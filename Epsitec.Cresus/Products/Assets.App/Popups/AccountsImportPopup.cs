@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
@@ -120,32 +121,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var range = importEngine.Import (importedAccounts, filename);
 
-					return string.Format ("{0}<br/>{1} comptes à importer",
-						AccountsImportPopup.GetRangeDescription (range),
-						importedAccounts.Count);
+					return string.Format ("Période {0}<br/>{1} comptes à importer", range.ToNiceString (), importedAccounts.Count);
 				}
 				catch
 				{
 					return null;
 				}
-			}
-		}
-
-		private static string GetRangeDescription(DateRange range)
-		{
-			if (range.FromTimestamp.Date.Day   ==  1 &&
-				range.FromTimestamp.Date.Month ==  1 &&  // du premier janvier ?
-				range.ToTimestamp.Date.Day     == 31 &&
-				range.ToTimestamp.Date.Month   == 12 &&  // au 31 décembre ?
-				range.FromTimestamp.Date.Year  == range.ToTimestamp.Date.Year)  // de la même année ?
-			{
-				return string.Format ("Année {0}", range.FromTimestamp.Date.Year);
-			}
-			else
-			{
-				return string.Format ("Période du {0} au {1}",
-					TypeConverters.DateToString (range.FromTimestamp.Date),
-					TypeConverters.DateToString (range.ToTimestamp.Date));
 			}
 		}
 	}

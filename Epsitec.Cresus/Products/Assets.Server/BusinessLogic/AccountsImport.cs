@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.InitDates ();
 			this.AddAccounts ();
 
-			return new DateRange (this.beginDate, this.endDate);
+			//	Retourne la période (attention, la date de fin est exclue).
+			return new DateRange (this.beginDate, this.endDate.AddDays (1));
 		}
 
 
@@ -134,8 +135,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void InitDates()
 		{
-			this.beginDate = this.SearchDate ("DATEBEG");
-			this.endDate   = this.SearchDate ("DATEEND");
+			this.beginDate = this.SearchDate ("DATEBEG");  // date de début (incluse)
+			this.endDate   = this.SearchDate ("DATEEND");  // date de fin (incluse)
 		}
 
 		private System.DateTime SearchDate(string tag)

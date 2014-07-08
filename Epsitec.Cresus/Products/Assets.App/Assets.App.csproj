@@ -84,6 +84,7 @@
     <Compile Include="Export\ExportEngine.cs" />
     <Compile Include="Export\EncodingHelpers.cs" />
     <Compile Include="Export\ExportHelpers.cs" />
+    <Compile Include="Helpers\DateRangeHelpers.cs" />
     <Compile Include="Helpers\String.cs" />
     <Compile Include="Helpers\Misc.cs" />
     <Compile Include="Helpers\DateTime.cs" />

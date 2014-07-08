@@ -25,8 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = true;
 			this.hasMoveOperations = false;
 
-			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings);
-
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
@@ -57,6 +55,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateData()
 		{
 			this.NodeGetter.SetParams (null, this.sortingInstructions);
+
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings)
+				+ " — "
+				+ this.accessor.Mandat.CurrentAccountsDateRange.ToNiceString ();
+
+			this.topTitle.SetTitle (this.title);
 
 			this.UpdateController ();
 			this.UpdateToolbar ();

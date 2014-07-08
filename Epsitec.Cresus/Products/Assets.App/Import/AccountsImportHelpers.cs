@@ -8,7 +8,6 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Export
@@ -54,14 +53,6 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private void Import(string filename)
 		{
-			if (this.ReadFile (filename))
-			{
-				this.ShowMessagePopup ("L'importation s'est effectuée avec succès.");
-			}
-		}
-
-		private bool ReadFile(string filename)
-		{
 			//	Lit le fichier .crp et ajoute-le à la liste des plans comptables dans le mandat.
 			using (var importEngine = new AccountsImport ())
 			{
@@ -75,11 +66,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 				catch (System.Exception ex)
 				{
 					this.ShowMessagePopup (ex.Message);
-					return false;
+					return;
 				}
 
 				this.accessor.Mandat.AddAccounts (range, importedAccounts);
-				return true;
+				this.accessor.Mandat.CurrentAccountsDateRange = range;
+
+				this.updateAction ();
+				this.ShowMessagePopup ("L'importation s'est effectuée avec succès.");
 			}
 		}
 
