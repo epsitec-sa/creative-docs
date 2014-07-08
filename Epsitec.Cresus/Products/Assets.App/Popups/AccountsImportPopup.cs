@@ -4,11 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Export;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
-using Epsitec.Cresus.Assets.Core.Helpers;
-using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -74,8 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			string accountsDescription;
-			bool ok = this.GetReport (out accountsDescription);
+			var report = this.Report;
 
 			{
 				var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
@@ -87,19 +82,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (1) as LabelStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.SetLabel (accountsDescription);
+				controller.SetLabel (report.Message);
 			}
 
-			this.okButton.Enable = ok;
+			this.okButton.Enable = (report.Mode != AccountsImportMode.Error);
 		}
 
 
-		private bool GetReport(out string report)
+		private AccountsImportReport Report
 		{
 			//	Retourne le rapport sur le plan comptable à importer.
-			using (var h = new AccountsImportHelpers (this.accessor, null, null))
+			get
 			{
-				return h.GetReport (this.Filename, out report);
+				using (var h = new AccountsImportHelpers (this.accessor, null, null))
+				{
+					return h.GetReport (this.Filename);
+				}
 			}
 		}
 	}

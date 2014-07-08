@@ -91,6 +91,8 @@
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
+    <Compile Include="Import\AccountsImportReport.cs" />
+    <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />

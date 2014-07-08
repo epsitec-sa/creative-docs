@@ -31,10 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
-		public bool GetReport(string filename, out string report)
+		public AccountsImportReport GetReport(string filename)
 		{
 			//	Retourne le rapport sur la future importation d'un plan comptable.
-			//	Retourne true si l'importation est possible.
 			using (var importEngine = new AccountsImport ())
 			{
 				var importedAccounts = new GuidList<DataObject> ();
@@ -49,34 +48,33 @@ namespace Epsitec.Cresus.Assets.App.Export
 						bool equal = AccountsLogic.Compare (importedAccounts, this.accessor.Mandat.GetAccounts (range));
 						if (equal)
 						{
-							report = "L'importation est inutile.<br/>Ce plan comptable a déjà été importé.";
-							return false;  // erreur
+							const string message = "L'importation est inutile.<br/>Ce plan comptable a déjà été importé.";
+							return new AccountsImportReport (AccountsImportMode.Error, message);
 						}
 						else
 						{
-							report = string.Format ("Mise à jour de la période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
-							return true;  // ok pour l'importation
+							string message = string.Format ("Mise à jour de la période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
+							return new AccountsImportReport (AccountsImportMode.Update, message);
 						}
 					}
 					else
 					{
-						report = string.Format ("Nouvelle période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
-						return true;  // ok pour l'importation
+						string message = string.Format ("Nouvelle période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
+						return new AccountsImportReport (AccountsImportMode.Add, message);
 					}
 				}
 				catch (System.Exception ex)
 				{
-					report = TextLayout.ConvertToTaggedText (ex.Message);
-					return false;  // erreur
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					return new AccountsImportReport (AccountsImportMode.Error, message);
 				}
 			}
 		}
 
-
 		public void ShowImportPopup()
 		{
-			//	Affiche le popup permettant de choisir un plan comptable à importer, ainsi
-			//	que le mode (Replace ou Merge).
+			//	Affiche le popup permettant de choisir un plan comptable à importer, puis
+			//	effectue l'importation.
 			var popup = new AccountsImportPopup (this.accessor)
 			{
 				Filename = LocalSettings.AccountsImportFilename,
@@ -93,6 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 				}
 			};
 		}
+
 
 		private void Import(string filename)
 		{
@@ -116,6 +115,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 				this.accessor.Mandat.CurrentAccountsDateRange = range;
 
 				this.updateAction ();
+
+				//	N'affiche rien lors d'une importation effectuée avec succès.
 			}
 		}
 
