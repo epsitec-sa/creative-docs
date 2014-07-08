@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.ExportJsonProfile = JsonExportProfile.Default;
 			LocalSettings.ExportPdfProfile  = PdfExportProfile.Default;
 
-			LocalSettings.AccountsImportInstructions = AccountsImportInstructions.Default;
+			LocalSettings.AccountsImportFilename = null;
 		}
 
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static YamlExportProfile				ExportYamlProfile;
 		public static JsonExportProfile				ExportJsonProfile;
 		public static PdfExportProfile				ExportPdfProfile;
-		public static AccountsImportInstructions	AccountsImportInstructions;
+		public static string						AccountsImportFilename;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}

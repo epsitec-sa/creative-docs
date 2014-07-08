@@ -22,7 +22,14 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		{
 			get
 			{
-				return this.description.Label.GetTextHeight (this.description.Width);
+				if (this.description.Height == 0)
+				{
+					return this.description.Label.GetTextHeight (this.description.Width);
+				}
+				else
+				{
+					return this.description.Height;
+				}
 			}
 		}
 
@@ -32,6 +39,12 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				return 0;
 			}
+		}
+
+
+		public void SetLabel(string text)
+		{
+			this.label.Text = text;
 		}
 
 
@@ -50,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			};
 
 			//	On affiche le texte multiligne à droite, dans la zone des contrôles.
-			new StaticText
+			this.label = new StaticText
 			{
 				Parent           = parent,
 				Text             = this.description.Label,
@@ -60,5 +73,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				PreferredHeight  = h,
 			};
 		}
+
+
+		private StaticText label;
 	}
 }

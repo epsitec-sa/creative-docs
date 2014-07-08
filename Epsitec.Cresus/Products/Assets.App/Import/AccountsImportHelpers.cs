@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	que le mode (Replace ou Merge).
 			var popup = new AccountsImportPopup (this.accessor)
 			{
-				ImportInstructions = LocalSettings.AccountsImportInstructions,
+				Filename = LocalSettings.AccountsImportFilename,
 			};
 
 			popup.Create (this.target, leftOrRight: true);
@@ -50,88 +50,31 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				if (name == "ok")
 				{
-					LocalSettings.AccountsImportInstructions = popup.ImportInstructions;  // enregistre dans les réglages
-					this.Import (popup.ImportInstructions);
+					LocalSettings.AccountsImportFilename = popup.Filename;  // enregistre dans les réglages
+					this.Import (popup.Filename);
 				}
 			};
 		}
 
-		private void Import(AccountsImportInstructions instructions)
+		private void Import(string filename)
 		{
-			if (!this.ReadFile (instructions))
+			if (this.ReadFile (filename))
 			{
-				return;
-			}
-
-			if (instructions.Mode == AccountsMergeMode.Merge && this.accountsMerge.HasCurrentAccounts)
-			{
-				//	Importation en mode Merge.
-				if (this.accountsMerge.Todo.Any ())
-				{
-					this.ShowMergePopup ();
-				}
-				else
-				{
-					this.ShowMessagePopup ("Il n'y a aucun compte à fusionner.<br/>Le plan comptable est à jour.");
-				}
-			}
-			else
-			{
-				//	Importation en mode Replace.
-				if (CategoriesLogic.HasAccounts (this.accessor))
-				{
-					//	S'il y a des comptes définis dans les caégories d'immobilisation, il faut
-					//	en avertir l'utilisateur.
-					this.ShowReplacePopup ();
-				}
-				else
-				{
-					//	Sinon, on peut importer directement.
-					this.ReplaceImport ();
-				}
+				this.ShowMessagePopup ("L'importation s'est effectuée avec succès.");
 			}
 		}
 
-		private void ShowReplacePopup()
-		{
-			//	Affiche le popup d'avertissement, avant d'effectuer une importation
-			//	en mode Remplace.
-			const string question = "L'importation effacera tous les comptes dans les catégories d'immobilisation.<br/><br/>Etes-vous certain de vouloir continuer ?";
-			YesNoPopup.Show (this.target, question, this.ReplaceImport);
-		}
-
-		private void ShowMergePopup()
-		{
-			//	Affiche le popup permettant de choisir comment effectuer la fusion.
-			var popup = new AccountsMergePopup (this.accessor, this.accountsMerge.Todo);
-
-			popup.Create (this.target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.accountsMerge.Do ();  // effectue l'importation en mode Merge
-					this.updateAction ();
-
-					this.ShowMessagePopup ("La fusion s'est effectuée avec succès.<br/>Vous pouvez éventuellement modifier les comptes à utiliser dans les catégories d'immobilisation.");
-				}
-			};
-		}
-
-
-		private bool ReadFile(AccountsImportInstructions instructions)
+		private bool ReadFile(string filename)
 		{
 			//	Lit le fichier .crp et crée le moteur d'importation AccountsMerge.
-			var currentAccounts = this.accessor.Mandat.GetData (BaseType.Accounts);
-
 			using (var importEngine = new AccountsImport ())
 			{
+				DateRange range;
 				var importedAccounts = new GuidList<DataObject> ();
 
 				try
 				{
-					importEngine.Import (importedAccounts, instructions.Filename);
+					range = importEngine.Import (importedAccounts, filename);
 				}
 				catch (System.Exception ex)
 				{
@@ -139,21 +82,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 					return false;
 				}
 
-				this.accountsMerge = new AccountsMerge (currentAccounts, importedAccounts, instructions.Mode);
+				this.accessor.Mandat.AddAccounts (range, importedAccounts);
 				return true;
 			}
 		}
-
-		private void ReplaceImport()
-		{
-			//	Effectue l'importation en mode Remplace.
-			this.accountsMerge.Do ();
-			CategoriesLogic.ClearAccounts (this.accessor);
-			this.updateAction ();
-
-			this.ShowMessagePopup ("L'importation s'est effectuée avec succès.<br/>Vous n'avez plus qu'à définir les comptes à utiliser dans les catégories d'immobilisation.");
-		}
-
 
 		private void ShowMessagePopup(string message)
 		{

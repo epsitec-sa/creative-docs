@@ -4,8 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -32,22 +33,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 1
 			{
-				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = AccountsMergeModeHelpers.MultiLabels,
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = 300,
+				Height                = 15*2,  // place pour 2 lignes
 			});
 
 			this.SetDescriptions (list);
 
 			this.defaultAcceptButtonName = "Importer";
-			this.defaultControllerRankFocus = 1;
+			this.defaultControllerRankFocus = 0;
 		}
 
 
-		public AccountsImportInstructions		ImportInstructions
+		public string							Filename
 		{
 			get
 			{
-				AccountsMergeMode	mode;
 				string				filename;
 
 				{
@@ -56,26 +57,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					filename = controller.Value;
 				}
 
-				{
-					var controller = this.GetController (1) as RadioStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					mode = AccountsMergeModeHelpers.GetMode (controller.Value.GetValueOrDefault ());
-				}
-
-				return new AccountsImportInstructions (mode, filename);
+				return filename;
 			}
 			set
 			{
 				{
 					var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value.Filename;
-				}
-
-				{
-					var controller = this.GetController (1) as RadioStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = AccountsMergeModeHelpers.GetRank (value.Mode);
+					controller.Value = value;
 				}
 			}
 		}
@@ -83,12 +72,81 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
-			System.Diagnostics.Debug.Assert (controller != null);
-			controller.Value = this.ImportInstructions.Filename;
-			controller.Update ();
+			var accountsDescription = this.AccountsDescription;
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.ImportInstructions.Filename);
+			{
+				var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = this.Filename;
+				controller.Update ();
+			}
+
+			{
+				var controller = this.GetController (1) as LabelStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.SetLabel (accountsDescription);
+			}
+
+			this.okButton.Enable = !string.IsNullOrEmpty (accountsDescription);
+		}
+
+
+		private string AccountsDescription
+		{
+			//	Retourne la description du plan comptable à importer.
+			get
+			{
+				var filename = this.Filename;
+
+				if (string.IsNullOrEmpty (filename))
+				{
+					return null;
+				}
+				else
+				{
+					return AccountsImportPopup.GetAccountsDescription (filename);
+				}
+			}
+		}
+
+		private static string GetAccountsDescription(string filename)
+		{
+			//	Retourne la description d'un plan comptable.
+			using (var importEngine = new AccountsImport ())
+			{
+				var importedAccounts = new GuidList<DataObject> ();
+
+				try
+				{
+					var range = importEngine.Import (importedAccounts, filename);
+
+					return string.Format ("{0}<br/>{1} comptes à importer",
+						AccountsImportPopup.GetRangeDescription (range),
+						importedAccounts.Count);
+				}
+				catch
+				{
+					return null;
+				}
+			}
+		}
+
+		private static string GetRangeDescription(DateRange range)
+		{
+			if (range.FromTimestamp.Date.Day   ==  1 &&
+				range.FromTimestamp.Date.Month ==  1 &&  // du premier janvier ?
+				range.ToTimestamp.Date.Day     == 31 &&
+				range.ToTimestamp.Date.Month   == 12 &&  // au 31 décembre ?
+				range.FromTimestamp.Date.Year  == range.ToTimestamp.Date.Year)  // de la même année ?
+			{
+				return string.Format ("Année {0}", range.FromTimestamp.Date.Year);
+			}
+			else
+			{
+				return string.Format ("Période du {0} au {1}",
+					TypeConverters.DateToString (range.FromTimestamp.Date),
+					TypeConverters.DateToString (range.ToTimestamp.Date));
+			}
 		}
 	}
 }
