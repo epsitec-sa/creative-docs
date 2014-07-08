@@ -144,14 +144,16 @@ namespace Epsitec.Common.Widgets
 		/// <param name="contextChain">The context chain.</param>
 		/// <param name="commandObject">The command object.</param>
 		/// <param name="source">The source of the command.</param>
-		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, object source)
+		/// <param name="commandShortcut">The command shortcut, if any.</param>
+		/// <param name="commandMessage">The message which generated the command, if any.</param>
+		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, object source, Shortcut commandShortcut, Message commandMessage)
 		{
 			if ((dispatcherChain != null) &&
 				(commandObject != null))
 			{
 				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)
 				{
-					if (dispatcher.DispatchCommand (contextChain, commandObject, source))
+					if (dispatcher.DispatchCommand (contextChain, commandObject, source, commandShortcut, commandMessage))
 					{
 						break;
 					}
@@ -599,7 +601,7 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 
-		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source)
+		private bool DispatchCommand(CommandContextChain contextChain, Command commandObject, object source, Shortcut commandShortcut, Message commandMessage)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 
@@ -640,8 +642,8 @@ namespace Epsitec.Common.Widgets
 					return false;
 				}
 			}
-			
-			CommandEventArgs e = new CommandEventArgs (source, commandObject, contextChain, commandContext, commandState);
+
+			CommandEventArgs e = new CommandEventArgs (source, commandObject, contextChain, commandContext, commandState, commandShortcut, commandMessage);
 
 			EventSlot slot;
 			this.eventHandlers.TryGetValue (commandObject, out slot);

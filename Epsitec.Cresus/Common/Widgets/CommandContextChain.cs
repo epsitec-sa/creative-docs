@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -171,8 +171,21 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The command context chain.</returns>
 		public static CommandContextChain BuildChain(DependencyObject obj)
 		{
-			CommandContextChain that = null;
+			var visual = obj as Visual;
 
+			if (visual != null)
+			{
+				return CommandContextChain.BuildChain (visual);
+			}
+			
+			var window = obj as Window;
+
+			if (window != null)
+			{
+				return CommandContextChain.BuildChain (window);
+			}
+
+			CommandContextChain that = null;
 			CommandContextChain.BuildChain (obj, ref that);
 
 			return that;

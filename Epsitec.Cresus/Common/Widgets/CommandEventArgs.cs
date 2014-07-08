@@ -1,4 +1,4 @@
-//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -17,13 +17,17 @@ namespace Epsitec.Common.Widgets
 		/// <param name="contextChain">The context chain.</param>
 		/// <param name="context">The context.</param>
 		/// <param name="state">The state.</param>
-		public CommandEventArgs(object source, Command command, CommandContextChain contextChain, CommandContext context, CommandState state)
+		/// <param name="commandShortcut">The command shortcut, if any.</param>
+		/// <param name="commandMessage">The UI message which produced the command, if any.</param>
+		internal CommandEventArgs(object source, Command command, CommandContextChain contextChain, CommandContext context, CommandState state, Shortcut commandShortcut, Message commandMessage)
 		{
-			this.source  = source;
-			this.command = command;
-			this.chain   = contextChain;
-			this.context = context;
-			this.state   = state;
+			this.source          = source;
+			this.command         = command;
+			this.commandShortcut = commandShortcut;
+			this.commandMessage  = commandMessage;
+			this.chain           = contextChain;
+			this.context         = context;
+			this.state           = state;
 		}
 		
 		
@@ -40,6 +44,22 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.command;
+			}
+		}
+
+		public Shortcut							CommandShortcut
+		{
+			get
+			{
+				return this.commandShortcut;
+			}
+		}
+
+		public Message							CommandMessage
+		{
+			get
+			{
+				return this.commandMessage;
 			}
 		}
 
@@ -82,6 +102,8 @@ namespace Epsitec.Common.Widgets
 
 		private readonly object					source;
 		private readonly Command				command;
+		private readonly Shortcut				commandShortcut;
+		private readonly Message				commandMessage;
 		private readonly CommandContextChain	chain;
 		private readonly CommandContext			context;
 		private readonly CommandState			state;

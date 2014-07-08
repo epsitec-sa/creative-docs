@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
 using Epsitec.Common.Support;
@@ -1795,12 +1795,11 @@ namespace Epsitec.Common.Widgets
 		private struct QueueItem
 		{
 			public QueueItem(Widget source, string command)
+				: this (source)
 			{
-				this.source          = source;
 				this.commandObject   = null;
+				this.commandShortcut = null;
 				this.commandLine     = command;
-				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
-				this.contextChain    = CommandContextChain.BuildChain (source);
 				
 				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
 				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
@@ -1808,25 +1807,23 @@ namespace Epsitec.Common.Widgets
 			}
 
 			public QueueItem(DependencyObject source, string command)
+				: this (source)
 			{
-				this.source          = source;
 				this.commandObject   = null;
+				this.commandShortcut = null;
 				this.commandLine     = command;
-				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
-				this.contextChain    = CommandContextChain.BuildChain (source);
 
 				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
 				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
 				System.Diagnostics.Debug.Assert (this.contextChain != null);
 			}
 
-			public QueueItem(Widget source, Command command)
+			public QueueItem(Widget source, Command command, Shortcut shortcut = null)
+				: this (source)
 			{
-				this.source          = source;
 				this.commandObject   = command;
 				this.commandLine     = null;
-				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
-				this.contextChain    = CommandContextChain.BuildChain (source);
+				this.commandShortcut = shortcut;
 
 				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
 				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
@@ -1834,16 +1831,26 @@ namespace Epsitec.Common.Widgets
 			}
 
 			public QueueItem(DependencyObject source, Command command)
+				: this (source)
 			{
-				this.source          = source;
 				this.commandObject   = command;
+				this.commandShortcut = null;
 				this.commandLine     = null;
-				this.dispatcherChain = CommandDispatcherChain.BuildChain (source);
-				this.contextChain    = CommandContextChain.BuildChain (source);
 
 				System.Diagnostics.Debug.Assert (this.dispatcherChain != null);
 				System.Diagnostics.Debug.Assert (this.dispatcherChain.IsEmpty == false);
 				System.Diagnostics.Debug.Assert (this.contextChain != null);
+			}
+
+			private QueueItem(object source)
+			{
+				this.source          = source;
+				this.commandObject   = null;
+				this.commandShortcut = null;
+				this.commandLine     = null;
+				this.dispatcherChain = CommandDispatcherChain.BuildChain (source as DependencyObject);
+				this.contextChain    = CommandContextChain.BuildChain (source as DependencyObject);
+				this.commandMessage  = Message.GetLastMessage ();
 			}
 			
 			
@@ -1860,6 +1867,14 @@ namespace Epsitec.Common.Widgets
 				get
 				{
 					return this.commandLine;
+				}
+			}
+
+			public Shortcut						CommandShortcut
+			{
+				get
+				{
+					return this.commandShortcut;
 				}
 			}
 
@@ -1886,13 +1901,23 @@ namespace Epsitec.Common.Widgets
 					return this.contextChain;
 				}
 			}
+
+			public Message						CommandMessage
+			{
+				get
+				{
+					return this.commandMessage;
+				}
+			}
+
 			
-			
-			object								source;
-			string								commandLine;
-			Command								commandObject;
-			CommandDispatcherChain				dispatcherChain;
-			CommandContextChain					contextChain;
+			private readonly object					source;
+			private readonly string					commandLine;
+			private readonly Command				commandObject;
+			private readonly Shortcut				commandShortcut;
+			private readonly CommandDispatcherChain	dispatcherChain;
+			private readonly CommandContextChain	contextChain;
+			private readonly Message				commandMessage;
 		}
 		#endregion
 		
@@ -1920,7 +1945,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void QueueCommand(Widget source, Command command)
+		public void QueueCommand(Widget source, Command command, Shortcut shortcut = null)
 		{
 			if (CommandDispatcherChain.BuildChain (source) == null)
 			{
@@ -1928,7 +1953,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.QueueCommand (new QueueItem (source, command));
+				this.QueueCommand (new QueueItem (source, command, shortcut));
 			}
 		}
 
@@ -2164,7 +2189,7 @@ namespace Epsitec.Common.Widgets
 
 				Command command = Command.Get (commandId);
 
-				CommandDispatcher.Dispatch (dispatcherChain, contextChain, command, null);
+				CommandDispatcher.Dispatch (dispatcherChain, contextChain, command, null, null, null);
 				
 				commandLine = commandArgs.Substring (commandId.Length);
 				dispatched  = true;
@@ -2183,10 +2208,12 @@ namespace Epsitec.Common.Widgets
 
 			while (this.cmdQueue.Count > 0)
 			{
-				QueueItem item          = this.cmdQueue.Dequeue ();
-				object    source        = item.Source;
-				string    commandLine   = item.CommandLine;
-				Command   commandObject = item.CommandObject;
+				QueueItem item            = this.cmdQueue.Dequeue ();
+				object    source          = item.Source;
+				string    commandLine     = item.CommandLine;
+				Command   commandObject   = item.CommandObject;
+				Shortcut  commandShortcut = item.CommandShortcut;
+				Message   commandMessage  = item.CommandMessage;
 
 				if (commandObject == null)
 				{
@@ -2216,7 +2243,7 @@ namespace Epsitec.Common.Widgets
 					//	required for this command and user happens to be an administrator; go
 					//	ahead, dispatch the command locally :
 
-					CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, source);
+					CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, source, commandShortcut, commandMessage);
 				}
 			}
 			
@@ -2872,9 +2899,9 @@ namespace Epsitec.Common.Widgets
 		private Widget							modalWidget;
 		private Timer							timer;
 		private MouseCursor						windowCursor;
-		private List<Widget>					logicalFocusStack = new List<Widget> ();
 		
-		private Queue<QueueItem>				cmdQueue = new Queue<QueueItem> ();
+		private readonly List<Widget>			logicalFocusStack = new List<Widget> ();
+		private readonly Queue<QueueItem>		cmdQueue = new Queue<QueueItem> ();
 		private bool							isDisposeQueued;
 		private bool							isAsyncNotificationQueued;
 		private bool							isAsyncLayoutQueued;

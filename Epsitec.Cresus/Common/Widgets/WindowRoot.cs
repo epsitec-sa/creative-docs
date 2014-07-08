@@ -275,7 +275,7 @@ namespace Epsitec.Common.Widgets
 						if (dispatcherChain != null)
 						{
 							Command bestCommand = dispatcherChain.GetBestCommand (commands);
-							window.QueueCommand (widget, bestCommand);
+							window.QueueCommand (widget, bestCommand, shortcut);
 							return true;
 						}
 					}
