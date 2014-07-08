@@ -46,12 +46,12 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 			var button = new CheckButton
 			{
 				Parent          = parent,
-				Text            = description.Label,
+				Text            = this.description.Label,
 				ActiveState     = this.Value ? ActiveState.Yes : ActiveState.No,
 				TabIndex        = ++tabIndex,
 				PreferredHeight = BoolStackedController.checkHeight,
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			button.ActiveStateChanged += delegate
 			{
 				this.Value = button.ActiveState == ActiveState.Yes;
-				this.OnValueChanged (description);
+				this.OnValueChanged ();
 			};
 		}
 

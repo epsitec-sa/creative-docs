@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Visibility      = false,
 				};
 
-				controller.CreateUI (visibleFrame, labelsWidth, ref tabIndex, description);
+				controller.CreateUI (visibleFrame, labelsWidth, ref tabIndex);
 
 				controller.ValueChanged += delegate (object sender, StackedControllerDescription d)
 				{

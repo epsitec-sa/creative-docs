@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public virtual void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public virtual void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 		}
 
@@ -73,12 +73,12 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		protected void CreateLabel(Widget parent, int labelWidth, StackedControllerDescription description)
+		protected void CreateLabel(Widget parent, int labelWidth)
 		{
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = description.Label,
+				Text             = this.description.Label,
 				ContentAlignment = ContentAlignment.TopRight,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock             = DockStyle.Left,
@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 
 		#region Events handler
-		protected void OnValueChanged(StackedControllerDescription description)
+		protected void OnValueChanged()
 		{
-			this.ValueChanged.Raise (this, description);
+			this.ValueChanged.Raise (this, this.description);
 		}
 
 		public event EventHandler<StackedControllerDescription> ValueChanged;

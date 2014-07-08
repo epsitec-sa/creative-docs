@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 			this.radios.Clear ();
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			}
 
 			int rank = 0;
-			foreach (var label in description.Labels)
+			foreach (var label in this.description.Labels)
 			{
 				var radio = new RadioButton
 				{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				{
 					this.Value = int.Parse (radio.Name);
 					this.UpdateRadios ();
-					this.OnValueChanged (description);
+					this.OnValueChanged ();
 				};
 
 				this.radios.Add (radio);

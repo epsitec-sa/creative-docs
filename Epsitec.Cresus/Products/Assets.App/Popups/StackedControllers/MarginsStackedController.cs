@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
-			this.CreateLabel (parent, labelWidth, description);
+			this.CreateLabel (parent, labelWidth);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.button = new ColoredButton
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 			this.button.Clicked += delegate
 			{
-				this.ShowMarginsPopup (description.Label);
+				this.ShowMarginsPopup (this.description.Label);
 			};
 		}
 

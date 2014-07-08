@@ -55,9 +55,9 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
-			this.CreateLabel (parent, labelWidth, description);
+			this.CreateLabel (parent, labelWidth);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.controller = new IntFieldController (this.accessor)
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.controller.ValueEdited += delegate
 			{
 				this.Value = this.controller.Value;
-				this.OnValueChanged (description);
+				this.OnValueChanged ();
 			};
 		}
 

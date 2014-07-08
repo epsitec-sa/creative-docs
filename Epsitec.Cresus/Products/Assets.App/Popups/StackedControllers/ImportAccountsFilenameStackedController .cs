@@ -50,19 +50,18 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 			this.parent = parent;
-			this.description = description;
 
-			this.CreateLabel (parent, labelWidth, description);
+			this.CreateLabel (parent, labelWidth);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.controller = new StringFieldController (this.accessor)
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - ImportAccountsFilenameStackedController.browseWidth,
+				EditWidth  = this.description.Width - ImportAccountsFilenameStackedController.browseWidth,
 				TabIndex   = ++tabIndex,
 			};
 
@@ -72,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.controller.ValueEdited += delegate
 			{
 				this.Value = this.controller.Value;
-				this.OnValueChanged (description);
+				this.OnValueChanged ();
 			};
 		}
 
@@ -108,11 +107,17 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private void ShowFilenameDialog()
 		{
-			//	Affiche le dialogue permettant de choisir un fichier à exporter.
-			const string title      = "Nom du plan comptable Crésus à importer";
+			//	Affiche le dialogue permettant de choisir un plan comptable à importer.
+			//	On permet de choisir les fichiers .cre et .crp :
+			//	  .cre -> fichier visible contenant la comptabilité
+			//	  .crp -> fichier caché contenant le plan comptable
+			//	Habituellement, l'utilisateur choisit le fichier .cre qui représente sa
+			//	comptabilité. Mais c'est le fichier .crp qui sera lu par Assets.
+
+			const string title      = "Plan comptable Crésus à importer";
 			string initialDirectory = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetDirectoryName (this.Value);
 			string filename         = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetFileName (this.Value);
-			const string ext        = ".crp";
+			const string ext        = ".cre|.crp";
 			const string formatName = "Plan comptable Crésus";
 
 			var f = FileOpenDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
@@ -128,7 +133,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.Value = value;
 			this.controller.Value = value;
 
-			this.OnValueChanged (this.description);
+			this.OnValueChanged ();
 		}
 
 
@@ -137,7 +142,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private string							value;
 		private Widget							parent;
-		private StackedControllerDescription	description;
 		private StringFieldController			controller;
 	}
 }

@@ -301,6 +301,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void ReadLines(string filename)
 		{
+			filename = System.IO.Path.ChangeExtension (filename, ".crp");  // remplace .cre par .crp
 			this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
 		}
 

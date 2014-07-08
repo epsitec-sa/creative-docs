@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
-			int h = description.Label.GetTextHeight (description.Width);
+			int h = this.description.Label.GetTextHeight (this.description.Width);
 
 			//	On laisse un espace libre à gauche, dans la zone des labels.
 			new StaticText
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			new StaticText
 			{
 				Parent           = parent,
-				Text             = description.Label,
+				Text             = this.description.Label,
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode    = TextBreakMode.None,
 				Dock             = DockStyle.Fill,

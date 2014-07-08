@@ -63,14 +63,14 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 			this.controller = new DateController (this.accessor)
 			{
-				DateRangeCategory = description.DateRangeCategory,
+				DateRangeCategory = this.description.DateRangeCategory,
 				Date              = this.Value,
 				DateLabelWidth    = labelWidth,
-				DateDescription   = description.Label,
+				DateDescription   = this.description.Label,
 				TabIndex          = ++tabIndex,
 			};
 
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.controller.DateChanged += delegate
 			{
 				this.Value = this.controller.Date;
-				this.OnValueChanged (description);
+				this.OnValueChanged ();
 			};
 		}
 

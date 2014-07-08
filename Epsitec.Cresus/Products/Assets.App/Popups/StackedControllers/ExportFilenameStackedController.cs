@@ -53,19 +53,18 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex, StackedControllerDescription description)
+		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
 			this.parent = parent;
-			this.description = description;
 
-			this.CreateLabel (parent, labelWidth, description);
+			this.CreateLabel (parent, labelWidth);
 			var controllerFrame = this.CreateControllerFrame (parent);
 
 			this.controller = new StringFieldController (this.accessor)
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = description.Width - ExportFilenameStackedController.browseWidth,
+				EditWidth  = this.description.Width - ExportFilenameStackedController.browseWidth,
 				TabIndex   = ++tabIndex,
 			};
 
@@ -75,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.controller.ValueEdited += delegate
 			{
 				this.Value = this.controller.Value;
-				this.OnValueChanged (description);
+				this.OnValueChanged ();
 			};
 		}
 
@@ -131,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.Value = value;
 			this.controller.Value = value;
 
-			this.OnValueChanged (this.description);
+			this.OnValueChanged ();
 		}
 
 
@@ -140,7 +139,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private string							value;
 		private Widget							parent;
-		private StackedControllerDescription	description;
 		private StringFieldController			controller;
 	}
 }
