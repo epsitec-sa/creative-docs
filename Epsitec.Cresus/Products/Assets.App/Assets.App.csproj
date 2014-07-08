@@ -191,7 +191,7 @@
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AccountsToolbarTreeTableController.cs" />
-    <Compile Include="Views\AccountsSettingsView.cs" />
+    <Compile Include="Views\AccountsView.cs" />
     <Compile Include="Views\AccountGuidFieldController.cs" />
     <Compile Include="Views\AmortizedAmountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountController.cs" />

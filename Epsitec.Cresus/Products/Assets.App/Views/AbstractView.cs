@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Persons);
 
 				case ViewType.AccountsSettings:
-					return new AccountsSettingsView (accessor, toolbar);
+					return new AccountsView (accessor, toolbar);
 
 				case ViewType.Entries:
 					return new EntriesView (accessor, toolbar);

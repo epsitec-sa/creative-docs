@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (!this.value.IsEmpty)
 				{
-					var viewState = AccountsSettingsView.GetViewState (this.value);
+					var viewState = AccountsView.GetViewState (this.value);
 					this.OnGoto (viewState);
 				}
 			};

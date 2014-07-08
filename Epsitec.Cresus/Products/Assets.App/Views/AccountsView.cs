@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsSettingsView : AbstractView
+	public class AccountsView : AbstractView
 	{
-		public AccountsSettingsView(DataAccessor accessor, MainToolbar toolbar)
+		public AccountsView(DataAccessor accessor, MainToolbar toolbar)
 			: base (accessor, toolbar)
 		{
 			this.baseType = BaseType.Accounts;

@@ -174,6 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowDateRangePopup(Widget target)
 		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une.
 			var popup = new SimplePopup ();
 
 			int i = 0;
@@ -183,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (range == this.accessor.Mandat.CurrentAccountsDateRange)
 				{
-					popup.SelectedItem = i;
+					popup.SelectedItem = i;  // sélectionne la période courante actuelle dans le popup
 				}
 
 				i++;
@@ -194,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray()[rank];
-				this.accessor.Mandat.CurrentAccountsDateRange = range;
+				this.accessor.Mandat.CurrentAccountsDateRange = range;  // change la période courante
 				this.UpdateAfterImport ();
 			};
 		}
