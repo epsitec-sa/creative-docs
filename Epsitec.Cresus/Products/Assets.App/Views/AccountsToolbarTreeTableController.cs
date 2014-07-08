@@ -253,6 +253,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
+
+			this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Copy,   ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.Paste,  ToolbarCommandState.Hide);
 		}
 
 

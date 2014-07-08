@@ -71,21 +71,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.UpdateAfterListChanged ();
 					}
 				};
-
-				this.listController.RowDoubleClicked += delegate
-				{
-					this.OnListDoubleClicked ();
-				};
-
-				this.listController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
-				{
-					this.OnUpdateAfterCreate (guid);
-				};
-
-				this.listController.UpdateAfterDelete += delegate
-				{
-					this.OnUpdateAfterDelete ();
-				};
 			}
 
 			//	Connexion des événements de l'éditeur.
@@ -122,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.listController.InUse = true;
-			this.editFrameBox.Visibility = this.isEditing;
+			this.editFrameBox.Visibility = false;
 
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
@@ -144,7 +129,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateToolbars ();
-			this.UpdateEditor ();
 
 			this.OnViewStateChanged (this.ViewState);
 		}
@@ -153,12 +137,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static AbstractViewState GetViewState(Guid accountGuid)
 		{
 			//	Retourne un ViewState permettant de voir un compte donné.
-			return new SettingsViewState
+			return new AccountsViewState
 			{
-				ViewType     = ViewType.AccountsSettings,
-				BaseType     = BaseType.Accounts,
-				SelectedGuid = accountGuid,
-				ShowGraphic  = false,
+				ViewType    = ViewType.AccountsSettings,
+				ShowGraphic = false,
 			};
 		}
 
@@ -167,20 +149,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return new SettingsViewState
+				return new AccountsViewState
 				{
-					ViewType     = ViewType.AccountsSettings,
-					BaseType     = this.baseType,
-					SelectedGuid = this.selectedGuid,
-					ShowGraphic  = this.listController.ShowGraphic,
+					ViewType    = ViewType.AccountsSettings,
+					ShowGraphic = this.listController.ShowGraphic,
 				};
 			}
 			set
 			{
-				var viewState = value as SettingsViewState;
+				var viewState = value as AccountsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.selectedGuid = viewState.SelectedGuid;
 				this.listController.ShowGraphic = viewState.ShowGraphic;
 
 				this.UpdateUI ();
@@ -188,136 +167,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void OnCommand(ToolbarCommand command)
-		{
-			base.OnCommand (command);
-
-			switch (command)
-			{
-				case ToolbarCommand.Edit:
-					this.OnStartStopEdit ();
-					break;
-
-				case ToolbarCommand.Accept:
-					this.OnEditAccept ();
-					break;
-
-				case ToolbarCommand.Cancel:
-					this.OnEditCancel ();
-					break;
-			}
-		}
-
-
-		private void OnListDoubleClicked()
-		{
-			this.OnStartEdit ();
-		}
-
-		private void OnStartStopEdit()
-		{
-			if (!this.isEditing && this.selectedGuid.IsEmpty)
-			{
-				return;
-			}
-
-			this.isEditing = !this.isEditing;
-			this.UpdateUI ();
-		}
-
-		private void OnStartEdit()
-		{
-			if (!this.isEditing && this.selectedGuid.IsEmpty)
-			{
-				return;
-			}
-
-			this.isEditing = true;
-			this.UpdateUI ();
-		}
-
-		private void OnUpdateAfterCreate(Guid guid)
-		{
-			//	Démarre une édition après avoir créé un contact.
-			this.isEditing = true;
-			this.selectedGuid = guid;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
-
-			this.DeepUpdateUI ();
-		}
-
-		private void OnUpdateAfterDelete()
-		{
-			this.isEditing = false;
-			this.selectedGuid = Guid.Empty;
-
-			this.DeepUpdateUI ();
-		}
-
-		private void OnEditAccept()
-		{
-			this.isEditing = false;
-			this.UpdateUI ();
-		}
-
-		private void OnEditCancel()
-		{
-			this.accessor.EditionAccessor.CancelObjectEdition ();
-			this.isEditing = false;
-			this.UpdateUI ();
-		}
-
-
 		private void UpdateAfterListChanged()
 		{
 			this.selectedGuid = this.listController.SelectedGuid;
 
-			if (this.selectedGuid.IsEmpty)
-			{
-				this.isEditing = false;
-			}
-
 			this.UpdateUI ();
-		}
-
-
-		private void UpdateEditor()
-		{
-			var timestamp = this.GetLastTimestamp (this.selectedGuid);
-
-			if (!timestamp.HasValue)
-			{
-				timestamp = Timestamp.Now;
-			}
-
-			this.objectEditor.SetObject (this.selectedGuid, timestamp);
 		}
 
 
 		private void UpdateToolbars()
 		{
-			if (this.isEditing)
-			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
-
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, !this.objectEditor.HasError);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
-			}
-			else
-			{
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
-
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-			}
-		}
-
-		private bool IsEditingPossible
-		{
-			get
-			{
-				return this.listController.SelectedRow != -1;
-			}
+			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 		}
 
 
@@ -327,7 +189,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;
 
-		private bool										isEditing;
 		private Guid										selectedGuid;
 	}
 }

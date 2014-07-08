@@ -410,9 +410,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.selectedTimestamp = viewState.SelectedTimestamp;
 				this.selectedGuid      = viewState.SelectedGuid;
 
-				this.listController.FilterGuid = viewState.FilterTreeTableGuid;
+				this.listController.FilterGuid           = viewState.FilterTreeTableGuid;
 				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
-				this.listController.ShowGraphic = viewState.ShowGraphic;
+				this.listController.ShowGraphic          = viewState.ShowGraphic;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

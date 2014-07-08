@@ -56,10 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return new LastViewNode (this.guid, this.ViewType, this.PageType, null, this.GetDescription (accessor), this.Pin);
 		}
 
-		protected virtual string GetDescription(DataAccessor accessor)
-		{
-			return null;
-		}
+		protected abstract string GetDescription(DataAccessor accessor);
 
 
 		protected readonly Guid					guid;

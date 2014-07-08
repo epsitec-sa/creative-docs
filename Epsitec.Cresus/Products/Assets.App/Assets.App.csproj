@@ -180,6 +180,7 @@
     <Compile Include="Views\AbstractEditor.cs" />
     <Compile Include="Views\AbstractFieldController.cs" />
     <Compile Include="Popups\HistoryController.cs" />
+    <Compile Include="Views\AccountsViewState.cs" />
     <Compile Include="Views\ComputedAmountController.cs" />
     <Compile Include="Views\ComputedAmountFieldController.cs" />
     <Compile Include="Views\AbstractEditorPage.cs" />
