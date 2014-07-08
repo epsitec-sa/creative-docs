@@ -24,8 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.accounts.Clear ();
 
 			this.ReadLines (filename);
-			this.InitBeginDate ();
-			this.InitEndDate ();
+			this.InitDates ();
 			this.AddAccounts ();
 
 			return new DateRange (this.beginDate, this.endDate);
@@ -133,33 +132,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private void InitBeginDate()
+		private void InitDates()
 		{
-			//	Cherche la date de début du plan comptable.
-			int index = this.IndexOfLine ("DATEBEG=");
-			if (index == -1)
-			{
-				throw new System.InvalidOperationException ("File does not contain \"DATEBEG\" line");
-			}
-
-			var text = this.lines[index].Substring (8);
-			var date = AccountsImport.ParseDate (text);
-
-			if (!date.HasValue)
-			{
-				throw new System.InvalidOperationException (string.Format ("Incorrect date {0}", text));
-			}
-
-			this.beginDate = date.Value;
+			this.beginDate = this.SearchDate ("DATEBEG");
+			this.endDate   = this.SearchDate ("DATEEND");
 		}
 
-		private void InitEndDate()
+		private System.DateTime SearchDate(string tag)
 		{
-			//	Cherche la date de fin du plan comptable.
-			int index = this.IndexOfLine ("DATEEND=");
+			int index = this.IndexOfLine (tag + "=");
 			if (index == -1)
 			{
-				throw new System.InvalidOperationException ("File does not contain \"DATEEND\" line");
+				throw new System.InvalidOperationException (string.Format ("File does not contain \"{0}\" line", tag));
 			}
 
 			var text = this.lines[index].Substring (8);
@@ -170,7 +154,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				throw new System.InvalidOperationException (string.Format ("Incorrect date {0}", text));
 			}
 
-			this.endDate = date.Value;
+			return date.Value;
 		}
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
