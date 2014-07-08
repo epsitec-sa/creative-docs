@@ -188,7 +188,6 @@
     <Compile Include="Views\CategoriesViewState.cs" />
     <Compile Include="Views\AmortizationsView.cs" />
     <Compile Include="Views\AmortizationsViewState.cs" />
-    <Compile Include="Views\AmortizationsToolbar.cs" />
     <Compile Include="Views\AccountsToolbarTreeTableController.cs" />
     <Compile Include="Views\AccountsSettingsView.cs" />
     <Compile Include="Views\AccountGuidFieldController.cs" />
