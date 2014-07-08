@@ -73,6 +73,7 @@
     <Compile Include="DataProperties\DataGuidRatioProperty.cs" />
     <Compile Include="DataProperties\DataIntProperty.cs" />
     <Compile Include="DataProperties\DataStringProperty.cs" />
+    <Compile Include="DateRange.cs" />
     <Compile Include="EntryScenario.cs" />
     <Compile Include="EventType.cs" />
     <Compile Include="FieldType.cs" />

@@ -69,7 +69,6 @@
     <Compile Include="BusinessLogic\AssetCalculator.cs" />
     <Compile Include="BusinessLogic\AssetsLogic.cs" />
     <Compile Include="BusinessLogic\DataCellFlags.cs" />
-    <Compile Include="BusinessLogic\DateRange.cs" />
     <Compile Include="BusinessLogic\DecimalFormat.cs" />
     <Compile Include="BusinessLogic\Entries.cs" />
     <Compile Include="BusinessLogic\EntriesLogic.cs" />

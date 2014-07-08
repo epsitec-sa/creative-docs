@@ -301,6 +301,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void ReadLines(string filename)
 		{
+			//	On permet de choisir les fichiers .cre et .crp :
+			//	  .cre -> fichier visible contenant la comptabilité
+			//	  .crp -> fichier caché contenant le plan comptable
+			//	Habituellement, l'utilisateur choisit le fichier .cre qui représente sa
+			//	comptabilité. Mais c'est le fichier .crp qui sera lu par Assets.
+
 			filename = System.IO.Path.ChangeExtension (filename, ".crp");  // remplace .cre par .crp
 			this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
 		}
