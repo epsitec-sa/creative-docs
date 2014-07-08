@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.Data
 				&& date <  this.ExcludeTo.Date;
 		}
 
+
 		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
 		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 

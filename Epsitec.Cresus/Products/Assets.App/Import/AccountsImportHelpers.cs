@@ -28,10 +28,6 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		public void Dispose()
 		{
-			if (this.accountsMerge != null)
-			{
-				this.accountsMerge.Dispose ();
-			}
 		}
 
 
@@ -66,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private bool ReadFile(string filename)
 		{
-			//	Lit le fichier .crp et crée le moteur d'importation AccountsMerge.
+			//	Lit le fichier .crp et ajoute-le à la liste des plans comptables dans le mandat.
 			using (var importEngine = new AccountsImport ())
 			{
 				DateRange range;
@@ -97,7 +93,5 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private readonly DataAccessor			accessor;
 		private readonly Widget					target;
 		private readonly System.Action			updateAction;
-
-		private AccountsMerge					accountsMerge;
 	}
 }

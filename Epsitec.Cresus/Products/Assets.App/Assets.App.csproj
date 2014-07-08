@@ -72,7 +72,6 @@
     </Compile>
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
-    <Compile Include="DataFillers\AccountsMergeTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
     <Compile Include="Dialogs\FileSaveDialog.cs" />
@@ -91,10 +90,8 @@
     <Compile Include="Helpers\TreeTableFiller.cs" />
     <Compile Include="EventHandler.cs" />
     <Compile Include="Helpers\Text.cs" />
-    <Compile Include="Import\AccountsMergeModeHelpers.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
-    <Compile Include="NodeGetters\AccountsMergeNodeGetter.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\MenuPopupItem.cs" />
     <Compile Include="Popups\PopupStack.cs" />
@@ -109,7 +106,6 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\AccountsImportPopup.cs" />
-    <Compile Include="Popups\AccountsMergePopup.cs" />
     <Compile Include="Popups\StackedControllers\ImportAccountsFilenameStackedController .cs" />
     <Compile Include="Popups\StackedControllers\PdfStyleStackedController.cs" />
     <Compile Include="Popups\PdfStylePopup.cs" />

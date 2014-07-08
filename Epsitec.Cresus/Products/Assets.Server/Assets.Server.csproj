@@ -53,13 +53,9 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="BusinessLogic\AccountMergeTodo.cs" />
     <Compile Include="BusinessLogic\ApproximativeSearching.cs" />
     <Compile Include="BusinessLogic\AccountsSearching.cs" />
-    <Compile Include="BusinessLogic\AccountsMergeMode.cs" />
     <Compile Include="BusinessLogic\CategoriesLogic.cs" />
-    <Compile Include="BusinessLogic\AccountsMerge.cs" />
-    <Compile Include="BusinessLogic\AccountsImportInstructions.cs" />
     <Compile Include="BusinessLogic\GroupsLogic.cs" />
     <Compile Include="BusinessLogic\LogicDescriptions.cs" />
     <Compile Include="BusinessLogic\AccountsLogic.cs" />
