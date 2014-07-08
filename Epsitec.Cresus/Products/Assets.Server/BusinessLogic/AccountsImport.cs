@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -16,19 +15,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public System.DateTime Import(GuidList<DataObject> accounts, string filename)
+		public DateRange Import(GuidList<DataObject> accounts, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
-			//	Retourne la date de début du plan comptable.
+			//	Retourne la période du plan comptable.
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
 			this.ReadLines (filename);
 			this.InitBeginDate ();
+			this.InitEndDate ();
 			this.AddAccounts ();
 
-			return this.beginDate;
+			return new DateRange (this.beginDate, this.endDate);
 		}
 
 
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private void InitBeginDate()
 		{
-			//	Cherche la date de début du plan comptable. On se fiche de celle de fin.
+			//	Cherche la date de début du plan comptable.
 			int index = this.IndexOfLine ("DATEBEG=");
 			if (index == -1)
 			{
@@ -151,6 +151,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			this.beginDate = date.Value;
+		}
+
+		private void InitEndDate()
+		{
+			//	Cherche la date de fin du plan comptable.
+			int index = this.IndexOfLine ("DATEEND=");
+			if (index == -1)
+			{
+				throw new System.InvalidOperationException ("File does not contain \"DATEEND\" line");
+			}
+
+			var text = this.lines[index].Substring (8);
+			var date = AccountsImport.ParseDate (text);
+
+			if (!date.HasValue)
+			{
+				throw new System.InvalidOperationException (string.Format ("Incorrect date {0}", text));
+			}
+
+			this.endDate = date.Value;
 		}
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
@@ -342,6 +362,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private string[]						lines;
 		private GuidList<DataObject>			accounts;
 		private System.DateTime					beginDate;
+		private System.DateTime					endDate;
 	}
 
 }

@@ -22,11 +22,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			using (var importEngine = new AccountsImport ())
 			{
-				var accounts = mandat.GetData (BaseType.Accounts);
-
 				try
 				{
-					importEngine.Import (accounts, filename);
+					var accounts = new GuidList<DataObject> ();
+					var range = importEngine.Import (accounts, filename);
+
+					mandat.AddAccounts (range, accounts);
+					mandat.CurrentAccountsDateRange = range;
 				}
 				catch
 				{

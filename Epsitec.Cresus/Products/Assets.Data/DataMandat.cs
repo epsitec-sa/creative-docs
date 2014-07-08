@@ -15,14 +15,16 @@ namespace Epsitec.Cresus.Assets.Data
 
 			this.Guid = Guid.NewGuid ();
 
+			this.CurrentAccountsDateRange = DateRange.Empty;
+
 			this.globalSettings = new GlobalSettings ();
 
-			this.assets     = new GuidList<DataObject> ();
-			this.categories = new GuidList<DataObject> ();
-			this.groups     = new GuidList<DataObject> ();
-			this.persons    = new GuidList<DataObject> ();
-			this.accounts   = new GuidList<DataObject> ();
-			this.entries    = new GuidList<DataObject> ();
+			this.assets        = new GuidList<DataObject> ();
+			this.categories    = new GuidList<DataObject> ();
+			this.groups        = new GuidList<DataObject> ();
+			this.persons       = new GuidList<DataObject> ();
+			this.entries       = new GuidList<DataObject> ();
+			this.rangeAccounts = new Dictionary<DateRange, GuidList<DataObject>> ();
 		}
 
 		public GlobalSettings					GlobalSettings
@@ -32,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Data
 				return this.globalSettings;
 			}
 		}
+
 
 		public readonly string					Name;
 		public readonly System.DateTime			StartDate;
@@ -55,7 +58,7 @@ namespace Epsitec.Cresus.Assets.Data
 					return this.persons;
 
 				case BaseType.Accounts:
-					return this.accounts;
+					return this.CurrentAccounts;
 
 				case BaseType.Entries:
 					return this.entries;
@@ -66,12 +69,47 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		private readonly GlobalSettings			globalSettings;
-		private readonly GuidList<DataObject>	assets;
-		private readonly GuidList<DataObject>	categories;
-		private readonly GuidList<DataObject>	groups;
-		private readonly GuidList<DataObject>	persons;
-		private readonly GuidList<DataObject>	accounts;
-		private readonly GuidList<DataObject>	entries;
+		#region Accounts
+		public DateRange						CurrentAccountsDateRange;
+
+		public IEnumerable<DateRange>			AccountsDateRanges
+		{
+			get
+			{
+				return this.rangeAccounts.Select (x => x.Key);
+			}
+		}
+
+		public void AddAccounts(DateRange dateRange, GuidList<DataObject> accounts)
+		{
+			this.rangeAccounts[dateRange] = accounts;
+		}
+
+		private GuidList<DataObject> CurrentAccounts
+		{
+			get
+			{
+				GuidList<DataObject> accounts;
+				if (this.rangeAccounts.TryGetValue (this.CurrentAccountsDateRange, out accounts))
+				{
+					return accounts;
+				}
+				else
+				{
+					// Il vaut mieux retourner une liste vide, plutôt que null.
+					return new GuidList<DataObject> ();
+				}
+			}
+		}
+		#endregion
+
+
+		private readonly GlobalSettings									globalSettings;
+		private readonly GuidList<DataObject>							assets;
+		private readonly GuidList<DataObject>							categories;
+		private readonly GuidList<DataObject>							groups;
+		private readonly GuidList<DataObject>							persons;
+		private readonly GuidList<DataObject>							entries;
+		private readonly Dictionary<DateRange, GuidList<DataObject>>	rangeAccounts;
 	}
 }
