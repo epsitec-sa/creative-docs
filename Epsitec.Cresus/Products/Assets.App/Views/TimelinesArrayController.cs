@@ -481,27 +481,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			if (this.HasAmortizationsOper)
-			{
-				MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
-					new MenuPopup.Item (ToolbarCommand.AmortizationsPreview,   this.OnAmortizationPreview),
-					new MenuPopup.Item (ToolbarCommand.AmortizationsFix,       this.OnAmortizationFix),
-					new MenuPopup.Item (ToolbarCommand.AmortizationsToExtra,   this.OnAmortizationToExtra),
-					new MenuPopup.Item (ToolbarCommand.AmortizationsUnpreview, this.OnAmortizationUnpreview),
-					new MenuPopup.Item (ToolbarCommand.AmortizationsDelete,    this.OnAmortizationDelete),
-					new MenuPopup.Item (),
-					new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
-					new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
-			}
-			else
-			{
-				MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
-					new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
-					new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
-					new MenuPopup.Item (),
-					new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
-					new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
-			}
+			MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
+				new MenuPopup.Item (ToolbarCommand.AmortizationsPreview,   this.OnAmortizationPreview),
+				new MenuPopup.Item (ToolbarCommand.AmortizationsFix,       this.OnAmortizationFix),
+				new MenuPopup.Item (ToolbarCommand.AmortizationsToExtra,   this.OnAmortizationToExtra),
+				new MenuPopup.Item (ToolbarCommand.AmortizationsUnpreview, this.OnAmortizationUnpreview),
+				new MenuPopup.Item (ToolbarCommand.AmortizationsDelete,    this.OnAmortizationDelete),
+				new MenuPopup.Item (),
+				new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
+				new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
+				new MenuPopup.Item (),
+				new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
+				new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
 		}
 
 		private void OnDokeySelect(KeyCode key)

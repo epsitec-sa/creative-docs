@@ -47,6 +47,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void Simplify()
 		{
+			//	Si le menu contient des sections vides, on supprime les séparateurs
+			//	superflus.
+			int i = 0;
+			while (i < this.commands.Count-1)
+			{
+				var c0 = this.commands[i];
+				var c1 = this.commands[i+1];
+
+				if (c0 == ToolbarCommand.Unknown &&
+					c1 == ToolbarCommand.Unknown)  // 2 séparateurs qui se suivent ?
+				{
+					this.commands.RemoveAt (i);
+				}
+				else
+				{
+					i++;
+				}
+			}
+
 			//	Si le menu commence par un séparateur, supprime-le.
 			if (this.commands.Any ())
 			{
