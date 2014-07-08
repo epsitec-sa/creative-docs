@@ -161,13 +161,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
 			{
-				h.ShowImportPopup ();
+				h.ShowImportPopup ();  // choix du fichier puis importation
 			}
 		}
 
 		private void UpdateAfterImport()
 		{
-			this.SelectedRow = -1;
+			this.SelectedRow = -1;  // car le plan comptable peut avoir changé
 			this.UpdateData ();
 		}
 

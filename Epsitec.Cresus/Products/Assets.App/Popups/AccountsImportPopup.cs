@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
 	/// Popup permettant la saisir des informations nécessaires à l'importation d'un plan comptable.
+	/// Un rapport indique l'éventuel impact de l'importation, si elle est effectuée.
 	/// </summary>
 	public class AccountsImportPopup : StackedPopup
 	{
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Label,
 				Width                 = 300,
-				Height                = 15*2,  // place pour 2 lignes
+				Height                = 15*2,  // place pour 2 lignes du rapport
 			});
 
 			this.SetDescriptions (list);
@@ -72,6 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var report = this.Report;
 
+			//	Met à jour le nom du fichier.
 			{
 				var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
@@ -79,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Update ();
 			}
 
+			//	Met à jour le rapport.
 			{
 				var controller = this.GetController (1) as LabelStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);

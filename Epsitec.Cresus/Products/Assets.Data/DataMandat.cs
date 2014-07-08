@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IEnumerable<DateRange>			AccountsDateRanges
 		{
+			//	Retourne la liste des périodes de tous les plans comptables connus.
 			get
 			{
 				return this.rangeAccounts.Select (x => x.Key);
@@ -82,6 +83,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidList<DataObject> GetAccounts(DateRange range)
 		{
+			//	Retourne le plan comptable correspondant à une période.
 			GuidList<DataObject> accounts;
 			if (this.rangeAccounts.TryGetValue (range, out accounts))
 			{
@@ -96,11 +98,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void AddAccounts(DateRange dateRange, GuidList<DataObject> accounts)
 		{
+			//	Prend connaissance d'un nouveau plan comptable, qui est ajouté ou
+			//	qui remplace un existant, selon sa période.
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
 		private GuidList<DataObject> CurrentAccounts
 		{
+			//	Retourne le plan comptable correspondant à la période courante.
 			get
 			{
 				return this.GetAccounts (this.CurrentAccountsDateRange);
