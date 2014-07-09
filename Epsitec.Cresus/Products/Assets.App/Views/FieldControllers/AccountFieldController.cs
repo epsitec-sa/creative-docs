@@ -7,6 +7,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
@@ -46,12 +48,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected override void UpdatePropertyState()
 		{
 			base.UpdatePropertyState ();
-
-			if (this.button != null)
-			{
-				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
-			}
-
 			this.UpdateButtons ();
 		}
 
@@ -70,7 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
-				Text             = this.value,
 			};
 
 			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
@@ -87,6 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			this.CreateGotoAccountButton ();
 			this.UpdatePropertyState ();
+			this.UpdateButtons ();
 
 			//	Connexion des événements.
 			this.button.Clicked += delegate
@@ -120,12 +116,59 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			if (this.button != null)
 			{
-				this.button.Text = this.value;
+				if (string.IsNullOrEmpty (this.value))
+				{
+					this.UpdateButton (null);
+				}
+				else
+				{
+					var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
+
+					if (baseType == BaseType.Unknown)
+					{
+						this.UpdateButton (this.value, "Aucun plan comptable à cette date");
+					}
+					else
+					{
+						var summary = AccountsLogic.GetSummary (this.accessor, baseType, this.value);
+
+						if (string.IsNullOrEmpty (summary))
+						{
+							this.UpdateButton (this.value, "Inconnu dans le plan comptable");
+						}
+						else
+						{
+							this.UpdateButton (summary);
+						}
+					}
+				}
 			}
 
 			if (this.gotoButton != null)
 			{
 				this.gotoButton.Visibility = !string.IsNullOrEmpty (this.value);
+			}
+		}
+
+		private void UpdateButton(string number, string error = null)
+		{
+			if (string.IsNullOrEmpty (number))  // aucun compte défini ?
+			{
+				this.button.Text = null;
+				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
+			}
+			else
+			{
+				if (string.IsNullOrEmpty (error))  // compte connu ?
+				{
+					this.button.Text = number;
+					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
+				}
+				else  // compte inconnu ?
+				{
+					this.button.Text = string.Concat (number, " — ", error);
+					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: true);
+				}
 			}
 		}
 

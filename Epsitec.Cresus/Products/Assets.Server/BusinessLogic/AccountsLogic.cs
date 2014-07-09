@@ -10,6 +10,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AccountsLogic
 	{
+		public static string GetSummary(DataAccessor accessor, BaseType baseType, string number)
+		{
+			//	Retourne le résumé (par exemple "1000 Caisse") d'après le seul numéro.
+			//	Le résumé dépend de la base (BaseType.Accounts+n), qui dépend elle-même
+			//	de la période du plan comptable.
+			if (baseType != BaseType.Unknown)
+			{
+				var data = accessor.Mandat.GetData (baseType);
+
+				foreach (var obj in data)
+				{
+					var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+					if (n == number)
+					{
+						var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+						return string.Join (" ", number, name);
+					}
+				}
+			}
+
+			return null;
+		}
+		
 		public static string GetNumber(DataAccessor accessor, BaseType baseType, Guid guid)
 		{
 			//	Retourne le numéro d'un compte.
