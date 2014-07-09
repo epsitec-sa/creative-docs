@@ -96,6 +96,7 @@
     <Compile Include="Import\AccountsImportHelpers.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
+    <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\MenuPopupItem.cs" />
     <Compile Include="Popups\PopupStack.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="Views\AmortizationsViewState.cs" />
     <Compile Include="Views\AccountsToolbarTreeTableController.cs" />
     <Compile Include="Views\AccountsView.cs" />
-    <Compile Include="Views\AccountGuidFieldController.cs" />
+    <Compile Include="Views\AccountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountFieldController.cs" />
     <Compile Include="Views\AmortizedAmountController.cs" />
     <Compile Include="Views\AccountsTreeGraphicController.cs" />

@@ -129,16 +129,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var name = AssetsLogic.GetSummary (this.accessor, assetGuid);
 
 				var date   = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
-				var debit  = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryDebitAccount);
-				var credit = ObjectProperties.GetObjectPropertyGuid    (entry, null, ObjectField.EntryCreditAccount);
+				var debit  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryDebitAccount);
+				var credit = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryCreditAccount);
 				var stamp  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryStamp);
 				var title  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
 				var value  = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 
-				var d = AccountsLogic.GetNumber (this.accessor, debit);
-				var c = AccountsLogic.GetNumber (this.accessor, credit);
-
-				var node = new EntryNode (entry.Guid, assetGuid, name, date, d, c, stamp, title, value, 1, NodeType.Final, e.Type);
+				var node = new EntryNode (entry.Guid, assetGuid, name, date, debit, credit, stamp, title, value, 1, NodeType.Final, e.Type);
 				nodes.Add (node);
 			}
 

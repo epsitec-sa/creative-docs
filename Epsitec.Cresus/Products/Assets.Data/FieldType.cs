@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Assets.Data
 		AmortizedAmount,
 		Int,
 		Date,
+		Account,		// compte
 		GuidGroup,		// Guid d'un groupe
 		GuidPerson,		// Guid d'une personne
-		GuidAccount,	// Guid d'un compte
 		GuidRatio,		// couple Guid + Ratio (decimal)
 	}
 }

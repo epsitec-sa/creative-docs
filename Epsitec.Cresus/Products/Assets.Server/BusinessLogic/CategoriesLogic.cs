@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static bool HasAccounts(DataObject cat, ObjectField field)
 		{
-			var guid = ObjectProperties.GetObjectPropertyGuid (cat, null, field);
-			return !guid.IsEmpty;
+			var account = ObjectProperties.GetObjectPropertyString (cat, null, field);
+			return !string.IsNullOrEmpty (account);
 		}
 
 

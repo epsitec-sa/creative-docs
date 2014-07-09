@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateDebitController(Widget parent)
 		{
-			this.debitController = new AccountGuidFieldController (this.accessor)
+			this.debitController = new AccountFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
 				Label                 = "Débit",
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateCreditController(Widget parent)
 		{
-			this.creditController = new AccountGuidFieldController (this.accessor)
+			this.creditController = new AccountFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
 				Label                 = "Crédit",
@@ -262,13 +262,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnValueEdited ();
 		}
 
-		private void SetDebit(Guid value)
+		private void SetDebit(string value)
 		{
 			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedDebit, value);
 			this.OnValueEdited ();
 		}
 
-		private void SetCredit(Guid value)
+		private void SetCredit(string value)
 		{
 			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedCredit, value);
 			this.OnValueEdited ();
@@ -343,8 +343,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.amountController.IsReadOnly = this.isReadOnly;
 
 				this.dateController  .Value = null;
-				this.debitController .Value = Guid.Empty;
-				this.creditController.Value = Guid.Empty;
+				this.debitController .Value = null;
+				this.creditController.Value = null;
 				this.stampController .Value = null;
 				this.titleController .Value = null;
 				this.amountController.Value = null;
@@ -407,8 +407,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int								tabIndex;
 		private DateFieldController				dateController;
-		private AccountGuidFieldController		debitController;
-		private AccountGuidFieldController		creditController;
+		private AccountFieldController		debitController;
+		private AccountFieldController		creditController;
 		private StringFieldController			stampController;
 		private StringFieldController			titleController;
 		private DecimalFieldController			amountController;

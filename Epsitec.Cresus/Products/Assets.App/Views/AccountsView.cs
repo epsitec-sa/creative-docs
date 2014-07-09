@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid accountGuid)
+		public static AbstractViewState GetViewState(string account)
 		{
 			//	Retourne un ViewState permettant de voir un compte donné.
 			return new AccountsViewState

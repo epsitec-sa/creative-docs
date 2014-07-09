@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -15,32 +16,24 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'un objet dans la base de données des groupes d'immobilisations.
+	/// Choix d'un compte dans le plan comptable.
 	/// </summary>
-	public class GroupsPopup : AbstractPopup
+	public class AccountsPopup : AbstractPopup
 	{
-		public GroupsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		public AccountsPopup(DataAccessor accessor, string selectedAccount)
 		{
 			this.accessor = accessor;
-			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
 
-			if (this.baseType == BaseType.Groups)
-			{
-				this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
-			}
+			this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
-			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedAccount);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -54,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController ();
 
 				var node = this.nodeGetter[this.visibleSelectedRow];
-				this.OnNavigate (node.Guid);
+				this.OnNavigate (this.GetNumber (node.Guid));
 				this.ClosePopup ();
 			};
 
@@ -75,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix du groupe");
+			this.CreateTitle ("Choix du compte");
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
@@ -93,6 +86,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateController ();
 		}
 
+
+		private string GetNumber(Guid guid)
+		{
+			return AccountsLogic.GetNumber (this.accessor, guid);
+		}
 
 		private void OnCompactOrExpand(int row)
 		{
@@ -142,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / GroupsPopup.rowHeight;
+			int max = (int) (h*0.5) / AccountsPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
@@ -151,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + rows * GroupsPopup.rowHeight
+				   + rows * AccountsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			return new Size (dx, dy);
@@ -161,14 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				if (this.baseType == BaseType.Groups)
-				{
-					return 200;  // colonne nom
-				}
-				else
-				{
-					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.baseType.ToString ()));
-				}
+				return 100 + 300;  // colonnes numéro et compte
 			}
 		}
 
@@ -179,19 +170,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Events handler
-		private void OnNavigate(Guid guid)
+		private void OnNavigate(string account)
 		{
-			this.Navigate.Raise (this, guid);
+			this.Navigate.Raise (this, account);
 		}
 
-		public event EventHandler<Guid> Navigate;
+		public event EventHandler<string> Navigate;
 		#endregion
 
 
 		private const int rowHeight        = 18;
 
 		private readonly DataAccessor					accessor;
-		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;

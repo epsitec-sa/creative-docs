@@ -10,40 +10,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AccountsLogic
 	{
-		public static string GetSummary(DataAccessor accessor, Guid guid)
-		{
-			//	Retourne le résumé d'un compte, du genre:
-			//	"1000 Caisse"
-			var obj = accessor.GetObject (BaseType.Accounts, guid);
-			return AccountsLogic.GetSummary (obj);
-		}
-
-		public static string GetSummary(DataObject obj)
-		{
-			//	Retourne le résumé d'un compte, du genre:
-			//	"1000 Caisse"
-			if (obj == null)
-			{
-				return null;
-			}
-			else
-			{
-				var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
-				var t = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-
-				return string.Join (" ", n, t);
-			}
-		}
-
 		public static string GetNumber(DataAccessor accessor, Guid guid)
 		{
-			//	Retourne le numéro d'un compte, du genre:
-			//	"1000"
-			if (guid == AccountsLogic.MultiGuid)
-			{
-				return "...";
-			}
-
+			//	Retourne le numéro d'un compte.
 			var obj = accessor.GetObject (BaseType.Accounts, guid);
 			if (obj == null)
 			{
@@ -55,14 +24,59 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static Guid MultiGuid
-		{
-			//	Retourne le Guid spécial indiquant une écriture multiple "...".
-			get
-			{
-				return Guid.NewGuid (1);
-			}
-		}
+		//-public static string GetSummary(DataAccessor accessor, Guid guid)
+		//-{
+		//-	//	Retourne le résumé d'un compte, du genre:
+		//-	//	"1000 Caisse"
+		//-	var obj = accessor.GetObject (BaseType.Accounts, guid);
+		//-	return AccountsLogic.GetSummary (obj);
+		//-}
+
+		//-public static string GetSummary(DataObject obj)
+		//-{
+		//-	//	Retourne le résumé d'un compte, du genre:
+		//-	//	"1000 Caisse"
+		//-	if (obj == null)
+		//-	{
+		//-		return null;
+		//-	}
+		//-	else
+		//-	{
+		//-		var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+		//-		var t = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+		//-
+		//-		return string.Join (" ", n, t);
+		//-	}
+		//-}
+
+		//-public static string GetNumber(DataAccessor accessor, Guid guid)
+		//-{
+		//-	//	Retourne le numéro d'un compte, du genre:
+		//-	//	"1000"
+		//-	if (guid == AccountsLogic.MultiGuid)
+		//-	{
+		//-		return "...";
+		//-	}
+		//-
+		//-	var obj = accessor.GetObject (BaseType.Accounts, guid);
+		//-	if (obj == null)
+		//-	{
+		//-		return null;
+		//-	}
+		//-	else
+		//-	{
+		//-		return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+		//-	}
+		//-}
+
+		//-public static Guid MultiGuid
+		//-{
+		//-	//	Retourne le Guid spécial indiquant une écriture multiple "...".
+		//-	get
+		//-	{
+		//-		return Guid.NewGuid (1);
+		//-	}
+		//-}
 
 
 		public static bool Compare(GuidList<DataObject> accounts1, GuidList<DataObject> accounts2)

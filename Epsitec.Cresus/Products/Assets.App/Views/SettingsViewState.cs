@@ -40,9 +40,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseType.Persons:
 					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
 
-				case BaseType.Accounts:
-					return AccountsLogic.GetSummary (accessor, this.SelectedGuid);
-
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
 			}

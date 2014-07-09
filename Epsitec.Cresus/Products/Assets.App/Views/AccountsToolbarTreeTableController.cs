@@ -165,12 +165,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void UpdateAfterImport()
-		{
-			this.SelectedRow = -1;  // car le plan comptable peut avoir changé
-			this.UpdateData ();
-		}
-
 
 		private void ShowDateRangePopup(Widget target)
 		{
@@ -238,6 +232,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ShowContextMenu(Point pos)
 		{
 			//	Pas de menu contextuel.
+		}
+
+
+		private void UpdateAfterImport()
+		{
+			this.SelectedRow = -1;  // car le plan comptable peut avoir changé
+			this.UpdateData ();
 		}
 
 

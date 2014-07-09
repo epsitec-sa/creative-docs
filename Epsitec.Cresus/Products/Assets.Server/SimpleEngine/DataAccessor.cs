@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.Account8:
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
-					return FieldType.GuidAccount;
+					return FieldType.Account;
 
 				default:
 					return FieldType.String;

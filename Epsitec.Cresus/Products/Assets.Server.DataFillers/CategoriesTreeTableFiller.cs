@@ -139,8 +139,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetAccount(DataObject obj, ObjectField field)
 		{
-			var guid = ObjectProperties.GetObjectPropertyGuid (obj, this.Timestamp, field);
-			return AccountsLogic.GetSummary (this.accessor, guid);
+			return ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field);
 		}
 	}
 }

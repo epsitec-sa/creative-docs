@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (userField.Type)
 			{
 				case FieldType.String:
+				case FieldType.Account:
 					var text = ObjectProperties.GetObjectPropertyString (obj, timestamp, userField.Field, synthetic: synthetic, inputValue: inputValue);
 					return new TreeTableCellString (text, cellState);
 
@@ -82,11 +83,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					var person = PersonsLogic.GetSummary (accessor, gp);
 					return new TreeTableCellString (person, cellState);
 
-				case FieldType.GuidAccount:
-					var ga = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, userField.Field, synthetic: synthetic);
-					var account = AccountsLogic.GetSummary (accessor, ga);
-					return new TreeTableCellString (account, cellState);
-
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
 			}
@@ -97,8 +93,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (type)
 			{
 				case FieldType.String:
+				case FieldType.Account:
 				case FieldType.GuidPerson:
-				case FieldType.GuidAccount:
 					return TreeTableColumnType.String;
 
 				case FieldType.Int:

@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
-			this.CreateAccountGuidController (parent, ObjectField.Account1);
-			this.CreateAccountGuidController (parent, ObjectField.Account2);
-			this.CreateAccountGuidController (parent, ObjectField.Account3);
-			this.CreateAccountGuidController (parent, ObjectField.Account4);
-			this.CreateAccountGuidController (parent, ObjectField.Account5);
-			this.CreateAccountGuidController (parent, ObjectField.Account6);
+			this.CreateAccountController (parent, ObjectField.Account1);
+			this.CreateAccountController (parent, ObjectField.Account2);
+			this.CreateAccountController (parent, ObjectField.Account3);
+			this.CreateAccountController (parent, ObjectField.Account4);
+			this.CreateAccountController (parent, ObjectField.Account5);
+			this.CreateAccountController (parent, ObjectField.Account6);
 			//this.CreateAccountGuidController (parent, ObjectField.Account7);
 			//this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}

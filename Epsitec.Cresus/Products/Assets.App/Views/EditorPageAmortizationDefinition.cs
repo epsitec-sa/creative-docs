@@ -36,12 +36,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
-			this.CreateAccountGuidController (parent, ObjectField.Account1);
-			this.CreateAccountGuidController (parent, ObjectField.Account2);
-			this.CreateAccountGuidController (parent, ObjectField.Account3);
-			this.CreateAccountGuidController (parent, ObjectField.Account4);
-			this.CreateAccountGuidController (parent, ObjectField.Account5);
-			this.CreateAccountGuidController (parent, ObjectField.Account6);
+			this.CreateAccountController (parent, ObjectField.Account1);
+			this.CreateAccountController (parent, ObjectField.Account2);
+			this.CreateAccountController (parent, ObjectField.Account3);
+			this.CreateAccountController (parent, ObjectField.Account4);
+			this.CreateAccountController (parent, ObjectField.Account5);
+			this.CreateAccountController (parent, ObjectField.Account6);
 			//this.CreateAccountGuidController (parent, ObjectField.Account7);
 			//this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}
@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (typeSrc)
 			{
 				case FieldType.String:
+				case FieldType.Account:
 					this.ImportFieldString (catObj, fieldSrc, fieldDst);
 					break;
 
@@ -143,10 +144,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case FieldType.Int:
 					this.ImportFieldInt (catObj, fieldSrc, fieldDst);
-					break;
-
-				case FieldType.GuidAccount:
-					this.ImportFieldGuidAccount (catObj, fieldSrc, fieldDst);
 					break;
 
 				default:
@@ -177,15 +174,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var d = ObjectProperties.GetObjectPropertyInt (catObj, null, fieldSrc);
 			if (d.HasValue)
-			{
-				this.accessor.EditionAccessor.SetField (fieldDst, d);
-			}
-		}
-
-		private void ImportFieldGuidAccount(DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
-		{
-			var d = ObjectProperties.GetObjectPropertyGuid (catObj, null, fieldSrc);
-			if (!d.IsEmpty)
 			{
 				this.accessor.EditionAccessor.SetField (fieldDst, d);
 			}

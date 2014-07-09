@@ -169,10 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 						//value = TreeGraphicValue.CreateAmount (d);
 						break;
 
-					case FieldType.GuidAccount:
-						var ga = ObjectProperties.GetObjectPropertyGuid (obj, null, field);
-						var ta = AccountsLogic.GetNumber (this.accessor, ga);
-						value = TreeGraphicValue.CreateText (ta);
+					case FieldType.Account:
+						var ac = ObjectProperties.GetObjectPropertyString (obj, null, field);
+						value = TreeGraphicValue.CreateText (ac);
 						break;
 
 					case FieldType.AmortizedAmount:

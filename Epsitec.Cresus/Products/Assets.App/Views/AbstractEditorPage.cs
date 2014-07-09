@@ -154,12 +154,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
-				else if (controller is AccountGuidFieldController)
+				else if (controller is AccountFieldController)
 				{
-					var c = controller as AccountGuidFieldController;
+					var c = controller as AccountFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
@@ -238,8 +238,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.CreatePersonGuidController (parent, userField.Field);
 					break;
 
-				case FieldType.GuidAccount:
-					this.CreateAccountGuidController (parent, userField.Field);
+				case FieldType.Account:
+					this.CreateAccountController (parent, userField.Field);
 					break;
 
 				default:
@@ -324,9 +324,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return controller;
 		}
 
-		protected AccountGuidFieldController CreateAccountGuidController(Widget parent, ObjectField field)
+		protected AccountFieldController CreateAccountController(Widget parent, ObjectField field)
 		{
-			var controller = new AccountGuidFieldController (this.accessor)
+			var controller = new AccountFieldController (this.accessor)
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldString (of);
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);

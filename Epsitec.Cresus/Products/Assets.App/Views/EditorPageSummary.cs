@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						return PageType.Asset;
 					}
-					else if (userField.Type == FieldType.GuidAccount)
+					else if (userField.Type == FieldType.Account)
 					{
 						return PageType.AmortizationDefinition;
 					}

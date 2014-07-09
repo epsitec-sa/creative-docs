@@ -3,13 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct EntryAccounts
 	{
-		public EntryAccounts(Guid account1, Guid account2, Guid account3, Guid account4, Guid account5, Guid account6, Guid account7, Guid account8)
+		public EntryAccounts(string account1, string account2, string account3, string account4, string account5, string account6, string account7, string account8)
 		{
 			this.Account1 = account1;
 			this.Account2 = account2;
@@ -26,27 +25,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Account1.IsEmpty
-					&& this.Account2.IsEmpty
-					&& this.Account3.IsEmpty
-					&& this.Account4.IsEmpty
-					&& this.Account5.IsEmpty
-					&& this.Account6.IsEmpty
-					&& this.Account7.IsEmpty
-					&& this.Account8.IsEmpty;
+				return string.IsNullOrEmpty (this.Account1)
+					&& string.IsNullOrEmpty (this.Account2)
+					&& string.IsNullOrEmpty (this.Account3)
+					&& string.IsNullOrEmpty (this.Account4)
+					&& string.IsNullOrEmpty (this.Account5)
+					&& string.IsNullOrEmpty (this.Account6)
+					&& string.IsNullOrEmpty (this.Account7)
+					&& string.IsNullOrEmpty (this.Account8);
 			}
 		}
 
 
-		public static EntryAccounts Empty = new EntryAccounts (Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty, Guid.Empty);
+		public static EntryAccounts Empty = new EntryAccounts (null, null, null, null, null, null, null, null);
 
-		public readonly Guid					Account1;
-		public readonly Guid					Account2;
-		public readonly Guid					Account3;
-		public readonly Guid					Account4;
-		public readonly Guid					Account5;
-		public readonly Guid					Account6;
-		public readonly Guid					Account7;
-		public readonly Guid					Account8;
+		public readonly string					Account1;
+		public readonly string					Account2;
+		public readonly string					Account3;
+		public readonly string					Account4;
+		public readonly string					Account5;
+		public readonly string					Account6;
+		public readonly string					Account7;
+		public readonly string					Account8;
 	}
 }

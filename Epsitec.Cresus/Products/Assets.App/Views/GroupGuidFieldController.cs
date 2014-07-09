@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	/// <summary>
 	/// Contrôleur permettant de choisir un goupe (champ ObjectField.GroupParent) pour
-	/// les groupes d'immobilisations ou les comptes (plan comptable).
+	/// les groupes d'immobilisations.
 	/// </summary>
 	public class GroupGuidFieldController : AbstractFieldController
 	{
@@ -126,10 +126,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.BaseType == BaseType.Groups)
 			{
 				return GroupsLogic.GetFullName (this.Accessor, guid);
-			}
-			else if (this.BaseType == BaseType.Accounts)
-			{
-				return AccountsLogic.GetSummary (this.Accessor, guid);
 			}
 			else
 			{
