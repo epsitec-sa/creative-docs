@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 {
 	public class AssetsTreeGraphicController : AbstractTreeGraphicController<CumulNode>
 	{

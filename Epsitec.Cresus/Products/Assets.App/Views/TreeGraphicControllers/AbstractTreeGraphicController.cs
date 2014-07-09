@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Core.Helpers;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 {
 	/// <summary>
 	/// Représente graphiquement le contenu d'un TreeTable, sous la forme d'une large zone

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
