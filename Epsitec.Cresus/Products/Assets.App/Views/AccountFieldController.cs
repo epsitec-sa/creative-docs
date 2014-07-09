@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public System.DateTime					Date;
+
 		public string							Value
 		{
 			get
@@ -169,7 +171,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new AccountsPopup (this.accessor, this.Value);
+			var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
+			var popup = new AccountsPopup (this.accessor, baseType, this.Value);
 			
 			popup.Create (this.textField, leftOrRight: true);
 			

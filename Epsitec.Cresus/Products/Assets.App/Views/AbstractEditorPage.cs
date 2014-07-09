@@ -159,6 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var c = controller as AccountFieldController;
 
 					c.EventType     = this.eventType;
+					c.Date          = this.accessor.EditionAccessor.EventDate;
 					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
@@ -328,6 +329,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var controller = new AccountFieldController (this.accessor)
 			{
+				Date      = this.accessor.EditionAccessor.EventDate,
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,

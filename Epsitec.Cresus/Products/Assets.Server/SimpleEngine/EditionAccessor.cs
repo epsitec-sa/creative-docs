@@ -152,6 +152,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public System.DateTime EventDate
+		{
+			//	Retourne la date de l'événement en cours d'édition.
+			get
+			{
+				if (this.dataEvent == null)
+				{
+					return Timestamp.Now.Date;
+				}
+				else
+				{
+					return this.dataEvent.Timestamp.Date;
+				}
+			}
+		}
+
+
 		#region Getters
 		public ComputedAmount? GetFieldComputedAmount(ObjectField field)
 		{

@@ -43,6 +43,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidList<DataObject> GetData(BaseType type)
 		{
+			if (type >= BaseType.Accounts+0 &&
+				type <= BaseType.Accounts+100)
+			{
+				return this.GetAccounts (type);
+			}
+
 			switch (type)
 			{
 				case BaseType.Assets:
@@ -57,14 +63,12 @@ namespace Epsitec.Cresus.Assets.Data
 				case BaseType.Persons:
 					return this.persons;
 
-				case BaseType.Accounts:
-					return this.CurrentAccounts;
-
 				case BaseType.Entries:
 					return this.entries;
 
 				default:
-					return null;
+					// Il vaut mieux retourner une liste vide, plutôt que null.
+					return new GuidList<DataObject> ();
 			}
 		}
 
@@ -81,11 +85,43 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public DateRange GetAccountsDateRange(BaseType baseType)
+		{
+			int rank = baseType - BaseType.Accounts;  // 0..n
+			var ranges = this.AccountsDateRanges.ToArray ();
+
+			if (rank >= 0 && rank < ranges.Length)
+			{
+				return ranges[rank];
+			}
+			else
+			{
+				return DateRange.Empty;
+			}
+		}
+
+		public BaseType GetAccountsBase(System.DateTime date)
+		{
+			//	Retourne la base correspondant à une date.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			var ranges = this.AccountsDateRanges.ToArray ();
+
+			for (int i=ranges.Length-1; i>=0; i--)
+			{
+				if (ranges[i].IsInside (date))
+				{
+					return BaseType.Accounts + i;
+				}
+			}
+
+			return BaseType.Unknown;
+		}
+
 		public GuidList<DataObject> GetAccounts(DateRange range)
 		{
 			//	Retourne le plan comptable correspondant à une période.
 			GuidList<DataObject> accounts;
-			if (this.rangeAccounts.TryGetValue (range, out accounts))
+			if (!range.IsEmpty && this.rangeAccounts.TryGetValue (range, out accounts))
 			{
 				return accounts;
 			}
@@ -103,13 +139,10 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
-		private GuidList<DataObject> CurrentAccounts
+		private GuidList<DataObject> GetAccounts(BaseType baseType)
 		{
-			//	Retourne le plan comptable correspondant à la période courante.
-			get
-			{
-				return this.GetAccounts (this.CurrentAccountsDateRange);
-			}
+			//	Retourne le plan comptable.
+			return this.GetAccounts (this.GetAccountsDateRange (baseType));
 		}
 		#endregion
 

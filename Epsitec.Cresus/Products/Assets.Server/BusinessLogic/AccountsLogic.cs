@@ -10,10 +10,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AccountsLogic
 	{
-		public static string GetNumber(DataAccessor accessor, Guid guid)
+		public static string GetNumber(DataAccessor accessor, BaseType baseType, Guid guid)
 		{
 			//	Retourne le numéro d'un compte.
-			var obj = accessor.GetObject (BaseType.Accounts, guid);
+			var obj = accessor.GetObject (baseType, guid);
 			if (obj == null)
 			{
 				return null;

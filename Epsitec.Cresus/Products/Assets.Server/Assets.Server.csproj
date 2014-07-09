@@ -91,7 +91,7 @@
     <Compile Include="SimpleEngine\DataClipboard.cs" />
     <Compile Include="BusinessLogic\AccountsImport.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
-    <Compile Include="SimpleEngine\DataAccessor.NodeGetter.cs" />
+    <Compile Include="SimpleEngine\GuidNodeGetter.cs" />
     <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />

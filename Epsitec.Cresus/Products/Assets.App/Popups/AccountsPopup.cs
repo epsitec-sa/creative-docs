@@ -20,15 +20,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AccountsPopup : AbstractPopup
 	{
-		public AccountsPopup(DataAccessor accessor, string selectedAccount)
+		public AccountsPopup(DataAccessor accessor, BaseType baseType, string selectedAccount)
 		{
 			this.accessor = accessor;
+			this.baseType = baseType;
 
 			this.controller = new NavigationTreeTableController();
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 
 			this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter);
 
@@ -68,7 +69,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix du compte");
+			string title;
+
+			var range = this.accessor.Mandat.GetAccountsDateRange (this.baseType);
+			if (range.IsEmpty)
+			{
+				title = "Aucun compte dans cette période";
+			}
+			else
+			{
+				title = string.Format ("Choix du compte (période {0})", range.ToNiceString ());
+			}
+
+			this.CreateTitle (title);
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
@@ -89,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private string GetNumber(Guid guid)
 		{
-			return AccountsLogic.GetNumber (this.accessor, guid);
+			return AccountsLogic.GetNumber (this.accessor, this.baseType, guid);
 		}
 
 		private void OnCompactOrExpand(int row)
@@ -182,6 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int rowHeight        = 18;
 
 		private readonly DataAccessor					accessor;
+		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
