@@ -32,12 +32,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			switch (this.BaseType)
+			switch (this.BaseType.Kind)
 			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
 
 				default:

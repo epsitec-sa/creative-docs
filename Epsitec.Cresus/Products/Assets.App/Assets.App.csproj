@@ -252,6 +252,7 @@
     <Compile Include="Views\AssetsView.cs" />
     <Compile Include="Views\SummaryController.cs" />
     <Compile Include="Views\SummaryControllerTile.cs" />
+    <Compile Include="Views\ViewTypeKind.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\EditorPageAmortizationValue.cs" />
     <Compile Include="Views\EditorPageAmortizationDefinition.cs" />

@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var node = this.nodeGetter[firstRow+i];
 
 				int    pin  = node.Pin ? 1 : 0;
-				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType);
+				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType.Kind);
 				string type = StaticDescriptions.GetObjectPageDescription (node.PageType);
 				string desc = node.Description;
 

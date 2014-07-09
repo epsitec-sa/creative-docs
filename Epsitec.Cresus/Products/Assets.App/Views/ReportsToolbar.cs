@@ -6,11 +6,17 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsToolbar : AbstractCommandToolbar
 	{
+		public ReportsToolbar(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
 		protected override void CreateCommands()
 		{
 			this.SetCommandDescription (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");

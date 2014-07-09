@@ -8,38 +8,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class StaticDescriptions
 	{
-		public static string GetViewTypeIcon(ViewType viewType)
+		public static string GetViewTypeIcon(ViewTypeKind kind)
 		{
-			switch (viewType)
+			switch (kind)
 			{
-				case ViewType.Assets:
+				case ViewTypeKind.Assets:
 					return "View.Assets";
 
-				case ViewType.Amortizations:
+				case ViewTypeKind.Amortizations:
 					return "View.Amortizations";
 
-				case ViewType.Entries:
+				case ViewTypeKind.Entries:
 					return "View.Ecritures";
 
-				case ViewType.Categories:
+				case ViewTypeKind.Categories:
 					return "View.Categories";
 
-				case ViewType.Groups:
+				case ViewTypeKind.Groups:
 					return "View.Groups";
 
-				case ViewType.Persons:
+				case ViewTypeKind.Persons:
 					return "View.Persons";
 
-				case ViewType.Reports:
+				case ViewTypeKind.Reports:
 					return "View.Reports";
 
-				case ViewType.AssetsSettings:
+				case ViewTypeKind.AssetsSettings:
 					return "View.AssetsSettings";
 
-				case ViewType.PersonsSettings:
+				case ViewTypeKind.PersonsSettings:
 					return "View.PersonsSettings";
 
-				case ViewType.Accounts:
+				case ViewTypeKind.Accounts:
 					return "View.AccountsSettings";
 
 				default:
@@ -47,40 +47,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public static string GetViewTypeDescription(ViewType viewType)
+		public static string GetViewTypeDescription(ViewTypeKind kind)
 		{
-			switch (viewType)
+			switch (kind)
 			{
-				case ViewType.Assets:
+				case ViewTypeKind.Assets:
 					return "Objets d'immobilisation";
 
-				case ViewType.Amortizations:
+				case ViewTypeKind.Amortizations:
 					return "Amortissements";
 
-				case ViewType.Entries:
+				case ViewTypeKind.Entries:
 					return "Ecritures comptables";
 
-				case ViewType.Categories:
+				case ViewTypeKind.Categories:
 					return "Catégories d'immobilisations";
 
-				case ViewType.Groups:
+				case ViewTypeKind.Groups:
 					return "Groupes";
 
-				case ViewType.Persons:
+				case ViewTypeKind.Persons:
 					return "Contacts";
 
-				case ViewType.Reports:
+				case ViewTypeKind.Reports:
 					return "Rapports et statistiques";
 
-				case ViewType.AssetsSettings:
+				case ViewTypeKind.AssetsSettings:
 					//?return "Réglages — Champs des objets d'immobilisations";
 					return "Champs des objets d'immobilisations";
 
-				case ViewType.PersonsSettings:
+				case ViewTypeKind.PersonsSettings:
 					//?return "Réglages — Champs des contacts";
 					return "Champs des contacts";
 
-				case ViewType.Accounts:
+				case ViewTypeKind.Accounts:
 					//?return "Réglages — Plan comptable";
 					return "Plan comptable";
 

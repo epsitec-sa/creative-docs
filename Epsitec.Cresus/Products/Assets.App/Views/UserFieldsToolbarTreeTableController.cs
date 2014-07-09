@@ -24,13 +24,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = true;
 
-			switch (this.baseType)
+			switch (this.baseType.Kind)
 			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AssetsSettings);
 					break;
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					this.title = AbstractView.GetViewTitle (this.accessor, ViewType.PersonsSettings);
 					break;
 

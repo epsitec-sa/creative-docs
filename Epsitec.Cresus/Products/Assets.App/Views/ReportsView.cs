@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateToolbar(Widget parent)
 		{
-			this.toolbar = new ReportsToolbar ();
+			this.toolbar = new ReportsToolbar (this.accessor);
 			this.toolbar.CreateUI (parent);
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)

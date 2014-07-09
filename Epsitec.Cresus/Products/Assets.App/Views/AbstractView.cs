@@ -177,41 +177,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 		{
-			if (viewType >= ViewType.Accounts &&
-				viewType <= ViewType.Accounts+100)
+			switch (viewType.Kind)
 			{
-				var baseType = BaseType.Accounts + (viewType - ViewType.Accounts);
-				return new AccountsView (accessor, toolbar, baseType);
-			}
-
-			switch (viewType)
-			{
-				case ViewType.Assets:
+				case ViewTypeKind.Assets:
 					return new AssetsView (accessor, toolbar);
 
-				case ViewType.Amortizations:
+				case ViewTypeKind.Amortizations:
 					return new AmortizationsView (accessor, toolbar);
 
-				case ViewType.Categories:
+				case ViewTypeKind.Categories:
 					return new CategoriesView (accessor, toolbar);
 
-				case ViewType.Groups:
+				case ViewTypeKind.Groups:
 					return new GroupsView (accessor, toolbar);
 
-				case ViewType.Persons:
+				case ViewTypeKind.Persons:
 					return new PersonsView (accessor, toolbar);
 
-				case ViewType.Reports:
+				case ViewTypeKind.Reports:
 					return new ReportsView (accessor, toolbar, historyViewStates);
 
-				case ViewType.AssetsSettings:
+				case ViewTypeKind.AssetsSettings:
 					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Assets);
 
-				case ViewType.PersonsSettings:
+				case ViewTypeKind.PersonsSettings:
 					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Persons);
 
-				case ViewType.Entries:
+				case ViewTypeKind.Entries:
 					return new EntriesView (accessor, toolbar);
+
+				case ViewTypeKind.Accounts:
+					var baseType = new BaseType (BaseTypeKind.Accounts, viewType.AccountsDateRange);
+					return new AccountsView (accessor, toolbar, baseType);
 
 				default:
 					return null;
@@ -229,11 +226,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne le titre à utiliser pour une vue, incluant le nom du mandat.
 			if (string.IsNullOrEmpty (accessor.Mandat.Name))
 			{
-				return StaticDescriptions.GetViewTypeDescription (viewType);
+				return StaticDescriptions.GetViewTypeDescription (viewType.Kind);
 			}
 			else
 			{
-				return string.Concat (accessor.Mandat.Name, " — ", StaticDescriptions.GetViewTypeDescription (viewType));
+				return string.Concat (accessor.Mandat.Name, " — ", StaticDescriptions.GetViewTypeDescription (viewType.Kind));
 			}
 		}
 

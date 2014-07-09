@@ -12,31 +12,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ViewPopup : AbstractPopup
 	{
-		public List<ViewType>					ViewTypes;
-		public ViewType							SelectedViewType;
+		public List<ViewTypeKind>				ViewTypeKinds;
+		public ViewTypeKind						SelectedViewType;
 
 		protected override Size					DialogSize
 		{
 			get
 			{
-				return new Size (ViewPopup.margins*2 + ViewPopup.buttonSize*ViewTypes.Count, ViewPopup.margins*2 + ViewPopup.buttonSize);
+				return new Size (ViewPopup.margins*2 + ViewPopup.buttonSize*this.ViewTypeKinds.Count, ViewPopup.margins*2 + ViewPopup.buttonSize);
 			}
 		}
 
 		public override void CreateUI()
 		{
-			var frame = this.CreateFrame (ViewPopup.margins, ViewPopup.margins, ViewPopup.buttonSize*ViewTypes.Count, ViewPopup.buttonSize);
+			var frame = this.CreateFrame (ViewPopup.margins, ViewPopup.margins, ViewPopup.buttonSize*this.ViewTypeKinds.Count, ViewPopup.buttonSize);
 
-			foreach (var viewType in this.ViewTypes)
+			foreach (var kind in this.ViewTypeKinds)
 			{
-				this.CreateButton (frame, viewType);
+				this.CreateButton (frame, kind);
 			}
 		}
 
-		protected IconButton CreateButton(Widget parent, ViewType viewType)
+		protected IconButton CreateButton(Widget parent, ViewTypeKind kind)
 		{
-			var icon = StaticDescriptions.GetViewTypeIcon (viewType);
-			var text = StaticDescriptions.GetViewTypeDescription (viewType);
+			var icon = StaticDescriptions.GetViewTypeIcon (kind);
+			var text = StaticDescriptions.GetViewTypeDescription (kind);
 
 			var button = new IconButton
 			{
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock          = DockStyle.Left,
 				IconUri       = Misc.GetResourceIconUri (icon),
 				ButtonStyle   = ButtonStyle.ActivableIcon,
-				ActiveState   = (viewType == this.SelectedViewType) ? ActiveState.Yes : ActiveState.No,
+				ActiveState   = (kind == this.SelectedViewType) ? ActiveState.Yes : ActiveState.No,
 				PreferredSize = new Size (ViewPopup.buttonSize, ViewPopup.buttonSize),
 			};
 
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			button.Clicked += delegate
 			{
 				this.ClosePopup ();
-				this.OnViewTypeClicked (viewType);
+				this.OnViewTypeClicked (kind);
 			};
 
 			return button;
@@ -63,12 +63,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Events handler
-		private void OnViewTypeClicked(ViewType viewType)
+		private void OnViewTypeClicked(ViewTypeKind kind)
 		{
-			this.ViewTypeClicked.Raise (this, viewType);
+			this.ViewTypeClicked.Raise (this, kind);
 		}
 
-		public event EventHandler<ViewType> ViewTypeClicked;
+		public event EventHandler<ViewTypeKind> ViewTypeClicked;
 		#endregion
 
 

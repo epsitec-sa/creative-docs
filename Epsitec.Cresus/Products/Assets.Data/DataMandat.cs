@@ -41,28 +41,25 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidList<DataObject> GetData(BaseType type)
 		{
-			if (type >= BaseType.Accounts+0 &&
-				type <= BaseType.Accounts+100)
+			switch (type.Kind)
 			{
-				return this.GetAccounts (type);
-			}
-
-			switch (type)
-			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					return this.assets;
 
-				case BaseType.Categories:
+				case BaseTypeKind.Categories:
 					return this.categories;
 
-				case BaseType.Groups:
+				case BaseTypeKind.Groups:
 					return this.groups;
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					return this.persons;
 
-				case BaseType.Entries:
+				case BaseTypeKind.Entries:
 					return this.entries;
+
+				case BaseTypeKind.Accounts:
+					return this.GetAccounts (type.AccountsDateRange);
 
 				default:
 					// Il vaut mieux retourner une liste vide, plutôt que null.
@@ -81,36 +78,12 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public DateRange GetAccountsDateRange(BaseType baseType)
-		{
-			int rank = baseType - BaseType.Accounts;  // 0..n
-			var ranges = this.AccountsDateRanges.ToArray ();
-
-			if (rank >= 0 && rank < ranges.Length)
-			{
-				return ranges[rank];
-			}
-			else
-			{
-				return DateRange.Empty;
-			}
-		}
-
 		public BaseType GetAccountsBase(System.DateTime date)
 		{
 			//	Retourne la base correspondant à une date.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
-			var ranges = this.AccountsDateRanges.ToArray ();
-
-			for (int i=ranges.Length-1; i>=0; i--)
-			{
-				if (ranges[i].IsInside (date))
-				{
-					return BaseType.Accounts + i;
-				}
-			}
-
-			return BaseType.Unknown;
+			var range = this.GetBestDateRange (date);
+			return new BaseType (BaseTypeKind.Accounts, range);
 		}
 
 		public GuidList<DataObject> GetAccounts(DateRange range)
@@ -135,10 +108,14 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
-		private GuidList<DataObject> GetAccounts(BaseType baseType)
+		private DateRange GetBestDateRange(System.DateTime date)
 		{
-			//	Retourne le plan comptable.
-			return this.GetAccounts (this.GetAccountsDateRange (baseType));
+			//	Retourne la période comptable correspondant à une date donnée.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			return this.AccountsDateRanges
+				.Reverse ()
+				.Where (x => x.IsInside (date))
+				.FirstOrDefault ();
 		}
 		#endregion
 

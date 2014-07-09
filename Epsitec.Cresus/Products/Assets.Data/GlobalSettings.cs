@@ -308,12 +308,12 @@ namespace Epsitec.Cresus.Assets.Data
 		private List<UserField> GetUserFieldsList(BaseType baseType)
 		{
 			//	Retourne la liste des rubriques utilisateur d'une base.
-			switch (baseType)
+			switch (baseType.Kind)
 			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					return this.assetsFields;
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					return this.personsFields;
 
 				default:

@@ -9,11 +9,17 @@ using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainToolbar : AbstractCommandToolbar
 	{
+		public MainToolbar(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
 		protected override void CreateCommands()
 		{
 			this.SetCommandDescription (ToolbarCommand.NewMandat,        "Main.New",              "Nouveau mandat");
@@ -31,10 +37,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
 			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
 
-			foreach (var viewType in MainToolbar.ViewTypes)
+			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
-				var command = MainToolbar.GetViewCommand (viewType);
-				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (viewType), StaticDescriptions.GetViewTypeDescription (viewType));
+				var command = MainToolbar.GetViewCommand (kind);
+				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind));
 			}
 		}
 
@@ -138,29 +144,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateViewTypeButtons()
 		{
-			foreach (var viewType in MainToolbar.ViewTypes)
+			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
-				if (!MainToolbar.PopupViewTypes.Contains (viewType))
+				if (!MainToolbar.PopupViewTypeKinds.Contains (kind))
 				{
-					this.CreateViewTypeButton (viewType);
+					this.CreateViewTypeButton (kind);
 				}
 			}
 		}
 
-		private IconButton CreateViewTypeButton(ViewType viewType)
+		private IconButton CreateViewTypeButton(ViewTypeKind kind)
 		{
-			var command = MainToolbar.GetViewCommand (viewType);
-			return this.CreateViewTypeButton (viewType, command);
+			var command = MainToolbar.GetViewCommand (kind);
+			return this.CreateViewTypeButton (kind, command);
 		}
 
-		private IconButton CreateViewTypeButton(ViewType view, ToolbarCommand command)
+		private IconButton CreateViewTypeButton(ViewTypeKind kind, ToolbarCommand command)
 		{
 			var button = this.CreateCommandButton (DockStyle.Left, command);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 
 			button.Clicked += delegate
 			{
-				this.ViewType = view;
+				this.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
 				this.OnViewChanged (this.viewType);
 			};
 
@@ -209,13 +215,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewTypeCommands()
 		{
-			foreach (var viewType in MainToolbar.ViewTypes)
+			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
-				var command = MainToolbar.GetViewCommand (viewType);
-				this.SetCommandActivate (command, this.viewType == viewType);
+				var command = MainToolbar.GetViewCommand (kind);
+				this.SetCommandActivate (command, this.viewType.Kind == kind);
 			}
 
-			bool ap = MainToolbar.PopupViewTypes.Contains (this.viewType);
+			bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
 			this.buttonPopup.ActiveState = ap ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -251,83 +257,83 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var popup = new ViewPopup ()
 			{
-				ViewTypes        = MainToolbar.PopupViewTypes.ToList (),
-				SelectedViewType = this.viewType,
+				ViewTypeKinds    = MainToolbar.PopupViewTypeKinds.ToList (),
+				SelectedViewType = this.viewType.Kind,
 			};
 
 			popup.Create (target, leftOrRight: false);
 
-			popup.ViewTypeClicked += delegate (object sender, ViewType viewType)
+			popup.ViewTypeClicked += delegate (object sender, ViewTypeKind kind)
 			{
-				this.ViewType = viewType;
+				this.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
 				this.OnViewChanged (this.viewType);
 			};
 		}
 
 
-		private static ToolbarCommand GetViewCommand(ViewType viewType)
+		private static ToolbarCommand GetViewCommand(ViewTypeKind kind)
 		{
-			switch (viewType)
+			switch (kind)
 			{
-				case ViewType.Assets:
+				case ViewTypeKind.Assets:
 					return ToolbarCommand.ViewTypeAssets;
 
-				case ViewType.Amortizations:
+				case ViewTypeKind.Amortizations:
 					return ToolbarCommand.ViewTypeAmortizations;
 
-				case ViewType.Entries:
+				case ViewTypeKind.Entries:
 					return ToolbarCommand.ViewTypeEcritures;
 
-				case ViewType.Categories:
+				case ViewTypeKind.Categories:
 					return ToolbarCommand.ViewTypeCategories;
 
-				case ViewType.Groups:
+				case ViewTypeKind.Groups:
 					return ToolbarCommand.ViewTypeGroups;
 
-				case ViewType.Persons:
+				case ViewTypeKind.Persons:
 					return ToolbarCommand.ViewTypePersons;
 
-				case ViewType.Reports:
+				case ViewTypeKind.Reports:
 					return ToolbarCommand.ViewTypeReports;
 
-				case ViewType.AssetsSettings:
+				case ViewTypeKind.AssetsSettings:
 					return ToolbarCommand.ViewTypeAssetsSettings;
 
-				case ViewType.PersonsSettings:
+				case ViewTypeKind.PersonsSettings:
 					return ToolbarCommand.ViewTypePersonsSettings;
 
-				case ViewType.Accounts:
-					return ToolbarCommand.ViewTypeAccountsSettings;
+				case ViewTypeKind.Accounts:
+					return ToolbarCommand.ViewTypeAccounts;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unsupported ViewType {0}", viewType.ToString ()));
+					throw new System.InvalidOperationException (string.Format ("Unsupported ViewType {0}", kind.ToString ()));
 			}
 		}
 
-		private static IEnumerable<ViewType> PopupViewTypes
+		private static IEnumerable<ViewTypeKind> PopupViewTypeKinds
 		{
 			get
 			{
-				yield return ViewType.AssetsSettings;
-				yield return ViewType.PersonsSettings;
-				yield return ViewType.Accounts;
+				yield return ViewTypeKind.AssetsSettings;
+				yield return ViewTypeKind.PersonsSettings;
+				yield return ViewTypeKind.Accounts;
 			}
 		}
 
-		private static IEnumerable<ViewType> ViewTypes
+		private static IEnumerable<ViewTypeKind> ViewTypeKinds
 		{
 			get
 			{
-				yield return ViewType.Assets;
-				yield return ViewType.Amortizations;
-				yield return ViewType.Entries;
-				yield return ViewType.Categories;
-				yield return ViewType.Groups;
-				yield return ViewType.Persons;
-				yield return ViewType.Reports;
-				yield return ViewType.AssetsSettings;
-				yield return ViewType.PersonsSettings;
-				yield return ViewType.Accounts;
+				yield return ViewTypeKind.Assets;
+				yield return ViewTypeKind.Amortizations;
+				yield return ViewTypeKind.Entries;
+				yield return ViewTypeKind.Categories;
+				yield return ViewTypeKind.Groups;
+				yield return ViewTypeKind.Persons;
+				yield return ViewTypeKind.Reports;
+				yield return ViewTypeKind.AssetsSettings;
+				yield return ViewTypeKind.PersonsSettings;
+				yield return ViewTypeKind.Accounts;
 			}
 		}
 

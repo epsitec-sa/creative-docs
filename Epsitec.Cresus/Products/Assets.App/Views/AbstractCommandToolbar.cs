@@ -8,13 +8,16 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractCommandToolbar
 	{
-		public AbstractCommandToolbar()
+		public AbstractCommandToolbar(DataAccessor accessor)
 		{
+			this.accessor = accessor;
+
 			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
 			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
@@ -242,6 +245,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int secondaryToolbarHeight = 24 + 2;
 		public const int separatorWidth         = 11;
 
+
+		protected readonly DataAccessor accessor;
 
 		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;

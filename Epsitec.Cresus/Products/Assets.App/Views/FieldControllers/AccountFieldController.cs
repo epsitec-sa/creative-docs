@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
 
-					if (baseType == BaseType.Unknown)
+					if (baseType.Kind == BaseTypeKind.Unknown)
 					{
 						this.UpdateButton (this.value, "Aucun plan comptable à cette date");
 					}

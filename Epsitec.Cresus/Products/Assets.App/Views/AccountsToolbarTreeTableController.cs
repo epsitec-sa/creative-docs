@@ -57,12 +57,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.NodeGetter.SetParams (null, this.sortingInstructions);
 
-			var rank = this.baseType - BaseType.Accounts;  // 0..n
-			var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Accounts)
 				+ " — "
-				+ range.ToNiceString ();
+				+ this.baseType.AccountsDateRange.ToNiceString ();
 
 			this.topTitle.SetTitle (this.title);
 
@@ -150,6 +147,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void UpdateAfterImport()
+		{
+			this.OnChangeView (ViewType.FromDefaultKind (this.accessor, ViewTypeKind.Accounts));
+		}
+
 
 		private void ShowDateRangePopup(Widget target)
 		{
@@ -162,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				popup.Items.Add ("Période " + range.ToNiceString ());
 
-				if (i == this.baseType - BaseType.Accounts)
+				if (range == this.baseType.AccountsDateRange)
 				{
 					popup.SelectedItem = i;  // sélectionne la période courante actuelle dans le popup
 				}
@@ -174,7 +176,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
-				this.OnChangeView (ViewType.Accounts + rank);
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+				this.OnChangeView (new ViewType(ViewTypeKind.Accounts, range));
 			};
 		}
 
@@ -182,13 +185,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void ShowContextMenu(Point pos)
 		{
 			//	Pas de menu contextuel.
-		}
-
-
-		private void UpdateAfterImport()
-		{
-			this.SelectedRow = -1;  // car le plan comptable peut avoir changé
-			this.UpdateData ();
 		}
 
 

@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.objectsToolbar = new TreeTableToolbar ();
+			this.objectsToolbar = new TreeTableToolbar (this.accessor);
 
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    "Supprimer l'objet d'immobilisation");
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStateAt (leftBox);
 
 			//	Partie droite.
-			this.timelinesToolbar = new TimelinesToolbar ();
+			this.timelinesToolbar = new TimelinesToolbar (this.accessor);
 			this.timelinesToolbar.CreateUI (rightBox);
 			this.timelinesToolbar.TimelinesMode = this.timelinesMode;
 

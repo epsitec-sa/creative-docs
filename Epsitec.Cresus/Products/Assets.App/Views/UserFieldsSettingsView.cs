@@ -156,13 +156,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				ViewType viewType;
 
-				switch (this.baseType)
+				switch (this.baseType.Kind)
 				{
-					case BaseType.Assets:
+					case BaseTypeKind.Assets:
 						viewType = ViewType.AssetsSettings;
 						break;
 
-					case BaseType.Persons:
+					case BaseTypeKind.Persons:
 						viewType = ViewType.PersonsSettings;
 						break;
 

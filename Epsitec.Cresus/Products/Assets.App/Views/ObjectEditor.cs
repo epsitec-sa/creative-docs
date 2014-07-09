@@ -66,25 +66,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.baseType >= BaseType.Accounts &&
-					this.baseType <= BaseType.Accounts+100)
+				switch (this.baseType.Kind)
 				{
-					return PageType.Account;
-				}
-
-				switch (this.baseType)
-				{
-					case BaseType.Categories:
+					case BaseTypeKind.Categories:
 						return PageType.Category;
 
-					case BaseType.Groups:
+					case BaseTypeKind.Groups:
 						return PageType.Group;
 
-					case BaseType.Persons:
+					case BaseTypeKind.Persons:
 						return PageType.Person;
 
-					case BaseType.UserFields:
+					case BaseTypeKind.UserFields:
 						return PageType.UserFields;
+
+					case BaseTypeKind.Accounts:
+						return PageType.Account;
 
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
@@ -272,28 +269,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static IEnumerable<PageType> GetAvailablePages(BaseType baseType, bool hasEvent, EventType type)
 		{
-			if (baseType >= BaseType.Accounts &&
-				baseType <= BaseType.Accounts+100)
+			switch (baseType.Kind)
 			{
-				return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
-			}
-
-			switch (baseType)
-			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					return ObjectEditor.GetObjectAvailablePages (hasEvent, type);
 
-				case BaseType.Categories:
+				case BaseTypeKind.Categories:
 					return ObjectEditor.GetCategoryAvailablePages (hasEvent, type);
 
-				case BaseType.Groups:
+				case BaseTypeKind.Groups:
 					return ObjectEditor.GetGroupAvailablePages (hasEvent, type);
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					return ObjectEditor.GetPersonAvailablePages (hasEvent, type);
 
-				case BaseType.UserFields:
+				case BaseTypeKind.UserFields:
 					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
+
+				case BaseTypeKind.Accounts:
+					return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
 
 				default:
 					return null;

@@ -7,11 +7,17 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
+		public TreeTableToolbar(DataAccessor accessor)
+			: base (accessor)
+		{
+		}
+
 		protected override void CreateCommands()
 		{
 			this.SetCommandDescription (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");

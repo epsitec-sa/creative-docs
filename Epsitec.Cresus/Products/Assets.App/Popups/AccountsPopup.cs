@@ -71,14 +71,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			string title;
 
-			var range = this.accessor.Mandat.GetAccountsDateRange (this.baseType);
-			if (range.IsEmpty)
+			if (this.baseType.AccountsDateRange.IsEmpty)
 			{
 				title = "Aucun compte dans cette période";
 			}
 			else
 			{
-				title = string.Format ("Choix du compte (période {0})", range.ToNiceString ());
+				title = string.Format ("Choix du compte (période {0})", this.baseType.AccountsDateRange.ToNiceString ());
 			}
 
 			this.CreateTitle (title);

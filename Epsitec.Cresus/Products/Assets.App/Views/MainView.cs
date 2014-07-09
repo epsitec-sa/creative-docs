@@ -9,7 +9,6 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Engine;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -35,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			MouseCursorManager.SetWindow (parent.Window);
 
-			this.toolbar = new MainToolbar ();
+			this.toolbar = new MainToolbar (this.accessor);
 			this.toolbar.CreateUI (parent);
 
 			this.viewBox = new FrameBox

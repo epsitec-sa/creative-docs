@@ -66,12 +66,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp)
 		{
-			switch (baseType)
+			switch (baseType.Kind)
 			{
-				case BaseType.Assets:
+				case BaseTypeKind.Assets:
 					return AssetsLogic.GetSummary (accessor, obj.Guid, timestamp);
 
-				case BaseType.Persons:
+				case BaseTypeKind.Persons:
 					return PersonsLogic.GetSummary (accessor, obj.Guid);
 
 				default:
