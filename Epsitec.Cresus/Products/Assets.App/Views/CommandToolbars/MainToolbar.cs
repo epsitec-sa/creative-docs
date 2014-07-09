@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public class MainToolbar : AbstractCommandToolbar
 	{

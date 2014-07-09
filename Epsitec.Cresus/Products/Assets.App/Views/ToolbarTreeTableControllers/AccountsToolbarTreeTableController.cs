@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ToolbarTreeTableControllers
 {
 	public class AccountsToolbarTreeTableController : AbstractToolbarBothTreesController<TreeNode>, IDirty
 	{

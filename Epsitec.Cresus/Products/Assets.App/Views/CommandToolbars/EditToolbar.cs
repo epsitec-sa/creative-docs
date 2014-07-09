@@ -8,20 +8,19 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
-	public class ReportsToolbar : AbstractCommandToolbar
+	public class EditToolbar : AbstractCommandToolbar
 	{
-		public ReportsToolbar(DataAccessor accessor)
+		public EditToolbar(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
+			this.SetCommandDescription (ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
+			this.SetCommandDescription (ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
 		}
 
 
@@ -35,11 +34,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportSelect);
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams);
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport);
+			this.buttonAccept = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Accept);
+			this.buttonCancel = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Cancel);
 
 			return this.toolbar;
 		}
+
+
+		private IconButton buttonAccept;
+		private IconButton buttonCancel;
 	}
 }
