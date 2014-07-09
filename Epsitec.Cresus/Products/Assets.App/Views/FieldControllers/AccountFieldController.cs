@@ -3,9 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
@@ -31,30 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				if (this.value != value)
 				{
 					this.value = value;
-
-					if (this.textField != null)
-					{
-						if (this.ignoreChanges.IsZero)
-						{
-							using (this.ignoreChanges.Enter ())
-							{
-								this.textField.Text = this.value;
-								this.textField.SelectAll ();
-							}
-						}
-					}
-
 					this.UpdateButtons ();
 				}
-			}
-		}
-
-		private void UpdateValue()
-		{
-			using (this.ignoreChanges.Enter ())
-			{
-				this.textField.Text = this.value;
-				this.textField.SelectAll ();
 			}
 		}
 
@@ -68,7 +47,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
+			if (this.button != null)
+			{
+				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
+			}
+
 			this.UpdateButtons ();
 		}
 
@@ -77,21 +60,24 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.CreateUI (parent);
 
-			this.textField = new TextField
+			this.button = new ColoredButton
 			{
-				Parent          = this.frameBox,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = this.EditWidth-AbstractFieldController.lineHeight,
+				Parent           = this.frameBox,
+				HoverColor       = ColorManager.HoverColor,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				TabIndex        = this.TabIndex,
-				Text            = this.value,
+				Margins          = new Margins (0, 10, 0, 0),
+				TabIndex         = this.TabIndex,
+				Text             = this.value,
 			};
 
 			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
 			//	afin de prendre la couleur du bouton principal.
 			var arrowButton = new GlyphButton
 			{
-				Parent           = this.textField,
+				Parent           = this.button,
 				GlyphShape       = GlyphShape.TriangleDown,
 				ButtonStyle      = ButtonStyle.ToolItem,
 				Anchor           = AnchorStyles.Right,
@@ -103,30 +89,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
-			this.textField.TextChanged += delegate
+			this.button.Clicked += delegate
 			{
-				if (this.ignoreChanges.IsZero)
-				{
-					using (this.ignoreChanges.Enter ())
-					{
-						this.Value = this.textField.Text;
-						this.OnValueEdited (this.Field);
-					}
-				}
-			};
-
-			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
-			{
-				bool focused = (bool) e.NewValue;
-
-				if (focused)  // pris le focus ?
-				{
-					this.SetFocus ();
-				}
-				else  // perdu le focus ?
-				{
-					this.UpdateValue ();
-				}
+				this.ShowPopup ();
 			};
 
 			arrowButton.Clicked += delegate
@@ -153,19 +118,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void UpdateButtons()
 		{
+			if (this.button != null)
+			{
+				this.button.Text = this.value;
+			}
+
 			if (this.gotoButton != null)
 			{
 				this.gotoButton.Visibility = !string.IsNullOrEmpty (this.value);
 			}
-		}
-
-
-		public override void SetFocus()
-		{
-			this.textField.SelectAll ();
-			this.textField.Focus ();
-
-			base.SetFocus ();
 		}
 
 
@@ -174,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
 			var popup = new AccountsPopup (this.accessor, baseType, this.Value);
 			
-			popup.Create (this.textField, leftOrRight: true);
+			popup.Create (this.button, leftOrRight: true);
 			
 			popup.Navigate += delegate (object sender, string account)
 			{
@@ -184,7 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private TextField						textField;
+		private ColoredButton					button;
 		private IconButton						gotoButton;
 		private string							value;
 	}
