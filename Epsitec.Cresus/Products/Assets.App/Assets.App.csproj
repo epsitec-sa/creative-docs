@@ -270,8 +270,8 @@
     <Compile Include="Views\CommandToolbars\TimelineToolbar.cs" />
     <Compile Include="Views\CommandToolbars\EditToolbar.cs" />
     <Compile Include="Views\CommandToolbars\TreeTableToolbar.cs" />
-    <Compile Include="Views\ToolbarCommand.cs" />
-    <Compile Include="Views\ToolbarCommandState.cs" />
+    <Compile Include="Views\CommandToolbars\ToolbarCommand.cs" />
+    <Compile Include="Views\CommandToolbars\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
