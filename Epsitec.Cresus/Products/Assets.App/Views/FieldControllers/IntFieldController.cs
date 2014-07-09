@@ -3,24 +3,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
-	public class AccountFieldController : AbstractFieldController
+	public class IntFieldController : AbstractFieldController
 	{
-		public AccountFieldController(DataAccessor accessor)
+		public IntFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
-		public System.DateTime					Date;
-
-		public string							Value
+		public int?								Value
 		{
 			get
 			{
@@ -38,13 +37,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.textField.Text = this.value;
+								this.textField.Text = IntFieldController.ConvIntToString (this.value);
 								this.textField.SelectAll ();
 							}
 						}
 					}
-
-					this.UpdateButtons ();
 				}
 			}
 		}
@@ -53,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.textField.Text = this.value;
+				this.textField.Text = IntFieldController.ConvIntToString (this.value);
 				this.textField.SelectAll ();
 			}
 		}
@@ -69,7 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			base.UpdatePropertyState ();
 
 			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
-			this.UpdateButtons ();
 		}
 
 
@@ -80,36 +76,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.textField = new TextField
 			{
 				Parent          = this.frameBox,
+				PreferredWidth  = 50,
+				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
-				PreferredWidth  = this.EditWidth-AbstractFieldController.lineHeight,
-				PreferredHeight  = AbstractFieldController.lineHeight,
 				TabIndex        = this.TabIndex,
-				Text            = this.value,
+				Text            = IntFieldController.ConvIntToString (this.value),
 			};
 
-			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
-			//	afin de prendre la couleur du bouton principal.
-			var arrowButton = new GlyphButton
+			var minus = new GlyphButton
 			{
-				Parent           = this.textField,
-				GlyphShape       = GlyphShape.TriangleDown,
-				ButtonStyle      = ButtonStyle.ToolItem,
-				Anchor           = AnchorStyles.Right,
-				PreferredWidth   = AbstractFieldController.lineHeight,
-				PreferredHeight  = AbstractFieldController.lineHeight,
+				Parent        = this.frameBox,
+				GlyphShape    = GlyphShape.Minus,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			this.CreateGotoAccountButton ();
+			var plus = new GlyphButton
+			{
+				Parent        = this.frameBox,
+				GlyphShape    = GlyphShape.Plus,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
+
 			this.UpdatePropertyState ();
 
-			//	Connexion des événements.
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = this.textField.Text;
+						this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
 						this.OnValueEdited (this.Field);
 					}
 				}
@@ -129,36 +129,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			};
 
-			arrowButton.Clicked += delegate
+			minus.Clicked += delegate
 			{
-				this.ShowPopup ();
+				this.AddDelta (-1);
+			};
+
+			plus.Clicked += delegate
+			{
+				this.AddDelta (1);
 			};
 		}
-
-		private void CreateGotoAccountButton()
-		{
-			this.gotoButton = this.CreateGotoButton ();
-
-			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du compte");
-
-			this.gotoButton.Clicked += delegate
-			{
-				if (!string.IsNullOrEmpty (this.value))
-				{
-					var viewState = AccountsView.GetViewState (this.value);
-					this.OnGoto (viewState);
-				}
-			};
-		}
-
-		private void UpdateButtons()
-		{
-			if (this.gotoButton != null)
-			{
-				this.gotoButton.Visibility = !string.IsNullOrEmpty (this.value);
-			}
-		}
-
 
 		public override void SetFocus()
 		{
@@ -169,23 +149,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void ShowPopup()
+		private void AddDelta(int delta)
 		{
-			var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
-			var popup = new AccountsPopup (this.accessor, baseType, this.Value);
-			
-			popup.Create (this.textField, leftOrRight: true);
-			
-			popup.Navigate += delegate (object sender, string account)
+			if (this.value.HasValue)
 			{
-				this.Value = account;
+				this.Value = this.value.Value + delta;
 				this.OnValueEdited (this.Field);
-			};
+			}
+		}
+
+
+		private static string ConvIntToString(int? value)
+		{
+			return TypeConverters.IntToString (value);
+		}
+
+		private static int? ConvStringToInt(string text)
+		{
+			return TypeConverters.ParseInt (text);
 		}
 
 
 		private TextField						textField;
-		private IconButton						gotoButton;
-		private string							value;
+		private int?							value;
 	}
 }

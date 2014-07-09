@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
 	public abstract class AbstractFieldController
 	{

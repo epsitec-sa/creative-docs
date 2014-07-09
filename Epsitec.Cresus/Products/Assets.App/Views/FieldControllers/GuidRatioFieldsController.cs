@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
 	/// <summary>
 	/// Contrôleur permettant de choisir l'ensemble des groupes-ratio de

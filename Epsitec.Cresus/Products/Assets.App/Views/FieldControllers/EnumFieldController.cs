@@ -6,16 +6,28 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
-	public class IntFieldController : AbstractFieldController
+	public class EnumFieldController : AbstractFieldController
 	{
-		public IntFieldController(DataAccessor accessor)
+		public EnumFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
+		}
+
+
+		public Dictionary<int, string>			Enums
+		{
+			get
+			{
+				return this.enums;
+			}
+			set
+			{
+				this.enums = value;
+			}
 		}
 
 
@@ -37,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.textField.Text = IntFieldController.ConvIntToString (this.value);
+								this.textField.Text = this.IntToString (this.value);
 								this.textField.SelectAll ();
 							}
 						}
@@ -50,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.textField.Text = IntFieldController.ConvIntToString (this.value);
+				this.textField.Text = this.IntToString (this.value);
 				this.textField.SelectAll ();
 			}
 		}
@@ -65,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
+			AbstractFieldController.UpdateCombo (this.textField, this.propertyState, this.isReadOnly);
 		}
 
 
@@ -73,34 +85,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.textField = new TextField
+			this.textField = new TextFieldCombo
 			{
 				Parent          = this.frameBox,
-				PreferredWidth  = 50,
-				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
+				PreferredWidth  = this.EditWidth,
+				PreferredHeight = AbstractFieldController.lineHeight,
 				TabIndex        = this.TabIndex,
-				Text            = IntFieldController.ConvIntToString (this.value),
+				Text            = this.IntToString (this.value),
 			};
 
-			var minus = new GlyphButton
-			{
-				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Minus,
-				ButtonStyle   = ButtonStyle.ToolItem,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-			};
-
-			var plus = new GlyphButton
-			{
-				Parent        = this.frameBox,
-				GlyphShape    = GlyphShape.Plus,
-				ButtonStyle   = ButtonStyle.ToolItem,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
-			};
-
+			this.UpdateCombo ();
 			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
@@ -109,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
+						this.Value = this.StringToInt (this.textField.Text);
 						this.OnValueEdited (this.Field);
 					}
 				}
@@ -128,16 +123,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateValue ();
 				}
 			};
-
-			minus.Clicked += delegate
-			{
-				this.AddDelta (-1);
-			};
-
-			plus.Clicked += delegate
-			{
-				this.AddDelta (1);
-			};
 		}
 
 		public override void SetFocus()
@@ -149,28 +134,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void AddDelta(int delta)
+		private string IntToString(int? n)
 		{
-			if (this.value.HasValue)
+			if (n.HasValue)
 			{
-				this.Value = this.value.Value + delta;
-				this.OnValueEdited (this.Field);
+				string s;
+				if (this.enums.TryGetValue (n.Value, out s))
+				{
+					return s;
+				}
+			}
+
+			return null;
+		}
+
+		private int? StringToInt(string s)
+		{
+			foreach (var e in this.enums)
+			{
+				if (s == e.Value)
+				{
+					return e.Key;
+				}
+			}
+
+			return null;
+		}
+
+		private void UpdateCombo()
+		{
+			this.textField.Items.Clear ();
+
+			foreach (var e in this.enums)
+			{
+				this.textField.Items.Add (e.Value);
 			}
 		}
 
 
-		private static string ConvIntToString(int? value)
-		{
-			return TypeConverters.IntToString (value);
-		}
-
-		private static int? ConvStringToInt(string text)
-		{
-			return TypeConverters.ParseInt (text);
-		}
-
-
-		private TextField						textField;
+		private TextFieldCombo					textField;
 		private int?							value;
+		private Dictionary<int, string>			enums;
 	}
 }

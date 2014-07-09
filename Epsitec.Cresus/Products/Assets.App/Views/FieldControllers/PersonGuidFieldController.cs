@@ -11,22 +11,17 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
-	/// <summary>
-	/// Contrôleur permettant de choisir un goupe (champ ObjectField.GroupParent) pour
-	/// les groupes d'immobilisations.
-	/// </summary>
-	public class GroupGuidFieldController : AbstractFieldController
+	public class PersonGuidFieldController : AbstractFieldController
 	{
-		public GroupGuidFieldController(DataAccessor accessor)
+		public PersonGuidFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
 		public DataAccessor						Accessor;
-		public BaseType							BaseType;
 
 		public Guid								Value
 		{
@@ -44,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.button.Text = this.GuidToString (this.value);
 					}
+
+					this.UpdateButtons ();
 				}
 			}
 		}
@@ -61,6 +58,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.button != null)
 			{
 				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
+
+				this.UpdateButtons ();
 			}
 		}
 
@@ -75,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverColor       = ColorManager.HoverColor,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = this.EditWidth,
+				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
@@ -94,8 +93,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
+			this.CreateGotoPersonButton ();
 			this.UpdatePropertyState ();
 
+			//	Connexion des événements.
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
@@ -107,12 +108,42 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void CreateGotoPersonButton()
+		{
+			this.gotoButton = this.CreateGotoButton ();
+
+			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du contact");
+
+			this.gotoButton.Clicked += delegate
+			{
+				if (!this.value.IsEmpty)
+				{
+					var viewState = PersonsView.GetViewState (this.value);
+					this.OnGoto (viewState);
+				}
+			};
+		}
+
+		private void UpdateButtons()
+		{
+			if (this.button != null)
+			{
+				var text = PersonsLogic.GetFullDescription (this.Accessor, this.value);
+				ToolTip.Default.SetToolTip (this.button, text);
+			}
+
+			if (this.gotoButton != null)
+			{
+				this.gotoButton.Visibility = !this.value.IsEmpty;
+			}
+		}
+
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, this.BaseType, this.Value);
+			var popup = new PersonsPopup (this.Accessor, this.Value);
 
-			popup.Create (this.button, leftOrRight: true);
+			popup.Create (this.button, leftOrRight: false);
 
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
@@ -123,18 +154,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string GuidToString(Guid guid)
 		{
-			if (this.BaseType == BaseType.Groups)
-			{
-				return GroupsLogic.GetFullName (this.Accessor, guid);
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
-			}
+			return PersonsLogic.GetSummary (this.Accessor, guid);
 		}
 
 
 		private ColoredButton					button;
+		private IconButton						gotoButton;
 		private Guid							value;
 	}
 }

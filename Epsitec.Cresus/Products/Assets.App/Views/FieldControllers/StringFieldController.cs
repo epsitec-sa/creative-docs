@@ -3,35 +3,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
-	public class EnumFieldController : AbstractFieldController
+	public class StringFieldController : AbstractFieldController
 	{
-		public EnumFieldController(DataAccessor accessor)
+		public StringFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}
 
 
-		public Dictionary<int, string>			Enums
-		{
-			get
-			{
-				return this.enums;
-			}
-			set
-			{
-				this.enums = value;
-			}
-		}
+		public int								LineCount = 1;
 
-
-		public int?								Value
+		public string							Value
 		{
 			get
 			{
@@ -49,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						{
 							using (this.ignoreChanges.Enter ())
 							{
-								this.textField.Text = this.IntToString (this.value);
+								this.textField.Text = this.value;
 								this.textField.SelectAll ();
 							}
 						}
@@ -62,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.textField.Text = this.IntToString (this.value);
+				this.textField.Text = this.value;
 				this.textField.SelectAll ();
 			}
 		}
@@ -77,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateCombo (this.textField, this.propertyState, this.isReadOnly);
+			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
 		}
 
 
@@ -85,17 +73,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			this.textField = new TextFieldCombo
+			if (this.LineCount == 1)
 			{
-				Parent          = this.frameBox,
-				Dock            = DockStyle.Left,
-				PreferredWidth  = this.EditWidth,
-				PreferredHeight = AbstractFieldController.lineHeight,
-				TabIndex        = this.TabIndex,
-				Text            = this.IntToString (this.value),
-			};
+				this.textField = new TextField
+				{
+					Parent          = this.frameBox,
+					Dock            = DockStyle.Left,
+					PreferredWidth  = this.EditWidth,
+					PreferredHeight = AbstractFieldController.lineHeight,
+					TabIndex        = this.TabIndex,
+					Text            = this.value,
+				};
+			}
+			else
+			{
+				this.textField = new TextFieldMulti
+				{
+					Parent          = this.frameBox,
+					Dock            = DockStyle.Left,
+					PreferredWidth  = this.EditWidth,
+					PreferredHeight = StringFieldController.GetMultiHeight (this.LineCount),
+					TabIndex        = this.TabIndex,
+					Text            = this.value,
+				};
+			}
 
-			this.UpdateCombo ();
 			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = this.StringToInt (this.textField.Text);
+						this.Value = this.textField.Text;
 						this.OnValueEdited (this.Field);
 					}
 				}
@@ -134,46 +136,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private string IntToString(int? n)
+		private static int GetMultiHeight(int lineCount)
 		{
-			if (n.HasValue)
-			{
-				string s;
-				if (this.enums.TryGetValue (n.Value, out s))
-				{
-					return s;
-				}
-			}
-
-			return null;
-		}
-
-		private int? StringToInt(string s)
-		{
-			foreach (var e in this.enums)
-			{
-				if (s == e.Value)
-				{
-					return e.Key;
-				}
-			}
-
-			return null;
-		}
-
-		private void UpdateCombo()
-		{
-			this.textField.Items.Clear ();
-
-			foreach (var e in this.enums)
-			{
-				this.textField.Items.Add (e.Value);
-			}
+			//	Calcul empyrique de la hauteur requise pour le widget TextFieldMulti.
+			return 7 + lineCount*15;
 		}
 
 
-		private TextFieldCombo					textField;
-		private int?							value;
-		private Dictionary<int, string>			enums;
+		private AbstractTextField				textField;
+		private string							value;
 	}
 }
