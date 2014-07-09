@@ -66,7 +66,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				switch (baseType)
+				if (this.baseType >= BaseType.Accounts &&
+					this.baseType <= BaseType.Accounts+100)
+				{
+					return PageType.Account;
+				}
+
+				switch (this.baseType)
 				{
 					case BaseType.Categories:
 						return PageType.Category;
@@ -79,9 +85,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case BaseType.UserFields:
 						return PageType.UserFields;
-
-					case BaseType.Accounts:
-						return PageType.Account;
 
 					default:
 						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
@@ -269,6 +272,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static IEnumerable<PageType> GetAvailablePages(BaseType baseType, bool hasEvent, EventType type)
 		{
+			if (baseType >= BaseType.Accounts &&
+				baseType <= BaseType.Accounts+100)
+			{
+				return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
+			}
+
 			switch (baseType)
 			{
 				case BaseType.Assets:
@@ -285,9 +294,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case BaseType.UserFields:
 					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
-
-				case BaseType.Accounts:
-					return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
 
 				default:
 					return null;

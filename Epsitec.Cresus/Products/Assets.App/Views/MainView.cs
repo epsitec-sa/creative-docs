@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.view.CreateUI (this.viewBox);
 				this.view.Goto += this.HandleViewGoto;
 				this.view.ViewStateChanged += this.HandleViewStateChanged;
+				this.view.ChangeView       += this.HandleChangeView;
 
 				this.RestoreCurrentViewState ();
 
@@ -126,6 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.view.Goto -= this.HandleViewGoto;
 				this.view.ViewStateChanged -= this.HandleViewStateChanged;
+				this.view.ChangeView       -= this.HandleChangeView;
 				this.view.Dispose ();
 				this.view = null;
 			}
@@ -139,6 +141,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void HandleViewStateChanged(object sender, AbstractViewState viewState)
 		{
 			this.PushViewState (viewState);
+		}
+
+		private void HandleChangeView(object sender, ViewType viewType)
+		{
+			this.CreateView (viewType);
 		}
 
 

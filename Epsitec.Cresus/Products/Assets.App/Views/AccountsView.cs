@@ -12,12 +12,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AccountsView : AbstractView
 	{
-		public AccountsView(DataAccessor accessor, MainToolbar toolbar)
+		public AccountsView(DataAccessor accessor, MainToolbar toolbar, BaseType baseType)
 			: base (accessor, toolbar)
 		{
-			this.baseType = BaseType.Accounts;
+			this.baseType = baseType;
 
-			this.listController = new AccountsToolbarTreeTableController (this.accessor, BaseType.Accounts);
+			this.listController = new AccountsToolbarTreeTableController (this.accessor, this.baseType);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 
@@ -70,6 +70,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					{
 						this.UpdateAfterListChanged ();
 					}
+				};
+
+				this.listController.ChangeView += delegate (object sender, ViewType viewType)
+				{
+					this.OnChangeView (viewType);
 				};
 			}
 
@@ -139,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne un ViewState permettant de voir un compte donné.
 			return new AccountsViewState
 			{
-				ViewType    = ViewType.AccountsSettings,
+				ViewType    = ViewType.Accounts,
 				ShowGraphic = false,
 			};
 		}
@@ -151,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new AccountsViewState
 				{
-					ViewType    = ViewType.AccountsSettings,
+					ViewType    = ViewType.Accounts,
 					ShowGraphic = this.listController.ShowGraphic,
 				};
 			}

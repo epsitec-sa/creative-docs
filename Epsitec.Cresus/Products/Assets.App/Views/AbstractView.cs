@@ -177,6 +177,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 		{
+			if (viewType >= ViewType.Accounts &&
+				viewType <= ViewType.Accounts+100)
+			{
+				var baseType = BaseType.Accounts + (viewType - ViewType.Accounts);
+				return new AccountsView (accessor, toolbar, baseType);
+			}
+
 			switch (viewType)
 			{
 				case ViewType.Assets:
@@ -202,9 +209,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case ViewType.PersonsSettings:
 					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Persons);
-
-				case ViewType.AccountsSettings:
-					return new AccountsView (accessor, toolbar);
 
 				case ViewType.Entries:
 					return new EntriesView (accessor, toolbar);
@@ -249,6 +253,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<AbstractViewState> ViewStateChanged;
+
+
+		protected void OnChangeView(ViewType viewType)
+		{
+			this.ChangeView.Raise (this, viewType);
+		}
+
+		public event EventHandler<ViewType> ChangeView;
 		#endregion
 
 

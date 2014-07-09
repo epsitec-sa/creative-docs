@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var node  = this.nodeGetter[firstRow+i];
 				var level = node.Level;
 				var type  = node.Type;
-				var obj   = this.accessor.GetObject (BaseType.Accounts, node.Guid);
+				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
 				var number   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
 				var name     = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);

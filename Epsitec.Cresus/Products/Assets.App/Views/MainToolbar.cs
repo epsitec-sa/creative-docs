@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.PersonsSettings:
 					return ToolbarCommand.ViewTypePersonsSettings;
 
-				case ViewType.AccountsSettings:
+				case ViewType.Accounts:
 					return ToolbarCommand.ViewTypeAccountsSettings;
 
 				default:
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				yield return ViewType.AssetsSettings;
 				yield return ViewType.PersonsSettings;
-				yield return ViewType.AccountsSettings;
+				yield return ViewType.Accounts;
 			}
 		}
 
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return ViewType.Reports;
 				yield return ViewType.AssetsSettings;
 				yield return ViewType.PersonsSettings;
-				yield return ViewType.AccountsSettings;
+				yield return ViewType.Accounts;
 			}
 		}
 

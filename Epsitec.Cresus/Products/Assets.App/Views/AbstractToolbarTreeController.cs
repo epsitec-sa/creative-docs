@@ -592,6 +592,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler UpdateAfterDelete;
+
+
+		protected void OnChangeView(ViewType viewType)
+		{
+			this.ChangeView.Raise (this, viewType);
+		}
+
+		public event EventHandler<ViewType> ChangeView;
 		#endregion
 
 

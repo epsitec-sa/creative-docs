@@ -8,17 +8,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ViewType
 	{
-		Unknown,
+		Unknown         = 0,
 
-		Assets,
-		Amortizations,
-		Entries,
-		Categories,
-		Groups,
-		Persons,
-		Reports,
-		AssetsSettings,
-		PersonsSettings,
-		AccountsSettings,
+		Assets          = 1,
+		Amortizations   = 2,
+		Entries         = 3,
+		Categories      = 4,
+		Groups          = 5,
+		Persons         = 6,
+		Reports         = 7,
+		AssetsSettings  = 8,
+		PersonsSettings = 9,
+		Accounts        = 100,	// +n pour les différentes périodes
 	}
 }

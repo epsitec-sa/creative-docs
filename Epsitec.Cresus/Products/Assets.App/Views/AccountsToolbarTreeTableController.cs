@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasMoveOperations = false;
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Accounts);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Accounts, primaryNodeGetter);
+			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
 		}
 
 
@@ -57,9 +57,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.NodeGetter.SetParams (null, this.sortingInstructions);
 
-			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AccountsSettings)
+			var rank = this.baseType - BaseType.Accounts;  // 0..n
+			var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Accounts)
 				+ " — "
-				+ this.accessor.Mandat.CurrentAccountsDateRange.ToNiceString ();
+				+ range.ToNiceString ();
 
 			this.topTitle.SetTitle (this.title);
 
@@ -137,24 +140,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected override void OnNew()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
-			this.ShowCreatePopup (target);
-		}
-
-		protected override void OnDelete()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
-
-			YesNoPopup.Show (target, "Voulez-vous supprimer le compte sélectionné ?", delegate
-			{
-				this.accessor.RemoveObject (BaseType.Accounts, this.SelectedGuid);
-				this.UpdateData ();
-				this.OnUpdateAfterDelete ();
-			});
-		}
-
 		protected override void OnImport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
@@ -177,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				popup.Items.Add ("Période " + range.ToNiceString ());
 
-				if (range == this.accessor.Mandat.CurrentAccountsDateRange)
+				if (i == this.baseType - BaseType.Accounts)
 				{
 					popup.SelectedItem = i;  // sélectionne la période courante actuelle dans le popup
 				}
@@ -189,44 +174,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
-				var range = this.accessor.Mandat.AccountsDateRanges.ToArray()[rank];
-				this.accessor.Mandat.CurrentAccountsDateRange = range;  // change la période courante
-				this.UpdateAfterImport ();
+				this.OnChangeView (ViewType.Accounts + rank);
 			};
 		}
-
-		private void ShowCreatePopup(Widget target)
-		{
-			var popup = new CreateGroupPopup (this.accessor)
-			{
-				ObjectParent = this.SelectedGuid,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.CreateObject (popup.ObjectName, popup.ObjectParent);
-				}
-			};
-		}
-
-		private void CreateObject(string name, Guid parent)
-		{
-			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Accounts, date, name, parent);
-			var obj = this.accessor.GetObject (BaseType.Accounts, guid);
-			System.Diagnostics.Debug.Assert (obj != null);
-			
-			this.UpdateData ();
-
-			this.SelectedGuid = guid;
-			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
-		}
-
-
 
 
 		protected override void ShowContextMenu(Point pos)

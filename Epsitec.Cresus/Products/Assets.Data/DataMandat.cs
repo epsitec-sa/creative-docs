@@ -15,8 +15,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 			this.Guid = Guid.NewGuid ();
 
-			this.CurrentAccountsDateRange = DateRange.Empty;
-
 			this.globalSettings = new GlobalSettings ();
 
 			this.assets        = new GuidList<DataObject> ();
@@ -74,8 +72,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 
 		#region Accounts
-		public DateRange						CurrentAccountsDateRange;
-
 		public IEnumerable<DateRange>			AccountsDateRanges
 		{
 			//	Retourne la liste des périodes de tous les plans comptables connus.

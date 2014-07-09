@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					var range = importEngine.Import (accounts, filename);
 
 					mandat.AddAccounts (range, accounts);
-					mandat.CurrentAccountsDateRange = range;
+					//?mandat.CurrentAccountsDateRange = range;
 				}
 				catch
 				{

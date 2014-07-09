@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewType.PersonsSettings:
 					return "View.PersonsSettings";
 
-				case ViewType.AccountsSettings:
+				case ViewType.Accounts:
 					return "View.AccountsSettings";
 
 				default:
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					//?return "Réglages — Champs des contacts";
 					return "Champs des contacts";
 
-				case ViewType.AccountsSettings:
+				case ViewType.Accounts:
 					//?return "Réglages — Plan comptable";
 					return "Plan comptable";
 

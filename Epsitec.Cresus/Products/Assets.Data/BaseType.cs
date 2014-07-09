@@ -15,6 +15,6 @@ namespace Epsitec.Cresus.Assets.Data
 		Persons    = 4,
 		UserFields = 5,
 		Entries    = 6,
-		Accounts   = 100,			// +n pour les différentes périodes
+		Accounts   = 100,	// +n pour les différentes périodes
 	}
 }
