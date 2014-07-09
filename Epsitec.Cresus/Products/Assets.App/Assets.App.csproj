@@ -266,7 +266,7 @@
     <Compile Include="Views\FieldControllers\DecimalFieldController.cs" />
     <Compile Include="Views\FieldControllers\StringFieldController.cs" />
     <Compile Include="Views\Editors\ObjectEditor.cs" />
-    <Compile Include="Views\AssetsToolbarTimelineController.cs" />
+    <Compile Include="Views\ToolbarTreeTableControllers\AssetsToolbarTimelineController.cs" />
     <Compile Include="Views\CommandToolbars\TimelineToolbar.cs" />
     <Compile Include="Views\CommandToolbars\EditToolbar.cs" />
     <Compile Include="Views\CommandToolbars\TreeTableToolbar.cs" />

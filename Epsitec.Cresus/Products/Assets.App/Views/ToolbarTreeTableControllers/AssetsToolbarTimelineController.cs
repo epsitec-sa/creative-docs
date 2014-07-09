@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ToolbarTreeTableControllers
 {
 	public class AssetsToolbarTimelineController : IDirty
 	{
