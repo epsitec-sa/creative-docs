@@ -6,7 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
 	public class ReportsViewState : AbstractViewState
 	{

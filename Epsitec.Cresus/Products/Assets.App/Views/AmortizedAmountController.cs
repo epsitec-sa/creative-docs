@@ -13,6 +13,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
+using Epsitec.Cresus.Assets.App.Views.ViewStates;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {

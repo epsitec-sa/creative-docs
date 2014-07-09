@@ -7,16 +7,16 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
-	public class CategoriesViewState : AbstractViewState
+	public class PersonsViewState : AbstractViewState
 	{
 		public Guid								SelectedGuid;
 
 
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
-			var o = other as CategoriesViewState;
+			var o = other as PersonsViewState;
 			if (o == null)
 			{
 				return false;
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return CategoriesLogic.GetSummary (accessor, this.SelectedGuid);
+				return PersonsLogic.GetSummary (accessor, this.SelectedGuid);
 			}
 
 			return null;

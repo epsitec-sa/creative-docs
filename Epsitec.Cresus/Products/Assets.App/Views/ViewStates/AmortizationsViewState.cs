@@ -8,31 +8,24 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
-	public class AssetsViewState : AbstractViewState
+	public class AmortizationsViewState : AbstractViewState
 	{
-		public ViewMode							ViewMode;
-		public bool								IsShowEvents;
 		public Timestamp?						SelectedTimestamp;
 		public Guid								SelectedGuid;
-		public Guid								FilterTreeTableGuid;
-		public Guid								FilterTimelinesGuid;
-		public bool								ShowGraphic;
 
 
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
-			var o = other as AssetsViewState;
+			var o = other as AmortizationsViewState;
 			if (o == null)
 			{
 				return false;
 			}
 
 			return this.ViewType          == o.ViewType
-				&& this.ViewMode          == o.ViewMode
 				&& this.PageType          == o.PageType
-				&& this.IsShowEvents      == o.IsShowEvents
 				&& this.SelectedTimestamp == o.SelectedTimestamp
 				&& this.SelectedGuid      == o.SelectedGuid;
 		}

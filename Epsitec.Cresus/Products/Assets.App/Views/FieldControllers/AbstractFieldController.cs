@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.App.Views.ViewStates;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {

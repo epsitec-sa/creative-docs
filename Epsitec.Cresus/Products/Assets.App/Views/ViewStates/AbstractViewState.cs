@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
 	public abstract class AbstractViewState : IGuid
 	{

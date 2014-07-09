@@ -7,42 +7,35 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
-	public class SettingsViewState : AbstractViewState
+	public class CategoriesViewState : AbstractViewState
 	{
-		public BaseType							BaseType;
 		public Guid								SelectedGuid;
-		public bool								ShowGraphic;
 
 
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
-			var o = other as SettingsViewState;
+			var o = other as CategoriesViewState;
 			if (o == null)
 			{
 				return false;
 			}
 
 			return this.ViewType     == o.ViewType
-				&& this.BaseType     == o.BaseType
+				&& this.PageType     == o.PageType
 				&& this.SelectedGuid == o.SelectedGuid;
 		}
 
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			switch (this.BaseType.Kind)
+			if (!this.SelectedGuid.IsEmpty)
 			{
-				case BaseTypeKind.Assets:
-					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
-
-				case BaseTypeKind.Persons:
-					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
-
-				default:
-					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));
+				return CategoriesLogic.GetSummary (accessor, this.SelectedGuid);
 			}
+
+			return null;
 		}
 	}
 }
