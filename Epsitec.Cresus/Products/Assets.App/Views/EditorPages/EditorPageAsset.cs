@@ -7,11 +7,11 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
-	public class EditorPageGroups : AbstractEditorPage
+	public class EditorPageAsset : AbstractEditorPage
 	{
-		public EditorPageGroups(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+		public EditorPageAsset(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
 			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
@@ -21,7 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			this.CreateGuidRatiosController (parent);
+			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Assets))
+			{
+				this.CreateController (parent, userField);
+			}
 		}
 	}
 }

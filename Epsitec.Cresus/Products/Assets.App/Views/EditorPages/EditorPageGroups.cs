@@ -7,11 +7,11 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views
+namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
-	public class EditorPageAmortizationValue : AbstractEditorPage
+	public class EditorPageGroups : AbstractEditorPage
 	{
-		public EditorPageAmortizationValue(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+		public EditorPageGroups(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
 			: base (accessor, baseType, subBaseType, isTimeless)
 		{
 		}
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			parent = this.CreateScrollable (parent);
 
-			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
+			this.CreateGuidRatiosController (parent);
 		}
 	}
 }
