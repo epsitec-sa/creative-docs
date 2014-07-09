@@ -15,7 +15,7 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views.ToolbarTreeTableControllers
+namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	/// <summary>
 	/// Classe de base pour tous les contrôleurs TreeTable et/ou TreeGraphic.
