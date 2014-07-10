@@ -92,7 +92,6 @@
     <Compile Include="BusinessLogic\AccountsImport.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
     <Compile Include="SimpleEngine\GuidNodeGetter.cs" />
-    <Compile Include="SimpleEngine\EmptyMandat.cs" />
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

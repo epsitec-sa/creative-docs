@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 			entries.Add (entry);
 
-			var start  = Timestamp.FixValue;
+			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
 			var e = new DataEvent (start, EventType.Input);
 			entry.AddEvent (e);
 

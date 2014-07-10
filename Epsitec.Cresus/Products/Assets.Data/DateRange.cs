@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public override string ToString()
 		{
 			//	Pour le debug.
-			return string.Join (", ", IncludeFrom.ToString ("dd.MM.yyyy"), ExcludeTo.ToString ("dd.MM.yyyy"));
+			return string.Concat ("From ", IncludeFrom.ToString ("dd.MM.yyyy"), " To ", ExcludeTo.ToString ("dd.MM.yyyy"));
 		}
 
 
