@@ -7,11 +7,12 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
+using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
-namespace Epsitec.Cresus.Assets.App.Views.ViewStates
+namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class UserFieldsSettingsView : AbstractView
 	{

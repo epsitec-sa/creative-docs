@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -162,15 +161,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
 
 					this.gotoButton.Visibility = true;
-					this.gotoButton.Enable     = true;
 				}
 				else  // compte inconnu ?
 				{
 					this.button.Text = string.Concat (number, " — ", error);
 					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: true);
 
-					this.gotoButton.Visibility = true;
-					this.gotoButton.Enable     = false;
+					this.gotoButton.Visibility = false;
 				}
 			}
 		}

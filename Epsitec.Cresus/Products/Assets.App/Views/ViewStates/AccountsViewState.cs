@@ -12,8 +12,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
 	public class AccountsViewState : AbstractViewState
 	{
-		public string							SelectedAccount;
+		public string							SelectedAccount;  // voir (*)
 		public bool								ShowGraphic;
+
+		//	(*)
+		//	SelectedAccount n'est volontairement pas "historié". Ainsi, le retour à une
+		//	vue "plan comptable" contenant un compte sélectionné ne le sélectionne plus.
+		//	De même, la sélection d'un autre compte ne génère pas une nouvelle ligne dans
+		//	l'historique.
+		//	Cela se justifie car les comptes ne sont pas éditables.
+		//	Cette propriété sert uniquement pour le bouton "goto" de AccountFieldController,
+		//	afin de sélectionner le bon compte.
 
 
 		public override LastViewNode GetNavigationNode(DataAccessor accessor)

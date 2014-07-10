@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (!timestamp.HasValue)
 			{
-				timestamp = Timestamp.Now;
+				timestamp = Timestamp.FixValue;
 			}
 
 			this.objectEditor.SetObject (this.selectedGuid, timestamp);

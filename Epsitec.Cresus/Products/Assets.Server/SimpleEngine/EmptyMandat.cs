@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			var categories = mandat.GetData (BaseType.Groups);
 
-			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			var start  = Timestamp.FixValue;
 
 			var o0 = new DataObject ();
 			categories.Add (o0);

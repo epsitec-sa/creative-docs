@@ -67,10 +67,19 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public static Timestamp FixValue
+		{
+			get
+			{
+				return new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			}
+		}
+
 		public static Timestamp FromDate(int year, int month, int day, int position = 0)
 		{
 			return new Timestamp (new System.DateTime (year, month, day), position);
 		}
+
 
 		#region IComparable<Timestamp> Members
 		public int CompareTo(Timestamp other)

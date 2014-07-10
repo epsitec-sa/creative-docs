@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected void AddPersonSample(string title, string firstName, string lastName, string company, string address, string zip, string city, string country, string phone1, string phone2, string phone3, string mail)
 		{
 			var persons = this.accessor.Mandat.GetData (BaseType.Persons);
-			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			var start  = Timestamp.FixValue;
 
 			var o = new DataObject ();
 			persons.Add (o);
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected DataObject AddGroup(DataObject parent, string name, string number)
 		{
 			var groups = this.accessor.Mandat.GetData (BaseType.Groups);
-			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			var start  = Timestamp.FixValue;
 
 			var o = new DataObject ();
 			groups.Add (o);
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected void AddCat(string name, string number, decimal rate, AmortizationType type, Periodicity periodicity, ProrataType prorata, decimal round, decimal residual)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
-			var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+			var start  = Timestamp.FixValue;
 
 			var o = new DataObject ();
 			cats.Add (o);
