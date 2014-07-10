@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
+		public System.DateTime?					ForcedDate;
 		public System.DateTime					Date;
 
 		public string							Value
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				if (!string.IsNullOrEmpty (this.value))
 				{
-					var viewState = AccountsView.GetViewState (this.accessor, this.Date, this.value);
+					var viewState = AccountsView.GetViewState (this.accessor, this.EffectiveDate, this.value);
 					this.OnGoto (viewState);
 				}
 			};
@@ -121,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				}
 				else
 				{
-					var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
+					var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
 
 					if (baseType.AccountsDateRange.IsEmpty)
 					{
@@ -175,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void ShowPopup()
 		{
-			var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
+			var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
 			var popup = new AccountsPopup (this.accessor, baseType, this.Value);
 			
 			popup.Create (this.button, leftOrRight: true);
@@ -185,6 +186,22 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				this.Value = account;
 				this.OnValueEdited (this.Field);
 			};
+		}
+
+
+		private System.DateTime EffectiveDate
+		{
+			get
+			{
+				if (this.ForcedDate.HasValue)
+				{
+					return this.ForcedDate.Value;
+				}
+				else
+				{
+					return this.Date;
+				}
+			}
 		}
 
 

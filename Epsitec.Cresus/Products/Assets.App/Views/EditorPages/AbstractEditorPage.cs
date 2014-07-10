@@ -327,15 +327,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			return controller;
 		}
 
-		protected AccountFieldController CreateAccountController(Widget parent, ObjectField field)
+		protected AccountFieldController CreateAccountController(Widget parent, ObjectField field, System.DateTime? forcedDate = null)
 		{
 			var controller = new AccountFieldController (this.accessor)
 			{
-				Date      = this.accessor.EditionAccessor.EventDate,
-				Field     = field,
-				Label     = this.accessor.GetFieldName (field),
-				EditWidth = AbstractFieldController.maxWidth,
-				TabIndex  = ++this.tabIndex,
+				ForcedDate = forcedDate,
+				Date       = this.accessor.EditionAccessor.EventDate,
+				Field      = field,
+				Label      = this.accessor.GetFieldName (field),
+				EditWidth  = AbstractFieldController.maxWidth,
+				TabIndex   = ++this.tabIndex,
 			};
 
 			controller.CreateUI (parent);

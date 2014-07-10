@@ -42,12 +42,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
 
-			this.CreateAccountController (parent, ObjectField.Account1);
-			this.CreateAccountController (parent, ObjectField.Account2);
-			this.CreateAccountController (parent, ObjectField.Account3);
-			this.CreateAccountController (parent, ObjectField.Account4);
-			this.CreateAccountController (parent, ObjectField.Account5);
-			this.CreateAccountController (parent, ObjectField.Account6);
+			//	On permet de choisir un compte dans le dernier plan comptable importé.
+			//	A voir à l'usage s'il faut faire mieux ?
+			var forcedDate = this.accessor.Mandat.AccountsDateRanges.LastOrDefault ().IncludeFrom;
+
+			this.CreateAccountController (parent, ObjectField.Account1, forcedDate);
+			this.CreateAccountController (parent, ObjectField.Account2, forcedDate);
+			this.CreateAccountController (parent, ObjectField.Account3, forcedDate);
+			this.CreateAccountController (parent, ObjectField.Account4, forcedDate);
+			this.CreateAccountController (parent, ObjectField.Account5, forcedDate);
+			this.CreateAccountController (parent, ObjectField.Account6, forcedDate);
 			//this.CreateAccountGuidController (parent, ObjectField.Account7);
 			//this.CreateAccountGuidController (parent, ObjectField.Account8);
 		}
