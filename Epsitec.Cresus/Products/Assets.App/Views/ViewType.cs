@@ -63,6 +63,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public override string ToString()
+		{
+			//	Pour le debug.
+			return string.Join (", ", Kind.ToString (), AccountsDateRange.ToString ());
+		}
+
+
 		public static ViewType FromDefaultKind(DataAccessor accessor, ViewTypeKind kind)
 		{
 			if (kind == ViewTypeKind.Accounts)

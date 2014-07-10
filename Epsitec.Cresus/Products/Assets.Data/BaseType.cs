@@ -61,6 +61,13 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public override string ToString()
+		{
+			//	Pour le debug.
+			return string.Join (", ", Kind.ToString (), AccountsDateRange.ToString ());
+		}
+
+
 		public static BaseType Unknown    = new BaseType (BaseTypeKind.Unknown);
 		public static BaseType Assets     = new BaseType (BaseTypeKind.Assets);
 		public static BaseType Categories = new BaseType (BaseTypeKind.Categories);

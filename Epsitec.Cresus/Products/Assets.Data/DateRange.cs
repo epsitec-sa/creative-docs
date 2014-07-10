@@ -68,6 +68,13 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public override string ToString()
+		{
+			//	Pour le debug.
+			return string.Join (", ", IncludeFrom.ToString ("dd.MM.yyyy"), ExcludeTo.ToString ("dd.MM.yyyy"));
+		}
+
+
 		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
 		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 
