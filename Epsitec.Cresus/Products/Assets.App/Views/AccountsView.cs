@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new AccountsViewState
 				{
-					ViewType    = ViewType.Accounts,
+					ViewType    = new ViewType (ViewTypeKind.Accounts, this.baseType.AccountsDateRange),
 					ShowGraphic = this.listController.ShowGraphic,
 				};
 			}
