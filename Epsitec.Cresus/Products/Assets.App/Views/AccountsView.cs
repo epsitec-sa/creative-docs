@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -143,13 +144,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(string account)
+		public static AbstractViewState GetViewState(DataAccessor accessor, System.DateTime date, string account)
 		{
-			//	Retourne un ViewState permettant de voir un compte donné.
+			//	Retourne un ViewState permettant de voir un compte donné à une date donnée.
+			var range = accessor.Mandat.GetBestDateRange (date);
+
 			return new AccountsViewState
 			{
-				ViewType    = ViewType.Accounts,
-				ShowGraphic = false,
+				ViewType        = new ViewType(ViewTypeKind.Accounts, range),
+				SelectedAccount = account,
+				ShowGraphic     = false,
 			};
 		}
 
@@ -168,6 +172,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var viewState = value as AccountsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
+
+				var baseType = new BaseType(BaseTypeKind.Accounts, viewState.ViewType.AccountsDateRange);
+				var obj = AccountsLogic.GetAccount(this.accessor, baseType, viewState.SelectedAccount);
+				if (obj == null)
+				{
+					this.selectedGuid = Guid.Empty;
+				}
+				else
+				{
+					this.selectedGuid = obj.Guid;
+				}
 
 				this.listController.ShowGraphic = viewState.ShowGraphic;
 

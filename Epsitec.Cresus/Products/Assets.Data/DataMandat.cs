@@ -108,14 +108,26 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
-		private DateRange GetBestDateRange(System.DateTime date)
+		public DateRange GetBestDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
-			return this.AccountsDateRanges
+			var range = this.AccountsDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
 				.FirstOrDefault ();
+
+			if (range.IncludeFrom == System.DateTime.MinValue)
+			{
+				//	Attention, si FirstOrDefault ne trouve rien, il ne rend pas un
+				//	DateRange.Empty, mais un DateRange avec les deux dates à "zéro",
+				//	c'est-à-dire égales à System.DateTime.MinValue !
+				return DateRange.Empty;
+			}
+			else
+			{
+				return range;
+			}
 		}
 		#endregion
 

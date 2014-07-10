@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				if (!string.IsNullOrEmpty (this.value))
 				{
-					var viewState = AccountsView.GetViewState (this.value);
+					var viewState = AccountsView.GetViewState (this.accessor, this.Date, this.value);
 					this.OnGoto (viewState);
 				}
 			};
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					var baseType = this.accessor.Mandat.GetAccountsBase (this.Date);
 
-					if (baseType.Kind == BaseTypeKind.Unknown)
+					if (baseType.AccountsDateRange.IsEmpty)
 					{
 						this.UpdateButton (this.value, "Aucun plan comptable à cette date");
 					}
@@ -143,11 +143,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					}
 				}
 			}
-
-			if (this.gotoButton != null)
-			{
-				this.gotoButton.Visibility = !string.IsNullOrEmpty (this.value);
-			}
 		}
 
 		private void UpdateButton(string number, string error = null)
@@ -156,6 +151,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.button.Text = null;
 				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
+
+				this.gotoButton.Visibility = false;
 			}
 			else
 			{
@@ -163,11 +160,17 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					this.button.Text = number;
 					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
+
+					this.gotoButton.Visibility = true;
+					this.gotoButton.Enable     = true;
 				}
 				else  // compte inconnu ?
 				{
 					this.button.Text = string.Concat (number, " — ", error);
 					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: true);
+
+					this.gotoButton.Visibility = true;
+					this.gotoButton.Enable     = false;
 				}
 			}
 		}

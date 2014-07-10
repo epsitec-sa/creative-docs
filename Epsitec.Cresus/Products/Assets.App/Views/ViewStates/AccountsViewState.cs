@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
 	public class AccountsViewState : AbstractViewState
 	{
+		public string							SelectedAccount;
 		public bool								ShowGraphic;
 
 

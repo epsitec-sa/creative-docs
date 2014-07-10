@@ -15,6 +15,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne le résumé (par exemple "1000 Caisse") d'après le seul numéro.
 			//	Le résumé dépend de la base (BaseType.Accounts+n), qui dépend elle-même
 			//	de la période du plan comptable.
+			if (!string.IsNullOrEmpty (number))
+			{
+				var obj = AccountsLogic.GetAccount (accessor, baseType, number);
+
+				if (obj != null)
+				{
+					var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+					return string.Join (" ", number, name);
+				}
+			}
+
+			return null;
+		}
+
+		public static DataObject GetAccount(DataAccessor accessor, BaseType baseType, string number)
+		{
 			if (baseType != BaseType.Unknown)
 			{
 				var data = accessor.Mandat.GetData (baseType);
@@ -24,15 +40,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
 					if (n == number)
 					{
-						var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-						return string.Join (" ", number, name);
+						return obj;
 					}
 				}
 			}
 
 			return null;
 		}
-		
+
 		public static string GetNumber(DataAccessor accessor, BaseType baseType, Guid guid)
 		{
 			//	Retourne le numéro d'un compte.
