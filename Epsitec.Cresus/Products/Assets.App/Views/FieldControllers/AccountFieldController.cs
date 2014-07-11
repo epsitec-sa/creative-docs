@@ -3,15 +3,18 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
+	/// <summary>
+	/// Permet de choisir un compte, soit en éditant directement le numéro, soit en
+	/// choisissant dans une liste.
+	/// </summary>
 	public class AccountFieldController : AbstractFieldController
 	{
 		public AccountFieldController(DataAccessor accessor)
@@ -34,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				if (this.value != value)
 				{
 					this.value = value;
-					this.UpdateButtons ();
+					this.UpdateWidgets ();
 				}
 			}
 		}
@@ -48,7 +51,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected override void UpdatePropertyState()
 		{
 			base.UpdatePropertyState ();
-			this.UpdateButtons ();
+
+			this.UpdateWidgets ();
 		}
 
 
@@ -56,38 +60,58 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.CreateUI (parent);
 
-			this.button = new ColoredButton
+			this.textField = new TextField
 			{
 				Parent           = this.frameBox,
-				HoverColor       = ColorManager.HoverColor,
-				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
+				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight*2,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = this.TabIndex,
 			};
 
-			//	Petit triangle "v" par-dessus la droite du bouton principal, sans fond
-			//	afin de prendre la couleur du bouton principal.
+			//	Petit triangle "v" à droite du champ éditable, pour faire comme un TextFieldCombo.
 			var arrowButton = new GlyphButton
 			{
-				Parent           = this.button,
+				Parent           = this.frameBox,
 				GlyphShape       = GlyphShape.TriangleDown,
-				ButtonStyle      = ButtonStyle.ToolItem,
-				Anchor           = AnchorStyles.Right,
+				ButtonStyle      = ButtonStyle.Combo,
+				Dock             = DockStyle.Left,
 				PreferredWidth   = AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 			};
 
 			this.CreateGotoAccountButton ();
 			this.UpdatePropertyState ();
-			this.UpdateButtons ();
+			this.UpdateWidgets ();
 
 			//	Connexion des événements.
-			this.button.Clicked += delegate
+			this.textField.TextChanged += delegate
 			{
-				this.ShowPopup ();
+				if (this.ignoreChanges.IsZero)
+				{
+					using (this.ignoreChanges.Enter ())
+					{
+						this.Value = this.textField.Text;
+						this.OnValueEdited (this.Field);
+					}
+				}
+			};
+
+			this.textField.IsFocusedChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.hasFocus = true;
+					this.UpdateWidgets ();
+					this.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+					this.hasFocus = false;
+					this.UpdateWidgets ();
+				}
 			};
 
 			arrowButton.Clicked += delegate
@@ -112,78 +136,96 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 		}
 
-		private void UpdateButtons()
+		private void UpdateWidgets()
 		{
-			if (this.button != null)
+			//	Lorsque le widget a le focus, on affiche juste le numéro du compte.
+			//	Lorsque le widget n'a pas le focus, on affiche plus d'informations.
+			//	Par exemple:
+			//	"1000 Caisse"
+			//	"1111 — Inconnu dans le plan comptable"
+			//	En cas d'erreur, le champ éditable change de couleur.
+
+			if (this.textField != null)
 			{
-				if (string.IsNullOrEmpty (this.value))
+				bool error;
+
+				if (string.IsNullOrEmpty (this.value))  // aucun compte ?
 				{
-					this.UpdateButton (null);
+					this.explanationsValue = null;
+					error = false;
 				}
-				else
+				else  // compte présent ?
 				{
+					//	Cherche le plan comptable correspondant à la date.
 					var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
 
-					if (baseType.AccountsDateRange.IsEmpty)
+					if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 					{
-						this.UpdateButton (this.value, "Aucun plan comptable à cette date");
+						this.explanationsValue = AccountFieldController.AddError (this.value, "Aucun plan comptable à cette date");
+						error = true;
 					}
-					else
+					else  // plan comptable trouvé ?
 					{
+						//	Cherche le résumé du compte (numéro et titre).
 						var summary = AccountsLogic.GetSummary (this.accessor, baseType, this.value);
 
-						if (string.IsNullOrEmpty (summary))
+						if (string.IsNullOrEmpty (summary))  // compte inexistant ?
 						{
-							this.UpdateButton (this.value, "Inconnu dans le plan comptable");
+							this.explanationsValue = AccountFieldController.AddError (this.value, "Inconnu dans le plan comptable");
+							error = true;
 						}
 						else
 						{
-							this.UpdateButton (summary);
+							this.explanationsValue = summary;  // par exemple "1000 Caisse"
+							error = false;
 						}
 					}
 				}
+
+				if (this.ignoreChanges.IsZero)
+				{
+					using (this.ignoreChanges.Enter ())
+					{
+						if (this.hasFocus)
+						{
+							//	Si on a le focus, on met juste le numéro du compte.
+							this.textField.Text = this.value;
+						}
+						else
+						{
+							//	Si on a pas le focus, on met le texte explicatif complet.
+							this.textField.Text = this.explanationsValue;
+							this.textField.SelectAll ();
+						}
+					}
+				}
+
+				AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, hasError: error);
 			}
 		}
 
-		private void UpdateButton(string number, string error = null)
+
+		public override void SetFocus()
 		{
-			if (string.IsNullOrEmpty (number))  // aucun compte défini ?
-			{
-				this.button.Text = null;
-				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
+			this.textField.SelectAll ();
+			this.textField.Focus ();
 
-				this.gotoButton.Visibility = false;
-			}
-			else
-			{
-				if (string.IsNullOrEmpty (error))  // compte connu ?
-				{
-					this.button.Text = number;
-					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: false);
-
-					this.gotoButton.Visibility = true;
-				}
-				else  // compte inconnu ?
-				{
-					this.button.Text = string.Concat (number, " — ", error);
-					AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly, isError: true);
-
-					this.gotoButton.Visibility = false;
-				}
-			}
+			base.SetFocus ();
 		}
 
 
 		private void ShowPopup()
 		{
+			//	Affiche le popup pour choisir un compte dans le plan comptable.
 			var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
 			var popup = new AccountsPopup (this.accessor, baseType, this.Value);
 			
-			popup.Create (this.button, leftOrRight: true);
+			popup.Create (this.textField, leftOrRight: true);
 			
 			popup.Navigate += delegate (object sender, string account)
 			{
 				this.Value = account;
+				this.SetFocus ();
 				this.OnValueEdited (this.Field);
 			};
 		}
@@ -193,8 +235,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			get
 			{
-				if (this.ForcedDate.HasValue)
+				if (this.ForcedDate.HasValue)  // y a-t-il une date forcée ?
 				{
+					//	Si oui, elle prend le dessus.
 					return this.ForcedDate.Value;
 				}
 				else
@@ -205,8 +248,33 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private ColoredButton					button;
+		private static string AddError(string text, string error)
+		{
+			//	Retourne un texte explicatif composé du numéro du compte et de l'erreur.
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+			else
+			{
+				if (string.IsNullOrEmpty (error))
+				{
+					return text;
+				}
+				else
+				{
+					return string.Concat (text, AccountFieldController.errorSeparator, error);
+				}
+			}
+		}
+
+		private const string errorSeparator = " — ";
+
+
+		private TextField						textField;
 		private IconButton						gotoButton;
 		private string							value;
+		private string							explanationsValue;
+		private bool							hasFocus;
 	}
 }

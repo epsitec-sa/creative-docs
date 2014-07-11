@@ -263,11 +263,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
-		public static void UpdateButton(ColoredButton button, PropertyState state, bool isReadOnly, bool isError = false)
+		public static void UpdateButton(ColoredButton button, PropertyState state, bool isReadOnly, bool hasError = false)
 		{
 			if (button != null)
 			{
-				button.NormalColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, isError);
+				button.NormalColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
 				button.Enable = !isReadOnly;
 			}
 		}
