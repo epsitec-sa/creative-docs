@@ -209,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent    = footer,
 				Dock      = DockStyle.Fill,
 				BackColor = ColorManager.WindowBackgroundColor,
+				Padding   = new Margins (2, 0, 0, 0),
 			};
 
 			this.dateFieldController.HideAdditionalButtons = true;

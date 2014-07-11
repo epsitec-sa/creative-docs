@@ -151,6 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.debitController = new AccountFieldController (this.accessor)
 			{
+				Date                  = this.accessor.EditionAccessor.EventDate,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Débit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -170,6 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.creditController = new AccountFieldController (this.accessor)
 			{
+				Date                  = this.accessor.EditionAccessor.EventDate,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Crédit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -407,8 +409,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private int								tabIndex;
 		private DateFieldController				dateController;
-		private AccountFieldController		debitController;
-		private AccountFieldController		creditController;
+		private AccountFieldController			debitController;
+		private AccountFieldController			creditController;
 		private StringFieldController			stampController;
 		private StringFieldController			titleController;
 		private DecimalFieldController			amountController;

@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 0, 0, 0),
-				Padding         = new Margins (2),
+				Padding         = new Margins (0, 0, 2, 2),
 			};
 
 			this.CreateLabel ();

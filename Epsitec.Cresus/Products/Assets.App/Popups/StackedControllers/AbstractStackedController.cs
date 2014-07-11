@@ -96,6 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Parent    = parent,
 				Dock      = DockStyle.Fill,
 				BackColor = ColorManager.WindowBackgroundColor,
+				Padding   = new Margins (2, 2, 0, 0),
 			};
 		}
 
