@@ -220,6 +220,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			foreach (var bs in this.GetButtons (this.toolbar.ActualWidth, size))
 			{
+				if (bs.Widget == null)
+				{
+					continue;
+				}
+
 				bs.Widget.Visibility = bs.Visibility;
 
 				if (bs.Visibility)

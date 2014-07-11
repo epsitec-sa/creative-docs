@@ -182,8 +182,13 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected override void CreateCatsSamples()
 		{
-			this.AddCat ("Immobilier", "10", 0.10m, AmortizationType.Linear,     Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m);
-			this.AddCat ("Véhicules",  "20", 0.20m, AmortizationType.Degressive, Periodicity.Annual, ProrataType.Prorata12,  100.0m, 1.0m);
+			this.AddCat ("Immobilier", "10", 0.10m, AmortizationType.Linear,
+				Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m,
+				"1000", "1010", "1600", "1600", "6930", "6900");
+
+			this.AddCat ("Véhicules",  "20", 0.20m, AmortizationType.Degressive,
+				Periodicity.Annual, ProrataType.Prorata12,  100.0m, 1.0m,
+				"1000", "1010", "1530", "1530", "6920", "6900");
 		}
 	}
 }

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (this.baseType.AccountsDateRange.IsEmpty)
 			{
-				title = "Aucun compte dans cette période";
+				title = "Aucun plan comptable à cette date";
 			}
 			else
 			{
