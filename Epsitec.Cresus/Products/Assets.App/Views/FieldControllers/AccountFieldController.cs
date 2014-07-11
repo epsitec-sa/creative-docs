@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void CreateGotoAccountButton()
 		{
+			//	Crée le bouton permettant de sauter dans le plan comptable.
 			this.gotoButton = this.CreateGotoButton ();
 
 			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du compte");
@@ -147,12 +148,14 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			if (this.textField != null)
 			{
+				string explanationsValue;
 				bool error;
 
 				if (string.IsNullOrEmpty (this.value))  // aucun compte ?
 				{
-					this.explanationsValue = null;
+					explanationsValue = null;
 					error = false;
+					this.gotoButton.Visibility = false;
 				}
 				else  // compte présent ?
 				{
@@ -161,8 +164,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 					if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 					{
-						this.explanationsValue = AccountFieldController.AddError (this.value, "Aucun plan comptable à cette date");
+						explanationsValue = AccountFieldController.AddError (this.value, "Aucun plan comptable à cette date");
 						error = true;
+						this.gotoButton.Visibility = false;
 					}
 					else  // plan comptable trouvé ?
 					{
@@ -171,13 +175,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 						if (string.IsNullOrEmpty (summary))  // compte inexistant ?
 						{
-							this.explanationsValue = AccountFieldController.AddError (this.value, "Inconnu dans le plan comptable");
+							explanationsValue = AccountFieldController.AddError (this.value, "Inconnu dans le plan comptable");
 							error = true;
+							this.gotoButton.Visibility = false;
 						}
 						else
 						{
-							this.explanationsValue = summary;  // par exemple "1000 Caisse"
+							explanationsValue = summary;  // par exemple "1000 Caisse"
 							error = false;
+							this.gotoButton.Visibility = true;
 						}
 					}
 				}
@@ -194,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 						else
 						{
 							//	Si on a pas le focus, on met le texte explicatif complet.
-							this.textField.Text = this.explanationsValue;
+							this.textField.Text = explanationsValue;
 							this.textField.SelectAll ();
 						}
 					}
@@ -274,7 +280,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private TextField						textField;
 		private IconButton						gotoButton;
 		private string							value;
-		private string							explanationsValue;
 		private bool							hasFocus;
 	}
 }
