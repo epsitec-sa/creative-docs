@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			this.SetVisibility (2, this.UseModel);
+			this.SetEnable (2, this.UseModel);
 
 			this.okButton.Enable = !string.IsNullOrEmpty (this.PersonName);
 		}

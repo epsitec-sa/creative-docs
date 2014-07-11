@@ -108,6 +108,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color DisableTextColor
+		{
+			get
+			{
+				return Color.FromBrightness (0.7);
+			}
+		}
+
 		public static Color GlyphColor
 		{
 			get

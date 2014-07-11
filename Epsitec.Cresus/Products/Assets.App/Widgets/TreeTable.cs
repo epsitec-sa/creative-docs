@@ -77,6 +77,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				layer.CreateUI ();
 			}
 
+			this.IsEnabledChanged += delegate
+			{
+				foreach (var column in this.treeTableColumns)
+				{
+					column.Enable = this.Enable;
+				}
+			};
+
 			this.AllowsMovement = true;
 			this.AllowsSorting  = true;
 		}

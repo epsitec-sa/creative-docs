@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Nom du mandat",
-				Width                 = DateController.controllerWidth - 3,
+				Width                 = DateController.controllerWidth - 4,
 			});
 
 			list.Add (new StackedControllerDescription  // 3

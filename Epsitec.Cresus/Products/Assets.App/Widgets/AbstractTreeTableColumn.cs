@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	le texte déborde (par exemple "Abracadab...").
 			var font      = Font.DefaultFont;
 			var fontSize  = this.FontSize;
-			var color     = ColorManager.TextColor;
+			var color     = this.Enable ? ColorManager.TextColor : ColorManager.DisableTextColor;
 			var alignment = this.RowContentAlignment;
 
 			this.textLayout.Text            = text;
@@ -405,7 +405,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected Color GetCellColor(bool isHover, CellState cellState)
 		{
-			if ((cellState & CellState.Selected) != 0)
+			if (this.Enable == false)
+			{
+				return ColorManager.TreeTableBackgroundColor;
+			}
+			else if ((cellState & CellState.Selected) != 0)
 			{
 				return ColorManager.SelectionColor;
 			}

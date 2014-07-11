@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Nom",
-				Width                 = DateController.controllerWidth - 3,
+				Width                 = DateController.controllerWidth - 4,
 			});
 
 			this.SetDescriptions (list);

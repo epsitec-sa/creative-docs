@@ -19,6 +19,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController
 	{
+		public bool								Enable
+		{
+			get
+			{
+				return this.treeTable.Enable;
+			}
+			set
+			{
+				this.treeTable.Enable = value;
+				this.scroller.Enable = value;
+			}
+		}
+
+
 		public void CreateUI(Widget parent, int rowHeight = 18, int headerHeight = 22, int footerHeight = 22)
 		{
 			parent.BackColor = ColorManager.TreeTableOutColor;

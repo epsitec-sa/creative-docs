@@ -67,6 +67,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controllerHiddenFrames[rank].Visibility = !visibility;
 		}
 
+		protected void SetEnable(int rank, bool enable)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0 && rank < this.controllers.Count);
+			this.controllers[rank].Enable = enable;
+		}
+
 
 		protected override Size					DialogSize
 		{

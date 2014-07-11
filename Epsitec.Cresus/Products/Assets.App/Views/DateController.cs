@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int controllerHeight = DateController.lineHeight*2 + 4;
 
 		private const int indent          = 30;
-		private const int widgetWidth     = DateFieldController.controllerWidth + (int) (AbstractFieldController.lineHeight*7.5) + 4;
+		private const int widgetWidth     = DateFieldController.controllerWidth + (int) (AbstractFieldController.lineHeight*7.5) + 3;
 		private const int lineHeight      = AbstractFieldController.lineHeight;
 
 

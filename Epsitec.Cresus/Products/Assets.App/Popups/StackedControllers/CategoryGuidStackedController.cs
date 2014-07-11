@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -28,6 +29,18 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.dataFiller = new SingleCategoriesTreeTableFiller (this.accessor, this.nodeGetter);
 		}
 
+
+		public override bool					Enable
+		{
+			get
+			{
+				return this.controller.Enable;
+			}
+			set
+			{
+				this.controller.Enable = value;
+			}
+		}
 
 		public Guid								Value
 		{
@@ -68,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		{
 			this.CreateLabel (parent, labelWidth);
 			var controllerFrame = this.CreateControllerFrame (parent);
+			controllerFrame.Padding = new Margins (2);
 
 			this.controller = new NavigationTreeTableController ();
 			this.controller.CreateUI (controllerFrame, headerHeight: 0, footerHeight: 0);
