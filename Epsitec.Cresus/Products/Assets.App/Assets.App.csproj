@@ -214,7 +214,6 @@
     <Compile Include="Views\TreeGraphicControllers\TreeGraphicState.cs" />
     <Compile Include="Views\TreeGraphicControllers\AbstractTreeGraphicController.cs" />
     <Compile Include="Views\EditorPages\EditorPageAccount.cs" />
-    <Compile Include="Views\EcrituresView.cs" />
     <Compile Include="Views\EditorPages\EditorPageUserField.cs" />
     <Compile Include="Views\CommandDescription.cs" />
     <Compile Include="Views\ToolbarControllers\UserFieldsToolbarTreeTableController.cs" />
