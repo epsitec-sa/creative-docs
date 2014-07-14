@@ -14,12 +14,349 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
-	/// <summary>
-	/// The <c>AbstractFileDialog</c> is used as a base class for every file
-	/// dialog (open, save, etc.) which displays a list of files.
-	/// </summary>
 	public abstract class AbstractFileDialog
 	{
+#if false
+		public AbstractFileDialog()
+		{
+			this.filters = new FilterCollection (null);
+			this.favorites = new List<string> ();
+		}
+
+		public void ChangeTitle(string title)
+		{
+			//	Modifie le titre de la fenêtre du dialogue.
+			this.title = title;
+		}
+
+		public DialogResult Result
+		{
+			//	Indique si le dialogue a été fermé avec 'ouvrir' ou 'annuler'.
+			get
+			{
+				return this.result;
+			}
+		}
+
+		public string InitialDirectory
+		{
+			//	Dossier initial.
+			get;
+			set;
+		}
+
+		public string InitialFileName
+		{
+			//	Nom de fichier initial.
+			get;
+			set;
+		}
+
+		public string FileExtension
+		{
+			//	Extension unique, par exemple ".crdoc".
+			get
+			{
+				return this.fileExtension;
+			}
+			set
+			{
+				this.fileExtension = value;
+				this.filters.Clear ();
+			}
+		}
+
+		public string FileFilterPattern
+		{
+			//	Liste des extensions, par exemple "*.tif|*.jpg".
+			//	Il faut mettre en premier les extensions qu'on souhaite voir.
+			get
+			{
+				return this.fileFilterPattern;
+			}
+			set
+			{
+				this.fileFilterPattern = value;
+				this.filters.Clear ();
+			}
+		}
+
+		public FilterCollection Filters
+		{
+			get
+			{
+				return this.filters;
+			}
+		}
+
+		public bool IsDirectoryRedirected
+		{
+			//	Indique si le dossier passé avec InitialDirectory a dû être
+			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
+			get
+			{
+				return false;
+			}
+		}
+
+		public string FileName
+		{
+			//	Retourne le nom du fichier à ouvrir, ou null si l'utilisateur a choisi
+			//	le bouton 'annuler'.
+			get
+			{
+				return this.filename;
+			}
+		}
+
+		public string[] FileNames
+		{
+			//	Retourne les noms des fichiers à ouvrir, ou null si l'utilisateur a choisi
+			//	le bouton 'annuler'.
+			get
+			{
+				return this.filenames;
+			}
+		}
+
+
+		public DialogResult ShowDialog()
+		{
+			this.CreateWindow ();
+
+			System.Windows.Forms.FileDialog dialog;
+
+			switch (this.FileDialogType)
+			{
+				case Dialogs.FileDialogType.Save:
+					dialog = new System.Windows.Forms.SaveFileDialog ()
+					{
+						CheckFileExists    = false,
+						CheckPathExists    = false,
+					};
+					break;
+
+				default:
+					dialog = new System.Windows.Forms.OpenFileDialog ()
+					{
+						CheckFileExists    = true,
+						CheckPathExists    = true,
+						Multiselect        = this.enableMultipleSelection,
+					};
+					break;
+			}
+
+			dialog.AutoUpgradeEnabled = true;
+			dialog.DereferenceLinks   = true;
+			dialog.AddExtension       = true;
+			dialog.RestoreDirectory   = false;
+			dialog.ShowHelp           = false;
+			dialog.ValidateNames      = true;
+			dialog.Title              = this.title;
+			dialog.InitialDirectory   = this.InitialDirectory;
+			dialog.FileName           = System.IO.Path.GetFileName (this.FileName);
+			dialog.DefaultExt         = this.fileExtension;
+
+			if (this.Filters.Count == 0)
+			{
+				if (string.IsNullOrEmpty (this.fileFilterPattern))
+				{
+					var desc = this.GetExtentionDescription (this.fileExtension);
+					var filter = new FilterItem ("x", desc, this.fileExtension);
+					this.Filters.Add (filter);
+				}
+				else
+				{
+					var desc = this.GetExtentionDescription (this.fileExtension);
+					var filter = new FilterItem ("x", desc, this.fileFilterPattern.Replace ("|", ";"));
+					this.Filters.Add (filter);
+				}
+			}
+			dialog.Filter = this.Filters.FileDialogFilter;
+
+			foreach (var favorite in this.favorites)
+			{
+				var place = new System.Windows.Forms.FileDialogCustomPlace (favorite);
+				dialog.CustomPlaces.Add (place);
+			}
+
+			var windowsResult = dialog.ShowDialog ();
+			this.result = AbstractFileDialog.ConvertWindowsResult (windowsResult);
+
+			if (this.result == DialogResult.Accept)
+			{
+				this.filename  = dialog.FileName;
+				this.filenames = dialog.FileNames;
+
+				this.InitialDirectory = System.IO.Path.GetDirectoryName (this.filename);
+			}
+			else
+			{
+				this.filename  = null;
+				this.filenames = null;
+			}
+
+			return this.result;
+		}
+
+
+		private string GetExtentionDescription(string ext)
+		{
+			if (!string.IsNullOrEmpty (ext))
+			{
+				var settings = this.FileListSettings;
+				var desc = settings.FindDescription (ext);
+
+				if (!string.IsNullOrEmpty (desc))
+				{
+					return desc;
+				}
+			}
+
+			return " ";  // il faut toujours retourner un nom !
+		}
+
+		private IFileExtensionDescription FileListSettings
+		{
+			get
+			{
+				var settings = new FileListSettings (this);
+
+				this.CreateFileExtensionDescriptions (settings);
+
+				return settings;
+			}
+		}
+
+
+		public virtual void PersistWindowBounds()
+		{
+		}
+
+		protected virtual string RedirectPath(string path)
+		{
+			return path;
+		}
+
+		protected abstract IFavoritesSettings FavoritesSettings
+		{
+			get;
+		}
+
+		protected abstract FileDialogType FileDialogType
+		{
+			get;
+		}
+
+		protected virtual string FileTypeLabel
+		{
+			get
+			{
+				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Label.ToSimpleText ();
+			}
+		}
+
+		protected virtual string ActionButtonName
+		{
+			get
+			{
+				switch (this.FileDialogType)
+				{
+					case FileDialogType.New:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New.ToSimpleText ();
+
+					case FileDialogType.Save:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save.ToSimpleText ();
+
+					default:
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open.ToSimpleText ();
+				}
+			}
+		}
+
+
+		protected virtual void CreateOptionsUserInterface()
+		{
+		}
+
+		protected virtual void UpdateOptions()
+		{
+		}
+
+		protected virtual Rectangle GetPersistedWindowBounds(string name)
+		{
+			return Rectangle.Empty;
+		}
+
+
+		protected abstract Rectangle GetOwnerBounds();
+
+		protected abstract void CreateFileExtensionDescriptions(IFileExtensionDescription settings);
+
+		protected abstract void FavoritesAddApplicationFolders();
+
+		protected void AddFavorite(FolderId id)
+		{
+		}
+
+		protected void AddFavorite(string text, string icon, string path)
+		{
+			this.favorites.Add (path);
+		}
+
+		protected abstract void CreateWindow();
+
+		protected void CreateUserInterface(string name, Size windowSize, string title, double cellHeight, Window owner)
+		{
+			this.title = title;
+		}
+
+		protected virtual void CreateFooterOptions(Widget footer)
+		{
+		}
+
+
+
+		private static DialogResult ConvertWindowsResult(System.Windows.Forms.DialogResult windowsResult)
+		{
+			switch (windowsResult)
+			{
+				case System.Windows.Forms.DialogResult.OK:
+					return DialogResult.Accept;
+
+				case System.Windows.Forms.DialogResult.Cancel:
+					return DialogResult.Cancel;
+
+				case System.Windows.Forms.DialogResult.Yes:
+					return DialogResult.Yes;
+
+				case System.Windows.Forms.DialogResult.No:
+					return DialogResult.No;
+
+
+				default:
+					return DialogResult.None;
+			}
+		}
+
+
+
+		public static readonly string NewEmptyDocument = "#NewEmptyDocument#";
+
+		private readonly FilterCollection		filters;
+		private readonly List<string>			favorites;
+
+		private string							title;
+		private DialogResult					result;
+		private string							filename;
+		private string[]						filenames;
+		private string							fileExtension;
+		private string							fileFilterPattern;
+
+		protected Window						window;
+		protected bool							enableNavigation;
+		protected bool							enableMultipleSelection;
+#else
 		public AbstractFileDialog()
 		{
 			this.context = new CommandContext ();
@@ -2449,5 +2786,6 @@ namespace Epsitec.Common.Dialogs
 		private List<FileListJob>			fileListJobs = new List<FileListJob> ();
 		private double						itemViewSize;
 		private string						title;
+#endif
 	}
 }
