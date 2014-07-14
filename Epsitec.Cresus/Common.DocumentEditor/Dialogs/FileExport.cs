@@ -11,7 +11,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	/// <summary>
 	/// Dialogue pour exporter un fichier.
 	/// </summary>
-	public class FileExport : AbstractFileSave
+	public class FileExport : AbstractFile
 	{
 		public FileExport(DocumentEditor editor) : base(editor)
 		{
