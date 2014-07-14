@@ -24,8 +24,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.FileExtension = ".crmod";
 			}
 
-			this.enableNavigation = true;
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.hasOptions              = false;
 		}
 
 		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType

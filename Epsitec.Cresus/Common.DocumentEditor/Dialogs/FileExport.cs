@@ -15,8 +15,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	{
 		public FileExport(DocumentEditor editor) : base(editor)
 		{
-			this.enableNavigation = true;
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.hasOptions              = false;
 		}
 
 		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType

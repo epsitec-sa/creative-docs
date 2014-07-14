@@ -16,7 +16,7 @@ namespace Epsitec.Common.Dialogs
 {
 	public abstract class AbstractFileDialog
 	{
-#if false
+#if true
 		public AbstractFileDialog()
 		{
 			this.filters = new FilterCollection (null);
@@ -196,7 +196,14 @@ namespace Epsitec.Common.Dialogs
 				this.filenames = null;
 			}
 
-			return this.result;
+			if (this.hasOptions && this.result == DialogResult.Accept)
+			{
+				return this.ShowOptionsDialog ();
+			}
+			else
+			{
+				return this.result;
+			}
 		}
 
 
@@ -308,6 +315,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected void CreateUserInterface(string name, Size windowSize, string title, double cellHeight, Window owner)
 		{
+			this.owner = owner;
 			this.title = title;
 		}
 
@@ -315,6 +323,136 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
+
+		#region Options dialog
+		private DialogResult ShowOptionsDialog()
+		{
+			if (this.window == null)
+			{
+				this.CreateOptionsDialog ();
+			}
+
+			this.result = DialogResult.Cancel;
+			this.window.ShowDialog ();
+			return this.result;
+		}
+
+		private void CreateOptionsDialog()
+		{
+			//	Crée la fenêtre et tous les widgets pour peupler le dialogue.
+			this.window = new Window ();
+			this.window.MakeFixedSizeWindow ();
+			this.window.PreventAutoClose = true;
+			this.window.Name = "Options";
+			this.window.Text = this.title;
+			this.window.Owner = this.owner;
+			this.window.Icon = this.owner == null ? null : this.window.Owner.Icon;
+
+			this.SetWindowGeometry (470, 140, false);
+
+			this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
+
+			//	Dans l'ordre de bas en haut :
+			this.CreateFooter ();
+			this.CreateOptionsUserInterface ();
+		}
+
+		private void SetWindowGeometry(double dx, double dy, bool resizable)
+		{
+			this.window.ClientSize = new Size (dx, dy);
+
+			dx = this.window.WindowSize.Width;
+			dy = this.window.WindowSize.Height;  // taille avec le cadre
+
+			Rectangle bounds = this.GetPersistedWindowBounds (this.window.Name);
+
+			if (bounds.IsValid)
+			{
+				if (resizable)
+				{
+					this.window.ClientSize = bounds.Size;
+					dx = this.window.WindowSize.Width;
+					dy = this.window.WindowSize.Height;  // taille avec le cadre
+				}
+
+				bounds.Size = new Size (dx, dy);
+				bounds = ScreenInfo.FitIntoWorkingArea (bounds);
+				this.window.WindowBounds = bounds;
+			}
+			else
+			{
+				Rectangle cb = this.GetOwnerBounds ();
+				this.window.WindowBounds = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
+			}
+
+			this.window.Root.Padding = new Margins (8);
+		}
+
+		private void CreateFooter()
+		{
+			//	Crée le pied du dialogue, avec les boutons 'ouvrir/enregistrer' et 'annuler'.
+			var footer = new Widget (this.window.Root)
+			{
+				PreferredHeight   = 22,
+				Margins           = new Margins (0, 0, 8, 0),
+				Dock              = DockStyle.Bottom,
+				TabIndex          = 6,
+				TabNavigationMode = TabNavigationMode.ForwardTabPassive,
+			};
+
+			//	Dans l'ordre de droite à gauche:
+			var buttonCancel = new Button (footer)
+			{
+				PreferredWidth    = 75,
+				Text              = Epsitec.Common.Dialogs.Res.Strings.Dialog.Generic.Button.Cancel.ToString (),
+				ButtonStyle       = ButtonStyle.DefaultCancel,
+				Dock              = DockStyle.Right,
+				Margins           = new Margins (6, 0, 0, 0),
+				TabIndex          = 2,
+				TabNavigationMode = TabNavigationMode.ActivateOnTab,
+			};
+
+			var buttonOk = new Button (footer)
+			{
+				PreferredWidth    = 85,
+				Text              = this.ActionButtonName,
+				ButtonStyle       = ButtonStyle.DefaultAccept,
+				Dock              = DockStyle.Right,
+				Margins           = new Margins (6, 0, 0, 0),
+				TabIndex          = 1,
+				TabNavigationMode = TabNavigationMode.ActivateOnTab,
+			};
+
+			buttonCancel.Clicked += this.HandleButtonCancelClicked;
+			buttonOk    .Clicked += this.HandleButtonOkClicked;
+		}
+
+		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton 'Annuler' cliqué.
+			this.CloseWindow ();
+			this.result = DialogResult.Cancel;
+		}
+
+		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
+		{
+			//	Bouton 'Ouvrir/Enregistrer' cliqué.
+			this.CloseWindow ();
+			this.result = DialogResult.Accept;
+		}
+
+		private void HandleWindowCloseClicked(object sender)
+		{
+			//	Fenêtre fermée.
+			this.CloseWindow ();
+		}
+
+		private void CloseWindow()
+		{
+			this.window.Owner.MakeActive ();
+			this.window.Hide ();
+		}
+		#endregion
 
 
 		private static DialogResult ConvertWindowsResult(System.Windows.Forms.DialogResult windowsResult)
@@ -326,13 +464,6 @@ namespace Epsitec.Common.Dialogs
 
 				case System.Windows.Forms.DialogResult.Cancel:
 					return DialogResult.Cancel;
-
-				case System.Windows.Forms.DialogResult.Yes:
-					return DialogResult.Yes;
-
-				case System.Windows.Forms.DialogResult.No:
-					return DialogResult.No;
-
 
 				default:
 					return DialogResult.None;
@@ -346,6 +477,7 @@ namespace Epsitec.Common.Dialogs
 		private readonly FilterCollection		filters;
 		private readonly List<string>			favorites;
 
+		private Window							owner;
 		private string							title;
 		private DialogResult					result;
 		private string							filename;
@@ -356,6 +488,7 @@ namespace Epsitec.Common.Dialogs
 		protected Window						window;
 		protected bool							enableNavigation;
 		protected bool							enableMultipleSelection;
+		protected bool							hasOptions;
 #else
 		public AbstractFileDialog()
 		{

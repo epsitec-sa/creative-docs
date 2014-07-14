@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.FileExtension           = ".xml";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.hasOptions              = true;
 		}
 
 
@@ -102,7 +103,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
 			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
-			this.optionsContainer.Visibility = FileExportDialog.showOptions;
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 
@@ -112,7 +112,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			group.PreferredWidth = 200;
 			group.Padding = new Margins (10, 0, 0, 3);
 			group.Dock = DockStyle.StackEnd;
-			group.Margins = new Margins (0, 182, 0, 0);
 			group.Name = "Options";
 
 			this.optionsExportAllButton = new CheckButton (group);

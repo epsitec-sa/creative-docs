@@ -64,7 +64,6 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
 			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
-			this.optionsContainer.Visibility = false;
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 

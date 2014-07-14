@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.FileFilterPattern       = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.hasOptions              = true;
 		}
 
 
@@ -111,7 +112,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.optionsContainer.Margins = new Margins (0, 0, 8, 0);
 			this.optionsContainer.Dock = DockStyle.Bottom;
 			this.optionsContainer.TabNavigationMode = TabNavigationMode.None;
-			this.optionsContainer.Visibility = FileSaveImageDialog.showOptions;
 			this.optionsContainer.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.optionsContainer.Name = "OptionsContainer";
 
@@ -121,7 +121,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			groupZoom.PreferredWidth = 200;
 			groupZoom.Padding = new Margins (10, 0, 0, 3);
 			groupZoom.Dock = DockStyle.StackEnd;
-			groupZoom.Margins = new Margins (0, 182, 0, 0);
 			groupZoom.Name = "ZoomOptions";
 
 			this.optionsZoom1 = new RadioButton (groupZoom);
