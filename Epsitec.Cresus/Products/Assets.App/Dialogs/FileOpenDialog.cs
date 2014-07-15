@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 				OwnerWindow      = parent,
 			};
 
-			var filter = new Epsitec.Common.Dialogs.FilterItem (ext, formatName, ext);
+			var filter = new Epsitec.Common.Dialogs.FilterItem ("x", formatName, ext);
 			dialog.Filters.Add (filter);
 			dialog.FilterIndex = 0;
 

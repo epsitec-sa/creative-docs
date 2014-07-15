@@ -135,30 +135,51 @@ namespace Epsitec.Common.Dialogs
 				return this.GetFixedFileNames ();
 			}
 		}
-		
+
 		public Helpers.FilterCollection			Filters
 		{
-			get { return this.filters; }
+			get
+			{
+				return this.filters;
+			}
 		}
-		
+
 		public int								FilterIndex
 		{
-			get { return this.filterIndex; }
-			set { this.filterIndex = value; }
+			get
+			{
+				return this.filterIndex;
+			}
+			set
+			{
+				this.filterIndex = value;
+			}
 		}
-		
+
 		public string							InitialDirectory
 		{
-			get { return this.dialog.InitialDirectory; }
-			set { this.dialog.InitialDirectory = value; }
+			get
+			{
+				return this.dialog.InitialDirectory;
+			}
+			set
+			{
+				this.dialog.InitialDirectory = value;
+			}
 		}
-		
+
 		public bool								CheckFileExists
 		{
-			get { return this.dialog.CheckFileExists; }
-			set { this.dialog.CheckFileExists = value; }
+			get
+			{
+				return this.dialog.CheckFileExists;
+			}
+			set
+			{
+				this.dialog.CheckFileExists = value;
+			}
 		}
-		
+
 		public bool								PromptForCreation
 		{
 			get;
@@ -170,11 +191,17 @@ namespace Epsitec.Common.Dialogs
 			get;
 			set;
 		}
-		
+
 		public string							Title
 		{
-			get { return this.dialog.Title; }
-			set { this.dialog.Title = value; }
+			get
+			{
+				return this.dialog.Title;
+			}
+			set
+			{
+				this.dialog.Title = value;
+			}
 		}
 		
 		public DialogResult						Result
@@ -250,8 +277,8 @@ namespace Epsitec.Common.Dialogs
 			var fileExt  = System.IO.Path.GetExtension (name).ToLowerInvariant ();
 			var forceExt = this.GetDefaultExtension ();
 
-			if ((forceExt != null) &&
-				(forceExt != fileExt))
+			if (forceExt != null &&
+				forceExt != fileExt)
 			{
 				return string.Concat (name, forceExt);
 			}

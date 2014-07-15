@@ -105,51 +105,93 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		#endregion
-		
+
 		public string							DefaultExt
 		{
-			get { return this.dialog.DefaultExt; }
-			set { this.dialog.DefaultExt = value; }
+			get
+			{
+				return this.dialog.DefaultExt;
+			}
+			set
+			{
+				this.dialog.DefaultExt = value;
+			}
 		}
-		
+
 		public string							FileName
 		{
-			get { return this.dialog.FileName; }
-			set { this.dialog.FileName = value; }
+			get
+			{
+				return this.dialog.FileName;
+			}
+			set
+			{
+				this.dialog.FileName = value;
+			}
 		}
-		
+
 		public string[]							FileNames
 		{
-			get { return this.dialog.FileNames; }
+			get
+			{
+				return this.dialog.FileNames;
+			}
 		}
-		
+
 		public Helpers.FilterCollection			Filters
 		{
-			get { return this.filters; }
+			get
+			{
+				return this.filters;
+			}
 		}
-		
+
 		public int								FilterIndex
 		{
-			get { return this.filterIndex; }
-			set { this.filterIndex = value; }
+			get
+			{
+				return this.filterIndex;
+			}
+			set
+			{
+				this.filterIndex = value;
+			}
 		}
-		
+
 		public string							InitialDirectory
 		{
-			get { return this.dialog.InitialDirectory; }
-			set { this.dialog.InitialDirectory = value; }
+			get
+			{
+				return this.dialog.InitialDirectory;
+			}
+			set
+			{
+				this.dialog.InitialDirectory = value;
+			}
 		}
-		
+
 		public bool								AcceptMultipleSelection
 		{
-			get { return this.dialog.Multiselect; }
-			set { this.dialog.Multiselect = value; }
+			get
+			{
+				return this.dialog.Multiselect;
+			}
+			set
+			{
+				this.dialog.Multiselect = value;
+			}
 		}
-		
+
 		public string							Title
 		{
-			get { return this.dialog.Title; }
-			set { this.dialog.Title = value; }
+			get
+			{
+				return this.dialog.Title;
+			}
+			set
+			{
+				this.dialog.Title = value;
+			}
 		}
 		
 		public DialogResult						Result
