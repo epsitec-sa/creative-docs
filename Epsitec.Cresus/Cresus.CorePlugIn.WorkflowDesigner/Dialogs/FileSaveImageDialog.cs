@@ -23,11 +23,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.owner                   = this.parent.Window;
 			this.InitialDirectory        = FileSaveImageDialog.initialDirectory;
 			this.InitialFileName         = FileSaveImageDialog.initialFilename;
-			this.FileFilterPattern       = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
 			this.fileDialogType          = FileDialogType.Save;
+
+			this.Filters.Add (new FilterItem ("x", "Image", "*.png|*.tif|*.bmp|*.jpg"));
 		}
 
 
@@ -67,14 +68,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
-		{
-			settings.Add (".png", "Image PNG");
-			settings.Add (".tif", "Image TIFF");
-			settings.Add (".bmp", "Image BMP");
-			settings.Add (".jpg", "Image JPEG");
 		}
 
 		protected override void FavoritesAddApplicationFolders()

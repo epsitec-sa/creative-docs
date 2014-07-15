@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
 using Epsitec.Common.IO;
 using System.IO;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.DocumentEditor.Dialogs
 {
@@ -17,11 +18,19 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			this.owner                   = this.editor.Window;
 			this.title                   = Res.Strings.Dialog.Save.TitleDoc;
-			this.FileExtension           = (editor.DocumentType == DocumentType.Pictogram) ? ".icon" : ".crdoc";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = false;
-			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Save;
+			this.fileDialogType          = FileDialogType.Save;
+
+			if (editor.DocumentType == DocumentType.Pictogram)
+			{
+				this.Filters.Add (new FilterItem ("x", Res.Strings.Dialog.File.Icon, ".icon"));
+			}
+			else
+			{
+				this.Filters.Add (new FilterItem ("x", Res.Strings.Dialog.File.Document, ".crdoc"));
+			}
 		}
 	}
 }

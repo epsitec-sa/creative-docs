@@ -4,6 +4,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using System.IO;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.Document.Dialogs
 {
@@ -16,10 +17,11 @@ namespace Epsitec.Common.Document.Dialogs
 		{
 			this.title                   = Res.Strings.Dialog.SaveImage.Title;
 			this.owner                   = this.ownerWindow;
-			this.FileFilterPattern       = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
-			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Save;
+			this.fileDialogType          = FileDialogType.Save;
+
+			this.Filters.Add (new FilterItem ("x", "Image", "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf"));
 		}
 
 

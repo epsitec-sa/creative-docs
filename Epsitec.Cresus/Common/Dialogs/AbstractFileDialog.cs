@@ -13,9 +13,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Anciennement, cette classe créait un dialogue "maison" pour ouvrir ou enregistrer un
 	/// fichier. Par la suite, il a été décidé de remplacer ces dialogues peu pratiques par
-	/// de véritables dialogues Windows. Actuellement, cette classe a une interface proche
-	/// de l'ancienne (et donc adaptée aux dialogues "maison"), mais elle crée un dialogue
-	/// standard. Cela fonctionne, mais il en résulte un code abracadabrant et peu logique !
+	/// de véritables dialogues Windows. Il en résulte une interface pas forcément idéale !
 	/// </summary>
 	public abstract class AbstractFileDialog
 	{
@@ -92,32 +90,11 @@ namespace Epsitec.Common.Dialogs
 			set;
 		}
 
-		public string							FileExtension
+		public FilterCollection					Filters
 		{
-			//	Extension unique, par exemple ".crdoc".
 			get
 			{
-				return this.fileExtension;
-			}
-			set
-			{
-				this.fileExtension = value;
-				this.filters.Clear ();
-			}
-		}
-
-		public string							FileFilterPattern
-		{
-			//	Liste des extensions, par exemple "*.tif|*.jpg".
-			//	Il faut mettre en premier les extensions qu'on souhaite voir.
-			get
-			{
-				return this.fileFilterPattern;
-			}
-			set
-			{
-				this.fileFilterPattern = value;
-				this.filters.Clear ();
+				return this.filters;
 			}
 		}
 
@@ -185,24 +162,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Title              = this.title;
 			dialog.InitialDirectory   = this.InitialDirectory;
 			dialog.FileName           = System.IO.Path.GetFileName (this.FileName);
-			dialog.DefaultExt         = this.fileExtension;
-
-			if (this.filters.Count == 0)
-			{
-				if (string.IsNullOrEmpty (this.fileFilterPattern))
-				{
-					var desc = this.GetExtentionDescription (this.fileExtension);
-					var filter = new FilterItem ("x", desc, this.fileExtension);
-					this.filters.Add (filter);
-				}
-				else
-				{
-					var desc = this.GetExtentionDescription (this.fileExtension);
-					var filter = new FilterItem ("x", desc, this.fileFilterPattern.Replace ("|", ";"));
-					this.filters.Add (filter);
-				}
-			}
-			dialog.Filter = this.filters.FileDialogFilter;
+			dialog.Filter             = this.filters.FileDialogFilter;
 
 			foreach (var favorite in this.favorites)
 			{
@@ -237,35 +197,6 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		private string GetExtentionDescription(string ext)
-		{
-			if (!string.IsNullOrEmpty (ext))
-			{
-				var settings = this.FileListSettings;
-				var desc = settings.FindDescription (ext);
-
-				if (!string.IsNullOrEmpty (desc))
-				{
-					return desc;
-				}
-			}
-
-			return " ";  // il faut toujours retourner un nom !
-		}
-
-		private IFileExtensionDescription FileListSettings
-		{
-			get
-			{
-				var settings = new FileListSettings (this);
-
-				this.CreateFileExtensionDescriptions (settings);
-
-				return settings;
-			}
-		}
-
-
 		protected virtual string RedirectPath(string path)
 		{
 			return path;
@@ -294,14 +225,8 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		protected virtual void CreateOptionsUserInterface()
-		{
-		}
-
 
 		protected abstract Rectangle GetOwnerBounds();
-
-		protected abstract void CreateFileExtensionDescriptions(IFileExtensionDescription settings);
 
 		protected abstract void FavoritesAddApplicationFolders();
 
@@ -318,6 +243,8 @@ namespace Epsitec.Common.Dialogs
 		#region Options dialog
 		private DialogResult ShowOptionsDialog()
 		{
+			//	Ouvre le dialogue des options, qui s'affiche après le dialogue Windows
+			//	standard pour ouvrir/enregistrer.
 			if (this.window == null)
 			{
 				this.CreateOptionsDialog ();
@@ -359,6 +286,10 @@ namespace Epsitec.Common.Dialogs
 			this.window.WindowBounds = new Rectangle (cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
 
 			this.window.Root.Padding = new Margins (8);
+		}
+
+		protected virtual void CreateOptionsUserInterface()
+		{
 		}
 
 		private void CreateFooter()
@@ -454,8 +385,6 @@ namespace Epsitec.Common.Dialogs
 		private string							initialDirectory;
 		private string							filename;
 		private string[]						filenames;
-		private string							fileExtension;
-		private string							fileFilterPattern;
 		private bool							isRedirected;
 
 		protected Window						window;

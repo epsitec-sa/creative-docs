@@ -4,6 +4,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using System.IO;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.Document.Dialogs
 {
@@ -17,10 +18,11 @@ namespace Epsitec.Common.Document.Dialogs
 			//	Il faut mettre en premier les extensions qu'on souhaite voir.
 			this.title                   = Res.Strings.Dialog.OpenImage.Title;
 			this.owner                   = this.ownerWindow;
-			this.FileFilterPattern       = "*.tif|*.jpg|*.gif|*.png|*.bmp|*.wmf|*.emf|*.tiff|*.jpeg";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
-			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Open;
+			this.fileDialogType          = FileDialogType.Open;
+
+			this.Filters.Add (new FilterItem ("x", "Image", "*.tif|*.jpg|*.gif|*.png|*.bmp|*.wmf|*.emf|*.tiff|*.jpeg"));
 		}
 
 

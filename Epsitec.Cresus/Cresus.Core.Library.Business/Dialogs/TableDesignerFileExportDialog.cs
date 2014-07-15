@@ -23,11 +23,12 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.owner                   = this.parent.Window;
 			this.InitialDirectory        = TableDesignerFileExportDialog.initialDirectory;
 			this.InitialFileName         = TableDesignerFileExportDialog.initialFilename;
-			this.FileExtension           = ".txt";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
 			this.fileDialogType          = FileDialogType.Save;
+
+			this.Filters.Add (new FilterItem ("x", "Fichier texte", ".txt"));
 		}
 
 
@@ -85,11 +86,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
-		{
-			settings.Add (".txt", "Fichier texte");
 		}
 
 		protected override void FavoritesAddApplicationFolders()

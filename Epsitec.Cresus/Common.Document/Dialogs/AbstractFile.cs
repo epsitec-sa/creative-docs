@@ -23,10 +23,6 @@ namespace Epsitec.Common.Document.Dialogs
 			}
 		}
 
-		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
-		{
-		}
-
 		protected override void FavoritesAddApplicationFolders()
 		{
 		}

@@ -290,4 +290,5 @@
   <data name="Dialog.Settings.QuickExportDpi" id="K2">Résolution (dpi)</data>
   <data name="Dialog.Settings.QuickExportType" id="K3">Type de fichier</data>
   <data name="Dialog.File.Icon" id="K4" mod="1">Pictogramme</data>
+  <data name="Dialog.File.Image" id="K5" mod="1">Image</data>
 </bundle>

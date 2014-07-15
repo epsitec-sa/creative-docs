@@ -23,10 +23,11 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.owner                   = this.parent.Window;
 			this.InitialDirectory        = FileImportDialog.initialDirectory;
 			this.InitialFileName         = FileImportDialog.initialFilename;
-			this.FileExtension           = ".xml";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
-			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Open;
+			this.fileDialogType          = FileDialogType.Open;
+
+			this.Filters.Add (new FilterItem ("x", "Fichier XML", ".xml"));
 		}
 
 
@@ -43,11 +44,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
-		{
-			settings.Add (".xml", "Fichier XML");
 		}
 
 		protected override void FavoritesAddApplicationFolders()

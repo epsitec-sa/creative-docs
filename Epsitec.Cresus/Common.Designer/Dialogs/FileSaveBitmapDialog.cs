@@ -22,11 +22,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.owner                   = this.designerApplication.Window;
 			this.InitialDirectory        = FileSaveBitmapDialog.initialDirectory;
 			this.InitialFileName         = FileSaveBitmapDialog.initialFilename;
-			this.FileFilterPattern       = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
 			this.fileDialogType          = FileDialogType.Save;
+
+			this.Filters.Add (new FilterItem ("x", "Image", "*.png|*.tif|*.bmp|*.jpg"));
 		}
 
 
@@ -62,14 +63,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			var w = this.designerApplication.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
-		{
-			settings.Add (".png", "Image PNG");
-			settings.Add (".tif", "Image TIFF");
-			settings.Add (".bmp", "Image BMP");
-			settings.Add (".jpg", "Image JPEG");
 		}
 
 		protected override void FavoritesAddApplicationFolders()

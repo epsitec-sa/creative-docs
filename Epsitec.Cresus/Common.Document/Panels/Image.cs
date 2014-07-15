@@ -485,18 +485,20 @@ namespace Epsitec.Common.Document.Panels
 					dlg.InitialDirectory = this.document.GlobalSettings.InitialDirectory;
 				}
 				dlg.InitialFileName = "";
-				dlg.FileExtension = ".png";
+				dlg.Filters.Add (new FilterItem ("x", "Image", ".png"));
 			}
 			else  // image importée normalement ?
 			{
-				dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
-				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
-				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+				var ext = System.IO.Path.GetExtension (this.fieldFilename.Text);
+				dlg.Filters.Add (new FilterItem ("x", "Image", ext));
+
+				dlg.InitialDirectory = System.IO.Path.GetDirectoryName (this.fieldFilename.Text);
+				dlg.InitialFileName  = System.IO.Path.GetFileName      (this.fieldFilename.Text);
 			}
 
 			dlg.ShowDialog();  // choix d'un fichier image...
 
-			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
+			if (dlg.Result == DialogResult.Accept)
 			{
 				ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
 				if (item != null)
