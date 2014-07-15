@@ -41,8 +41,39 @@ namespace Epsitec.Common.Dialogs
 		public string InitialDirectory
 		{
 			//	Dossier initial.
-			get;
-			set;
+			get
+			{
+				return this.initialDirectory;
+			}
+			set
+			{
+				this.isRedirected = false;
+				FolderItem folder;
+
+				if (value == "")  // poste de travail ?
+				{
+					folder = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+				}
+				else
+				{
+					if (this.FileDialogType == FileDialogType.Save)
+					{
+						string oldPath = value;
+						string newPath = this.RedirectPath (oldPath);
+						this.isRedirected = oldPath != newPath;
+						value = newPath;
+					}
+
+					folder = FileManager.GetFolderItem (value, FolderQueryMode.NoIcons);
+
+					if (folder.IsEmpty)
+					{
+						folder = FileManager.GetFolderItem (FolderId.VirtualMyComputer, FolderQueryMode.NoIcons);
+					}
+				}
+
+				this.initialDirectory = folder.FullPath;
+			}
 		}
 
 		public string InitialFileName
@@ -95,7 +126,7 @@ namespace Epsitec.Common.Dialogs
 			//	redirigé de 'Exemples originaux' vers 'Mes exemples'.
 			get
 			{
-				return false;
+				return this.isRedirected;
 			}
 		}
 
@@ -480,6 +511,7 @@ namespace Epsitec.Common.Dialogs
 		private Window							owner;
 		private string							title;
 		private DialogResult					result;
+		private string							initialDirectory;
 		private string							filename;
 		private string[]						filenames;
 		private string							fileExtension;
@@ -489,6 +521,7 @@ namespace Epsitec.Common.Dialogs
 		protected bool							enableNavigation;
 		protected bool							enableMultipleSelection;
 		protected bool							hasOptions;
+		private bool							isRedirected;
 #else
 		public AbstractFileDialog()
 		{
