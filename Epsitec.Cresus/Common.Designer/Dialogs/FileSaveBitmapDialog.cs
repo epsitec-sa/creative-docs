@@ -17,14 +17,16 @@ namespace Epsitec.Common.Designer.Dialogs
 	{
 		public FileSaveBitmapDialog(DesignerApplication designerApplication)
 		{
-			this.designerApplication = designerApplication;
-
+			this.designerApplication     = designerApplication;
+			this.title                   = Res.Strings.Entities.Action.SaveBitmap;
+			this.owner                   = this.designerApplication.Window;
 			this.InitialDirectory        = FileSaveBitmapDialog.initialDirectory;
 			this.InitialFileName         = FileSaveBitmapDialog.initialFilename;
 			this.FileFilterPattern       = "*.png|*.tif|*.bmp|*.jpg";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
+			this.fileDialogType          = FileDialogType.Save;
 		}
 
 
@@ -54,30 +56,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected override void CreateWindow()
-		{
-			this.CreateUserInterface ("FileSaveBitmap", new Size (720, 480), Res.Strings.Entities.Action.SaveBitmap, 20, this.designerApplication.Window);
-		}
-
-		protected override FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Save;
-			}
-		}
-
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
 			var w = this.designerApplication.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
@@ -164,6 +148,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.cartridgeSamplesButton.AutoToggle = false;
 			this.cartridgeSamplesButton.Dock = DockStyle.Top;
 			this.cartridgeSamplesButton.Clicked += this.HandleOptionsZoomClicked;
+
+			this.UpdateZoom ();
 		}
 
 		private string GetZoomDescription(double zoom)
@@ -173,31 +159,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			string y = System.Math.Floor (this.BitmapSize.Height*zoom).ToString ();
 
 			return string.Format ("{0}% ({1} × {2} pixels)", z, x, y);
-		}
-
-		protected override void CreateFooterOptions(Widget footer)
-		{
-			this.optionsExtend = new GlyphButton (footer);
-			this.optionsExtend.PreferredWidth = 16;
-			this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-			this.optionsExtend.AutoFocus = false;
-			this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
-			this.optionsExtend.Dock = DockStyle.Left;
-			this.optionsExtend.Margins = new Margins (0, 8, 3, 3);
-			this.optionsExtend.Clicked += this.HandleOptionsExtendClicked;
-			ToolTip.Default.SetToolTip (this.optionsExtend, "Montre ou cache les options");
-		}
-
-		protected override void UpdateOptions()
-		{
-			base.UpdateOptions ();
-			
-			if (this.optionsExtend != null)
-			{
-				this.optionsExtend.GlyphShape = this.optionsContainer.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			}
-
-			this.UpdateZoom ();
 		}
 
 		protected void UpdateZoom()
@@ -214,14 +175,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.cartridgeDateButton.ActiveState    = (this.BitmapParameters.GenerateDateCartridge) ? ActiveState.Yes : ActiveState.No;
 				this.cartridgeSamplesButton.ActiveState = (this.BitmapParameters.GenerateSamplesCartridge) ? ActiveState.Yes : ActiveState.No;
 			}
-		}
-
-		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
-		{
-			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
-			FileSaveBitmapDialog.showOptions = this.optionsContainer.Visibility;
-
-			this.UpdateOptions();
 		}
 
 		private void HandleOptionsZoomClicked(object sender, MessageEventArgs e)
@@ -313,11 +266,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		private static string initialDirectory = null;
 		private static string initialFilename = null;
 		private static EntitiesEditor.BitmapParameters bitmapParameters = new EntitiesEditor.BitmapParameters();
-		private static bool showOptions = true;
 
 		private readonly DesignerApplication designerApplication;
 
-		private GlyphButton optionsExtend;
 		private Widget optionsContainer;
 		private RadioButton optionsZoom1;
 		private RadioButton optionsZoom2;

@@ -18,15 +18,16 @@ namespace Epsitec.Cresus.Core.Dialogs
 	{
 		public TableDesignerFileExportDialog(Widget parent, string title)
 		{
-			this.parent = parent;
-			this.title = title;
-
+			this.parent                  = parent;
+			this.title                   = title;
+			this.owner                   = this.parent.Window;
 			this.InitialDirectory        = TableDesignerFileExportDialog.initialDirectory;
 			this.InitialFileName         = TableDesignerFileExportDialog.initialFilename;
 			this.FileExtension           = ".txt";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
+			this.fileDialogType          = FileDialogType.Save;
 		}
 
 
@@ -70,19 +71,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 		}
 
 
-		protected override void CreateWindow()
-		{
-			this.CreateUserInterface ("FileExport", new Size (720, 480), this.title, 20, this.parent.Window);
-		}
-
-		protected override FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Save;
-			}
-		}
-
 		protected override string ActionButtonName
 		{
 			get
@@ -97,11 +85,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
@@ -151,29 +134,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 			this.optionCheckButtonRows.Dock = DockStyle.Top;
 			this.optionCheckButtonRows.AutoToggle = false;
 			this.optionCheckButtonRows.Clicked += this.HandleOptionsClicked;
-		}
-
-		protected override void CreateFooterOptions(Widget footer)
-		{
-			this.optionsExtend = new GlyphButton (footer);
-			this.optionsExtend.PreferredWidth = 16;
-			this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-			this.optionsExtend.AutoFocus = false;
-			this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
-			this.optionsExtend.Dock = DockStyle.Left;
-			this.optionsExtend.Margins = new Margins (0, 8, 3, 3);
-			this.optionsExtend.Clicked += this.HandleOptionsExtendClicked;
-			ToolTip.Default.SetToolTip (this.optionsExtend, "Montre ou cache les options");
-		}
-
-		protected override void UpdateOptions()
-		{
-			base.UpdateOptions ();
-
-			if (this.optionsExtend != null)
-			{
-				this.optionsExtend.GlyphShape = this.optionsContainer.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			}
 
 			this.UpdateOptionsButtons ();
 		}
@@ -185,14 +145,6 @@ namespace Epsitec.Cresus.Core.Dialogs
 				this.optionCheckButtonColumns.ActiveState = (TableDesignerFileExportDialog.useColumns) ? ActiveState.Yes : ActiveState.No;
 				this.optionCheckButtonRows.ActiveState    = (TableDesignerFileExportDialog.useRows   ) ? ActiveState.Yes : ActiveState.No;
 			}
-		}
-
-		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
-		{
-			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
-			TableDesignerFileExportDialog.showOptions = this.optionsContainer.Visibility;
-
-			this.UpdateOptions ();
 		}
 
 		private void HandleOptionsClicked(object sender, MessageEventArgs e)
@@ -260,12 +212,10 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static string			initialFilename = null;
 		private static bool				useColumns = true;
 		private static bool				useRows = true;
-		private static bool				showOptions = true;
 
 		private readonly Widget			parent;
 		private readonly string			title;
 
-		private GlyphButton				optionsExtend;
 		private Widget					optionsContainer;
 		private CheckButton				optionCheckButtonColumns;
 		private CheckButton				optionCheckButtonRows;

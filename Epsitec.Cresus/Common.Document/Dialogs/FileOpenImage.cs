@@ -15,20 +15,15 @@ namespace Epsitec.Common.Document.Dialogs
 		public FileOpenImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
 			//	Il faut mettre en premier les extensions qu'on souhaite voir.
-			this.FileFilterPattern = "*.tif|*.jpg|*.gif|*.png|*.bmp|*.wmf|*.emf|*.tiff|*.jpeg";
-			this.enableNavigation = true;
+			this.title                   = Res.Strings.Dialog.OpenImage.Title;
+			this.owner                   = this.ownerWindow;
+			this.FileFilterPattern       = "*.tif|*.jpg|*.gif|*.png|*.bmp|*.wmf|*.emf|*.tiff|*.jpeg";
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Open;
 		}
 
 
-		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Open;
-			}
-		}
-		
 		protected override string ActionButtonName
 		{
 			get
@@ -40,12 +35,6 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void FavoritesAddApplicationFolders()
 		{
 			this.AddFavorite(FolderId.MyPictures);
-		}
-
-		protected override void CreateWindow()
-		{
-			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileOpenImage", new Size(720, 480), Res.Strings.Dialog.OpenImage.Title, 20, this.ownerWindow);
 		}
 	}
 }

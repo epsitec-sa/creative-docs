@@ -18,13 +18,15 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 	{
 		public FileImportDialog(Widget parent)
 		{
-			this.parent = parent;
-
-			this.InitialDirectory = FileImportDialog.initialDirectory;
-			this.InitialFileName  = FileImportDialog.initialFilename;
-			this.FileExtension    = ".xml";
-			this.enableNavigation = true;
+			this.parent                  = parent;
+			this.title                   = "Importation d'un workflow";
+			this.owner                   = this.parent.Window;
+			this.InitialDirectory        = FileImportDialog.initialDirectory;
+			this.InitialFileName         = FileImportDialog.initialFilename;
+			this.FileExtension           = ".xml";
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Open;
 		}
 
 
@@ -35,30 +37,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		}
 
 
-		protected override void CreateWindow()
-		{
-			this.CreateUserInterface ("FileImport", new Size (720, 480), "Importation d'un workflow", 20, this.parent.Window);
-		}
-
-		protected override FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Open;
-			}
-		}
-
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)

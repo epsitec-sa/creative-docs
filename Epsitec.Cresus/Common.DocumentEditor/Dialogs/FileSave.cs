@@ -15,24 +15,13 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	{
 		public FileSave(DocumentEditor editor) : base(editor)
 		{
-			this.FileExtension           = ".crdoc";
+			this.owner                   = this.editor.Window;
+			this.title                   = Res.Strings.Dialog.Save.TitleDoc;
+			this.FileExtension           = (editor.DocumentType == DocumentType.Pictogram) ? ".icon" : ".crdoc";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = false;
-		}
-
-		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Save;
-			}
-		}
-
-		protected override void CreateWindow()
-		{
-			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileSave", new Size(720, 480), Res.Strings.Dialog.Save.TitleDoc, 20, this.editor.Window);
+			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Save;
 		}
 	}
 }

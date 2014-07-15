@@ -24,21 +24,6 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			}
 		}
 
-		protected override Rectangle GetPersistedWindowBounds(string name)
-		{
-			Point location;
-			Size  size;
-
-			if (this.globalSettings.GetWindowBounds(name, out location, out size))
-			{
-				return new Rectangle(location, size);
-			}
-			else
-			{
-				return base.GetPersistedWindowBounds(name);
-			}
-		}
-
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
 		{
 			settings.Add(".crdoc", Res.Strings.Dialog.File.Document);
@@ -47,7 +32,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected override void FavoritesAddApplicationFolders()
 		{
-			if (this.FileDialogType != Epsitec.Common.Dialogs.FileDialogType.Save)
+			if (this.fileDialogType != Epsitec.Common.Dialogs.FileDialogType.Save)
 			{
 				this.AddFavorite(Document.OriginalSamplesDisplayName, Misc.Icon("FileTypeOriginalSamples"), Document.OriginalSamplesPath);
 			}
@@ -74,17 +59,6 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			{
 				return new Rectangle(window.WindowLocation, window.WindowSize);
 			}
-		}
-		
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
-			if (this.window == null || this.globalSettings == null)
-			{
-				return;
-			}
-
-			this.globalSettings.SetWindowBounds(this.window.Name, this.window.WindowLocation, this.window.ClientSize);
 		}
 		
 		protected DocumentEditor				editor;

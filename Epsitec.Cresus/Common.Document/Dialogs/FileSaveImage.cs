@@ -14,20 +14,15 @@ namespace Epsitec.Common.Document.Dialogs
 	{
 		public FileSaveImage(Document document, Window ownerWindow) : base(document, ownerWindow)
 		{
-			this.FileFilterPattern = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
-			this.enableNavigation = true;
+			this.title                   = Res.Strings.Dialog.SaveImage.Title;
+			this.owner                   = this.ownerWindow;
+			this.FileFilterPattern       = "*.bmp|*.tif|*.tiff|*.jpg|*.jpeg|*.gif|*.png|*.wmf|*.emf";
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
+			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Save;
 		}
 
 
-		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Save;
-			}
-		}
-		
 		protected override string ActionButtonName
 		{
 			get
@@ -39,12 +34,6 @@ namespace Epsitec.Common.Document.Dialogs
 		protected override void FavoritesAddApplicationFolders()
 		{
 			this.AddFavorite(FolderId.MyPictures);
-		}
-
-		protected override void CreateWindow()
-		{
-			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileSaveImage", new Size(720, 480), Res.Strings.Dialog.SaveImage.Title, 20, this.ownerWindow);
 		}
 	}
 }

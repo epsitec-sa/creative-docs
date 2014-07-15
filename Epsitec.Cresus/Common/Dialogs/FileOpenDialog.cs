@@ -13,19 +13,20 @@ namespace Epsitec.Common.Dialogs
 	{
 		public FileOpenDialog()
 		{
-			this.dialog = new System.Windows.Forms.OpenFileDialog ();
 			this.filters = new Helpers.FilterCollection (this);
 
-			this.dialog.AutoUpgradeEnabled = true;
-			this.dialog.DereferenceLinks = true;
-			this.dialog.AddExtension = true;
-			this.dialog.CheckFileExists = true;
-			this.dialog.CheckPathExists = true;
-			this.dialog.DereferenceLinks = true;
-			this.dialog.RestoreDirectory = true;
-			this.dialog.ShowHelp = false;
-			this.dialog.ShowReadOnly = false;
-			this.dialog.ValidateNames = true;
+			this.dialog = new System.Windows.Forms.OpenFileDialog ()
+			{
+				AutoUpgradeEnabled = true,
+				DereferenceLinks   = true,
+				AddExtension       = true,
+				CheckFileExists    = true,
+				CheckPathExists    = true,
+				RestoreDirectory   = true,
+				ShowHelp           = false,
+				ShowReadOnly       = false,
+				ValidateNames      = true,
+			};
 			
 			this.dialog.FileOk +=
 				(sender, e) =>
@@ -65,7 +66,7 @@ namespace Epsitec.Common.Dialogs
 
 		private static void SetFileName(System.IntPtr hdlg, string name)
 		{
-			FileOpenDialog.SetDlgItemText (hdlg, FileTitleCntrlID, name);
+			FileOpenDialog.SetDlgItemText (hdlg, FileOpenDialog.FileTitleCntrlID, name);
 		}
 #endif
 		
@@ -92,7 +93,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public Common.Widgets.Window	OwnerWindow
+		public Common.Widgets.Window			OwnerWindow
 		{
 			get
 			{
@@ -166,12 +167,12 @@ namespace Epsitec.Common.Dialogs
 			//	Rien de spécial à faire...
 		}
 		#endregion
-		
-		
-		Common.Widgets.Window					owner;
-		System.Windows.Forms.OpenFileDialog		dialog;
-		Helpers.FilterCollection				filters;
-		int										filterIndex;
-		private DialogResult					result = DialogResult.None;
+
+
+		private readonly System.Windows.Forms.OpenFileDialog	dialog;
+		private readonly Helpers.FilterCollection				filters;
+		private Common.Widgets.Window							owner;
+		private int												filterIndex;
+		private DialogResult									result = DialogResult.None;
 	}
 }

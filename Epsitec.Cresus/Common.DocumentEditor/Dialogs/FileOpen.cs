@@ -15,25 +15,12 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	{
 		public FileOpen(DocumentEditor editor) : base(editor)
 		{
-			this.FileExtension = ".crdoc";
-			//?this.FileFilterPattern = "*.crdoc|*.icon";
-			this.enableNavigation = true;
+			this.title                   = Res.Strings.Dialog.Open.TitleDoc;
+			this.owner                   = this.editor.Window;
+			this.FileExtension           = (editor.DocumentType == DocumentType.Pictogram) ? ".icon" : ".crdoc";
+			this.enableNavigation        = true;
 			this.enableMultipleSelection = true;
-		}
-
-
-		protected override Epsitec.Common.Dialogs.FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Open;
-			}
-		}
-		
-		protected override void CreateWindow()
-		{
-			//	Crée la fenêtre du dialogue.
-			this.CreateUserInterface("FileOpen", new Size(720, 480), Res.Strings.Dialog.Open.TitleDoc, 20, this.editor.Window);
+			this.fileDialogType          = Epsitec.Common.Dialogs.FileDialogType.Open;
 		}
 	}
 }

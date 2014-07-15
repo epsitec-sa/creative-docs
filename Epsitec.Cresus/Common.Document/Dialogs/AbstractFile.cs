@@ -10,8 +10,8 @@ namespace Epsitec.Common.Document.Dialogs
 	{
 		public AbstractFile(Document document, Window ownerWindow)
 		{
-			this.document = document;
-			this.ownerWindow = ownerWindow;
+			this.document       = document;
+			this.ownerWindow    = ownerWindow;
 			this.globalSettings = document.GlobalSettings;
 		}
 
@@ -20,21 +20,6 @@ namespace Epsitec.Common.Document.Dialogs
 			get
 			{
 				return this.globalSettings;
-			}
-		}
-
-		protected override Rectangle GetPersistedWindowBounds(string name)
-		{
-			Point location;
-			Size  size;
-
-			if (this.globalSettings.GetWindowBounds(name, out location, out size))
-			{
-				return new Rectangle(location, size);
-			}
-			else
-			{
-				return base.GetPersistedWindowBounds(name);
 			}
 		}
 
@@ -63,17 +48,6 @@ namespace Epsitec.Common.Document.Dialogs
 			{
 				return new Rectangle(this.ownerWindow.WindowLocation, this.ownerWindow.WindowSize);
 			}
-		}
-		
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
-			if (this.window == null || this.globalSettings == null)
-			{
-				return;
-			}
-
-			this.globalSettings.SetWindowBounds(this.window.Name, this.window.WindowLocation, this.window.ClientSize);
 		}
 		
 		protected Document document;

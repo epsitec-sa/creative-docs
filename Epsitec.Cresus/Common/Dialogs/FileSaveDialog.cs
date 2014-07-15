@@ -13,19 +13,21 @@ namespace Epsitec.Common.Dialogs
 	{
 		public FileSaveDialog()
 		{
-			this.dialog = new System.Windows.Forms.SaveFileDialog ();
 			this.filters = new Helpers.FilterCollection (this);
-			
-			this.dialog.AddExtension = true;
-			this.dialog.AutoUpgradeEnabled = true;
-			this.dialog.CheckFileExists = false;
-			this.dialog.CheckPathExists = true;
-			this.dialog.CreatePrompt = false;
-			this.dialog.DereferenceLinks = true;
-			this.dialog.OverwritePrompt = false;
-			this.dialog.RestoreDirectory = true;
-			this.dialog.ShowHelp = false;
-			this.dialog.ValidateNames = true;
+
+			this.dialog = new System.Windows.Forms.SaveFileDialog ()
+			{
+				AddExtension       = true,
+				AutoUpgradeEnabled = true,
+				CheckFileExists    = false,
+				CheckPathExists    = true,
+				CreatePrompt       = false,
+				DereferenceLinks   = true,
+				OverwritePrompt    = false,
+				RestoreDirectory   = true,
+				ShowHelp           = false,
+				ValidateNames      = true,
+			};
 
 			this.dialog.FileOk +=
 				(sender, e) =>
@@ -97,7 +99,7 @@ namespace Epsitec.Common.Dialogs
 
 		private static void SetFileName(System.IntPtr hdlg, string name)
 		{
-			FileSaveDialog.SetDlgItemText (hdlg, FileTitleCntrlID, name);
+			FileSaveDialog.SetDlgItemText (hdlg, FileSaveDialog.FileTitleCntrlID, name);
 		}
 #endif
 		
@@ -211,6 +213,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+        public Common.Widgets.Window			OwnerWindow
+		{
+			get
+			{
+				return this.owner;
+			}
+			set
+			{
+				this.owner = value;
+			}
+		}
+
 		private string[] GetFixedFileNames()
 		{
 			if (string.IsNullOrEmpty (this.DefaultExt))
@@ -265,18 +279,6 @@ namespace Epsitec.Common.Dialogs
 				return ext.ToLowerInvariant ();
 			}
 		}
-
-        public Common.Widgets.Window	OwnerWindow
-		{
-			get
-			{
-				return this.owner;
-			}
-			set
-			{
-				this.owner = value;
-			}
-		}
 		#endregion
 		
 		#region IFilterCollectionHost Members
@@ -285,12 +287,12 @@ namespace Epsitec.Common.Dialogs
 			//	Rien de spécial à faire...
 		}
 		#endregion
-		
-		
-		Common.Widgets.Window					owner;
-		System.Windows.Forms.SaveFileDialog 	dialog;
-		Helpers.FilterCollection				filters;
-		int										filterIndex;
-		private DialogResult					result = DialogResult.None;
+
+
+		private readonly System.Windows.Forms.SaveFileDialog 	dialog;
+		private readonly Helpers.FilterCollection				filters;
+		private Common.Widgets.Window							owner;
+		private int												filterIndex;
+		private DialogResult									result = DialogResult.None;
 	}
 }

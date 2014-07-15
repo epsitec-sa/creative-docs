@@ -18,14 +18,16 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 	{
 		public FileExportDialog(Widget parent)
 		{
-			this.parent = parent;
-
+			this.parent                  = parent;
+			this.title                   = "Exportation d'un workflow";
+			this.owner                   = this.parent.Window;
 			this.InitialDirectory        = FileExportDialog.initialDirectory;
 			this.InitialFileName         = FileExportDialog.initialFilename;
 			this.FileExtension           = ".xml";
 			this.enableNavigation        = true;
 			this.enableMultipleSelection = false;
 			this.hasOptions              = true;
+			this.fileDialogType          = FileDialogType.Save;
 		}
 
 
@@ -53,30 +55,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		}
 
 
-		protected override void CreateWindow()
-		{
-			this.CreateUserInterface ("FileExport", new Size (720, 480), "Exportation d'un workflow", 20, this.parent.Window);
-		}
-
-		protected override FileDialogType FileDialogType
-		{
-			get
-			{
-				return Epsitec.Common.Dialogs.FileDialogType.Save;
-			}
-		}
-
 		protected override Rectangle GetOwnerBounds()
 		{
 			//	Donne les frontières de l'application.
 			var w = this.parent.Window;
 
 			return new Rectangle (w.WindowLocation, w.WindowSize);
-		}
-
-		public override void PersistWindowBounds()
-		{
-			//	Sauve la fenêtre.
 		}
 
 		protected override void CreateFileExtensionDescriptions(Epsitec.Common.Dialogs.IFileExtensionDescription settings)
@@ -119,29 +103,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			this.optionsExportAllButton.AutoToggle = false;
 			this.optionsExportAllButton.Dock = DockStyle.Top;
 			this.optionsExportAllButton.Clicked += this.HandleOptionsClicked;
-		}
-
-		protected override void CreateFooterOptions(Widget footer)
-		{
-			this.optionsExtend = new GlyphButton (footer);
-			this.optionsExtend.PreferredWidth = 16;
-			this.optionsExtend.ButtonStyle = ButtonStyle.Slider;
-			this.optionsExtend.AutoFocus = false;
-			this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
-			this.optionsExtend.Dock = DockStyle.Left;
-			this.optionsExtend.Margins = new Margins (0, 8, 3, 3);
-			this.optionsExtend.Clicked += this.HandleOptionsExtendClicked;
-			ToolTip.Default.SetToolTip (this.optionsExtend, "Montre ou cache les options");
-		}
-
-		protected override void UpdateOptions()
-		{
-			base.UpdateOptions ();
-
-			if (this.optionsExtend != null)
-			{
-				this.optionsExtend.GlyphShape = this.optionsContainer.Visibility ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			}
 
 			this.UpdateOptionsButtons ();
 		}
@@ -152,14 +113,6 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 			{
 				this.optionsExportAllButton.ActiveState = this.ExportAll ? ActiveState.Yes : ActiveState.No;
 			}
-		}
-
-		private void HandleOptionsExtendClicked(object sender, MessageEventArgs e)
-		{
-			this.optionsContainer.Visibility = !this.optionsContainer.Visibility;
-			FileExportDialog.showOptions = this.optionsContainer.Visibility;
-
-			this.UpdateOptions ();
 		}
 
 		private void HandleOptionsClicked(object sender, MessageEventArgs e)
@@ -214,11 +167,9 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		private static string			initialDirectory = null;
 		private static string			initialFilename = null;
 		private static bool				exportAll = false;
-		private static bool				showOptions = true;
 
 		private readonly Widget			parent;
 
-		private GlyphButton				optionsExtend;
 		private Widget					optionsContainer;
 		private CheckButton				optionsExportAllButton;
 	}
