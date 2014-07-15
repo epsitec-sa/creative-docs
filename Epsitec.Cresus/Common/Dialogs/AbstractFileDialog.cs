@@ -14,6 +14,9 @@ namespace Epsitec.Common.Dialogs
 	/// Anciennement, cette classe créait un dialogue "maison" pour ouvrir ou enregistrer un
 	/// fichier. Par la suite, il a été décidé de remplacer ces dialogues peu pratiques par
 	/// de véritables dialogues Windows. Il en résulte une interface pas forcément idéale !
+	/// Les anciens dialogues "maison" avaient une partie dédiée aux options, en bas.
+	/// Ces options s'affichent désormais dans un 2ème dialogue spécifique, qui vient après
+	/// le dialogue Windows standard (pour autant qu'il existe des options).
 	/// </summary>
 	public abstract class AbstractFileDialog
 	{

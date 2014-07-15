@@ -201,7 +201,6 @@
     <Compile Include="Dialogs\FileDialogType.cs" />
     <Compile Include="Dialogs\FileListItem.cs" />
     <Compile Include="Dialogs\FileListItemViewFactory.cs" />
-    <Compile Include="Dialogs\FileListSettings.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
     <Compile Include="Dialogs\FileSaveDialog.cs" />
     <Compile Include="Dialogs\FilterItem.cs" />
@@ -216,7 +215,6 @@
     <Compile Include="Dialogs\HintListWidget.cs" />
     <Compile Include="Dialogs\IDialog.cs" />
     <Compile Include="Dialogs\IFavoritesSettings.cs" />
-    <Compile Include="Dialogs\IFileExtensionDescription.cs" />
     <Compile Include="Dialogs\ISearchContext.cs" />
     <Compile Include="Dialogs\ItemViewFactories\EntityItemViewFactory.cs" />
     <Compile Include="Dialogs\IWorkInProgressReport.cs" />
