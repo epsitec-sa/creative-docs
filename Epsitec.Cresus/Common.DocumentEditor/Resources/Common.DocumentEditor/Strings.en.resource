@@ -287,4 +287,5 @@
   <data id="039">Format</data>
   <data id="029">Geometry</data>
   <data id="K">Quick export</data>
+  <data id="K4" mod="1">CrPicto</data>
 </bundle>

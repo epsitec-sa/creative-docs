@@ -10,6 +10,13 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
+	/// <summary>
+	/// Anciennement, cette classe créait un dialogue "maison" pour ouvrir ou enregistrer un
+	/// fichier. Par la suite, il a été décidé de remplacer ces dialogues peu pratiques par
+	/// de véritables dialogues Windows. Actuellement, cette classe a une interface proche
+	/// de l'ancienne (et donc adaptée aux dialogues "maison"), mais elle crée un dialogue
+	/// standard. Cela fonctionne, mais il en résulte un code abracadabrant et peu logique !
+	/// </summary>
 	public abstract class AbstractFileDialog
 	{
 		public AbstractFileDialog()

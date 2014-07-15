@@ -769,6 +769,14 @@ namespace Epsitec.Common.DocumentEditor
 							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (224));
 						}
 					}
+					//	designer:str/43K4
+					public static global::System.String Icon
+					{
+						get
+						{
+							return global::Epsitec.Common.DocumentEditor.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544324));
+						}
+					}
 					//	designer:str/430V6
 					public static global::System.String LabelDoc
 					{
@@ -3423,6 +3431,14 @@ namespace Epsitec.Common.DocumentEditor
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (224);
+						}
+					}
+					//	designer:str/43K4
+					public static global::Epsitec.Common.Support.Druid Icon
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544324);
 						}
 					}
 					//	designer:str/430V6

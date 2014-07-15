@@ -287,4 +287,5 @@
   <data id="019">PDF-Datei wird erzeugt...</data>
   <data id="K">
   </data>
+  <data id="K4" mod="1">CrPicto</data>
 </bundle>
