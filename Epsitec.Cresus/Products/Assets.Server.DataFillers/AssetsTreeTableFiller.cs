@@ -10,9 +10,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class AssetsTreeTableFiller : AbstractTreeTableFiller<CumulNode>
+	public class AssetsTreeTableFiller : AbstractTreeTableFiller<SortableCumulNode>
 	{
-		public AssetsTreeTableFiller(DataAccessor accessor, INodeGetter<CumulNode> nodeGetter)
+		public AssetsTreeTableFiller(DataAccessor accessor, INodeGetter<SortableCumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}

@@ -17,7 +17,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class AssetsToolbarTreeTableController : AbstractToolbarBothTreesController<CumulNode>, IDirty
+	public class AssetsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableCumulNode>, IDirty
 	{
 		public AssetsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
+			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> SortableCumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void CreateNodeFiller()
 		{
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Assets");
+			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Assets");
 
-			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 

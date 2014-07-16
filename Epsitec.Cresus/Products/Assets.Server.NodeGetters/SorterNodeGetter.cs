@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateData()
 		{
+#if false
 			this.outputNodes = SortingMachine<SortableNode>.Sorts
 			(
 				this.sortingInstructions,
@@ -59,6 +60,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				x => x.PrimarySortValue,
 				x => x.SecondarySortValue
 			).ToArray ();
+#else
+			//	On ne trie plus !!!
+			this.outputNodes = this.inputNodes.GetNodes ().ToArray ();
+#endif
 		}
 
 

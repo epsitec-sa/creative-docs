@@ -37,12 +37,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
-			this.nodeGetter = new MCH2SummaryNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
+			//?this.nodeGetter = new MCH2SummaryNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
+			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.NodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
-			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
 
 			base.Initialize ();
 		}
@@ -88,7 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
 			//	peuvent avoir changé, et les colonnes doivent afficher "Etat initial au 01.01.2014"
 			//	et "Etat final au 31.12.2014".
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
 			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
@@ -104,20 +105,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowExportPopup(Widget target)
 		{
-			ExportHelpers<CumulNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
+			ExportHelpers<SortableCumulNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
 		}
 
 
 		protected override void HandleSortingChanged(object sender)
 		{
-			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
 			this.UpdateParams ();
 		}
 
 
 		protected override void UpdateTreeTable()
 		{
-			TreeTableFiller<CumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
+			TreeTableFiller<SortableCumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
 
@@ -137,16 +138,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private MCH2SummaryNodeGetter NodeGetter
+		//?private MCH2SummaryNodeGetter NodeGetter
+		//?{
+		//?	get
+		//?	{
+		//?		return this.nodeGetter as MCH2SummaryNodeGetter;
+		//?	}
+		//?}
+		private ObjectsNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodeGetter as MCH2SummaryNodeGetter;
+				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
 
 
 		private SortingInstructions					sortingInstructions;
-		private AbstractTreeTableFiller<CumulNode>	dataFiller;
+		private AbstractTreeTableFiller<SortableCumulNode>	dataFiller;
 	}
 }

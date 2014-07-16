@@ -37,9 +37,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  CumulNode
 	///     V
+	/// FinalSortableNodeGetter
+	///     |
+	///     o  SortableCumulNode
+	///     V
+	/// FinalSorterNodeGetter
+	///     |
+	///     o  SortableCumulNode
+	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodeGetter : INodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
+	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
@@ -52,6 +60,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);
 			this.cumulNodeGetter   = new CumulNodeGetter (accessor, this.treeObjectsGetter);
+
+			this.finalSortableNodeGetter = new FinalSortableNodeGetter (this.cumulNodeGetter, accessor, BaseType.Assets);
+			this.finalSorterNodeGetter = new FinalSorterNodeGetter (this.finalSortableNodeGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
@@ -73,30 +84,30 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.cumulNodeGetter.Count;
+				return this.finalSorterNodeGetter.Count;
 			}
 		}
 
-		public CumulNode this[int index]
+		public SortableCumulNode this[int index]
 		{
 			get
 			{
-				if (index >= 0 && index < this.cumulNodeGetter.Count)
+				if (index >= 0 && index < this.finalSorterNodeGetter.Count)
 				{
-					return this.cumulNodeGetter[index];
+					return this.finalSorterNodeGetter[index];
 				}
 				else
 				{
-					return CumulNode.Empty;
+					return SortableCumulNode.Empty;
 				}
 			}
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
+		public decimal? GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.cumulNodeGetter.GetValue (obj, node, field);
+			return this.finalSorterNodeGetter.GetValue (node, field);
 		}
 
 
@@ -111,6 +122,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.mergeNodeGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+
+			this.finalSortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.finalSorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
 		}
 
 
@@ -196,6 +210,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly MergeNodeGetter		mergeNodeGetter;
 		private readonly TreeObjectsNodeGetter	treeObjectsGetter;
 		private readonly CumulNodeGetter		cumulNodeGetter;
+		private readonly FinalSortableNodeGetter		finalSortableNodeGetter;
+		private readonly FinalSorterNodeGetter		finalSorterNodeGetter;
 
 		private Timestamp?						timestamp;
 		private Guid							rootGuid;

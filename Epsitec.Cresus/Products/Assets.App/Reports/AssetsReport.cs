@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.NodeGetter);
-			TreeTableFiller<CumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Assets");
+			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.Assets");
 
-			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
 
 			base.Initialize ();
 		}
@@ -95,20 +95,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void ShowExportPopup(Widget target)
 		{
-			ExportHelpers<CumulNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
+			ExportHelpers<SortableCumulNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
 		}
 
 
 		protected override void HandleSortingChanged(object sender)
 		{
-			this.sortingInstructions = TreeTableFiller<CumulNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
 			this.UpdateParams ();
 		}
 
 
 		protected override void UpdateTreeTable()
 		{
-			TreeTableFiller<CumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
+			TreeTableFiller<SortableCumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
 
@@ -130,6 +130,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private SortingInstructions					sortingInstructions;
-		private AbstractTreeTableFiller<CumulNode>	dataFiller;
+		private AbstractTreeTableFiller<SortableCumulNode>	dataFiller;
 	}
 }

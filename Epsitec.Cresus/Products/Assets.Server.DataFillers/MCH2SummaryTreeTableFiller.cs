@@ -11,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class MCH2SummaryTreeTableFiller : AbstractTreeTableFiller<CumulNode>
+	public class MCH2SummaryTreeTableFiller : AbstractTreeTableFiller<SortableCumulNode>
 	{
-		public MCH2SummaryTreeTableFiller(DataAccessor accessor, INodeGetter<CumulNode> nodeGetter)
+		public MCH2SummaryTreeTableFiller(DataAccessor accessor, INodeGetter<SortableCumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private decimal? GetColumnValue(CumulNode node, DataObject obj, Column column)
+		private decimal? GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
 			var field = ObjectField.MCH2Report + (int) column;
@@ -316,11 +316,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private MCH2SummaryNodeGetter NodeGetter
+		//?private MCH2SummaryNodeGetter NodeGetter
+		//?{
+		//?	get
+		//?	{
+		//?		return this.nodeGetter as MCH2SummaryNodeGetter;
+		//?	}
+		//?}
+		private ObjectsNodeGetter NodeGetter
 		{
 			get
 			{
-				return this.nodeGetter as MCH2SummaryNodeGetter;
+				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
 	}

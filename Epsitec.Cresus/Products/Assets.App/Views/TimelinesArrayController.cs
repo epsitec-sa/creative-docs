@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedRow    = -1;
 			this.selectedColumn = -1;
 
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> CumulNode
+			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> SortableCumulNode
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
 			this.nodeGetter      = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);

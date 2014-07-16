@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
@@ -17,13 +16,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct TreeNode
 	{
-		public TreeNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type)
+		public TreeNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type, int? groupIndex)
 		{
-			this.Guid     = guid;
-			this.BaseType = baseType;
-			this.Level    = level;
-			this.Ratio    = ratio;
-			this.Type     = type;
+			this.Guid       = guid;
+			this.BaseType   = baseType;
+			this.Level      = level;
+			this.Ratio      = ratio;
+			this.Type       = type;
+			this.GroupIndex = groupIndex;
 		}
 
 		public bool IsEmpty
@@ -36,12 +36,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Assets, -1, null, NodeType.None);
+		public static TreeNode Empty = new TreeNode (Guid.Empty, BaseType.Assets, -1, null, NodeType.None, null);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;
 		public readonly int					Level;
 		public readonly decimal?			Ratio;
 		public readonly NodeType			Type;
+		public readonly int?				GroupIndex;
 	}
 }

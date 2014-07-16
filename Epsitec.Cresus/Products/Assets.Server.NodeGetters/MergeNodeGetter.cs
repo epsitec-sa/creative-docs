@@ -89,16 +89,24 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			foreach (var objectNode in this.objectNodes.GetNodes ())
 			{
-				this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Assets, 0, null));
+				this.outputNodes.Add (new LevelNode (objectNode.Guid, BaseType.Assets, 0, null, null));
 			}
 		}
 
 		private void MergeObjects()
 		{
-			foreach (var inputNode in this.groupNodes.GetNodes ())
+			int groupIndex = 0;
+
+			foreach (var groupNode in this.groupNodes.GetNodes ())
 			{
-				var node = new LevelNode (inputNode.Guid, BaseType.Groups, inputNode.Level, null);
-				this.outputNodes.Add (node);
+				//	1) On met le groupe.
+				{
+					var node = new LevelNode (groupNode.Guid, BaseType.Groups, groupNode.Level, null, ++groupIndex);
+					this.outputNodes.Add (node);
+				}
+
+				//	2) Puis les objets contenus dans le groupe.
+				groupIndex++;
 
 				foreach (var objectNode in this.objectNodes.GetNodes ())
 				{
@@ -114,9 +122,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 							inputValue: true
 						);
 
-						if (gr.Guid == inputNode.Guid)  // objet faisant partie de ce groupe ?
+						if (gr.Guid == groupNode.Guid)  // objet faisant partie de ce groupe ?
 						{
-							node = new LevelNode (objectNode.Guid, BaseType.Assets, inputNode.Level+1, gr.Ratio);
+							var node = new LevelNode (objectNode.Guid, BaseType.Assets, groupNode.Level+1, gr.Ratio, groupIndex);
 							this.outputNodes.Add (node);
 						}
 					}

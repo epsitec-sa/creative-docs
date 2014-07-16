@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get;
 		}
-		
-		CumulNode this[int index]
+
+		SortableCumulNode this[int index]
 		{
 			get;
 		}

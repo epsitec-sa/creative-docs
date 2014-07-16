@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 {
-	public class AssetsTreeGraphicController : AbstractTreeGraphicController<CumulNode>
+	public class AssetsTreeGraphicController : AbstractTreeGraphicController<SortableCumulNode>
 	{
 		public AssetsTreeGraphicController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 		}
 
 
-		public override void UpdateController(INodeGetter<CumulNode> nodeGetter, Guid selectedGuid, bool crop = true)
+		public override void UpdateController(INodeGetter<SortableCumulNode> nodeGetter, Guid selectedGuid, bool crop = true)
 		{
 			if (this.treeGraphicViewState == null || this.scrollable == null)
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 					fields = assetFields;
 				}
 
-				double fontSize = AbstractTreeGraphicController<CumulNode>.GetFontSize (deep, level);
+				double fontSize = AbstractTreeGraphicController<SortableCumulNode>.GetFontSize (deep, level);
 
 				var values = this.GetValues (ng, node.BaseType, node, fields);
 				var w = this.CreateTile (parent, node.Guid, level, fontSize, node.Type, values, fontFactors);
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 		}
 
 
-		private TreeGraphicValue[] GetValues(ObjectsNodeGetter nodeGetter, BaseType baseType, CumulNode node, ObjectField[] fields)
+		private TreeGraphicValue[] GetValues(ObjectsNodeGetter nodeGetter, BaseType baseType, SortableCumulNode node, ObjectField[] fields)
 		{
 			var list = new List<TreeGraphicValue> ();
 			var obj = this.accessor.GetObject (baseType, node.Guid);
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 			return list.ToArray ();
 		}
 
-		private TreeGraphicValue GetValue(ObjectsNodeGetter nodeGetter, DataObject obj, CumulNode node, ObjectField field)
+		private TreeGraphicValue GetValue(ObjectsNodeGetter nodeGetter, DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			var type = this.accessor.GetFieldType (field);
 

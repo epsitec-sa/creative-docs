@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// C'est un ObjectsNodeGetter trié (parfois).
 	/// Provisoire, cela demande encore de la réflexion !!!
 	/// </summary>
-	public class MCH2SummaryNodeGetter : INodeGetter<CumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
+	public class MCH2SummaryNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
 	{
 		public MCH2SummaryNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
 			this.accessor   = accessor;
 			this.inputNodes = new ObjectsNodeGetter (this.accessor, groupNodes, objectNodes);
 
-			this.outputSortedNodes = new List<CumulNode> ();
+			this.outputSortedNodes = new List<SortableCumulNode> ();
 		}
 
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public CumulNode this[int index]
+		public SortableCumulNode this[int index]
 		{
 			get
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
+		public decimal? GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			return this.inputNodes.GetValue (obj, node, field);
 		}
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private IEnumerable<CumulNode> InputNodes
+		private IEnumerable<SortableCumulNode> InputNodes
 		{
 			get
 			{
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private IEnumerable<CumulNode> SortNodes(IEnumerable<CumulNode> nodes)
+		private IEnumerable<SortableCumulNode> SortNodes(IEnumerable<SortableCumulNode> nodes)
 		{
 			if (this.sortingInstructions.PrimaryField   != ObjectField.Unknown &&
 				this.sortingInstructions.SecondaryField == ObjectField.Unknown)
@@ -208,17 +208,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return nodes;
 		}
 
-		private ComparableData GetPrimaryData(CumulNode node)
+		private ComparableData GetPrimaryData(SortableCumulNode node)
 		{
 			return this.GetComparableData (node, this.sortingInstructions.PrimaryField);
 		}
 
-		private ComparableData GetSecondaryData(CumulNode node)
+		private ComparableData GetSecondaryData(SortableCumulNode node)
 		{
 			return this.GetComparableData (node, this.sortingInstructions.SecondaryField);
 		}
 
-		private ComparableData GetComparableData(CumulNode node, ObjectField field)
+		private ComparableData GetComparableData(SortableCumulNode node, ObjectField field)
 		{
 			var obj = this.accessor.GetObject (node.BaseType, node.Guid);
 
@@ -263,22 +263,23 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (this.rootGuid.IsEmpty)  // pas de regroupements ?
-				{
-					return this.extractionInstructions != null
-						&& this.extractionInstructions.Any ();
-				}
-				else
-				{
-					return false;
-				}
+				return false;
+				//?if (this.rootGuid.IsEmpty)  // pas de regroupements ?
+				//?{
+				//?	return this.extractionInstructions != null
+				//?		&& this.extractionInstructions.Any ();
+				//?}
+				//?else
+				//?{
+				//?	return false;
+				//?}
 			}
 		}
 
 
 		private readonly DataAccessor			accessor;
 		private readonly ObjectsNodeGetter		inputNodes;
-		private readonly List<CumulNode>		outputSortedNodes;
+		private readonly List<SortableCumulNode>		outputSortedNodes;
 
 		private Timestamp?						timestamp;
 		private Guid							rootGuid;
