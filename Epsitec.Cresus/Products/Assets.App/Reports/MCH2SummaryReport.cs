@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
 			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
-			//?this.nodeGetter = new MCH2SummaryNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
 
 			this.dataFiller = new MCH2SummaryTreeTableFiller (this.accessor, this.NodeGetter);
@@ -138,13 +137,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		//?private MCH2SummaryNodeGetter NodeGetter
-		//?{
-		//?	get
-		//?	{
-		//?		return this.nodeGetter as MCH2SummaryNodeGetter;
-		//?	}
-		//?}
 		private ObjectsNodeGetter NodeGetter
 		{
 			get

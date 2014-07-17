@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly INodeGetter<GuidNode> inputNodes;
+		private readonly INodeGetter<GuidNode>	inputNodes;
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
 

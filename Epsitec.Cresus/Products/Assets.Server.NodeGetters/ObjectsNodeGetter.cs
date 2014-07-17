@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// (BaseType.Groups)        (BaseType.Assets)
 	///     |                         |
 	///     o  GuidNode               o  GuidNode
-	///     V                         V
-	/// GroupParentNodeGetter    SortableNodeGetter
+	///     V                         |
+	/// GroupParentNodeGetter         |
 	///     |                         |
-	///     o  ParentNode             o  SortableNode
-	///     V                         V
-	/// GroupLevelNodeGetter     SorterNodeGetter
+	///     o  ParentNode             |
+	///     V                         |
+	/// GroupLevelNodeGetter          |
 	///     |                         |
-	///     o  LevelNode              o  SortableNode
+	///     o  LevelNode              |
 	///     V                         |
 	/// MergeNodeGetter <-------------|
 	///     |
@@ -37,11 +37,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  CumulNode
 	///     V
-	/// FinalSortableNodeGetter
+	/// SortableCumulNodeGetter
 	///     |
 	///     o  SortableCumulNode
 	///     V
-	/// FinalSorterNodeGetter
+	/// SorterCumulNodeGetter
 	///     |
 	///     o  SortableCumulNode
 	///     V
@@ -51,18 +51,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
-			this.objectNodeGetter1 = new SortableNodeGetter (objectNodes, accessor, BaseType.Assets);
-			this.objectNodeGetter2 = new SorterNodeGetter (this.objectNodeGetter1);
-
 			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor, BaseType.Groups);
 			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor, BaseType.Groups);
 
-			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.objectNodeGetter2);
+			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, objectNodes);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);
 			this.cumulNodeGetter   = new CumulNodeGetter (accessor, this.treeObjectsGetter);
 
-			this.finalSortableNodeGetter = new FinalSortableNodeGetter (this.cumulNodeGetter, accessor, BaseType.Assets);
-			this.finalSorterNodeGetter = new FinalSorterNodeGetter (this.finalSortableNodeGetter);
+			this.sortableNodeGetter = new SortableCumulNodeGetter (this.cumulNodeGetter, accessor, BaseType.Assets);
+			this.sorterNodeGetter   = new SorterCumulNodeGetter (this.sortableNodeGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
@@ -84,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.finalSorterNodeGetter.Count;
+				return this.sorterNodeGetter.Count;
 			}
 		}
 
@@ -92,9 +89,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.finalSorterNodeGetter.Count)
+				if (index >= 0 && index < this.sorterNodeGetter.Count)
 				{
-					return this.finalSorterNodeGetter[index];
+					return this.sorterNodeGetter[index];
 				}
 				else
 				{
@@ -107,15 +104,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public decimal? GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.finalSorterNodeGetter.GetValue (node, field);
+			return this.sorterNodeGetter.GetValue (node, field);
 		}
 
 
 		private void UpdateData()
 		{
-			this.objectNodeGetter1.SetParams (this.timestamp, this.sortingInstructions);
-			this.objectNodeGetter2.SetParams (this.sortingInstructions);
-
 			this.groupNodeGetter1.SetParams (this.timestamp, this.sortingInstructions);
 			this.groupNodeGetter2.SetParams (this.rootGuid, this.sortingInstructions, this.rootGuid.IsEmpty);
 
@@ -123,8 +117,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
 			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
 
-			this.finalSortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
-			this.finalSorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.sortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.sorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
 		}
 
 
@@ -203,19 +197,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
-		private readonly SortableNodeGetter		objectNodeGetter1;
-		private readonly SorterNodeGetter		objectNodeGetter2;
-		private readonly GroupParentNodeGetter	groupNodeGetter1;
-		private readonly GroupLevelNodeGetter	groupNodeGetter2;
-		private readonly MergeNodeGetter		mergeNodeGetter;
-		private readonly TreeObjectsNodeGetter	treeObjectsGetter;
-		private readonly CumulNodeGetter		cumulNodeGetter;
-		private readonly FinalSortableNodeGetter		finalSortableNodeGetter;
-		private readonly FinalSorterNodeGetter		finalSorterNodeGetter;
+		private readonly GroupParentNodeGetter		groupNodeGetter1;
+		private readonly GroupLevelNodeGetter		groupNodeGetter2;
+		private readonly MergeNodeGetter			mergeNodeGetter;
+		private readonly TreeObjectsNodeGetter		treeObjectsGetter;
+		private readonly CumulNodeGetter			cumulNodeGetter;
+		private readonly SortableCumulNodeGetter	sortableNodeGetter;
+		private readonly SorterCumulNodeGetter		sorterNodeGetter;
 
-		private Timestamp?						timestamp;
-		private Guid							rootGuid;
-		private SortingInstructions				sortingInstructions;
-		private List<ExtractionInstructions>	extractionInstructions;
+		private Timestamp?							timestamp;
+		private Guid								rootGuid;
+		private SortingInstructions					sortingInstructions;
+		private List<ExtractionInstructions>		extractionInstructions;
 	}
 }

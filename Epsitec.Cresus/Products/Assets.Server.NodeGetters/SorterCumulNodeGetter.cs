@@ -7,9 +7,14 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
-	public class FinalSorterNodeGetter : INodeGetter<SortableCumulNode>  // outputNodes
+	/// <summary>
+	/// Accès en lecture à des données cumulées, triées selon le groupe, PrimaryOrderedValue
+	/// et SecondaryOrderedValue (ComparableData).
+	/// SortableCumulNode -> SortableCumulNode
+	/// </summary>
+	public class SorterCumulNodeGetter : INodeGetter<SortableCumulNode>  // outputNodes
 	{
-		public FinalSorterNodeGetter(INodeGetter<SortableCumulNode> inputNodes)
+		public SorterCumulNodeGetter(INodeGetter<SortableCumulNode> inputNodes)
 		{
 			this.inputNodes = inputNodes;
 		}

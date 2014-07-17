@@ -9,9 +9,14 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
-	public class FinalSortableNodeGetter : INodeGetter<SortableCumulNode>  // outputNodes
+	/// <summary>
+	/// Accès en lecture à des données cumulées, enrichies d'un contenu
+	/// triable (ComparableData).
+	/// CumulNode -> SortableCumulNode
+	/// </summary>
+	public class SortableCumulNodeGetter : INodeGetter<SortableCumulNode>  // outputNodes
 	{
-		public FinalSortableNodeGetter(INodeGetter<CumulNode> inputNodes, DataAccessor accessor, BaseType baseType)
+		public SortableCumulNodeGetter(INodeGetter<CumulNode> inputNodes, DataAccessor accessor, BaseType baseType)
 		{
 			this.inputNodes = inputNodes;
 			this.accessor   = accessor;

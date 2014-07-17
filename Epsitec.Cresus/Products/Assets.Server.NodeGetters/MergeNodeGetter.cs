@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
 	/// Gère l'accès en lecture à la fusion des objets dans les groupes.
-	/// LevelNode + SortableNode -> LevelNode
-	///    Group  +    Object    ->   mixte
+	/// LevelNode + GuidNode -> LevelNode
+	///    Group  +  Object  ->   mixte
 	/// 
 	///  >  Group
 	///    >  Object
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class MergeNodeGetter : INodeGetter<LevelNode>  // outputNodes
 	{
-		public MergeNodeGetter(DataAccessor accessor, INodeGetter<LevelNode> groupNodes, INodeGetter<SortableNode> objectNodes)
+		public MergeNodeGetter(DataAccessor accessor, INodeGetter<LevelNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
 			this.accessor    = accessor;
 			this.groupNodes  = groupNodes;
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private readonly DataAccessor				accessor;
 		private readonly INodeGetter<LevelNode>		groupNodes;
-		private readonly INodeGetter<SortableNode>	objectNodes;
+		private readonly INodeGetter<GuidNode>		objectNodes;
 		private readonly List<LevelNode>			outputNodes;
 
 		private Timestamp?							timestamp;

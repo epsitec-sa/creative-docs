@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController();
 
-			var primary      = this.accessor.GetNodeGetter (BaseType.Categories);
-			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
+			var primary     = this.accessor.GetNodeGetter (BaseType.Categories);
+			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
 			this.nodeGetter = new SorterNodeGetter (secondary);
 
 			secondary.SetParams (null, SortingInstructions.Default);

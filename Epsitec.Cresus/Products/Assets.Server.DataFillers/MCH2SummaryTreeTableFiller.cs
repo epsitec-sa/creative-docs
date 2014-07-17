@@ -345,13 +345,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		//?private MCH2SummaryNodeGetter NodeGetter
-		//?{
-		//?	get
-		//?	{
-		//?		return this.nodeGetter as MCH2SummaryNodeGetter;
-		//?	}
-		//?}
 		private ObjectsNodeGetter NodeGetter
 		{
 			get

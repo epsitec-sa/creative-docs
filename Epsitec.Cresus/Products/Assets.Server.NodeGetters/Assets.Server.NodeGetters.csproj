@@ -48,7 +48,6 @@
     <Compile Include="ExtractionEngine.cs" />
     <Compile Include="SortableCumulNode.cs" />
     <Compile Include="CumulNode.cs" />
-    <Compile Include="MCH2SummaryNodeGetter.cs" />
     <Compile Include="CumulNodeGetter.cs" />
     <Compile Include="EntriesNodeGetter.cs" />
     <Compile Include="EntryNode.cs" />
@@ -68,9 +67,9 @@
     <Compile Include="ParentNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortableNode.cs" />
-    <Compile Include="FinalSortableNodeGetter.cs" />
+    <Compile Include="SortableCumulNodeGetter.cs" />
     <Compile Include="SortableNodeGetter.cs" />
-    <Compile Include="FinalSorterNodeGetter.cs" />
+    <Compile Include="SorterCumulNodeGetter.cs" />
     <Compile Include="SorterNodeGetter.cs" />
     <Compile Include="SortingMachine.cs" />
     <Compile Include="TreeNode.cs" />

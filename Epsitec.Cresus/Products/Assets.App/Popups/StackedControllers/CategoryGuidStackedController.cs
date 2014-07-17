@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		public CategoryGuidStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
-			var primary      = this.accessor.GetNodeGetter (BaseType.Categories);
-			var secondary    = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
+			var primary     = this.accessor.GetNodeGetter (BaseType.Categories);
+			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);
 			this.nodeGetter = new SorterNodeGetter (secondary);
 
 			secondary.SetParams (null, SortingInstructions.Default);
