@@ -105,8 +105,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			//?var childrens = this.Sort (this.inputNodes.GetNodes ().Where (x => x.Parent == tree.Node.Guid));
-			var childrens = this.inputNodes.GetNodes ().Where (x => x.Parent == tree.Node.Guid);
+			var childrens = this.Sort (this.inputNodes.GetNodes ().Where (x => x.Parent == tree.Node.Guid));
 
 			foreach (var children in childrens)
 			{
@@ -117,16 +116,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		//?private IEnumerable<ParentNode> Sort(IEnumerable<ParentNode> nodes)
-		//?{
-		//?	return SortingMachine<ParentNode>.Sorts
-		//?	(
-		//?		this.sortingInstructions,
-		//?		nodes,
-		//?		x => x.PrimaryOrderedValue,
-		//?		x => x.SecondaryOrderedValue
-		//?	);
-		//?}
+		private IEnumerable<ParentNode> Sort(IEnumerable<ParentNode> nodes)
+		{
+			return SortingMachine<ParentNode>.Sorts
+			(
+				this.sortingInstructions,
+				nodes,
+				null,
+				x => x.PrimaryOrderedValue,
+				x => x.SecondaryOrderedValue
+			);
+		}
 
 		private static int GetLevel(TreeNode treeNode)
 		{
