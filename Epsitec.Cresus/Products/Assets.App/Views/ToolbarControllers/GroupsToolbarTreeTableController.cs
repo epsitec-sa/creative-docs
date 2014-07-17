@@ -100,6 +100,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		protected override void CreateControllerUI(Widget parent)
+		{
+			base.CreateControllerUI (parent);
+
+			this.treeTableController.AllowsSorting = false;
+		}
+
+
 		protected override void AdaptToolbarCommand()
 		{
 			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", "Nouveau groupe");
