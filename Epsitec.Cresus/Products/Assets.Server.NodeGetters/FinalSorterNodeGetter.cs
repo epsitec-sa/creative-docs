@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public decimal? GetValue(SortableCumulNode node, ObjectField field)
 		{
 			decimal value;
-			if (node.Cumuls.TryGetValue (field, out value))
+			if (node.Cumuls != null && node.Cumuls.TryGetValue (field, out value))
 			{
 				return value;
 			}

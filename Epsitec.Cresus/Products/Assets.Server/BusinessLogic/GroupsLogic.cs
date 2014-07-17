@@ -11,6 +11,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class GroupsLogic
 	{
+		public static string GetDescription(string name, string number)
+		{
+			//	Retourne la description d'un groupe, contenant le nom et le numéro.
+			return string.Format ("{0} ({1})", name, number);
+			//?return string.Format ("{0} — {1}", name, number);
+		}
+
 		public static string GetShortName(DataAccessor accessor, GuidRatio guidRatio)
 		{
 			//	Retourne le nom court d'un groupe-ratio, du genre:

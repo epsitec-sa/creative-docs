@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return new SortingInstructions (ObjectField.MCH2Report, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+				return new SortingInstructions (this.MainStringField, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 			}
 		}
 
@@ -64,7 +64,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				foreach (var column in this.OrderedColumns)
 				{
-					var field = ObjectField.MCH2Report + (int) column;
+					ObjectField field;
+
+					if (column == Column.Name)
+					{
+						field = this.MainStringField;
+					}
+					else
+					{
+						field = ObjectField.MCH2Report + (int) column;
+					}
+
 					var type  = this.GetColumnType  (column);
 					var width = this.GetColumnWidth (column);
 					var name  = this.GetColumnName  (column);
@@ -110,8 +120,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					if (column == Column.Name)
 					{
-						var field = (baseType == BaseType.Groups) ? ObjectField.Name : this.accessor.GlobalSettings.GetMainStringField (BaseType.Assets);
-						var text = ObjectProperties.GetObjectPropertyString (obj, this.FinalTimestamp, field, inputValue: true);
+						string text;
+
+						if (baseType == BaseType.Groups)
+						{
+							var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+							var number = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
+							text = GroupsLogic.GetDescription (name, number);
+						}
+						else
+						{
+							text = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, this.MainStringField, inputValue: true);
+						}
+
 						cell = new TreeTableCellTree (level, type, text, cellState1);
 					}
 					else
@@ -296,6 +317,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.AmortizationsExtra;
 				yield return Column.Revaluations;
 				yield return Column.Revalorizations;
+			}
+		}
+
+		private ObjectField MainStringField
+		{
+			get
+			{
+				return this.accessor.GetMainStringField (BaseType.Assets);
 			}
 		}
 

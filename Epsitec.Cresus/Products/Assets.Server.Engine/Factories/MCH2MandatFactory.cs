@@ -82,9 +82,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var v1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  1), "Fiat Uno",                 "300",    8000.0m,   20000.0m,   10000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
 			var v2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (100), "Citroën C4 Picasso",       "304",   22000.0m,   35000.0m,   35000.0m, "Nicolet",  null,       "Véhicules",  "Voitures",               "Immobilisations corporelles",   "Administratif");
 			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Parcelle du Crêt-au-Clos", "400", 1000000.0m,       null,  900000.0m, "Dupond",   "Nicolet",  "Immobilier", "Terrains",               "Immobilisations corporelles",   "Administratif");
-			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "500",  250000.0m,       null,  290000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Nestlé",    "500",  300000.0m,       null,  290000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
 			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Participations Logitech",  "501",   10000.0m,       null,   15000.0m, "Zumstein", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
-			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "502",  300000.0m,       null,  250000.0m, "Dubosson", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (200), "Participations Raifeisen", "502",  250000.0m,       null,  250000.0m, "Dubosson", null,       null,         "Autres immobilisations", "Immobilisations incorporelles", "Financier");
 
 			{
 				var e = this.AddAssetEvent (i1, this.accessor.Mandat.StartDate.AddYears (1), EventType.Modification);

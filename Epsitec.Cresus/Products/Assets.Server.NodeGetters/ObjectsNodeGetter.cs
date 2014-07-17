@@ -148,37 +148,37 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void CompactOrExpand(int index)
 		{
 			this.treeObjectsGetter.CompactOrExpand (index);
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public void CompactAll()
 		{
 			this.treeObjectsGetter.CompactAll ();
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public void CompactOne()
 		{
 			this.treeObjectsGetter.CompactOne ();
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public void ExpandOne()
 		{
 			this.treeObjectsGetter.ExpandOne ();
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public void ExpandAll()
 		{
 			this.treeObjectsGetter.ExpandAll ();
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public void SetLevel(int level)
 		{
 			this.treeObjectsGetter.SetLevel (level);
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.UpdateData ();
 		}
 
 		public int GetLevel()

@@ -110,8 +110,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						{
 							var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 							var number = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
-							text = string.Format ("{0} ({1})", name, number);
-							//?text = string.Format ("{0} — {1}", name, number);
+							text = GroupsLogic.GetDescription (name, number);
 						}
 						else
 						{

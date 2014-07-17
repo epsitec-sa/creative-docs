@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			var result = nodes;
 
-			//	On trie en premier selon le critère secondaire.
+			//	1) On trie en premier selon le critère secondaire.
 			if (instructions.SecondaryField != ObjectField.Unknown)
 			{
 				if (instructions.SecondaryType == SortedType.Ascending)
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			//	On trie en deuxième selon le critère principal.
+			//	2) On trie en deuxième selon le critère principal.
 			if (instructions.PrimaryField != ObjectField.Unknown)
 			{
 				if (instructions.PrimaryType == SortedType.Ascending)
@@ -53,7 +53,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			//	On trie ensuite selon les groupes.
+			//	3) On trie finalement ensuite selon les groupes, ce qui prime
+			//	   sur tous les autres tris.
 			if (getGroupData != null)
 			{
 				result = result.OrderBy (x => getGroupData (x));
