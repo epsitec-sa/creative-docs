@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static ComparableData GetComparableData(DataObject obj, Timestamp? timestamp, ObjectField field)
+		public static ComparableData GetComparableData(DataAccessor accessor, DataObject obj, Timestamp? timestamp, ObjectField field)
 		{
 			if (obj != null)
 			{
@@ -163,13 +163,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					p = ObjectProperties.GetObjectInputProperty (obj, field);
 				}
 
-				return ObjectProperties.GetComparableData (p);
+				return ObjectProperties.GetComparableData (accessor, p);
 			}
 
 			return ComparableData.Empty;
 		}
 
-		public static ComparableData GetComparableData(AbstractDataProperty property)
+		public static ComparableData GetComparableData(DataAccessor accessor, AbstractDataProperty property)
 		{
 			if (property != null)
 			{
@@ -196,6 +196,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (property is DataStringProperty)
 				{
 					return new ComparableData ((property as DataStringProperty).Value);
+				}
+				else if (property is DataGuidProperty)
+				{
+					var guid = (property as DataGuidProperty).Value;
+					var text = PersonsLogic.GetSummary (accessor, guid);
+					return new ComparableData (text);
 				}
 			}
 

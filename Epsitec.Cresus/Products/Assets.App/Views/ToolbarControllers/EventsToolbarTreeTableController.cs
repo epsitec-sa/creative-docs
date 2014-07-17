@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.hasTreeOperations = false;
 			this.hasMoveOperations = false;
 
-			this.eventsNodeGetter = new ObjectEventsNodeGetter ();
+			this.eventsNodeGetter = new ObjectEventsNodeGetter (this.accessor);
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
 			this.title = "Evénements";

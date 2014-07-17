@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
@@ -14,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public class ObjectEventsNodeGetter : INodeGetter<SortableNode>  // outputNodes
 	{
+		public ObjectEventsNodeGetter(DataAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
+
 		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
 		{
 			this.dataObject          = dataObject;
@@ -51,14 +58,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var pp = e.GetProperty (this.sortingInstructions.PrimaryField);
 					var sp = e.GetProperty (this.sortingInstructions.SecondaryField);
 
-					var primary   = ObjectProperties.GetComparableData (pp);
-					var secondary = ObjectProperties.GetComparableData (sp);
+					var primary   = ObjectProperties.GetComparableData (this.accessor, pp);
+					var secondary = ObjectProperties.GetComparableData (this.accessor, sp);
 
 					return new SortableNode (e.Guid, primary, secondary);
 				}
 			}
 		}
 
+
+		private readonly DataAccessor			accessor;
 
 		private DataObject						dataObject;
 		private SortingInstructions				sortingInstructions;

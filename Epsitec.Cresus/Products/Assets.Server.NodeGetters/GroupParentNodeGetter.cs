@@ -49,8 +49,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var node      = this.inputNodes[index];
 				var obj       = this.accessor.GetObject (this.baseType, node.Guid);
 				var parent    = this.GetParent (obj);
-				var primary   = ObjectProperties.GetComparableData (obj, this.timestamp, this.sortingInstructions.PrimaryField);
-				var secondary = ObjectProperties.GetComparableData (obj, this.timestamp, this.sortingInstructions.SecondaryField);
+				var primary   = ObjectProperties.GetComparableData (this.accessor, obj, this.timestamp, this.sortingInstructions.PrimaryField);
+				var secondary = ObjectProperties.GetComparableData (this.accessor, obj, this.timestamp, this.sortingInstructions.SecondaryField);
 
 				return new ParentNode (node.Guid, parent, primary, secondary);
 			}

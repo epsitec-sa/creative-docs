@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			else
 			{
 				var obj = this.accessor.GetObject (this.baseType, node.Guid);
-				return ObjectProperties.GetComparableData (obj, this.timestamp, field);
+				return ObjectProperties.GetComparableData (this.accessor, obj, this.timestamp, field);
 			}
 		}
 
