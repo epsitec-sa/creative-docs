@@ -182,17 +182,25 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		public int SearchBestIndex(Guid value)
 		{
-			return this.treeObjectsGetter.SearchBestIndex (value);
+			int index = this.treeObjectsGetter.SearchBestIndex (value);
+
+			if (index != -1)
+			{
+				var guid = this.treeObjectsGetter[index].Guid;
+				index = this.sorterNodeGetter.GetIndex (guid);
+			}
+
+			return index;
 		}
 
 		public int VisibleToAll(int index)
 		{
-			return this.treeObjectsGetter.VisibleToAll (index);
+			return index;
 		}
 
 		public int AllToVisible(int index)
 		{
-			return this.treeObjectsGetter.AllToVisible (index);
+			return index;
 		}
 		#endregion
 

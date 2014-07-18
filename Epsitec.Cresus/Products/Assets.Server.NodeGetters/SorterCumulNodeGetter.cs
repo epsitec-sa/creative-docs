@@ -52,6 +52,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
+		public int GetIndex(Guid guid)
+		{
+			for (int i=0; i<this.outputNodes.Length; i++)
+			{
+				if (this.outputNodes[i].Guid == guid)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
+
 		public decimal? GetValue(SortableCumulNode node, ObjectField field)
 		{
 			decimal value;

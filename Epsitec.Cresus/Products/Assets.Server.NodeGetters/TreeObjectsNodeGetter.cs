@@ -204,9 +204,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	
 		public int SearchBestIndex(Guid value)
 		{
-			//	Retourne l'index ayant un Guid donné. Si la ligne correspondante
-			//	est cachée, on est assez malin pour retourner la prochaine ligne
-			//	visible, vers le haut.
+			//	Retourne l'index (dans l'espace "Visible") ayant un Guid donné.
+			//	Si la ligne correspondante est cachée, on est assez malin pour
+			//	retourner la prochaine ligne visible, vers le haut.
 			int index = -1;
 
 			if (!value.IsEmpty)
