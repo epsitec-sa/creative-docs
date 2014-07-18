@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 				&& this.PageType          == o.PageType
 				&& this.IsShowEvents      == o.IsShowEvents
 				&& this.SelectedTimestamp == o.SelectedTimestamp
-				&& this.SelectedGuid      == o.SelectedGuid;
+				&& this.SelectedGuid      == o.SelectedGuid
+				&& this.ShowGraphic       == o.ShowGraphic;
 		}
 
 

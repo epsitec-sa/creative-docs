@@ -25,6 +25,19 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		//	afin de sélectionner le bon compte.
 
 
+		public override bool StrictlyEquals(AbstractViewState other)
+		{
+			var o = other as AccountsViewState;
+			if (o == null)
+			{
+				return false;
+			}
+
+			return this.ViewType    == o.ViewType
+				&& this.ShowGraphic == o.ShowGraphic;
+		}
+
+
 		public override LastViewNode GetNavigationNode(DataAccessor accessor)
 		{
 			var timestamp = new Timestamp (this.ViewType.AccountsDateRange.IncludeFrom, 0);

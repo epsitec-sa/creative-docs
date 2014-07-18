@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 			return this.ViewType     == o.ViewType
 				&& this.PageType     == o.PageType
-				&& this.SelectedGuid == o.SelectedGuid;
+				&& this.SelectedGuid == o.SelectedGuid
+				&& this.ShowGraphic  == o.ShowGraphic;
 		}
 
 
