@@ -13,8 +13,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetSummary(DataAccessor accessor, BaseType baseType, string number)
 		{
 			//	Retourne le résumé (par exemple "1000 Caisse") d'après le seul numéro.
-			//	Le résumé dépend de la base (BaseType.Accounts+n), qui dépend elle-même
-			//	de la période du plan comptable.
 			if (!string.IsNullOrEmpty (number))
 			{
 				var obj = AccountsLogic.GetAccount (accessor, baseType, number);

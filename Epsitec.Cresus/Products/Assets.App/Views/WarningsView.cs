@@ -5,25 +5,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
-using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsView : AbstractView
+	public class WarningsView : AbstractView
 	{
-		public AccountsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, BaseType baseType)
+		public WarningsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 			: base (accessor, toolbar, viewType)
 		{
-			this.baseType = baseType;
+			this.baseType = BaseType.Persons;
 
-			this.listController = new AccountsToolbarTreeTableController (this.accessor, this.baseType);
-			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
+			this.listController = new WarningsToolbarTreeTableController (this.accessor, BaseType.Persons);
 		}
 
 
@@ -37,11 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
-			{
-				this.DataChanged ();
-			}
-
 			var topBox = new FrameBox
 			{
 				Parent  = parent,
@@ -54,16 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
-			this.editFrameBox = new FrameBox
-			{
-				Parent         = topBox,
-				Dock           = DockStyle.Right,
-				PreferredWidth = AbstractView.editionWidth,
-				BackColor      = ColorManager.GetBackgroundColor (),
-			};
-
 			this.listController.CreateUI (this.listFrameBox);
-			this.objectEditor.CreateUI (this.editFrameBox);
 
 			this.DeepUpdateUI ();
 
@@ -77,6 +59,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
+				this.listController.RowDoubleClicked += delegate
+				{
+					this.OnListDoubleClicked ();
+				};
+
 				this.listController.UpdateView += delegate (object sender)
 				{
 					this.UpdateUI ();
@@ -85,19 +72,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.listController.ChangeView += delegate (object sender, ViewType viewType)
 				{
 					this.OnChangeView (viewType);
-				};
-			}
-
-			//	Connexion des événements de l'éditeur.
-			{
-				this.objectEditor.ValueChanged += delegate (object sender, ObjectField field)
-				{
-					this.UpdateToolbars ();
-				};
-
-				this.objectEditor.DataChanged += delegate
-				{
-					this.DataChanged ();
 				};
 			}
 		}
@@ -116,13 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
-			{
-				this.DataChanged ();
-			}
-
 			this.listController.InUse = true;
-			this.editFrameBox.Visibility = false;
 
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
@@ -151,52 +119,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(DataAccessor accessor, System.DateTime date, string account)
-		{
-			//	Retourne un ViewState permettant de voir un compte donné à une date donnée.
-			var range = accessor.Mandat.GetBestDateRange (date);
-
-			return new AccountsViewState
-			{
-				ViewType        = new ViewType(ViewTypeKind.Accounts, range),
-				SelectedAccount = account,
-				ShowGraphic     = false,
-			};
-		}
-
-
 		public override AbstractViewState ViewState
 		{
 			get
 			{
-				return new AccountsViewState
+				return new WarningsViewState
 				{
-					ViewType    = new ViewType (ViewTypeKind.Accounts, this.baseType.AccountsDateRange),
-					ShowGraphic = this.listController.ShowGraphic,
+					ViewType     = ViewType.Warnings,
+					SelectedGuid = this.selectedGuid,
 				};
 			}
 			set
 			{
-				var viewState = value as AccountsViewState;
+				var viewState = value as WarningsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				var baseType = new BaseType(BaseTypeKind.Accounts, viewState.ViewType.AccountsDateRange);
-				var obj = AccountsLogic.GetAccount(this.accessor, baseType, viewState.SelectedAccount);
-				if (obj == null)
-				{
-					this.selectedGuid = Guid.Empty;
-				}
-				else
-				{
-					this.selectedGuid = obj.Guid;
-				}
-
-				this.listController.ShowGraphic = viewState.ShowGraphic;
+				this.selectedGuid = viewState.SelectedGuid;
 
 				this.UpdateUI ();
 			}
 		}
 
+		protected override Guid SelectedGuid
+		{
+			get
+			{
+				return this.selectedGuid;
+			}
+		}
+
+
+		private void OnListDoubleClicked()
+		{
+		}
 
 		private void UpdateAfterListChanged()
 		{
@@ -214,12 +169,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly AccountsToolbarTreeTableController listController;
-		private readonly ObjectEditor						objectEditor;
+		private readonly WarningsToolbarTreeTableController	listController;
 
 		private FrameBox									listFrameBox;
-		private FrameBox									editFrameBox;
-
 		private Guid										selectedGuid;
 	}
 }

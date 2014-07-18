@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Groups,
 		Persons,
 		Reports,
+		Warnings,
 		AssetsSettings,
 		PersonsSettings,
 		Accounts,

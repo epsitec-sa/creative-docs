@@ -221,8 +221,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateToolbar()
 		{
 			this.toolbar.SetCommandState (ToolbarCommand.NewMandat,        ToolbarCommandState.Enable);
-			this.toolbar.SetCommandState (ToolbarCommand.OpenMandat,       ToolbarCommandState.Disable);
-			this.toolbar.SetCommandState (ToolbarCommand.SaveMandat,       ToolbarCommandState.Disable);
+			this.toolbar.SetCommandState (ToolbarCommand.OpenMandat,       ToolbarCommandState.Hide);
+			this.toolbar.SetCommandState (ToolbarCommand.SaveMandat,       ToolbarCommandState.Hide);
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateBack,    this.NavigateBackEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateMenu,    this.NavigateMenuEnable);

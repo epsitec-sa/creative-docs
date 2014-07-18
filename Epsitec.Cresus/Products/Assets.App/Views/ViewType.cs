@@ -93,6 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static ViewType Groups          = new ViewType (ViewTypeKind.Groups);
 		public static ViewType Persons         = new ViewType (ViewTypeKind.Persons);
 		public static ViewType Reports         = new ViewType (ViewTypeKind.Reports);
+		public static ViewType Warnings        = new ViewType (ViewTypeKind.Warnings);
 		public static ViewType AssetsSettings  = new ViewType (ViewTypeKind.AssetsSettings);
 		public static ViewType PersonsSettings = new ViewType (ViewTypeKind.PersonsSettings);
 		public static ViewType Accounts        = new ViewType (ViewTypeKind.Accounts);

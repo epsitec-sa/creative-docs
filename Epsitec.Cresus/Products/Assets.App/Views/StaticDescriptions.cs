@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewTypeKind.Reports:
 					return "View.Reports";
 
+				case ViewTypeKind.Warnings:
+					return "View.Warnings";
+
 				case ViewTypeKind.AssetsSettings:
 					return "View.AssetsSettings";
 
@@ -71,6 +74,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case ViewTypeKind.Reports:
 					return "Rapports et statistiques";
+
+				case ViewTypeKind.Warnings:
+					return "Avertissements";
 
 				case ViewTypeKind.AssetsSettings:
 					//?return "Réglages — Champs des objets d'immobilisations";

@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class UserFieldsSettingsView : AbstractView
 	{
-		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar toolbar, BaseType baseType)
-			: base (accessor, toolbar)
+		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, BaseType baseType)
+			: base (accessor, toolbar, viewType)
 		{
 			this.baseType = baseType;
 

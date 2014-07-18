@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class GroupsView : AbstractView
 	{
-		public GroupsView(DataAccessor accessor, MainToolbar toolbar)
-			: base (accessor, toolbar)
+		public GroupsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, toolbar, viewType)
 		{
 			this.baseType = BaseType.Groups;
 

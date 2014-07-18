@@ -87,6 +87,12 @@ namespace Epsitec.Cresus.Assets.Data
 		UserFieldField,
 		UserFieldGuid,
 
+		WarningGlyph,
+		WarningObject,
+		WarningDate,
+		WarningField,
+		WarningDescription,
+
 		GroupGuidRatioFirst = 10000,
 		GroupGuidRatioLast  = 10099,
 

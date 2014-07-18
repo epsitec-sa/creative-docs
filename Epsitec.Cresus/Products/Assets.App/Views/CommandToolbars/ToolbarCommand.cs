@@ -67,6 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		ViewTypeAssetsSettings,
 		ViewTypePersonsSettings,
 		ViewTypeAccounts,
+		ViewTypeWarnings,
 
 		ViewModeSingle,
 		ViewModeEvent,

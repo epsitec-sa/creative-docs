@@ -296,6 +296,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				case ViewTypeKind.Reports:
 					return ToolbarCommand.ViewTypeReports;
 
+				case ViewTypeKind.Warnings:
+					return ToolbarCommand.ViewTypeWarnings;
+
 				case ViewTypeKind.AssetsSettings:
 					return ToolbarCommand.ViewTypeAssetsSettings;
 
@@ -331,6 +334,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				yield return ViewTypeKind.Groups;
 				yield return ViewTypeKind.Persons;
 				yield return ViewTypeKind.Reports;
+				yield return ViewTypeKind.Warnings;
 				yield return ViewTypeKind.AssetsSettings;
 				yield return ViewTypeKind.PersonsSettings;
 				yield return ViewTypeKind.Accounts;

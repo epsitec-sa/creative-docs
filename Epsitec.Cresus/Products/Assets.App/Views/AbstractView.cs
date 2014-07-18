@@ -19,10 +19,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView
 	{
-		public AbstractView(DataAccessor accessor, MainToolbar toolbar)
+		public AbstractView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 		{
-			this.accessor = accessor;
+			this.accessor    = accessor;
 			this.mainToolbar = toolbar;
+			this.viewType    = viewType;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -184,35 +185,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (viewType.Kind)
 			{
 				case ViewTypeKind.Assets:
-					return new AssetsView (accessor, toolbar);
+					return new AssetsView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Amortizations:
-					return new AmortizationsView (accessor, toolbar);
+					return new AmortizationsView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Categories:
-					return new CategoriesView (accessor, toolbar);
+					return new CategoriesView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Groups:
-					return new GroupsView (accessor, toolbar);
+					return new GroupsView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Persons:
-					return new PersonsView (accessor, toolbar);
+					return new PersonsView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Reports:
-					return new ReportsView (accessor, toolbar, historyViewStates);
+					return new ReportsView (accessor, toolbar, viewType, historyViewStates);
+
+				case ViewTypeKind.Warnings:
+					return new WarningsView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.AssetsSettings:
-					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Assets);
+					return new UserFieldsSettingsView (accessor, toolbar, viewType, BaseType.Assets);
 
 				case ViewTypeKind.PersonsSettings:
-					return new UserFieldsSettingsView (accessor, toolbar, BaseType.Persons);
+					return new UserFieldsSettingsView (accessor, toolbar, viewType, BaseType.Persons);
 
 				case ViewTypeKind.Entries:
-					return new EntriesView (accessor, toolbar);
+					return new EntriesView (accessor, toolbar, viewType);
 
 				case ViewTypeKind.Accounts:
 					var baseType = new BaseType (BaseTypeKind.Accounts, viewType.AccountsDateRange);
-					return new AccountsView (accessor, toolbar, baseType);
+					return new AccountsView (accessor, toolbar, viewType, baseType);
 
 				default:
 					return null;
@@ -270,6 +274,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected readonly DataAccessor			accessor;
 		protected readonly MainToolbar			mainToolbar;
+		protected readonly ViewType				viewType;
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;

@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizationsView : AbstractView
 	{
-		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar)
-			: base (accessor, toolbar)
+		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, toolbar, viewType)
 		{
 			this.baseType = BaseType.Assets;
 

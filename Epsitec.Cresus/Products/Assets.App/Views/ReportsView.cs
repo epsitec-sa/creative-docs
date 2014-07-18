@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsView : AbstractView
 	{
-		public ReportsView(DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
-			: base (accessor, toolbar)
+		public ReportsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, List<AbstractViewState> historyViewStates)
+			: base (accessor, toolbar, viewType)
 		{
 			this.historyViewStates = historyViewStates;
 		}
