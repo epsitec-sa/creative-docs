@@ -43,10 +43,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void DeepUpdateUI()
 		{
+			//	Met à jour la vue après un changement des données.
 		}
 
 		public virtual void UpdateUI()
 		{
+			//	Met à jour la vue.
 		}
 
 		public virtual AbstractViewState		ViewState

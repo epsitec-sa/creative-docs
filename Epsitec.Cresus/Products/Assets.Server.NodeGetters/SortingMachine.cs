@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			var result = nodes;
 
 			//	1) On trie en premier selon le critère secondaire.
-			if (instructions.SecondaryField != ObjectField.Unknown)
+			if (getSecondaryData != null && instructions.SecondaryField != ObjectField.Unknown)
 			{
 				if (instructions.SecondaryType == SortedType.Ascending)
 				{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			//	2) On trie en deuxième selon le critère principal.
-			if (instructions.PrimaryField != ObjectField.Unknown)
+			if (getPrimaryData != null && instructions.PrimaryField != ObjectField.Unknown)
 			{
 				if (instructions.PrimaryType == SortedType.Ascending)
 				{

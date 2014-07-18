@@ -77,6 +77,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
+				this.listController.UpdateView += delegate (object sender)
+				{
+					this.UpdateUI ();
+				};
+
 				this.listController.ChangeView += delegate (object sender, ViewType viewType)
 				{
 					this.OnChangeView (viewType);
@@ -124,6 +129,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.listController.InUse)
 				{
+					this.listController.UpdateGraphicMode ();
+
 					if (this.listController.DirtyData)
 					{
 						this.listController.UpdateData ();

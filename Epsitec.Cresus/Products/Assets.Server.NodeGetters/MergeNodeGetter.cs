@@ -95,6 +95,26 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void MergeObjects()
 		{
+			//	Valeurs de groupIndex, permettant de trier les objets
+			//	selon les groupes:
+			//
+			//  >  Group		groupIndex = 1
+			//    >  Object		groupIndex = 2
+			//    >  Object		groupIndex = 2
+			//  >  Group		groupIndex = 3
+			//    >  Object		groupIndex = 4
+			//  >  Group		groupIndex = 5
+			//  >  Group		groupIndex = 6
+			//    >  Object		groupIndex = 7
+			//    >  Object		groupIndex = 7
+			//    >  Object		groupIndex = 7
+			//  >  Group		groupIndex = 8
+			//    >  Object		groupIndex = 9
+			//    >  Object		groupIndex = 9
+			//
+			//	Les objets à l'intérieur des groupes sont triés selon
+			//	d'autres critères (par exemple, ordre alphabétique).
+
 			int groupIndex = 0;
 
 			foreach (var groupNode in this.groupNodes.GetNodes ())

@@ -130,6 +130,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.OnUpdateAfterObjectDelete ();
 				};
+
+				this.listController.UpdateView += delegate (object sender)
+				{
+					this.UpdateUI ();
+				};
+
+				this.listController.ChangeView += delegate (object sender, ViewType viewType)
+				{
+					this.OnChangeView (viewType);
+				};
 			}
 
 			//	Connexion des événements de la timeline en bas.
@@ -288,6 +298,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.listController.InUse)
 				{
+					this.listController.UpdateGraphicMode ();
+
 					if (this.listController.DirtyData)
 					{
 						this.listController.UpdateData ();

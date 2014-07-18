@@ -56,8 +56,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.CreateTreeTableControllerUI (this.treeTableFrame);
 			this.CreateGraphicControllerUI (this.graphicFrame);
-
-			this.UpdateGraphicMode ();
 		}
 
 		private void CreateTreeTableControllerUI(Widget parent)
@@ -157,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void UpdateGraphicMode()
+		public override void UpdateGraphicMode()
 		{
 			this.treeTableFrame.Visibility = !this.showGraphic;
 			this.graphicFrame.Visibility   =  this.showGraphic;

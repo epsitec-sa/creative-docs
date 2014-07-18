@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				if (this.showGraphic != value)
 				{
 					this.showGraphic = value;
-					this.UpdateGraphicMode ();
+					this.OnUpdateView ();
 				}
 			}
 		}
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 		}
 
-		protected virtual void UpdateGraphicMode()
+		public virtual void UpdateGraphicMode()
 		{
 		}
 
@@ -251,8 +251,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void OnGraphic()
 		{
-			this.showGraphic = !this.showGraphic;
-			this.UpdateGraphicMode ();
+			this.ShowGraphic = !this.showGraphic;
 		}
 
 		protected virtual void OnFilter()
@@ -593,6 +592,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		public event EventHandler UpdateAfterDelete;
+
+
+		protected void OnUpdateView()
+		{
+			this.UpdateView.Raise (this);
+		}
+
+		public event EventHandler UpdateView;
 
 
 		protected void OnChangeView(ViewType viewType)
