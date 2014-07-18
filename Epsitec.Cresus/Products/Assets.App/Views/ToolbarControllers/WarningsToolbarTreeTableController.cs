@@ -6,9 +6,9 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
+using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
 
-			var warnings = new List<Warning>();
-			WarningsLogic.GetWarnings (warnings, this.accessor);
-			this.nodeGetter = new WarningNodeGetter (warnings);
+			this.warnings = new List<Warning>();
+			WarningsLogic.GetWarnings (this.warnings, this.accessor);
+			this.nodeGetter = new WarningNodeGetter (this.warnings);
 		}
 
 
@@ -76,6 +76,29 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		public AbstractViewState Goto(Guid warningGuid)
+		{
+			var warning = this.warnings.Where (x => x.Guid == warningGuid).FirstOrDefault ();
+
+			switch (warning.BaseType.Kind)
+			{
+				case BaseTypeKind.Assets:
+					return this.GotoAsset (warning);
+
+				default:
+					return null;
+			}
+		}
+
+		private AbstractViewState GotoAsset(Warning warning)
+		{
+			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+			var e = obj.GetEvent (warning.EventGuid);
+
+			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, PageType.AmortizationDefinition);
+		}
+
+
 		protected override void AdaptToolbarCommand()
 		{
 			this.toolbar.SetCommandDescription (ToolbarCommand.New,      CommandDescription.Empty);
@@ -100,5 +123,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.VisibleSelectedRow = -1;
 		}
+
+
+		private readonly List<Warning>			warnings;
 	}
 }

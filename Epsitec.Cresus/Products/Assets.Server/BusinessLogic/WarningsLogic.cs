@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (account == null)
 				{
-					var desc = string.Format ("Le compte {0} n'est pas défini", p.Value);
+					var desc = string.Format ("Le compte {0} n'est pas défini à cette date", p.Value);
 					var warning = new Warning (BaseType.Assets, "View.Assets", asset.Guid, e.Guid, accountField, desc);
 					warnings.Add (warning);
 				}

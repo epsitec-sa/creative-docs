@@ -384,14 +384,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp)
+		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp, PageType pageType = PageType.AmortizationValue)
 		{
 			//	Retourne un ViewState permettant de voir l'écriture d'un objet
 			//	à un instant donné.
+			//	PageType.AmortizationValue permet d'éditer directement la valeur comptable
 			return new AssetsViewState
 			{
 				ViewType          = ViewType.Assets,
-				PageType          = PageType.AmortizationValue,  // pour éditer directement la valeur comptable
+				PageType          = pageType,
 				ViewMode          = ViewMode.Single,
 				SelectedGuid      = assetGuid,
 				SelectedTimestamp = timestamp,

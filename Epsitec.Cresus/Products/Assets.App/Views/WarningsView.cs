@@ -151,6 +151,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnListDoubleClicked()
 		{
+			this.selectedGuid = this.listController.SelectedGuid;
+			var viewState = this.listController.Goto (this.selectedGuid);
+
+			if (viewState != null)
+			{
+				this.OnGoto (viewState);
+			}
 		}
 
 		private void UpdateAfterListChanged()

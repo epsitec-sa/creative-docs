@@ -108,6 +108,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				case BaseTypeKind.Assets:
 					return AssetsLogic.GetSummary (this.accessor, obj.Guid, null);
 
+				case BaseTypeKind.Categories:
+					return CategoriesLogic.GetSummary (this.accessor, obj.Guid);
+
 				default:
 					return null;
 			}
