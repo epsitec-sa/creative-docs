@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartEdit (eventType, timestamp);
 				};
 
+				this.timelinesArrayController.StopEditing += delegate (object sender)
+				{
+					this.OnStopEdit ();
+				};
+
 				this.timelinesArrayController.SelectedCellChanged += delegate
 				{
 					if (this.ignoreChanges.IsZero)
@@ -280,6 +285,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.selectedTimestamp = timestamp;
 			this.objectEditor.PageType = this.objectEditor.MainPageType;
 
+			this.UpdateUI ();
+		}
+
+		private void OnStopEdit()
+		{
+			if (!this.isEditing)
+			{
+				return;
+			}
+
+			this.isEditing = false;
 			this.UpdateUI ();
 		}
 

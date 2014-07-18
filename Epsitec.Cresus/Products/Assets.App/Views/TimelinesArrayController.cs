@@ -932,6 +932,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						asset.AddEvent (newEvent);
 
 						this.UpdateData ();
+						this.OnStopEditing ();
 					}
 				}
 			}
@@ -1004,6 +1005,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateData ();
+			this.OnStopEditing ();
 		}
 
 		private void DoAmortisationsFix(DateRange processRange, bool allObjects)
@@ -1018,6 +1020,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateData ();
+			this.OnStopEditing ();
 		}
 
 		private void DoAmortisationsUnpreview(DateRange processRange, bool allObjects)
@@ -1032,6 +1035,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateData ();
+			this.OnStopEditing ();
 		}
 
 		private void DoAmortisationsDelete(DateRange processRange, bool allObjects)
@@ -1046,6 +1050,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateData ();
+			this.OnStopEditing ();
 		}
 		#endregion
 
@@ -1744,6 +1749,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler<EventType, Timestamp> StartEditing;
+
+
+		private void OnStopEditing()
+		{
+			this.StopEditing.Raise (this);
+		}
+
+		public event EventHandler StopEditing;
 		#endregion
 
 
