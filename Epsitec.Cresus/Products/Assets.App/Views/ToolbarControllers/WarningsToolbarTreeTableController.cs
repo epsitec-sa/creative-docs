@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		#region Goto Logic
 		public AbstractViewState Goto(Guid warningGuid)
 		{
 			var warning = this.warnings.Where (x => x.Guid == warningGuid).FirstOrDefault ();
@@ -84,6 +85,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				case BaseTypeKind.Assets:
 					return this.GotoAsset (warning);
+
+				case BaseTypeKind.Categories:
+					return this.GotoCategory (warning);
+
+				case BaseTypeKind.Groups:
+					return this.GotoGroup (warning);
+
+				case BaseTypeKind.Persons:
+					return this.GotoPerson (warning);
 
 				default:
 					return null;
@@ -95,8 +105,45 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
 			var e = obj.GetEvent (warning.EventGuid);
 
-			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, PageType.AmortizationDefinition);
+			PageType page;
+
+			if (warning.Field >= ObjectField.UserFieldFirst &&
+				warning.Field <= ObjectField.UserFieldLast)
+			{
+				page = PageType.Asset;
+			}
+			else
+			{
+				page = PageType.AmortizationDefinition;
+			}
+
+			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, page);
 		}
+
+		private AbstractViewState GotoCategory(Warning warning)
+		{
+			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+			var e = obj.GetEvent (warning.EventGuid);
+
+			return CategoriesView.GetViewState (warning.ObjectGuid);
+		}
+
+		private AbstractViewState GotoGroup(Warning warning)
+		{
+			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+			var e = obj.GetEvent (warning.EventGuid);
+
+			return GroupsView.GetViewState (warning.ObjectGuid);
+		}
+
+		private AbstractViewState GotoPerson(Warning warning)
+		{
+			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+			var e = obj.GetEvent (warning.EventGuid);
+
+			return PersonsView.GetViewState (warning.ObjectGuid);
+		}
+		#endregion
 
 
 		protected override void AdaptToolbarCommand()

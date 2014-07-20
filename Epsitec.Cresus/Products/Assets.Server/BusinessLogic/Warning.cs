@@ -9,12 +9,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct Warning
 	{
-		public Warning(BaseType baseType, string viewIcon, Guid objectGuid, Guid eventGuid, ObjectField field, string description)
+		public Warning(BaseType baseType, Guid objectGuid, Guid eventGuid, ObjectField field, string description)
 		{
 			this.Guid        = Guid.NewGuid ();
 
 			this.BaseType    = baseType;
-			this.ViewIcon    = viewIcon;
 			this.ObjectGuid  = objectGuid;
 			this.EventGuid   = eventGuid;
 			this.Field       = field;
@@ -33,11 +32,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static Warning Empty = new Warning (BaseType.Unknown, null, Guid.Empty, Guid.Empty, ObjectField.Unknown, null);
+		public static Warning Empty = new Warning (BaseType.Unknown, Guid.Empty, Guid.Empty, ObjectField.Unknown, null);
 
 		public readonly Guid				Guid;
 		public readonly BaseType			BaseType;
-		public readonly string				ViewIcon;
 		public readonly Guid				ObjectGuid;
 		public readonly Guid				EventGuid;
 		public readonly ObjectField			Field;

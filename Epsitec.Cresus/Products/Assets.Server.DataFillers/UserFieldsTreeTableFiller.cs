@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 150, "Nom"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldType,         TreeTableColumnType.String, 100, "Type"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldRequired,     TreeTableColumnType.String,  50, "Oblig."));
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldColumnWidth,  TreeTableColumnType.Int,     70, "Lg colonne"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineWidth,    TreeTableColumnType.Int,     70, "Lg ligne"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineCount,    TreeTableColumnType.Int,     70, "Nb lignes"));
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<7; i++)
+			for (int i=0; i<8; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -70,23 +71,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var node  = this.nodeGetter[firstRow+i];
 				var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
 
-				var text0  = userField.Name;
-				var text1  = EnumDictionaries.GetFieldTypeName (userField.Type);
-				var text2  = userField.ColumnWidth;
-				var text3  = userField.LineWidth;
-				var text4  = userField.LineCount;
-				var text5  = userField.TopMargin;
-				var text6  = userField.SummaryOrder;
+				var text0 = userField.Name;
+				var text1 = EnumDictionaries.GetFieldTypeName (userField.Type);
+				var text2 = userField.Required ? "Oui" : "Non";
+				var text3 = userField.ColumnWidth;
+				var text4 = userField.LineWidth;
+				var text5 = userField.LineCount;
+				var text6 = userField.TopMargin;
+				var text7 = userField.SummaryOrder;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				var cell0 = new TreeTableCellString (text0, cellState);
 				var cell1 = new TreeTableCellString (text1, cellState);
-				var cell2 = new TreeTableCellInt    (text2, cellState);
+				var cell2 = new TreeTableCellString (text2, cellState);
 				var cell3 = new TreeTableCellInt    (text3, cellState);
 				var cell4 = new TreeTableCellInt    (text4, cellState);
 				var cell5 = new TreeTableCellInt    (text5, cellState);
 				var cell6 = new TreeTableCellInt    (text6, cellState);
+				var cell7 = new TreeTableCellInt    (text7, cellState);
 
 				int columnRank = 0;
 
@@ -97,6 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
 				content.Columns[columnRank++].AddRow (cell6);
+				content.Columns[columnRank++].AddRow (cell7);
 			}
 
 			return content;

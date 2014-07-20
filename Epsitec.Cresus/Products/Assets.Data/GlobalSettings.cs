@@ -75,9 +75,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 			var p8 = new DataIntProperty (ObjectField.UserFieldField, (int) userField.Field);
 			e.AddProperty (p8);
-	
+
 			var p9 = new DataGuidProperty (ObjectField.UserFieldGuid, guid);
 			e.AddProperty (p9);
+
+			var p10 = new DataIntProperty (ObjectField.UserFieldRequired, userField.Required ? 1:0);
+			e.AddProperty (p10);
 
 			return obj;
 		}
@@ -88,29 +91,32 @@ namespace Epsitec.Cresus.Assets.Data
 			var e = obj.GetEvent (0);
 			System.Diagnostics.Debug.Assert (e != null);
 
-			var p1 = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;
-			var p2 = e.GetProperty (ObjectField.UserFieldType        ) as DataIntProperty;
-			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth ) as DataIntProperty;
-			var p4 = e.GetProperty (ObjectField.UserFieldLineWidth   ) as DataIntProperty;
-			var p5 = e.GetProperty (ObjectField.UserFieldLineCount   ) as DataIntProperty;
-			var p6 = e.GetProperty (ObjectField.UserFieldSummaryOrder) as DataIntProperty;
-			var p7 = e.GetProperty (ObjectField.UserFieldTopMargin   ) as DataIntProperty;
-			var p8 = e.GetProperty (ObjectField.UserFieldField       ) as DataIntProperty;
-			var p9 = e.GetProperty (ObjectField.UserFieldGuid        ) as DataGuidProperty;
+			var p1  = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;
+			var p2  = e.GetProperty (ObjectField.UserFieldType        ) as DataIntProperty;
+			var p3  = e.GetProperty (ObjectField.UserFieldColumnWidth ) as DataIntProperty;
+			var p4  = e.GetProperty (ObjectField.UserFieldLineWidth   ) as DataIntProperty;
+			var p5  = e.GetProperty (ObjectField.UserFieldLineCount   ) as DataIntProperty;
+			var p6  = e.GetProperty (ObjectField.UserFieldSummaryOrder) as DataIntProperty;
+			var p7  = e.GetProperty (ObjectField.UserFieldTopMargin   ) as DataIntProperty;
+			var p8  = e.GetProperty (ObjectField.UserFieldField       ) as DataIntProperty;
+			var p9  = e.GetProperty (ObjectField.UserFieldGuid        ) as DataGuidProperty;
+			var p10 = e.GetProperty (ObjectField.UserFieldRequired    ) as DataIntProperty;
 
-			System.Diagnostics.Debug.Assert (p1 != null);
-			System.Diagnostics.Debug.Assert (p2 != null);
-			System.Diagnostics.Debug.Assert (p3 != null);
-			System.Diagnostics.Debug.Assert (p7 != null);
-			System.Diagnostics.Debug.Assert (p8 != null);
-			System.Diagnostics.Debug.Assert (p9 != null);
+			System.Diagnostics.Debug.Assert (p1  != null);
+			System.Diagnostics.Debug.Assert (p2  != null);
+			System.Diagnostics.Debug.Assert (p3  != null);
+			System.Diagnostics.Debug.Assert (p7  != null);
+			System.Diagnostics.Debug.Assert (p8  != null);
+			System.Diagnostics.Debug.Assert (p9  != null);
+			System.Diagnostics.Debug.Assert (p10 != null);
 
-			var  name        =               p1.Value;
-			var  type        = (FieldType)   p2.Value;
-			var  columnWidth =               p3.Value;
-			var  topMargin   =               p7.Value;
-			var  field       = (ObjectField) p8.Value;
-			var  guid        =               p9.Value;
+			var name        =               p1.Value;
+			var type        = (FieldType)   p2.Value;
+			var columnWidth =               p3.Value;
+			var topMargin   =               p7.Value;
+			var field       = (ObjectField) p8.Value;
+			var guid        =               p9.Value;
+			var required    =               p10.Value != 0;
 
 			int? lineWidth = null;
 			if (p4 != null && type == FieldType.String)
@@ -138,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 			//	Recrée la nouvelle rubrique utilisateur, au même emplacement et sans
 			//	modifier son Guid.
-			var userField = new UserField (guid, name, field, type, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
+			var userField = new UserField (guid, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
 			this.InsertUserField (baseType, index, userField);
 		}
 

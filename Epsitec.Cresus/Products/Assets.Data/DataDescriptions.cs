@@ -96,6 +96,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.UserFieldType:
 					return "Type";
 
+				case ObjectField.UserFieldRequired:
+					return "Obligatoire";
+
 				case ObjectField.UserFieldColumnWidth:
 					return "Largeur colonne";
 

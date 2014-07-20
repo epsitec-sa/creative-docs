@@ -170,7 +170,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnViewStateChanged (this.ViewState);
 		}
 
-	
+
+		public static AbstractViewState GetViewState(Guid categoryGuid)
+		{
+			//	Retourne un ViewState permettant de voir une catégorie donnée.
+			return new CategoriesViewState
+			{
+				ViewType     = ViewType.Categories,
+				PageType     = PageType.Category,  // pour éditer directement
+				SelectedGuid = categoryGuid,
+			};
+		}
+
+
 		public override AbstractViewState ViewState
 		{
 			get

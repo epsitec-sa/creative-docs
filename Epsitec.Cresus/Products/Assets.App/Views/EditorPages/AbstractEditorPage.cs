@@ -127,6 +127,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
+				else if (controller is BoolFieldController)
+				{
+					var c = controller as BoolFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field) != 0;
+					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
+				}
 				else if (controller is DateFieldController)
 				{
 					var c = controller as DateFieldController;
@@ -594,6 +603,42 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
 				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+
+			return controller;
+		}
+
+		protected BoolFieldController CreateBoolController(Widget parent, ObjectField field)
+		{
+			var controller = new BoolFieldController (this.accessor)
+			{
+				Field     = field,
+				Label     = this.accessor.GetFieldName (field),
+				TabIndex  = ++this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value ? 1:0);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (of) != 0;
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);

@@ -3,11 +3,36 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class StaticDescriptions
 	{
+		public static ViewTypeKind GetViewTypeKind(BaseTypeKind kind)
+		{
+			switch (kind)
+			{
+				case BaseTypeKind.Assets:
+					return ViewTypeKind.Assets;
+
+				case BaseTypeKind.Entries:
+					return ViewTypeKind.Entries;
+
+				case BaseTypeKind.Categories:
+					return ViewTypeKind.Categories;
+
+				case BaseTypeKind.Groups:
+					return ViewTypeKind.Groups;
+
+				case BaseTypeKind.Persons:
+					return ViewTypeKind.Persons;
+
+				default:
+					return ViewTypeKind.Unknown;
+			}
+		}
+
 		public static string GetViewTypeIcon(ViewTypeKind kind)
 		{
 			switch (kind)

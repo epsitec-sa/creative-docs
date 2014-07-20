@@ -75,12 +75,22 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
 				var e = obj.GetEvent (warning.EventGuid);
 
+				Timestamp? timestamp;
+				if (e == null)
+				{
+					timestamp = null;
+				}
+				else
+				{
+					timestamp = e.Timestamp;
+				}
+
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				string icon  = warning.ViewIcon;
-				string text  = this.GetObjectSummary (warning.BaseType, obj);
-				string date  = TypeConverters.DateToString (e.Timestamp.Date);
-				string field = DataDescriptions.GetObjectFieldDescription (warning.Field);
+				string icon  = StaticDescriptions.GetViewTypeIcon (StaticDescriptions.GetViewTypeKind (warning.BaseType.Kind));
+				string text  = UniversalLogic.GetObjectSummary (this.accessor, warning.BaseType, obj, timestamp);
+				string date  = timestamp.HasValue ? TypeConverters.DateToString (timestamp.Value.Date) : null;
+				string field = UserFieldsLogic.GetFieldName (this.accessor, warning.BaseType, warning.Field);
 				string desc  = warning.Description;
 
 				var cell1 = new TreeTableCellString (icon,  cellState);
@@ -99,21 +109,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			}
 
 			return content;
-		}
-
-		private string GetObjectSummary(BaseType baseType, DataObject obj)
-		{
-			switch (baseType.Kind)
-			{
-				case BaseTypeKind.Assets:
-					return AssetsLogic.GetSummary (this.accessor, obj.Guid, null);
-
-				case BaseTypeKind.Categories:
-					return CategoriesLogic.GetSummary (this.accessor, obj.Guid);
-
-				default:
-					return null;
-			}
 		}
 	}
 }

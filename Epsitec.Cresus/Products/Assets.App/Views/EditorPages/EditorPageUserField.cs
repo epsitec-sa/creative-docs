@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 			this.CreateEnumController (parent, ObjectField.UserFieldType, dict, editWidth: 100);
 
+			this.CreateBoolController (parent, ObjectField.UserFieldRequired);
+
 			this.CreateSepartor (parent);
 
 			new StaticText

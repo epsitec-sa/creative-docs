@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	Juste après les deux premières colonnes (en général nom et numéro), on injecte
 					//	la valeur comptable.
 					//	Le Guid créé à la volée n'est pas utilisé !
-					yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, 120, null, null, null, 0);
+					yield return new UserField (DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, false, 120, null, null, null, 0);
 				}
 
 				yield return userField;
