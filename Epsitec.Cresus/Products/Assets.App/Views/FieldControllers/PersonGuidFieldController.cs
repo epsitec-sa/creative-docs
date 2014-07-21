@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				if (!this.value.IsEmpty)
 				{
-					var viewState = PersonsView.GetViewState (this.value);
+					var viewState = PersonsView.GetViewState (this.value, ObjectField.Unknown);
 					this.OnGoto (viewState);
 				}
 			};

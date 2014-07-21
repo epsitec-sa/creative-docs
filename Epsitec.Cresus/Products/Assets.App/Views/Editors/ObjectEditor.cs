@@ -138,6 +138,11 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			};
 		}
 
+		public void SetPage(PageType pageType, ObjectField field)
+		{
+			this.OpenPage (pageType, field, notifyChange: false);
+		}
+
 
 		private void TabPageClicked(int rank)
 		{
@@ -274,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			switch (baseType.Kind)
 			{
 				case BaseTypeKind.Assets:
-					return ObjectEditor.GetObjectAvailablePages (hasEvent, type);
+					return ObjectEditor.GetAssetAvailablePages (hasEvent, type);
 
 				case BaseTypeKind.Categories:
 					return ObjectEditor.GetCategoryAvailablePages (hasEvent, type);
@@ -296,7 +301,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			}
 		}
 
-		private static IEnumerable<PageType> GetObjectAvailablePages(bool hasEvent, EventType type)
+		private static IEnumerable<PageType> GetAssetAvailablePages(bool hasEvent, EventType type)
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			if (type == EventType.AmortizationAuto   ||

@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
+using Epsitec.Cresus.Assets.App.Views.EditorPages;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -102,22 +103,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private AbstractViewState GotoAsset(Warning warning)
 		{
-			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e = obj.GetEvent (warning.EventGuid);
+			var obj  = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+			var e    = obj.GetEvent (warning.EventGuid);
+			var page = EditorPageSummary.GetPageType (this.accessor, warning.Field);
 
-			PageType page;
-
-			if (warning.Field >= ObjectField.UserFieldFirst &&
-				warning.Field <= ObjectField.UserFieldLast)
-			{
-				page = PageType.Asset;
-			}
-			else
-			{
-				page = PageType.AmortizationDefinition;
-			}
-
-			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, page);
+			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, page, warning.Field);
 		}
 
 		private AbstractViewState GotoCategory(Warning warning)
@@ -125,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
 			var e = obj.GetEvent (warning.EventGuid);
 
-			return CategoriesView.GetViewState (warning.ObjectGuid);
+			return CategoriesView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 
 		private AbstractViewState GotoGroup(Warning warning)
@@ -133,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
 			var e = obj.GetEvent (warning.EventGuid);
 
-			return GroupsView.GetViewState (warning.ObjectGuid);
+			return GroupsView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 
 		private AbstractViewState GotoPerson(Warning warning)
@@ -141,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
 			var e = obj.GetEvent (warning.EventGuid);
 
-			return PersonsView.GetViewState (warning.ObjectGuid);
+			return PersonsView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 		#endregion
 

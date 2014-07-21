@@ -166,13 +166,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid personGuid)
+		public static AbstractViewState GetViewState(Guid personGuid, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir un contact donné.
 			return new PersonsViewState
 			{
 				ViewType     = ViewType.Persons,
 				PageType     = PageType.Person,  // pour éditer directement le contact
+				Field        = field,
 				SelectedGuid = personGuid,
 			};
 		}
@@ -203,7 +204,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.isEditing = true;
-					this.objectEditor.PageType = viewState.PageType;
+					this.objectEditor.SetPage (viewState.PageType, viewState.Field);
 				}
 
 				this.UpdateUI ();

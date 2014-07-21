@@ -171,13 +171,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid categoryGuid)
+		public static AbstractViewState GetViewState(Guid categoryGuid, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir une catégorie donnée.
 			return new CategoriesViewState
 			{
 				ViewType     = ViewType.Categories,
 				PageType     = PageType.Category,  // pour éditer directement
+				Field        = field,
 				SelectedGuid = categoryGuid,
 			};
 		}
@@ -208,7 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.isEditing = true;
-					this.objectEditor.PageType = viewState.PageType;
+					this.objectEditor.SetPage (viewState.PageType, viewState.Field);
 				}
 
 				this.UpdateUI ();

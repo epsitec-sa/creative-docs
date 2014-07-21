@@ -11,6 +11,10 @@ using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Affiche des boutons ayant l'apparence d'onglets dans une zone horizontale, qui
+	/// permettent de choisir le panneau sélectionné en dessous.
+	/// </summary>
 	public class TabPagesController
 	{
 		public TabPagesController()

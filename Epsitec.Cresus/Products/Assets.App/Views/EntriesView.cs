@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var e = asset.GetEvent (eventGuid);
 					if (e != null)
 					{
-						var viewState = AssetsView.GetViewState (assetGuid, e.Timestamp);
+						var viewState = AssetsView.GetViewState (assetGuid, e.Timestamp, PageType.AmortizationValue, ObjectField.Unknown);
 						this.OnGoto (viewState);
 					}
 				}

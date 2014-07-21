@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp, PageType pageType = PageType.AmortizationValue)
+		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp, PageType pageType, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir l'écriture d'un objet
 			//	à un instant donné.
@@ -393,6 +393,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				ViewType          = ViewType.Assets,
 				PageType          = pageType,
+				Field             = field,
 				ViewMode          = ViewMode.Single,
 				SelectedGuid      = assetGuid,
 				SelectedTimestamp = timestamp,
@@ -438,7 +439,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.isEditing = true;
-					this.objectEditor.PageType = viewState.PageType;
+					this.objectEditor.SetPage (viewState.PageType, viewState.Field);
 				}
 
 				this.UpdateUI ();
