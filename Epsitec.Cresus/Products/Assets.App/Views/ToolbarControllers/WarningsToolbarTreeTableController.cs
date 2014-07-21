@@ -80,6 +80,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public string SelectedPersistantUniqueId
 		{
+			//	Comme les avertissements sont recalculés chaque fois que la vue est activée,
+			//	il n'est pas possible d'utiliser le Guid pour retrouver la sélection dans la
+			//	vue. Pour cela, on a besoin d'un identificateur persistant qui dépend uniquement
+			//	des données réelles.
 			get
 			{
 				if (this.VisibleSelectedRow == -1)
@@ -101,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#region Goto Logic
 		public AbstractViewState Goto(Guid warningGuid)
 		{
-			var warning = this.NodeGetter.Nodes.Where (x => x.Guid == warningGuid).FirstOrDefault ();
+			var warning = this.NodeGetter.GetNodes ().Where (x => x.Guid == warningGuid).FirstOrDefault ();
 
 			switch (warning.BaseType.Kind)
 			{

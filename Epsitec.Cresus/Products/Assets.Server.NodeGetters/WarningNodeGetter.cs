@@ -48,14 +48,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public IEnumerable<Warning> Nodes
-		{
-			get
-			{
-				return this.outputWarnings;
-			}
-		}
-
 
 		private void UpdateData()
 		{
