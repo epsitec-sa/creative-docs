@@ -125,8 +125,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new WarningsViewState
 				{
-					ViewType     = ViewType.Warnings,
-					SelectedGuid = this.selectedGuid,
+					ViewType           = ViewType.Warnings,
+					PersistantUniqueId = this.listController.SelectedPersistantUniqueId,
 				};
 			}
 			set
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var viewState = value as WarningsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.selectedGuid = viewState.SelectedGuid;
+				this.listController.SelectedPersistantUniqueId = viewState.PersistantUniqueId;
 
 				this.UpdateUI ();
 			}

@@ -20,6 +20,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Description = description;
 		}
 
+		public string PersistantUniqueId
+		{
+			//	Comme les avertissements sont recalculés chaque fois que la vue est choisie,
+			//	il n'est pas possible d'utiliser le Guid pour retrouver la sélection dans la
+			//	vue. Pour cela, on a besoin d'un identificateur persistant qui dépend uniquement
+			//	des données réelles.
+			get
+			{
+				return string.Join (";",
+					this.BaseType.ToString (),
+					this.ObjectGuid.ToString (),
+					this.EventGuid.ToString (),
+					this.Field.ToString (),
+					this.Description);
+			}
+		}
+
 		public bool IsEmpty
 		{
 			get

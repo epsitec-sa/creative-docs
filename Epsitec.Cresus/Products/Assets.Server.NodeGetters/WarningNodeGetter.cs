@@ -37,9 +37,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.sortingWarnings.Length)
+				if (index >= 0 && index < this.outputWarnings.Length)
 				{
-					return this.sortingWarnings[index];
+					return this.outputWarnings[index];
 				}
 				else
 				{
@@ -52,14 +52,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.sortingWarnings;
+				return this.outputWarnings;
 			}
 		}
 
 
 		private void UpdateData()
 		{
-			this.sortingWarnings = SortingMachine<Warning>.Sorts
+			this.outputWarnings = SortingMachine<Warning>.Sorts
 			(
 				this.sortingInstructions,
 				this.inputWarnings,
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private readonly DataAccessor			accessor;
 		private readonly List<Warning>			inputWarnings;
-		private Warning[]						sortingWarnings;
+		private Warning[]						outputWarnings;
 		private SortingInstructions				sortingInstructions;
 	}
 }

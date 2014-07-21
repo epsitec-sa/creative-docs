@@ -78,6 +78,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		public string SelectedPersistantUniqueId
+		{
+			get
+			{
+				if (this.VisibleSelectedRow == -1)
+				{
+					return null;
+				}
+				else
+				{
+					return this.NodeGetter[this.VisibleSelectedRow].PersistantUniqueId;
+				}
+			}
+			set
+			{
+				this.VisibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.PersistantUniqueId == value);
+			}
+		}
+
 
 		#region Goto Logic
 		public AbstractViewState Goto(Guid warningGuid)
