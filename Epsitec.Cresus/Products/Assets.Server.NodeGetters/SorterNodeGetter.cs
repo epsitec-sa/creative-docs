@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
+
 		private void UpdateData()
 		{
 			this.outputNodes = SortingMachine<SortableNode>.Sorts

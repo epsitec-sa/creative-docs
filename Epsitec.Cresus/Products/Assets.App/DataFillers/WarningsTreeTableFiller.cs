@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			get
 			{
-				return new SortingInstructions (ObjectField.Description, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+				return new SortingInstructions (ObjectField.WarningViewGlyph, SortedType.Descending, ObjectField.WarningObject, SortedType.Ascending);
 			}
 		}
 
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			get
 			{
-				return 1;
+				return 2;
 			}
 		}
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    32, "Vue"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    50, "Vue"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningObject,      TreeTableColumnType.String, 200, "Description"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  70, "Date"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningEventGlyph,  TreeTableColumnType.Glyph,   20, ""));
@@ -77,7 +77,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var e = obj.GetEvent (warning.EventGuid);
 
 				Timestamp? timestamp;
-				EventType eventType;
+				EventType  eventType;
+
 				if (e == null)
 				{
 					timestamp = null;

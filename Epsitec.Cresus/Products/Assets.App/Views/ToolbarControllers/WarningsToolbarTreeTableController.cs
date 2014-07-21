@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
 
-			this.warnings = new List<Warning>();
-			WarningsLogic.GetWarnings (this.warnings, this.accessor);
-			this.nodeGetter = new WarningNodeGetter (this.warnings);
+			var warnings = new List<Warning>();
+			WarningsLogic.GetWarnings (warnings, this.accessor);
+			this.nodeGetter = new WarningNodeGetter (this.accessor, warnings);
 		}
 
 
@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
+			this.NodeGetter.SetParams (this.sortingInstructions);
+
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -80,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#region Goto Logic
 		public AbstractViewState Goto(Guid warningGuid)
 		{
-			var warning = this.warnings.Where (x => x.Guid == warningGuid).FirstOrDefault ();
+			var warning = this.NodeGetter.Nodes.Where (x => x.Guid == warningGuid).FirstOrDefault ();
 
 			switch (warning.BaseType.Kind)
 			{
@@ -175,6 +177,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private readonly List<Warning>			warnings;
+		private WarningNodeGetter NodeGetter
+		{
+			get
+			{
+				return this.nodeGetter as WarningNodeGetter;
+			}
+		}
 	}
 }
