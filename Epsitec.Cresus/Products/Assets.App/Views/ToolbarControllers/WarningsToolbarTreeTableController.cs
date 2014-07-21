@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void UpdateToolbar()
 		{
+			base.UpdateToolbar ();
 			this.toolbar.SetCommandEnable (ToolbarCommand.Goto, this.VisibleSelectedRow != -1);
 		}
 
