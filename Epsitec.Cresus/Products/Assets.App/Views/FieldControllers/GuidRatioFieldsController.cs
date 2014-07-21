@@ -65,8 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Parent         = frame,
 				Text           = "Groupe",
 				Dock           = DockStyle.Left,
-				PreferredWidth = 350,
-				Margins        = new Margins (85+10+5, 0, 0, 0),
+				PreferredWidth = AbstractFieldController.maxWidth - 45,
+				Margins        = new Margins (85+10, 0, 0, 0),
 			};
 
 			new StaticText
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Parent         = frame,
 				Text           = "Ratio",
 				Dock           = DockStyle.Left,
-				PreferredWidth = 90,
+				PreferredWidth = 45,
 			};
 		}
 
@@ -97,6 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Parent          = parent,
 				Anchor          = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
 				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (0, 10, 0, 0),
 			};
 
 			var label = new StaticText
