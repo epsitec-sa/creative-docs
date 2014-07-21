@@ -410,6 +410,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					ViewType            = ViewType.Assets,
 					ViewMode            = this.viewMode,
 					PageType            = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					Field               = this.isEditing ? this.objectEditor.FocusField : ObjectField.Unknown,
 					IsShowEvents        = this.isShowEvents,
 					SelectedTimestamp   = this.selectedTimestamp,
 					SelectedGuid        = this.selectedGuid,

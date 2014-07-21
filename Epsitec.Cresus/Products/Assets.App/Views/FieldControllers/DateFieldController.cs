@@ -1118,8 +1118,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private IconButton						calendarButton;
 		private IconButton						deleteButton;
 		private System.DateTime?				value;
-		private bool							hasFocus;
 		private bool							isMouseInside;
 		private bool							isMouseInsideParent;
+		private bool							hasFocus;
 	}
 }

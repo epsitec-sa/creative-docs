@@ -194,6 +194,12 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
+
+		public ObjectField GetFocus()
+		{
+			return this.fieldFocus;
+		}
+
 		public void SetFocus(ObjectField field)
 		{
 			if (this.fieldControllers.ContainsKey (field))
@@ -283,6 +289,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -319,6 +330,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -360,6 +376,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -384,6 +405,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -424,6 +450,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -460,6 +491,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -499,6 +535,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -533,6 +574,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -572,6 +618,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -608,6 +659,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
 			{
 				this.ShowHistoryPopup (target, of);
@@ -642,6 +698,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -681,6 +742,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -912,5 +978,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected EventType							eventType;
 		protected int								tabIndex;
 		protected bool								isLocked;
+		private ObjectField							fieldFocus;
 	}
 }

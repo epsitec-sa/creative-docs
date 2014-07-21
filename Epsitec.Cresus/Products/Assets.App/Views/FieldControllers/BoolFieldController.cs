@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -73,6 +74,19 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.Value = !this.Value;
 				this.OnValueEdited (this.Field);
+			};
+
+			this.button.IsFocusedChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+				}
 			};
 		}
 

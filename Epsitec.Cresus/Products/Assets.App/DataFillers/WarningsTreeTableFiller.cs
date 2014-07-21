@@ -45,9 +45,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningGlyph,       TreeTableColumnType.Icon,    32, "Vue"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    32, "Vue"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningObject,      TreeTableColumnType.String, 200, "Description"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  80, "Date"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  70, "Date"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningEventGlyph,  TreeTableColumnType.Glyph,   20, ""));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningField,       TreeTableColumnType.String, 150, "Champ"));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDescription, TreeTableColumnType.String, 300, "Message"));
 
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<5; i++)
+			for (int i=0; i<6; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -76,13 +77,16 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var e = obj.GetEvent (warning.EventGuid);
 
 				Timestamp? timestamp;
+				EventType eventType;
 				if (e == null)
 				{
 					timestamp = null;
+					eventType = EventType.Unknown;
 				}
 				else
 				{
 					timestamp = e.Timestamp;
+					eventType = e.Type;
 				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
@@ -90,14 +94,16 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				string icon  = StaticDescriptions.GetViewTypeIcon (StaticDescriptions.GetViewTypeKind (warning.BaseType.Kind));
 				string text  = UniversalLogic.GetObjectSummary (this.accessor, warning.BaseType, obj, timestamp);
 				string date  = timestamp.HasValue ? TypeConverters.DateToString (timestamp.Value.Date) : null;
+				var    glyph = TimelineData.TypeToGlyph (eventType);
 				string field = UserFieldsLogic.GetFieldName (this.accessor, warning.BaseType, warning.Field);
 				string desc  = warning.Description;
 
 				var cell1 = new TreeTableCellString (icon,  cellState);
 				var cell2 = new TreeTableCellString (text,  cellState);
 				var cell3 = new TreeTableCellString (date,  cellState);
-				var cell4 = new TreeTableCellString (field, cellState);
-				var cell5 = new TreeTableCellString (desc,  cellState);
+				var cell4 = new TreeTableCellGlyph  (glyph, cellState);
+				var cell5 = new TreeTableCellString (field, cellState);
+				var cell6 = new TreeTableCellString (desc,  cellState);
 
 				int columnRank = 0;
 
@@ -106,6 +112,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				content.Columns[columnRank++].AddRow (cell3);
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
 			}
 
 			return content;

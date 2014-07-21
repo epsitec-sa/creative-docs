@@ -187,6 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					ViewType     = ViewType.Persons,
 					PageType     = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					Field        = this.isEditing ? this.objectEditor.FocusField : ObjectField.Unknown,
 					SelectedGuid = this.selectedGuid,
 				};
 			}

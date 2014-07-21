@@ -88,9 +88,10 @@ namespace Epsitec.Cresus.Assets.Data
 		UserFieldField,
 		UserFieldGuid,
 
-		WarningGlyph,
+		WarningViewGlyph,
 		WarningObject,
 		WarningDate,
+		WarningEventGlyph,
 		WarningField,
 		WarningDescription,
 

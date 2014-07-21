@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 					else if (userField.Field == ObjectField.EventGlyph)
 					{
-						var glyph= TimelineData.TypeToGlyph (eventType);
+						var glyph = TimelineData.TypeToGlyph (eventType);
 						cell = new TreeTableCellGlyph (glyph, cellState);
 					}
 					else if (userField.Field == ObjectField.EventType)

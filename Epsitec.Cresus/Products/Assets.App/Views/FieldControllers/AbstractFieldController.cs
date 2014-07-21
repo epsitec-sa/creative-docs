@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		public virtual void SetFocus()
 		{
+			this.OnSetFieldFocus (this.Field);
 			this.ScrollToField ();
 		}
 
@@ -366,6 +367,14 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 		public event EventHandler<ObjectField> ValueEdited;
+
+
+		protected void OnSetFieldFocus(ObjectField field)
+		{
+			this.SetFieldFocus.Raise (this, field);
+		}
+
+		public event EventHandler<ObjectField> SetFieldFocus;
 
 
 		protected void OnShowHistory(Widget target, ObjectField field)

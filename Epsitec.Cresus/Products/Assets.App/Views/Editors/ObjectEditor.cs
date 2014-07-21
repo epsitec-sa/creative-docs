@@ -52,6 +52,21 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			}
 		}
 
+		public ObjectField						FocusField
+		{
+			get
+			{
+				if (this.currentPage == null)
+				{
+					return ObjectField.Unknown;
+				}
+				else
+				{
+					return this.currentPage.GetFocus ();
+				}
+			}
+		}
+
 		public override PageType				PageType
 		{
 			get

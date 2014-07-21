@@ -99,6 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.view != null)
 			{
 				this.SaveCurrentViewState ();
+				//?this.UpdateViewState (this.view.ViewState);
 				this.DeleteView ();
 			}
 
@@ -340,6 +341,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.historyViewStates.Add (viewState);
 				this.historyPosition = this.historyViewStates.Count-1;
+
+				this.UpdateToolbar ();
+			}
+		}
+
+		private void UpdateViewState(AbstractViewState viewState)
+		{
+			if (viewState == null)
+			{
+				return;
+			}
+
+			if (this.ignoreChanges.IsZero)
+			{
+				if (this.historyPosition >= 0 &&
+					viewState.StrictlyEquals (this.historyViewStates[this.historyPosition]))
+				{
+					return;
+				}
+
+				this.SaveLastViewState (viewState);
+				this.historyViewStates[this.historyPosition] = viewState;
 
 				this.UpdateToolbar ();
 			}
