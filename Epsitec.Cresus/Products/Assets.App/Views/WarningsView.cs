@@ -125,8 +125,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new WarningsViewState
 				{
-					ViewType           = ViewType.Warnings,
-					PersistantUniqueId = this.listController.SelectedPersistantUniqueId,
+					ViewType               = ViewType.Warnings,
+					PersistantUniqueId     = this.listController.SelectedPersistantUniqueId,
+					NextPersistantUniqueId = this.listController.NextPersistantUniqueId,
+					PrevPersistantUniqueId = this.listController.PrevPersistantUniqueId,
 				};
 			}
 			set
@@ -135,6 +137,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.Diagnostics.Debug.Assert (viewState != null);
 
 				this.listController.SelectedPersistantUniqueId = viewState.PersistantUniqueId;
+
+				//	Si on n'a pas pu sélectionner l'avertissement précédemment sélectionné,
+				//	c'est probablement qu'il a été corrigé. On essaie alors de sélectionner
+				//	l'avertissement suivant.
+				if (this.listController.SelectedGuid.IsEmpty)
+				{
+					this.listController.SelectedPersistantUniqueId = viewState.NextPersistantUniqueId;
+				}
+
+				//	Si on n'a toujours pas réussi, on essaie alors de sélectionner
+				//	l'avertissement précédent.
+				if (this.listController.SelectedGuid.IsEmpty)
+				{
+					this.listController.SelectedPersistantUniqueId = viewState.PrevPersistantUniqueId;
+				}
 
 				this.UpdateUI ();
 			}

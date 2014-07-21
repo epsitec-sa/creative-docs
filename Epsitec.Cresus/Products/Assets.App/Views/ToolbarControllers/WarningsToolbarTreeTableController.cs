@@ -101,6 +101,38 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		public string PrevPersistantUniqueId
+		{
+			get
+			{
+				if (this.VisibleSelectedRow == -1 ||
+					this.VisibleSelectedRow-1 < 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.NodeGetter[this.VisibleSelectedRow-1].PersistantUniqueId;
+				}
+			}
+		}
+
+		public string NextPersistantUniqueId
+		{
+			get
+			{
+				if (this.VisibleSelectedRow == -1 ||
+					this.VisibleSelectedRow+1 >= this.NodeGetter.Count)
+				{
+					return null;
+				}
+				else
+				{
+					return this.NodeGetter[this.VisibleSelectedRow+1].PersistantUniqueId;
+				}
+			}
+		}
+
 
 		#region Goto Logic
 		public AbstractViewState Goto(Guid warningGuid)

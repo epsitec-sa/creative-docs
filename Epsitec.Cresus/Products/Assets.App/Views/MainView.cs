@@ -98,6 +98,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.view != null)
 			{
+				using (this.ignoreChanges.Enter ())
+				{
+					this.view.UpdateUI ();  // il faut effectuer SaveObjectEdition !
+				}
+
 				this.SaveCurrentViewState ();
 				//?this.UpdateViewState (this.view.ViewState);
 				this.DeleteView ();
@@ -108,7 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.view != null)
 			{
 				this.view.CreateUI (this.viewBox);
-				this.view.Goto += this.HandleViewGoto;
+				this.view.Goto             += this.HandleViewGoto;
 				this.view.ViewStateChanged += this.HandleViewStateChanged;
 				this.view.ChangeView       += this.HandleChangeView;
 
@@ -127,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.view != null)
 			{
-				this.view.Goto -= this.HandleViewGoto;
+				this.view.Goto             -= this.HandleViewGoto;
 				this.view.ViewStateChanged -= this.HandleViewStateChanged;
 				this.view.ChangeView       -= this.HandleChangeView;
 				this.view.Dispose ();

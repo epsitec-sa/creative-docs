@@ -10,6 +10,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 	public class WarningsViewState : AbstractViewState
 	{
 		public string							PersistantUniqueId;
+		public string							PrevPersistantUniqueId;
+		public string							NextPersistantUniqueId;
 
 
 		public override bool ApproximatelyEquals(AbstractViewState other)
