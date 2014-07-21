@@ -180,6 +180,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					case ToolbarCommand.Import:
 						this.OnImport ();
 						break;
+
+					case ToolbarCommand.Goto:
+						this.OnGoto ();
+						break;
 				}
 			};
 		}
@@ -424,6 +428,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected virtual void OnImport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
+			MessagePopup.ShowTodo (target);
+		}
+
+		protected virtual void OnGoto()
+		{
+			var target = this.toolbar.GetTarget (ToolbarCommand.Goto);
 			MessagePopup.ShowTodo (target);
 		}
 

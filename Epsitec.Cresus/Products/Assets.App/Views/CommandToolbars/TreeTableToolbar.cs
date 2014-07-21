@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
 			this.SetCommandDescription (ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
 			this.SetCommandDescription (ToolbarCommand.Import,     "TreeTable.Import",     "Importer");
+			this.SetCommandDescription (ToolbarCommand.Goto,       "TreeTable.Goto",       "Aller");
 		}
 
 
@@ -189,6 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Paste);
 			this.buttonImport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Import);
 			this.buttonExport     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Export);
+			this.buttonGoto       = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Goto);
 
 			this.buttonGraphic  .ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonFilter   .ButtonStyle = ButtonStyle.ActivableIcon;
@@ -366,6 +368,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				yield return new ButtonState (this.buttonExport, copyPaste);
 			}
+
+			if (!this.GetCommandDescription (ToolbarCommand.Goto).IsEmpty)
+			{
+				yield return new ButtonState (this.buttonGoto, copyPaste);
+			}
 		}
 
 		private int CopyPasteGroupCount
@@ -435,6 +442,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private IconButton						buttonPaste;
 		private IconButton						buttonExport;
 		private IconButton						buttonImport;
+		private IconButton						buttonGoto;
 
 		private bool							hasGraphic;
 		private bool							hasFilter;

@@ -155,6 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les avertissements");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     null, "Aller sur l'avertissement");
 		}
 
 		protected override void CreateNodeFiller()
@@ -169,6 +170,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
+		}
+
+		protected override void OnGoto()
+		{
+			this.OnRowDoubleClicked (this.VisibleSelectedRow);
+		}
+
+
+		protected override void UpdateToolbar()
+		{
+			this.toolbar.SetCommandEnable (ToolbarCommand.Goto, this.VisibleSelectedRow != -1);
 		}
 
 

@@ -117,6 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,     null, "Coller le compte");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Export,    null, "Exporter le plan comptable");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,    null, "Importer un plan comptable Crésus (fichier .cre)");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,      CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()

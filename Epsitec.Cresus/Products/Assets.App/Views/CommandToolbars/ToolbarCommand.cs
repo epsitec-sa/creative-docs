@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		Paste,
 		Export,
 		Import,
+		Goto,
 		ReportSelect,
 		ReportParams,
 		ReportExport,

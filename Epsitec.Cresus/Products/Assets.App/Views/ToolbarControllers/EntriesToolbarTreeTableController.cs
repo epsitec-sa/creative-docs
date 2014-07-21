@@ -106,6 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les écritures comptables");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
 
 		protected override void CreateNodeFiller()
