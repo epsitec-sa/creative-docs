@@ -215,6 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateFieldController.HideAdditionalButtons = true;
 			this.dateFieldController.TabIndex = this.TabIndex;
 			this.dateFieldController.CreateUI (dateFrame);
+			this.TabIndex = this.dateFieldController.TabIndex;
 			this.dateFieldController.SetFocus ();
 
 			this.dateFieldController.ValueEdited += delegate

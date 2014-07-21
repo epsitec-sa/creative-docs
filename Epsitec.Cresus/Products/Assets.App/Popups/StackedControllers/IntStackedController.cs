@@ -66,10 +66,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Value      = this.Value,
 				LabelWidth = 0,
 				EditWidth  = IntStackedController.width,
-				TabIndex   = ++tabIndex,
+				TabIndex   = tabIndex,
 			};
 
 			this.controller.CreateUI (controllerFrame);
+			tabIndex = this.controller.TabIndex;
 
 			this.controller.ValueEdited += delegate
 			{

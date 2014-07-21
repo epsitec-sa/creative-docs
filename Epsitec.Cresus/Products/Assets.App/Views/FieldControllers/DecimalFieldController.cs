@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Dock            = DockStyle.Left,
 				PreferredWidth  = this.Width,
 				PreferredHeight = AbstractFieldController.lineHeight,
-				TabIndex        = this.TabIndex,
+				TabIndex        = ++this.TabIndex,
 				Text            = this.ConvDecimalToString (this.value),
 			};
 

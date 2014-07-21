@@ -194,6 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (focused)  // pris le focus ?
 				{
 					this.SetFocus (this.argumentTextField);
+					this.OnFocusEngage ();
 				}
 				else  // perdu le focus ?
 				{
@@ -208,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (focused)  // pris le focus ?
 				{
 					this.SetFocus (this.finalTextField);
+					this.OnFocusEngage ();
 				}
 				else  // perdu le focus ?
 				{
@@ -501,6 +503,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler ValueEdited;
+
+
+		protected void OnFocusEngage()
+		{
+			this.FocusEngage.Raise (this);
+		}
+
+		public event EventHandler FocusEngage;
 
 
 		protected void OnFocusLost()

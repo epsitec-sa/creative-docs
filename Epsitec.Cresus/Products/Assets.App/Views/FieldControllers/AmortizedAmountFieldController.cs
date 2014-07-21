@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				}
 			};
 
+			this.controller.FocusEngage += delegate
+			{
+				base.SetFocus ();
+			};
+
 			this.controller.FocusLost += delegate
 			{
 				this.UpdateValue ();

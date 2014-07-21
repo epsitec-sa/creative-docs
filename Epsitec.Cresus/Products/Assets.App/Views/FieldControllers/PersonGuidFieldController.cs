@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
-				TabIndex         = this.TabIndex,
+				TabIndex         = ++this.TabIndex,
 				Text             = this.GuidToString (this.value),
 			};
 
@@ -100,6 +101,19 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
+			};
+
+			this.button.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					this.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+				}
 			};
 
 			arrowButton.Clicked += delegate
@@ -136,6 +150,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.gotoButton.Visibility = !this.value.IsEmpty;
 			}
+		}
+
+		public override void SetFocus()
+		{
+			this.button.Focus ();
+
+			base.SetFocus ();
 		}
 
 

@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.ViewChanged += delegate (object sender, ViewType viewType)
 			{
+				this.UpdateViewState ();
 				this.CreateView (viewType);
 			};
 
@@ -104,7 +105,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.SaveCurrentViewState ();
-				//?this.UpdateViewState (this.view.ViewState);
 				this.DeleteView ();
 			}
 
@@ -142,6 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void HandleViewGoto(object sender, AbstractViewState viewState)
 		{
+			this.UpdateViewState ();
 			this.RestoreViewState (viewState);
 		}
 
@@ -152,6 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void HandleChangeView(object sender, ViewType viewType)
 		{
+			this.UpdateViewState ();
 			this.CreateView (viewType);
 		}
 
@@ -351,32 +353,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void UpdateViewState(AbstractViewState viewState)
+		private void UpdateViewState()
 		{
+			var viewState = this.view.ViewState;
+
 			if (viewState == null)
 			{
 				return;
 			}
 
-			if (this.ignoreChanges.IsZero)
-			{
-				if (this.historyPosition >= 0 &&
-					viewState.StrictlyEquals (this.historyViewStates[this.historyPosition]))
-				{
-					return;
-				}
-
-				this.SaveLastViewState (viewState);
-				this.historyViewStates[this.historyPosition] = viewState;
-
-				this.UpdateToolbar ();
-			}
+			this.SaveLastViewState (viewState);
+			this.historyViewStates[this.historyPosition] = viewState;
 		}
 
 		private void GoHistoryBack()
 		{
 			if (this.NavigateBackEnable)
 			{
+				this.UpdateViewState ();
 				this.RestoreViewState (this.historyViewStates[--this.historyPosition]);
 			}
 		}
@@ -385,6 +379,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.NavigateForwardEnable)
 			{
+				this.UpdateViewState ();
 				this.RestoreViewState (this.historyViewStates[++this.historyPosition]);
 			}
 		}
@@ -405,6 +400,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (!guid.IsEmpty)
 				{
+					this.UpdateViewState ();
+
 					var viewState = this.lastViewStates.Where (x => x.Guid == guid).FirstOrDefault ();
 					this.RestoreViewState (viewState);
 				}

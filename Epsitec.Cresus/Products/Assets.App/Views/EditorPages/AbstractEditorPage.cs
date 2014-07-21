@@ -274,10 +274,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -317,10 +318,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -361,10 +363,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field      = field,
 				Label      = this.accessor.GetFieldName (field),
 				EditWidth  = AbstractFieldController.maxWidth,
-				TabIndex   = ++this.tabIndex,
+				TabIndex   = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -435,10 +438,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				LineCount = lineCount,
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -478,10 +482,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				Enums     = enums,
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -520,10 +525,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field         = field,
 				Label         = this.accessor.GetFieldName (field),
 				DecimalFormat = format,
-				TabIndex      = ++this.tabIndex,
+				TabIndex      = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -561,10 +567,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -603,10 +610,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field                 = field,
 				Label                 = this.accessor.GetFieldName (field),
 				HideAdditionalButtons = true,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -644,10 +652,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -685,10 +694,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Field     = field,
 				Label     = this.accessor.GetFieldName (field),
-				TabIndex  = ++this.tabIndex,
+				TabIndex  = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -727,10 +737,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field             = field,
 				Label             = this.accessor.GetFieldName (field),
 				DateRangeCategory = rangeCategory,
-				TabIndex          = ++this.tabIndex,
+				TabIndex          = this.tabIndex,
 			};
 
 			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{

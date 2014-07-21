@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Dock             = DockStyle.Left,
 				PreferredWidth   = this.EditWidth-AbstractFieldController.lineHeight*2,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				TabIndex         = this.TabIndex,
+				TabIndex         = ++this.TabIndex,
 			};
 
 			//	Petit triangle "v" à droite du champ éditable, pour faire comme un TextFieldCombo.

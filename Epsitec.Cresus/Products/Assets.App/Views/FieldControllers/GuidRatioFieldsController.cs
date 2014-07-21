@@ -143,6 +143,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				this.OnShowHistory (target, of);
 			};
 
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.OnSetFieldFocus (field);
+			};
+
 			this.controllers.Add (controller);
 
 			var line = new Line (frame, label, controller);

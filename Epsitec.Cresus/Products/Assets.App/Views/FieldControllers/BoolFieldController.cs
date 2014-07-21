@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredWidth  = 200,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
-				TabIndex        = this.TabIndex,
+				TabIndex        = ++this.TabIndex,
 				AutoToggle      = false,
 				ActiveState     = this.value ? ActiveState.Yes : ActiveState.No,
 			};

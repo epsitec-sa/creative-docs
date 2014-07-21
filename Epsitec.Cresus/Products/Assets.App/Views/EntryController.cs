@@ -136,10 +136,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Date",
 				HideAdditionalButtons = false,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.dateController.CreateUI (parent);
+			this.tabIndex = this.dateController.TabIndex;
 
 			this.dateController.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -156,10 +157,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Débit",
 				EditWidth             = AbstractFieldController.maxWidth,
 				HideAdditionalButtons = false,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.debitController.CreateUI (parent);
+			this.tabIndex = this.debitController.TabIndex;
 
 			this.debitController.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -176,10 +178,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Crédit",
 				EditWidth             = AbstractFieldController.maxWidth,
 				HideAdditionalButtons = false,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.creditController.CreateUI (parent);
+			this.tabIndex = this.creditController.TabIndex;
 
 			this.creditController.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -196,10 +199,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				EditWidth             = 100,
 				LineCount             = 1,
 				HideAdditionalButtons = false,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.stampController.CreateUI (parent);
+			this.tabIndex = this.stampController.TabIndex;
 
 			this.stampController.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -216,10 +220,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				EditWidth             = AbstractFieldController.maxWidth,
 				LineCount             = 1,
 				HideAdditionalButtons = false,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.titleController.CreateUI (parent);
+			this.tabIndex = this.titleController.TabIndex;
 
 			this.titleController.ValueEdited += delegate (object sender, ObjectField of)
 			{
@@ -235,10 +240,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Label                 = "Montant",
 				DecimalFormat         = DecimalFormat.Amount,
 				HideAdditionalButtons = false,
-				TabIndex              = ++this.tabIndex,
+				TabIndex              = this.tabIndex,
 			};
 
 			this.amountController.CreateUI (parent);
+			this.tabIndex = this.amountController.TabIndex;
 
 			this.amountController.ValueEdited += delegate (object sender, ObjectField of)
 			{

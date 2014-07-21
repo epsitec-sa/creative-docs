@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					Dock            = DockStyle.Left,
 					PreferredWidth  = this.EditWidth,
 					PreferredHeight = AbstractFieldController.lineHeight,
-					TabIndex        = this.TabIndex,
+					TabIndex        = ++this.TabIndex,
 					Text            = this.value,
 				};
 			}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					Dock            = DockStyle.Left,
 					PreferredWidth  = this.EditWidth,
 					PreferredHeight = StringFieldController.GetMultiHeight (this.LineCount),
-					TabIndex        = this.TabIndex,
+					TabIndex        = ++this.TabIndex,
 					Text            = this.value,
 				};
 			}

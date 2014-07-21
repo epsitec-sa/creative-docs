@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredWidth   = this.EditWidth - 50,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 4, 0, 0),
-				TabIndex         = this.TabIndex,
+				TabIndex         = ++this.TabIndex,
 				Text             = this.GuidToString (this.value.Guid),
 			};
 
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredWidth  = 50,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
-				TabIndex        = this.TabIndex,
+				TabIndex        = ++this.TabIndex,
 				Text            = this.ConvDecimalToString (this.value.Ratio),
 			};
 
@@ -131,6 +131,19 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.button.Clicked += delegate
 			{
 				this.ShowPopup ();
+			};
+
+			this.button.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
+			{
+				bool focused = (bool) e.NewValue;
+
+				if (focused)  // pris le focus ?
+				{
+					base.SetFocus ();
+				}
+				else  // perdu le focus ?
+				{
+				}
 			};
 
 			arrowButton.Clicked += delegate

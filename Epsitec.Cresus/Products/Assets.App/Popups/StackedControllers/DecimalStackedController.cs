@@ -67,10 +67,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				DecimalFormat = this.description.DecimalFormat,
 				LabelWidth    = 0,
 				EditWidth     = DecimalStackedController.width,
-				TabIndex      = ++tabIndex,
+				TabIndex      = tabIndex,
 			};
 
 			this.controller.CreateUI (controllerFrame);
+			tabIndex = this.controller.TabIndex;
 
 			this.controller.ValueEdited += delegate
 			{

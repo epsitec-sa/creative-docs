@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredWidth  = DateFieldController.fieldWidth,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
-				TabIndex        = this.TabIndex,
+				TabIndex        = ++this.TabIndex,
 				Text            = this.ConvDateToString (this.value),
 			};
 

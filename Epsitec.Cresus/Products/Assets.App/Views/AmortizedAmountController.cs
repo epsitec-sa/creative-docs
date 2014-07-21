@@ -1033,6 +1033,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler ValueEdited;
 
 
+		protected void OnFocusEngage()
+		{
+			this.FocusEngage.Raise (this);
+		}
+
+		public event EventHandler FocusEngage;
+
+
 		protected void OnFocusLost()
 		{
 			this.FocusLost.Raise (this);
