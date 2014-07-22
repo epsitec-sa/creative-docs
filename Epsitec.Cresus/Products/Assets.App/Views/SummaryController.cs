@@ -101,12 +101,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (tile.Value.Hilited)
 					{
 						//	Rectangle bleu sans hover.
-						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isLocked);
+						if (this.isLocked)
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Result);
+						}
+						else
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Defined);
+						}
 					}
 					else
 					{
 						//	Rectangle gris sans hover.
-						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, true);
+						button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Readonly);
 					}
 
 					button.HoverColor = Color.Empty;
@@ -116,12 +123,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (tile.Value.Hilited)
 					{
 						//	Rectangle bleu avec hover.
-						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isLocked);
+						if (this.isLocked)
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Result);
+						}
+						else
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Defined);
+						}
 					}
 					else
 					{
 						//	Rectangle blanc avec hover.
-						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, this.isLocked);
+						if (this.isLocked)
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Readonly);
+						}
+						else
+						{
+							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Editable);
+						}
 					}
 
 					button.HoverColor = ColorManager.HoverColor;

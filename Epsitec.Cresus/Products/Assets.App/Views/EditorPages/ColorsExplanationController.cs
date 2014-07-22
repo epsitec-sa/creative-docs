@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Data;
 namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
 	/// <summary>
-	/// Affiche en pied de page une série de "commentaires" composés d'un échantillon de
+	/// Affiche en pied de page une série d'explications composées d'un échantillon de
 	/// couleur et d'un texte explicatif.
 	/// </summary>
 	public class ColorsExplanationController
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var colorSample = new FrameBox
 			{
 				Parent        = parent,
-				BackColor     = item.Color,
+				BackColor     = AbstractFieldController.GetBackgroundColor (item.Type),
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (h, h),
 			};
@@ -185,52 +185,46 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				(
 					FieldColorType.Editable,
 					"Champ pouvant être défini",
-					"Cette couleur indique un champ pouvant être défini par cet événement",
-					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: false, isError: false)
+					"Cette couleur indique un champ pouvant être défini par cet événement"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Defined,
 					"Champ défini",
-					"Cette couleur indique un champ défini par cet événement",
-					AbstractFieldController.GetBackgroundColor (PropertyState.Single, isReadOnly: false, isError: false)
+					"Cette couleur indique un champ défini par cet événement"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Readonly,
 					"Champ ne pouvant pas être défini",
-					"Cette couleur indique un champ ne pouvant pas être défini par cet événement",
-					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: true, isError: false)
+					"Cette couleur indique un champ ne pouvant pas être défini par cet événement"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Result,
 					"Résultat d'un calcul",
-					"Cette couleur indique le résultat d'un calcul ne pouvant pas être modifié",
-					AbstractFieldController.GetBackgroundColor (PropertyState.Single, isReadOnly: true, isError: false)
+					"Cette couleur indique le résultat d'un calcul ne pouvant pas être modifié"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Error,
 					"Erreur",
-					"Cette couleur indique un champ incorrectement rempli",
-					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: false, isError: true)
+					"Cette couleur indique un champ incorrectement rempli"
 				);
 			}
 		}
 
 		private struct Item
 		{
-			public Item(FieldColorType type, string description, string tooltip, Color color)
+			public Item(FieldColorType type, string description, string tooltip)
 			{
 				this.Type        = type;
 				this.Description = description;
 				this.Tooltip     = tooltip;
-				this.Color       = color;
 			}
 
 			public bool IsEmpty
@@ -239,17 +233,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				{
 					return this.Type == FieldColorType.Unknown
 						&& string.IsNullOrEmpty (this.Description)
-						&& string.IsNullOrEmpty (this.Tooltip)
-						&& this.Color.IsEmpty;
+						&& string.IsNullOrEmpty (this.Tooltip);
 				}
 			}
 
-			public static Item Empty = new Item (FieldColorType.Unknown, null, null, Color.Empty);
+			public static Item Empty = new Item (FieldColorType.Unknown, null, null);
 
 			public readonly FieldColorType		Type;
 			public readonly string				Description;
 			public readonly string				Tooltip;
-			public readonly Color				Color;
 		}
 
 

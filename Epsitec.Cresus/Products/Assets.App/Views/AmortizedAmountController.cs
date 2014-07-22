@@ -14,7 +14,6 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
-using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {

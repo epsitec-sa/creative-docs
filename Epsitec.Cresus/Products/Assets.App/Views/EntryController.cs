@@ -10,7 +10,6 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
-using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {

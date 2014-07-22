@@ -11,7 +11,6 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
-using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
@@ -246,7 +245,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					isReadOnly = true;
 				}
 
-				textField.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
+				var type = AbstractFieldController.GetFieldColorType (state, isReadOnly, hasError);
+				textField.BackColor = AbstractFieldController.GetBackgroundColor (type);
 
 				if (textField.TextDisplayMode == TextFieldDisplayMode.ActiveHint ||
 					textField.TextDisplayMode == TextFieldDisplayMode.ActiveHintAndUseBackColor)
@@ -266,7 +266,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			if (combo != null)
 			{
-				combo.BackColor       = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				var type = AbstractFieldController.GetFieldColorType (state, isReadOnly);
+				combo.BackColor       = AbstractFieldController.GetBackgroundColor (type);
 				combo.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
 				combo.IsReadOnly      = true;
 				combo.Enable          = !isReadOnly;
@@ -277,52 +278,39 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			if (button != null)
 			{
-				button.NormalColor          = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
+				var type = AbstractFieldController.GetFieldColorType (state, isReadOnly, hasError);
+				button.NormalColor          = AbstractFieldController.GetBackgroundColor (type);
 				button.Enable               = !isReadOnly;
 				button.SameColorWhenDisable = true;
 			}
 		}
 
-		public static Color GetBackgroundColor(PropertyState state, bool isReadOnly, bool isError = false)
+		public static Color GetBackgroundColor(FieldColorType type)
 		{
-			Color color;
-			double delta = -0.1;
-
-			if (isError)
+			switch (type)
 			{
-				color = ColorManager.ErrorColor;
+				case FieldColorType.Editable:
+					return ColorManager.NormalFieldColor;
+
+				case FieldColorType.Defined:
+					return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
+
+				case FieldColorType.Readonly:
+					return ColorManager.NormalFieldColor.Delta (-0.1);
+
+				case FieldColorType.Result:
+					return ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation).Delta (-0.1);
+
+				case FieldColorType.Error:
+					return ColorManager.ErrorColor;;
+
+				default:
+					return Color.Empty;
 			}
-			else
-			{
-				switch (state)
-				{
-					case PropertyState.Single:
-						color = ColorManager.GetEditSinglePropertyColor (DataAccessor.Simulation);
-						delta = -0.1;
-						break;
-
-					case PropertyState.Inherited:
-						color = ColorManager.EditInheritedPropertyColor;
-						break;
-
-					default:
-						color = ColorManager.NormalFieldColor;
-						break;
-				}
-			}
-
-			if (isReadOnly)
-			{
-				color = color.Delta (delta);
-			}
-
-			return color;
 		}
 
 		public static FieldColorType GetFieldColorType(PropertyState state, bool isReadOnly, bool isError = false)
 		{
-			bool defined = (state == PropertyState.Single);
-
 			if (isError)
 			{
 				return FieldColorType.Error;
@@ -331,11 +319,25 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				if (isReadOnly)
 				{
-					return defined ? FieldColorType.Result : FieldColorType.Readonly;
+					if (state == PropertyState.Single)
+					{
+						return FieldColorType.Result;  // gris-bleu
+					}
+					else
+					{
+						return FieldColorType.Readonly;  // gris
+					}
 				}
 				else
 				{
-					return defined ? FieldColorType.Defined : FieldColorType.Editable;
+					if (state == PropertyState.Single)
+					{
+						return FieldColorType.Defined;  // bleu
+					}
+					else
+					{
+						return FieldColorType.Editable;  // blanc
+					}
 				}
 			}
 		}

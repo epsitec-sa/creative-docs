@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
