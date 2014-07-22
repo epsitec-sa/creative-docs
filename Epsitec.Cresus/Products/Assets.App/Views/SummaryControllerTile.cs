@@ -4,20 +4,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct SummaryControllerTile
 	{
-		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false, bool hatch = false, bool simpleText = false)
+		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false, bool hatch = false, bool label = false)
 		{
-			this.Text       = text;
-			this.Tootip     = tooltip;
-			this.Alignment  = alignment;
-			this.Hilited    = hilited;
-			this.ReadOnly   = readOnly;
-			this.Hatch      = hatch;
-			this.SimpleText = simpleText;
+			this.Text      = text;
+			this.Tootip    = tooltip;
+			this.Alignment = alignment;
+			this.Hilited   = hilited;
+			this.ReadOnly  = readOnly;
+			this.Hatch     = hatch;
+			this.Label     = label;
+		}
+
+		public CommentaryType GetCommentaryType(bool isLocked)
+		{
+			if (this.Hilited)
+			{
+				return this.ReadOnly || isLocked ? CommentaryType.Result : CommentaryType.Defined;
+			}
+			else
+			{
+				return this.ReadOnly || isLocked ? CommentaryType.Readonly : CommentaryType.Editable;
+			}
 		}
 
 		public readonly string				Text;
@@ -26,6 +39,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public readonly bool				Hilited;
 		public readonly bool				ReadOnly;
 		public readonly bool				Hatch;
-		public readonly bool				SimpleText;
+		public readonly bool				Label;
 	}
 }

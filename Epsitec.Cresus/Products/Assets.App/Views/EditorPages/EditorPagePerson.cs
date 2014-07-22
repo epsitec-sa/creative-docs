@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected internal override void CreateUI(Widget parent)
 		{
-			parent = this.CreateScrollable (parent);
+			parent = this.CreateScrollable (parent, commentaries: false);
 
 			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.Persons))
 			{

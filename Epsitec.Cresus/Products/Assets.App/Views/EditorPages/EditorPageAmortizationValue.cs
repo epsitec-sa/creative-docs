@@ -9,6 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
+	/// <summary>
+	/// Page utilisée pour l'onglet "Valeur" d'un objet d'immobilisation.
+	/// </summary>
 	public class EditorPageAmortizationValue : AbstractEditorPage
 	{
 		public EditorPageAmortizationValue(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
@@ -19,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected internal override void CreateUI(Widget parent)
 		{
-			parent = this.CreateScrollable (parent);
+			parent = this.CreateScrollable (parent, commentaries: true);
 
 			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
 		}

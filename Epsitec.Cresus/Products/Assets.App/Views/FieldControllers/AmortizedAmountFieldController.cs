@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Views.EditorPages;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -50,6 +51,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				}
 			}
 		}
+
+		public override IEnumerable<CommentaryType> CommentaryTypes
+		{
+			get
+			{
+				return this.controller.CommentaryTypes;
+			}
+		}
+
 
 		private void UpdateValue()
 		{
@@ -125,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private AmortizedAmountController		controller;
-		private AmortizedAmount?				value;
+		private AmortizedAmountController			controller;
+		private AmortizedAmount?					value;
 	}
 }

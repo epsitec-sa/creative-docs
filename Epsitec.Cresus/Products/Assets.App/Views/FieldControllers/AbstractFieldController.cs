@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
+using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
@@ -100,6 +101,14 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			get
 			{
 				return this.frameBox;
+			}
+		}
+
+		public virtual IEnumerable<CommentaryType> CommentaryTypes
+		{
+			get
+			{
+				yield return AbstractFieldController.GetCommentaryType (this.propertyState, this.isReadOnly, this.hasError);
 			}
 		}
 
@@ -222,7 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			if (this.clearButton != null)
 			{
 				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
-				this.clearButton.Enable = !this.isReadOnly;
+				this.clearButton.Enable     = !this.isReadOnly;
 			}
 		}
 
@@ -257,10 +266,10 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			if (combo != null)
 			{
-				combo.BackColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
+				combo.BackColor       = AbstractFieldController.GetBackgroundColor (state, isReadOnly);
 				combo.TextDisplayMode = TextFieldDisplayMode.UseBackColor;
-				combo.IsReadOnly = true;
-				combo.Enable = !isReadOnly;
+				combo.IsReadOnly      = true;
+				combo.Enable          = !isReadOnly;
 			}
 		}
 
@@ -268,15 +277,16 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			if (button != null)
 			{
-				button.NormalColor = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
-				button.Enable = !isReadOnly;
+				button.NormalColor          = AbstractFieldController.GetBackgroundColor (state, isReadOnly, hasError);
+				button.Enable               = !isReadOnly;
+				button.SameColorWhenDisable = true;
 			}
 		}
 
 		public static Color GetBackgroundColor(PropertyState state, bool isReadOnly, bool isError = false)
 		{
 			Color color;
-			double delta = -0.05;
+			double delta = -0.1;
 
 			if (isError)
 			{
@@ -307,6 +317,27 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 
 			return color;
+		}
+
+		public static CommentaryType GetCommentaryType(PropertyState state, bool isReadOnly, bool isError = false)
+		{
+			bool defined = (state == PropertyState.Single);
+
+			if (isError)
+			{
+				return CommentaryType.Error;
+			}
+			else
+			{
+				if (isReadOnly)
+				{
+					return defined ? CommentaryType.Result : CommentaryType.Readonly;
+				}
+				else
+				{
+					return defined ? CommentaryType.Defined : CommentaryType.Editable;
+				}
+			}
 		}
 
 

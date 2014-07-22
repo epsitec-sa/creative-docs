@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		public bool								SameColorWhenDisable;
+
 		public Color							NormalColor
 		{
 			get
@@ -119,7 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var color = this.BackColor;
 
-				if (!this.Enable)
+				if (!this.Enable && !this.SameColorWhenDisable)
 				{
 					color = color.Delta (0.1);  // plus clair si disable
 				}

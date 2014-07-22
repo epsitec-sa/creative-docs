@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.isTimeless  = isTimeless;
 
 			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
+			this.commentariesController = new CommentariesController ();
 		}
 
 		public void Dispose()
@@ -45,6 +46,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected internal virtual void CreateUI(Widget parent)
 		{
 		}
+
+		protected void CreateCommentaries(Widget parent)
+		{
+			this.commentariesController.CreateUI (parent);
+			//?this.commentariesController.Update (this.hasEvent, this.isLocked);
+		}
+
 
 		public virtual void SetObject(Guid objectGuid, Timestamp timestamp)
 		{
@@ -192,6 +200,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.Update ();
 				}
 			}
+
+			this.UpdateCommentaries ();
 		}
 
 
@@ -215,6 +225,22 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					this.fieldControllers.First ().Value.SetFocus ();
 				}
 			}
+		}
+
+
+		protected virtual void UpdateCommentaries()
+		{
+			this.commentariesController.ClearTypesToShow ();
+
+			if (this.hasEvent)
+			{
+				foreach (var controller in this.fieldControllers.Values)
+				{
+					this.commentariesController.AddTypesToShow (controller.CommentaryTypes);
+				}
+			}
+
+			this.commentariesController.Update ();
 		}
 
 
@@ -797,9 +823,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		protected Widget CreateScrollable(Widget parent)
+		protected Widget CreateScrollable(Widget parent, bool commentaries)
 		{
 			this.CreateLockedWidgets (parent);
+
+			if (commentaries)
+			{
+				this.CreateCommentaries (parent);
+			}
 
 			//	Crée la zone scrollable verticalement contenant tous les contrôleurs.
 			this.scrollable = new Scrollable
@@ -846,18 +877,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				Text             = Misc.GetRichTextImg ("Background.Locked", verticalOffset: 0),
 				Margins          = new Margins (0, AbstractScroller.DefaultBreadth+10, 0, 10),
-			};
-		}
-
-		protected void CreateRightGrey(Widget parent)
-		{
-			//	Crée la bande grise à droite, qui prolonge visuellement l'ascenseur vertical.
-			new FrameBox
-			{
-				Parent         = parent,
-				Anchor         = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right,
-				PreferredWidth = AbstractView.scrollerDefaultBreadth,
-				BackColor      = ColorManager.WindowBackgroundColor,
 			};
 		}
 
@@ -978,6 +997,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected readonly BaseType					subBaseType;
 		protected readonly bool						isTimeless;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
+		protected readonly CommentariesController	commentariesController;
 
 		protected Scrollable						scrollable;
 		protected StaticText						lockedMark;

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
+using Epsitec.Cresus.Assets.App.Views.EditorPages;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -22,7 +23,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AmortizedAmountController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
 			this.ignoreChanges = new SafeCounter ();
+			this.commentaryTypes = new HashSet<CommentaryType> ();
 		}
 
 
@@ -85,6 +88,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.propertyState = value;
 					this.UpdateUI ();
 				}
+			}
+		}
+
+		public IEnumerable<CommentaryType>		CommentaryTypes
+		{
+			get
+			{
+				return this.commentaryTypes;
 			}
 		}
 
@@ -480,6 +491,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
+				this.commentaryTypes.Clear ();
+
 				if (this.value.HasValue)
 				{
 					this.typeTextFieldCombo.Visibility = this.IsAmortization;
@@ -542,6 +555,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.prorataDenominatorTextField);
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
+				{
+					var type = AbstractFieldController.GetCommentaryType (this.propertyState, isReadOnly: false);
+					this.commentaryTypes.Add (type);
+				}
+
+				{
+					var type = AbstractFieldController.GetCommentaryType (this.propertyState, isReadOnly: true);
+					this.commentaryTypes.Add (type);
+				}
+
 				this.UpdateEntry ();
 			}
 		}
@@ -556,6 +579,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.entryController.Value         = this.value;
 			this.entryController.PropertyState = this.propertyState;
 			this.entryController.IsReadOnly    = this.isReadOnly;
+
+			foreach (var type in this.entryController.CommentaryTypes)
+			{
+				this.commentaryTypes.Add (type);
+			}
 		}
 
 
@@ -1066,6 +1094,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor			accessor;
 		private readonly SafeCounter			ignoreChanges;
+		private readonly HashSet<CommentaryType> commentaryTypes;
 
 		private AmortizedAmount?				value;
 		private EventType						eventType;

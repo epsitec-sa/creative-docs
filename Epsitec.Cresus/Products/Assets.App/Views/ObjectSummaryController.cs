@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.EditorPages;
 using Epsitec.Cresus.Assets.App.Views.Editors;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.controller = new SummaryController ();
+			this.commentaryTypes = new HashSet<CommentaryType> ();
 
 			this.controller.TileClicked += delegate (object sender, int row, int column)
 			{
@@ -31,14 +33,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public IEnumerable<CommentaryType> CommentaryTypes
+		{
+			get
+			{
+				return this.commentaryTypes;
+			}
+		}
+
+
 		public void CreateUI(Widget parent)
 		{
-			this.informations = new StaticText
+			var header = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
+				PreferredHeight = 10+30+10,
+			};
+
+			this.informations = new StaticText
+			{
+				Parent          = header,
+				Dock            = DockStyle.Fill,
 				PreferredHeight = 30,
 				Margins         = new Margins (10),
+			};
+
+			//	Partie grise à droite, pour prolonger l'ascenseur vertical.
+			new FrameBox
+			{
+				Parent          = header,
+				Dock            = DockStyle.Right,
+				PreferredWidth  = AbstractView.scrollerDefaultBreadth,
+				BackColor       = ColorManager.WindowBackgroundColor,
 			};
 
 			this.controller.CreateUI (parent);
@@ -57,6 +84,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.hasEvent  = false;
 			this.isOutOfBounds  = true;
 			this.eventType = EventType.Unknown;
+
+			this.commentaryTypes.Clear ();
 
 			if (!objectGuid.IsEmpty && this.obj != null)
 			{
@@ -106,6 +135,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var tile = this.GetTile (column, row);
 						var cell = this.GetCell (tile);
 						columns.Add (cell);
+
+						if (cell.HasValue)
+						{
+							this.commentaryTypes.Add (cell.Value.GetCommentaryType (this.isLocked));
+						}
 					}
 
 					cells.Add (columns);
@@ -180,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			string text = this.accessor.GetFieldName (tile.Field);
-			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, simpleText: true);
+			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, label: true);
 		}
 
 		private SummaryControllerTile? GetCell(ObjectSummaryControllerTile tile)
@@ -192,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (tile.Text != null)
 			{
-				return new SummaryControllerTile (tile.Text, alignment: ContentAlignment.MiddleCenter, simpleText: true);
+				return new SummaryControllerTile (tile.Text, alignment: ContentAlignment.MiddleCenter, label: true);
 			}
 
 			string text = null;
@@ -320,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool hilited   = this.IsHilited (tile.Field);
 			bool readOnly  = this.IsReadOnly (tile.Field);
 
-			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, this.isOutOfBounds);
+			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, hatch: this.isOutOfBounds);
 		}
 
 		private bool IsHilited(ObjectField field)
@@ -436,6 +470,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor				accessor;
 		private readonly BaseType					baseType;
 		private readonly SummaryController			controller;
+		private readonly HashSet<CommentaryType>	commentaryTypes;
 
 		private List<List<ObjectSummaryControllerTile>> tiles;
 		private bool								isLocked;

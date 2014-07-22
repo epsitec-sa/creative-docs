@@ -56,14 +56,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ReadonlyFieldColor
-		{
-			get
-			{
-				return Color.FromBrightness (0.9);
-			}
-		}
-
 		public static Color GetTreeTableDockToLeftBackgroundColor(bool isHover = false)
 		{
 			if (isHover)

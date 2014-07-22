@@ -9,7 +9,6 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -32,10 +31,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.scrollable.Viewport.IsAutoFitting = true;
 		}
 
-		public void SetTiles(List<List<SummaryControllerTile?>> tiles, bool isReadOnly)
+		public void SetTiles(List<List<SummaryControllerTile?>> tiles, bool isLocked)
 		{
 			this.tiles = tiles;
-			this.isReadOnly = isReadOnly;
+			this.isLocked = isLocked;
 
 			this.CreateTiles ();
 		}
@@ -95,42 +94,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateButton(ColoredButton button, SummaryControllerTile? tile)
 		{
-			if (tile.HasValue && !tile.Value.SimpleText)
+			if (tile.HasValue && !tile.Value.Label)
 			{
 				if (tile.Value.ReadOnly)
 				{
-					//	Rectangle gris ou bleu sans hover.
-					button.NormalColor   = ColorManager.ReadonlyFieldColor;
-					button.SelectedColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isReadOnly);
-					button.HoverColor    = Color.Empty;
+					if (tile.Value.Hilited)
+					{
+						//	Rectangle bleu sans hover.
+						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isLocked);
+					}
+					else
+					{
+						//	Rectangle gris sans hover.
+						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, true);
+					}
+
+					button.HoverColor = Color.Empty;
 				}
 				else
 				{
-					//	Rectangle blanc ou bleu avec hover.
-					button.NormalColor   = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, this.isReadOnly);
-					button.SelectedColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single,    this.isReadOnly);
-					button.HoverColor    = ColorManager.HoverColor;
+					if (tile.Value.Hilited)
+					{
+						//	Rectangle bleu avec hover.
+						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Single, this.isLocked);
+					}
+					else
+					{
+						//	Rectangle blanc avec hover.
+						button.NormalColor = AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, this.isLocked);
+					}
+
+					button.HoverColor = ColorManager.HoverColor;
 				}
 
 				button.Hatch = tile.Value.Hatch;
-
-				if (tile.Value.Hilited)
-				{
-					button.ActiveState = ActiveState.Yes;
-				}
-				else
-				{
-					button.ActiveState = ActiveState.No;
-				}
 			}
 			else
 			{
 				//	Rectangle invisible (comme le fond).
-				button.NormalColor   = Color.Empty;
-				button.SelectedColor = Color.Empty;
-				button.HoverColor    = Color.Empty;
-
-				button.ActiveState = ActiveState.No;
+				button.NormalColor = Color.Empty;
+				button.HoverColor  = Color.Empty;
 			}
 
 			if (tile.HasValue)
@@ -233,6 +236,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private Scrollable							scrollable;
 		private List<List<SummaryControllerTile?>>	tiles;
-		private bool								isReadOnly;
+		private bool								isLocked;
 	}
 }

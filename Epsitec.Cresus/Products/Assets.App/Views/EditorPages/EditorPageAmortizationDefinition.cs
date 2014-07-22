@@ -13,6 +13,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
+	/// <summary>
+	/// Page utilisée pour l'onglet "Amortissement" d'un objet d'immobilisation.
+	/// </summary>
 	public class EditorPageAmortizationDefinition : AbstractEditorPage
 	{
 		public EditorPageAmortizationDefinition(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
@@ -23,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected internal override void CreateUI(Widget parent)
 		{
-			parent = this.CreateScrollable (parent);
+			parent = this.CreateScrollable (parent, commentaries: true);
 
 			this.CreateImportButton (parent);
 
