@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.controller = new SummaryController ();
-			this.commentaryTypes = new HashSet<CommentaryType> ();
+			this.fieldColorTypes = new HashSet<FieldColorType> ();
 
 			this.controller.TileClicked += delegate (object sender, int row, int column)
 			{
@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public IEnumerable<CommentaryType> CommentaryTypes
+		public IEnumerable<FieldColorType> FieldColorTypes
 		{
 			get
 			{
-				return this.commentaryTypes;
+				return this.fieldColorTypes;
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.isOutOfBounds  = true;
 			this.eventType = EventType.Unknown;
 
-			this.commentaryTypes.Clear ();
+			this.fieldColorTypes.Clear ();
 
 			if (!objectGuid.IsEmpty && this.obj != null)
 			{
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						if (cell.HasValue)
 						{
-							this.commentaryTypes.Add (cell.Value.GetCommentaryType (this.isLocked));
+							this.fieldColorTypes.Add (cell.Value.GetFieldColorType (this.isLocked));
 						}
 					}
 
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor				accessor;
 		private readonly BaseType					baseType;
 		private readonly SummaryController			controller;
-		private readonly HashSet<CommentaryType>	commentaryTypes;
+		private readonly HashSet<FieldColorType>	fieldColorTypes;
 
 		private List<List<ObjectSummaryControllerTile>> tiles;
 		private bool								isLocked;

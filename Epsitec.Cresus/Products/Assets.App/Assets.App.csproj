@@ -179,8 +179,8 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
-    <Compile Include="Views\EditorPages\CommentaryType.cs" />
-    <Compile Include="Views\EditorPages\CommentariesController.cs" />
+    <Compile Include="Views\FieldColorType.cs" />
+    <Compile Include="Views\EditorPages\ColorsExplanationController.cs" />
     <Compile Include="Views\Editors\AbstractEditor.cs" />
     <Compile Include="Views\FieldControllers\AbstractFieldController.cs" />
     <Compile Include="Popups\HistoryController.cs" />

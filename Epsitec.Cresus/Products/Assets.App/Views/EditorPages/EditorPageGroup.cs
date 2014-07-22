@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected internal override void CreateUI(Widget parent)
 		{
-			parent = this.CreateScrollable (parent, commentaries: false);
+			parent = this.CreateScrollable (parent, hasColorsExplanation: false);
 
 			this.CreateGroupGuidController (parent, ObjectField.GroupParent, BaseType.Groups);
 			this.CreateSepartor            (parent);

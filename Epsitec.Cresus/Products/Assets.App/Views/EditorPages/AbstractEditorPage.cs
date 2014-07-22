@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.isTimeless  = isTimeless;
 
 			this.fieldControllers = new Dictionary<ObjectField, AbstractFieldController> ();
-			this.commentariesController = new CommentariesController ();
+			this.colorsExplanationController = new ColorsExplanationController ();
 		}
 
 		public void Dispose()
@@ -47,10 +47,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 		}
 
-		protected void CreateCommentaries(Widget parent)
+		protected void CreateColorsExplanation(Widget parent)
 		{
-			this.commentariesController.CreateUI (parent);
-			//?this.commentariesController.Update (this.hasEvent, this.isLocked);
+			this.colorsExplanationController.CreateUI (parent);
 		}
 
 
@@ -201,7 +200,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				}
 			}
 
-			this.UpdateCommentaries ();
+			this.UpdateColorsExplanation ();
 		}
 
 
@@ -228,19 +227,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		protected virtual void UpdateCommentaries()
+		protected virtual void UpdateColorsExplanation()
 		{
-			this.commentariesController.ClearTypesToShow ();
+			this.colorsExplanationController.ClearTypesToShow ();
 
 			if (this.hasEvent)
 			{
 				foreach (var controller in this.fieldControllers.Values)
 				{
-					this.commentariesController.AddTypesToShow (controller.CommentaryTypes);
+					this.colorsExplanationController.AddTypesToShow (controller.FieldColorTypes);
 				}
 			}
 
-			this.commentariesController.Update ();
+			this.colorsExplanationController.Update ();
 		}
 
 
@@ -823,13 +822,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		protected Widget CreateScrollable(Widget parent, bool commentaries)
+		protected Widget CreateScrollable(Widget parent, bool hasColorsExplanation)
 		{
 			this.CreateLockedWidgets (parent);
 
-			if (commentaries)
+			if (hasColorsExplanation)
 			{
-				this.CreateCommentaries (parent);
+				this.CreateColorsExplanation (parent);
 			}
 
 			//	Crée la zone scrollable verticalement contenant tous les contrôleurs.
@@ -997,7 +996,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected readonly BaseType					subBaseType;
 		protected readonly bool						isTimeless;
 		private Dictionary<ObjectField, AbstractFieldController> fieldControllers;
-		protected readonly CommentariesController	commentariesController;
+		protected readonly ColorsExplanationController	colorsExplanationController;
 
 		protected Scrollable						scrollable;
 		protected StaticText						lockedMark;

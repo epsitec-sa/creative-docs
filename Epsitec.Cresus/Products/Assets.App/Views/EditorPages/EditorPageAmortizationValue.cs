@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected internal override void CreateUI(Widget parent)
 		{
-			parent = this.CreateScrollable (parent, commentaries: true);
+			parent = this.CreateScrollable (parent, hasColorsExplanation: true);
 
 			this.CreateAmortizedAmountController (parent, ObjectField.MainValue);
 		}

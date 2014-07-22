@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 	/// Affiche en pied de page une série de "commentaires" composés d'un échantillon de
 	/// couleur et d'un texte explicatif.
 	/// </summary>
-	public class CommentariesController
+	public class ColorsExplanationController
 	{
-		public CommentariesController()
+		public ColorsExplanationController()
 		{
-			this.typesToShow  = new HashSet<CommentaryType> ();
+			this.typesToShow  = new HashSet<FieldColorType> ();
 		}
 
 
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.typesToShow.Clear ();
 		}
 
-		public void AddTypesToShow(IEnumerable<CommentaryType> types)
+		public void AddTypesToShow(IEnumerable<FieldColorType> types)
 		{
 			foreach (var type in types)
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
-		public void AddTypeToShow(CommentaryType type)
+		public void AddTypeToShow(FieldColorType type)
 		{
 			this.typesToShow.Add (type);
 		}
@@ -89,8 +89,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//	Crée les différentes lignes, de bas en haut.
 			this.frame.Children.Clear ();
 
-			var widths = new int[CommentariesController.columnsCount];
-			for (int column=0; column<CommentariesController.columnsCount; column++)
+			var widths = new int[ColorsExplanationController.columnsCount];
+			for (int column=0; column<ColorsExplanationController.columnsCount; column++)
 			{
 				widths[column] = GetColumnWidth (column);
 			}
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			foreach (var item in this.ItemsToShow)
 			{
-				if (rank%CommentariesController.columnsCount == 0)  // crée une nouvelle ligne ?
+				if (rank%ColorsExplanationController.columnsCount == 0)  // crée une nouvelle ligne ?
 				{
 					line = new FrameBox
 					{
@@ -111,14 +111,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					};
 				}
 
-				int width = widths[rank%CommentariesController.columnsCount];
-				this.CreateCommentary (line, item, width);
+				int width = widths[rank%ColorsExplanationController.columnsCount];
+				this.CreateColorExplanation (line, item, width);
 
 				rank++;
 			}
 		}
 
-		private void CreateCommentary(Widget parent, Item item, int width)
+		private void CreateColorExplanation(Widget parent, Item item, int width)
 		{
 			//	Crée un commentaire composé d'un carré coloré suivi d'un texte.
 			const int h = AbstractFieldController.lineHeight;
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			foreach (var item in this.ItemsToShow)
 			{
-				if (rank%CommentariesController.columnsCount == column)
+				if (rank%ColorsExplanationController.columnsCount == column)
 				{
 					width = System.Math.Max (width, item.Description.GetTextWidth ());
 				}
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				yield return new Item
 				(
-					CommentaryType.Editable,
+					FieldColorType.Editable,
 					"Champ pouvant être défini",
 					"Cette couleur indique un champ pouvant être défini par cet événement",
 					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: false, isError: false)
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				yield return new Item
 				(
-					CommentaryType.Defined,
+					FieldColorType.Defined,
 					"Champ défini",
 					"Cette couleur indique un champ défini par cet événement",
 					AbstractFieldController.GetBackgroundColor (PropertyState.Single, isReadOnly: false, isError: false)
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				yield return new Item
 				(
-					CommentaryType.Readonly,
+					FieldColorType.Readonly,
 					"Champ ne pouvant pas être défini",
 					"Cette couleur indique un champ ne pouvant pas être défini par cet événement",
 					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: true, isError: false)
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				yield return new Item
 				(
-					CommentaryType.Result,
+					FieldColorType.Result,
 					"Résultat d'un calcul",
 					"Cette couleur indique le résultat d'un calcul ne pouvant pas être modifié",
 					AbstractFieldController.GetBackgroundColor (PropertyState.Single, isReadOnly: true, isError: false)
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				yield return new Item
 				(
-					CommentaryType.Error,
+					FieldColorType.Error,
 					"Erreur",
 					"Cette couleur indique un champ incorrectement rempli",
 					AbstractFieldController.GetBackgroundColor (PropertyState.Synthetic, isReadOnly: false, isError: true)
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private struct Item
 		{
-			public Item(CommentaryType type, string description, string tooltip, Color color)
+			public Item(FieldColorType type, string description, string tooltip, Color color)
 			{
 				this.Type        = type;
 				this.Description = description;
@@ -237,16 +237,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				get
 				{
-					return this.Type == CommentaryType.Unknown
+					return this.Type == FieldColorType.Unknown
 						&& string.IsNullOrEmpty (this.Description)
 						&& string.IsNullOrEmpty (this.Tooltip)
 						&& this.Color.IsEmpty;
 				}
 			}
 
-			public static Item Empty = new Item (CommentaryType.Unknown, null, null, Color.Empty);
+			public static Item Empty = new Item (FieldColorType.Unknown, null, null, Color.Empty);
 
-			public readonly CommentaryType		Type;
+			public readonly FieldColorType		Type;
 			public readonly string				Description;
 			public readonly string				Tooltip;
 			public readonly Color				Color;
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private const int columnsCount = 3;
 
-		private readonly HashSet<CommentaryType> typesToShow;
+		private readonly HashSet<FieldColorType> typesToShow;
 
 		private FrameBox						footer;
 		private FrameBox						frame;

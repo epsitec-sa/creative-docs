@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 
 			this.ignoreChanges = new SafeCounter ();
-			this.commentaryTypes = new HashSet<CommentaryType> ();
+			this.fieldColorTypes = new HashSet<FieldColorType> ();
 
 			this.lastEntrySeed = -1;
 		}
@@ -107,11 +107,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public IEnumerable<CommentaryType>		CommentaryTypes
+		public IEnumerable<FieldColorType>		FieldColorTypes
 		{
 			get
 			{
-				return this.commentaryTypes;
+				return this.fieldColorTypes;
 			}
 		}
 
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateUI()
 		{
-			this.commentaryTypes.Clear ();
+			this.fieldColorTypes.Clear ();
 
 			if (this.value.HasValue)
 			{
@@ -370,8 +370,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController .Value = null;
 				this.amountController.Value = null;
 
-				var type = AbstractFieldController.GetCommentaryType (this.propertyState, this.isReadOnly);
-				this.commentaryTypes.Add (type);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.isReadOnly);
+				this.fieldColorTypes.Add (type);
 			}
 		}
 
@@ -380,8 +380,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			fieldController.PropertyState = equal ? PropertyState.Synthetic : PropertyState.Single;
 			fieldController.IsReadOnly = this.isReadOnly;
 
-			var type = AbstractFieldController.GetCommentaryType (fieldController.PropertyState, this.isReadOnly);
-			this.commentaryTypes.Add (type);
+			var type = AbstractFieldController.GetFieldColorType (fieldController.PropertyState, this.isReadOnly);
+			this.fieldColorTypes.Add (type);
 		}
 
 
@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor			accessor;
 		private readonly SafeCounter			ignoreChanges;
-		private readonly HashSet<CommentaryType> commentaryTypes;
+		private readonly HashSet<FieldColorType> fieldColorTypes;
 
 		private AmortizedAmount?				value;
 		private int								lastEntrySeed;

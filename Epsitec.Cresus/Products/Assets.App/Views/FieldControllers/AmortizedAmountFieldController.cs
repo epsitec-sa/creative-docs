@@ -52,11 +52,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
-		public override IEnumerable<CommentaryType> CommentaryTypes
+		public override IEnumerable<FieldColorType> FieldColorTypes
 		{
 			get
 			{
-				return this.controller.CommentaryTypes;
+				return this.controller.FieldColorTypes;
 			}
 		}
 

@@ -21,15 +21,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Label     = label;
 		}
 
-		public CommentaryType GetCommentaryType(bool isLocked)
+		public FieldColorType GetFieldColorType(bool isLocked)
 		{
 			if (this.Hilited)
 			{
-				return this.ReadOnly || isLocked ? CommentaryType.Result : CommentaryType.Defined;
+				return this.ReadOnly || isLocked ? FieldColorType.Result : FieldColorType.Defined;
 			}
 			else
 			{
-				return this.ReadOnly || isLocked ? CommentaryType.Readonly : CommentaryType.Editable;
+				return this.ReadOnly || isLocked ? FieldColorType.Readonly : FieldColorType.Editable;
 			}
 		}
 

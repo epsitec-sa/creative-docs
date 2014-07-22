@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected internal override void CreateUI(Widget parent)
 		{
 			this.CreateLockedWidgets (parent);
-			this.CreateCommentaries (parent);
+			this.CreateColorsExplanation (parent);
 			this.summaryController.CreateUI (parent);
 		}
 
@@ -38,20 +38,20 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.summaryController.SetTiles (this.SummaryTiles, this.isLocked);
 			this.summaryController.UpdateFields (this.objectGuid, this.timestamp);
 
-			this.UpdateCommentaries ();
+			this.UpdateColorsExplanation ();
 		}
 
 
-		protected override void UpdateCommentaries()
+		protected override void UpdateColorsExplanation()
 		{
-			this.commentariesController.ClearTypesToShow ();
+			this.colorsExplanationController.ClearTypesToShow ();
 
 			if (this.hasEvent)
 			{
-				this.commentariesController.AddTypesToShow (this.summaryController.CommentaryTypes);
+				this.colorsExplanationController.AddTypesToShow (this.summaryController.FieldColorTypes);
 			}
 
-			this.commentariesController.Update ();
+			this.colorsExplanationController.Update ();
 		}
 
 

@@ -104,11 +104,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
-		public virtual IEnumerable<CommentaryType> CommentaryTypes
+		public virtual IEnumerable<FieldColorType> FieldColorTypes
 		{
 			get
 			{
-				yield return AbstractFieldController.GetCommentaryType (this.propertyState, this.isReadOnly, this.hasError);
+				yield return AbstractFieldController.GetFieldColorType (this.propertyState, this.isReadOnly, this.hasError);
 			}
 		}
 
@@ -319,23 +319,23 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			return color;
 		}
 
-		public static CommentaryType GetCommentaryType(PropertyState state, bool isReadOnly, bool isError = false)
+		public static FieldColorType GetFieldColorType(PropertyState state, bool isReadOnly, bool isError = false)
 		{
 			bool defined = (state == PropertyState.Single);
 
 			if (isError)
 			{
-				return CommentaryType.Error;
+				return FieldColorType.Error;
 			}
 			else
 			{
 				if (isReadOnly)
 				{
-					return defined ? CommentaryType.Result : CommentaryType.Readonly;
+					return defined ? FieldColorType.Result : FieldColorType.Readonly;
 				}
 				else
 				{
-					return defined ? CommentaryType.Defined : CommentaryType.Editable;
+					return defined ? FieldColorType.Defined : FieldColorType.Editable;
 				}
 			}
 		}

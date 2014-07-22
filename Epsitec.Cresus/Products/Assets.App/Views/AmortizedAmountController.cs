@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor = accessor;
 
 			this.ignoreChanges = new SafeCounter ();
-			this.commentaryTypes = new HashSet<CommentaryType> ();
+			this.fieldColorTypes = new HashSet<FieldColorType> ();
 		}
 
 
@@ -91,11 +91,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public IEnumerable<CommentaryType>		CommentaryTypes
+		public IEnumerable<FieldColorType>		FieldColorTypes
 		{
 			get
 			{
-				return this.commentaryTypes;
+				return this.fieldColorTypes;
 			}
 		}
 
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.commentaryTypes.Clear ();
+				this.fieldColorTypes.Clear ();
 
 				if (this.value.HasValue)
 				{
@@ -556,13 +556,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
 				{
-					var type = AbstractFieldController.GetCommentaryType (this.propertyState, isReadOnly: false);
-					this.commentaryTypes.Add (type);
+					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isReadOnly: false);
+					this.fieldColorTypes.Add (type);
 				}
 
 				{
-					var type = AbstractFieldController.GetCommentaryType (this.propertyState, isReadOnly: true);
-					this.commentaryTypes.Add (type);
+					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isReadOnly: true);
+					this.fieldColorTypes.Add (type);
 				}
 
 				this.UpdateEntry ();
@@ -580,9 +580,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.entryController.PropertyState = this.propertyState;
 			this.entryController.IsReadOnly    = this.isReadOnly;
 
-			foreach (var type in this.entryController.CommentaryTypes)
+			foreach (var type in this.entryController.FieldColorTypes)
 			{
-				this.commentaryTypes.Add (type);
+				this.fieldColorTypes.Add (type);
 			}
 		}
 
@@ -1094,7 +1094,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor			accessor;
 		private readonly SafeCounter			ignoreChanges;
-		private readonly HashSet<CommentaryType> commentaryTypes;
+		private readonly HashSet<FieldColorType> fieldColorTypes;
 
 		private AmortizedAmount?				value;
 		private EventType						eventType;

@@ -4,9 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.Views.EditorPages
+namespace Epsitec.Cresus.Assets.App.Views
 {
-	public enum CommentaryType
+	public enum FieldColorType
 	{
 		Unknown,
 
