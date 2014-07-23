@@ -9,13 +9,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct SummaryControllerTile
 	{
-		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool defined = false, bool readOnly = false, bool label = false)
+		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool defined = false, bool readOnly = false, bool hasError = false, bool label = false)
 		{
 			this.Text      = text;
 			this.Tootip    = tooltip;
 			this.Alignment = alignment;
 			this.Defined   = defined;
 			this.ReadOnly  = readOnly;
+			this.HasError  = hasError;
 			this.Label     = label;
 		}
 
@@ -23,13 +24,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.Defined)
+				if (this.HasError)
 				{
-					return FieldColorType.Defined;
+					return FieldColorType.Error;  // orange
+				}
+				else if (this.Defined)
+				{
+					return FieldColorType.Defined;  // bleu
+				}
+				else if (this.ReadOnly)
+				{
+					return FieldColorType.Readonly;  // gris
 				}
 				else
 				{
-					return this.ReadOnly ? FieldColorType.Readonly : FieldColorType.Editable;
+					return FieldColorType.Editable;  // blanc
 				}
 			}
 		}
@@ -39,6 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public readonly ContentAlignment	Alignment;
 		public readonly bool				Defined;
 		public readonly bool				ReadOnly;
+		public readonly bool				HasError;
 		public readonly bool				Label;
 	}
 }

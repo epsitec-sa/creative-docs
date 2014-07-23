@@ -10,6 +10,75 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AccountsLogic
 	{
+		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string number,
+			out bool hasError, out bool gotoVisible)
+		{
+			//	Retourne le texte explicatif d'un compte. Exemples:
+			//	"1000 Caisse"
+			//	"1111 — Inconnu dans le plan comptable"
+			string explanationsValue;
+
+			if (string.IsNullOrEmpty (number))  // aucun compte ?
+			{
+				explanationsValue = null;
+				hasError = false;
+				gotoVisible = false;
+			}
+			else  // compte présent ?
+			{
+				//	Cherche le plan comptable correspondant à la date.
+				var baseType = accessor.Mandat.GetAccountsBase (date);
+
+				if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
+				{
+					explanationsValue = AccountsLogic.AddError (number, "Aucun plan comptable à cette date");
+					hasError = true;
+					gotoVisible = false;
+				}
+				else  // plan comptable trouvé ?
+				{
+					//	Cherche le résumé du compte (numéro et titre).
+					var summary = AccountsLogic.GetSummary (accessor, baseType, number);
+
+					if (string.IsNullOrEmpty (summary))  // compte inexistant ?
+					{
+						explanationsValue = AccountsLogic.AddError (number, "Inconnu dans le plan comptable");
+						hasError = true;
+						gotoVisible = false;
+					}
+					else
+					{
+						explanationsValue = summary;  // par exemple "1000 Caisse"
+						hasError = false;
+						gotoVisible = true;
+					}
+				}
+			}
+
+			return explanationsValue;
+		}
+
+		private static string AddError(string text, string error)
+		{
+			//	Retourne un texte explicatif composé du numéro du compte et de l'erreur.
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+			else
+			{
+				if (string.IsNullOrEmpty (error))
+				{
+					return text;
+				}
+				else
+				{
+					return string.Concat (text, " — ", error);
+				}
+			}
+		}
+
+
 		public static string GetSummary(DataAccessor accessor, BaseType baseType, string number)
 		{
 			//	Retourne le résumé (par exemple "1000 Caisse") d'après le seul numéro.

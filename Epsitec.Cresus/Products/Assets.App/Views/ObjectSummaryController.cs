@@ -231,6 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
+			bool hasError = false;
 
 			switch (this.accessor.GetFieldType (tile.Field))
 			{
@@ -340,6 +341,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					break;
 
 				case FieldType.Account:
+					text = ObjectProperties.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
+					if (!string.IsNullOrEmpty (text) && this.timestamp.HasValue)
+					{
+						bool gotoVisible;
+						text = AccountsLogic.GetExplanation (this.accessor, this.timestamp.Value.Date, text, out hasError, out gotoVisible);
+					}
+					alignment = ContentAlignment.MiddleLeft;
+					break;
+
 				default:
 					string s = ObjectProperties.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
 					if (!string.IsNullOrEmpty (s))
@@ -354,7 +364,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool defined   = this.IsDefined  (tile.Field);
 			bool readOnly  = this.IsReadOnly (tile.Field);
 
-			return new SummaryControllerTile (text, tooltip, alignment, defined, readOnly);
+			if (!hasError)
+			{
+				hasError  = this.HasError (tile.Field, text);
+			}
+
+			return new SummaryControllerTile (text, tooltip, alignment, defined, readOnly, hasError);
 		}
 
 		private bool IsDefined(ObjectField field)
@@ -372,6 +387,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return false;
 			}
+		}
+
+		private bool HasError(ObjectField field, string text)
+		{
+			if (WarningsLogic.IsRequired (this.accessor, this.baseType, field))
+			{
+				if (string.IsNullOrEmpty (text))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private bool IsReadOnly(ObjectField field)

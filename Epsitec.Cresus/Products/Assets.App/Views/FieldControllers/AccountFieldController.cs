@@ -148,44 +148,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			if (this.textField != null)
 			{
-				string explanationsValue;
+				bool hasError, gotoVisible;
+				string explanationsValue = AccountsLogic.GetExplanation (this.accessor, this.EffectiveDate, this.value, out hasError, out gotoVisible);
 
-				if (string.IsNullOrEmpty (this.value))  // aucun compte ?
-				{
-					explanationsValue = null;
-					this.hasError = false;
-					this.gotoButton.Visibility = false;
-				}
-				else  // compte présent ?
-				{
-					//	Cherche le plan comptable correspondant à la date.
-					var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
-
-					if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
-					{
-						explanationsValue = AccountFieldController.AddError (this.value, "Aucun plan comptable à cette date");
-						this.hasError = true;
-						this.gotoButton.Visibility = false;
-					}
-					else  // plan comptable trouvé ?
-					{
-						//	Cherche le résumé du compte (numéro et titre).
-						var summary = AccountsLogic.GetSummary (this.accessor, baseType, this.value);
-
-						if (string.IsNullOrEmpty (summary))  // compte inexistant ?
-						{
-							explanationsValue = AccountFieldController.AddError (this.value, "Inconnu dans le plan comptable");
-							this.hasError = true;
-							this.gotoButton.Visibility = false;
-						}
-						else
-						{
-							explanationsValue = summary;  // par exemple "1000 Caisse"
-							this.hasError = false;
-							this.gotoButton.Visibility = true;
-						}
-					}
-				}
+				this.hasError = hasError;
+				this.gotoButton.Visibility = gotoVisible;
 
 				if (this.ignoreChanges.IsZero)
 				{

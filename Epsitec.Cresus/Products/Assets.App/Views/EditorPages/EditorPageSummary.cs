@@ -225,8 +225,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account4));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account5));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account6));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account7));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account8));
+				//?c3.Add (new ObjectSummaryControllerTile (ObjectField.Account7));
+				//?c3.Add (new ObjectSummaryControllerTile (ObjectField.Account8));
 
 				return list;
 			}

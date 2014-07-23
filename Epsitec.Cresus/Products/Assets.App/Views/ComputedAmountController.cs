@@ -81,6 +81,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool HasError
+		{
+			get
+			{
+				return this.hasError;
+			}
+			set
+			{
+				if (this.hasError != value)
+				{
+					this.hasError = value;
+					this.UpdateUI ();
+				}
+			}
+		}
+
 
 		public void UpdateValue()
 		{
@@ -402,10 +418,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.EditedFinalAmount = ca.FinalAmount;
 					}
 
-					var argumentType = AbstractFieldController.GetFieldColorType (ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined);
+					var argumentType = AbstractFieldController.GetFieldColorType (ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.hasError);
 					AbstractFieldController.UpdateTextField (this.argumentTextField, argumentType, this.isReadOnly);
 
-					var finalType = AbstractFieldController.GetFieldColorType (!ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined);
+					var finalType = AbstractFieldController.GetFieldColorType (!ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.hasError);
 					AbstractFieldController.UpdateTextField (this.finalTextField, finalType, this.isReadOnly);
 				}
 				else
@@ -424,8 +440,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
 
-					AbstractFieldController.UpdateTextField (this.argumentTextField, FieldColorType.Editable, true);
-					AbstractFieldController.UpdateTextField (this.finalTextField,    FieldColorType.Editable, this.isReadOnly);
+					var type = this.hasError ? FieldColorType.Error : FieldColorType.Editable;
+					AbstractFieldController.UpdateTextField (this.argumentTextField, type, true);
+					AbstractFieldController.UpdateTextField (this.finalTextField,    type, this.isReadOnly);
 				}
 
 				this.addSubButton.Enable = !this.isReadOnly;
@@ -534,6 +551,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ComputedAmount?					computedAmount;
 		private PropertyState					propertyState;
 		private bool							isReadOnly;
+		private bool							hasError;
 
 		private GlyphButton						addSubButton;
 		private TextField						argumentTextField;

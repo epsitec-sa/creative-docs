@@ -38,7 +38,22 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			get
 			{
-				return this.fieldControllers.Values.Where (x => x.HasError).Any ();
+				//-return this.fieldControllers.Values.Where (x => x.HasError).Any ();
+
+				//	Il vaut mieux toujours accepter de valider une page, même si elle
+				//	contient des erreurs, pour plusieurs raisons:
+				//	1) La validation ne s'effectue que pour la page en cours. En cas
+				//	   d'erreur dans une page, il suffit de changer de page puis de
+				//	   valider. Même la page contenant des erreurs est alors validée,
+				//	   puisque toutes les pages représentent le même objet. Autant
+				//	   donc accepter toujours la validation.
+				//	2) Le changement du mode "obligatoire" (required) dans une rubrique
+				//	   utilisateur peut de toute façon gérérer un grand nombre d'objets
+				//	   invalides.
+				//	3) La vue des avertissements (WarningView) est là pour repérer les
+				//	   erreurs et aider à les corriger.
+
+				return false;
 			}
 		}
 

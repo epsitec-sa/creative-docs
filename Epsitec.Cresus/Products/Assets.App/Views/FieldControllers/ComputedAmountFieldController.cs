@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 							using (this.ignoreChanges.Enter ())
 							{
 								this.controller.ComputedAmount = this.value;
+								this.UpdateError ();
 							}
 						}
 						else
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 							using (this.ignoreChanges.Enter ())
 							{
 								this.controller.ComputedAmountNoEditing = this.value;
+								this.UpdateError ();
 							}
 						}
 					}
@@ -55,6 +57,20 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.controller.UpdateValue ();
+				this.UpdateError ();
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.Required)
+			{
+				bool error = !this.value.HasValue;
+				if (this.hasError != error)
+				{
+					this.hasError = error;
+					this.UpdatePropertyState ();
+				}
 			}
 		}
 
@@ -71,7 +87,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			if (this.controller != null)
 			{
 				this.controller.PropertyState = this.PropertyState;
-				this.controller.IsReadOnly = this.isReadOnly;
+				this.controller.IsReadOnly    = this.isReadOnly;
+				this.controller.HasError      = this.hasError;
 			}
 		}
 
@@ -84,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.controller.CreateUI (this.frameBox);
 			this.controller.ComputedAmount = this.value;
 
+			this.UpdateError ();
 			this.UpdatePropertyState ();
 
 			this.controller.ValueEdited += delegate
@@ -93,6 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.controller.ComputedAmount;
+						this.UpdateError ();
 						this.OnValueEdited (this.Field);
 					}
 				}
