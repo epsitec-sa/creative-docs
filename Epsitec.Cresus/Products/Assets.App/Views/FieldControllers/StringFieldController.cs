@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 							{
 								this.textField.Text = this.value;
 								this.textField.SelectAll ();
+
+								this.UpdateError ();
 							}
 						}
 					}
@@ -52,6 +54,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.textField.Text = this.value;
 				this.textField.SelectAll ();
+
+				this.UpdateError ();
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.Required)
+			{
+				bool error = string.IsNullOrEmpty (this.value);
+				if (this.hasError != error)
+				{
+					this.hasError = error;
+					this.UpdatePropertyState ();
+				}
 			}
 		}
 
@@ -65,7 +82,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
+			var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+			AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
 		}
 
 
@@ -98,6 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				};
 			}
 
+			this.UpdateError ();
 			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
@@ -107,6 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.textField.Text;
+						this.UpdateError ();
 						this.OnValueEdited (this.Field);
 					}
 				}

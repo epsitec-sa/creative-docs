@@ -402,8 +402,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.EditedFinalAmount = ca.FinalAmount;
 					}
 
-					AbstractFieldController.UpdateTextField (this.argumentTextField, ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.isReadOnly);
-					AbstractFieldController.UpdateTextField (this.finalTextField,   !ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.isReadOnly);
+					var argumentType = AbstractFieldController.GetFieldColorType (ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined);
+					AbstractFieldController.UpdateTextField (this.argumentTextField, argumentType, this.isReadOnly);
+
+					var finalType = AbstractFieldController.GetFieldColorType (!ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined);
+					AbstractFieldController.UpdateTextField (this.finalTextField, finalType, this.isReadOnly);
 				}
 				else
 				{
@@ -421,8 +424,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.EditedArgumentAmount = null;
 					this.EditedFinalAmount = null;
 
-					AbstractFieldController.UpdateTextField (this.argumentTextField, PropertyState.Undefined, true);
-					AbstractFieldController.UpdateTextField (this.finalTextField,    PropertyState.Undefined, this.isReadOnly);
+					AbstractFieldController.UpdateTextField (this.argumentTextField, FieldColorType.Editable, true);
+					AbstractFieldController.UpdateTextField (this.finalTextField,    FieldColorType.Editable, this.isReadOnly);
 				}
 
 				this.addSubButton.Enable = !this.isReadOnly;

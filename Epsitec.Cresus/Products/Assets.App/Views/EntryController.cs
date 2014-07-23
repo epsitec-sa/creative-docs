@@ -13,6 +13,9 @@ using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Contrôleur permettant de saisir une écriture.
+	/// </summary>
 	public class EntryController
 	{
 		public EntryController(DataAccessor accessor)
@@ -103,6 +106,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.propertyState = value;
 					this.UpdateUI ();
 				}
+			}
+		}
+
+		public bool								HasError
+		{
+			get
+			{
+				return this.dateController  .HasError
+					|| this.debitController .HasError
+					|| this.creditController.HasError
+					|| this.stampController .HasError
+					|| this.titleController .HasError
+					|| this.amountController.HasError;
 			}
 		}
 
@@ -323,7 +339,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.value.HasValue)
 			{
-				EntryProperties baseProperties= null;
+				EntryProperties baseProperties = null;
 				EntryProperties editProperties = null;
 
 				using (var entries = new Entries (this.accessor))
@@ -369,18 +385,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController .Value = null;
 				this.amountController.Value = null;
 
-				var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.isReadOnly);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState);
 				this.fieldColorTypes.Add (type);
 			}
 		}
 
 		private void UpdatePropertyState(AbstractFieldController fieldController, bool equal)
 		{
-			fieldController.PropertyState = equal ? PropertyState.Synthetic : PropertyState.Single;
+			//	Si le champ est défini automatiquement (equal = true), le contrôleur a un fond
+			//	bleu clair. S'il est défini manuellement, il a un fond bleu.
+
+			fieldController.PropertyState = equal ? PropertyState.Automatic : PropertyState.Single;
 			fieldController.IsReadOnly = this.isReadOnly;
 
-			var type = AbstractFieldController.GetFieldColorType (fieldController.PropertyState, this.isReadOnly);
-			this.fieldColorTypes.Add (type);
+			if (fieldController.HasError)
+			{
+				this.fieldColorTypes.Add (FieldColorType.Error);
+			}
+			else
+			{
+				this.fieldColorTypes.Add (equal ? FieldColorType.Automatic : FieldColorType.Defined);
+			}
 		}
 
 

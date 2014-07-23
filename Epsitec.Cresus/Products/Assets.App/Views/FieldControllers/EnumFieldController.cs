@@ -77,7 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateCombo (this.textField, this.propertyState, this.isReadOnly);
+			var type = AbstractFieldController.GetFieldColorType (this.propertyState);
+			AbstractFieldController.UpdateCombo (this.textField, type, this.isReadOnly);
 		}
 
 

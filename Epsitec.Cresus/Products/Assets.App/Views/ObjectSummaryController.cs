@@ -136,9 +136,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 						var cell = this.GetCell (tile);
 						columns.Add (cell);
 
-						if (cell.HasValue)
+						if (cell.HasValue && !cell.Value.Label)
 						{
-							this.fieldColorTypes.Add (cell.Value.GetFieldColorType (this.isLocked));
+							this.fieldColorTypes.Add (cell.Value.FieldColorType);
 						}
 					}
 
@@ -351,16 +351,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			string tooltip = string.Join ("<br/>", this.accessor.GetFieldName (tile.Field), text);
-			bool hilited   = this.IsHilited (tile.Field);
+			bool defined   = this.IsDefined  (tile.Field);
 			bool readOnly  = this.IsReadOnly (tile.Field);
 
-			return new SummaryControllerTile (text, tooltip, alignment, hilited, readOnly, hatch: this.isOutOfBounds);
+			return new SummaryControllerTile (text, tooltip, alignment, defined, readOnly);
 		}
 
-		private bool IsHilited(ObjectField field)
+		private bool IsDefined(ObjectField field)
 		{
-			if (field != ObjectField.Unknown &&
-				!DataObject.IsOneShotField(field))
+			//	Indique si un champ est défini. Si oui, il apparaît en bleu.
+			if (DataObject.IsOneShotField (field))
+			{
+				return true;
+			}
+			else if (field != ObjectField.Unknown)
 			{
 				return this.GetPropertyState (field) == PropertyState.Single;
 			}

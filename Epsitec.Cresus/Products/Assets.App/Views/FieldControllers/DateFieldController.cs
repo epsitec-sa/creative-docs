@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 								this.textField.Text = this.ConvDateToString (this.value);
 								this.textField.SelectAll ();
 
-								this.HasError = false;
+								this.UpdateError ();
 							}
 						}
 					}
@@ -88,6 +88,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.textField.Text = this.ConvDateToString (this.value);
 				this.textField.SelectAll ();
+
+				this.UpdateError ();
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.Required)
+			{
+				bool error = !this.value.HasValue || this.outOfDate;
+				if (this.hasError != error)
+				{
+					this.hasError = error;
+					this.UpdatePropertyState ();
+				}
 			}
 		}
 
@@ -102,7 +117,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, this.hasError);
+			var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+			AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
 			this.UpdateButtons ();
 		}
 
@@ -138,6 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
 			ToolTip.Default.SetToolTip (this.deleteButton,     "Effacer la date");
 
+			this.UpdateError ();
 			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
@@ -185,6 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 						DateFieldController.AutoDots (this.textField);
 						this.Value = this.ConvStringToDate (this.textField.Text);
 						this.UpdateButtons ();
+						this.UpdateError ();
 						this.OnValueEdited (this.Field);
 					}
 				}
@@ -268,7 +286,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			this.deleteButton.Clicked += delegate
 			{
-				this.textField.Text = null;
+				this.Value = null;
 				this.UpdateButtons ();
 				this.SetFocus ();
 				this.OnValueEdited (this.Field);
@@ -1075,8 +1093,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					throw new System.InvalidOperationException (string.Format ("Unsupported DateRangeCategory {0}", this.DateRangeCategory));
 			}
 
-			this.HasError = !TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, min, max, out date);
-
+			this.outOfDate = !TypeConverters.ParseDate (text, LocalSettings.DefaultMandatDate, min, max, out date);
+			
 			if (date.HasValue)
 			{
 				LocalSettings.DefaultMandatDate = date.Value;
@@ -1121,5 +1139,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private bool							isMouseInside;
 		private bool							isMouseInsideParent;
 		private bool							hasFocus;
+		private bool							outOfDate;
 	}
 }

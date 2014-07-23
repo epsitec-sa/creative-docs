@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Unknown,
 
 		Editable,	// blanc
+		Automatic,	// bleu clair
 		Defined,	// bleu
 		Readonly,	// gris
 		Result,		// gris-bleu

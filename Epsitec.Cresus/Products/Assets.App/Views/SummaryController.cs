@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						Margins           = new Margins (0, 1, 0, 1),
 						TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 						HorizontalMargins = 0,
+						AutoFocus         = false,
 					};
 
 					this.UpdateButton (button, this.GetTile (column, row));
@@ -96,59 +97,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (tile.HasValue && !tile.Value.Label)
 			{
+				button.NormalColor = AbstractFieldController.GetBackgroundColor (tile.Value.FieldColorType);
+
 				if (tile.Value.ReadOnly)
 				{
-					if (tile.Value.Hilited)
-					{
-						//	Rectangle bleu sans hover.
-						if (this.isLocked)
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Result);
-						}
-						else
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Defined);
-						}
-					}
-					else
-					{
-						//	Rectangle gris sans hover.
-						button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Readonly);
-					}
-
 					button.HoverColor = Color.Empty;
 				}
 				else
 				{
-					if (tile.Value.Hilited)
-					{
-						//	Rectangle bleu avec hover.
-						if (this.isLocked)
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Result);
-						}
-						else
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Defined);
-						}
-					}
-					else
-					{
-						//	Rectangle blanc avec hover.
-						if (this.isLocked)
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Readonly);
-						}
-						else
-						{
-							button.NormalColor = AbstractFieldController.GetBackgroundColor (FieldColorType.Editable);
-						}
-					}
-
 					button.HoverColor = ColorManager.HoverColor;
 				}
-
-				button.Hatch = tile.Value.Hatch;
 			}
 			else
 			{

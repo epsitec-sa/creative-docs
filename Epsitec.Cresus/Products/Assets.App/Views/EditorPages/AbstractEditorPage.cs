@@ -229,6 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected virtual void UpdateColorsExplanation()
 		{
+			//	Met à jour les explications sur les couleurs en bas de la vue.
 			this.colorsExplanationController.ClearTypesToShow ();
 
 			if (this.hasEvent)
@@ -297,6 +298,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Accessor  = this.accessor,
 				BaseType  = baseType,
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,
 				TabIndex  = this.tabIndex,
@@ -341,6 +343,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Accessor  = this.accessor,
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = AbstractFieldController.maxWidth,
 				TabIndex  = this.tabIndex,
@@ -386,6 +389,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				ForcedDate = forcedDate,
 				Date       = this.accessor.EditionAccessor.EventDate,
 				Field      = field,
+				Required   = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label      = this.accessor.GetFieldName (field),
 				EditWidth  = AbstractFieldController.maxWidth,
 				TabIndex   = this.tabIndex,
@@ -460,6 +464,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new StringFieldController (this.accessor)
 			{
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				LineCount = lineCount,
@@ -504,6 +509,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new EnumFieldController (this.accessor)
 			{
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				EditWidth = editWidth,
 				Enums     = enums,
@@ -548,6 +554,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new DecimalFieldController (this.accessor)
 			{
 				Field         = field,
+				Required      = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label         = this.accessor.GetFieldName (field),
 				DecimalFormat = format,
 				TabIndex      = this.tabIndex,
@@ -591,6 +598,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new ComputedAmountFieldController (this.accessor)
 			{
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = this.tabIndex,
 			};
@@ -633,6 +641,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new AmortizedAmountFieldController (this.accessor)
 			{
 				Field                 = field,
+				Required              = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label                 = this.accessor.GetFieldName (field),
 				HideAdditionalButtons = true,
 				TabIndex              = this.tabIndex,
@@ -676,6 +685,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new IntFieldController (this.accessor)
 			{
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = this.tabIndex,
 			};
@@ -718,6 +728,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new BoolFieldController (this.accessor)
 			{
 				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label     = this.accessor.GetFieldName (field),
 				TabIndex  = this.tabIndex,
 			};
@@ -760,6 +771,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var controller = new DateFieldController (this.accessor)
 			{
 				Field             = field,
+				Required          = WarningsLogic.IsRequired (this.accessor, baseType, field),
 				Label             = this.accessor.GetFieldName (field),
 				DateRangeCategory = rangeCategory,
 				TabIndex          = this.tabIndex,
@@ -774,7 +786,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				controller.MinValue      = this.accessor.EditionAccessor.GetFieldDateMin (of);
 				controller.MaxValue      = this.accessor.EditionAccessor.GetFieldDateMax (of);
-				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (of);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDate    (of);
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
@@ -984,6 +996,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 	
 		protected void OnValueEdited(ObjectField field)
 		{
+			this.UpdateColorsExplanation ();
 			this.ValueEdited.Raise (this, field);
 		}
 

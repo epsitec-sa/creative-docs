@@ -41,7 +41,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 						this.button.Text = this.GuidToString (this.value);
 					}
 
+					this.UpdateError ();
 					this.UpdateButtons ();
+				}
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.Required)
+			{
+				bool error = this.value.IsEmpty;
+				if (this.hasError != error)
+				{
+					this.hasError = error;
+					this.UpdatePropertyState ();
 				}
 			}
 		}
@@ -58,7 +72,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			if (this.button != null)
 			{
-				AbstractFieldController.UpdateButton (this.button, this.PropertyState, this.isReadOnly);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+				AbstractFieldController.UpdateButton (this.button, type, this.isReadOnly);
 
 				this.UpdateButtons ();
 			}
@@ -95,6 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 
 			this.CreateGotoPersonButton ();
+			this.UpdateError ();
 			this.UpdatePropertyState ();
 
 			//	Connexion des événements.
@@ -111,9 +127,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					this.SetFocus ();
 				}
-				else  // perdu le focus ?
-				{
-				}
 			};
 
 			arrowButton.Clicked += delegate
@@ -126,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			this.gotoButton = this.CreateGotoButton ();
 
-			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du contact");
+			ToolTip.Default.SetToolTip (this.gotoButton, "Aller sur le contact");
 
 			this.gotoButton.Clicked += delegate
 			{
@@ -169,6 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			popup.Navigate += delegate (object sender, Guid guid)
 			{
 				this.Value = guid;
+				this.UpdateError ();
 				this.OnValueEdited (this.Field);
 			};
 		}

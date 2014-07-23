@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			//	Crée le bouton permettant de sauter dans le plan comptable.
 			this.gotoButton = this.CreateGotoButton ();
 
-			ToolTip.Default.SetToolTip (this.gotoButton, "Montrer les détails du compte");
+			ToolTip.Default.SetToolTip (this.gotoButton, "Aller sur le compte");
 
 			this.gotoButton.Clicked += delegate
 			{
@@ -149,12 +149,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			if (this.textField != null)
 			{
 				string explanationsValue;
-				bool error;
 
 				if (string.IsNullOrEmpty (this.value))  // aucun compte ?
 				{
 					explanationsValue = null;
-					error = false;
+					this.hasError = false;
 					this.gotoButton.Visibility = false;
 				}
 				else  // compte présent ?
@@ -165,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 					{
 						explanationsValue = AccountFieldController.AddError (this.value, "Aucun plan comptable à cette date");
-						error = true;
+						this.hasError = true;
 						this.gotoButton.Visibility = false;
 					}
 					else  // plan comptable trouvé ?
@@ -176,13 +175,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 						if (string.IsNullOrEmpty (summary))  // compte inexistant ?
 						{
 							explanationsValue = AccountFieldController.AddError (this.value, "Inconnu dans le plan comptable");
-							error = true;
+							this.hasError = true;
 							this.gotoButton.Visibility = false;
 						}
 						else
 						{
 							explanationsValue = summary;  // par exemple "1000 Caisse"
-							error = false;
+							this.hasError = false;
 							this.gotoButton.Visibility = true;
 						}
 					}
@@ -206,7 +205,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					}
 				}
 
-				AbstractFieldController.UpdateTextField (this.textField, this.propertyState, this.isReadOnly, hasError: error);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+				AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
 			}
 		}
 

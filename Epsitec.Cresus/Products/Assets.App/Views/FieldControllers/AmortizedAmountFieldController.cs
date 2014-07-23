@@ -83,6 +83,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.controller.PropertyState = this.PropertyState;
 				this.controller.IsReadOnly = this.isReadOnly;
+
+				this.hasError = this.controller.HasError;
 			}
 		}
 

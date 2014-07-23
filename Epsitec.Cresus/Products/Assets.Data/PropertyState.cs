@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Assets.Data
 		OneShot,		// propriété sans influence sur les événements futurs
 		Timeless,		// propriété intemporelle
 		Readonly,		// pas d'événement à la date choisie
+		Automatic,		// propriété définie automatiquement
 	}
 }

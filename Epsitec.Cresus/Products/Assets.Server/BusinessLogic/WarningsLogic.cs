@@ -11,6 +11,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class WarningsLogic
 	{
+		public static bool IsRequired(DataAccessor accessor, BaseType baseType, ObjectField field)
+		{
+			//	Retourne true si un champ est requis.
+			if (field >= ObjectField.UserFieldFirst &&
+				field <= ObjectField.UserFieldLast)
+			{
+				return accessor.Mandat.GlobalSettings.GetUserFields (baseType)
+					.Where (x => x.Field == field && x.Required)
+					.Any ();
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		public static void GetWarnings(List<Warning> warnings, DataAccessor accessor)
 		{
 			//	Retourne la liste de tous les warnings actuels.

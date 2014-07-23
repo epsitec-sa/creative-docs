@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (hasComplexTypes)
 			{
-				dict.Add ((int) FieldType.GuidPerson, "Personne");
+				dict.Add ((int) FieldType.GuidPerson, "Contact");
 			}
 
 			return dict;

@@ -29,6 +29,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
+		public override IEnumerable<FieldColorType> FieldColorTypes
+		{
+			get
+			{
+				foreach (var controller in this.controllers)
+				{
+					foreach (var type in controller.FieldColorTypes)
+					{
+						yield return type;
+					}
+				}
+			}
+		}
+
+
 		public override void CreateUI(Widget parent)
 		{
 			this.CreateTitle (parent);

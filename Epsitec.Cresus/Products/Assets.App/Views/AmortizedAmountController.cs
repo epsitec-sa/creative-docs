@@ -90,6 +90,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public bool								HasError
+		{
+			get
+			{
+				return this.entryController.HasError;
+			}
+		}
+
 		public IEnumerable<FieldColorType>		FieldColorTypes
 		{
 			get
@@ -555,13 +563,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
 				{
-					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isReadOnly: false);
+					var type = AbstractFieldController.GetFieldColorType (this.propertyState);
 					this.fieldColorTypes.Add (type);
 				}
 
+				if (this.IsAmortization)
 				{
-					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isReadOnly: true);
-					this.fieldColorTypes.Add (type);
+					this.fieldColorTypes.Add (FieldColorType.Result);
 				}
 
 				this.UpdateEntry ();
@@ -972,13 +980,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
+				var type       = textField.Name == "IsReadOnly" ? FieldColorType.Result : FieldColorType.Defined;
+				var isReadOnly = textField.Name == "IsReadOnly" || this.isReadOnly;
+
 				if (textField is TextFieldCombo)
 				{
-					AbstractFieldController.UpdateCombo (textField as TextFieldCombo, this.propertyState, this.isReadOnly);
+					AbstractFieldController.UpdateCombo (textField as TextFieldCombo, type, isReadOnly);
 				}
 				else
 				{
-					AbstractFieldController.UpdateTextField (textField, this.propertyState, this.isReadOnly);
+					AbstractFieldController.UpdateTextField (textField, type, isReadOnly);
 				}
 			}
 		}

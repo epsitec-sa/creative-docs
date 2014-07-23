@@ -184,29 +184,36 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				yield return new Item
 				(
 					FieldColorType.Editable,
-					"Champ pouvant être défini",
-					"Cette couleur indique un champ pouvant être défini par cet événement"
+					"Peut être défini",
+					"Cette couleur indique un champ pouvant être défini<br/>par cet événement"
+				);
+
+				yield return new Item
+				(
+					FieldColorType.Automatic,
+					"Automatique",
+					"Cette couleur indique un champ rempli automatiquement,<br/>pouvant être redéfini"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Defined,
-					"Champ défini",
+					"Défini",
 					"Cette couleur indique un champ défini par cet événement"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Readonly,
-					"Champ ne pouvant pas être défini",
-					"Cette couleur indique un champ ne pouvant pas être défini par cet événement"
+					"Ne peut pas être défini",
+					"Cette couleur indique un champ ne pouvant pas<br/>être défini par cet événement"
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Result,
 					"Résultat d'un calcul",
-					"Cette couleur indique le résultat d'un calcul ne pouvant pas être modifié"
+					"Cette couleur indique le résultat d'un calcul<br/>ne pouvant pas être modifié"
 				);
 
 				yield return new Item
@@ -245,7 +252,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		private const int columnsCount = 3;
+		private const int columnsCount = 4;
 
 		private readonly HashSet<FieldColorType> typesToShow;
 

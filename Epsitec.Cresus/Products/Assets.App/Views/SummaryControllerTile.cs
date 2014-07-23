@@ -9,35 +9,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public struct SummaryControllerTile
 	{
-		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool hilited = false, bool readOnly = false, bool hatch = false, bool label = false)
+		public SummaryControllerTile(string text, string tooltip = null, ContentAlignment alignment = ContentAlignment.MiddleLeft, bool defined = false, bool readOnly = false, bool label = false)
 		{
 			this.Text      = text;
 			this.Tootip    = tooltip;
 			this.Alignment = alignment;
-			this.Hilited   = hilited;
+			this.Defined   = defined;
 			this.ReadOnly  = readOnly;
-			this.Hatch     = hatch;
 			this.Label     = label;
 		}
 
-		public FieldColorType GetFieldColorType(bool isLocked)
+		public FieldColorType FieldColorType
 		{
-			if (this.Hilited)
+			get
 			{
-				return this.ReadOnly || isLocked ? FieldColorType.Result : FieldColorType.Defined;
-			}
-			else
-			{
-				return this.ReadOnly || isLocked ? FieldColorType.Readonly : FieldColorType.Editable;
+				if (this.Defined)
+				{
+					return FieldColorType.Defined;
+				}
+				else
+				{
+					return this.ReadOnly ? FieldColorType.Readonly : FieldColorType.Editable;
+				}
 			}
 		}
 
 		public readonly string				Text;
 		public readonly string				Tootip;
 		public readonly ContentAlignment	Alignment;
-		public readonly bool				Hilited;
+		public readonly bool				Defined;
 		public readonly bool				ReadOnly;
-		public readonly bool				Hatch;
 		public readonly bool				Label;
 	}
 }
