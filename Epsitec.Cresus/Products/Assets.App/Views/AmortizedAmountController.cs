@@ -544,7 +544,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ProrataDenominator = this.value.Value.ProrataDenominator;
 
 					bool hasEntry = Entries.HasEntry (this.accessor, this.value.Value);
-					this.deleteEntryButton.Enable = hasEntry;
+					this.deleteEntryButton.Enable = hasEntry && !this.isReadOnly;
 					this.showEntryButton  .Enable = hasEntry;
 				}
 				else
@@ -592,7 +592,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
 				{
-					var type = AbstractFieldController.GetFieldColorType (this.propertyState);
+					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly);
 					this.fieldColorTypes.Add (type);
 				}
 
@@ -1009,7 +1009,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
-				var type       = textField.Name == "IsReadOnly" ? FieldColorType.Result : FieldColorType.Defined;
+				FieldColorType type;
+
+				if (this.isReadOnly)
+				{
+					type = FieldColorType.Readonly;  // gris
+				}
+				else if (textField.Name == "IsReadOnly")
+				{
+					type = FieldColorType.Result;  // gris-bleu
+				}
+				else
+				{
+					type = FieldColorType.Defined;  // bleu
+				}
+
 				var isReadOnly = textField.Name == "IsReadOnly" || this.isReadOnly;
 
 				if (textField is TextFieldCombo)

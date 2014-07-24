@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			get
 			{
-				yield return AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+				yield return AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly, isError: this.hasError);
 			}
 		}
 
@@ -305,9 +305,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
-		public static FieldColorType GetFieldColorType(PropertyState state, bool isError = false)
+		public static FieldColorType GetFieldColorType(PropertyState state, bool isLocked = false, bool isError = false)
 		{
-			if (isError)
+			if (isLocked)
+			{
+				return FieldColorType.Readonly;  // gris
+			}
+			else if (isError)
 			{
 				return FieldColorType.Error;  // orange
 			}

@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 
 			//	Petit triangle "v" à droite du champ éditable, pour faire comme un TextFieldCombo.
-			var arrowButton = new GlyphButton
+			this.arrowButton = new GlyphButton
 			{
 				Parent           = this.frameBox,
 				GlyphShape       = GlyphShape.TriangleDown,
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				}
 			};
 
-			arrowButton.Clicked += delegate
+			this.arrowButton.Clicked += delegate
 			{
 				this.ShowPopup ();
 			};
@@ -172,8 +172,10 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					}
 				}
 
-				var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly, isError: this.hasError);
 				AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
+
+				this.arrowButton.Enable = !this.isReadOnly;
 			}
 		}
 
@@ -222,6 +224,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 
 		private TextField						textField;
+		private GlyphButton						arrowButton;
 		private IconButton						gotoButton;
 		private string							value;
 		private bool							hasFocus;

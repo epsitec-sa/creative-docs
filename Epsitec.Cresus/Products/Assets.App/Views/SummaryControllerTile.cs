@@ -24,17 +24,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				if (this.HasError)
+				if (this.ReadOnly)
+				{
+					return FieldColorType.Readonly;  // gris
+				}
+				else if (this.HasError)
 				{
 					return FieldColorType.Error;  // orange
 				}
 				else if (this.Defined)
 				{
 					return FieldColorType.Defined;  // bleu
-				}
-				else if (this.ReadOnly)
-				{
-					return FieldColorType.Readonly;  // gris
 				}
 				else
 				{

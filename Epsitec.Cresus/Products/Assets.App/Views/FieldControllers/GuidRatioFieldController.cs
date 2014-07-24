@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			var type = AbstractFieldController.GetFieldColorType (this.propertyState);
+			var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly, isError: this.hasError);
 
 			if (this.button != null)
 			{

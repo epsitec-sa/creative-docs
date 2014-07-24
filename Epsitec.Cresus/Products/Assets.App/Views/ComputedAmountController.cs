@@ -418,10 +418,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.EditedFinalAmount = ca.FinalAmount;
 					}
 
-					var argumentType = AbstractFieldController.GetFieldColorType (ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.hasError);
+					var argumentType = AbstractFieldController.GetFieldColorType (ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, isLocked: this.isReadOnly, isError: this.hasError);
 					AbstractFieldController.UpdateTextField (this.argumentTextField, argumentType, this.isReadOnly);
 
-					var finalType = AbstractFieldController.GetFieldColorType (!ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, this.hasError);
+					var finalType = AbstractFieldController.GetFieldColorType (!ca.ArgumentDefined ? this.propertyState : PropertyState.Undefined, isLocked: this.isReadOnly, isError: this.hasError);
 					AbstractFieldController.UpdateTextField (this.finalTextField, finalType, this.isReadOnly);
 				}
 				else

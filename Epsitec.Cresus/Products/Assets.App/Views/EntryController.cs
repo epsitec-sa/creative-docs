@@ -274,17 +274,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void SetFocus()
-		{
-		}
-
-		private void SetFocus(TextField textField)
-		{
-			textField.SelectAll ();
-			textField.Focus ();
-		}
-
-
 		private void SetDate(System.DateTime? value)
 		{
 			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedDate, value);
@@ -383,7 +372,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController .Value = null;
 				this.amountController.Value = null;
 
-				var type = AbstractFieldController.GetFieldColorType (this.propertyState);
+				var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly);
 				this.fieldColorTypes.Add (type);
 			}
 		}
@@ -396,7 +385,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			fieldController.PropertyState = equal ? PropertyState.Automatic : PropertyState.Single;
 			fieldController.IsReadOnly = this.isReadOnly;
 
-			if (fieldController.HasError)
+			if (fieldController.IsReadOnly)
+			{
+				this.fieldColorTypes.Add (FieldColorType.Readonly);
+			}
+			else if (fieldController.HasError)
 			{
 				this.fieldColorTypes.Add (FieldColorType.Error);
 			}

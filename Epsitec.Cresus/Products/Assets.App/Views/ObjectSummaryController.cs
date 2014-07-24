@@ -406,7 +406,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Un champ est non modifiable s'il appartient à une page interdite
 			//	pour le type de l'événement en cours.
-			if (this.hasEvent && field != ObjectField.Unknown)
+			if (this.isLocked)
+			{
+				return true;
+			}
+			else if (this.hasEvent && field != ObjectField.Unknown)
 			{
 				var type = EditorPageSummary.GetPageType (this.accessor, field);
 				var availables = ObjectEditor.GetAvailablePages (this.baseType, this.hasEvent, this.eventType);
