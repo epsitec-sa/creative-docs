@@ -19,8 +19,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			get
 			{
-				return this.IncludeFrom == System.DateTime.MaxValue
-					&& this.ExcludeTo   == System.DateTime.MinValue;
+				return this == DateRange.Empty;
 			}
 		}
 
@@ -75,10 +74,20 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static DateRange Empty = new DateRange (System.DateTime.MaxValue, System.DateTime.MinValue);
+		public static DateRange Empty = new DateRange ();
 		public static DateRange Full  = new DateRange (System.DateTime.MinValue, System.DateTime.MaxValue);
 
 		public readonly System.DateTime			IncludeFrom;
 		public readonly System.DateTime			ExcludeTo;
+
+
+		static DateRange()
+		{
+			//	Un DateRange créé sans paramètres doit absolument être équivalement
+			//	à un DateRange.Empty !
+
+			System.Diagnostics.Debug.Assert (new DateRange () == DateRange.Empty);
+			System.Diagnostics.Debug.Assert (new DateRange ().IsEmpty);
+		}
 	}
 }
