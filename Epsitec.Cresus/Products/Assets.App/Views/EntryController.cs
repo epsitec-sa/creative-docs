@@ -131,13 +131,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public void UpdateValue()
+		public void Clear()
 		{
-			this.UpdateUI ();
-
-			using (this.ignoreChanges.Enter ())
-			{
-			}
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedAmount, 0.0m);
+			this.OnValueEdited ();
 		}
 
 		public void CreateUI(Widget parent)
@@ -345,7 +342,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				using (var entries = new Entries (this.accessor))
 				{
 					baseProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.Base);
-					editProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.Edited);
+					editProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.EditedOrBase);
 				}
 
 				this.UpdatePropertyState (this.dateController,   baseProperties.Date   == editProperties.Date);

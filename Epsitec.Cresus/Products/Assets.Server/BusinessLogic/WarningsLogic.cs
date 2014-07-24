@@ -21,6 +21,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					.Where (x => x.Field == field && x.Required)
 					.Any ();
 			}
+			else if (baseType == BaseType.Categories)
+			{
+				return field == ObjectField.Name
+					|| field == ObjectField.AmortizationRate
+					|| field == ObjectField.AmortizationType
+					|| field == ObjectField.Periodicity
+					|| field == ObjectField.Prorata
+					|| field == ObjectField.Round
+					|| field == ObjectField.ResidualValue;
+			}
+			else if (baseType == BaseType.Assets)
+			{
+				return field == ObjectField.CategoryName
+					|| field == ObjectField.AmortizationRate
+					|| field == ObjectField.AmortizationType
+					|| field == ObjectField.Periodicity
+					|| field == ObjectField.Prorata
+					|| field == ObjectField.Round
+					|| field == ObjectField.ResidualValue;
+			}
 			else
 			{
 				return false;
@@ -40,13 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
 				ObjectField.Round,
-				ObjectField.ResidualValue,
-				ObjectField.Account1,
-				ObjectField.Account2,
-				ObjectField.Account3,
-				ObjectField.Account4,
-				ObjectField.Account5,
-				ObjectField.Account6);
+				ObjectField.ResidualValue);
 
 			//	On cherche les champs indéfinis dans les groupes.
 			WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Groups,
@@ -95,9 +109,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (p == null || string.IsNullOrEmpty (p.Value))
 			{
-				const string desc = "Le compte n'est pas défini";
-				var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, accountField, desc);
-				warnings.Add (warning);
+				//-const string desc = "Le compte n'est pas défini";
+				//-var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, accountField, desc);
+				//-warnings.Add (warning);
 			}
 			else
 			{

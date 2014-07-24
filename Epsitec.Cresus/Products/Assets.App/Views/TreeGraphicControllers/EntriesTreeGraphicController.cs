@@ -90,7 +90,14 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 
 		private int GetDeep(EntriesNodeGetter nodeGetter)
 		{
-			return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
+			if (nodeGetter.Count == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				return nodeGetter.GetNodes ().Max (x => x.Level) + 1;
+			}
 		}
 	}
 }

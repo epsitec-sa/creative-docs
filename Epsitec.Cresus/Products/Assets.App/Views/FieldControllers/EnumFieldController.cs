@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -51,6 +50,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 							{
 								this.textField.Text = this.IntToString (this.value);
 								this.textField.SelectAll ();
+
+								this.UpdateError ();
 							}
 						}
 					}
@@ -64,6 +65,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.textField.Text = this.IntToString (this.value);
 				this.textField.SelectAll ();
+
+				this.UpdateError ();
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.Required)
+			{
+				bool error = !this.value.HasValue;
+				if (this.hasError != error)
+				{
+					this.hasError = error;
+					this.UpdatePropertyState ();
+				}
 			}
 		}
 
@@ -77,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			base.UpdatePropertyState ();
 
-			var type = AbstractFieldController.GetFieldColorType (this.propertyState);
+			var type = AbstractFieldController.GetFieldColorType (this.propertyState, this.hasError);
 			AbstractFieldController.UpdateCombo (this.textField, type, this.isReadOnly);
 		}
 
@@ -97,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 
 			this.UpdateCombo ();
+			this.UpdateError ();
 			this.UpdatePropertyState ();
 
 			this.textField.TextChanged += delegate
@@ -106,6 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = this.StringToInt (this.textField.Text);
+						this.UpdateError ();
 						this.OnValueEdited (this.Field);
 					}
 				}

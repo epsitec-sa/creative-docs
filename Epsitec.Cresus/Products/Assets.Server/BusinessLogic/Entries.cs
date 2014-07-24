@@ -21,12 +21,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		private bool HasEntry(AmortizedAmount amount)
+		{
+			var editedProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.EditedOrBase);
+			return editedProperties.IsValid;
+		}
+
 		public AmortizedAmount CreateEntry(AmortizedAmount amount)
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
 			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
 
-			if (amount.EntryScenario == EntryScenario.None)
+			var editedProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.EditedOrBase);
+
+			if (amount.EntryScenario == EntryScenario.None || !editedProperties.IsValid)
 			{
 				return this.RemoveEntry (amount);
 			}
@@ -71,15 +79,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			Base,
 			Current,
-			Edited,
+			EditedOrBase,
 		}
 
 		public EntryProperties GetEntryProperties(AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			var asset = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
 			System.Diagnostics.Debug.Assert (asset != null);
+
 			var assetEvent = asset.GetEvent (amount.EventGuid);
 			System.Diagnostics.Debug.Assert (assetEvent != null);
+
 			var entryAccounts = this.GetEntryAccounts (amount);
 
 			return new EntryProperties
@@ -152,7 +162,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var date = this.accessor.EditionAccessor.GetFieldDate (ObjectField.AssetEntryForcedDate, synthetic: false);
 				if (date.HasValue)
@@ -176,7 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var field = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedDebit, synthetic: false);
 				if (!string.IsNullOrEmpty (field))
@@ -217,7 +227,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var field = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedCredit, synthetic: false);
 				if (!string.IsNullOrEmpty (field))
@@ -258,7 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var s = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedStamp, synthetic: false);
 				if (!string.IsNullOrEmpty (s))
@@ -282,7 +292,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var s = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedTitle, synthetic: false);
 				if (!string.IsNullOrEmpty (s))
@@ -330,7 +340,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			if (type == GetEntryPropertiesType.Edited)
+			if (type == GetEntryPropertiesType.EditedOrBase)
 			{
 				var d = this.accessor.EditionAccessor.GetFieldDecimal (ObjectField.AssetEntryForcedAmount, synthetic: false);
 				if (d.HasValue)
@@ -394,6 +404,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return entry.Guid;
 		}
 
+
+		public static bool HasEntry(DataAccessor accessor, AmortizedAmount aa)
+		{
+			if (accessor == null)
+			{
+				return false;
+			}
+
+			using (var entries = new Entries (accessor))
+			{
+				return entries.HasEntry (aa);
+			}
+		}
 
 		public static AmortizedAmount CreateEntry(DataAccessor accessor, AmortizedAmount aa)
 		{

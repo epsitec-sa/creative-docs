@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -15,5 +14,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public string							Stamp;
 		public string							Title;
 		public decimal							Amount;
+
+		public bool IsValid
+		{
+			//	Retourne true si tout est ok pour passer l'écriture.
+			get
+			{
+				return !string.IsNullOrEmpty (this.Debit)   // le compte au débit doit exister
+					&& !string.IsNullOrEmpty (this.Credit)  // le compte au crédit doit exister
+					&& !string.IsNullOrEmpty (this.Title)   // le libellé doit exister
+					&& this.Amount != 0.0m;                 // le montant ne doit pas être nul
+			}
+		}
 	}
 }

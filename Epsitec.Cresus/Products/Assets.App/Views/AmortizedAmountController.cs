@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre total", this.UpdateProrataDenominator);
 		}
 
-		private void CreateButton(Widget parent)
+		private void CreateButtons(Widget parent)
 		{
 			const int h = 22;
 
@@ -304,18 +304,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 
-			var button = new Button
+			this.deleteEntryButton = new Button
+			{
+				Parent        = line,
+				Text          = "Supprimer l'écriture",
+				ButtonStyle   = ButtonStyle.Icon,
+				AutoFocus     = false,
+				PreferredSize = new Size (120, h),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (100+10, 0, 0, 0),
+			};
+
+			this.showEntryButton = new Button
 			{
 				Parent        = line,
 				Text          = "Voir l'écriture",
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
-				PreferredSize = new Size (100, h),
+				PreferredSize = new Size (120, h),
 				Dock          = DockStyle.Left,
-				Margins       = new Margins (100+10, 0, 0, 0),
+				Margins       = new Margins (10, 0, 0, 0),
 			};
 
-			button.Clicked += delegate
+			ToolTip.Default.SetToolTip (this.deleteEntryButton, "Supprime l'écriture en mettant un montant nul");
+			ToolTip.Default.SetToolTip (this.showEntryButton,   "Sélectionne l'écriture dans la vue des écritures comptables");
+
+			this.deleteEntryButton.Clicked += delegate
+			{
+				if (this.value.HasValue)
+				{
+					this.entryController.Clear ();
+				}
+			};
+
+			this.showEntryButton.Clicked += delegate
 			{
 				if (this.value.HasValue)
 				{
@@ -471,7 +493,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			{
 				var line = this.CreateFrame (parent);
-				this.CreateButton (line);
+				this.CreateButtons (line);
 			}
 		}
 
@@ -520,6 +542,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ProrataRate        = this.value.Value.Prorata;
 					this.ProrataNumerator   = this.value.Value.ProrataNumerator;
 					this.ProrataDenominator = this.value.Value.ProrataDenominator;
+
+					bool hasEntry = Entries.HasEntry (this.accessor, this.value.Value);
+					this.deleteEntryButton.Enable = hasEntry;
+					this.showEntryButton  .Enable = hasEntry;
 				}
 				else
 				{
@@ -539,6 +565,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ProrataRate        = null;
 					this.ProrataNumerator   = null;
 					this.ProrataDenominator = null;
+
+					this.deleteEntryButton.Enable = false;
+					this.showEntryButton  .Enable = false;
 				}
 
 				AmortizedAmountController.UpdateType (this.typeTextFieldCombo);
@@ -1132,6 +1161,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextFieldCombo					scenarioFieldCombo;
 
 		private EntryController					entryController;
+		private Button							deleteEntryButton;
+		private Button							showEntryButton;
 
 		private FrameBox						line1;
 		private FrameBox						line12;
