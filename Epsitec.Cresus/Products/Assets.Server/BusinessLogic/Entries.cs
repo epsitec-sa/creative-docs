@@ -405,7 +405,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		#region static helpers
+		#region Static helpers
+		public static EntryProperties GetEntryProperties(DataAccessor accessor, AmortizedAmount amount, GetEntryPropertiesType type)
+		{
+			if (accessor == null)
+			{
+				return null;
+			}
+
+			using (var entries = new Entries (accessor))
+			{
+				return entries.GetEntryProperties (amount, type);
+			}
+		}
+
 		public static bool HasEntry(DataAccessor accessor, AmortizedAmount aa)
 		{
 			if (accessor == null)

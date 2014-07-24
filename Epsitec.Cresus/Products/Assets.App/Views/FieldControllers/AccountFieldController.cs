@@ -221,29 +221,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private static string AddError(string text, string error)
-		{
-			//	Retourne un texte explicatif composé du numéro du compte et de l'erreur.
-			if (string.IsNullOrEmpty (text))
-			{
-				return null;
-			}
-			else
-			{
-				if (string.IsNullOrEmpty (error))
-				{
-					return text;
-				}
-				else
-				{
-					return string.Concat (text, AccountFieldController.errorSeparator, error);
-				}
-			}
-		}
-
-		private const string errorSeparator = " — ";
-
-
 		private TextField						textField;
 		private IconButton						gotoButton;
 		private string							value;

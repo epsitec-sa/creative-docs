@@ -107,13 +107,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						ObjectField.ResidualValue);
 
 					//	On cherche les comptes indéfinis.
-					bool skip = false;
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account1, ref skip);
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account2, ref skip);
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account3, ref skip);
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account4, ref skip);
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account5, ref skip);
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account6, ref skip);
+					if (WarningsLogic.IsDefinableAccount (e.Type))
+					{
+						bool skip = false;
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account1, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account2, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account3, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account4, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account5, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account6, ref skip);
+					}
 
 					//	On cherche les comptes incorrects dans les écritures.
 					WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
@@ -219,28 +222,38 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (p != null)
 			{
 				var aa = p.Value;
+				var ep = Entries.GetEntryProperties (accessor, aa, Entries.GetEntryPropertiesType.Current);
 
-				EntryProperties ep;
-				using (var entries = new Entries (accessor))
+				if (ep != null)
 				{
-					ep = entries.GetEntryProperties (aa, Entries.GetEntryPropertiesType.Current);
+					bool skip = false;
+					WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e, ep.Debit , ref skip);
+					WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e, ep.Credit, ref skip);
 				}
-
-				WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e, ep.Debit);
-				WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e, ep.Credit);
 			}
 		}
 
-		private static void CheckAssetEntry(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e, string number)
+		private static void CheckAssetEntry(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e, string number, ref bool skip)
 		{
-			if (string.IsNullOrEmpty(number))
+			if (skip || string.IsNullOrEmpty(number))
 			{
 				return;
 			}
 
 			var baseType = accessor.Mandat.GetAccountsBase (e.Timestamp.Date);
 
-			if (!baseType.AccountsDateRange.IsEmpty)
+			if (baseType.AccountsDateRange.IsEmpty)
+			{
+				if (!WarningsLogic.IsDefinableAccount (e.Type))
+				{
+					const string desc = "Aucun plan comptable à cette date";
+					var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.MainValue, desc);
+					warnings.Add (warning);
+
+					skip = true;  // il n'est pas pertinent de signaler cette erreur pour les autres comptes
+				}
+			}
+			else
 			{
 				var account = AccountsLogic.GetAccount (accessor, baseType, number);
 
@@ -251,6 +264,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					warnings.Add (warning);
 				}
 			}
+		}
+
+
+		private static bool IsDefinableAccount(EventType type)
+		{
+			//	Pour un type d'événement, indique si on a accès aux définitions des
+			//	comptes (donc si l'onglet "Amortissement" est présent).
+			//	Doit être en accord avec ObjectEditor.GetAssetAvailablePages !
+			return type == EventType.Input
+				|| type == EventType.Modification
+				|| type == EventType.Output;
 		}
 
 

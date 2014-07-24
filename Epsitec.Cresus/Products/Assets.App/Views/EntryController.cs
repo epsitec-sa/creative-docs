@@ -175,7 +175,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.debitController = new AccountFieldController (this.accessor)
 			{
-				Date                  = this.accessor.EditionAccessor.EventDate,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Débit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -196,7 +195,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.creditController = new AccountFieldController (this.accessor)
 			{
-				Date                  = this.accessor.EditionAccessor.EventDate,
 				Field                 = ObjectField.Unknown,
 				Label                 = "Crédit",
 				EditWidth             = AbstractFieldController.maxWidth,
@@ -336,6 +334,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.value.HasValue)
 			{
+				this.debitController .Date = this.accessor.EditionAccessor.EventDate;
+				this.creditController.Date = this.accessor.EditionAccessor.EventDate;
+
 				EntryProperties baseProperties = null;
 				EntryProperties editProperties = null;
 

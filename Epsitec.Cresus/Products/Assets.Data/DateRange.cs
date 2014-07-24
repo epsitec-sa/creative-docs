@@ -83,6 +83,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		static DateRange()
 		{
+			//	Auto-test:
 			//	Un DateRange créé sans paramètres doit absolument être équivalement
 			//	à un DateRange.Empty !
 
