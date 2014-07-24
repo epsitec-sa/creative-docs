@@ -273,6 +273,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
 			//	Crée l'événement d'aperçu d'amortissement.
+			if (details.Def.EffectiveRate == 0.0m)
+			{
+				//	Si le taux est nul, on ne génère pas d'amortissement.
+				return;
+			}
+
 			var e = this.accessor.CreateAssetEvent (obj, date, EventType.AmortizationPreview);
 
 			if (e != null)

@@ -405,6 +405,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		#region static helpers
 		public static bool HasEntry(DataAccessor accessor, AmortizedAmount aa)
 		{
 			if (accessor == null)
@@ -443,6 +444,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return entries.RemoveEntry (aa);
 			}
 		}
+		#endregion
 
 
 		private readonly DataAccessor			accessor;

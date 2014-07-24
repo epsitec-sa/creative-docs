@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les avertissements");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     null, "Aller sur l'avertissement");
+			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     null, "Aller sur la cause de l'avertissement");
 		}
 
 		protected override void CreateNodeFiller()
