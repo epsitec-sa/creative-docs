@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -21,6 +22,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Int,
 				Label                 = "Nombre d'années",
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = 80,
+				Height                = 15*1,  // place pour 1 ligne
 			});
 
 			this.SetDescriptions (list);
@@ -77,7 +85,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
+			{
+				var controller = this.GetController (1) as LabelStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.SetLabel (this.Result);
+			}
+
 			this.okButton.Enable = this.TotalYears.HasValue;
+		}
+
+		private string Result
+		{
+			get
+			{
+				if (this.Rate.HasValue)
+				{
+					var rate = TypeConverters.RateToString (this.Rate);
+					return string.Format ("Taux = {0}", rate);
+				}
+				else
+				{
+					return null;
+				}
+			}
 		}
 	}
 }
