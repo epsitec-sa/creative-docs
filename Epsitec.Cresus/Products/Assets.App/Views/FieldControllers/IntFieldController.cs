@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected override void ClearValue()
 		{
 			this.Value = null;
+			this.UpdateButtons ();
 			this.OnValueEdited (this.Field);
 		}
 
@@ -84,6 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly, isError: this.hasError);
 			AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
+			this.UpdateButtons ();
 		}
 
 
@@ -101,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Text            = IntFieldController.ConvIntToString (this.value),
 			};
 
-			var minus = new GlyphButton
+			this.minusButton = new GlyphButton
 			{
 				Parent        = this.frameBox,
 				GlyphShape    = GlyphShape.Minus,
@@ -110,7 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
-			var plus = new GlyphButton
+			this.plusButton = new GlyphButton
 			{
 				Parent        = this.frameBox,
 				GlyphShape    = GlyphShape.Plus,
@@ -122,6 +124,19 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.UpdateError ();
 			this.UpdatePropertyState ();
 
+			//	Connexion des événements.
+			this.frameBox.Entered += delegate
+			{
+				this.isMouseInside = true;
+				this.UpdateButtons ();
+			};
+
+			this.frameBox.Exited += delegate
+			{
+				this.isMouseInside = false;
+				this.UpdateButtons ();
+			};
+
 			this.textField.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -129,10 +144,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					using (this.ignoreChanges.Enter ())
 					{
 						this.Value = IntFieldController.ConvStringToInt (this.textField.Text);
+						this.UpdateButtons ();
 						this.UpdateError ();
 						this.OnValueEdited (this.Field);
 					}
 				}
+			};
+
+			this.textField.CursorChanged += delegate
+			{
+				this.UpdateButtons ();
+			};
+
+			this.textField.SelectionChanged += delegate
+			{
+				this.UpdateButtons ();
 			};
 
 			this.textField.KeyboardFocusChanged += delegate (object sender, DependencyPropertyChangedEventArgs e)
@@ -141,20 +167,22 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 				if (focused)  // pris le focus ?
 				{
+					this.hasFocus = true;
 					this.SetFocus ();
 				}
 				else  // perdu le focus ?
 				{
+					this.hasFocus = false;
 					this.UpdateValue ();
 				}
 			};
 
-			minus.Clicked += delegate
+			this.minusButton.Clicked += delegate
 			{
 				this.AddDelta (-1);
 			};
 
-			plus.Clicked += delegate
+			this.plusButton.Clicked += delegate
 			{
 				this.AddDelta (1);
 			};
@@ -166,6 +194,26 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.textField.Focus ();
 
 			base.SetFocus ();
+		}
+
+
+		private void UpdateButtons()
+		{
+			if (this.minusButton == null)
+			{
+				return;
+			}
+
+			this.minusButton.Visibility = this.AreButtonsVisible;
+			this.plusButton .Visibility = this.AreButtonsVisible;
+		}
+
+		private bool AreButtonsVisible
+		{
+			get
+			{
+				return this.isMouseInside || this.hasFocus;
+			}
 		}
 
 
@@ -191,6 +239,10 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 
 		private TextField						textField;
+		private GlyphButton						minusButton;
+		private GlyphButton						plusButton;
 		private int?							value;
+		private bool							hasFocus;
+		private bool							isMouseInside;
 	}
 }
