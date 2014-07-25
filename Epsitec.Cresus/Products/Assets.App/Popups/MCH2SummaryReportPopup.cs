@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Etat initial au",
+				Label                 = "Etat initial avant le",
 			});
 
 			list.Add (new StackedControllerDescription  // 1
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Etat final au",
+				Label                 = "Etat final après le",
 				BottomMargin          = 10,
 			});
 
