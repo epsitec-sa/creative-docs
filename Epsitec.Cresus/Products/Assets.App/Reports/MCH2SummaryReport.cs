@@ -52,8 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var popup = new MCH2SummaryReportPopup (this.accessor)
 			{
-				InitialDate = this.Params.InitialTimestamp.Date,
-				FinalDate   = this.Params.FinalTimestamp.Date,
+				DateRange   = this.Params.DateRange,
 				GroupGuid   = this.Params.RootGuid,
 				Level       = this.Params.Level
 			};
@@ -64,13 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportView.ReportParams = new MCH2SummaryParams
-					(
-						new Timestamp (popup.InitialDate.GetValueOrDefault (), 0),
-						new Timestamp (popup.FinalDate.GetValueOrDefault (), 0),
-						popup.GroupGuid,
-						popup.Level
-					);
+					this.reportView.ReportParams = new MCH2SummaryParams (popup.DateRange, popup.GroupGuid, popup.Level);
 				}
 			};
 		}
@@ -82,16 +75,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			this.DataFiller.InitialTimestamp = this.Params.InitialTimestamp;
-			this.DataFiller.FinalTimestamp   = this.Params.FinalTimestamp;
+			this.DataFiller.DateRange = this.Params.DateRange;
 
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
-			//	peuvent avoir changé, et les colonnes doivent afficher "Etat initial au 01.01.2014"
-			//	et "Etat final au 31.12.2014".
+			//	peuvent avoir changé, et les colonnes doivent afficher "Etat avant 01.01.2014" et
+			//	"Etat après 31.12.2014" (par exemple).
 			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
 			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.NodeGetter.SetParams (this.Params.FinalTimestamp, this.Params.RootGuid, this.sortingInstructions, e);
+			this.NodeGetter.SetParams (this.Params.DateRange.FromTimestamp.JustBefore, this.Params.RootGuid, this.sortingInstructions, e);
 
 			if (this.Params.Level.HasValue)
 			{

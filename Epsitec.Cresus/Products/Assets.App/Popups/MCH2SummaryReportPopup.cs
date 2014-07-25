@@ -68,7 +68,40 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public System.DateTime?					InitialDate
+		public DateRange						DateRange
+		{
+			//	Donne la période. Comme les dates spécifiées par l'utilisateur vont
+			//	habituellement du 1 janvier au 31 décembre, il faut adapter la date
+			//	de fin. En effet, un DateRange a une date de fin exclue.
+			get
+			{
+				if (this.InitialDate.HasValue && this.FinalDate.HasValue)
+				{
+					return new DateRange (
+						this.InitialDate.Value,             // du 1 janvier
+						this.FinalDate.Value.AddDays (1));  // au 1 janvier de l'année suivante (exlu)
+				}
+				else
+				{
+					return DateRange.Empty;
+				}
+			}
+			set
+			{
+				if (value.IsEmpty)
+				{
+					this.InitialDate = null;
+					this.FinalDate   = null;
+				}
+				else
+				{
+					this.InitialDate = value.IncludeFrom;
+					this.FinalDate   = value.ExcludeTo.AddDays (-1);
+				}
+			}
+		}
+
+		private System.DateTime?					InitialDate
 		{
 			get
 			{
@@ -104,7 +137,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime?					FinalDate
+		private System.DateTime?					FinalDate
 		{
 			get
 			{

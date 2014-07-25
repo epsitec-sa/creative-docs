@@ -19,8 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public Timestamp						InitialTimestamp;
-		public Timestamp						FinalTimestamp;
+		public DateRange						DateRange;
 
 
 		public override SortingInstructions		DefaultSorting
@@ -176,58 +175,63 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			switch (column)
 			{
 				case Column.InitialState:
+					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état avant
+					//	le premier janvier, donc au 31.12.2013 23:59:59.
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
-						new DateRange (System.DateTime.MinValue, this.InitialTimestamp.Date.AddDays (1)),
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
 						EventType.Unknown);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.Input);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.Modification);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.Output);
-
-				case Column.FinalState:
-					return new ExtractionInstructions (field,
-						ExtractionAmount.StateAt,
-						new DateRange (System.DateTime.MinValue, this.FinalTimestamp.Date.AddDays (1)),
-						EventType.Unknown);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.AmortizationAuto);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.AmortizationExtra);
 
 				case Column.Revaluations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.Revaluation);
 
 				case Column.Revalorizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Filtered,
-						new DateRange (this.InitialTimestamp.Date.AddDays (1), this.FinalTimestamp.Date.AddDays (1)),
+						this.DateRange,
 						EventType.Revalorization);
+
+				case Column.FinalState:
+					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
+					//	le 31 décembre. Comme la date "au" est exclue dans un DateRange, la date
+					//	ExcludeTo vaut 01.01.2015. On cherche donc l'état au 31.12.2014 23:59:59.
+					return new ExtractionInstructions (field,
+						ExtractionAmount.StateAt,
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						EventType.Unknown);
 
 				default:
 					return ExtractionInstructions.Empty;
@@ -243,7 +247,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.InitialState:
 				case Column.FinalState:
-					return 150;
+					return 130;
 
 				default:
 					return 100;
@@ -270,8 +274,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
 
 				case Column.InitialState:
-					var id = TypeConverters.DateToString (this.InitialTimestamp.Date);
-					return string.Format ("Etat initial au {0}", id);
+					return string.Format ("Etat avant {0}", this.InitialDate);
 
 				case Column.Inputs:
 					return "Entrées";
@@ -281,10 +284,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Outputs:
 					return "Sorties";
-
-				case Column.FinalState:
-					var fd = TypeConverters.DateToString (this.FinalTimestamp.Date);
-					return string.Format ("Etat final au {0}", fd);
 
 				case Column.AmortizationsAuto:
 					return "Amort. ord.";
@@ -298,8 +297,41 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Revalorizations:
 					return "Revalorisations";
 
+				case Column.FinalState:
+					return string.Format ("Etat après {0}", this.FinalDate);
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));
+			}
+		}
+
+		private string InitialDate
+		{
+			get
+			{
+				if (this.DateRange.IsEmpty)
+				{
+					return "?";
+				}
+				else
+				{
+					return TypeConverters.DateToString (this.DateRange.IncludeFrom);
+				}
+			}
+		}
+
+		private string FinalDate
+		{
+			get
+			{
+				if (this.DateRange.IsEmpty)
+				{
+					return "?";
+				}
+				else
+				{
+					return TypeConverters.DateToString (this.DateRange.ExcludeTo.AddDays (-1));
+				}
 			}
 		}
 
@@ -312,11 +344,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.Inputs;
 				yield return Column.Reorganizations;
 				yield return Column.Outputs;
-				yield return Column.FinalState;
 				yield return Column.AmortizationsAuto;
 				yield return Column.AmortizationsExtra;
 				yield return Column.Revaluations;
 				yield return Column.Revalorizations;
+				yield return Column.FinalState;
 			}
 		}
 

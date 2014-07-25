@@ -9,21 +9,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryParams : AbstractParams
 	{
-		public MCH2SummaryParams(Timestamp initialTimestamp, Timestamp finalTimestamp, Guid rootGuid, int? level)
+		public MCH2SummaryParams(DateRange dateRange, Guid rootGuid, int? level)
 		{
-			this.InitialTimestamp = initialTimestamp;
-			this.FinalTimestamp   = finalTimestamp;
-			this.RootGuid         = rootGuid;
-			this.Level            = level;
+			this.DateRange = dateRange;
+			this.RootGuid  = rootGuid;
+			this.Level     = level;
 		}
 
 		public MCH2SummaryParams()
 		{
 			var year = Timestamp.Now.Date.Year;  // année en cours
-			this.InitialTimestamp = new Timestamp (new System.DateTime (year,  1,  1), 0);  // 1 janvier
-			this.FinalTimestamp   = new Timestamp (new System.DateTime (year, 12, 31), 0);  // 31 décembre
-			this.RootGuid         = Guid.Empty;
-			this.Level            = 1;
+
+			var i = new System.DateTime (year,   1, 1);  // 1 janvier
+			var f = new System.DateTime (year+1, 1, 1);  // 1 janvier de l'année suivante
+
+			this.DateRange = new DateRange (i, f);
+			this.RootGuid  = Guid.Empty;
+			this.Level     = 1;
 		}
 
 		public override bool StrictlyEquals(AbstractParams other)
@@ -32,16 +34,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var o = other as MCH2SummaryParams;
 
-				return this.InitialTimestamp == o.InitialTimestamp
-					&& this.FinalTimestamp   == o.FinalTimestamp
-					&& this.RootGuid         == o.RootGuid;
+				return this.DateRange == o.DateRange
+					&& this.RootGuid  == o.RootGuid;
 			}
 
 			return false;
 		}
 
-		public readonly Timestamp				InitialTimestamp;
-		public readonly Timestamp				FinalTimestamp;
+		public readonly DateRange				DateRange;
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;
 	}
