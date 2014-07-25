@@ -180,21 +180,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int rank = this.GetRank (description);
 
-			if (rank == 0)  // modification de la date initiale ?
+			if (rank == MCH2SummaryReportPopup.InitialDateRank)  // modification de la date initiale ?
 			{
 				this.FinalDateController.Value = this.ComputeFinalDate ();
 			}
-			else if (rank == 1)  // modification de la durée en mois ?
+			else if (rank == MCH2SummaryReportPopup.MonthCountRank)  // modification de la durée en mois ?
 			{
 				this.FinalDateController.Value = this.ComputeFinalDate ();
 			}
-			else if (rank == 2)  // modification de la date finale ?
+			else if (rank == MCH2SummaryReportPopup.FinalDateRank)  // modification de la date finale ?
 			{
 				this.MonthCountController.Value = this.ComputeMonthCount ();
 			}
 
-			this.SetVisibility (4, this.GroupEnable);
-			this.SetVisibility (5, this.GroupEnable);
+			this.SetVisibility (MCH2SummaryReportPopup.GroupGuidRank, this.GroupEnable);
+			this.SetVisibility (MCH2SummaryReportPopup.LevelRank,     this.GroupEnable);
 
 			this.okButton.Enable = this.InitialDate.HasValue
 								&& this.MonthCount.HasValue
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (0) as DateStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.InitialDateRank) as DateStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (1) as IntStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.MonthCountRank) as IntStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (2) as DateStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.FinalDateRank) as DateStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (3) as BoolStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.GroupEnableRank) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (4) as GroupGuidStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.GroupGuidRank) as GroupGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (5) as IntStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.LevelRank) as IntStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -269,12 +269,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private System.DateTime? ComputeFinalDate()
 		{
+			//	Calcule la date finale, à partir de la date initiale et du nombre de mois.
+			//	Du 01.01.2014 + 12 mois retourne 31.12.2014.
 			var i = this.InitialDate;
 			var m = this.MonthCount;
 
 			if (i.HasValue && m.HasValue)
 			{
-				return i.Value.AddMonths (m.Value).AddDays (-1);
+				return i.Value.AddMonths (m.Value).AddDays (-1);  // dernier jour du mois
 			}
 			else
 			{
@@ -284,6 +286,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private int? ComputeMonthCount()
 		{
+			//	Calcule le nombre de mois, à partir des dates initiale et finale.
+			//	Du 01.01.2014 au 31.12.2014 retourne 12.
 			var i = this.InitialDate;
 			var f = this.FinalDate;
 
@@ -303,5 +307,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			return date.Year*12 + date.Month;
 		}
+
+
+		private const int InitialDateRank = 0;
+		private const int MonthCountRank  = 1;
+		private const int FinalDateRank   = 2;
+		private const int GroupEnableRank = 3;
+		private const int GroupGuidRank   = 4;
+		private const int LevelRank       = 5;
 	}
 }
