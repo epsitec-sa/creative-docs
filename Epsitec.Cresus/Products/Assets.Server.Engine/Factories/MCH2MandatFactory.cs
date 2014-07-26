@@ -116,7 +116,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			}
 
 			{
-				this.AddAssetEvent (p1, this.accessor.Mandat.StartDate.AddYears (2), EventType.Output);
+				var e = this.AddAssetEvent (p1, this.accessor.Mandat.StartDate.AddYears (2), EventType.Output);
+				this.AddAssetAmortizedAmount (e, 0.0m);
 			}
 		}
 

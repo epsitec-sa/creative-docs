@@ -448,6 +448,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (aa.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
 				{
+					//?aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
+					//?Amortizations.SetAmortizedAmount (e, aa);
+
 					lastAmount = aa.FinalAmortizedAmount;
 					lastBase   = aa.FinalAmortizedAmount;
 				}
@@ -459,10 +462,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					lastAmount = aa.FinalAmortizedAmount;
 				}
 
-				{
-					aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
-					Amortizations.SetAmortizedAmount (e, aa);
-				}
+				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
+				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
 

@@ -144,6 +144,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
 			//	d'un type donné.
+#if false
 			decimal? value = null;
 
 			foreach (var e in obj.Events.Where (x =>
@@ -158,11 +159,40 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return value;
+#else
+			decimal? lastValue = null;
+			decimal? value = null;
+
+			foreach (var e in obj.Events)
+			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				{
+					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					{
+						if (lastValue.HasValue)
+						{
+							value = lastValue.Value - p.Value.FinalAmortizedAmount.Value;
+						}
+						else
+						{
+							value = p.Value.FinalAmortizedAmount.Value;
+						}
+					}
+
+					lastValue = p.Value.FinalAmortizedAmount.Value;
+				}
+			}
+
+			return value;
+#endif
 		}
 
 		private static decimal? GetAmortizations(DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne le total des amortissements effectués dans une période donnée.
+#if false
 			decimal? sum = null;
 
 			foreach (var e in obj.Events.Where (x =>
@@ -184,6 +214,58 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return sum;
+#else
+			decimal? lastValue = null;
+			decimal? sum = null;
+
+			foreach (var e in obj.Events)
+			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				{
+					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					{
+						decimal value;
+
+						if (lastValue.HasValue)
+						{
+							value = lastValue.Value - p.Value.FinalAmortizedAmount.Value;
+						}
+						else
+						{
+							value = p.Value.FinalAmortizedAmount.Value;
+						}
+
+						if (sum.HasValue)
+						{
+							sum += value;
+						}
+						else
+						{
+							sum = value;
+						}
+					}
+
+					lastValue = p.Value.FinalAmortizedAmount.Value;
+				}
+			}
+
+			return sum;
+#endif
+		}
+
+		private static bool CompareEventTypes(EventType extractionType, EventType eventType)
+		{
+			if (extractionType == EventType.AmortizationAuto)
+			{
+				return eventType == extractionType
+					|| eventType == EventType.AmortizationPreview;
+			}
+			else
+			{
+				return eventType == extractionType;
+			}
 		}
 
 

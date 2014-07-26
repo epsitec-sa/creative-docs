@@ -58,6 +58,29 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly int						EntrySeed;
 
 
+		//?public decimal?							Delta
+		//?{
+		//?	get
+		//?	{
+		//?		if (this.InitialAmount.HasValue && this.FinalAmortizedAmount.HasValue)
+		//?		{
+		//?			return this.InitialAmount.Value - this.FinalAmortizedAmount.Value;
+		//?		}
+		//?		else if (this.FinalAmortizedAmount.HasValue)
+		//?		{
+		//?			return this.FinalAmortizedAmount.Value;
+		//?		}
+		//?		else if (this.InitialAmount.HasValue)
+		//?		{
+		//?			return this.InitialAmount.Value;
+		//?		}
+		//?		else
+		//?		{
+		//?			return null;
+		//?		}
+		//?	}
+		//?}
+
 		public decimal?							FinalAmortizedAmount
 		{
 			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
