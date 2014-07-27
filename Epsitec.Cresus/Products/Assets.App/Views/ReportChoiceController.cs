@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
@@ -27,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dataFiller = new MessagesTreeTableFiller (this.accessor, this.nodeGetter)
 			{
+				Title = "Liste des rapports disponibles :",
 				Width = ReportChoiceController.messageWidth - (int) AbstractScroller.DefaultBreadth,
 			};
 
@@ -60,21 +60,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var frame = new FrameBox
 			{
-				Parent         = parent,
-				Dock           = DockStyle.Fill,
-				Margins        = new Margins (10, 10, 0, 0),
-			};
-
-			var label = "Choisissez un rapport";
-
-			new StaticText
-			{
-				Parent           = frame,
-				Text             = label,
-				PreferredWidth   = label.GetTextWidth () + 10,
-				ContentAlignment = ContentAlignment.TopLeft,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 0, 2, 0),
+				Parent = parent,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.CreateController (frame);
@@ -86,14 +73,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = parent,
 				PreferredWidth = ReportChoiceController.messageWidth,
-				Dock           = DockStyle.Left,
+				Dock           = DockStyle.Fill,
 			};
 
 			this.controller.CreateUI (frame, rowHeight: ReportChoiceController.rowHeight, headerHeight: ReportChoiceController.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<MessageNode>.FillColumns (this.controller, this.dataFiller, "Message");
+			TreeTableFiller<MessageNode>.FillColumns (this.controller, this.dataFiller, "ReportChoiceController");
 		}
 
 
@@ -121,9 +108,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private const int headerHeight     = 0;
+		private const int headerHeight     = 40;  // hauteur standard = 22
 		private const int rowHeight        = 18;
-		private const int messageWidth     = 500;
+		private const int messageWidth     = 2000;
 
 
 		private readonly DataAccessor					accessor;

@@ -18,6 +18,18 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
+		public string							Title
+		{
+			get
+			{
+				return this.title;
+			}
+			set
+			{
+				this.title = value;
+			}
+		}
+
 		public int								Width
 		{
 			get
@@ -53,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, this.width, "Message"));
+				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, this.width, this.title));
 
 				return list.ToArray ();
 			}
@@ -89,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private int width = 300;
+		private string							title = "Messages";
+		private int								width = 300;
 	}
 }
