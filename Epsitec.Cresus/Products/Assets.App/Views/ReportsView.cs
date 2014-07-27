@@ -60,20 +60,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateToolbar (parent);
 
-			var mainFrame = new FrameBox
+			this.mainFrame = new FrameBox
 			{
 				Parent              = parent,
 				Dock                = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			this.CreateReport (mainFrame);
 			this.UpdateToolbars ();
 		}
 
 		public override void UpdateUI()
 		{
 			this.UpdateReport ();
+
 			this.OnViewStateChanged (this.ViewState);
 		}
 
@@ -98,15 +98,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					case ToolbarCommand.ReportExport:
 						this.OnExport ();
 						break;
+
+					case ToolbarCommand.ReportClose:
+						this.OnClose ();
+						break;
 				}
 			};
-		}
-
-
-		private void CreateReport(Widget parent)
-		{
-			this.treeTableController = new NavigationTreeTableController ();
-			this.treeTableController.CreateUI (parent, footerHeight: 0);
 		}
 
 
@@ -129,6 +126,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			this.report.ShowExportPopup (target);
+		}
+
+		private void OnClose()
+		{
+			//	Ferme le rapport.
+			this.selectedReportType = ReportType.Unknown;
+			this.UpdateUI ();
 		}
 
 
@@ -154,6 +158,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.report != null)
 			{
+				this.DeleteTreeTable ();
+
 				this.report.ParamsChanged -= this.HandleParamsChanged;
 				this.report.Dispose ();
 				this.report = null;
@@ -176,12 +182,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.report != null)
 			{
-				this.report.Initialize ();
+				this.CreateTreeTable ();
+
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}
 
 			this.UpdateToolbars ();
+		}
+
+		private void CreateTreeTable()
+		{
+			this.treeTableController = new NavigationTreeTableController ();
+			this.treeTableController.CreateUI (this.mainFrame, footerHeight: 0);
+
+			this.report.Initialize (this.treeTableController);
+		}
+
+		private void DeleteTreeTable()
+		{
+			this.treeTableController = null;
+			this.mainFrame.Children.Clear ();
 		}
 
 		private void HandleParamsChanged(object sender)
@@ -238,11 +259,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect, true);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams, this.report != null);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport, this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,  this.report != null);
 		}
 
 
 		private readonly List<AbstractViewState> historyViewStates;
 
+		private FrameBox						mainFrame;
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;

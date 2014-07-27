@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
 			this.SetCommandDescription (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
 			this.SetCommandDescription (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportClose,  "Report.Close",  "Fermer le rapport");
 		}
 
 
@@ -35,9 +36,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportSelect);
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams);
-			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportExport);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportSelect);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportParams);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
+			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
 
 			return this.toolbar;
 		}

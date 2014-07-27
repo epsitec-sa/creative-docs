@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		ReportSelect,
 		ReportParams,
 		ReportExport,
+		ReportClose,
 
 		NavigateBack,
 		NavigateForward,

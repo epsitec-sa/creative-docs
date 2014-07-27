@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -21,8 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void Initialize()
+		public override void Initialize(NavigationTreeTableController treeTableController)
 		{
+			this.treeTableController = treeTableController;
 			this.visibleSelectedRow = -1;
 
 			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
@@ -34,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
 
-			base.Initialize ();
+			base.Initialize (treeTableController);
 		}
 
 		public override void UpdateParams()

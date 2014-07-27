@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 			this.reportView = reportView;
-			this.treeTableController = reportView.TreeTableController;
 		}
 
 		public virtual void Dispose()
@@ -40,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual void Initialize()
+		public virtual void Initialize(NavigationTreeTableController treeTableController)
 		{
 			this.UpdateTreeTable ();
 
@@ -142,8 +141,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 	
 		protected readonly DataAccessor			accessor;
 		protected readonly ReportsView			reportView;
-		protected readonly NavigationTreeTableController treeTableController;
 
+		protected NavigationTreeTableController treeTableController;
 		protected ITreeFunctions				nodeGetter;
 		protected int							visibleSelectedRow;
 	}

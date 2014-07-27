@@ -144,22 +144,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
 			//	d'un type donné.
-#if false
-			decimal? value = null;
-
-			foreach (var e in obj.Events.Where (x =>
-				x.Type == extractionInstructions.FilteredEventType &&
-				extractionInstructions.Range.IsInside (x.Timestamp.Date)))
-			{
-				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
-				{
-					value = p.Value.FinalAmortizedAmount.Value;
-				}
-			}
-
-			return value;
-#else
 			decimal? lastValue = null;
 			decimal? value = null;
 
@@ -186,35 +170,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return value;
-#endif
 		}
 
 		private static decimal? GetAmortizations(DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne le total des amortissements effectués dans une période donnée.
-#if false
-			decimal? sum = null;
-
-			foreach (var e in obj.Events.Where (x =>
-				x.Type == extractionInstructions.FilteredEventType &&
-				extractionInstructions.Range.IsInside (x.Timestamp.Date)))
-			{
-				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null)
-				{
-					if (sum.HasValue)
-					{
-						sum += p.Value.FinalAmortization;
-					}
-					else
-					{
-						sum = p.Value.FinalAmortization;
-					}
-				}
-			}
-
-			return sum;
-#else
 			decimal? lastValue = null;
 			decimal? sum = null;
 
@@ -252,7 +212,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return sum;
-#endif
 		}
 
 		private static bool CompareEventTypes(EventType extractionType, EventType eventType)

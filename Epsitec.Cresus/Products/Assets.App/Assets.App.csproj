@@ -476,6 +476,7 @@
     <EmbeddedResource Include="Images\TreeTable.DateRange.icon" />
     <EmbeddedResource Include="Images\View.Warnings.icon" />
     <EmbeddedResource Include="Images\TreeTable.Goto.icon" />
+    <EmbeddedResource Include="Images\Report.Close.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
