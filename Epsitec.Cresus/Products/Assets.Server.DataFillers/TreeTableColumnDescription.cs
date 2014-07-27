@@ -9,13 +9,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public struct TreeTableColumnDescription
 	{
-		public TreeTableColumnDescription(ObjectField field, TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string footer = null)
+		public TreeTableColumnDescription(ObjectField field, TreeTableColumnType type = TreeTableColumnType.String, int width = 100, string header = null, string headerTooltip = null, string footer = null)
 		{
-			this.Field  = field;
-			this.Type   = type;
-			this.Width  = width;
-			this.Header = header;
-			this.Footer = footer;
+			this.Field         = field;
+			this.Type          = type;
+			this.Width         = width;
+			this.Header        = header;
+			this.HeaderTooltip = headerTooltip;
+			this.Footer        = footer;
 		}
 
 
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public readonly TreeTableColumnType		Type;
 		public readonly int						Width;
 		public readonly string					Header;
+		public readonly string					HeaderTooltip;
 		public readonly string					Footer;
 
 		

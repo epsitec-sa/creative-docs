@@ -74,11 +74,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						field = ObjectField.MCH2Report + (int) column;
 					}
 
-					var type  = this.GetColumnType  (column);
-					var width = this.GetColumnWidth (column);
-					var name  = this.GetColumnName  (column);
+					var type    = this.GetColumnType    (column);
+					var width   = this.GetColumnWidth   (column);
+					var name    = this.GetColumnName    (column);
+					var tooltip = this.GetColumnTooltip (column);
 
-					columns.Add (new TreeTableColumnDescription (field, type, width, name));
+					columns.Add (new TreeTableColumnDescription (field, type, width, name, tooltip));
 				}
 
 				return columns.ToArray ();
@@ -305,6 +306,45 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+		private string GetColumnTooltip(Column column)
+		{
+			switch (column)
+			{
+				case Column.Name:
+					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
+
+				case Column.InitialState:
+					return string.Format ("Etat initial le {0}", this.InitialDateTooltip);
+
+				case Column.Inputs:
+					return "Variations dues aux entrées";
+
+				case Column.Reorganizations:
+					return "Variations dues aux réorganisations";
+
+				case Column.Outputs:
+					return "Variations dues aux sorties";
+
+				case Column.AmortizationsAuto:
+					return "Variations dues aux amortissements ordinaires";
+
+				case Column.AmortizationsExtra:
+					return "Variations dues aux amortissement extraordinaire";
+
+				case Column.Revaluations:
+					return "Variations dues aux réévaluations";
+
+				case Column.Revalorizations:
+					return "Variations dues aux revalorisations";
+
+				case Column.FinalState:
+					return string.Format ("Etat final le {0}", this.FinalDateTooltip);
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));
+			}
+		}
+
 		private string InitialDate
 		{
 			get
@@ -331,6 +371,38 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				else
 				{
 					return TypeConverters.DateToString (this.DateRange.ExcludeTo.AddDays (-1));
+				}
+			}
+		}
+
+		private string InitialDateTooltip
+		{
+			get
+			{
+				if (this.DateRange.IsEmpty)
+				{
+					return "?";
+				}
+				else
+				{
+					var date = TypeConverters.DateToString (this.DateRange.IncludeFrom.AddDays (-1));
+					return string.Format ("{0} à 23h59", date);  // 31.12.xx à 23h59
+				}
+			}
+		}
+
+		private string FinalDateTooltip
+		{
+			get
+			{
+				if (this.DateRange.IsEmpty)
+				{
+					return "?";
+				}
+				else
+				{
+					var date = TypeConverters.DateToString (this.DateRange.ExcludeTo.AddDays (-1));
+					return string.Format ("{0} à 23h59", date);  // 31.12.xx à 23h59
 				}
 			}
 		}

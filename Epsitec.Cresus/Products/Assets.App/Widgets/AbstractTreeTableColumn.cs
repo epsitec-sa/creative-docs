@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
-	public abstract class AbstractTreeTableColumn : Widget
+	public abstract class AbstractTreeTableColumn : Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public AbstractTreeTableColumn()
 		{
@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.hilitedHoverRow = -1;
 			this.sortedType = SortedType.None;
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -36,6 +38,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public string							HeaderDescription
+		{
+			get;
+			set;
+		}
+
+		public string							HeaderTooltip
 		{
 			get;
 			set;
@@ -433,6 +441,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 		}
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.HeaderHeight > 0 && pos.Y < this.HeaderHeight)
+			{
+				return this.HeaderTooltip;
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		#region Events handler

@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryDate,  TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryGlyph, TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, ""));
+				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryDate,  TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date", "Date de l'événement"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryGlyph, TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, "",    "Icône de l'événement"));
 
 				switch (this.accessor.GetFieldType (this.field))
 				{
