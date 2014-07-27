@@ -67,6 +67,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
+			this.choiceFrame = new FrameBox
+			{
+				Parent              = parent,
+				Dock                = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			this.reportChoiceController = new ReportChoiceController (this.accessor);
+			this.reportChoiceController.CreateUI (this.choiceFrame);
+
+			this.reportChoiceController.ReportSelected += delegate (object sender, ReportType reportType)
+			{
+				this.selectedReportType = reportType;
+				this.UpdateUI ();
+			};
+
+			this.UpdateReport ();
 			this.UpdateToolbars ();
 		}
 
@@ -139,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowReportPopup(Widget target)
 		{
 			//	Affiche le Popup pour choisir un rapport.
-			var popup = new ReportPopup ()
+			var popup = new ReportPopup()
 			{
 				ReportType = this.selectedReportType,
 			};
@@ -187,6 +204,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}
+
+			this.mainFrame  .Visibility = (this.report != null);
+			this.choiceFrame.Visibility = (this.report == null);
+
+			this.reportChoiceController.ClearSelection ();
 
 			this.UpdateToolbars ();
 		}
@@ -265,7 +287,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly List<AbstractViewState> historyViewStates;
 
+		private FrameBox						choiceFrame;
 		private FrameBox						mainFrame;
+		private ReportChoiceController			reportChoiceController;
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
