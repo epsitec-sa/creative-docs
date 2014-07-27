@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="DataFillers\MessagesTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="Import\AccountsImportReport.cs" />
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
+    <Compile Include="NodeGetters\MessagesNodeGetter.cs" />
+    <Compile Include="NodeGetters\MessageNode.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />

@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Reports;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -16,12 +19,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public ReportChoiceController(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
+			this.controller = new NavigationTreeTableController ();
+
+			this.nodeGetter = new MessagesNodeGetter ();
+			this.nodeGetter.SetParams (this.MessageNodes);
+
+			this.dataFiller = new MessagesTreeTableFiller (this.accessor, this.nodeGetter)
+			{
+				Width = ReportChoiceController.messageWidth - (int) AbstractScroller.DefaultBreadth,
+			};
+
+			//	Connexion des événements.
+			this.controller.ContentChanged += delegate (object sender, bool crop)
+			{
+				this.UpdateController (crop);
+			};
+
+			this.controller.RowClicked += delegate (object sender, int row, int column)
+			{
+				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
+
+				int sel = this.visibleSelectedRow;
+				var array = ReportsList.ReportTypes.ToArray ();
+				if (sel >= 0 && sel < array.Length)
+				{
+					this.OnReportSelected (array[sel]);
+				}
+			};
 		}
 
 
 		public void ClearSelection()
 		{
-			this.list.SelectedItemIndex = -1;
+			this.visibleSelectedRow = -1;
+			this.UpdateController (false);
 		}
 
 		public void CreateUI(Widget parent)
@@ -30,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent         = parent,
 				Dock           = DockStyle.Fill,
-				Margins        = new Margins (10),
+				Margins        = new Margins (10, 10, 0, 0),
 			};
 
 			var label = "Choisissez un rapport";
@@ -42,40 +74,40 @@ namespace Epsitec.Cresus.Assets.App.Views
 				PreferredWidth   = label.GetTextWidth () + 10,
 				ContentAlignment = ContentAlignment.TopLeft,
 				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 0, 5, 0),
+				Margins          = new Margins (0, 0, 2, 0),
 			};
 
-			this.list = new ScrollList
+			this.CreateController (frame);
+		}
+
+		private void CreateController(Widget parent)
+		{
+			var frame = new FrameBox
 			{
-				Parent         = frame,
-				PreferredWidth = 300,
+				Parent         = parent,
+				PreferredWidth = ReportChoiceController.messageWidth,
 				Dock           = DockStyle.Left,
-				RowHeight      = 20,    
 			};
 
-			this.UpdateList ();
+			this.controller.CreateUI (frame, rowHeight: ReportChoiceController.rowHeight, headerHeight: ReportChoiceController.headerHeight, footerHeight: 0);
+			this.controller.AllowsMovement = false;
+			this.controller.AllowsSorting  = false;
 
-			this.list.SelectedItemChanged += delegate
-			{
-				var array = ReportsList.ReportTypes.ToArray ();
-				int sel = this.list.SelectedItemIndex;
-				if (sel >= 0 && sel < array.Length)
-				{
-					this.OnReportSelected (array[sel]);
-				}
-			};
+			TreeTableFiller<MessageNode>.FillColumns (this.controller, this.dataFiller, "Message");
 		}
 
 
-		private void UpdateList()
+		private IEnumerable<MessageNode> MessageNodes
 		{
-			this.list.Items.Clear ();
-
-			foreach (var type in ReportsList.ReportTypes)
+			get
 			{
-				var name = "  " + ReportsList.GetReportName (type);
-				this.list.Items.Add (name);
+				return ReportsList.ReportTypes.Select (x => new MessageNode (ReportsList.GetReportName (x)));
 			}
+		}
+
+		private void UpdateController(bool crop = true)
+		{
+			TreeTableFiller<MessageNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -89,7 +121,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private readonly DataAccessor			accessor;
-		private ScrollList						list;
+		private const int headerHeight     = 0;
+		private const int rowHeight        = 18;
+		private const int messageWidth     = 500;
+
+
+		private readonly DataAccessor					accessor;
+		private readonly NavigationTreeTableController	controller;
+		private readonly MessagesNodeGetter				nodeGetter;
+		private readonly MessagesTreeTableFiller		dataFiller;
+
+		private int										visibleSelectedRow;
 	}
 }
