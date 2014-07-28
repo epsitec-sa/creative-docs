@@ -1156,11 +1156,11 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAJJ].[LVAA4]" title="Groupe" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAJJ].[LVAA4]" title="Région" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA4J]" title="Répondance pour" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA4J]" title="Fonction" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -2182,6 +2182,9 @@ AiderReferee = [LVADJ]
 
     <d cid="[LVAGG]" teid="@AiderLegalPerson" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
       <R><r>@user</r></R>
+      <L>
+        <l t="Adresse du premier contact" f="0"/>
+      </L>
     </d>
 
     <d cid="[LVG102]" teid="@AiderHousehold" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">

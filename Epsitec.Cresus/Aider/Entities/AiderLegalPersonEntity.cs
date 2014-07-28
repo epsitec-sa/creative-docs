@@ -14,6 +14,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Entities
 {
@@ -27,6 +28,11 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Name);
+		}
+
+		public FormattedText GetAddressLabelText(PostalAddressType type = PostalAddressType.Default)
+		{
+			return this.GetAddressLabelText (this.GetAddressRecipientText (), type);
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -88,6 +94,28 @@ namespace Epsitec.Aider.Entities
 		public AiderContactEntity GetMainContact()
 		{
 			return this.Contacts.FirstOrDefault ();
+		}
+
+		private FormattedText GetAddressLabelText(string recipient, PostalAddressType type)
+		{
+			return TextFormatter.FormatText (recipient, "\n", this.Address.GetPostalAddress (type));
+		}
+
+		private string GetAddressRecipientText()
+		{
+			var contact = this.Contacts.FirstOrDefault ();
+			if(contact != null)
+			{
+				List<string> lines = new List<string> ();
+
+				lines.Add (contact.LegalPersonContactMrMrs.GetLongText ());
+				lines.Add (contact.LegalPersonContactFullName);
+				lines.AddRange (contact.LegalPerson.GetNameLines ());
+
+				return StringUtils.Join ("\n", lines);
+			}
+
+			return "";
 		}
 
 		private IList<AiderGroupParticipantEntity> GetParticipations()

@@ -13,6 +13,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Data.Groups;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Entities
 {
@@ -148,14 +150,16 @@ namespace Epsitec.Aider.Entities
 			return businessContext.DataContext.GetByExample (officeExample).First ();
 		}
 
-		public static AiderOfficeManagementEntity Create(BusinessContext businessContext,string name,AiderGroupEntity parishGroup)
+		public static AiderOfficeManagementEntity Create(BusinessContext businessContext,string name,AiderGroupEntity managementGroup)
 		{
 			var office = businessContext.CreateAndRegisterEntity<AiderOfficeManagementEntity> ();
 
 			office.OfficeName = name;
-			office.ParishGroup = parishGroup;
-			office.ParishGroupPathCache = parishGroup.Path;
+			office.ParishGroup = managementGroup;
+			office.ParishGroupPathCache = managementGroup.Path;
 			office.RefreshOfficeShortName ();
+
+			AiderUsersGroups.CreateForGroup (businessContext, managementGroup);
 
 			return office;
 		}

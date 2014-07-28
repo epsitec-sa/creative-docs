@@ -271,21 +271,31 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
-			job.Start ();
-
 			var user		= LoginModule.GetUserName (this);
 			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
 			var filename    = DownloadsModule.GenerateFileNameForUser (user, fileExt);
-		
 			var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
-			var caches		= this.CoreServer.Caches;
-			
-			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+
+			try
 			{
-				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+				job.Start ();
+				var caches		= this.CoreServer.Caches;
+
+				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+				{
+					DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+				}
+			}
+			catch
+			{
+				finishMetaData = "Une erreur est survenue. tâche annulée";
+			}
+			finally
+			{
+				job.Finish (finishMetaData);
 			}
 
-			job.Finish (finishMetaData);
+			
 		}
 
 		private void UpdateTaskStatusInBag(CoreJob task)

@@ -25,44 +25,56 @@ namespace Epsitec.Aider.Data.Groups
 	/// </summary>
 	public static class AiderUsersGroups
 	{		
-		public static void CreateIfNeeded(CoreData coreData)
+		public static void InitParishUserGroups(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
 				var exampleParishGroupDef = AiderGroupEntity.FindGroups (businessContext, "R001.P001.").First ().GroupDef;
 
-				AiderUsersGroups.CreateUserGroupIfNeeded (businessContext, exampleParishGroupDef, "Utilisateurs AIDER", GroupClassification.Users);
-				AiderUsersGroups.CreateUserGroupIfNeeded (businessContext, exampleParishGroupDef, "Suppléant AIDER", GroupClassification.ActingUser);
-				AiderUsersGroups.CreateUserGroupIfNeeded (businessContext, exampleParishGroupDef, "Responsable AIDER", GroupClassification.ResponsibleUser);
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleParishGroupDef, "Utilisateurs AIDER", GroupClassification.Users,true);
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleParishGroupDef, "Suppléant AIDER", GroupClassification.ActingUser,false);
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleParishGroupDef, "Responsable AIDER", GroupClassification.ResponsibleUser,true);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 		}
 
-		private static void CreateUserGroupIfNeeded(BusinessContext businessContext, AiderGroupDefEntity parishGroupDef, string name, GroupClassification classif)
+		public static void CreateForGroup(BusinessContext businessContext, AiderGroupEntity group)
+		{
+			var usersDef		= AiderUsersGroups.CreateUserGroupDef (businessContext, group.GroupDef, "Utilisateurs AIDER", GroupClassification.Users, true);
+			var actingDef		= AiderUsersGroups.CreateUserGroupDef (businessContext, group.GroupDef, "Suppléant AIDER", GroupClassification.ActingUser, false);
+			var responsibleDef  = AiderUsersGroups.CreateUserGroupDef (businessContext, group.GroupDef, "Responsable AIDER", GroupClassification.ResponsibleUser, true);
+
+			group.CreateSubgroup (businessContext, usersDef);
+			group.CreateSubgroup (businessContext, actingDef);
+			group.CreateSubgroup (businessContext, responsibleDef);
+		}
+
+		private static void CreateUserGroupsIfNeeded(BusinessContext businessContext, AiderGroupDefEntity parishGroupDef, string name, GroupClassification classif, bool readOnlyMembers)
 		{
 			var groupExist = AiderGroupEntity.FindGroups (businessContext, "R001.P001.").First ()
 												.Subgroups.Where (s => s.GroupDef.Classification == classif)
 												.Any ();
 			if (!groupExist)
 			{
-				var aiderUsersDef = AiderUsersGroups.CreateUserGroupDef (businessContext, parishGroupDef, name, classif);
-
-				aiderUsersDef.MembersReadOnly = true;
-
-				AiderUsersGroups.DeployUserGroup (businessContext, parishGroupDef, aiderUsersDef);
+				var aiderUsersDef = AiderUsersGroups.CreateUserGroupDef (businessContext, parishGroupDef, name, classif, readOnlyMembers);
+				AiderUsersGroups.DeployUserGroups (businessContext, parishGroupDef, aiderUsersDef);
 			}		
 		}
 
-		private static AiderGroupDefEntity CreateUserGroupDef(BusinessContext businessContext, AiderGroupDefEntity parishGroupDef, string name, GroupClassification classification)
+		private static AiderGroupDefEntity CreateUserGroupDef(BusinessContext businessContext, AiderGroupDefEntity parishGroupDef, string name, GroupClassification classification, bool readOnlyMembers)
 		{
-			return AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext,
+			var def = AiderGroupDefEntity.CreateDefinitionSubGroup (businessContext,
 					parishGroupDef, name, classification,
 					subgroupsAllowed: false, membersAllowed: true, mutability: Mutability.SystemDefined
 				);
+
+			def.MembersReadOnly = readOnlyMembers;
+
+			return def;
 		}
 
-		private static void DeployUserGroup (BusinessContext businessContext,AiderGroupDefEntity parishGroupDef,AiderGroupDefEntity aiderUsersDef)
+		private static void DeployUserGroups (BusinessContext businessContext,AiderGroupDefEntity parishGroupDef,AiderGroupDefEntity aiderUsersDef)
 		{
 			var groupToComplete = AiderGroupEntity.FindGroupsFromPathAndLevel (businessContext, parishGroupDef.Level, parishGroupDef.PathTemplate);
 			foreach (var group in groupToComplete)

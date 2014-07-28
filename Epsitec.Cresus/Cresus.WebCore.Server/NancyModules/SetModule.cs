@@ -156,19 +156,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var user	 = LoginModule.GetUserName (this);
 			var fileExt	 = this.Request.Query.type == "label" ? ".pdf" : ".csv";
 			var filename = DownloadsModule.GenerateFileNameForUser (user, fileExt);
-			var result	 = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
+			var finishMetaData	= "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			var caches   = this.CoreServer.Caches;
 
-
-			job.Start ("Exportation démarrée");
-
-			using (ISetViewController controller = this.GetController (businessContext, parameters))
-			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
+			try
 			{
-				DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+				job.Start ();
+				using (ISetViewController controller = this.GetController (businessContext, parameters))
+				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
+				{
+					DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+				}
 			}
-
-			job.Finish (result);
+			catch
+			{
+				finishMetaData = "Une erreur est survenue. tâche annulée";
+			}
+			finally
+			{
+				job.Finish (finishMetaData);
+			}
 		}	
 
 		private EntityExtractor GetEntityExtractor(BusinessContext businessContext, ISetViewController controller, dynamic parameters)
