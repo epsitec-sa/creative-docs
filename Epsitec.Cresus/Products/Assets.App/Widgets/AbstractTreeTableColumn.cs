@@ -79,6 +79,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set;
 		}
 
+		public bool								AllowsMovement
+		{
+			get;
+			set;
+		}
+
+		public bool								AllowsSorting
+		{
+			get;
+			set;
+		}
+
 		public int								VisibleCellCount
 		{
 			get
@@ -448,12 +460,42 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (this.HeaderHeight > 0 && pos.Y < this.HeaderHeight)
 			{
-				return this.HeaderTooltip;
+				return this.FullHeaderTooltip;
 			}
 
 			return null;
 		}
 		#endregion
+
+		private string FullHeaderTooltip
+		{
+			//	Retourne le texte complet pour le tooltip d'une colonne, expliquant:
+			//		ligne 1 -> la signification de la colonne
+			//		ligne 2 -> le clic pour trier
+			//		ligne 3 -> le drag pour déplacer
+			//	Selon le contexte, chaque ligne est succeptible de ne pas exister.
+			get
+			{
+				var list = new List<string> ();
+
+				if (!string.IsNullOrEmpty (this.HeaderTooltip))
+				{
+					list.Add (this.HeaderTooltip + ".");
+				}
+
+				if (this.AllowsSorting)
+				{
+					list.Add ("Cliquez pour trier selon la colonne.");
+				}
+
+				if (this.AllowsMovement)
+				{
+					list.Add ("Tirez pour déplacer la colonne.");
+				}
+
+				return string.Join ("<br/>", list);
+			}
+		}
 
 
 		#region Events handler

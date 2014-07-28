@@ -399,21 +399,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				var description = this.columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
 
 				var column = TreeTableColumnHelper.Create (description);
+
 				column.PreferredWidth = columnState.FinalWidth;
-				column.Index = index;
+				column.Index          = index;
+				column.AllowsMovement = this.AllowsMovement;
+				column.AllowsSorting  = this.AllowsSorting;
 
 				this.treeTableColumns.Add (column);
 
 				if (index < this.columnsState.DockToLeftCount)  // dans le conteneur fixe de gauche ?
 				{
 					column.DockToLeft = true;
-					column.Dock = DockStyle.Left;
+					column.Dock       = DockStyle.Left;
 					this.leftContainer.Children.Add (column);
 				}
 				else  // dans le conteneur scrollable de droite ?
 				{
 					column.DockToLeft = false;
-					column.Dock = DockStyle.Left;
+					column.Dock       = DockStyle.Left;
 					this.columnsContainer.Viewport.Children.Add (column);
 				}
 
