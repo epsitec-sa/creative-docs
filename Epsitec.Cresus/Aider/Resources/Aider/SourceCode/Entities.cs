@@ -3055,6 +3055,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>RolePathCache</c> field.
+		///	designer:fld/LVA73/LVO143
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO143]")]
+		public string RolePathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO143]");
+			}
+			set
+			{
+				string oldValue = this.RolePathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVO143]"))
+				{
+					this.OnRolePathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVO143]", oldValue, value);
+					this.OnRolePathCacheChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>RoleCacheDisabled</c> field.
 		///	designer:fld/LVA73/LVOP33
 		///	</summary>
@@ -3087,6 +3109,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnRoleCacheChanging(string oldValue, string newValue);
 		partial void OnRoleCacheChanged(string oldValue, string newValue);
+		partial void OnRolePathCacheChanging(string oldValue, string newValue);
+		partial void OnRolePathCacheChanged(string oldValue, string newValue);
 		partial void OnRoleCacheDisabledChanging(bool oldValue, bool newValue);
 		partial void OnRoleCacheDisabledChanged(bool oldValue, bool newValue);
 		

@@ -653,6 +653,10 @@ AiderReferee = [LVADJ]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOS33].[LVO143]" title="Chemin" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1696,6 +1700,10 @@ AiderReferee = [LVADJ]
         <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVOO33]" title="Rôle" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVO143]" title="Chemin" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>

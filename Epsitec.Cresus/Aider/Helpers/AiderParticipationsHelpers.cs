@@ -28,6 +28,13 @@ namespace Epsitec.Aider.Helpers
 			}
 		}
 
+		public static string GetRolePath(AiderGroupParticipantEntity participation)
+		{
+			var path = participation.Group.Parents.Select (p => p.Name).ToList ();
+			path.Add(participation.Group.Name);
+			return path.JoinNonEmpty (" / ");
+		}
+
 		public static AiderParticipationRole BuildRoleFromParticipation(AiderGroupParticipantEntity participation)
 		{
 			var level				= participation.Group.GroupLevel;

@@ -2382,6 +2382,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RoleCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 120);
 				//	designer:cap/LVOP33
 				public static readonly global::Epsitec.Common.Support.Druid RoleCacheDisabled = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 121);
+				//	designer:cap/LVO143
+				public static readonly global::Epsitec.Common.Support.Druid RolePathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 129);
 			}
 			
 			public static class AiderGroupPlace

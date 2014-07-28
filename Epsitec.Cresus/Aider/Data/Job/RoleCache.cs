@@ -165,9 +165,15 @@ namespace Epsitec.Aider.Data.Job
 			{
 				if (participation.Contact.IsNotNull ())
 				{
-					var role = AiderParticipationsHelpers.BuildRoleFromParticipation (participation).GetRole (participation);
-					Logger.LogToConsole (string.Format("{0} is {1}",participation.Contact.DisplayName ,role));
-					participation.RoleCache = role;
+					var role		= AiderParticipationsHelpers.BuildRoleFromParticipation (participation)
+																.GetRole (participation);
+
+					var rolePath	= AiderParticipationsHelpers.GetRolePath (participation);
+
+					participation.RoleCache		= role;
+					participation.RolePathCache = rolePath;
+
+					Logger.LogToConsole (string.Format ("{0} is {1} ({2})", participation.Contact.DisplayName, role, rolePath));
 				}
 			}
 
