@@ -148,14 +148,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public FrameBox							LeftContainer
-		{
-			get
-			{
-				return this.leftContainer;
-			}
-		}
-
 		public Scrollable						ColumnsContainer
 		{
 			get

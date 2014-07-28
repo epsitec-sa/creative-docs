@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private const int headerHeight     = 40;  // hauteur standard = 22
+		private const int headerHeight     = 35;  // hauteur standard = 22
 		private const int rowHeight        = 18;
 		private const int messageWidth     = 2000;
 

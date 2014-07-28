@@ -87,14 +87,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected FrameBox LeftContainer
-		{
-			get
-			{
-				return this.treeTable.LeftContainer;
-			}
-		}
-
 		protected Scrollable ColumnsContainer
 		{
 			get
