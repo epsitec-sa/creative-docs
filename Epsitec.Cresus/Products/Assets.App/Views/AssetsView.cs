@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
@@ -92,11 +93,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.closeButton = new GlyphButton
+			this.closeButton = new IconButton
 			{
 				Parent        = parent,
-				GlyphShape    = GlyphShape.Close,
-				ButtonStyle   = ButtonStyle.ToolItem,
+				IconUri       = Misc.GetResourceIconUri ("TreeTable.Close"),
 				Anchor        = AnchorStyles.TopRight,
 				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
 				Margins       = new Margins (0, 0, TopTitle.height, 0),
@@ -841,7 +841,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									timelinesArrayFrameBox;
 		private FrameBox									editFrameBox;
 
-		private GlyphButton									closeButton;
+		private IconButton									closeButton;
 
 		private ViewMode									viewMode;
 		private bool										isShowEvents;
