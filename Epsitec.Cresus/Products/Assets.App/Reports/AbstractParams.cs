@@ -12,5 +12,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			return false;
 		}
+
+		public virtual AbstractParams ChangePeriod(int direction)
+		{
+			return null;
+		}
 	}
 }

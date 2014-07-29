@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -97,6 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					this.InitialDate = value.IncludeFrom;
 					this.FinalDate   = value.ExcludeTo.AddDays (-1);
+					this.MonthCount  = this.ComputeMonthCount ();
 				}
 			}
 		}
@@ -110,12 +112,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				this.InitialDateController.Value = value;
-
-				var date = this.ComputeFinalDate ();
-				if (this.FinalDate != date)
-				{
-					this.FinalDate = date;
-				}
 			}
 		}
 
@@ -128,12 +124,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				this.MonthCountController.Value = value;
-
-				var date = this.ComputeFinalDate ();
-				if (this.FinalDate != date)
-				{
-					this.FinalDate = date;
-				}
 			}
 		}
 
@@ -146,12 +136,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				this.FinalDateController.Value = value;
-
-				var month = this.ComputeMonthCount ();
-				if (this.MonthCount != month)
-				{
-					this.MonthCount = month;
-				}
 			}
 		}
 
@@ -215,15 +199,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (rank == MCH2SummaryReportPopup.InitialDateRank)  // modification de la date initiale ?
 			{
-				this.FinalDateController.Value = this.ComputeFinalDate ();
+				this.FinalDate = this.ComputeFinalDate ();
 			}
 			else if (rank == MCH2SummaryReportPopup.MonthCountRank)  // modification de la durée en mois ?
 			{
-				this.FinalDateController.Value = this.ComputeFinalDate ();
+				this.FinalDate = this.ComputeFinalDate ();
 			}
 			else if (rank == MCH2SummaryReportPopup.FinalDateRank)  // modification de la date finale ?
 			{
-				this.MonthCountController.Value = this.ComputeMonthCount ();
+				this.MonthCount = this.ComputeMonthCount ();
 			}
 
 			this.SetVisibility (MCH2SummaryReportPopup.GroupGuidRank, this.GroupEnable);
@@ -326,19 +310,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (i.HasValue && f.HasValue)
 			{
-				return MCH2SummaryReportPopup.GetMonth (f.Value)
-					 - MCH2SummaryReportPopup.GetMonth (i.Value)
+				return f.Value.GetTotalMonth ()
+					 - i.Value.GetTotalMonth ()
 					 + 1;
 			}
 			else
 			{
 				return null;
 			}
-		}
-
-		private static int GetMonth(System.DateTime date)
-		{
-			return date.Year*12 + date.Month;
 		}
 
 

@@ -36,6 +36,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return false;
 		}
 
+		public override AbstractParams ChangePeriod(int direction)
+		{
+			var timestamp = new Timestamp (this.Timestamp.Date.AddYears (direction), 0);
+			return new AssetsParams (timestamp, this.RootGuid, this.Level);
+		}
+
+
 		public readonly Timestamp				Timestamp;
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;

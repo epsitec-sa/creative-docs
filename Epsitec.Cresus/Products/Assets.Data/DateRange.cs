@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -51,6 +52,56 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return date >= this.IncludeFrom.Date
 				&& date <  this.ExcludeTo.Date;
+		}
+
+
+		public DateRange ChangePeriod(int direction)
+		{
+			if (this.IncludeFrom.Day == 1 &&
+				this.ExcludeTo.Day   == 1)
+			{
+				return this.ChangePeriodMonth (direction);
+			}
+			else
+			{
+				return this.ChangePeriodGeneric (direction);
+			}
+		}
+
+		private DateRange ChangePeriodMonth(int direction)
+		{
+			if (direction > 0)
+			{
+				var month = this.ExcludeTo.GetTotalMonth () - this.IncludeFrom.GetTotalMonth ();
+				return new DateRange (this.ExcludeTo, this.ExcludeTo.AddMonths (month));
+			}
+			else if (direction < 0)
+			{
+				var month = this.ExcludeTo.GetTotalMonth () - this.IncludeFrom.GetTotalMonth ();
+				return new DateRange (this.IncludeFrom.AddMonths (-month), this.IncludeFrom);
+			}
+			else
+			{
+				return this;
+			}
+		}
+
+		private DateRange ChangePeriodGeneric(int direction)
+		{
+			if (direction > 0)
+			{
+				var delta = this.ExcludeTo - this.IncludeFrom;
+				return new DateRange (this.ExcludeTo, this.ExcludeTo + delta);
+			}
+			else if (direction < 0)
+			{
+				var delta = this.ExcludeTo - this.IncludeFrom;
+				return new DateRange (this.IncludeFrom - delta, this.IncludeFrom);
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 

@@ -19,10 +19,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-//-			this.SetCommandDescription (ToolbarCommand.ReportSelect, "Report.Select", "Choix d'un rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportParams, "Report.Params", "Paramètres du rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportExport, "Report.Export", "Exporter le rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportClose,  "Report.Close",  "Fermer le rapport");
+//-			this.SetCommandDescription (ToolbarCommand.ReportSelect,     "Report.Select",     "Choix d'un rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportParams,     "Report.Params",     "Paramètres du rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportExport,     "Report.Export",     "Exporter le rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod, "Report.PrevPeriod", "Période précédente");
+			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod, "Report.NextPeriod", "Période suivante");
+
+			this.SetCommandDescription (ToolbarCommand.ReportClose,      "Report.Close",      "Fermer le rapport");
 		}
 
 
@@ -39,6 +42,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 //-			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportSelect);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportParams);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
+			this.CreateSeparator     (DockStyle.Left);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportPrevPeriod);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportNextPeriod);
+
 			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
 
 			return this.toolbar;

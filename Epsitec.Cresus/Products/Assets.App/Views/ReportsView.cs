@@ -116,6 +116,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnExport ();
 						break;
 
+					case ToolbarCommand.ReportPrevPeriod:
+						this.OnChangePeriod (-1);
+						break;
+
+					case ToolbarCommand.ReportNextPeriod:
+						this.OnChangePeriod (1);
+						break;
+
 					case ToolbarCommand.ReportClose:
 						this.OnClose ();
 						break;
@@ -143,6 +151,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			this.report.ShowExportPopup (target);
+		}
+
+		private void OnChangePeriod(int direction)
+		{
+			this.reportParams = this.reportParams.ChangePeriod (direction);
+			this.report.UpdateParams ();
 		}
 
 		private void OnClose()
@@ -278,10 +292,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect, true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams, this.report != null);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport, this.report != null);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,  this.report != null);
+			bool changePeriodEnable = this.ChangePeriodEnable;
+
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect,     true);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,     this.HasParams);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,     this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportPrevPeriod, changePeriodEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportNextPeriod, changePeriodEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,      this.report != null);
+		}
+
+		private bool ChangePeriodEnable
+		{
+			get
+			{
+				return this.report != null
+					&& this.reportParams != null
+					&& this.reportParams.ChangePeriod (1) != null;
+			}
+		}
+
+		private bool HasParams
+		{
+			get
+			{
+				return this.report != null
+					&& this.reportParams != null;
+			}
 		}
 
 

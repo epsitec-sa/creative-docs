@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
 
 				case Column.InitialState:
-					return string.Format ("Initial {0}", this.InitialDate);
+					return string.Format ("Etat {0}", this.InitialDate);
 
 				case Column.Inputs:
 					return "Entrées";
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return "Revalorisations";
 
 				case Column.FinalState:
-					return string.Format ("Final {0}", this.FinalDate);
+					return string.Format ("Etat {0}", this.FinalDate);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));

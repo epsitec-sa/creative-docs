@@ -83,6 +83,7 @@
     <Compile Include="GuidList.cs" />
     <Compile Include="GuidNode.cs" />
     <Compile Include="GuidRatio.cs" />
+    <Compile Include="Helpers\DateTime.cs" />
     <Compile Include="IGuid.cs" />
     <Compile Include="INodeGetter.cs" />
     <Compile Include="NodeGetterExtensions.cs" />

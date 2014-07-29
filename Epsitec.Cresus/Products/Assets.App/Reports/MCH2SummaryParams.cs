@@ -41,6 +41,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return false;
 		}
 
+		public override AbstractParams ChangePeriod(int direction)
+		{
+			return new MCH2SummaryParams (this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level);
+		}
+
+
 		public readonly DateRange				DateRange;
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;

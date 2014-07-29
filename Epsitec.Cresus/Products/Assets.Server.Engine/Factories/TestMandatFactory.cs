@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (188), EventType.Output);
-					this.AddAssetComputedAmount (e, ObjectField.MainValue, 0.0m);
+					this.AddAssetAmortizedAmount (e, 0.0m);
 				}
 			}
 
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 				{
 					var e = this.AddAssetEvent (obj, year1.AddDays (190), EventType.Output);
-					this.AddAssetComputedAmount (e, ObjectField.MainValue, 0.0m);
+					this.AddAssetAmortizedAmount (e, 0.0m);
 				}
 			}
 
