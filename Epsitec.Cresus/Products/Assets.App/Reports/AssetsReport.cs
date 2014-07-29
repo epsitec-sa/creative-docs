@@ -8,6 +8,7 @@ using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -17,8 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsReport : AbstractReport
 	{
-		public AssetsReport(DataAccessor accessor, ReportsView reportView)
-			: base (accessor, reportView)
+		public AssetsReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
+			: base (accessor, reportView, reportType)
 		{
 		}
 
@@ -28,6 +29,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return new AssetsParams ();  // paramètres par défaut
+			}
+		}
+
+		public override string					Title
+		{
+			get
+			{
+				return string.Concat (base.Title, " ", TypeConverters.DateToString (this.Params.Timestamp.Date));
 			}
 		}
 

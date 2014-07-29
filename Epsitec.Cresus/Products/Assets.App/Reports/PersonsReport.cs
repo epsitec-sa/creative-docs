@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class PersonsReport : AbstractReport
 	{
-		public PersonsReport(DataAccessor accessor, ReportsView reportView)
-			: base (accessor, reportView)
+		public PersonsReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
+			: base (accessor, reportView, reportType)
 		{
 		}
 

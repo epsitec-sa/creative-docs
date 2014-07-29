@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -15,10 +16,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractReport
 	{
-		public AbstractReport(DataAccessor accessor, ReportsView reportView)
+		public AbstractReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
 		{
-			this.accessor = accessor;
+			this.accessor   = accessor;
 			this.reportView = reportView;
+			this.reportType = reportType;
 		}
 
 		public virtual void Dispose()
@@ -35,6 +37,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return null;
+			}
+		}
+
+		public virtual string					Title
+		{
+			get
+			{
+				return AbstractView.GetViewTitle (this.accessor, ReportsList.GetReportName (this.reportType));
 			}
 		}
 
@@ -141,6 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 	
 		protected readonly DataAccessor			accessor;
 		protected readonly ReportsView			reportView;
+		protected readonly ReportType			reportType;
 
 		protected NavigationTreeTableController treeTableController;
 		protected ITreeFunctions				nodeGetter;

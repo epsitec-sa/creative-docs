@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.report != null)
 				{
 					this.report.UpdateParams ();
+					this.UpdateTitle ();
 				}
 			}
 		}
@@ -52,11 +53,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			var topTitle = new TopTitle
+			this.topTitle = new TopTitle
 			{
 				Parent = parent,
 			};
-			topTitle.SetTitle (this.GetViewTitle (ViewType.Reports));
 
 			this.CreateToolbar (parent);
 
@@ -90,7 +90,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateUI()
 		{
 			this.UpdateReport ();
-
 			this.OnViewStateChanged (this.ViewState);
 		}
 
@@ -155,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnChangePeriod(int direction)
 		{
-			this.reportParams = this.reportParams.ChangePeriod (direction);
+			this.ReportParams = this.reportParams.ChangePeriod (direction);
 			this.report.UpdateParams ();
 		}
 
@@ -199,15 +198,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (this.selectedReportType)
 			{
 				case ReportType.MCH2Summary:
-					this.report = new MCH2SummaryReport (this.accessor, this);
+					this.report = new MCH2SummaryReport (this.accessor, this, this.selectedReportType);
 					break;
 
 				case ReportType.AssetsList:
-					this.report = new AssetsReport (this.accessor, this);
+					this.report = new AssetsReport (this.accessor, this, this.selectedReportType);
 					break;
 
 				case ReportType.PersonsList:
-					this.report = new PersonsReport (this.accessor, this);
+					this.report = new PersonsReport (this.accessor, this, this.selectedReportType);
 					break;
 			}
 
@@ -218,6 +217,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged += this.HandleParamsChanged;
 			}
+
+			this.UpdateTitle ();
 
 			this.mainFrame  .Visibility = (this.report != null);
 			this.choiceFrame.Visibility = (this.report == null);
@@ -239,6 +240,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.treeTableController = null;
 			this.mainFrame.Children.Clear ();
+		}
+
+		private void UpdateTitle()
+		{
+			if (this.report == null)
+			{
+				this.topTitle.SetTitle (this.GetViewTitle (ViewType.Reports));
+			}
+			else
+			{
+				this.topTitle.SetTitle (this.report.Title);
+			}
 		}
 
 		private void HandleParamsChanged(object sender)
@@ -324,6 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly List<AbstractViewState> historyViewStates;
 
+		private TopTitle						topTitle;
 		private FrameBox						choiceFrame;
 		private FrameBox						mainFrame;
 		private ReportChoiceController			reportChoiceController;

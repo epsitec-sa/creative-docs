@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryReport : AbstractReport
 	{
-		public MCH2SummaryReport(DataAccessor accessor, ReportsView reportView)
-			: base (accessor, reportView)
+		public MCH2SummaryReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
+			: base (accessor, reportView, reportType)
 		{
 		}
 
@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return new MCH2SummaryParams ();  // paramètres par défaut
+			}
+		}
+
+		public override string					Title
+		{
+			get
+			{
+				return string.Concat (base.Title, " ", this.Params.DateRange.ToNiceString ());
 			}
 		}
 

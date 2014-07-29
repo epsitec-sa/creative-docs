@@ -232,13 +232,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static string GetViewTitle(DataAccessor accessor, ViewType viewType)
 		{
 			//	Retourne le titre à utiliser pour une vue, incluant le nom du mandat.
+			return AbstractView.GetViewTitle (accessor, StaticDescriptions.GetViewTypeDescription (viewType.Kind));
+		}
+
+		public static string GetViewTitle(DataAccessor accessor, string title)
+		{
+			//	Retourne le titre à utiliser pour une vue, incluant le nom du mandat.
 			if (string.IsNullOrEmpty (accessor.Mandat.Name))
 			{
-				return StaticDescriptions.GetViewTypeDescription (viewType.Kind);
+				return title;
 			}
 			else
 			{
-				return string.Concat (accessor.Mandat.Name, " — ", StaticDescriptions.GetViewTypeDescription (viewType.Kind));
+				return string.Concat (accessor.Mandat.Name, " — ", title);
 			}
 		}
 
