@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region IToolTipHost Members
 		public object GetToolTipCaption(Point pos)
 		{
-			if (this.HeaderHeight > 0 && pos.Y < this.HeaderHeight)
+			if (this.HeaderHeight > 0 && pos.Y > this.ActualHeight-this.HeaderHeight)
 			{
 				return this.FullHeaderTooltip;
 			}
@@ -485,12 +485,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (this.AllowsSorting)
 				{
-					list.Add ("Cliquez pour trier selon la colonne.");
+					list.Add ("Cliquer pour trier selon la colonne.");
 				}
 
 				if (this.AllowsMovement)
 				{
-					list.Add ("Tirez pour déplacer la colonne.");
+					list.Add ("Tirer pour déplacer la colonne.");
 				}
 
 				return string.Join ("<br/>", list);
