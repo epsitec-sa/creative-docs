@@ -41,6 +41,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateParams()
 		{
+			this.dataFiller.Title = this.Title;
+
 			this.secondaryNodeGetter.SetParams (null, this.sortingInstructions);
 			this.primaryNodeGetter.SetParams (this.sortingInstructions);
 

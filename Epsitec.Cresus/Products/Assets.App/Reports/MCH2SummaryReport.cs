@@ -85,6 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
+			this.dataFiller.Title = this.Title;
 			this.DataFiller.DateRange = this.Params.DateRange;
 
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp

@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			Converters.dict = new Dictionary<string, string> ();
 
 			Converters.dict.Add ("•",  "&lt;BULLET&gt;");	// édite <BULLET> (unicode 2022)
+			Converters.dict.Add ("—",  "&lt;TIRET&gt;");	// édite <TIRET> (unicode 2014)
 			Converters.dict.Add ("\t", "&lt;TAB&gt;");		// édite <TAB>
 			Converters.dict.Add ("\r", "&lt;CR&gt;");		// édite <CR>
 			Converters.dict.Add ("\n", "&lt;LF&gt;");		// édite <LF>

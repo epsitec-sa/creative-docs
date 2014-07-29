@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 
@@ -144,7 +145,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 
@@ -175,7 +177,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 
@@ -206,7 +209,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 
@@ -237,7 +241,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 
@@ -268,7 +273,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 					}
 					catch (System.Exception ex)
 					{
-						this.ShowErrorPopup (ex.Message);
+						string message = TextLayout.ConvertToTaggedText (ex.Message);
+						this.ShowErrorPopup (message);
 						return;
 					}
 

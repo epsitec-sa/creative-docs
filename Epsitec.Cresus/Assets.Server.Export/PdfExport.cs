@@ -24,11 +24,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			base.Export (instructions, profile, filler, columnsState);
 
 			this.FillArray (false);
-			this.ExportPdf ();
+			this.ExportPdf (filler.Title);
 		}
 
 
-		private void ExportPdf()
+		private void ExportPdf(string title)
 		{
 			var info = new ExportPdfInfo ()
 			{
@@ -48,13 +48,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			if (!string.IsNullOrEmpty (this.Profile.Header))
 			{
-				setup.HeaderText    = this.GetFormattedText (this.Profile.Header, 1.5);
+				setup.HeaderText    = this.GetFormattedText (this.GetTitleText (this.Profile.Header, title), 1.5);
 				setup.HeaderMargins = this.HeaderMargins;
 			}
 
 			if (!string.IsNullOrEmpty (this.Profile.Footer))
 			{
-				setup.FooterText    = this.GetFormattedText (this.Profile.Footer, 1.5);
+				setup.FooterText    = this.GetFormattedText (this.GetTitleText (this.Profile.Footer, title), 1.5);
 				setup.FooterMargins = this.FooterMargins;
 			}
 
@@ -272,6 +272,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
+
+		private string GetTitleText(string text, string title)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				text = text.Replace ("<TITLE>", title);
+			}
+
+			return text;
+		}
 
 		private string GetLeveledText(string text, int level)
 		{

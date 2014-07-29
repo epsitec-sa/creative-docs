@@ -107,7 +107,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 				}
 				catch (System.Exception ex)
 				{
-					this.ShowMessagePopup (ex.Message);
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowMessagePopup (message);
 					return;
 				}
 

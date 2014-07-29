@@ -111,7 +111,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new EntriesTreeTableFiller (this.accessor, this.nodeGetter)
+			{
+				Title = this.title,
+			};
+
 			TreeTableFiller<EntryNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Entries");
 
 			this.sortingInstructions = TreeTableFiller<EntryNode>.GetSortingInstructions (this.treeTableController);
