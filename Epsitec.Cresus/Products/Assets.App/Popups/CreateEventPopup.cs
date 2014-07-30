@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Choix du type d'un nouvel événement à créer, et de sa date.
 	/// </summary>
-	public class NewEventPopup : AbstractPopup
+	public class CreateEventPopup : AbstractPopup
 	{
-		private NewEventPopup(DataAccessor accessor)
+		private CreateEventPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 		}
@@ -45,18 +45,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var dateFrame = this.CreateFrame
 			(
-				NewEventPopup.horizontalMargins,
-				NewEventPopup.verticalMargins*2 + bh,
-				NewEventPopup.buttonWidth,
+				CreateEventPopup.horizontalMargins,
+				CreateEventPopup.verticalMargins*2 + bh,
+				CreateEventPopup.buttonWidth,
 				DateController.controllerHeight
 			);
 
 			this.buttonsFrame = this.CreateFrame
 			(
-				NewEventPopup.horizontalMargins,
-				NewEventPopup.verticalMargins,
-				NewEventPopup.buttonWidth,
-				NewEventPopup.buttonGap + bh
+				CreateEventPopup.horizontalMargins,
+				CreateEventPopup.verticalMargins,
+				CreateEventPopup.buttonWidth,
+				CreateEventPopup.buttonGap + bh
 			);
 
 			this.CreateDate (dateFrame);
@@ -100,15 +100,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Crée les boutons de bas en haut.
 			this.buttonsFrame.Children.Clear ();
 
-			int dx = NewEventPopup.buttonWidth;
-			int dy = NewEventPopup.buttonHeight;
+			int dx = CreateEventPopup.buttonWidth;
+			int dy = CreateEventPopup.buttonHeight;
 			int y = 0;
 
 			int tabIndex = 100;
 			foreach (var desc in this.ButtonDescriptions.Reverse ())
 			{
 				this.CreateButton (dx, dy, desc.Type, desc.Text, desc.Tooltip, desc.Enable, tabIndex--);
-				y += dy + NewEventPopup.buttonGap;
+				y += dy + CreateEventPopup.buttonGap;
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Enable        = enable,
 				Dock          = DockStyle.Bottom,
 				PreferredSize = new Size (dx, dy),
-				Margins       = new Margins (0, 0, NewEventPopup.buttonGap, 0),
+				Margins       = new Margins (0, 0, CreateEventPopup.buttonGap, 0),
 				TabIndex      = tabIndex,
 			};
 
@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				int dx = NewEventPopup.horizontalMargins*2 + NewEventPopup.buttonWidth;
-				int dy = NewEventPopup.verticalMargins*3
+				int dx = CreateEventPopup.horizontalMargins*2 + CreateEventPopup.buttonWidth;
+				int dy = CreateEventPopup.verticalMargins*3
 					   + AbstractPopup.titleHeight
 					   + DateController.controllerHeight
 					   + this.ButtonsHeight;
@@ -163,8 +163,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				int buttonCount = this.ButtonDescriptions.Count ();
 
-				return NewEventPopup.buttonHeight * buttonCount
-					 + NewEventPopup.buttonGap * (buttonCount-1);
+				return CreateEventPopup.buttonHeight * buttonCount
+					 + CreateEventPopup.buttonGap * (buttonCount-1);
 			}
 		}
 
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				foreach (var type in NewEventPopup.EventTypes)
+				foreach (var type in CreateEventPopup.EventTypes)
 				{
 					yield return this.GetButtonDescription (type);
 				}
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				System.DateTime? createDate = timestamp.Date;
 
-				var popup = new NewEventPopup (accessor)
+				var popup = new CreateEventPopup (accessor)
 				{
 					BaseType   = baseType,
 					DataObject = obj,

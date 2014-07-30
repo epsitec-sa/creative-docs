@@ -145,7 +145,7 @@
     <Compile Include="Popups\StackedControllers\GroupGuidStackedController.cs" />
     <Compile Include="Popups\CreateAssetPopup.cs" />
     <Compile Include="Popups\LockedPopup.cs" />
-    <Compile Include="Popups\CreateMandatPopup.cs" />
+    <Compile Include="Popups\NewMandatPopup.cs" />
     <Compile Include="Popups\StackedControllers\RadioStackedController.cs" />
     <Compile Include="Popups\StackedControllers\TextStackedController.cs" />
     <Compile Include="Popups\StackedControllers\IntStackedController.cs" />
@@ -169,7 +169,7 @@
     <Compile Include="Popups\HistoryAccessor.cs" />
     <Compile Include="Popups\HistoryPopup.cs" />
     <Compile Include="Popups\YesNoPopup.cs" />
-    <Compile Include="Popups\NewEventPopup.cs" />
+    <Compile Include="Popups\CreateEventPopup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\AbstractReport.cs" />
     <Compile Include="Reports\AssetsReport.cs" />
