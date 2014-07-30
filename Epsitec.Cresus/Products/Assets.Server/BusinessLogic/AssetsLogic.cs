@@ -18,7 +18,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			System.Diagnostics.Debug.Assert (asset != null);
 
 			//	Importe la catégorie d'immobilisation dans l'événement d'entrée.
-			CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);
+			if (!cat.IsEmpty)
+			{
+				CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);
+			}
 
 			return asset;
 		}

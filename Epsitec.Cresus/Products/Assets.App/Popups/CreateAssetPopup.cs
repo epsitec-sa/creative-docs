@@ -42,10 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 2
 			{
-				StackedControllerType = StackedControllerType.Label,
-				Label                 = "Catégorie d'immobilisation :",
-				Width                 = DateController.controllerWidth - 4,
-				Height                = 15*1,  // place pour 1 ligne
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Catégorie d'immobilisation",
 			});
 
 			list.Add (new StackedControllerDescription  // 3
@@ -60,8 +58,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.defaultAcceptButtonName = "Créer";
 			this.defaultControllerRankFocus = 1;
-
-			this.ObjectCategory = Guid.Empty;
 		}
 
 
@@ -97,13 +93,36 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							UseCategory
+		{
+			get
+			{
+				var controller = this.GetController (2) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (2) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 		public Guid								ObjectCategory
 		{
 			get
 			{
-				var controller = this.GetController (3) as CategoryGuidStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
+				if (this.UseCategory)
+				{
+					var controller = this.GetController (3) as CategoryGuidStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+					return controller.Value;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
 			}
 			set
 			{
@@ -116,9 +135,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
+			this.SetEnable (3, this.UseCategory);
+
 			this.okButton.Enable = this.ObjectDate.HasValue
 								&& !string.IsNullOrEmpty (this.ObjectName)
-								&& !this.ObjectCategory.IsEmpty
+								&& (!this.UseCategory || !this.ObjectCategory.IsEmpty)
 								&& !this.HasError;
 		}
 
@@ -130,7 +151,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var popup = new CreateAssetPopup (accessor)
 				{
-					ObjectDate = LocalSettings.CreateAssetDate,
+					ObjectDate     = LocalSettings.CreateAssetDate,
+					UseCategory    = true,
+					ObjectCategory = Guid.Empty,
 				};
 
 				popup.Create (target, leftOrRight: true);
