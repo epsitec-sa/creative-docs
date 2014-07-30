@@ -100,6 +100,7 @@ namespace Epsitec.Common.Drawing
 
 		public Font GetFont(bool bold, bool italic)
 		{
+#if false
 			bool regular = !bold && !italic;
 			
 			foreach (Font font in this.fonts)
@@ -117,6 +118,22 @@ namespace Epsitec.Common.Drawing
 					}
 				}
 			}
+#else
+			//	[DR]
+			//	J'ai ajouté ceci pour trouver correctement la bonne police "Segoe UI" parmi
+			//	les nombreuses variantes et éviter le bug des polices italiques qui
+			//	s'affichaient en bold-italique (en fait, l'ancien code trouvait du "Black Italic").
+			//	Note: Ces quelques lignes auraient pu s'écrire plus élégamment avec link, mais
+			//	il ne semble pas disponible ici !
+
+			foreach (var font in this.fonts)
+			{
+				if (font.MatchForStyle (bold, italic))
+				{
+					return font;
+				}
+			}
+#endif
 			
 			Font syntheticFont = this.GetSyntheticFont (bold, italic);
 

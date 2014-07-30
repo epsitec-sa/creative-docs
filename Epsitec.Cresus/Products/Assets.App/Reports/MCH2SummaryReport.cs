@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				DateRange   = this.Params.DateRange,
 				GroupGuid   = this.Params.RootGuid,
-				Level       = this.Params.Level
+				Level       = this.Params.Level,
 			};
 
 			popup.Create (target, leftOrRight: true);

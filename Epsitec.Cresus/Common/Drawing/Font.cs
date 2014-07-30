@@ -232,7 +232,7 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 		}
-		
+
 		public string							LocaleStyleName
 		{
 			get
@@ -385,7 +385,81 @@ namespace Epsitec.Common.Drawing
 				return this.openTypeFont != null;
 			}
 		}
-		
+
+		public bool MatchForStyle(bool bold, bool italic)
+		{
+			//	Vérifie si une police match pour les 4 cas possibles (normal, bold
+			//	italique ou bold-italique).
+			//	Par exemple, avec Windows 8 et la police "Segoe UI", on rencontre les
+			//	styles suivants:
+			//	- Black Italic
+			//	- Black Regular
+			//	- Bold				<- à utiliser pour bold
+			//	- Bold Italic		<- à utiliser pour bold-italique
+			//	- Italic			<- à utiliser pour italique
+			//	- Light Italic
+			//	- Light Regular
+			//	- Mono Regular
+			//	- Regular			<- à utiliser pour normal
+			//	- Semibold Italic
+			//	- Semibold Regular
+			//	- Semilight Regular
+
+			if (string.IsNullOrEmpty (this.StyleName))
+			{
+				return !bold && !italic;
+			}
+			else
+			{
+				var styles = this.StyleName.Split (' ');
+
+				foreach (var style in styles)
+				{
+					switch (style)
+					{
+						case "Roman":
+						case "Normal":
+						case "Regular":
+							//	Si on trouve l'un de ces 3 styles et qu'on cherche du bold
+							//	ou de l'italique, ça ne match pas.
+							if (bold || italic)
+							{
+								return false;
+							}
+							break;
+
+						case "Bold":
+							//	Si on trouve ce style et qu'on cherche du non-bold,
+							//	ça ne match pas.
+							if (!bold)
+							{
+								return false;
+							}
+							break;
+
+						case "Italic":
+						case "Oblique":
+						case "Slanted":
+							//	Si on trouve l'un de ces 3 styles et qu'on cherche du non-italic,
+							//	ça ne match pas.
+							if (!italic)
+							{
+								return false;
+							}
+							break;
+
+						default:
+							//	Si on trouve un autre style (par exemple Black, Light ou Semibold)
+							//	ça ne match jamais.
+							return false;
+					}
+				}
+
+				//	Si on a rien trouvé qui ne matchait pas, alors ça match !
+				return true;
+			}
+		}
+
 		public ushort GetGlyphIndex(int unicode)
 		{
 			return this.OpenTypeFont.GetGlyphIndex (unicode);
