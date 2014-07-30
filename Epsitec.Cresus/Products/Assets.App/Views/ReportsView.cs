@@ -84,7 +84,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.UpdateReport ();
-			this.UpdateToolbars ();
 		}
 
 		public override void UpdateUI()
@@ -113,6 +112,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					case ToolbarCommand.ReportExport:
 						this.OnExport ();
+						break;
+
+					case ToolbarCommand.CompactAll:
+						this.OnCompactAll ();
+						break;
+
+					case ToolbarCommand.CompactOne:
+						this.OnCompactOne ();
+						break;
+
+					case ToolbarCommand.ExpandOne:
+						this.OnExpandOne ();
+						break;
+
+					case ToolbarCommand.ExpandAll:
+						this.OnExpandAll ();
 						break;
 
 					case ToolbarCommand.ReportPrevPeriod:
@@ -150,6 +165,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportExport);
 			this.report.ShowExportPopup (target);
+		}
+
+		private void OnCompactAll()
+		{
+			this.report.OnCompactAll ();
+		}
+
+		private void OnCompactOne()
+		{
+			this.report.OnCompactOne ();
+		}
+
+		private void OnExpandOne()
+		{
+			this.report.OnExpandOne ();
+		}
+
+		private void OnExpandAll()
+		{
+			this.report.OnExpandAll ();
 		}
 
 		private void OnChangePeriod(int direction)
@@ -190,7 +225,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.DeleteTreeTable ();
 
-				this.report.ParamsChanged -= this.HandleParamsChanged;
+				this.report.ParamsChanged  -= this.HandleParamsChanged;
+				this.report.UpdateCommands -= this.HandleUpdateCommands;
 				this.report.Dispose ();
 				this.report = null;
 			}
@@ -215,7 +251,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateTreeTable ();
 
 				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
-				this.report.ParamsChanged += this.HandleParamsChanged;
+				this.report.ParamsChanged  += this.HandleParamsChanged;
+				this.report.UpdateCommands += this.HandleUpdateCommands;
 			}
 
 			this.UpdateTitle ();
@@ -257,6 +294,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void HandleParamsChanged(object sender)
 		{
 			this.OnViewStateChanged (this.ViewState);
+		}
+
+		private void HandleUpdateCommands(object sender)
+		{
+			this.UpdateToolbars ();
 		}
 
 
@@ -305,14 +347,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			bool isCompactEnable    = this.IsCompactEnable;
+			bool isExpandEnable     = this.IsExpandEnable;
 			bool changePeriodEnable = this.ChangePeriodEnable;
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect,     true);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,     this.HasParams);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,     this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,       isCompactEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne,       isCompactEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,        isExpandEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,        isExpandEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportPrevPeriod, changePeriodEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportNextPeriod, changePeriodEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,      this.report != null);
+		}
+
+		private bool IsCompactEnable
+		{
+			get
+			{
+				return this.report != null && this.report.IsCompactEnable;
+			}
+		}
+
+		private bool IsExpandEnable
+		{
+			get
+			{
+				return this.report != null && this.report.IsExpandEnable;
+			}
 		}
 
 		private bool ChangePeriodEnable

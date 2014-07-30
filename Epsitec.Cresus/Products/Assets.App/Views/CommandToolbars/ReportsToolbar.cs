@@ -19,13 +19,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-//-			this.SetCommandDescription (ToolbarCommand.ReportSelect,     "Report.Select",     "Choix d'un rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportParams,     "Report.Params",     "Paramètres du rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportExport,     "Report.Export",     "Exporter le rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod, "Report.PrevPeriod", "Période précédente");
-			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod, "Report.NextPeriod", "Période suivante");
-
-			this.SetCommandDescription (ToolbarCommand.ReportClose,      "Report.Close",      "Fermer le rapport");
+//-			this.SetCommandDescription (ToolbarCommand.ReportSelect,     "Report.Select",        "Choix d'un rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportParams,     "Report.Params",        "Paramètres du rapport");
+			this.SetCommandDescription (ToolbarCommand.CompactAll,       "TreeTable.CompactAll", "Compacter tout");
+			this.SetCommandDescription (ToolbarCommand.CompactOne,       "TreeTable.CompactOne", "Compacter un niveau");
+			this.SetCommandDescription (ToolbarCommand.ExpandOne,        "TreeTable.ExpandOne",  "Etendre un niveau");
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,        "TreeTable.ExpandAll",  "Etendre tout");
+			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod, "Report.PrevPeriod",    "Période précédente");
+			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod, "Report.NextPeriod",    "Période suivante");
+			this.SetCommandDescription (ToolbarCommand.ReportExport,     "Report.Export",        "Exporter le rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportClose,      "Report.Close",         "Fermer le rapport");
 		}
 
 
@@ -41,10 +44,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 //-			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportSelect);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportParams);
-			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
+			this.CreateSeparator     (DockStyle.Left);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.CompactAll);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.CompactOne);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ExpandOne);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ExpandAll);
 			this.CreateSeparator     (DockStyle.Left);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportPrevPeriod);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportNextPeriod);
+			this.CreateSeparator     (DockStyle.Left);
+			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
 
 			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
 

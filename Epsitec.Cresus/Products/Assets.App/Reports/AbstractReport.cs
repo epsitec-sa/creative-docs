@@ -103,34 +103,55 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateTreeTable ();
+			this.OnUpdateCommands ();
 		}
 
-		protected void OnCompactAll()
+		public void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
 			this.nodeGetter.CompactAll ();
 			this.UpdateTreeTable ();
+			this.OnUpdateCommands ();
 		}
 
-		protected void OnCompactOne()
+		public void OnCompactOne()
 		{
 			//	Compacte une ligne.
 			this.nodeGetter.CompactOne ();
 			this.UpdateTreeTable ();
+			this.OnUpdateCommands ();
 		}
 
-		protected void OnExpandOne()
+		public void OnExpandOne()
 		{
 			//	Etend une ligne.
 			this.nodeGetter.ExpandOne ();
 			this.UpdateTreeTable ();
+			this.OnUpdateCommands ();
 		}
 
-		protected void OnExpandAll()
+		public void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
 			this.nodeGetter.ExpandAll ();
 			this.UpdateTreeTable ();
+			this.OnUpdateCommands ();
+		}
+
+		public bool IsCompactEnable
+		{
+			get
+			{
+				return this.nodeGetter != null && !this.nodeGetter.IsAllCompacted;
+			}
+		}
+
+		public bool IsExpandEnable
+		{
+			get
+			{
+				return this.nodeGetter != null && !this.nodeGetter.IsAllExpanded;
+			}
 		}
 
 
@@ -146,6 +167,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler ParamsChanged;
+
+
+		protected void OnUpdateCommands()
+		{
+			this.UpdateCommands.Raise (this);
+		}
+
+		public event EventHandler UpdateCommands;
 		#endregion
 
 	

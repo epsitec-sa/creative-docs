@@ -102,7 +102,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.UpdateTreeTable ();
+
 			this.OnParamsChanged ();
+			this.OnUpdateCommands ();
 		}
 
 		public override void ShowExportPopup(Widget target)

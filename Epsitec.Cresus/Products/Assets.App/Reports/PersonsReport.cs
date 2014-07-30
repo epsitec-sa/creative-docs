@@ -47,7 +47,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.primaryNodeGetter.SetParams (this.sortingInstructions);
 
 			this.UpdateTreeTable ();
+
 			this.OnParamsChanged ();
+			this.OnUpdateCommands ();
 		}
 
 		public override void ShowExportPopup(Widget target)

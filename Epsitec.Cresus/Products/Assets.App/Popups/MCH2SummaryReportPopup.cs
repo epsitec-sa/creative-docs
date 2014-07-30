@@ -189,7 +189,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			base.CreateUI ();
 
 			{
-				this.LevelController.Value = 1;
+				var controller = this.GetController (4) as GroupGuidStackedController;
+				controller.Level = 1;
 			}
 		}
 
