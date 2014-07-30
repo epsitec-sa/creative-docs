@@ -274,6 +274,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			var aa = Amortizations.InitialiseAmortizedAmount (obj, e, timestamp, amortizationType, entryScenario);
+
+			if (e.Type == EventType.Output)
+			{
+				//	Il est bien pratique de mettre tout de suite une valeur comptable nulle
+				//	lors de la création d'un événement de sortie.
+				aa = AmortizedAmount.SetInitialAmount (aa, 0.0m);
+			}
+
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
