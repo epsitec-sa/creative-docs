@@ -80,7 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.stateAtController = new StateAtController (this.accessor);
 			var frame = this.stateAtController.CreateUI (parent);
 			frame.Dock = DockStyle.Left;
-			
 
 			this.stateAtController.DateChanged += delegate
 			{

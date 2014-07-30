@@ -54,7 +54,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportNextPeriod);
 			this.CreateSeparator     (DockStyle.Left);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
-
 			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
 
 			return this.toolbar;

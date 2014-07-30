@@ -89,12 +89,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DataFiller.DateRange = this.Params.DateRange;
 
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
-			//	peuvent avoir changé, et les colonnes doivent afficher "Etat avant 01.01.2014" et
-			//	"Etat après 31.12.2014" (par exemple).
+			//	peuvent avoir changé, et les colonnes doivent afficher "Etat 01.01.2014" et
+			//	"Etat 31.12.2014" (par exemple).
 			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
-			var e = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.NodeGetter.SetParams (this.Params.DateRange.FromTimestamp.JustBefore, this.Params.RootGuid, this.sortingInstructions, e);
+			//	Il faut utiliser ToTimestamp.JustBefore pour afficher les noms des objets tels
+			//	qu'ils sont définis le 31.12.xx à 23h59.
+			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
+			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.sortingInstructions, ei);
+			this.dataFiller.Timestamp = this.Params.DateRange.ToTimestamp.JustBefore;
 
 			if (this.Params.Level.HasValue)
 			{
