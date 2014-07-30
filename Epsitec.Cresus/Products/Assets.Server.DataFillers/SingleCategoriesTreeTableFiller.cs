@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return 1;
+				return 0;
 			}
 		}
 
@@ -40,7 +40,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name, TreeTableColumnType.String, 200, "Catégories"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,             TreeTableColumnType.String, 220, "Catégories"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate, TreeTableColumnType.Rate,    50, "Taux"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType, TreeTableColumnType.String,  80, "Type"));
 
 				return columns.ToArray ();
 			}
@@ -50,7 +52,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			content.Columns.Add (new TreeTableColumnItem ());
+			for (int i=0; i<3; i++)
+			{
+				content.Columns.Add (new TreeTableColumnItem ());
+			}
 
 			for (int i=0; i<count; i++)
 			{
@@ -62,12 +67,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var node = this.nodeGetter[firstRow+i];
 				var obj  = this.accessor.GetObject (BaseType.Categories, node.Guid);
 
-				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var name = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var rate = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
+				var type = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
+
+				var t = EnumDictionaries.GetAmortizationTypeName (type);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var cell = new TreeTableCellString (name, cellState);
 
-				content.Columns[0].AddRow (cell);
+				var cell1 = new TreeTableCellString  (name, cellState);
+				var cell2 = new TreeTableCellDecimal (rate, cellState);
+				var cell3 = new TreeTableCellString  (t, cellState);
+
+				int columnRank = 0;
+
+				content.Columns[columnRank++].AddRow (cell1);
+				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
 			}
 
 			return content;
