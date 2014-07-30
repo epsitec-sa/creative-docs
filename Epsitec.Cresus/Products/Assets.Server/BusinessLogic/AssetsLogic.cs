@@ -4,20 +4,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
-		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, string name, Guid cat)
+		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, string name, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.
 			var guid = accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
 			var asset = accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (asset != null);
 
-			//	Importe la catégorie d'immobilisation dans l'événement d'entrée.
+			//	Crée la valeur comptable d'entrée, si nécessaire.
+			if (value.HasValue)
+			{
+				var e = asset.GetEvent (0);
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				var aa = p.Value;
+
+				aa = AmortizedAmount.SetInitialAmount (aa, value.Value);
+				Amortizations.SetAmortizedAmount (e, aa);
+			}
+
+			//	Importe la catégorie d'immobilisation dans l'événement d'entrée, si nécessaire.
 			if (!cat.IsEmpty)
 			{
 				CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);

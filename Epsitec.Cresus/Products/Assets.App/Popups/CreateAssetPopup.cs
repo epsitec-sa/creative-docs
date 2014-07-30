@@ -8,6 +8,7 @@ using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -37,16 +38,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Nom",
 				Width                 = DateController.controllerWidth - 4,
-				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Decimal,
+				DecimalFormat         = DecimalFormat.Amount,
+				Label                 = "Valeur comptable",
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = "Catégorie d'immobilisation",
 			});
 
-			list.Add (new StackedControllerDescription  // 3
+			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.CategoryGuid,
 				Label                 = "",
@@ -93,17 +101,33 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool							UseCategory
+		private decimal?						MainValue
 		{
 			get
 			{
-				var controller = this.GetController (2) as BoolStackedController;
+				var controller = this.GetController (2) as DecimalStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (2) as BoolStackedController;
+				var controller = this.GetController (2) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private bool							UseCategory
+		{
+			get
+			{
+				var controller = this.GetController (3) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (3) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -115,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.UseCategory)
 				{
-					var controller = this.GetController (3) as CategoryGuidStackedController;
+					var controller = this.GetController (4) as CategoryGuidStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					return controller.Value;
 				}
@@ -126,7 +150,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			set
 			{
-				var controller = this.GetController (3) as CategoryGuidStackedController;
+				var controller = this.GetController (4) as CategoryGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -135,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			this.SetEnable (3, this.UseCategory);
+			this.SetEnable (4, this.UseCategory);
 
 			this.okButton.Enable = this.ObjectDate.HasValue
 								&& !string.IsNullOrEmpty (this.ObjectName)
@@ -145,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 	
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string, Guid> action)
+		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string, decimal?, Guid> action)
 		{
 			if (target != null)
 			{
@@ -167,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
 						}
 
-						action (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectCategory);
+						action (popup.ObjectDate.Value, popup.ObjectName, popup.MainValue, popup.ObjectCategory);
 					}
 				};
 			}

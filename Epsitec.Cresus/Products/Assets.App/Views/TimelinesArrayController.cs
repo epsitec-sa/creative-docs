@@ -690,15 +690,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name, Guid cat)
+			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name, decimal? value, Guid cat)
 			{
-				this.CreateAsset (date, name, cat);
+				this.CreateAsset (date, name, value, cat);
 			});
 		}
 
-		private void CreateAsset(System.DateTime date, string name, Guid cat)
+		private void CreateAsset(System.DateTime date, string name, decimal? value, Guid cat)
 		{
-			var asset = AssetsLogic.CreateAsset (this.accessor, date, name, cat);
+			var asset = AssetsLogic.CreateAsset (this.accessor, date, name, value, cat);
 			var guid = asset.Guid;
 
 			this.UpdateData ();
