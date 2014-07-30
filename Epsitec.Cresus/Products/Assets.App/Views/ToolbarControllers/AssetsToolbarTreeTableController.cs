@@ -279,22 +279,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name)
+			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name, Guid cat)
 			{
-				this.CreateAsset (date, name);
+				this.CreateAsset (date, name, cat);
 			});
 		}
 
-		private void CreateAsset(System.DateTime date, string name)
+		private void CreateAsset(System.DateTime date, string name, Guid cat)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
-			var obj = this.accessor.GetObject (BaseType.Assets, guid);
-			System.Diagnostics.Debug.Assert (obj != null);
-			
+			var asset = AssetsLogic.CreateAsset (this.accessor, date, name, cat);
+			var guid = asset.Guid;
+
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
-			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (obj);
+			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (asset);
 			
 			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
 		}

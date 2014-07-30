@@ -10,6 +10,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
+		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, string name, Guid cat)
+		{
+			//	Crée un nouvel objet d'immobilisation.
+			var guid = accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
+			var asset = accessor.GetObject (BaseType.Assets, guid);
+			System.Diagnostics.Debug.Assert (asset != null);
+
+			//	Importe la catégorie d'immobilisation dans l'événement d'entrée.
+			CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);
+
+			return asset;
+		}
+
+
 		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor)
 		{
 			//	Retourne les champs d'un objet d'immobilisation.

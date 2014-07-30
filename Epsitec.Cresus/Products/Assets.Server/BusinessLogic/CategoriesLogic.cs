@@ -5,12 +5,124 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class CategoriesLogic
 	{
+		#region Import category to asset
+		public static void ImportCategoryToAsset(DataAccessor accessor, DataObject asset, DataEvent e, Guid catGuid)
+		{
+			//	Importe par copie une catégorie d'immobilisation dans un objet d'immobilisation.
+			//	Si asset = null, on importe dans l'objet en édition.
+
+			if (asset != null && e == null)
+			{
+				e = asset.GetEvent (0);  // prend l'événement d'entrée
+			}
+
+			var catObj = accessor.GetObject (BaseType.Categories, catGuid);
+
+			//	Copie les champs nécessaires.
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,             ObjectField.CategoryName);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate, ObjectField.AmortizationRate);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationType, ObjectField.AmortizationType);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,      ObjectField.Periodicity);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,          ObjectField.Prorata);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,            ObjectField.Round);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,    ObjectField.ResidualValue);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account1,         ObjectField.Account1);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account2,         ObjectField.Account2);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account3,         ObjectField.Account3);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account4,         ObjectField.Account4);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account5,         ObjectField.Account5);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account6,         ObjectField.Account6);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account7,         ObjectField.Account7);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account8,         ObjectField.Account8);
+		}
+
+		private static void ImportField(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var typeSrc = accessor.GetFieldType (fieldSrc);
+			var typeDst = accessor.GetFieldType (fieldDst);
+			System.Diagnostics.Debug.Assert (typeSrc == typeDst);
+
+			switch (typeSrc)
+			{
+				case FieldType.String:
+				case FieldType.Account:
+					CategoriesLogic.ImportFieldString (accessor, asset, e, catObj, fieldSrc, fieldDst);
+					break;
+
+				case FieldType.Decimal:
+					CategoriesLogic.ImportFieldDecimal (accessor, asset, e, catObj, fieldSrc, fieldDst);
+					break;
+
+				case FieldType.Int:
+					CategoriesLogic.ImportFieldInt (accessor, asset, e, catObj, fieldSrc, fieldDst);
+					break;
+
+				default:
+					System.Diagnostics.Debug.Fail ("Not supported");
+					break;
+			}
+		}
+
+		private static void ImportFieldString(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var s = ObjectProperties.GetObjectPropertyString (catObj, null, fieldSrc);
+			if (!string.IsNullOrEmpty (s))
+			{
+				if (asset == null)
+				{
+					accessor.EditionAccessor.SetField (fieldDst, s);
+				}
+				else
+				{
+					var newProperty = new DataStringProperty (fieldDst, s);
+					e.AddProperty (newProperty);
+				}
+			}
+		}
+
+		private static void ImportFieldDecimal(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectProperties.GetObjectPropertyDecimal (catObj, null, fieldSrc);
+			if (d.HasValue)
+			{
+				if (asset == null)
+				{
+					accessor.EditionAccessor.SetField (fieldDst, d);
+				}
+				else
+				{
+					var newProperty = new DataDecimalProperty (fieldDst, d.Value);
+					e.AddProperty (newProperty);
+				}
+			}
+		}
+
+		private static void ImportFieldInt(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectProperties.GetObjectPropertyInt (catObj, null, fieldSrc);
+			if (d.HasValue)
+			{
+				if (asset == null)
+				{
+					accessor.EditionAccessor.SetField (fieldDst, d);
+				}
+				else
+				{
+					var newProperty = new DataIntProperty (fieldDst, d.Value);
+					e.AddProperty (newProperty);
+				}
+			}
+		}
+#endregion
+
+
 		public static bool HasAccounts(DataAccessor accessor)
 		{
 			//	Indique s'il existe une catégorie d'immobilisation qui fait référence à un compte.

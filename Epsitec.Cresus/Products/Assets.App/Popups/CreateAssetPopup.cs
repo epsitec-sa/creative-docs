@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -36,12 +37,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = "Nom",
 				Width                 = DateController.controllerWidth - 4,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Label                 = "Catégorie d'immobilisation :",
+				Width                 = DateController.controllerWidth - 4,
+				Height                = 15*1,  // place pour 1 ligne
+			});
+
+			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.CategoryGuid,
+				Label                 = "",
+				Width                 = DateController.controllerWidth - 4,
+				Height                = 180,
 			});
 
 			this.SetDescriptions (list);
 
 			this.defaultAcceptButtonName = "Créer";
 			this.defaultControllerRankFocus = 1;
+
+			this.ObjectCategory = Guid.Empty;
 		}
 
 
@@ -77,17 +97,34 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		public Guid								ObjectCategory
+		{
+			get
+			{
+				var controller = this.GetController (3) as CategoryGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (3) as CategoryGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			this.okButton.Enable = this.ObjectDate.HasValue
 								&& !string.IsNullOrEmpty (this.ObjectName)
+								&& !this.ObjectCategory.IsEmpty
 								&& !this.HasError;
 		}
 
 	
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string> action)
+		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string, Guid> action)
 		{
 			if (target != null)
 			{
@@ -107,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
 						}
 
-						action (popup.ObjectDate.Value, popup.ObjectName);
+						action (popup.ObjectDate.Value, popup.ObjectName, popup.ObjectCategory);
 					}
 				};
 			}

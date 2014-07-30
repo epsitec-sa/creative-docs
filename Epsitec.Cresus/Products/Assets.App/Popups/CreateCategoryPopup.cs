@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.SetEnable (2, this.UseModel);
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
+			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName)
+								&& (!this.UseModel || !this.ObjectModel.IsEmpty);
 		}
 	}
 }
