@@ -52,7 +52,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Met à jour la vue.
 		}
 
-		public virtual AbstractViewState		ViewState
+		public void CloseUI()
+		{
+			this.accessor.EditionAccessor.StopObjectEdition ();
+		}
+
+		public virtual AbstractViewState ViewState
 		{
 			get
 			{

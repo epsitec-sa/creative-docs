@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				using (this.ignoreChanges.Enter ())
 				{
 					this.view.UpdateUI ();  // il faut effectuer SaveObjectEdition !
+					this.view.CloseUI ();
 				}
 
 				this.SaveCurrentViewState ();
