@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 				if (this.HasGraph)
 				{
-					h += lineHeight*2;
+					h += lineHeight*3;
 				}
 
 				if (this.IsWeeksOfYear)
@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 				if (this.HasGraph)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 2.0));
+					list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 3.0));
 				}
 
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));

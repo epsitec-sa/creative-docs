@@ -114,7 +114,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (obj != null)
 			{
 				int eventCount = obj.EventsCount;
-				var userValueField = this.UserValueField;
 
 				for (int i=0; i<eventCount; i++)
 				{
@@ -132,17 +131,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var type = e.Type;
 						var glyph = TimelineData.TypeToGlyph (type);
 
-						var value1 = ObjectProperties.GetObjectPropertyComputedAmount (obj, t, ObjectField.MainValue);
-
-						ComputedAmount? value2 = null;
-						if (userValueField != ObjectField.Unknown)
-						{
-							value2 = ObjectProperties.GetObjectPropertyComputedAmount (obj, t, userValueField);
-						}
-
-						decimal? v1 = value1 != null && value1.HasValue ? value1.Value.FinalAmount : null;
-						decimal? v2 = value2 != null && value2.HasValue ? value2.Value.FinalAmount : null;
-
 						if (index == -1)
 						{
 							var cell = new TimelineCell
@@ -150,7 +138,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 								Timestamp = t,
 								Glyph     = glyph,
 								Tooltip   = LogicDescriptions.GetTooltip (this.accessor, obj, t, type, 8),
-								Values    = new decimal?[] { v1, v2 },
+								Values    = this.GetValues (obj, t),
 							};
 
 							index = this.GetIndex (t);
@@ -163,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 								Timestamp = this.cells[index].Timestamp,
 								Glyph     = glyph,
 								Tooltip   = LogicDescriptions.GetTooltip (this.accessor, obj, t, type, 8),
-								Values    = new decimal?[] { v1, v2 },
+								Values    = this.GetValues (obj, t),
 							};
 
 							this.cells[index] = cell;
@@ -173,23 +161,47 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private ObjectField UserValueField
+		private decimal?[] GetValues(DataObject obj, Timestamp timestamp)
 		{
-			get
-			{
-				var userField = this.accessor.GlobalSettings.GetUserFields (BaseType.Assets)
-					.Where (x => x.Type == FieldType.ComputedAmount)
-					.FirstOrDefault ();
+			var list = new List<decimal?> ();
 
-				if (userField.IsEmpty)
+			list.Add (this.GetMainValue (obj, timestamp));
+
+			foreach (var field in this.accessor.GlobalSettings.GetUserFields (BaseType.Assets)
+				.Where (x => x.Type == FieldType.ComputedAmount)
+				.Select (x => x.Field))
+			{
+				list.Add (this.GetUserValue (obj, timestamp, field));
+			}
+
+			return list.ToArray ();
+		}
+
+		private decimal? GetMainValue(DataObject obj, Timestamp timestamp)
+		{
+			var p = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue, synthetic: false);
+
+			if (p != null)
+			{
+				return p.Value.FinalAmortizedAmount;
+			}
+
+			return null;
+		}
+
+		private decimal? GetUserValue(DataObject obj, Timestamp timestamp, ObjectField field)
+		{
+			if (field != ObjectField.Unknown)
+			{
+				var p = ObjectProperties.GetObjectPropertyComputedAmount (obj, timestamp, field, synthetic: false);
+
+				if (p != null)
 				{
-					return ObjectField.Unknown;
-				}
-				else
-				{
-					return userField.Field;
+					return p.Value.FinalAmount;
 				}
 			}
+
+			return null;
 		}
 
 		private void AddForcedDate(System.DateTime? date)
@@ -332,11 +344,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public TimelineCell? GetSyntheticCell(int index)
 		{
-			var syntheticCell = new TimelineCell ()
-			{
-				Values = new decimal?[TimelineData.MaxValues],
-			};
-
+			var syntheticCell = new TimelineCell ();
 			bool first = true;
 
 			while (index >= 0)
@@ -440,8 +448,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			public decimal?[]		Values;
 		}
 
-
-		public static readonly int MaxValues = 2;
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;

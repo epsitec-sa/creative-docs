@@ -312,34 +312,64 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	légèrement différentes (1 pixel) d'une ligne à l'autre.
 			if (this.timelineRows.Count > 0)
 			{
-				int ch = this.CellHeight;
-				int hi = (int) this.ActualHeight / this.timelineRows.Count;
-				var h = (this.ActualHeight - hi*this.TopRowsWithExactHeight) / (this.timelineRows.Count - this.TopRowsWithExactHeight);
-
-				double bottom = 0;
-
-				for (int i=0; i<this.timelineRows.Count; i++)
+				if (this.TopRowsWithExactHeight == 0)
 				{
-					var row = this.timelineRows[i];
+					//	Cas de la timeline normale en bas.
+					int ch = this.CellHeight;
 
-					row.CellWidth     = (int) (ch * this.RelativeWidth);
-					row.RelativeWidth = this.RelativeWidth;
+					double bottom = 0;
 
-					double top = bottom + h;
-
-					if (i == this.timelineRows.Count - this.TopRowsWithExactHeight - 1)
+					for (int i=0; i<this.timelineRows.Count; i++)
 					{
-						h = hi;
-						top = System.Math.Floor (top+0.5);
+						var row = this.timelineRows[i];
+
+						row.CellWidth     = (int) (ch * this.RelativeWidth);
+						row.RelativeWidth = this.RelativeWidth;
+
+						double h = ch * row.RelativeHeight;
+						double top = bottom + h;
+
+						int bi = (int) bottom;
+						int ti = (int) top;
+
+						var rect = new Rectangle (0, bi, this.ActualWidth, ti-bi);
+						row.SetManualBounds (rect);
+
+						bottom = top;
 					}
+				}
+				else
+				{
+					//	Cas de la timeline en haut, intégrée au tableau des événements.
+					int ch = this.CellHeight;
+					int hi = (int) this.ActualHeight / this.timelineRows.Count;
+					var h = (this.ActualHeight - hi*this.TopRowsWithExactHeight) / (this.timelineRows.Count - this.TopRowsWithExactHeight);
 
-					int bi = (int) bottom;
-					int ti = (int) top;
+					double bottom = 0;
 
-					var rect = new Rectangle (0, bi, this.ActualWidth, ti-bi);
-					row.SetManualBounds (rect);
+					for (int i=0; i<this.timelineRows.Count; i++)
+					{
+						var row = this.timelineRows[i];
 
-					bottom = top;
+						row.CellWidth     = (int) (ch * this.RelativeWidth);
+						row.RelativeWidth = this.RelativeWidth;
+
+						double top = bottom + h;
+
+						if (i == this.timelineRows.Count - this.TopRowsWithExactHeight - 1)
+						{
+							h = hi;
+							top = System.Math.Floor (top+0.5);
+						}
+
+						int bi = (int) bottom;
+						int ti = (int) top;
+
+						var rect = new Rectangle (0, bi, this.ActualWidth, ti-bi);
+						row.SetManualBounds (rect);
+
+						bottom = top;
+					}
 				}
 			}
 		}

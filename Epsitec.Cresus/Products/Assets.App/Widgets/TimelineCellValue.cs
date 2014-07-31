@@ -4,8 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Epsitec.Common.Drawing;
-
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellValue
@@ -35,9 +33,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								ValueCount
+		{
+			get
+			{
+				if (this.Values == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.Values.Length;
+				}
+			}
+		}
+
 		public decimal? GetValue(int rank)
 		{
-			return this.Values[rank];
+			if (rank >= 0 && rank < this.ValueCount)
+			{
+				return this.Values[rank];
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public readonly int						Rank;

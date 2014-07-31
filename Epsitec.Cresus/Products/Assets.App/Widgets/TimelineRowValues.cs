@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -35,8 +34,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public TimelineValueDisplayMode			ValueDisplayMode;
-		public Color?							ValueColor1;
-		public Color?							ValueColor2;
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -53,71 +50,102 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void Paint(Graphics graphics)
 		{
-			var dots = new List<IndexedDot> ();
+			var dots = new List<Point> ();
 
 			if (this.HasMinMax)
 			{
-				for (int i=0; i<TimelineData.MaxValues; i++)
+				//	Compte le nombre de lignes.
+				int linesCount = 0;
+
+				for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 				{
+					var cell = this.GetCell (rank);
+
+					if (cell.IsValid)
+					{
+						linesCount = System.Math.Max (linesCount, cell.ValueCount);
+					}
+				}
+
+				//	Dessine les surfaces.
+				for (int line=0; line<linesCount; line++)
+				{
+					dots.Clear ();
+
 					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 					{
 						var cell = this.GetCell (rank);
 
 						if (cell.IsValid)
 						{
-							var y = this.GetVerticalPosition (cell, i);
+							var y = this.GetVerticalPosition (cell, line);
 
 							if (y.HasValue)
 							{
 								var rect = this.GetCellsRect (rank, rank+1);
 								int x = (int) rect.Center.X - 1;
 
-								dots.Add (new IndexedDot(new Point (x, y.Value), i));
+								dots.Add (new Point (x, y.Value));
 							}
 						}
 					}
+
+					this.PaintSurfaces (graphics, dots, line);
 				}
-			}
 
-			if (dots.Any ())
-			{
-				this.PaintSurfaces (graphics, dots);
-				this.PaintDots     (graphics, dots);
-			}
-		}
-
-		private void PaintSurfaces(Graphics graphics, List<IndexedDot> dots)
-		{
-			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0 ||
-				(this.ValueDisplayMode & TimelineValueDisplayMode.Lines   ) != 0)
-			{
-				for (int i=0; i<TimelineData.MaxValues; i++)
+				//	Dessine les points.
+				for (int line=0; line<linesCount; line++)
 				{
-					var points = dots.Where (x => x.Index == i).Select (x => x.Point).ToArray ();
-					this.PaintSurfaces (graphics, points, i);
+					dots.Clear ();
+
+					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
+					{
+						var cell = this.GetCell (rank);
+
+						if (cell.IsValid)
+						{
+							var y = this.GetVerticalPosition (cell, line);
+
+							if (y.HasValue)
+							{
+								var rect = this.GetCellsRect (rank, rank+1);
+								int x = (int) rect.Center.X - 1;
+
+								dots.Add (new Point (x, y.Value));
+							}
+						}
+					}
+
+					this.PaintDots (graphics, dots, line);
 				}
 			}
 		}
 
-		private void PaintSurfaces(Graphics graphics, Point[] points, int index)
+		private void PaintSurfaces(Graphics graphics, List<Point> dots, int line)
 		{
-			if (!points.Any ())
+			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) == 0 &&
+				(this.ValueDisplayMode & TimelineValueDisplayMode.Lines   ) == 0)
+			{
+				return;
+			}
+
+			if (!dots.Any ())
 			{
 				return;
 			}
 
 			var path = new Path ();
 
-			path.MoveTo (points[0].X+0.5, -0.5);
-			path.LineTo (points[0].X+0.5, points[0].Y+0.5);
+			path.MoveTo (dots[0].X+0.5, -0.5);
+			path.LineTo (dots[0].X+0.5, dots[0].Y+0.5);
 
-			for (int i=1; i<points.Length; i++)
+			for (int i=1; i<dots.Count; i++)
 			{
-				path.LineTo (points[i].X+0.5, points[i-1].Y+0.5);
-				path.LineTo (points[i].X+0.5, points[i].Y+0.5);
+				path.LineTo (dots[i].X+0.5, dots[i-1].Y+0.5);
+				path.LineTo (dots[i].X+0.5, dots[i].Y+0.5);
 			}
 
-			var lastPoint = points.Last ();
+			var lastPoint = dots.Last ();
 			path.LineTo (this.ActualWidth+0.5, lastPoint.Y+0.5);
 			path.LineTo (this.ActualWidth+0.5, -0.5);
 			path.Close ();
@@ -125,43 +153,35 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
 			{
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (this.GetSurfaceColor (index));
+				graphics.RenderSolid (this.GetSurfaceColor (line));
 			}
 
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
 			{
 				graphics.AddPath (path);
-				graphics.RenderSolid (this.GetDotColor (index));
+				graphics.RenderSolid (this.GetDotColor (line));
 			}
 		}
 
-		private void PaintDots(Graphics graphics, List<IndexedDot> dots)
+		private void PaintDots(Graphics graphics, List<Point> dots, int line)
 		{
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Dots) != 0)
 			{
 				foreach (var dot in dots)
 				{
-					var color = this.GetDotColor (dot.Index);
-					this.PaintDot (graphics, dot.Point, color);
+					var color = this.GetDotColor (line);
+					this.PaintDot (graphics, dot, color, line);
 				}
 			}
 		}
 
-		private void PaintDot(Graphics graphics, Point pos, Color color)
+		private void PaintDot(Graphics graphics, Point pos, Color color, int line)
 		{
 			int x = (int) pos.X;
 			int y = (int) pos.Y;
 			int s = this.DotSize;
 
-			if (false)  // points carrée ?
-			{
-				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
-
-				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-				graphics.RenderSolid (color);
-			}
-			else  // points ronds ?
+			if (line == 0)  // points ronds (MainValue) ?
 			{
 				graphics.AddFilledCircle (x+0.5, y+0.5, s-1.0);
 				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
@@ -169,50 +189,48 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
 				graphics.RenderSolid (color);
 			}
-		}
-
-		private struct IndexedDot
-		{
-			public IndexedDot(Point point, int index)
+			else  // points carrés (UserValue) ?
 			{
-				this.Point = point;
-				this.Index = index;
+				s++;
+				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
+				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
+				graphics.RenderSolid (color);
 			}
-
-			public readonly Point Point;
-			public readonly int   Index;
 		}
 
-		private Color GetSurfaceColor(int rank)
+		private Color GetSurfaceColor(int line)
 		{
-			return this.GetColor (rank).Alpha (0.15);
-		}
-
-		private Color GetDotColor(int rank)
-		{
-			return this.GetColor (rank);
-		}
-
-		private Color GetColor(int rank)
-		{
-			var color = (rank == 0) ? this.ValueColor1 : this.ValueColor2;
-
-			if (color.HasValue)
+			if (line == 0)
 			{
-				return color.Value;
+				return Color.FromAlphaRgb (0.15, 0.0, 0.0, 0.0);
 			}
 			else
 			{
-				return ColorManager.ValueDotColor;
+				double i = (line%2 == 0) ? 0.6 : 0.8;
+				return Color.FromAlphaRgb (0.15, i, i, i);
 			}
 		}
+
+		private Color GetDotColor(int line)
+		{
+			if (line == 0)
+			{
+				return Color.FromBrightness (0.2);
+			}
+			else
+			{
+				return Color.FromBrightness (0.5);
+			}
+		}
+
 		
-		
-		private int? GetVerticalPosition(TimelineCellValue cell, int rank)
+		private int? GetVerticalPosition(TimelineCellValue cell, int line)
 		{
 			if (this.HasMinMax)
 			{
-				var value = cell.GetValue (rank);
+				var value = cell.GetValue (line);
 
 				if (value.HasValue)
 				{
@@ -236,7 +254,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return System.Math.Max ((int) (this.ActualHeight * 0.1), 2);
+				//?return System.Math.Max ((int) (this.ActualHeight * 0.1), 2);
+				return 3;
 			}
 		}
 
@@ -244,33 +263,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private TimelineCellValue GetCell(int rank)
 		{
 			return this.cells.Where (x => x.Rank == rank).FirstOrDefault ();
-
-#if false
-			if (rank < this.VisibleCellCount)
-			{
-				int index = this.GetListIndex (rank);
-
-				if (index >= 0 && index < this.cells.Length)
-				{
-					return this.cells[index];
-				}
-			}
-
-			return new TimelineCellValue ();  // retourne une cellule invalide
-#endif
-		}
-
-		private int GetListIndex(int rank)
-		{
-			if (rank >= 0 && rank < this.cells.Length)
-			{
-				int offset = (int) ((double) (this.cells.Length - this.VisibleCellCount) * this.pivot);
-				return rank + offset;
-			}
-			else
-			{
-				return -1;
-			}
 		}
 
 

@@ -140,22 +140,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public static Color ValueDotColor
-		{
-			get
-			{
-				return Color.FromBrightness (0.5);
-			}
-		}
-
-		public static Color ValueSurfaceColor
-		{
-			get
-			{
-				return Color.FromBrightness (0.9);
-			}
-		}
-
 		public static Color SelectionColor
 		{
 			get
