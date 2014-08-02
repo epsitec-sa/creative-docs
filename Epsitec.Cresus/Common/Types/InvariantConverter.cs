@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -826,9 +826,12 @@ namespace Epsitec.Common.Types
 			return values;
 		}
 		
-		public static string ExtractDecimal(ref string value)
+		public static string ExtractDecimal(ref string value, char dotChar = '\0')
 		{
-			char dotChar = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			if (dotChar == '\0')
+			{
+				dotChar = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			}
 			
 			if (value == null)
 			{

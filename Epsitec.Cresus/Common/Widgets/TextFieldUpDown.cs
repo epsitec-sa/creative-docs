@@ -1,4 +1,4 @@
-//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -51,7 +51,10 @@ namespace Epsitec.Common.Widgets
 
 				if (text != "")
 				{
-					string dec = Types.InvariantConverter.ExtractDecimal (ref text);
+					text = text.Replace ("'", "");
+					text = text.Replace (',', '.');
+
+					string dec = Types.InvariantConverter.ExtractDecimal (ref text, '.');
 
 					try
 					{
@@ -75,7 +78,7 @@ namespace Epsitec.Common.Widgets
 
 				if (this.Text == "" || this.Value != value)
 				{
-					this.Text = this.range.ConvertToString (value);
+					this.Text = this.GetTextValue (value);
 					this.SelectAll ();
 				}
 			}
@@ -140,7 +143,7 @@ namespace Epsitec.Common.Widgets
 
 					if (this.Text != "")
 					{
-						this.Text = this.range.Constrain (this.Value).ToString ();
+						this.Text = this.GetTextValue (this.range.Constrain (this.Value));
 						this.SelectAll ();
 					}
 				}
@@ -239,6 +242,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void ClearDefaultValue()
+		{
+			if (this.isDefaultValueDefined)
+			{
+				this.isDefaultValueDefined = false;
+				this.UpdateValidator ();
+
+				if (this.Validator != null)
+				{
+					this.Validator.MakeDirty (true);
+				}
+			}
+		}
+
+		
 		protected override TextLayout GetTextLayout()
 		{
 			if (string.IsNullOrEmpty (this.textSuffix) || this.IsTextEmpty)
@@ -256,21 +274,6 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return true;
-			}
-		}
-
-
-		public void ClearDefaultValue()
-		{
-			if (this.isDefaultValueDefined)
-			{
-				this.isDefaultValueDefined = false;
-				this.UpdateValidator ();
-
-				if (this.Validator != null)
-				{
-					this.Validator.MakeDirty (true);
-				}
 			}
 		}
 
@@ -310,11 +313,6 @@ namespace Epsitec.Common.Widgets
 				double width = System.Math.Floor (rect.Height*adorner.GeometryUpDownWidthFactor);
 				this.margins.Right = width - AbstractTextField.FrameMargin;
 			}
-		}
-
-		public override Drawing.Margins GetInternalPadding()
-		{
-			return base.GetInternalPadding ();
 		}
 
 		protected override void UpdateGeometry()
@@ -497,6 +495,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected string GetTextValue(decimal value)
+		{
+			return this.range.ConvertToString (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+
 		protected virtual void UpdateValidator()
 		{
 			if (this.validator1 != null)
@@ -529,7 +532,7 @@ namespace Epsitec.Common.Widgets
 
 
 
-		public event EventHandler RangeChanged
+		public event EventHandler				RangeChanged
 		{
 			add
 			{
@@ -541,7 +544,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler TextSuffixChanged
+		public event EventHandler				TextSuffixChanged
 		{
 			add
 			{
@@ -553,14 +556,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected Types.DecimalRange range;
-		protected string textSuffix;
-		protected GlyphButton arrowUp;
-		protected GlyphButton arrowDown;
-		protected decimal defaultValue = 0;
-		protected bool isDefaultValueDefined = false;
-		protected decimal step = 1;
-		protected Validators.RegexValidator validator1;
-		protected Validators.NumRangeValidator validator2;
+		
+		protected Types.DecimalRange			range;
+		protected string						textSuffix;
+		protected GlyphButton					arrowUp;
+		protected GlyphButton					arrowDown;
+		protected decimal						defaultValue;
+		protected bool							isDefaultValueDefined;
+		protected decimal						step = 1;
+		protected Validators.RegexValidator		validator1;
+		protected Validators.NumRangeValidator	validator2;
 	}
 }
