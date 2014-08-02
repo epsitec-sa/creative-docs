@@ -433,7 +433,6 @@
     <Compile Include="Rules\AiderSubscriptionRefusalBusinessRules.cs" />
     <Compile Include="Rules\AiderTownBusinessRules.cs" />
     <Compile Include="Rules\AiderUserBusinessRules.cs" />
-    <Compile Include="Labels\AiderContactLabelTextFactory0.cs" />
     <Compile Include="Tests\EChFileAnalyzer.cs" />
     <Compile Include="Tests\ParishFileAnalyzer.cs" />
     <Compile Include="Tests\TestMatchSort.cs" />

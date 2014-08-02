@@ -368,3 +368,24 @@ SVN Update > r23389
 
 -echupdate -newechfile:S:\eerv\eerv-2014-07-03.xml -oldechfile:S:\eerv\eerv-2014-06-26.xml -output:s:\eerv\ech-diff-2014-07-03.md
 
+Lancé le 20.07.2014
+-------------------
+
+SVN Update > r23469
+
+-echupdate -newechfile:S:\eerv\eerv-2014-07-10.xml -oldechfile:S:\eerv\eerv-2014-07-03.xml -output:s:\eerv\ech-diff-2014-07-10.md
+-echupdate -newechfile:S:\eerv\eerv-2014-07-17.xml -oldechfile:S:\eerv\eerv-2014-07-10.xml -output:s:\eerv\ech-diff-2014-07-17.md
+
+
+Lancé le 26.07.2014
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2014-07-24.xml -oldechfile:S:\eerv\eerv-2014-07-17.xml -output:s:\eerv\ech-diff-2014-07-24.md
+
+
+Lancé le 02.08.2014
+-------------------
+
+SVN Update > r23525
+
+-echupdate -newechfile:S:\eerv\eerv-2014-07-31.xml -oldechfile:S:\eerv\eerv-2014-07-24.xml -output:s:\eerv\ech-diff-2014-07-31.md
