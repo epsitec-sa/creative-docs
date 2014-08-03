@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 				if (this.HasGraph)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Value, "Valeurs", relativeHeight: 3.0));
+					list.Add (new TimelineRowDescription (TimelineRowType.Values, "Valeurs", relativeHeight: 3.0));
 				}
 
 				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
@@ -672,7 +672,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				decimal min, max;
 				this.timelineData.GetMinMax (out min, out max);
-				this.controller.SetRowValueCells (line++, values.ToArray (), min, max);
+				this.controller.SetRowValueCells (line++, values.ToArray (), min, max, this.timelineData.ValuesFieldNames);
 			}
 
 			this.controller.SetRowGlyphCells (line++, glyphs.ToArray ());

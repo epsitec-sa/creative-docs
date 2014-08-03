@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					row = new TimelineRowGlyphs ();
 					break;
 
-				case TimelineRowType.Value:
+				case TimelineRowType.Values:
 					row = new TimelineRowValues ();
 
 					var v = row as TimelineRowValues;

@@ -23,6 +23,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public IEnumerable<string>				ValuesFieldNames
+		{
+			get
+			{
+				yield return DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue);
+
+				foreach (var field in this.accessor.GlobalSettings.GetUserFields (BaseType.Assets)
+					.Where (x => x.Type == FieldType.ComputedAmount))
+				{
+					yield return field.Name;
+				}
+			}
+		}
+
+
 		public void Compute(Guid? objectGuid, TimelineMode mode, System.DateTime start, System.DateTime end, System.DateTime? forcedDate)
 		{
 			this.cells.Clear ();
@@ -362,6 +377,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (cell.Value.Values != null)
 					{
+						if (syntheticCell.Values == null)
+						{
+							syntheticCell.Values = new decimal?[cell.Value.Values.Length];
+						}
+
 						int count = System.Math.Min (syntheticCell.Values.Length, cell.Value.Values.Length);
 						for (int i=0; i<count; i++)
 						{

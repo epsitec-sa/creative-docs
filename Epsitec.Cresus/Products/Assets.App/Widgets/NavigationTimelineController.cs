@@ -213,9 +213,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.timeline.SetRowDayMonthCells (rank, cells);
 		}
 
-		public void SetRowValueCells(int rank, TimelineCellValue[] cells, decimal min, decimal max)
+		public void SetRowValueCells(int rank, TimelineCellValue[] cells, decimal min, decimal max, IEnumerable<string> valuesFieldNames)
 		{
-			this.timeline.SetRowValueCells (rank, cells, min, max);
+			this.timeline.SetRowValueCells (rank, cells, min, max, valuesFieldNames);
 		}
 
 		public void SetRowGlyphCells(int rank, TimelineCellGlyph[] cells)

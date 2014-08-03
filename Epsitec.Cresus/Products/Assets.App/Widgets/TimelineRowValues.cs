@@ -4,18 +4,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Core.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
 	/// Ligne de Timeline affichant des valeurs numériques, généralement des montants.
 	/// </summary>
-	public class TimelineRowValues : AbstractTimelineRow
+	public class TimelineRowValues : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public TimelineRowValues()
 		{
+			this.fieldNames = new List<string> ();
+
 			this.min = decimal.MaxValue;
 			this.max = decimal.MinValue;
+
+			this.hoverLine = -1;
+			this.hoverRank = -1;
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
+		}
+
+
+		public List<string>						FieldNames
+		{
+			get
+			{
+				return this.fieldNames;
+			}
 		}
 
 
@@ -34,6 +52,94 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		public TimelineValueDisplayMode			ValueDisplayMode;
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.hoverRank != -1 && this.hoverLine != -1)
+			{
+				var cell = this.GetCell (this.hoverRank);
+
+				if (cell.IsValid)
+				{
+					var value = cell.GetValue (this.hoverLine);
+
+					if (value.HasValue)
+					{
+						var amount = TypeConverters.AmountToString (value.Value);
+
+						if (this.hoverLine >= 0 && this.hoverLine < this.fieldNames.Count)
+						{
+							var fieldName = this.fieldNames[this.hoverLine];
+							return string.Format ("{0} {1}", fieldName, amount);
+						}
+						else
+						{
+							return amount;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+		#endregion
+
+
+		protected override void OnMouseMove(MessageEventArgs e)
+		{
+			if (this.DetectDot (e.Point))
+			{
+				this.Invalidate ();
+			}
+
+			base.OnMouseMove (e);
+		}
+
+		protected override void OnExited(MessageEventArgs e)
+		{
+			this.hoverLine = -1;
+			this.hoverRank = -1;
+			this.Invalidate ();
+
+			base.OnExited (e);
+		}
+
+		private bool DetectDot(Point pos)
+		{
+			var hoverRank = -1;
+			var hoverLine = -1;
+
+			for (int line=0; line<this.linesCount; line++)
+			{
+				for (int rank = -1; rank <= this.VisibleCellCount; rank++)
+				{
+					var center = this.GetDotCenter (rank, line);
+
+					if (!center.IsZero)
+					{
+						var d = Point.Distance (pos, center);
+						if (d <= 4)
+						{
+							hoverRank = rank;
+							hoverLine = line;
+						}
+					}
+				}
+			}
+
+			bool changing = this.hoverRank != hoverRank
+						 || this.hoverLine != hoverLine;
+
+			if (changing)
+			{
+				this.hoverRank = hoverRank;
+				this.hoverLine = hoverLine;
+			}
+
+			return changing;
+		}
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -55,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (this.HasMinMax)
 			{
 				//	Compte le nombre de lignes.
-				int linesCount = 0;
+				this.linesCount = 0;
 
 				for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 				{
@@ -63,30 +169,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 					if (cell.IsValid)
 					{
-						linesCount = System.Math.Max (linesCount, cell.ValueCount);
+						this.linesCount = System.Math.Max (this.linesCount, cell.ValueCount);
 					}
 				}
 
 				//	Dessine les surfaces.
-				for (int line=0; line<linesCount; line++)
+				for (int line=0; line<this.linesCount; line++)
 				{
 					dots.Clear ();
 
 					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 					{
-						var cell = this.GetCell (rank);
+						var center = this.GetDotCenter (rank, line);
 
-						if (cell.IsValid)
+						if (!center.IsZero)
 						{
-							var y = this.GetVerticalPosition (cell, line);
-
-							if (y.HasValue)
-							{
-								var rect = this.GetCellsRect (rank, rank+1);
-								int x = (int) rect.Center.X - 1;
-
-								dots.Add (new Point (x, y.Value));
-							}
+							dots.Add (center);
 						}
 					}
 
@@ -94,31 +192,43 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 
 				//	Dessine les points.
-				for (int line=0; line<linesCount; line++)
+				for (int line=0; line<this.linesCount; line++)
 				{
 					dots.Clear ();
 
 					for (int rank = -1; rank <= this.VisibleCellCount; rank++)
 					{
-						var cell = this.GetCell (rank);
+						var center = this.GetDotCenter (rank, line);
 
-						if (cell.IsValid)
+						if (!center.IsZero)
 						{
-							var y = this.GetVerticalPosition (cell, line);
-
-							if (y.HasValue)
-							{
-								var rect = this.GetCellsRect (rank, rank+1);
-								int x = (int) rect.Center.X - 1;
-
-								dots.Add (new Point (x, y.Value));
-							}
+							dots.Add (center);
 						}
 					}
 
 					this.PaintDots (graphics, dots, line);
 				}
 			}
+		}
+
+		private Point GetDotCenter(int rank, int line)
+		{
+			var cell = this.GetCell (rank);
+
+			if (cell.IsValid)
+			{
+				var y = this.GetVerticalPosition (cell, line);
+
+				if (y.HasValue)
+				{
+					var rect = this.GetCellsRect (rank, rank+1);
+					int x = (int) rect.Center.X - 1;
+
+					return new Point (x, y.Value);
+				}
+			}
+
+			return Point.Zero;
 		}
 
 		private void PaintSurfaces(Graphics graphics, List<Point> dots, int line)
@@ -152,14 +262,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Surfaces) != 0)
 			{
-				graphics.AddFilledPath (path);
-				graphics.RenderSolid (this.GetSurfaceColor (line));
+				var color = this.GetSurfaceColor (line);
+				if (!color.IsEmpty)
+				{
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (color);
+				}
 			}
 
 			if ((this.ValueDisplayMode & TimelineValueDisplayMode.Lines) != 0)
 			{
 				graphics.AddPath (path);
-				graphics.RenderSolid (this.GetDotColor (line));
+				graphics.RenderSolid (this.GetLineColor (line));
 			}
 		}
 
@@ -169,13 +283,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				foreach (var dot in dots)
 				{
-					var color = this.GetDotColor (line);
-					this.PaintDot (graphics, dot, color, line);
+					this.PaintDot (graphics, dot, line);
 				}
 			}
 		}
 
-		private void PaintDot(Graphics graphics, Point pos, Color color, int line)
+		private void PaintDot(Graphics graphics, Point pos, int line)
 		{
 			int x = (int) pos.X;
 			int y = (int) pos.Y;
@@ -184,44 +297,76 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (line == 0)  // points ronds (MainValue) ?
 			{
 				graphics.AddFilledCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+				graphics.RenderSolid (this.GetDotFillColor (line));
 
 				graphics.AddCircle (x+0.5, y+0.5, s-1.0);
-				graphics.RenderSolid (color);
+				graphics.RenderSolid (this.GetLineColor (line));
 			}
 			else  // points carrés (UserValue) ?
 			{
 				s++;
 				graphics.AddFilledRectangle (x-s/2, y-s/2, s, s);
-				graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+				graphics.RenderSolid (this.GetDotFillColor (line));
 
 				graphics.AddRectangle (x-s/2+0.5, y-s/2+0.5, s, s);
-				graphics.RenderSolid (color);
+				graphics.RenderSolid (this.GetLineColor (line));
+			}
+		}
+
+		private Color GetLineColor(int line)
+		{
+			if (this.hoverLine == -1)
+			{
+				if (line == 0)
+				{
+					return Color.FromAlphaRgb (0.8, 0.0, 0.0, 0.0);
+				}
+				else
+				{
+					return Color.FromAlphaRgb (0.2, 0.0, 0.0, 0.0);
+				}
+			}
+			else
+			{
+				if (line == this.hoverLine)
+				{
+					return Color.FromAlphaRgb (0.8, 0.0, 0.0, 0.0);
+				}
+				else
+				{
+					return Color.FromAlphaRgb (0.2, 0.0, 0.0, 0.0);
+				}
 			}
 		}
 
 		private Color GetSurfaceColor(int line)
 		{
-			if (line == 0)
+			if (line == this.hoverLine)
 			{
-				return Color.FromAlphaRgb (0.15, 0.0, 0.0, 0.0);
+				return Color.FromAlphaColor (0.4, ColorManager.SelectionColor);
 			}
 			else
 			{
-				double i = (line%2 == 0) ? 0.6 : 0.8;
-				return Color.FromAlphaRgb (0.15, i, i, i);
+				if (line == 0 && this.hoverLine == -1)
+				{
+					return Color.FromAlphaRgb (0.15, 0.0, 0.0, 0.0);
+				}
+				else
+				{
+					return Color.Empty;
+				}
 			}
 		}
 
-		private Color GetDotColor(int line)
+		private Color GetDotFillColor(int line)
 		{
-			if (line == 0)
+			if (line == this.hoverLine)
 			{
-				return Color.FromBrightness (0.2);
+				return ColorManager.SelectionColor;
 			}
 			else
 			{
-				return Color.FromBrightness (0.5);
+				return ColorManager.GetBackgroundColor ();
 			}
 		}
 
@@ -266,8 +411,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private TimelineCellValue[] cells;
-		private decimal min;
-		private decimal max;
+		private readonly List<string>			fieldNames;
+
+		private TimelineCellValue[]				cells;
+		private decimal							min;
+		private decimal							max;
+		private int								linesCount;
+		private int								hoverRank;
+		private int								hoverLine;
 	}
 }

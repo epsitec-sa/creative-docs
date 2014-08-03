@@ -12,6 +12,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		Days,
 		DaysMonths,
 		Glyph,
-		Value,
+		Values,
 	};
 }
