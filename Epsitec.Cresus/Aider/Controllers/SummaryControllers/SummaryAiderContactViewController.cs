@@ -48,6 +48,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderContactViewController0CreatePerson> ();
 			}
 
+
 			if (user.LoginName == "epsitec")
 			{
 				//	Process the degenerated cases when we click on them: no name for the
@@ -121,7 +122,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				case Enumerations.ContactType.PersonHousehold:
 					if (contact.Person.IsNotNull ())
-					{						
+					{
+						if ((contact.Household.IsNull ()) &&
+							(this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator)))
+							
+						{
+							wall.AddBrick ()
+								.Text ("Personne sans ménage !?")
+								.EnableActionButton<ActionAiderContactViewController6DeleteContact> ();
+						}
+
 						wall.AddBrick (x => x.Person)
 							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
