@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -24,7 +24,10 @@ namespace Epsitec.Cresus.Core.Binders
 				return value;
 			}
 
-			return FormattedText.FromSimpleText (Epsitec.TwixClip.TwixTel.FormatPhoneNumber (value.ToSimpleText ()));
+			var numbers = value.ToSimpleText ().Split (';').Select (x => x.Trim ());
+			var formatted = string.Join (";", numbers.Select (x => Epsitec.TwixClip.TwixTel.FormatPhoneNumber (x)));
+
+			return FormattedText.FromSimpleText (formatted);
 		}
 
 		public FormattedText ConvertFromUI(FormattedText value)
