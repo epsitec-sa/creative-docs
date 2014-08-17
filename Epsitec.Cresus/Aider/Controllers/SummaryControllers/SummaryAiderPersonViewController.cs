@@ -93,6 +93,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var households = this.Entity.Households;
 			var contacts   = this.Entity.Contacts;
 
+			this.CreateHouseholdBrick (wall, households);
+			this.CreateContactsBrick (wall, contacts, user);
+
+			wall.AddBrick (x => x.Comment)
+				.Attribute (BrickMode.AutoCreateNullEntity);
+		}
+
+		private void CreateHouseholdBrick(BrickWall<AiderPersonEntity> wall, System.Collections.Generic.IList<AiderHouseholdEntity> households)
+		{
 			if (households.Any ())
 			{
 				wall.AddBrick (x => x.Households)
@@ -105,7 +114,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.End ()
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
-
+		}
+		
+		private void CreateContactsBrick(BrickWall<AiderPersonEntity> wall, System.Collections.Generic.IList<AiderContactEntity> contacts, AiderUserEntity user)
+		{
 			if (contacts.Any (x => x.ContactType == Enumerations.ContactType.PersonAddress))
 			{
 				wall.AddBrick (x => x.AdditionalAddresses)
@@ -119,23 +131,21 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.End ()
 					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 
-				if (user.CanViewConfidentialAddress ())
+				if ((user.CanViewConfidentialAddress ()) &&
+					(contacts.Any (x => x.AddressType == Enumerations.AddressType.Confidential)))
 				{
 					wall.AddBrick (x => x.ConfidentialAddresses)
-					.Title ("Adresses confidentielles")
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.EnableActionMenu<ActionAiderPersonViewController6RemoveAlternateAddress> ()
-					.Template ()
-						.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
-					.End ()
-					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+						.Title ("Adresses confidentielles")
+						.Attribute (BrickMode.HideAddButton)
+						.Attribute (BrickMode.HideRemoveButton)
+						.Attribute (BrickMode.AutoGroup)
+						.EnableActionMenu<ActionAiderPersonViewController6RemoveAlternateAddress> ()
+						.Template ()
+							.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.AddressType).ApplyBold (), "\n", x.Address.GetSummary ()))
+						.End ()
+						.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 				}
 			}
-
-			wall.AddBrick (x => x.Comment)
-				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 
 		private void CreateParishBrick(BrickWall<AiderPersonEntity> wall)
@@ -175,6 +185,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (TextFormatter.FormatText (buffer));
 			}
 		}
+		
 		private static FormattedText GetTechnicalSummary(AiderPersonEntity person)
 		{
 			return TextFormatter.FormatText (person.eCH_Person.GetSummary (), "~\n \n~",

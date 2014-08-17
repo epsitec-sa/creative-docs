@@ -124,32 +124,46 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public IEnumerable<FormattedText> GetPhones()
+		{
+			var phones = new List<FormattedText> ()
+			{
+				TextFormatter.FormatField (() => this.Phone1),
+				TextFormatter.FormatField (() => this.Phone2),
+				TextFormatter.FormatField (() => this.Mobile),
+				TextFormatter.FormatText (TextFormatter.FormatField (() => this.Fax), "~(fax)")
+			};
+
+			return phones.Where (x => x.IsNullOrWhiteSpace () == false).Distinct ();
+		}
+
 		public FormattedText GetPhoneSummary()
 		{
-			return TextFormatter.FormatText (
-				TextFormatter.FormatField (() => this.Phone1), "\n",
-				TextFormatter.FormatField (() => this.Phone2), "\n",
-				TextFormatter.FormatField (() => this.Mobile), "\n",
-				TextFormatter.FormatField (() => this.Fax), "~(fax)"
-			);
+			return FormattedText.Join (FormattedText.HtmlBreak, this.GetPhones ());
+		}
+
+		public IEnumerable<FormattedText> GetWebEmails()
+		{
+			var webEmails = new List<FormattedText> ()
+			{
+				UriFormatter.ToFormattedText (this.Email),
+				UriFormatter.ToFormattedText (this.Web, "_blank")
+			};
+
+			return webEmails.Where (x => x.IsNullOrWhiteSpace () == false);
 		}
 
 		public FormattedText GetWebEmailSummary()
 		{
-			return TextFormatter.FormatText (
-				UriFormatter.ToFormattedText (this.Email), "\n",
-				UriFormatter.ToFormattedText (this.Web, "_blank")
-			);
+			return FormattedText.Join (FormattedText.HtmlBreak, this.GetWebEmails ());
 		}
 
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (
-				this.GetPostalAddress (), "\n",
-				this.GetPhoneSummary (), "\n",
-				this.GetWebEmailSummary ()
-			);
+			return TextFormatter.FormatText (this.GetPostalAddress (), "\n",
+				/**/						 this.GetPhoneSummary (), "\n",
+				/**/						 this.GetWebEmailSummary ());
 		}
 
 		public override FormattedText GetCompactSummary()

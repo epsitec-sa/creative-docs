@@ -1,4 +1,4 @@
-//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -8,6 +8,7 @@ using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Controllers.EditionControllers;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Override;
 
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
@@ -15,7 +16,7 @@ using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
-using Epsitec.Aider.Override;
+using System.Collections.Generic;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -250,19 +251,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			var text = contact.Person.GetCompactSummary ();
-			var contactInfoPrivate   = text;
-			var contactInfoConfidential = FormattedText.Empty;
-			var contactInfoProf			= FormattedText.Empty;
-			var contactInfoSecondary	= FormattedText.Empty;
+			
+			var contactInfoPrivate      = new List<FormattedText> (text.Split (FormattedText.HtmlBreak));
+			var contactInfoConfidential = new List<FormattedText> ();
+			var contactInfoProf			= new List<FormattedText> ();
+			var contactInfoSecondary	= new List<FormattedText> ();
 
 			foreach (var detail in contact.Person.Contacts.Where (x => x.Address.IsNotNull ()))
 			{
-				var address = detail.Address;
-				var phone   = address.GetPhoneSummary ();
-				var email   = address.GetWebEmailSummary ();
+				var address        = detail.Address;
+				var phonesAndMails = address.GetPhones ().Concat (address.GetWebEmails ()).ToList ();
 
-				if ((phone.IsNullOrEmpty ()) &&
-					(email.IsNullOrEmpty ()))
+				if (phonesAndMails.Count == 0)
 				{
 					continue;
 				}
@@ -272,37 +272,47 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					case Enumerations.AddressType.Default:
 					
 					case Enumerations.AddressType.Other:					
-						contactInfoPrivate = TextFormatter.FormatText (contactInfoPrivate, "\n", phone, "\n", email);
+						contactInfoPrivate.AddRange (phonesAndMails);
 						break;
+					
 					case Enumerations.AddressType.Confidential:
 						if (user.CanViewConfidentialAddress ())
 						{
-							if (contactInfoConfidential.IsNullOrEmpty ())
+							if (contactInfoConfidential.Count == 0)
 							{
-								contactInfoConfidential = new FormattedText ("<hr/><b>Confidentiel:</b>");
+								contactInfoConfidential.Add (new FormattedText ("<hr/><b>Confidentiel:</b>"));
 							}
-							contactInfoConfidential = TextFormatter.FormatText (contactInfoConfidential, "\n", phone, "\n", email);
+
+							contactInfoConfidential.AddRange (phonesAndMails);
 						}
 						break;
+
 					case Enumerations.AddressType.Professional:
-						if (contactInfoProf.IsNullOrEmpty ())
+						if (contactInfoProf.Count == 0)
 						{
-							contactInfoProf = new FormattedText ("<hr/><b>Professionnel:</b>");
+							contactInfoProf.Add (new FormattedText ("<hr/><b>Professionnel:</b>"));
 						}
-						contactInfoProf = TextFormatter.FormatText (contactInfoProf, "\n", phone, "\n", email);
+						contactInfoProf.AddRange (phonesAndMails);
 						break;
 
 					case Enumerations.AddressType.Secondary:
-						if (contactInfoSecondary.IsNullOrEmpty ())
+						if (contactInfoSecondary.Count == 0)
 						{
-							contactInfoSecondary = new FormattedText ("<hr/><b>Domicile secondaire:</b>");
+							contactInfoSecondary.Add (new FormattedText ("<hr/><b>Domicile secondaire:</b>"));
 						}
-						contactInfoSecondary = TextFormatter.FormatText (contactInfoSecondary, "\n", phone, "\n", email);
+						contactInfoSecondary.AddRange (phonesAndMails);
 						break;
 				}
 			}
 
-			return TextFormatter.FormatText (contactInfoPrivate, "\n", contactInfoProf, "\n", contactInfoSecondary, "\n", contactInfoConfidential);
+			var all = new List<FormattedText> ();
+
+			all.AddRange (contactInfoPrivate.Distinct ());
+			all.AddRange (contactInfoProf.Distinct ());
+			all.AddRange (contactInfoSecondary.Distinct ());
+			all.AddRange (contactInfoConfidential.Distinct ());
+
+			return TextFormatter.Join (FormattedText.HtmlBreak, all);
 		}
 	}
 }

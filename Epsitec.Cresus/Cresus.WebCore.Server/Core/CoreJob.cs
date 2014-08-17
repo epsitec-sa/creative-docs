@@ -1,12 +1,13 @@
 ﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Epsitec.Cresus.Core.Library;
-using Nancy.Helpers;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.WebCore.Server.Core
 {
@@ -45,18 +46,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 
 				if ((this.Status == CoreJobStatus.Ordered) || (this.Status == CoreJobStatus.Waiting))
 				{
-					desc = desc + "<br><input type='button' onclick='Epsitec.Cresus.Core.app.cancelJob(\"" + this.Id + "\");' value='Annuler' />";
-				}
-				if (this.Status == CoreJobStatus.Ended)
-				{
-					desc = desc + string.Format("<br>Durée: {0}",this.GetRunningTime());
+					desc = desc + "<br/><input type='button' onclick='Epsitec.Cresus.Core.app.cancelJob(\"" + this.Id + "\");' value='Annuler' />";
 				}
 				if (this.Status == CoreJobStatus.Cancelled)
 				{
-					desc = desc + string.Format ("<br><b>Annulée</b><br>Durée: {0}", this.GetRunningTime ());
+					desc = desc + "<br/><b>Annulée</b>";
+				}
+				if (this.Status == CoreJobStatus.Ended || this.Status == CoreJobStatus.Cancelled)
+				{
+					desc = desc + "<br/>Durée&nbsp;: " + this.GetRunningTime ().GetSimpleFormattedTime ();
 				}
 
-				desc = desc + "<br>" + this.Metadata;
+				desc = desc + "<br/>" + this.Metadata;
 
 				return new FormattedText (desc);
 			}
