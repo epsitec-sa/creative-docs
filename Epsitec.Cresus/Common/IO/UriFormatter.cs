@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -37,12 +37,14 @@ namespace Epsitec.Common.IO
 		/// <returns>The formatted text.</returns>
 		public static FormattedText ToFormattedText(string uri, string target = null)
 		{
-			if (string.IsNullOrEmpty (uri))
+			uri = UriBuilder.FixScheme (uri);
+
+			if (uri == null)
 			{
 				return FormattedText.Empty;
 			}
 
-			var cleanUri = new UriBuilder (UriBuilder.FixScheme (uri));
+			var cleanUri = new UriBuilder (uri);
 			var display  = UriFormatter.GetDisplayText (cleanUri);
 
 			if (string.IsNullOrEmpty (target))
