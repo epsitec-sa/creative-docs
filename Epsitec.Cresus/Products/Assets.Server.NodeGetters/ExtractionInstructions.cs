@@ -23,7 +23,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
 					break;
 
-				case ExtractionAmount.Filtered:
+				case ExtractionAmount.DeltaFiltered:
+					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
+					break;
+
+				case ExtractionAmount.LastFiltered:
 					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
 					break;
 

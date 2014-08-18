@@ -112,8 +112,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					case ExtractionAmount.StateAt:
 						return ExtractionEngine.GetStateAt (obj, extractionInstructions);
 
-					case ExtractionAmount.Filtered:
-						return ExtractionEngine.GetFiltered (obj, extractionInstructions);
+					case ExtractionAmount.DeltaFiltered:
+						return ExtractionEngine.GetDeltaFiltered (obj, extractionInstructions);
+
+					case ExtractionAmount.LastFiltered:
+						return ExtractionEngine.GetLastFiltered (obj, extractionInstructions);
 
 					case ExtractionAmount.Amortizations:
 						return ExtractionEngine.GetAmortizations (obj, extractionInstructions);
@@ -140,10 +143,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static decimal? GetFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetDeltaFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
 		{
-			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
-			//	d'un type donné.
+			//	Pour une période donnée, retourne la variation d'une valeur suite à un
+			//	type d'événement donné (début - fin, donc une valeur qui diminue suite
+			//	à un amortissement par exemple retourne une valeur positive).
 			decimal? lastValue = null;
 			decimal? value = null;
 
@@ -166,6 +170,28 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					}
 
 					lastValue = p.Value.FinalAmortizedAmount.Value;
+				}
+			}
+
+			return value;
+		}
+
+		private static decimal? GetLastFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
+			//	d'un type donné.
+			decimal? value = null;
+
+			foreach (var e in obj.Events)
+			{
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				{
+					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					{
+						value = p.Value.FinalAmortizedAmount.Value;
+					}
 				}
 			}
 

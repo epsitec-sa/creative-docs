@@ -130,15 +130,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public void CancelObjectEdition()
 		{
 			//	Marque la fin de l'édition de l'événement d'un objet.
-			this.dirty               = false;
-			this.computedAmountDirty = false;
-			this.objectGuid          = Guid.Empty;
-			this.timestamp           = null;
-		}
-
-		public void StopObjectEdition()
-		{
-			//	Termine définitivement l'édition de l'événement d'un objet.
 			this.baseType            = BaseType.Unknown;
 			this.dirty               = false;
 			this.computedAmountDirty = false;

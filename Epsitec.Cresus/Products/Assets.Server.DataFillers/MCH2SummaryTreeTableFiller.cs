@@ -185,19 +185,31 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Filtered,
+						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Input);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Filtered,
+						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Modification);
 
+				case Column.Revaluations:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DateRange,
+						EventType.Revaluation);
+
+				case Column.Revalorizations:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DateRange,
+						EventType.Revalorization);
+
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Filtered,
+						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Output);
 
@@ -212,18 +224,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						ExtractionAmount.Amortizations,
 						this.DateRange,
 						EventType.AmortizationExtra);
-
-				case Column.Revaluations:
-					return new ExtractionInstructions (field,
-						ExtractionAmount.Filtered,
-						this.DateRange,
-						EventType.Revaluation);
-
-				case Column.Revalorizations:
-					return new ExtractionInstructions (field,
-						ExtractionAmount.Filtered,
-						this.DateRange,
-						EventType.Revalorization);
 
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
@@ -279,6 +279,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Reorganizations:
 					return "Réorganisations";
 
+				case Column.Revaluations:
+					return "Réévaluations";
+
+				case Column.Revalorizations:
+					return "Revalorisations";
+
 				case Column.Outputs:
 					return "Sorties";
 
@@ -287,12 +293,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.AmortizationsExtra:
 					return "Amort. extra.";
-
-				case Column.Revaluations:
-					return "Réévaluations";
-
-				case Column.Revalorizations:
-					return "Revalorisations";
 
 				case Column.FinalState:
 					return string.Format ("Etat {0}", this.FinalDate);
@@ -318,6 +318,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Reorganizations:
 					return "Variations dues aux réorganisations";
 
+				case Column.Revaluations:
+					return "Valeurs après réévaluations";
+
+				case Column.Revalorizations:
+					return "Valeurs après revalorisations";
+
 				case Column.Outputs:
 					return "Variations dues aux sorties";
 
@@ -326,12 +332,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.AmortizationsExtra:
 					return "Variations dues aux amortissement extraordinaire";
-
-				case Column.Revaluations:
-					return "Variations dues aux réévaluations";
-
-				case Column.Revalorizations:
-					return "Variations dues aux revalorisations";
 
 				case Column.FinalState:
 					return string.Format ("Etat final le {0}", this.FinalDateTooltip);
@@ -405,17 +405,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private IEnumerable<Column> OrderedColumns
 		{
+			//	Retourne les colonnes visibles, dans le bon ordre.
 			get
 			{
 				yield return Column.Name;
 				yield return Column.InitialState;
 				yield return Column.Inputs;
-				yield return Column.Reorganizations;
+//?				yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
+				yield return Column.Revaluations;
+				yield return Column.Revalorizations;
 				yield return Column.Outputs;
 				yield return Column.AmortizationsAuto;
 				yield return Column.AmortizationsExtra;
-				yield return Column.Revaluations;
-				yield return Column.Revalorizations;
 				yield return Column.FinalState;
 			}
 		}
@@ -435,13 +436,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			InitialState,
 			Inputs,
 			Reorganizations,
-			Outputs,
-
-			FinalState,
-			AmortizationsAuto,
-			AmortizationsExtra,
 			Revaluations,
 			Revalorizations,
+			Outputs,
+			AmortizationsAuto,
+			AmortizationsExtra,
+			FinalState,
 		}
 
 

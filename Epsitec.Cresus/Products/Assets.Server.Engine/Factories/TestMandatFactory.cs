@@ -83,6 +83,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			//	Bâtiment communal
 			{
 				var obj = this.AddAssetsSamples (year0.AddDays (0), "Bâtiment communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Administratif");
+
+				{
+					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Revaluation);
+					this.AddAssetAmortizedAmount (e, 1200000.0m);
+				}
+
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);

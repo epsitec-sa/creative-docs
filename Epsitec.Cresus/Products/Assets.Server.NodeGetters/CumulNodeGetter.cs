@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	/// <summary>
 	/// Gère l'accès en lecture "en arbre" à des objets. Les groupes compactés sont
-	/// vu avec des valeurs égales au total des sous-objets cachés.
+	/// vus avec des valeurs égales au total des sous-objets cachés.
 	/// </summary>
 	public class CumulNodeGetter : INodeGetter<CumulNode>  // outputNodes
 	{
