@@ -486,19 +486,38 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var list = new List<string> ();
 
-				if (!string.IsNullOrEmpty (this.HeaderTooltip))
+				if (string.IsNullOrEmpty (this.HeaderTooltip))
 				{
-					list.Add (this.HeaderTooltip + ".");
+					//	Affiche le nom de la colonne, s'il n'y a pas de tooltip.
+					//	Cela est bien pratique lorsque la colonne est étroite et que
+					//	le nom ne s'affiche pas intégralement.
+					if (!string.IsNullOrEmpty (this.HeaderDescription))
+					{
+						list.Add (this.HeaderDescription);
+					}
+				}
+				else
+				{
+					list.Add (this.HeaderTooltip);
 				}
 
 				if (this.AllowsSorting)
 				{
-					list.Add ("Cliquer pour trier selon la colonne.");
+					list.Add ("Cliquer pour trier selon la colonne");
 				}
 
 				if (this.AllowsMovement)
 				{
-					list.Add ("Tirer pour déplacer la colonne.");
+					list.Add ("Tirer pour déplacer la colonne");
+				}
+
+				//	Termine les lignes par un point, mais seulement s'il y en a plusieurs.
+				if (list.Count > 1)
+				{
+					for (int i=0; i<list.Count; i++)
+					{
+						list[i] += ".";
+					}
 				}
 
 				return string.Join ("<br/>", list);
