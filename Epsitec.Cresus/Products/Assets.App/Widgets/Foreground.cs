@@ -12,12 +12,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// <summary>
 	/// Ce widget permet de dessiner des chemins quelconques servant de feedback
 	/// visuel pour un hilite, par exemple lors du déplacement d'une colonne.
+	/// Comme il vient par dessous les colonnes, il empêche leurs tooltips dynamiques
+	/// de fonctionner. Il prend donc le relai et demande au TreeTable sous-jacent
+	/// de trouver le bon tooltip.
 	/// </summary>
-	public class Foreground : Widget
+	public class Foreground : FrameBox, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public Foreground()
 		{
 			this.zones = new List<Zone> ();
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -71,6 +76,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				e.Graphics.RenderSolid (zone.Color);
 			}
 		}
+
+
+		#region IToolTipHost Members
+		public object GetToolTipCaption(Point pos)
+		{
+			if (this.Parent is TreeTable)
+			{
+				//	Demande au TreeTable sous-jacent de trouver le bon tooltip dynamique.
+				var treeTable = this.Parent as TreeTable;
+
+				pos = this.MapClientToScreen (pos);
+				return treeTable.GetTooltip (pos);
+			}
+
+			return null;
+		}
+		#endregion
 
 
 		private struct Zone

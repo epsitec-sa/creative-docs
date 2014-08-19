@@ -93,6 +93,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
 			this.objectEditor.CreateUI (this.editFrameBox);
 
+			//?this.CreateDebug (topBox);
+
 			this.closeButton = new IconButton
 			{
 				Parent        = parent,
@@ -248,6 +250,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.OnCloseColumn ();
 			};
+		}
+
+		private void CreateDebug(Widget parent)
+		{
+#if true
+			var leftContainer = new FrameBox
+			{
+				Parent         = parent,
+				Dock           = DockStyle.Fill,
+			};
+
+			//?var foreground = new FrameBox
+			//?{
+			//?	Parent  = parent,
+			//?	Anchor  = AnchorStyles.All,
+			//?};
+
+			var c = new TreeTableColumnString ()
+			{
+				Parent = leftContainer,
+				Field = ObjectField.Name,
+				HeaderHeight = 22,
+				RowHeight = 18,
+				HeaderDescription = "debug",
+				HeaderTooltip = "coucou!!!",
+				Dock = DockStyle.Fill,
+			};
+#else
+			var tt = new NavigationTreeTableController ();
+			tt.CreateUI (parent);
+
+			var primary = this.accessor.GetNodeGetter (BaseType.Categories);
+			var secondary = new Epsitec.Cresus.Assets.Server.NodeGetters.SortableNodeGetter (primary, this.accessor, BaseType.Categories);
+			var nodeGetter = new Epsitec.Cresus.Assets.Server.NodeGetters.SorterNodeGetter (secondary);
+
+			secondary.SetParams (null, SortingInstructions.Default);
+			nodeGetter.SetParams (SortingInstructions.Default);
+
+			var dataFiller = new Epsitec.Cresus.Assets.Server.DataFillers.CategoriesTreeTableFiller (this.accessor, nodeGetter);
+
+			TreeTableFiller<Epsitec.Cresus.Assets.Server.NodeGetters.SortableNode>.FillColumns (tt, dataFiller, "Popup.Categories");
+			TreeTableFiller<Epsitec.Cresus.Assets.Server.NodeGetters.SortableNode>.FillContent (tt, dataFiller, -1, false);
+
+			//?var list = new List<Epsitec.Cresus.Assets.Server.DataFillers.TreeTableColumnDescription> ();
+			//?
+			//?var c1 = new Epsitec.Cresus.Assets.Server.DataFillers.TreeTableColumnDescription (ObjectField.Name, Server.DataFillers.TreeTableColumnType.String, 100, "Header", "Voici le tooltip");
+			//?list.Add (c1);
+			//?list.Add (c1);
+			//?list.Add (c1);
+			//?
+			//?tt.SetColumns (list.ToArray (), SortingInstructions.Default, 1, "debug");
+#endif
 		}
 
 

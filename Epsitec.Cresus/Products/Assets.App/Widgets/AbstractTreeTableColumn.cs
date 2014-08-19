@@ -21,7 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.hilitedHoverRow = -1;
 			this.sortedType = SortedType.None;
 
-			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
+			//	Il est inutile d'enclencher les tooltips dynamiques, car les colonnes
+			//	sont "sous" un widget AbstractInteractiveLayer, ce qui empêche
+			//	l'appel automatique normal.
+			//- ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
@@ -151,28 +154,31 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.PaintHeader (graphics);
 			this.PaintFooter (graphics);
 
-			int y = 0;
-
-			foreach (var cell in this.cells)
+			if (this.cells != null)
 			{
-				//	Dessine le fond.
-				var rect = this.GetCellsRect (y);
+				int y = 0;
 
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.CellState));
-
-				if ((cell.CellState & CellState.Unavailable) != 0)
+				foreach (var cell in this.cells)
 				{
-					this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
+					//	Dessine le fond.
+					var rect = this.GetCellsRect (y);
+
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (this.GetCellColor (y == this.hilitedHoverRow, cell.CellState));
+
+					if ((cell.CellState & CellState.Unavailable) != 0)
+					{
+						this.PaintUnavailable (graphics, rect, y, this.hilitedHoverRow);
+					}
+
+					//	Dessine la valeur.
+					this.PaintCell (graphics, rect, y, cell);
+
+					//	Dessine la grille.
+					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
+
+					y++;
 				}
-
-				//	Dessine la valeur.
-				this.PaintCell (graphics, rect, y, cell);
-
-				//	Dessine la grille.
-				this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
-
-				y++;
 			}
 		}
 
@@ -458,6 +464,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#region IToolTipHost Members
 		public object GetToolTipCaption(Point pos)
 		{
+			//	N'est pas appelé normalement, car les colonnes sont "sous" un widget
+			//	AbstractInteractiveLayer. Cela empêche l'appel automatique normal.
 			if (this.HeaderHeight > 0 && pos.Y > this.ActualHeight-this.HeaderHeight)
 			{
 				return this.FullHeaderTooltip;

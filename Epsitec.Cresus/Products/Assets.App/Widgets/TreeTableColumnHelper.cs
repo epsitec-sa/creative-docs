@@ -78,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			column.Field             = description.Field;
 			column.HeaderDescription = description.Header;
+			column.HeaderTooltip     = description.HeaderTooltip;
 			column.FooterDescription = description.Footer;
 
 			return column;

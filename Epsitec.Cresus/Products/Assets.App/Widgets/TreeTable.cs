@@ -181,6 +181,48 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public string GetTooltip(Point screenPos)
+		{
+			//	Fouille les colonnes à la recherche du bon tooltip dynamique.
+			foreach (var column in this.leftContainer.Children)
+			{
+				var x = column as AbstractTreeTableColumn;
+				if (x != null)
+				{
+					var pos = x.MapScreenToClient (screenPos);
+
+					if (column.Client.Bounds.Contains (pos))
+					{
+						var s = x.GetToolTipCaption (pos) as string;
+						if (!string.IsNullOrEmpty (s))
+						{
+							return s;
+						}
+					}
+				}
+			}
+
+			foreach (var column in this.columnsContainer.Viewport.Children)
+			{
+				var x = column as AbstractTreeTableColumn;
+				if (x != null)
+				{
+					var pos = x.MapScreenToClient (screenPos);
+
+					if (column.Client.Bounds.Contains (pos))
+					{
+						var s = x.GetToolTipCaption (pos) as string;
+						if (!string.IsNullOrEmpty (s))
+						{
+							return s;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public void AddSortedColumn(ObjectField field)
 		{
 			var list = this.columnsState.Sorted.ToList ();
