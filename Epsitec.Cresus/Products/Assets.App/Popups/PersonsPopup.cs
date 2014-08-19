@@ -59,6 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller.CreateUI (frame, headerHeight: PersonsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
+			this.controller.AllowsSorting  = false;
 
 			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.Persons");
 			this.UpdateController ();

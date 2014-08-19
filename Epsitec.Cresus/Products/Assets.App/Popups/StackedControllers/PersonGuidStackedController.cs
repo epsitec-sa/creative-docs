@@ -86,6 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.controller = new NavigationTreeTableController ();
 			this.controller.CreateUI (controllerFrame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
+			this.controller.AllowsSorting  = false;
 
 			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Controller.Stacked.Persons");
 			this.UpdateController ();
