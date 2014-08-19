@@ -366,6 +366,7 @@
     <Compile Include="Helpers\AiderParticipationRole.cs" />
     <Compile Include="Helpers\AiderParticipationsHelpers.cs" />
     <Compile Include="Helpers\FrenchLanguage.cs" />
+    <Compile Include="Labels\AiderContactLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory1.cs" />

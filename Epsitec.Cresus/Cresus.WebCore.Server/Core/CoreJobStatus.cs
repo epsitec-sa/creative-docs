@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 		}
 
 
-		public static readonly CoreJobStatus	Ordered  = new CoreJobStatus ("En attente");
-		public static readonly CoreJobStatus	Waiting  = new CoreJobStatus ("En attente");
-		public static readonly CoreJobStatus	Running  = new CoreJobStatus ("En cours");
-		public static readonly CoreJobStatus	Ended    = new CoreJobStatus ("Terminée");
-		public static readonly CoreJobStatus	Cancelled = new CoreJobStatus ("Annulée");
+		public static readonly CoreJobStatus	Ordered  = new CoreJobStatus ("en attente");
+		public static readonly CoreJobStatus	Waiting  = new CoreJobStatus ("en attente");
+		public static readonly CoreJobStatus	Running  = new CoreJobStatus ("en cours");
+		public static readonly CoreJobStatus	Ended    = new CoreJobStatus ("terminé");
+		public static readonly CoreJobStatus	Cancelled = new CoreJobStatus ("annulé");
 	}
 }
 
