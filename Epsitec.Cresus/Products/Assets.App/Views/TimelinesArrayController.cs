@@ -197,9 +197,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    "Supprimer l'objet d'immobilisation");
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'objet d'immobilisation");
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    "Exporter les objets d'immobilisations");
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Export,   CommandDescription.Empty);
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 
 			this.objectsToolbar.CreateUI (leftBox);
 			this.objectsToolbar.HasFilter = true;

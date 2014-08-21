@@ -355,7 +355,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return amount.FinalAmortizedAmount.GetValueOrDefault ();
 
 				case EntryScenario.Sale:
-					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+					//	Lors d'une vente, la nouvelle valeur de l'objet est de zéro.
+					//	Mais il faut passer une écriture avec le montant de la vente,
+					//	c'est-à-dire la dernière valeur moins la valeur actuelle (en
+					//	principe nulle).
+					return amount.PreviousAmount.GetValueOrDefault ()
+						 - amount.FinalAmortizedAmount.GetValueOrDefault ();
 
 				case EntryScenario.AmortizationAuto:
 				case EntryScenario.AmortizationExtra:

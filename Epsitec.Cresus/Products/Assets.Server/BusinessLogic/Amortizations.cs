@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return new AmortizedAmount
 			(
-				amortizationType, null, null, def.EffectiveRate,
+				amortizationType, null, null, null, def.EffectiveRate,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
 			);
@@ -448,8 +448,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (aa.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
 				{
-					//?aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
-					//?Amortizations.SetAmortizedAmount (e, aa);
+					aa = AmortizedAmount.SetPreviousAmount (aa, lastAmount);
+					Amortizations.SetAmortizedAmount (e, aa);
 
 					lastAmount = aa.FinalAmortizedAmount;
 					lastBase   = aa.FinalAmortizedAmount;

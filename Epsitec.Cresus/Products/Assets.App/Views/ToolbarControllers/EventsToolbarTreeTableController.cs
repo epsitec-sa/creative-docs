@@ -102,14 +102,36 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new EventsAssetsTreeTableFiller (this.accessor, this.nodeGetter)
-			{
-				Title = this.title,
-			};
+			this.dataFiller = new EventsAssetsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.UpdateFillerTitle();
 
 			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Events");
 
 			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
+		}
+
+		protected override void UpdateFillerTitle()
+		{
+			this.dataFiller.Title = this.FullTitle;
+		}
+
+		private string FullTitle
+		{
+			get
+			{
+				var builder = new System.Text.StringBuilder ();
+				builder.Append (this.title);
+
+				if (!this.ObjectGuid.IsEmpty)
+				{
+					builder.Append (" — ");
+
+					var name = AssetsLogic.GetSummary (this.accessor, this.ObjectGuid);
+					builder.Append (name);
+				}
+
+				return builder.ToString ();
+			}
 		}
 
 

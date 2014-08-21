@@ -186,6 +186,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		protected virtual void UpdateFillerTitle()
+		{
+		}
+
 
 		protected override void SetFocus()
 		{
@@ -196,6 +200,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void OnExport()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
+
+			this.UpdateFillerTitle ();
 			ExportHelpers<T>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);
 		}
 

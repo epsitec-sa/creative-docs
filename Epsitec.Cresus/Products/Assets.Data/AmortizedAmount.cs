@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public AmortizedAmount
 		(
 			AmortizationType	amortizationType,
+			decimal?			previousAmount,
 			decimal?			initialAmount,
 			decimal?			baseAmount,
 			decimal?			effectiveRate,
@@ -27,6 +28,7 @@ namespace Epsitec.Cresus.Assets.Data
 		)
 		{
 			this.AmortizationType   = amortizationType;
+			this.PreviousAmount     = previousAmount;
 			this.InitialAmount      = initialAmount;
 			this.BaseAmount         = baseAmount;
 			this.EffectiveRate      = effectiveRate;
@@ -43,6 +45,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 		public readonly AmortizationType		AmortizationType;
+		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				BaseAmount;
 		public readonly decimal?				EffectiveRate;
@@ -253,6 +256,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				value,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -274,6 +278,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				value,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -295,6 +300,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				value,
 				model.EffectiveRate,
@@ -316,6 +322,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				value,
@@ -337,6 +344,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -358,6 +366,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -379,6 +388,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -400,6 +410,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -421,6 +432,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -442,6 +454,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -463,6 +476,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -484,6 +498,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -505,6 +520,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -526,6 +542,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -547,6 +564,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				model.EffectiveRate,
@@ -571,6 +589,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				amortizationType,
+				null,
 				model.InitialAmount,
 				model.BaseAmount,
 				effectiveRate,
@@ -587,11 +606,34 @@ namespace Epsitec.Cresus.Assets.Data
 			);
 		}
 
+		public static AmortizedAmount SetPreviousAmount(AmortizedAmount model, decimal? previousAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationType,
+				previousAmount,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.EffectiveRate,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
 		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model, decimal? initialAmount, decimal? baseAmount)
 		{
 			return new AmortizedAmount
 			(
 				model.AmortizationType,
+				null,
 				initialAmount,
 				baseAmount,
 				model.EffectiveRate,
@@ -614,6 +656,7 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				amortizationType,
+				null,
 				initialAmount,
 				baseAmount,
 				effectiveRate,

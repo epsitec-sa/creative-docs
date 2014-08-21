@@ -8,6 +8,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -187,14 +188,51 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter)
-			{
-				Title = this.title,
-			};
+			this.dataFiller = new AssetsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.UpdateFillerTitle ();
 
 			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Assets");
 
 			this.sortingInstructions = TreeTableFiller<SortableCumulNode>.GetSortingInstructions (this.treeTableController);
+		}
+
+		protected override void UpdateFillerTitle()
+		{
+			this.dataFiller.Title = this.FullTitle;
+		}
+
+		private string FullTitle
+		{
+			get
+			{
+				var builder = new System.Text.StringBuilder ();
+				builder.Append(this.title);
+
+				if (!this.SelectedGuid.IsEmpty)
+				{
+					builder.Append (" — ");
+
+					if (this.stateAtController.Date.HasValue)
+					{
+						var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+						var name = AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, timestamp);
+						builder.Append (name);
+					}
+					else
+					{
+						var name = AssetsLogic.GetSummary (this.accessor, this.SelectedGuid);
+						builder.Append (name);
+					}
+				}
+
+				if (this.stateAtController != null && this.stateAtController.Date.HasValue)
+				{
+					builder.Append (" — ");
+					builder.Append (TypeConverters.DateToString (this.stateAtController.Date));
+				}
+
+				return builder.ToString ();
+			}
 		}
 
 
