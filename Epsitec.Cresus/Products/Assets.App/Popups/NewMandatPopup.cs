@@ -11,7 +11,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant la saisir des informations nécessaires à la création d'un
+	/// Popup permettant la saisie des informations nécessaires à la création d'un
 	/// nouveau mandat.
 	/// </summary>
 	public class NewMandatPopup : StackedPopup
@@ -19,7 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public NewMandatPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'un nouveau mandat";
+			//?this.title = "Création d'un nouveau mandat";
+			this.title = Res.Strings.Toto.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
