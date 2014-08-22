@@ -208,6 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				var builder = new System.Text.StringBuilder ();
 				builder.Append(this.title);
 
+#if false
 				if (!this.SelectedGuid.IsEmpty)
 				{
 					builder.Append (" — ");
@@ -224,6 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 						builder.Append (name);
 					}
 				}
+#endif
 
 				if (this.stateAtController != null && this.stateAtController.Date.HasValue)
 				{
