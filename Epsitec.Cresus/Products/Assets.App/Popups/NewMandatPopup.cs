@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			: base (accessor)
 		{
 			//?this.title = "Création d'un nouveau mandat";
-			this.title = Res.Strings.Toto.ToString ();
+			this.title = Res.Strings.Popup.NewMandat.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
