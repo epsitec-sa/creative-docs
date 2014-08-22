@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow ();
 				this.WindowInit ("Open", 600, 440, true);
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
-				this.window.Root.Padding = new Margins (8, 8, 8, 8);
+				this.window.Root.Padding = new Margins (8);
 
 				var resize=new ResizeKnob (this.window.Root)
 				{
@@ -69,15 +69,22 @@ namespace Epsitec.Common.Designer.Dialogs
 				st.Fields.Add ("Icon",  StringType.NativeDefault);
 				st.Fields.Add ("Patch", StringType.NativeDefault);
 
-				this.table = new UI.ItemTable (this.window.Root);
+				this.table = new UI.ItemTable (this.window.Root)
+				{
+					SourceType        = st,
+					HeaderVisibility  = true,
+					FrameVisibility   = true,
+					TabIndex          = 2,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+					Dock              = DockStyle.Fill,
+				};
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
-				this.table.SourceType = st;
 				this.table.Items = this.moduleInfosShowed;
-				this.table.Columns.Add ("Name", 400);
-				this.table.Columns.Add ("Id", 35);
-				this.table.Columns.Add ("State", 70);
-				this.table.Columns.Add ("Icon", 30);
-				this.table.Columns.Add ("Patch", 30);
+				this.table.Columns.Add ("Name",  400);
+				this.table.Columns.Add ("Id",     35);
+				this.table.Columns.Add ("State",  70);
+				this.table.Columns.Add ("Icon",   30);
+				this.table.Columns.Add ("Patch",  30);
 				this.table.ColumnHeader.SetColumnText (0, "Nom");
 				this.table.ColumnHeader.SetColumnText (1, "No");
 				this.table.ColumnHeader.SetColumnText (2, "Etat");
@@ -88,16 +95,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.ColumnHeader.SetColumnComparer (2, this.CompareState);
 				this.table.ColumnHeader.SetColumnComparer (3, this.CompareIcon);
 				this.table.ColumnHeader.SetColumnComparer (4, this.ComparePatch);
-				this.table.HeaderVisibility = true;
-				this.table.FrameVisibility = true;
-				this.table.ItemPanel.Layout = UI.ItemPanelLayout.VerticalList;
-				this.table.ItemPanel.ItemSelectionMode = UI.ItemPanelSelectionMode.ExactlyOne;
+				this.table.ItemPanel.Layout                  = UI.ItemPanelLayout.VerticalList;
+				this.table.ItemPanel.ItemSelectionMode       = UI.ItemPanelSelectionMode.ExactlyOne;
 				this.table.ItemPanel.CurrentItemTrackingMode = UI.CurrentItemTrackingMode.AutoSelectAndDeselect;
 				this.table.ItemPanel.SelectionChanged += new EventHandler<UI.ItemPanelSelectionChangedEventArgs> (this.HandleTableSelectionChanged);
-				this.table.ItemPanel.DoubleClicked += new EventHandler<MessageEventArgs> (this.HandleTableDoubleClicked);
-				this.table.TabIndex = 2;
-				this.table.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.table.Dock = Widgets.DockStyle.Fill;
+				this.table.ItemPanel.DoubleClicked    += new EventHandler<MessageEventArgs> (this.HandleTableDoubleClicked);
 
 				//	Boutons de fermeture.
 				var footer = new Widget (this.window.Root)
