@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -22,7 +21,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		public OpenDialog(DesignerApplication designerApplication) : base(designerApplication)
 		{
-			this.moduleInfosLive = new Types.Collections.ObservableList<ResourceModuleInfo>();
+			this.moduleInfosLive   = new Types.Collections.ObservableList<ResourceModuleInfo>();
 			this.moduleInfosShowed = new CollectionView(this.moduleInfosLive);
 		}
 
@@ -31,19 +30,24 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Crée et montre la fenêtre du dialogue.
 			if ( this.window == null )
 			{
-				this.window = new Window ();
-				this.window.Icon = this.designerApplication.Icon;
+				this.window = new Window ()
+				{
+					Icon             = this.designerApplication.Icon,
+					PreventAutoClose = true,
+					Text             = Res.Strings.Dialog.Open.Title,
+					Owner            = this.parentWindow,
+				};
 				this.window.MakeSecondaryWindow ();
-				this.window.PreventAutoClose = true;
 				this.WindowInit ("Open", 600, 440, true);
-				this.window.Text = Res.Strings.Dialog.Open.Title;
-				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins (8, 8, 8, 8);
 
-				ResizeKnob resize = new ResizeKnob (this.window.Root);
-				resize.Anchor = AnchorStyles.BottomRight;
-				resize.Margins = new Margins (0, -8, 0, -8);
+				var resize=new ResizeKnob (this.window.Root)
+				{
+					Anchor  = AnchorStyles.BottomRight,
+					Margins = new Margins (0, -8, 0, -8)
+				};
+
 				ToolTip.Default.SetToolTip (resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				//	Bande horizontale pour la recherche.
@@ -58,11 +62,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				}
 
 				//	Tableau principal.
-				StructuredType st = new StructuredType ();
-				st.Fields.Add ("Name", StringType.NativeDefault);
-				st.Fields.Add ("Id", StringType.NativeDefault);
+				var st = new StructuredType ();
+				st.Fields.Add ("Name",  StringType.NativeDefault);
+				st.Fields.Add ("Id",    StringType.NativeDefault);
 				st.Fields.Add ("State", StringType.NativeDefault);
-				st.Fields.Add ("Icon", StringType.NativeDefault);
+				st.Fields.Add ("Icon",  StringType.NativeDefault);
 				st.Fields.Add ("Patch", StringType.NativeDefault);
 
 				this.table = new UI.ItemTable (this.window.Root);
@@ -96,61 +100,73 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.Dock = Widgets.DockStyle.Fill;
 
 				//	Boutons de fermeture.
-				Widget footer = new Widget (this.window.Root);
-				footer.PreferredHeight = 22;
-				footer.Margins = new Margins (0, 0, 8, 0);
-				footer.Dock = DockStyle.Bottom;
-				footer.TabIndex = 3;
-				footer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
+				var footer = new Widget (this.window.Root)
+				{
+					PreferredHeight   = 22,
+					Margins           = new Margins (0, 0, 8, 0),
+					Dock              = DockStyle.Bottom,
+					TabIndex          = 3,
+					TabNavigationMode = TabNavigationMode.ForwardTabPassive
+				};
 
-				this.checkOpened = new CheckButton (footer);
-				this.checkOpened.AutoToggle = false;
-				this.checkOpened.Text = "Modules ouverts";
-				this.checkOpened.PreferredWidth = 110;
-				this.checkOpened.Dock = DockStyle.Left;
-				this.checkOpened.Margins = new Margins (0, 0, 0, 0);
+				this.checkOpened = new CheckButton (footer)
+				{
+					AutoToggle        = false,
+					Text              = "Modules ouverts",
+					PreferredWidth    = 110,
+					Dock              = DockStyle.Left,
+					Margins           = new Margins (0, 0, 0, 0),
+					TabIndex          = 8,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
 				this.checkOpened.Clicked += this.HandleCheckClicked;
-				this.checkOpened.TabIndex = 8;
-				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.checkLocked = new CheckButton (footer);
-				this.checkLocked.AutoToggle = false;
-				this.checkLocked.Text = "Modules bloqués";
-				this.checkLocked.PreferredWidth = 115;
-				this.checkLocked.Dock = DockStyle.Left;
-				this.checkLocked.Margins = new Margins (0, 0, 0, 0);
+				this.checkLocked = new CheckButton (footer)
+				{
+					AutoToggle        = false,
+					Text              = "Modules bloqués",
+					PreferredWidth    = 115,
+					Dock              = DockStyle.Left,
+					Margins           = new Margins (0, 0, 0, 0),
+					TabIndex          = 9,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
 				this.checkLocked.Clicked += this.HandleCheckClicked;
-				this.checkLocked.TabIndex = 9;
-				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.checkSecondary = new CheckButton (footer);
-				this.checkSecondary.AutoToggle = false;
-				this.checkSecondary.Text = "Modules secondaires";
-				this.checkSecondary.PreferredWidth = 130;
-				this.checkSecondary.Dock = DockStyle.Left;
-				this.checkSecondary.Margins = new Margins (0, 0, 0, 0);
+				this.checkSecondary = new CheckButton (footer)
+				{
+					AutoToggle        = false,
+					Text              = "Modules secondaires",
+					PreferredWidth    = 130,
+					Dock              = DockStyle.Left,
+					Margins           = new Margins (0, 0, 0, 0),
+					TabIndex          = 9,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
 				this.checkSecondary.Clicked += this.HandleCheckClicked;
-				this.checkSecondary.TabIndex = 9;
-				this.checkSecondary.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonCancel = new Button (footer);
-				this.buttonCancel.PreferredWidth = 75;
-				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
-				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
-				this.buttonCancel.Dock = DockStyle.Right;
+				this.buttonCancel = new Button (footer)
+				{
+					PreferredWidth    = 75,
+					Text              = Res.Strings.Dialog.Button.Cancel,
+					ButtonStyle       = ButtonStyle.DefaultCancel,
+					Dock              = DockStyle.Right,
+					TabIndex          = 11,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
 				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
-				this.buttonCancel.TabIndex = 11;
-				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonOpen = new Button (footer);
-				this.buttonOpen.PreferredWidth = 75;
-				this.buttonOpen.Text = Res.Strings.Dialog.Open.Button.Open;
-				this.buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
-				this.buttonOpen.Dock = DockStyle.Right;
-				this.buttonOpen.Margins = new Margins (0, 6, 0, 0);
+				this.buttonOpen = new Button (footer)
+				{
+					PreferredWidth    = 75,
+					Text              = Res.Strings.Dialog.Open.Button.Open,
+					ButtonStyle       = ButtonStyle.DefaultAccept,
+					Dock              = DockStyle.Right,
+					Margins           = new Margins (0, 6, 0, 0),
+					TabIndex          = 10,
+					TabNavigationMode = TabNavigationMode.ActivateOnTab,
+				};
 				this.buttonOpen.Clicked += this.HandleButtonOpenClicked;
-				this.buttonOpen.TabIndex = 10;
-				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
 			this.filterController.ClearFilter ();
