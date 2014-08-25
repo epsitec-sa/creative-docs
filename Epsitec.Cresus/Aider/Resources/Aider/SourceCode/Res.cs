@@ -1257,6 +1257,38 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 674));
 						}
 					}
+					//	designer:cap/LVADL
+					public static global::Epsitec.Common.Types.Caption CantonLieuPhare
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 685));
+						}
+					}
+					//	designer:cap/LVAEL
+					public static global::Epsitec.Common.Types.Caption CantonMiCo
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 686));
+						}
+					}
+					//	designer:cap/LVABL
+					public static global::Epsitec.Common.Types.Caption CantonOffice
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 683));
+						}
+					}
+					//	designer:cap/LVACL
+					public static global::Epsitec.Common.Types.Caption CantonService
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 684));
+						}
+					}
 					//	designer:cap/LVATK
 					public static global::Epsitec.Common.Types.Caption None
 					{

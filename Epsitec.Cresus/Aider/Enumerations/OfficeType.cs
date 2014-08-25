@@ -12,10 +12,11 @@ namespace Epsitec.Aider.Enumerations
 
 		Parish			= 1,
 		Region			= 2,
-		Canton			= 3,
-
-		RegionalGroup	= 12,
-		CantonalGroup	= 13,
+		CantonOffice	= 3,
+		
+		CantonService	= 12,
+		CantonLieuPhare	= 13,
+		CantonMiCo		= 14,
 	}
 }
 

@@ -243,12 +243,29 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			var parishPath   = subscription.ParishGroupPathCache;
 			var regionNumber = AiderGroupIds.GetRegionNumber (parishPath);
-			var parishName   = parishPath == null ? "<null>" : this.parishes[parishPath];
+			var parishName   = this.GetParishSafely (parishPath);
 			var message      = string.Format ("{0}\t{1}\t{2}", error, regionNumber.GetValueOrDefault (0), parishName);
 
 			this.errors.Add (System.Tuple.Create (subscription.Id, message));
 		}
-		
+
+		private string GetParishSafely(string parishPath)
+		{
+			if (parishPath == null)
+			{
+				return "<null>";
+			}
+
+			string parishName;
+			
+			if (this.parishes.TryGetValue (parishPath, out parishName))
+			{
+				return parishName;
+			}
+
+			return "<path=" + parishPath + ">";
+		}
+
 		private void ComputeStats(IEnumerable<SubscriptionFileLine> lines)
 		{
 			foreach (var line in lines)
