@@ -75,6 +75,111 @@ namespace Epsitec.Cresus.Assets.App
 			
 		}
 		
+		public static class Types
+		{
+			internal static void _Initialize()
+			{
+				global::System.Object.Equals (AccountsImportMode, null);
+			}
+			
+			//	designer:cap/JUK8001
+			public static readonly Epsitec.Common.Types.EnumType AccountsImportMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
+			//	designer:cap/JUKC001
+			public static readonly Epsitec.Common.Types.EnumType ExportFormat = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
+		}
+		
+		public static class Values
+		{
+			public static class AccountsImportMode
+			{
+				//	designer:cap/JUKA001
+				public static global::Epsitec.Common.Types.Caption Add
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
+					}
+				}
+				//	designer:cap/JUK9001
+				public static global::Epsitec.Common.Types.Caption Error
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+					}
+				}
+				//	designer:cap/JUKB001
+				public static global::Epsitec.Common.Types.Caption Update
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+					}
+				}
+			}
+			
+			public static class ExportFormat
+			{
+				//	designer:cap/JUKF001
+				public static global::Epsitec.Common.Types.Caption Csv
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
+					}
+				}
+				//	designer:cap/JUKI001
+				public static global::Epsitec.Common.Types.Caption Json
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+					}
+				}
+				//	designer:cap/JUKJ001
+				public static global::Epsitec.Common.Types.Caption Pdf
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+					}
+				}
+				//	designer:cap/JUKE001
+				public static global::Epsitec.Common.Types.Caption Txt
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
+					}
+				}
+				//	designer:cap/JUKD001
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
+					}
+				}
+				//	designer:cap/JUKG001
+				public static global::Epsitec.Common.Types.Caption Xml
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16));
+					}
+				}
+				//	designer:cap/JUKH001
+				public static global::Epsitec.Common.Types.Caption Yaml
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+					}
+				}
+			}
+			
+		}
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -163,6 +268,7 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Edit._Initialize ();
 			Commands.View._Initialize ();
+			Types._Initialize ();
 			Strings._Initialize ();
 		}
 		

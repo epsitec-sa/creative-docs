@@ -3,9 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Assets.App.Export
 {
+	[DesignerVisible]
 	public enum AccountsImportMode
 	{
 		Error,
