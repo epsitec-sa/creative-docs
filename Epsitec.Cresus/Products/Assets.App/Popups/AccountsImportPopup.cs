@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Importer";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Import.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Coller";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Paste.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

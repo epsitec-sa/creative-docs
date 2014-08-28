@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Voir";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Show.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

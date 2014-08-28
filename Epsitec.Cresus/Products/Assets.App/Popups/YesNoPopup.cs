@@ -30,8 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Oui";
-			this.defaultCancelButtonName = "Non";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Yes.ToString ();
+			this.defaultCancelButtonName = Res.Strings.Popup.No.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

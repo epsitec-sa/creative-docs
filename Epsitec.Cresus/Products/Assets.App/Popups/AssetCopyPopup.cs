@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Copier";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Copy.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

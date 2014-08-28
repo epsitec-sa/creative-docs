@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Créer";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Create.ToString ();
 			this.defaultControllerRankFocus = 1;
 		}
 

@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Calculer";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Compute.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

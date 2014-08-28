@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public NewMandatPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			//?this.title = "Création d'un nouveau mandat";
 			this.title = Res.Strings.Popup.NewMandat.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
@@ -34,14 +33,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Avec des exemples",
+				Label                 = Res.Strings.Popup.NewMandat.Sample.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Nom du mandat",
+				Label                 = Res.Strings.Popup.NewMandat.Name.ToString (),
 				Width                 = DateController.controllerWidth - 4,
 			});
 
@@ -49,12 +48,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Free,
-				Label                 = "Date de début",
+				Label                 = Res.Strings.Popup.NewMandat.Date.ToString (),
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Créer";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Create.ToString ();
 			this.defaultControllerRankFocus = 2;
 		}
 

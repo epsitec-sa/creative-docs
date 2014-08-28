@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Exporter";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Export.ToString ();
 			this.defaultControllerRankFocus = 1;
 		}
 

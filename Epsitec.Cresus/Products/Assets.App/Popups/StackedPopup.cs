@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controllerVisibleFrames = new List<FrameBox> ();
 			this.controllerHiddenFrames = new List<FrameBox> ();
 
-			this.defaultAcceptButtonName = "D'accord";
-			this.defaultCancelButtonName = "Annuler";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Ok.ToString ();
+			this.defaultCancelButtonName = Res.Strings.Popup.Cancel.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

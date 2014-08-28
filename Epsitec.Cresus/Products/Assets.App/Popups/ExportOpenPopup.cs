@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = "Ouvrir";
-			this.defaultCancelButtonName = "Fermer";
+			this.defaultAcceptButtonName = Res.Strings.Popup.Open.ToString ();
+			this.defaultCancelButtonName = Res.Strings.Popup.Close.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 
