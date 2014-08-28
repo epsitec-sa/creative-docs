@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -110,6 +109,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.access.CollectionView.MoveCurrentToFirst();
 			}
 
+			this.hasPasteThenCopyCommand = true;
+
 			this.UpdateAll();
 		}
 
@@ -151,7 +152,31 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		
+
+		protected override void PasteThenCopy()
+		{
+			//	Colle le texte du bloc-notes dans le texte principal, puis copie le
+			//	nom de la ressource dans les bloc-notes, sous la forme:
+			//	Res.Strings.XXX.ToString ()
+			this.primaryText.ProcessPaste ();
+
+			var text = string.Concat ("Res.Strings.", this.labelEdit.Text, ".ToString ()");
+			Strings.ClipboardCopy (text);
+
+			this.primaryText.Focus ();
+			this.primaryText.SelectAll ();
+		}
+
+		private static void ClipboardCopy(string text)
+		{
+			var data = new ClipboardWriteData ();
+
+			data.WriteText (text);
+
+			Clipboard.SetData (data);
+		}
+
+
 		protected override void UpdateEdit()
 		{
 			//	Met à jour les lignes éditables en fonction de la sélection dans le tableau.

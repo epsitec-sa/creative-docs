@@ -601,4 +601,5 @@
   <data name="Action.SaveAllBitmaps" id="KO3">Exporte toutes les images des entités selon les réglages de chaque module</data>
   <data name="Action.SaveAll" id="KP3">Enregistrer tout</data>
   <data name="Ribbon.Section.Global" id="KQ3">Tous les modules</data>
+  <data name="Action.PasteThenCopy" id="KR3">Coller le texte puis copier le nom</data>
 </bundle>

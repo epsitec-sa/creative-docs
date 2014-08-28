@@ -891,8 +891,17 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (name == "Paste")
 			{
-				this.currentTextField.ProcessPaste();
+				this.currentTextField.ProcessPaste ();
 			}
+
+			if (name == "PasteThenCopy")
+			{
+				this.PasteThenCopy ();
+			}
+		}
+
+		protected virtual void PasteThenCopy()
+		{
 		}
 
 		public void DoFont(string name)
@@ -1552,6 +1561,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("FontUnderline").Enable = (sel != -1);
 				this.GetCommandState("DesignerGlyphs").Enable = (sel != -1);
 			}
+
+			this.GetCommandState ("PasteThenCopy").Enable = this.hasPasteThenCopyCommand;
 
 			if (this is Panels)
 			{
@@ -2809,5 +2820,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected bool							lastActionIsReplace = false;
 		protected AbstractTextField				currentTextField;
 		protected int							tabIndex = 1;
+		protected bool							hasPasteThenCopyCommand = false;
 	}
 }

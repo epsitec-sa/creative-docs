@@ -258,4 +258,5 @@
   <data id="KO3">Save</data>
   <data id="KP3">Save all</data>
   <data id="KQ3">All modules</data>
+  <data id="KR3">Paste text then copy name</data>
 </bundle>

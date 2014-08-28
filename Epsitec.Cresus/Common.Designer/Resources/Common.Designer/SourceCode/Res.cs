@@ -2714,6 +2714,14 @@ namespace Epsitec.Common.Designer
 						return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (40));
 					}
 				}
+				//	designer:str/30KR3
+				public static global::System.String PasteThenCopy
+				{
+					get
+					{
+						return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (335544443));
+					}
+				}
 				//	designer:str/30051
 				public static global::System.String Quit
 				{
@@ -8078,6 +8086,14 @@ namespace Epsitec.Common.Designer
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (40);
+					}
+				}
+				//	designer:str/30KR3
+				public static global::Epsitec.Common.Support.Druid PasteThenCopy
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544443);
 					}
 				}
 				//	designer:str/30051

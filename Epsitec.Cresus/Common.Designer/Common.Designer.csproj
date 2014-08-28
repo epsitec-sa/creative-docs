@@ -769,6 +769,7 @@
     <EmbeddedResource Include="Images\EntityIndexAscending.icon" />
     <EmbeddedResource Include="Images\EntityIndexBoth.icon" />
     <EmbeddedResource Include="Images\EntityIndexDescending.icon" />
+    <EmbeddedResource Include="Images\PasteThenCopy.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

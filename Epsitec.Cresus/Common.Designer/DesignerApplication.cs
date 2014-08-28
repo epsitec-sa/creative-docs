@@ -954,9 +954,10 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoCopyToModule(this.LastModule);
 		}
 
-		[Command("Cut")]
-		[Command("Copy")]
-		[Command("Paste")]
+		[Command ("Cut")]
+		[Command ("Copy")]
+		[Command ("Paste")]
+		[Command ("PasteThenCopy")]
 		void CommandClipboard(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if (!this.HasCurrentModule)
@@ -1153,7 +1154,8 @@ namespace Epsitec.Common.Designer
 			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = this.CreateCommandState("Copy", KeyCode.ModifierControl|KeyCode.AlphaC);
-			this.pasteState = this.CreateCommandState("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.pasteState = this.CreateCommandState ("Paste", KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.pasteThenCopyState = this.CreateCommandState ("PasteThenCopy", KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.editLockedState = this.CreateCommandState("EditLocked", KeyCode.ModifierControl|KeyCode.AlphaL);
 			this.editOkState = this.CreateCommandState("EditOk", KeyCode.FuncF12);
 			this.editCancelState = this.CreateCommandState("EditCancel");
@@ -2381,6 +2383,7 @@ namespace Epsitec.Common.Designer
 				this.cutState.Enable = false;
 				this.copyState.Enable = false;
 				this.pasteState.Enable = false;
+				this.pasteThenCopyState.Enable = false;
 				this.newCultureState.Enable = false;
 				this.deleteCultureState.Enable = false;
 				this.filterState.Enable = false;
@@ -3149,6 +3152,7 @@ namespace Epsitec.Common.Designer
 		private CommandState					cutState;
 		private CommandState					copyState;
 		private CommandState					pasteState;
+		private CommandState					pasteThenCopyState;
 		private CommandState					editLockedState;
 		private CommandState					editOkState;
 		private CommandState					editCancelState;
