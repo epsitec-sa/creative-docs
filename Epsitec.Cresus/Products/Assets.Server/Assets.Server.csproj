@@ -110,6 +110,7 @@
     </Content>
     <Content Include="Resources\Assets.Server\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
