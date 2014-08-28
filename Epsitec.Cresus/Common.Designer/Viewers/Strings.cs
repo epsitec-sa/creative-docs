@@ -160,6 +160,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Res.Strings.XXX.ToString ()
 			this.primaryText.ProcessPaste ();
 
+//-			var text = string.Concat ("Res.Strings.", this.labelEdit.Text);
 			var text = string.Concat ("Res.Strings.", this.labelEdit.Text, ".ToString ()");
 			Strings.ClipboardCopy (text);
 

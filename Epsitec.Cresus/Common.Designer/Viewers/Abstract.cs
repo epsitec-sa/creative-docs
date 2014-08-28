@@ -811,10 +811,10 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateCommands();
 					this.designerApplication.LocatorFix();
 
-					if (this.currentTextField != null)
+					if (this.labelEdit != null)
 					{
-						this.currentTextField.SelectAll();
-						this.currentTextField.Focus();
+						this.labelEdit.SelectAll ();
+						this.labelEdit.Focus ();
 					}
 				}
 			}
