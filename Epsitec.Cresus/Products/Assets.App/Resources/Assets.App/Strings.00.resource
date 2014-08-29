@@ -313,4 +313,15 @@
   <data name="FieldControllers.GuidRatio.List" id="KV9">Regroupements</data>
   <data name="FieldControllers.GuidRatio.New" id="K0A">Nouveau</data>
   <data name="FieldControllers.Person.Goto" id="K1A">Aller sur le contact</data>
+  <data name="ToolbarControllers.Accounts.DateRange" id="K2A">Choix du plan comptable</data>
+  <data name="ToolbarControllers.Accounts.New" id="K3A">Nouveau compte</data>
+  <data name="ToolbarControllers.Accounts.Delete" id="K4A">Supprimer le compte</data>
+  <data name="ToolbarControllers.Accounts.Deselect" id="K5A">Désélectionner le compte</data>
+  <data name="ToolbarControllers.Accounts.Copy" id="K6A">Copier le compte</data>
+  <data name="ToolbarControllers.Accounts.Paste" id="K7A">Coller le compte</data>
+  <data name="ToolbarControllers.Accounts.Export" id="K8A">Exporter le plan comptable</data>
+  <data name="ToolbarControllers.Accounts.Import" id="K9A">Importer un plan comptable Crésus (fichier .cre)</data>
+  <data name="ToolbarControllers.AssetsTimeline.Copy.EmptySelection" id="KAA">La copie est impossible, car aucun événement n'est sélectionné.</data>
+  <data name="ToolbarControllers.AssetsTimeline.Paste.Wrong" id="KBA">Les données sont incompatibles.</data>
+  <data name="ToolbarControllers.AssetsTimeline.Paste.Empty" id="KCA">Aucun événement ne peut être collé, car le bloc-notes est vide.</data>
 </bundle>

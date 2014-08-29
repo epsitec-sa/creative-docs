@@ -109,14 +109,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.DateRange, null, "Choix du plan comptable");
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,       null, "Nouveau compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,    null, "Supprimer le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect,  null, "Désélectionner le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,      null, "Copier le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,     null, "Coller le compte");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,    null, "Exporter le plan comptable");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,    null, "Importer un plan comptable Crésus (fichier .cre)");
+			this.toolbar.SetCommandDescription (ToolbarCommand.DateRange, null, Res.Strings.ToolbarControllers.AccountsTreeTable.DateRange.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,       null, Res.Strings.ToolbarControllers.AccountsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect,  null, Res.Strings.ToolbarControllers.AccountsTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,      null, Res.Strings.ToolbarControllers.AccountsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,     null, Res.Strings.ToolbarControllers.AccountsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Export.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Import,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Import.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,      CommandDescription.Empty);
 		}
 

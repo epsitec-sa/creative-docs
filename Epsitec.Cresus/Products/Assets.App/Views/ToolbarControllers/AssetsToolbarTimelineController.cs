@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Copy.EmptySelection.ToString ());
 			}
 		}
 
@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 					if (e == null)
 					{
-						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+						MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Wrong.ToString ());
 					}
 					else
 					{
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Empty.ToString ());
 			}
 		}
 
@@ -557,10 +557,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 				if (this.HasGraph)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Values, "Valeurs", relativeHeight: 3.0));
+					list.Add (new TimelineRowDescription (TimelineRowType.Values, Res.Strings.ToolbarControllers.AssetsTimeline.Row.Values.ToString (), relativeHeight: 3.0));
 				}
 
-				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, "Evénements"));
+				list.Add (new TimelineRowDescription (TimelineRowType.Glyph, Res.Strings.ToolbarControllers.AssetsTimeline.Row.Events.ToString ()));
 
 				if (this.IsDaysOfWeek)
 				{
@@ -569,25 +569,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 				if (this.IsExpanded)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Days, "Jour"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Days, Res.Strings.ToolbarControllers.AssetsTimeline.Row.Days.ToString ()));
 				}
 				else
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, Res.Strings.ToolbarControllers.AssetsTimeline.Row.DaysMonths.ToString ()));
 				}
 
 				if (this.IsWeeksOfYear)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, "Semaine"));
+					list.Add (new TimelineRowDescription (TimelineRowType.WeekOfYear, Res.Strings.ToolbarControllers.AssetsTimeline.Row.WeekOfYear.ToString ()));
 				}
 
 				if (this.IsExpanded)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.ToolbarControllers.AssetsTimeline.Row.Months.ToString ()));
 				}
 				else
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Years, "Année"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years, Res.Strings.ToolbarControllers.AssetsTimeline.Row.Years.ToString ()));
 				}
 
 				return list.ToArray ();

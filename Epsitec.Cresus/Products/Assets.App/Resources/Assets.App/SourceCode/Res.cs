@@ -3522,6 +3522,172 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class ToolbarControllers
+			{
+				public static class AccountsTreeTable
+				{
+					//	designer:str/JUK6A01
+					public static global::Epsitec.Common.Types.FormattedText Copy
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544646));
+						}
+					}
+					//	designer:str/JUKDA01
+					public static global::Epsitec.Common.Types.FormattedText DateRange
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544653));
+						}
+					}
+					//	designer:str/JUK4A01
+					public static global::Epsitec.Common.Types.FormattedText Delete
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544644));
+						}
+					}
+					//	designer:str/JUK5A01
+					public static global::Epsitec.Common.Types.FormattedText Deselect
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544645));
+						}
+					}
+					//	designer:str/JUK8A01
+					public static global::Epsitec.Common.Types.FormattedText Export
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544648));
+						}
+					}
+					//	designer:str/JUK9A01
+					public static global::Epsitec.Common.Types.FormattedText Import
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544649));
+						}
+					}
+					//	designer:str/JUK3A01
+					public static global::Epsitec.Common.Types.FormattedText New
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544643));
+						}
+					}
+					//	designer:str/JUK7A01
+					public static global::Epsitec.Common.Types.FormattedText Paste
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544647));
+						}
+					}
+				}
+				
+				public static class AssetsTimeline
+				{
+					public static class Copy
+					{
+						//	designer:str/JUKAA01
+						public static global::Epsitec.Common.Types.FormattedText EmptySelection
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544650));
+							}
+						}
+					}
+					
+					public static class Paste
+					{
+						//	designer:str/JUKCA01
+						public static global::Epsitec.Common.Types.FormattedText Empty
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544652));
+							}
+						}
+						//	designer:str/JUKBA01
+						public static global::Epsitec.Common.Types.FormattedText Wrong
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544651));
+							}
+						}
+					}
+					
+					public static class Row
+					{
+						//	designer:str/JUKGA01
+						public static global::Epsitec.Common.Types.FormattedText Days
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544656));
+							}
+						}
+						//	designer:str/JUKHA01
+						public static global::Epsitec.Common.Types.FormattedText DaysMonths
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544657));
+							}
+						}
+						//	designer:str/JUKFA01
+						public static global::Epsitec.Common.Types.FormattedText Events
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544655));
+							}
+						}
+						//	designer:str/JUKJA01
+						public static global::Epsitec.Common.Types.FormattedText Months
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544659));
+							}
+						}
+						//	designer:str/JUKEA01
+						public static global::Epsitec.Common.Types.FormattedText Values
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544654));
+							}
+						}
+						//	designer:str/JUKIA01
+						public static global::Epsitec.Common.Types.FormattedText WeekOfYear
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544658));
+							}
+						}
+						//	designer:str/JUKKA01
+						public static global::Epsitec.Common.Types.FormattedText Years
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544660));
+							}
+						}
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
@@ -6476,6 +6642,172 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544580);
+						}
+					}
+				}
+			}
+			
+			public static class ToolbarControllers
+			{
+				public static class AccountsTreeTable
+				{
+					//	designer:str/JUK6A01
+					public static global::Epsitec.Common.Support.Druid Copy
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544646);
+						}
+					}
+					//	designer:str/JUKDA01
+					public static global::Epsitec.Common.Support.Druid DateRange
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544653);
+						}
+					}
+					//	designer:str/JUK4A01
+					public static global::Epsitec.Common.Support.Druid Delete
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544644);
+						}
+					}
+					//	designer:str/JUK5A01
+					public static global::Epsitec.Common.Support.Druid Deselect
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544645);
+						}
+					}
+					//	designer:str/JUK8A01
+					public static global::Epsitec.Common.Support.Druid Export
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544648);
+						}
+					}
+					//	designer:str/JUK9A01
+					public static global::Epsitec.Common.Support.Druid Import
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544649);
+						}
+					}
+					//	designer:str/JUK3A01
+					public static global::Epsitec.Common.Support.Druid New
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544643);
+						}
+					}
+					//	designer:str/JUK7A01
+					public static global::Epsitec.Common.Support.Druid Paste
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544647);
+						}
+					}
+				}
+				
+				public static class AssetsTimeline
+				{
+					public static class Copy
+					{
+						//	designer:str/JUKAA01
+						public static global::Epsitec.Common.Support.Druid EmptySelection
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544650);
+							}
+						}
+					}
+					
+					public static class Paste
+					{
+						//	designer:str/JUKCA01
+						public static global::Epsitec.Common.Support.Druid Empty
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544652);
+							}
+						}
+						//	designer:str/JUKBA01
+						public static global::Epsitec.Common.Support.Druid Wrong
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544651);
+							}
+						}
+					}
+					
+					public static class Row
+					{
+						//	designer:str/JUKGA01
+						public static global::Epsitec.Common.Support.Druid Days
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544656);
+							}
+						}
+						//	designer:str/JUKHA01
+						public static global::Epsitec.Common.Support.Druid DaysMonths
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544657);
+							}
+						}
+						//	designer:str/JUKFA01
+						public static global::Epsitec.Common.Support.Druid Events
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544655);
+							}
+						}
+						//	designer:str/JUKJA01
+						public static global::Epsitec.Common.Support.Druid Months
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544659);
+							}
+						}
+						//	designer:str/JUKEA01
+						public static global::Epsitec.Common.Support.Druid Values
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544654);
+							}
+						}
+						//	designer:str/JUKIA01
+						public static global::Epsitec.Common.Support.Druid WeekOfYear
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544658);
+							}
+						}
+						//	designer:str/JUKKA01
+						public static global::Epsitec.Common.Support.Druid Years
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544660);
+							}
 						}
 					}
 				}
