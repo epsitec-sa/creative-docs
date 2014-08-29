@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.Accept, "Edit.Accept", "Accepter les modifications");
-			this.SetCommandDescription (ToolbarCommand.Cancel, "Edit.Cancel", "Annuler les modifications");
+			this.SetCommandDescription (ToolbarCommand.Accept, "Edit.Accept", Res.Strings.Toolbar.Edit.Accept.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Cancel, "Edit.Cancel", Res.Strings.Toolbar.Edit.Cancel.ToString ());
 		}
 
 

@@ -19,16 +19,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-//-			this.SetCommandDescription (ToolbarCommand.ReportSelect,     "Report.Select",        "Choix d'un rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportParams,     "Report.Params",        "Paramètres du rapport");
-			this.SetCommandDescription (ToolbarCommand.CompactAll,       "TreeTable.CompactAll", "Compacter tout");
-			this.SetCommandDescription (ToolbarCommand.CompactOne,       "TreeTable.CompactOne", "Compacter un niveau");
-			this.SetCommandDescription (ToolbarCommand.ExpandOne,        "TreeTable.ExpandOne",  "Etendre un niveau");
-			this.SetCommandDescription (ToolbarCommand.ExpandAll,        "TreeTable.ExpandAll",  "Etendre tout");
-			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod, "Report.PrevPeriod",    "Période précédente");
-			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod, "Report.NextPeriod",    "Période suivante");
-			this.SetCommandDescription (ToolbarCommand.ReportExport,     "Report.Export",        "Exporter le rapport");
-			this.SetCommandDescription (ToolbarCommand.ReportClose,      "Report.Close",         "Fermer le rapport");
+			this.SetCommandDescription (ToolbarCommand.ReportParams,     "Report.Params",        Res.Strings.Toolbar.Reports.Params.ToString ());
+			this.SetCommandDescription (ToolbarCommand.CompactAll,       "TreeTable.CompactAll", Res.Strings.Toolbar.Reports.CompactAll.ToString ());
+			this.SetCommandDescription (ToolbarCommand.CompactOne,       "TreeTable.CompactOne", Res.Strings.Toolbar.Reports.CompactOne.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ExpandOne,        "TreeTable.ExpandOne",  Res.Strings.Toolbar.Reports.ExpandOne.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,        "TreeTable.ExpandAll",  Res.Strings.Toolbar.Reports.ExpandAll.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod, "Report.PrevPeriod",    Res.Strings.Toolbar.Reports.PrevPeriod.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod, "Report.NextPeriod",    Res.Strings.Toolbar.Reports.NextPeriod.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ReportExport,     "Report.Export",        Res.Strings.Toolbar.Reports.Export.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ReportClose,      "Report.Close",         Res.Strings.Toolbar.Reports.Close.ToString ());
 		}
 
 
@@ -42,7 +41,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-//-			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportSelect);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportParams);
 			this.CreateSeparator     (DockStyle.Left);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.CompactAll);

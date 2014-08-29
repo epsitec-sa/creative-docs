@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Reports
@@ -50,22 +51,27 @@ namespace Epsitec.Cresus.Assets.App.Reports
 		{
 			get
 			{
-				yield return new Report (ReportType.MCH2Summary, "Tableau des immobilisations MCH2");
-				yield return new Report (ReportType.AssetsList,  "Liste des objets d'immobilisations");
-				yield return new Report (ReportType.PersonsList, "Liste des contacts");
+				yield return new Report (ReportType.MCH2Summary);
+				yield return new Report (ReportType.AssetsList);
+				yield return new Report (ReportType.PersonsList);
 			}
 		}
 
 		private struct Report
 		{
-			public Report(ReportType type, string name)
+			public Report(ReportType type)
 			{
 				this.Type = type;
-				this.Name = name;
+				this.Name = ReportsList.GetReportTypeDescription (type);
 			}
 
 			public readonly ReportType			Type;
 			public readonly string				Name;
+		}
+
+		private static string GetReportTypeDescription(ReportType type)
+		{
+			return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
 		}
 	}
 }

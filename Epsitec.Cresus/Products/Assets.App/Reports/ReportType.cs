@@ -3,9 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	[DesignerVisible]
 	public enum ReportType
 	{
 		Unknown,

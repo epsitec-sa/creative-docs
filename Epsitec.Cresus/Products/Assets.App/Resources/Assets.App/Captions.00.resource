@@ -51,4 +51,9 @@
   <data name="Val.PfdPredefinedStyle.Contrast" id="KL1">&lt;s:data id="_0" f:Name="Contrast" f:Labels="{Collection {Text 'Contrasté'}}" /&gt;</data>
   <data name="Val.PfdPredefinedStyle.Kitch" id="KM1">&lt;s:data id="_0" f:Name="Kitch" f:Labels="{Collection {Text 'Kitch'}}" /&gt;</data>
   <data name="Typ.PfdPredefinedStyle" id="K91">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PfdPredefinedStyle" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.Export.PdfPredefinedStyle, Assets.Server.Export" f:_2.EnumValues="{Collection {Text '0 [JUKA101]'}, {Text '1 [JUKB101]'}, {Text '2 [JUKC101]'}, {Text '3 [JUKD101]'}, {Text '4 [JUKE101]'}, {Text '5 [JUKF101]'}, {Text '6 [JUKG101]'}, {Text '7 [JUKH101]'}, {Text '8 [JUKI101]'}, {Text '9 [JUKJ101]'}, {Text '10 [JUKK101]'}, {Text '11 [JUKL101]'}, {Text '12 [JUKM101]'}}" /&gt;</data>
+  <data name="Val.ReportType.Unknown" id="KO1">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.ReportType.MCH2Summary" id="KP1">&lt;s:data id="_0" f:Name="MCH2Summary" f:Labels="{Collection {Text 'Tableau des immobilisations MCH2'}}" /&gt;</data>
+  <data name="Val.ReportType.AssetsList" id="KQ1">&lt;s:data id="_0" f:Name="AssetsList" f:Labels="{Collection {Text 'Liste des objets d\'immobilisations'}}" /&gt;</data>
+  <data name="Val.ReportType.PersonsList" id="KR1">&lt;s:data id="_0" f:Name="PersonsList" f:Labels="{Collection {Text 'Liste des contacts'}}" /&gt;</data>
+  <data name="Typ.ReportType" id="KN1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ReportType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.ReportType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKO101]'}, {Text '1 [JUKP101]'}, {Text '2 [JUKQ101]'}, {Text '3 [JUKR101]'}}" /&gt;</data>
 </bundle>

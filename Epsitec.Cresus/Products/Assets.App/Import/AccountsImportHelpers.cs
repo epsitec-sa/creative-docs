@@ -48,18 +48,18 @@ namespace Epsitec.Cresus.Assets.App.Export
 						bool equal = AccountsLogic.Compare (importedAccounts, this.accessor.Mandat.GetAccounts (range));
 						if (equal)
 						{
-							const string message = "L'importation est inutile.<br/>Ce plan comptable a déjà été importé.";
+							string message = Res.Strings.AccountsImport.Message.Equal.ToString ();
 							return new AccountsImportReport (AccountsImportMode.Error, message);
 						}
 						else
 						{
-							string message = string.Format ("Mise à jour de la période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
+							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count);
 							return new AccountsImportReport (AccountsImportMode.Update, message);
 						}
 					}
 					else
 					{
-						string message = string.Format ("Nouvelle période {0}.<br/>{1} comptes à importer.", range.ToNiceString (), importedAccounts.Count);
+						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count);
 						return new AccountsImportReport (AccountsImportMode.Add, message);
 					}
 				}
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ShowMessagePopup(string message)
 		{
 			//	Affiche une erreur.
-			MessagePopup.ShowMessage (this.target, "Importation", message);
+			MessagePopup.ShowMessage (this.target, Res.Strings.Popup.Message.AccountsImport.Title.ToString (), message);
 		}
 
 

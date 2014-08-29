@@ -20,29 +20,29 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.Filter,     "TreeTable.Filter",     "Grouper les objets selon");
-			this.SetCommandDescription (ToolbarCommand.DateRange,  "TreeTable.DateRange",  "Choix de la période");
-			this.SetCommandDescription (ToolbarCommand.Graphic,    "TreeTable.Graphic",    "Représentation graphique");
-			this.SetCommandDescription (ToolbarCommand.First,      "TreeTable.First",      "Retourner sur la première ligne");
-			this.SetCommandDescription (ToolbarCommand.Prev,       "TreeTable.Prev",       "Reculer sur la ligne précédente");
-			this.SetCommandDescription (ToolbarCommand.Next,       "TreeTable.Next",       "Avancer sur la ligne suivante");
-			this.SetCommandDescription (ToolbarCommand.Last,       "TreeTable.Last",       "Avancer sur la dernière ligne");
-			this.SetCommandDescription (ToolbarCommand.CompactAll, "TreeTable.CompactAll", "Compacter tout");
-			this.SetCommandDescription (ToolbarCommand.CompactOne, "TreeTable.CompactOne", "Compacter un niveau");
-			this.SetCommandDescription (ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  "Etendre un niveau");
-			this.SetCommandDescription (ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  "Etendre tout");
-			this.SetCommandDescription (ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    "Déplacer la ligne au sommet");
-			this.SetCommandDescription (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     "Monter la ligne");
-			this.SetCommandDescription (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   "Descendre la ligne");
-			this.SetCommandDescription (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", "Déplacer la ligne à la fin");
-			this.SetCommandDescription (ToolbarCommand.New,        "TreeTable.New",        "Nouvelle ligne");
-			this.SetCommandDescription (ToolbarCommand.Delete,     "TreeTable.Delete",     "Supprimer la ligne");
-			this.SetCommandDescription (ToolbarCommand.Deselect,   "TreeTable.Deselect",   "Désélectionner la ligne");
-			this.SetCommandDescription (ToolbarCommand.Copy,       "TreeTable.Copy",       "Copier");
-			this.SetCommandDescription (ToolbarCommand.Paste,      "TreeTable.Paste",      "Coller");
-			this.SetCommandDescription (ToolbarCommand.Export,     "TreeTable.Export",     "Exporter");
-			this.SetCommandDescription (ToolbarCommand.Import,     "TreeTable.Import",     "Importer");
-			this.SetCommandDescription (ToolbarCommand.Goto,       "TreeTable.Goto",       "Aller");
+			this.SetCommandDescription (ToolbarCommand.Filter,     "TreeTable.Filter",     Res.Strings.Toolbar.TreeTable.Filter.ToString ());
+			this.SetCommandDescription (ToolbarCommand.DateRange,  "TreeTable.DateRange",  Res.Strings.Toolbar.TreeTable.DateRange.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Graphic,    "TreeTable.Graphic",    Res.Strings.Toolbar.TreeTable.Graphic.ToString ());
+			this.SetCommandDescription (ToolbarCommand.First,      "TreeTable.First",      Res.Strings.Toolbar.TreeTable.First.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Prev,       "TreeTable.Prev",       Res.Strings.Toolbar.TreeTable.Prev.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Next,       "TreeTable.Next",       Res.Strings.Toolbar.TreeTable.Next.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Last,       "TreeTable.Last",       Res.Strings.Toolbar.TreeTable.Last.ToString ());
+			this.SetCommandDescription (ToolbarCommand.CompactAll, "TreeTable.CompactAll", Res.Strings.Toolbar.TreeTable.CompactAll.ToString ());
+			this.SetCommandDescription (ToolbarCommand.CompactOne, "TreeTable.CompactOne", Res.Strings.Toolbar.TreeTable.CompactOne.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ExpandOne,  "TreeTable.ExpandOne",  Res.Strings.Toolbar.TreeTable.ExpandOne.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,  "TreeTable.ExpandAll",  Res.Strings.Toolbar.TreeTable.ExpandAll.ToString ());
+			this.SetCommandDescription (ToolbarCommand.MoveTop,    "TreeTable.MoveTop",    Res.Strings.Toolbar.TreeTable.MoveTop.ToString ());
+			this.SetCommandDescription (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     Res.Strings.Toolbar.TreeTable.MoveUp.ToString ());
+			this.SetCommandDescription (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   Res.Strings.Toolbar.TreeTable.MoveDown.ToString ());
+			this.SetCommandDescription (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", Res.Strings.Toolbar.TreeTable.MoveBottom.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,        "TreeTable.New",        Res.Strings.Toolbar.TreeTable.New.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Delete,     "TreeTable.Delete",     Res.Strings.Toolbar.TreeTable.Delete.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Deselect,   "TreeTable.Deselect",   Res.Strings.Toolbar.TreeTable.Deselect.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Copy,       "TreeTable.Copy",       Res.Strings.Toolbar.TreeTable.Copy.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Paste,      "TreeTable.Paste",      Res.Strings.Toolbar.TreeTable.Paste.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Export,     "TreeTable.Export",     Res.Strings.Toolbar.TreeTable.Export.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Import,     "TreeTable.Import",     Res.Strings.Toolbar.TreeTable.Import.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Goto,       "TreeTable.Goto",       Res.Strings.Toolbar.TreeTable.Goto.ToString ());
 		}
 
 

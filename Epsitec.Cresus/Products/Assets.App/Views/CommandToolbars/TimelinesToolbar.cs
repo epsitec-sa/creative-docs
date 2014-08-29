@@ -21,22 +21,22 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.Narrow,                 "Timeline.Narrow",         "Affichage étroit");
-			this.SetCommandDescription (ToolbarCommand.Wide,                   "Timeline.Wide",           "Affichage large");
-			this.SetCommandDescription (ToolbarCommand.First,                  "Timeline.First",          "Retourner sur le premier événement");
-			this.SetCommandDescription (ToolbarCommand.Prev,                   "Timeline.Prev",           "Reculer sur l'événement précédent");
-			this.SetCommandDescription (ToolbarCommand.Next,                   "Timeline.Next",           "Avancer sur l'événement suivant");
-			this.SetCommandDescription (ToolbarCommand.Last,                   "Timeline.Last",           "Avancer sur le dernier événement");
-			this.SetCommandDescription (ToolbarCommand.New,                    "TreeTable.New.Event",     "Nouvel événement");
-			this.SetCommandDescription (ToolbarCommand.Delete,                 "Timeline.Delete",         "Supprimer l'événement");
-			this.SetCommandDescription (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   "Générer les préamortissements");
-			this.SetCommandDescription (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       "Fixer les préamortissements");
-			this.SetCommandDescription (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   "Transformer en amortissement extraordinaire");
-			this.SetCommandDescription (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", "Supprimer les préamortissements");
-			this.SetCommandDescription (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    "Supprimer des amortissements ordinaires");
-			this.SetCommandDescription (ToolbarCommand.Deselect,               "Timeline.Deselect",       "Désélectionner l'événement");
-			this.SetCommandDescription (ToolbarCommand.Copy,                   "TreeTable.Copy.Event",    "Copier l'événement");
-			this.SetCommandDescription (ToolbarCommand.Paste,                  "TreeTable.Paste.Event",   "Coller l'événement");
+			this.SetCommandDescription (ToolbarCommand.Narrow,                 "Timeline.Narrow",         Res.Strings.Toolbar.Timelines.Narrow.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Wide,                   "Timeline.Wide",           Res.Strings.Toolbar.Timelines.Wide.ToString ());
+			this.SetCommandDescription (ToolbarCommand.First,                  "Timeline.First",          Res.Strings.Toolbar.Timelines.First.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Prev,                   "Timeline.Prev",           Res.Strings.Toolbar.Timelines.Prev.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Next,                   "Timeline.Next",           Res.Strings.Toolbar.Timelines.Next.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Last,                   "Timeline.Last",           Res.Strings.Toolbar.Timelines.Last.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,                    "TreeTable.New.Event",     Res.Strings.Toolbar.Timelines.NewEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Delete,                 "Timeline.Delete",         Res.Strings.Toolbar.Timelines.DeleteEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   Res.Strings.Popup.Amortizations.Preview.Title.ToString ());
+			this.SetCommandDescription (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       Res.Strings.Popup.Amortizations.Fix.Title.ToString ());
+			this.SetCommandDescription (ToolbarCommand.AmortizationsToExtra,   "Amortizations.ToExtra",   Res.Strings.Popup.Amortizations.ToExtra.Title.ToString ());
+			this.SetCommandDescription (ToolbarCommand.AmortizationsUnpreview, "Amortizations.Unpreview", Res.Strings.Popup.Amortizations.Unpreview.Title.ToString ());
+			this.SetCommandDescription (ToolbarCommand.AmortizationsDelete,    "Amortizations.Delete",    Res.Strings.Popup.Amortizations.Delete.Title.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Deselect,               "Timeline.Deselect",       Res.Strings.Toolbar.Timelines.DeselectEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Copy,                   "TreeTable.Copy.Event",    Res.Strings.Toolbar.Timelines.CopyEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Paste,                  "TreeTable.Paste.Event",   Res.Strings.Toolbar.Timelines.PasteEvent.ToString ());
 		}
 
 

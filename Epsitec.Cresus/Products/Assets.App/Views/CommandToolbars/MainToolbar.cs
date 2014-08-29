@@ -22,20 +22,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.NewMandat,        "Main.New",              "Nouveau mandat");
-			this.SetCommandDescription (ToolbarCommand.OpenMandat,       "Main.Open",             "Ouvrir un mandat");
-			this.SetCommandDescription (ToolbarCommand.SaveMandat,       "Main.Save",             "Enregistrer le mandat");
-			this.SetCommandDescription (ToolbarCommand.NavigateBack,     "Navigate.Back",         "Retourner à la vue précédente");
-			this.SetCommandDescription (ToolbarCommand.NavigateForward,  "Navigate.Forward",      "Avancer à la vue suivante");
-			this.SetCommandDescription (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         "Dernières vues");
-			this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   "Axe du temps de l'objet sélectionné");
-			this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    "Tableau des événements");
-			this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", "Axe du temps pour tous les objets");
-			this.SetCommandDescription (ToolbarCommand.Edit,             "Main.Edit",             "Edition");
-			this.SetCommandDescription (ToolbarCommand.Locked,           "Main.Locked",           "Gestion des verrous");
-			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       "Simulation");
-			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           "Annuler les modifications");
-			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           "Accepter les modifications");
+			this.SetCommandDescription (ToolbarCommand.NewMandat,        "Main.New",              Res.Strings.Toolbar.Main.New.ToString ());
+			this.SetCommandDescription (ToolbarCommand.OpenMandat,       "Main.Open",             Res.Strings.Toolbar.Main.Open.ToString ());
+			this.SetCommandDescription (ToolbarCommand.SaveMandat,       "Main.Save",             Res.Strings.Toolbar.Main.Save.ToString ());
+			this.SetCommandDescription (ToolbarCommand.NavigateBack,     "Navigate.Back",         Res.Strings.Toolbar.Main.Navigate.Back.ToString ());
+			this.SetCommandDescription (ToolbarCommand.NavigateForward,  "Navigate.Forward",      Res.Strings.Toolbar.Main.Navigate.Forward.ToString ());
+			this.SetCommandDescription (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         Res.Strings.Toolbar.Main.Navigate.Menu.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   Res.Strings.Toolbar.Main.Show.TimelineSingle.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    Res.Strings.Toolbar.Main.Show.TimelineEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", Res.Strings.Toolbar.Main.Show.TimelineMultiple.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Edit,             "Main.Edit",             Res.Strings.Toolbar.Main.Edit.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Locked,           "Main.Locked",           Res.Strings.Toolbar.Main.Locked.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       Res.Strings.Toolbar.Main.Simulation.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           Res.Strings.Toolbar.Main.Cancel.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           Res.Strings.Toolbar.Main.Accept.ToString ());
 
 			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (size, size),
 			};
 
-			ToolTip.Default.SetToolTip (button, "Choix du réglage");
+			ToolTip.Default.SetToolTip (button, Res.Strings.Toolbar.Main.ChoiceSettings.ToString ());
 
 			button.Clicked += delegate
 			{

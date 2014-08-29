@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 
 			if (weekOfYear)
 			{
-				text += string.Format (" (sem. {0})", date.ToWeekOfYear ());
+				text += string.Format (Res.Strings.DateTime.WeekOfYear.ToString (), date.ToWeekOfYear ());
 			}
 
 			return text;

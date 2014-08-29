@@ -186,4 +186,88 @@
   <data name="Encoding.Ascii" id="K06">ASCII</data>
   <data name="Export.Engine.UnknownFormat" id="K16">L'extension "{0}" n'est pas supportée.</data>
   <data name="Popup.Message.ExportError.Text" id="K26">Exportation impossible</data>
+  <data name="DateRange.FromTo" id="K36">du {0} au {1}</data>
+  <data name="DateTime.WeekOfYear" id="K46"> (sem. {0})</data>
+  <data name="AccountsImport.Message.Equal" id="K56">L'importation est inutile.&lt;br/&gt;Ce plan comptable a déjà été importé.</data>
+  <data name="AccountsImport.Message.Update" id="K66">Mise à jour de la période {0}.&lt;br/&gt;{1} comptes à importer.</data>
+  <data name="AccountsImport.Message.New" id="K76">Nouvelle période {0}.&lt;br/&gt;{1} comptes à importer.</data>
+  <data name="Popup.Message.AccountsImport.Title" id="K86">Importation</data>
+  <data name="Toolbar.Edit.Accept" id="K96">Accepter les modifications</data>
+  <data name="Toolbar.Edit.Cancel" id="KA6">Annuler les modifications</data>
+  <data name="Toolbar.Main.New" id="KB6">Nouveau mandat</data>
+  <data name="Toolbar.Main.Open" id="KC6">Ouvrir un mandat</data>
+  <data name="Toolbar.Main.Save" id="KD6">Enregistrer le mandat</data>
+  <data name="Toolbar.Main.Navigate.Back" id="KE6">Retourner à la vue précédente</data>
+  <data name="Toolbar.Main.Navigate.Forward" id="KF6">Avancer à la vue suivante</data>
+  <data name="Toolbar.Main.Navigate.Menu" id="KG6">Dernières vues</data>
+  <data name="Toolbar.Main.Show.TimelineSingle" id="KH6">Axe du temps de l'objet sélectionné</data>
+  <data name="Toolbar.Main.Show.TimelineEvent" id="KI6">Tableau des événements</data>
+  <data name="Toolbar.Main.Show.TimelineMultiple" id="KJ6">Axe du temps pour tous les objets</data>
+  <data name="Toolbar.Main.Edit" id="KK6">Edition</data>
+  <data name="Toolbar.Main.Locked" id="KL6">Gestion des verrous</data>
+  <data name="Toolbar.Main.Simulation" id="KM6">Simulation</data>
+  <data name="Toolbar.Main.Cancel" id="KN6">Annuler les modifications</data>
+  <data name="Toolbar.Main.Accept" id="KO6">Accepter les modifications</data>
+  <data name="Toolbar.Main.ChoiceSettings" id="KP6">Choix du réglage</data>
+  <data name="Toolbar.Reports.Params" id="KQ6">Paramètres du rapport</data>
+  <data name="Toolbar.Reports.CompactAll" id="KR6">Compacter tout</data>
+  <data name="Toolbar.Reports.CompactOne" id="KS6">Compacter un niveau</data>
+  <data name="Toolbar.Reports.ExpandOne" id="KT6">Etendre un niveau</data>
+  <data name="Toolbar.Reports.ExpandAll" id="KU6">Etendre tout</data>
+  <data name="Toolbar.Reports.PrevPeriod" id="KV6">Période précédente</data>
+  <data name="Toolbar.Reports.NextPeriod" id="K07">Période suivante</data>
+  <data name="Toolbar.Reports.Export" id="K17">Exporter le rapport</data>
+  <data name="Toolbar.Reports.Close" id="K27">Fermer le rapport</data>
+  <data name="Toolbar.Timelines.Narrow" id="K37">Affichage étroit</data>
+  <data name="Toolbar.Timelines.Wide" id="K47">Affichage large</data>
+  <data name="Toolbar.Timelines.First" id="K57">Retourner sur le premier événement</data>
+  <data name="Toolbar.Timelines.Prev" id="K67">Reculer sur l'événement précédent</data>
+  <data name="Toolbar.Timelines.Next" id="K77">Avancer sur l'événement suivant</data>
+  <data name="Toolbar.Timelines.Last" id="K87">Avancer sur le dernier événement</data>
+  <data name="Toolbar.Timelines.NewEvent" id="K97">Nouvel événement</data>
+  <data name="Toolbar.Timelines.DeleteEvent" id="KA7">Supprimer l'événement</data>
+  <data name="Toolbar.Timelines.DeselectEvent" id="KB7">Désélectionner l'événement</data>
+  <data name="Toolbar.Timelines.CopyEvent" id="KC7">Copier l'événement</data>
+  <data name="Toolbar.Timelines.PasteEvent" id="KD7">Coller l'événement</data>
+  <data name="Popup.Amortizations.ToExtra.Title" id="KE7">Transformer en amortissement extraordinaire</data>
+  <data name="Toolbar.Timeline.Labels" id="KF7">Afficher les noms des lignes</data>
+  <data name="Toolbar.Timeline.Compacted" id="KG7">Affichage compact</data>
+  <data name="Toolbar.Timeline.Expanded" id="KH7">Affichage étendu</data>
+  <data name="Toolbar.Timeline.WeeksOfYear" id="KI7">Afficher les numéros des semaines</data>
+  <data name="Toolbar.Timeline.DaysOfWeek" id="KJ7">Afficher les jours de la semaine</data>
+  <data name="Toolbar.Timeline.Graph" id="KK7">Afficher les graphique des valeurs</data>
+  <data name="Toolbar.Timeline.First" id="KL7">Retourner sur le premier événement</data>
+  <data name="Toolbar.Timeline.Prev" id="KM7">Reculer sur l'événement précédent</data>
+  <data name="Toolbar.Timeline.Next" id="KN7">Avancer sur l'événement suivant</data>
+  <data name="Toolbar.Timeline.Last" id="KO7">Avancer sur le dernier événement</data>
+  <data name="Toolbar.Timeline.Now" id="KP7">Aller à la date du jour</data>
+  <data name="Toolbar.Timeline.Date" id="KQ7">Aller à une date à choix</data>
+  <data name="Toolbar.Timeline.New" id="KR7">Nouvel événement</data>
+  <data name="Toolbar.Timeline.Delete" id="KS7">Supprimer l'événement</data>
+  <data name="Toolbar.Timeline.Deselect" id="KT7">Désélectionner l'événement</data>
+  <data name="Toolbar.Timeline.Copy" id="KU7">Copier l'événement</data>
+  <data name="Toolbar.Timeline.Paste" id="KV7">Coller l'événement</data>
+  <data name="Toolbar.TreeTable.Filter" id="K08">Grouper les objets selon</data>
+  <data name="Toolbar.TreeTable.DateRange" id="K18">Choix de la période</data>
+  <data name="Toolbar.TreeTable.Graphic" id="K28">Représentation graphique</data>
+  <data name="Toolbar.TreeTable.First" id="K38">Retourner sur la première ligne</data>
+  <data name="Toolbar.TreeTable.Prev" id="K48">Reculer sur la ligne précédente</data>
+  <data name="Toolbar.TreeTable.Next" id="K58">Avancer sur la ligne suivante</data>
+  <data name="Toolbar.TreeTable.Last" id="K68">Avancer sur la dernière ligne</data>
+  <data name="Toolbar.TreeTable.CompactAll" id="K78">Compacter tout</data>
+  <data name="Toolbar.TreeTable.CompactOne" id="K88">Compacter un niveau</data>
+  <data name="Toolbar.TreeTable.ExpandOne" id="K98">Etendre un niveau</data>
+  <data name="Toolbar.TreeTable.ExpandAll" id="KA8">Etendre tout</data>
+  <data name="Toolbar.TreeTable.MoveTop" id="KB8">Déplacer la ligne au sommet</data>
+  <data name="Toolbar.TreeTable.MoveUp" id="KC8">Monter la ligne</data>
+  <data name="Toolbar.TreeTable.MoveDown" id="KD8">Descendre la ligne</data>
+  <data name="Toolbar.TreeTable.MoveBottom" id="KE8">Déplacer la ligne à la fin</data>
+  <data name="Toolbar.TreeTable.New" id="KF8">Nouvelle ligne</data>
+  <data name="Toolbar.TreeTable.Delete" id="KG8">Supprimer la ligne</data>
+  <data name="Toolbar.TreeTable.Deselect" id="KH8">Désélectionner la ligne</data>
+  <data name="Toolbar.TreeTable.Copy" id="KI8">Copier</data>
+  <data name="Toolbar.TreeTable.Paste" id="KJ8">Coller</data>
+  <data name="Toolbar.TreeTable.Export" id="KK8">Exporter</data>
+  <data name="Toolbar.TreeTable.Import" id="KL8">Importer</data>
+  <data name="Toolbar.TreeTable.Goto" id="KM8">Aller</data>
 </bundle>

@@ -22,23 +22,23 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.Labels,      "Timeline.Labels",       "Afficher les noms des lignes");
-			this.SetCommandDescription (ToolbarCommand.CompactAll,  "Timeline.Compacted",    "Affichage compact");
-			this.SetCommandDescription (ToolbarCommand.ExpandAll,   "Timeline.Expanded",     "Affichage étendu");
-			this.SetCommandDescription (ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear",  "Afficher les numéros des semaines");
-			this.SetCommandDescription (ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",   "Afficher les jours de la semaine");
-			this.SetCommandDescription (ToolbarCommand.Graph,       "Timeline.Graph",        "Afficher les graphique des valeurs");
-			this.SetCommandDescription (ToolbarCommand.First,       "Timeline.First",        "Retourner sur le premier événement");
-			this.SetCommandDescription (ToolbarCommand.Prev,        "Timeline.Prev",         "Reculer sur l'événement précédent");
-			this.SetCommandDescription (ToolbarCommand.Next,        "Timeline.Next",         "Avancer sur l'événement suivant");
-			this.SetCommandDescription (ToolbarCommand.Last,        "Timeline.Last",         "Avancer sur le dernier événement");
-			this.SetCommandDescription (ToolbarCommand.Now,         "Timeline.Now",          "Aller à la date du jour");
-			this.SetCommandDescription (ToolbarCommand.Date,        "Timeline.Date",         "Aller à une date à choix");
-			this.SetCommandDescription (ToolbarCommand.New,         "TreeTable.New.Event",   "Nouvel événement");
-			this.SetCommandDescription (ToolbarCommand.Delete ,     "Timeline.Delete",       "Supprimer l'événement");
-			this.SetCommandDescription (ToolbarCommand.Deselect,    "Timeline.Deselect",     "Désélectionner l'événement");
-			this.SetCommandDescription (ToolbarCommand.Copy,        "TreeTable.Copy.Event",  "Copier l'événement");
-			this.SetCommandDescription (ToolbarCommand.Paste,       "TreeTable.Paste.Event", "Coller l'événement");
+			this.SetCommandDescription (ToolbarCommand.Labels,      "Timeline.Labels",       Res.Strings.Toolbar.Timeline.Labels.ToString ());
+			this.SetCommandDescription (ToolbarCommand.CompactAll,  "Timeline.Compacted",    Res.Strings.Toolbar.Timeline.Compacted.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ExpandAll,   "Timeline.Expanded",     Res.Strings.Toolbar.Timeline.Expanded.ToString ());
+			this.SetCommandDescription (ToolbarCommand.WeeksOfYear, "Timeline.WeeksOfYear",  Res.Strings.Toolbar.Timeline.WeeksOfYear.ToString ());
+			this.SetCommandDescription (ToolbarCommand.DaysOfWeek,  "Timeline.DaysOfWeek",   Res.Strings.Toolbar.Timeline.DaysOfWeek.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Graph,       "Timeline.Graph",        Res.Strings.Toolbar.Timeline.Graph.ToString ());
+			this.SetCommandDescription (ToolbarCommand.First,       "Timeline.First",        Res.Strings.Toolbar.Timeline.First.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Prev,        "Timeline.Prev",         Res.Strings.Toolbar.Timeline.Prev.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Next,        "Timeline.Next",         Res.Strings.Toolbar.Timeline.Next.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Last,        "Timeline.Last",         Res.Strings.Toolbar.Timeline.Last.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Now,         "Timeline.Now",          Res.Strings.Toolbar.Timeline.Now.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Date,        "Timeline.Date",         Res.Strings.Toolbar.Timeline.Date.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,         "TreeTable.New.Event",   Res.Strings.Toolbar.Timeline.New.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Delete ,     "Timeline.Delete",       Res.Strings.Toolbar.Timeline.Delete.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Deselect,    "Timeline.Deselect",     Res.Strings.Toolbar.Timeline.Deselect.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Copy,        "TreeTable.Copy.Event",  Res.Strings.Toolbar.Timeline.Copy.ToString ());
+			this.SetCommandDescription (ToolbarCommand.Paste,       "TreeTable.Paste.Event", Res.Strings.Toolbar.Timeline.Paste.ToString ());
 		}
 
 

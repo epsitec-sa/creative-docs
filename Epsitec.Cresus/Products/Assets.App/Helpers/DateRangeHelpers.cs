@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 				}
 				else
 				{
-					return string.Format ("du {0} au {1}",
+					return string.Format (Res.Strings.DateRange.FromTo.ToString (),
 						TypeConverters.DateToString (f),
 						TypeConverters.DateToString (t));
 				}
