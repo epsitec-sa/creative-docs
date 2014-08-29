@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
-using Epsitec.Cresus.Assets.App.Views;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {

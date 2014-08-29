@@ -16,4 +16,12 @@
   <data name="Val.ExportFormat.Json" id="KI">&lt;s:data id="_0" f:Name="Json" f:Labels="{Collection {Text 'JSON — Fichier texte \&amp;quot;JavaScript Object Notation\&amp;quot;'}}" /&gt;</data>
   <data name="Val.ExportFormat.Pdf" id="KJ">&lt;s:data id="_0" f:Name="Pdf" f:Labels="{Collection {Text 'PDF — Document mis en pages'}}" /&gt;</data>
   <data name="Typ.ExportFormat" id="KC">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ExportFormat" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.Export.ExportFormat, Assets.Server.Export" f:_2.EnumValues="{Collection {Text '0 [JUKD001]'}, {Text '1 [JUKE001]'}, {Text '2 [JUKF001]'}, {Text '3 [JUKG001]'}, {Text '4 [JUKH001]'}, {Text '5 [JUKI001]'}, {Text '6 [JUKJ001]'}}" /&gt;</data>
+  <data name="Val.PageFormatType.Unknown" id="KL">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Sur mesure'}}" /&gt;</data>
+  <data name="Val.PageFormatType.A2" id="KM">&lt;s:data id="_0" f:Name="A2" f:Labels="{Collection {Text 'A2'}}" /&gt;</data>
+  <data name="Val.PageFormatType.A3" id="KN">&lt;s:data id="_0" f:Name="A3" f:Labels="{Collection {Text 'A3'}}" /&gt;</data>
+  <data name="Val.PageFormatType.A4" id="KO">&lt;s:data id="_0" f:Name="A4" f:Labels="{Collection {Text 'A4'}}" /&gt;</data>
+  <data name="Val.PageFormatType.A5" id="KP">&lt;s:data id="_0" f:Name="A5" f:Labels="{Collection {Text 'A5'}}" /&gt;</data>
+  <data name="Val.PageFormatType.Letter" id="KQ">&lt;s:data id="_0" f:Name="Letter" f:Labels="{Collection {Text 'Letter'}}" /&gt;</data>
+  <data name="Val.PageFormatType.Legal" id="KR">&lt;s:data id="_0" f:Name="Legal" f:Labels="{Collection {Text 'Legal'}}" /&gt;</data>
+  <data name="Typ.PageFormatType" id="KK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PageFormatType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Popups.PageFormatType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKL001]'}, {Text '1 [JUKM001]'}, {Text '2 [JUKN001]'}, {Text '3 [JUKO001]'}, {Text '4 [JUKP001]'}, {Text '5 [JUKQ001]'}, {Text '6 [JUKR001]'}}" f:Labels="{Collection {Text ''}}" /&gt;</data>
 </bundle>

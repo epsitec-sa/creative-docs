@@ -101,6 +101,7 @@
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
+    <Compile Include="Popups\PageFormatType.cs" />
     <Compile Include="Popups\MenuPopupItem.cs" />
     <Compile Include="Popups\PopupStack.cs" />
     <Compile Include="Popups\AbstractPopup.cs" />

@@ -152,13 +152,6 @@
   <data name="Popup.PageSize.Height" id="KN4">Hauteur</data>
   <data name="Popup.PageSize.Description.Portrait" id="KO4">portrait</data>
   <data name="Popup.PageSize.Description.Landscape" id="KP4">paysage</data>
-  <data name="Popup.PageSize.FormatType.A2" id="KQ4">A2</data>
-  <data name="Popup.PageSize.FormatType.A3" id="KR4">A3</data>
-  <data name="Popup.PageSize.FormatType.A4" id="KS4">A4</data>
-  <data name="Popup.PageSize.FormatType.A5" id="KT4">A5</data>
-  <data name="Popup.PageSize.FormatType.Letter" id="KU4">Letter</data>
-  <data name="Popup.PageSize.FormatType.Legal" id="KV4">Legal</data>
-  <data name="Popup.PageSize.FormatType.Custom" id="K05">Sur mesure</data>
   <data name="Popup.PdfStyle.Title" id="K15">Style</data>
   <data name="Popup.PdfStyle.Predefined" id="K25">Style prédéfini</data>
   <data name="Popup.PdfStyle.LabelColor" id="K35">Couleur en-tête</data>

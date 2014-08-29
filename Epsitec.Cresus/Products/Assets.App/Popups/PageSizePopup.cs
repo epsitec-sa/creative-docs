@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -226,47 +227,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static string FormatToString(Format format)
 		{
-			switch (format.Type)
-			{
-				case FormatType.A2:
-					return Res.Strings.Popup.PageSize.FormatType.A2.ToString ();
-
-				case FormatType.A3:
-					return Res.Strings.Popup.PageSize.FormatType.A3.ToString ();
-
-				case FormatType.A4:
-					return Res.Strings.Popup.PageSize.FormatType.A4.ToString ();
-
-				case FormatType.A5:
-					return Res.Strings.Popup.PageSize.FormatType.A5.ToString ();
-
-				case FormatType.Letter:
-					return Res.Strings.Popup.PageSize.FormatType.Letter.ToString ();
-
-				case FormatType.Legal:
-					return Res.Strings.Popup.PageSize.FormatType.Legal.ToString ();
-
-				default:
-					return Res.Strings.Popup.PageSize.FormatType.Custom.ToString ();
-			}
+			return EnumKeyValues.GetEnumKeyValue (format.Type).Values.Last ().ToString ();
 		}
 
 		private static IEnumerable<Format> Formats
 		{
 			get
 			{
-				yield return new Format (FormatType.A2,     420.0, 594.0);
-				yield return new Format (FormatType.A3,     297.0, 420.0);
-				yield return new Format (FormatType.A4,     210.0, 297.0);
-				yield return new Format (FormatType.A5,     148.0, 210.0);
-				yield return new Format (FormatType.Letter, 279.4, 215.9);
-				yield return new Format (FormatType.Legal,  355.6, 216.0);
+				yield return new Format (PageFormatType.A2,     420.0, 594.0);
+				yield return new Format (PageFormatType.A3,     297.0, 420.0);
+				yield return new Format (PageFormatType.A4,     210.0, 297.0);
+				yield return new Format (PageFormatType.A5,     148.0, 210.0);
+				yield return new Format (PageFormatType.Letter, 279.4, 215.9);
+				yield return new Format (PageFormatType.Legal,  355.6, 216.0);
 			}
 		}
 
 		private struct Format
 		{
-			public Format(FormatType type, double width, double height)
+			public Format(PageFormatType type, double width, double height)
 			{
 				this.Type   = type;
 				this.Width  = width;
@@ -277,26 +256,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				get
 				{
-					return this.Type == FormatType.Unknown;
+					return this.Type == PageFormatType.Unknown;
 				}
 			}
 
-			public static Format Empty = new Format (FormatType.Unknown, 0.0, 0.0);
+			public static Format Empty = new Format (PageFormatType.Unknown, 0.0, 0.0);
 
-			public readonly FormatType			Type;
+			public readonly PageFormatType		Type;
 			public readonly double				Width;
 			public readonly double				Height;
-		}
-
-		private enum FormatType
-		{
-			Unknown,
-			A2,
-			A3,
-			A4,
-			A5,
-			Letter,
-			Legal,
 		}
 		#endregion
 	}
