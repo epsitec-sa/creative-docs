@@ -56,4 +56,21 @@
   <data name="Val.ReportType.AssetsList" id="KQ1">&lt;s:data id="_0" f:Name="AssetsList" f:Labels="{Collection {Text 'Liste des objets d\'immobilisations'}}" /&gt;</data>
   <data name="Val.ReportType.PersonsList" id="KR1">&lt;s:data id="_0" f:Name="PersonsList" f:Labels="{Collection {Text 'Liste des contacts'}}" /&gt;</data>
   <data name="Typ.ReportType" id="KN1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ReportType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.ReportType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKO101]'}, {Text '1 [JUKP101]'}, {Text '2 [JUKQ101]'}, {Text '3 [JUKR101]'}}" /&gt;</data>
+  <data name="Val.DateType.Unknown" id="KT1">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.DateType.Separator" id="KU1">&lt;s:data id="_0" f:Name="Separator" /&gt;</data>
+  <data name="Val.DateType.BeginMandat" id="KV1">&lt;s:data id="_0" f:Name="BeginMandat" f:Labels="{Collection {Text 'Début du mandat'}}" /&gt;</data>
+  <data name="Val.DateType.BeginPreviousYear" id="K02">&lt;s:data id="_0" f:Name="BeginPreviousYear" f:Labels="{Collection {Text 'Début de l\'année précédente'}}" /&gt;</data>
+  <data name="Val.DateType.EndPreviousYear" id="K12">&lt;s:data id="_0" f:Name="EndPreviousYear" f:Labels="{Collection {Text 'Fin de l\'année précédente'}}" /&gt;</data>
+  <data name="Val.DateType.BeginCurrentYear" id="K22">&lt;s:data id="_0" f:Name="BeginCurrentYear" f:Labels="{Collection {Text 'Début de l\'année en cours'}}" /&gt;</data>
+  <data name="Val.DateType.EndCurrentYear" id="K32">&lt;s:data id="_0" f:Name="EndCurrentYear" f:Labels="{Collection {Text 'Fin de l\'année en cours'}}" /&gt;</data>
+  <data name="Val.DateType.BeginNextYear" id="K42">&lt;s:data id="_0" f:Name="BeginNextYear" f:Labels="{Collection {Text 'Début de l\'année suivante'}}" /&gt;</data>
+  <data name="Val.DateType.EndNextYear" id="K52">&lt;s:data id="_0" f:Name="EndNextYear" f:Labels="{Collection {Text 'Fin de l\'année suivante'}}" /&gt;</data>
+  <data name="Val.DateType.BeginPreviousMonth" id="K62">&lt;s:data id="_0" f:Name="BeginPreviousMonth" f:Labels="{Collection {Text 'Début du mois précédent'}}" /&gt;</data>
+  <data name="Val.DateType.EndPreviousMonth" id="K72">&lt;s:data id="_0" f:Name="EndPreviousMonth" f:Labels="{Collection {Text 'Fin du mois précédent'}}" /&gt;</data>
+  <data name="Val.DateType.BeginCurrentMonth" id="K82">&lt;s:data id="_0" f:Name="BeginCurrentMonth" f:Labels="{Collection {Text 'Début du mois en cours'}}" /&gt;</data>
+  <data name="Val.DateType.EndCurrentMonth" id="K92">&lt;s:data id="_0" f:Name="EndCurrentMonth" f:Labels="{Collection {Text 'Fin du mois en cours'}}" /&gt;</data>
+  <data name="Val.DateType.BeginNextMonth" id="KA2">&lt;s:data id="_0" f:Name="BeginNextMonth" f:Labels="{Collection {Text 'Début du mois suivant'}}" /&gt;</data>
+  <data name="Val.DateType.EndNextMonth" id="KB2">&lt;s:data id="_0" f:Name="EndNextMonth" f:Labels="{Collection {Text 'Fin du mois suivant'}}" /&gt;</data>
+  <data name="Val.DateType.Now" id="KC2">&lt;s:data id="_0" f:Name="Now" f:Labels="{Collection {Text 'Aujourd\'hui'}}" /&gt;</data>
+  <data name="Typ.DateType" id="KS1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DateType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.FieldControllers.DateFieldController+DateType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKT101]'}, {Text '1 [JUKU101]'}, {Text '2 [JUKV101]'}, {Text '3 [JUK0201]'}, {Text '4 [JUK1201]'}, {Text '5 [JUK2201]'}, {Text '6 [JUK3201]'}, {Text '7 [JUK4201]'}, {Text '8 [JUK5201]'}, {Text '9 [JUK6201]'}, {Text '10 [JUK7201]'}, {Text '11 [JUK8201]'}, {Text '12 [JUK9201]'}, {Text '13 [JUKA201]'}, {Text '14 [JUKB201]'}, {Text '15 [JUKC201]'}}" /&gt;</data>
 </bundle>

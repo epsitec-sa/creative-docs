@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			//	Crée le bouton permettant de sauter dans le plan comptable.
 			this.gotoButton = this.CreateGotoButton ();
 
-			ToolTip.Default.SetToolTip (this.gotoButton, "Aller sur le compte");
+			ToolTip.Default.SetToolTip (this.gotoButton, Res.Strings.FieldControllers.Account.Goto.ToString ());
 
 			this.gotoButton.Clicked += delegate
 			{

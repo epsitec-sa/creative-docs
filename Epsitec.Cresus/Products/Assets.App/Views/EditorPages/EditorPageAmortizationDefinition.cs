@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
-			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
+			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
 			this.CreateAccountController (parent, ObjectField.Account1);
 			this.CreateAccountController (parent, ObjectField.Account2);
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var button = new Button
 			{
 				Parent        = line,
-				Text          = "Importer",
+				Text          = Res.Strings.EditorPages.AmortizationDefinition.Import.ToString (),
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				PreferredSize = new Size (70, h),
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			new StaticText
 			{
 				Parent        = line,
-				Text          = "Importez une catégorie d'immobilisation existante, puis modifiez éventuellement sa définition ci-dessous.",
+				Text          = Res.Strings.EditorPages.AmortizationDefinition.ImportHelp.ToString (),
 				Dock          = DockStyle.Fill,
 				Margins       = new Margins (10, 0, 0, 0),
 			};

@@ -147,12 +147,12 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.calendarButton   = this.CreateIconButton (this.frameBox, "Date.Calendar",         false);
 			this.deleteButton     = this.CreateIconButton (this.frameBox, "Field.Delete",          true);
 
-			ToolTip.Default.SetToolTip (this.beginButton,      "Début de l'année en cours");
-			ToolTip.Default.SetToolTip (this.nowButton,        "Aujourd'hui");
-			ToolTip.Default.SetToolTip (this.endButton,        "Fin de l'année en cours");
-			ToolTip.Default.SetToolTip (this.predefinedButton, "Autre date à choix...");
-			ToolTip.Default.SetToolTip (this.calendarButton,   "Calendrier...");
-			ToolTip.Default.SetToolTip (this.deleteButton,     "Effacer la date");
+			ToolTip.Default.SetToolTip (this.beginButton,      Res.Strings.FieldControllers.Date.Begin.ToString ());
+			ToolTip.Default.SetToolTip (this.nowButton,        Res.Strings.FieldControllers.Date.Now.ToString ());
+			ToolTip.Default.SetToolTip (this.endButton,        Res.Strings.FieldControllers.Date.End.ToString ());
+			ToolTip.Default.SetToolTip (this.predefinedButton, Res.Strings.FieldControllers.Date.Predefined.ToString ());
+			ToolTip.Default.SetToolTip (this.calendarButton,   Res.Strings.FieldControllers.Date.Calendar.ToString ());
+			ToolTip.Default.SetToolTip (this.deleteButton,     Res.Strings.FieldControllers.Date.Delete.ToString ());
 
 			this.UpdateError ();
 			this.UpdatePropertyState ();
@@ -339,18 +339,18 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			switch (part)
 			{
 				case Part.Day:
-					ToolTip.Default.SetToolTip (this.minusButton, "Jour précédent");
-					ToolTip.Default.SetToolTip (this.plusButton,  "Jour suivant");
+					ToolTip.Default.SetToolTip (this.minusButton, Res.Strings.FieldControllers.Date.PrevDay.ToString ());
+					ToolTip.Default.SetToolTip (this.plusButton, Res.Strings.FieldControllers.Date.NextDay.ToString ());
 					break;
 
 				case Part.Month:
-					ToolTip.Default.SetToolTip (this.minusButton, "Mois précédent");
-					ToolTip.Default.SetToolTip (this.plusButton,  "Mois suivant");
+					ToolTip.Default.SetToolTip (this.minusButton, Res.Strings.FieldControllers.Date.PrevMonth.ToString ());
+					ToolTip.Default.SetToolTip (this.plusButton,  Res.Strings.FieldControllers.Date.NextMonth.ToString ());
 					break;
 
 				case Part.Year:
-					ToolTip.Default.SetToolTip (this.minusButton, "Année précédente");
-					ToolTip.Default.SetToolTip (this.plusButton,  "Année suivante");
+					ToolTip.Default.SetToolTip (this.minusButton, Res.Strings.FieldControllers.Date.PrevYear.ToString ());
+					ToolTip.Default.SetToolTip (this.plusButton,  Res.Strings.FieldControllers.Date.NextYear.ToString ());
 					break;
 			}
 
@@ -446,52 +446,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private string GetPredefinedDescription(DateType type)
 		{
-			switch (type)
+			if (type == DateType.Separator)
 			{
-				case DateType.BeginMandat:
-					return "Début du mandat";
-
-				case DateType.BeginPreviousYear:
-					return "Début de l'année précédente";
-
-				case DateType.EndPreviousYear:
-					return "Fin de l'année précédente";
-
-				case DateType.BeginCurrentYear:
-					return "Début de l'année en cours";
-
-				case DateType.EndCurrentYear:
-					return "Fin de l'année en cours";
-
-				case DateType.BeginNextYear:
-					return "Début de l'année suivante";
-
-				case DateType.EndNextYear:
-					return "Fin de l'année suivante";
-
-				case DateType.BeginPreviousMonth:
-					return "Début du mois précédent";
-
-				case DateType.EndPreviousMonth:
-					return "Fin du mois précédent";
-
-				case DateType.BeginCurrentMonth:
-					return "Début du mois en cours";
-
-				case DateType.EndCurrentMonth:
-					return "Fin du mois en cours";
-
-				case DateType.BeginNextMonth:
-					return "Début du mois suivant";
-
-				case DateType.EndNextMonth:
-					return "Fin du mois suivant";
-
-				case DateType.Now:
-					return "Aujourd'hui";
-
-				default:
-					return null;
+				return null;
+			}
+			else
+			{
+				return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
 			}
 		}
 
@@ -591,6 +552,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				yield return DateType.Separator;
 
 				yield return DateType.BeginPreviousYear;
+				yield return DateType.EndPreviousYear;
 
 				yield return DateType.Separator;
 
@@ -620,6 +582,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
+		[DesignerVisible]
 		private enum DateType
 		{
 			Unknown,

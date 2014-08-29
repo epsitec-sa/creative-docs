@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "Informations ponctuelles liées à l'événement:",
+				Text    = Res.Strings.EditorPages.OneShot.Info.ToString (),
 				Dock    = DockStyle.Top,
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 0, 20),
 			};

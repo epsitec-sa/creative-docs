@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				var c1 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c1);
 
-				c1.Add (new ObjectSummaryControllerTile ("Evénement"));
+				c1.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Event.ToString ()));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotNumber));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateEvent));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);
 				if (groups.Any ())
 				{
-					c1.Add (new ObjectSummaryControllerTile ("Groupes"));
+					c1.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Groups.ToString ()));
 					foreach (var field in groups)
 					{
 						c1.Add (new ObjectSummaryControllerTile (field));
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				var c2 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c2);
 
-				c2.Add (new ObjectSummaryControllerTile ("Général"));
+				c2.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Main.ToString ()));
 				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.Assets))
 				{
 					if (userField.TopMargin >= 5)  // limite arbitraire
@@ -207,11 +207,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				var c3 = new List<ObjectSummaryControllerTile> ();
 				list.Add (c3);
 
-				c3.Add (new ObjectSummaryControllerTile ("Valeur comptable"));
+				c3.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.MainValue.ToString ()));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.MainValue));
 				c3.Add (ObjectSummaryControllerTile.Empty);
 
-				c3.Add (new ObjectSummaryControllerTile ("Amortissements"));
+				c3.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Amortizations.ToString ()));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.CategoryName));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationRate));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationType));

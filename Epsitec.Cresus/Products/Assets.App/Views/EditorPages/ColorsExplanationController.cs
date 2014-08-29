@@ -184,43 +184,43 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				yield return new Item
 				(
 					FieldColorType.Editable,
-					"Peut être défini",
-					"Cette couleur indique un champ pouvant être défini<br/>par cet événement"
+					Res.Strings.EditorPages.ColorsExplanation.Editable.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Editable.Tooltip.ToString ()
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Automatic,
-					"Automatique",
-					"Cette couleur indique un champ rempli automatiquement,<br/>pouvant être redéfini"
+					Res.Strings.EditorPages.ColorsExplanation.Automatic.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Automatic.Tooltip.ToString ()
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Defined,
-					"Défini",
-					"Cette couleur indique un champ défini par cet événement"
+					Res.Strings.EditorPages.ColorsExplanation.Defined.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Defined.Tooltip.ToString ()
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Readonly,
-					"Ne peut pas être défini",
-					"Cette couleur indique un champ ne pouvant pas<br/>être défini par cet événement"
+					Res.Strings.EditorPages.ColorsExplanation.Readonly.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Readonly.Tooltip.ToString ()
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Result,
-					"Résultat d'un calcul",
-					"Cette couleur indique le résultat d'un calcul<br/>ne pouvant pas être modifié"
+					Res.Strings.EditorPages.ColorsExplanation.Result.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Result.Tooltip.ToString ()
 				);
 
 				yield return new Item
 				(
 					FieldColorType.Error,
-					"Erreur",
-					"Cette couleur indique un champ incorrectement rempli"
+					Res.Strings.EditorPages.ColorsExplanation.Error.Description.ToString (),
+					Res.Strings.EditorPages.ColorsExplanation.Error.Tooltip.ToString ()
 				);
 			}
 		}

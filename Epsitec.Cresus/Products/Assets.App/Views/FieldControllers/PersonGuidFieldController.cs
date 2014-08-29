@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			this.gotoButton = this.CreateGotoButton ();
 
-			ToolTip.Default.SetToolTip (this.gotoButton, "Aller sur le contact");
+			ToolTip.Default.SetToolTip (this.gotoButton, Res.Strings.FieldControllers.Person.Goto.ToString ());
 
 			this.gotoButton.Clicked += delegate
 			{

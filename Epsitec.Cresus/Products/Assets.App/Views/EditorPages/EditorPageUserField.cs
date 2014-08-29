@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "Dans le tableau:",
+				Text    = Res.Strings.EditorPages.UserFields.TreeTable.ToString (),
 				Dock    = DockStyle.Top,
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 			};
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "Lors de l'édition:",
+				Text    = Res.Strings.EditorPages.UserFields.Edition.ToString (),
 				Dock    = DockStyle.Top,
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 			};
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			new StaticText
 			{
 				Parent  = parent,
-				Text    = "Texte résumé:",
+				Text    = Res.Strings.EditorPages.UserFields.Summary.ToString (),
 				Dock    = DockStyle.Top,
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 			};

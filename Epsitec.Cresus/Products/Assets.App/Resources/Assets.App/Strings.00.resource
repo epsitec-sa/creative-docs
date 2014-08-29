@@ -270,4 +270,47 @@
   <data name="Toolbar.TreeTable.Export" id="KK8">Exporter</data>
   <data name="Toolbar.TreeTable.Import" id="KL8">Importer</data>
   <data name="Toolbar.TreeTable.Goto" id="KM8">Aller</data>
+  <data name="EditorPages.ColorsExplanation.Editable.Description" id="KN8">Peut être défini</data>
+  <data name="EditorPages.ColorsExplanation.Editable.Tooltip" id="KO8">Cette couleur indique un champ pouvant être défini&lt;br/&gt;par cet événement</data>
+  <data name="EditorPages.ColorsExplanation.Automatic.Description" id="KP8">Automatique</data>
+  <data name="EditorPages.ColorsExplanation.Automatic.Tooltip" id="KQ8">Cette couleur indique un champ rempli automatiquement,&lt;br/&gt;pouvant être redéfini</data>
+  <data name="EditorPages.ColorsExplanation.Defined.Description" id="KR8">Défini</data>
+  <data name="EditorPages.ColorsExplanation.Defined.Tooltip" id="KS8">Cette couleur indique un champ défini par cet événement</data>
+  <data name="EditorPages.ColorsExplanation.Readonly.Description" id="KT8">Ne peut pas être défini</data>
+  <data name="EditorPages.ColorsExplanation.Readonly.Tooltip" id="KU8">Cette couleur indique un champ ne pouvant pas&lt;br/&gt;être défini par cet événement</data>
+  <data name="EditorPages.ColorsExplanation.Result.Description" id="KV8">Résultat d'un calcul</data>
+  <data name="EditorPages.ColorsExplanation.Result.Tooltip" id="K09">Cette couleur indique le résultat d'un calcul&lt;br/&gt;ne pouvant pas être modifié</data>
+  <data name="EditorPages.ColorsExplanation.Error.Description" id="K19">Erreur</data>
+  <data name="EditorPages.ColorsExplanation.Error.Tooltip" id="K29">Cette couleur indique un champ incorrectement rempli</data>
+  <data name="EditorPages.Category.AccountsSubtitle" id="K39">Res.Strings.EditorPages.ColorsExplanation.Error.Tooltip.ToString ()</data>
+  <data name="EditorPages.AmortizationDefinition.Import" id="K49">Importer</data>
+  <data name="EditorPages.AmortizationDefinition.ImportHelp" id="K59">Importez une catégorie d'immobilisation existante, puis modifiez éventuellement sa définition ci-dessous.</data>
+  <data name="EditorPages.Category.CalculatorButton" id="K69">Calculer d'après le nombre d'années</data>
+  <data name="EditorPages.OneShot.Info" id="K79">Informations ponctuelles liées à l'événement:</data>
+  <data name="EditorPages.Summary.Event" id="K89">Evénement</data>
+  <data name="EditorPages.Summary.Groups" id="K99">Groupes</data>
+  <data name="EditorPages.Summary.Main" id="KA9">Général</data>
+  <data name="EditorPages.Summary.MainValue" id="KB9">Valeur comptable</data>
+  <data name="EditorPages.Summary.Amortizations" id="KC9">Amortissements</data>
+  <data name="EditorPages.UserFields.TreeTable" id="KD9">Dans le tableau:</data>
+  <data name="EditorPages.UserFields.Edition" id="KE9">Lors de l'édition:</data>
+  <data name="EditorPages.UserFields.Summary" id="KF9">Texte résumé:</data>
+  <data name="FieldControllers.ShowHistory" id="KG9">Montrer l'historique des modifications</data>
+  <data name="FieldControllers.ClearModification" id="KH9">Supprimer cette modification de l'événement</data>
+  <data name="FieldControllers.Account.Goto" id="KI9">Aller sur le compte</data>
+  <data name="FieldControllers.Date.Begin" id="KJ9">Début de l'année en cours</data>
+  <data name="FieldControllers.Date.Now" id="KK9">Aujourd'hui</data>
+  <data name="FieldControllers.Date.End" id="KL9">Fin de l'année en cours</data>
+  <data name="FieldControllers.Date.Predefined" id="KM9">Autre date à choix...</data>
+  <data name="FieldControllers.Date.Calendar" id="KN9">Calendrier...</data>
+  <data name="FieldControllers.Date.Delete" id="KO9">Effacer la date</data>
+  <data name="FieldControllers.Date.PrevDay" id="KP9">Jour précédent</data>
+  <data name="FieldControllers.Date.NextDay" id="KQ9">Jour suivant</data>
+  <data name="FieldControllers.Date.PrevMonth" id="KR9">Mois précédent</data>
+  <data name="FieldControllers.Date.NextMonth" id="KS9">Mois suivant</data>
+  <data name="FieldControllers.Date.PrevYear" id="KT9">Année précédente</data>
+  <data name="FieldControllers.Date.NextYear" id="KU9">Année suivante</data>
+  <data name="FieldControllers.GuidRatio.List" id="KV9">Regroupements</data>
+  <data name="FieldControllers.GuidRatio.New" id="K0A">Nouveau</data>
+  <data name="FieldControllers.Person.Goto" id="K1A">Aller sur le contact</data>
 </bundle>

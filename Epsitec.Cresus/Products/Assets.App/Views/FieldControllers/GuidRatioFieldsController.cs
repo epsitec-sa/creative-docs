@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			int y = 0;
 			foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
 			{
-				var label = (y == 0) ? "Regroupements" : "";  // légende uniquement pour le premier
+				var label = (y == 0) ? Res.Strings.FieldControllers.GuidRatio.List.ToString () : "";  // légende uniquement pour le premier
 				this.UpdateController (field, y, label);
 				y += AbstractFieldController.lineHeight + 4;  // en dessous
 			}
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var ff = this.FreeField;
 			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
 			{
-				this.UpdateController (ff, y, "Nouveau");
+				this.UpdateController (ff, y, Res.Strings.FieldControllers.GuidRatio.New.ToString ());
 			}
 		}
 

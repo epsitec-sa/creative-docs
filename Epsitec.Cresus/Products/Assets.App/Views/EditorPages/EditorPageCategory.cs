@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
 
-			this.CreateSubtitle (parent, "Comptes à utiliser pour passer les écritures comptables :");
+			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
 			//	On permet de choisir un compte dans le dernier plan comptable importé.
 			//	A voir à l'usage s'il faut faire mieux ?
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void CreateCalculatorButton()
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du taux.
-			var text = "Calculer d'après le nombre d'années";
+			var text = Res.Strings.EditorPages.Category.CalculatorButton.ToString ();
 			var width = text.GetTextWidth ();
 
 			var button = new Button
