@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Calendrier");
+			this.CreateTitle (Res.Strings.Popup.Calendar.Title.ToString ());
 
 			this.CreateCalendarUI ();
 			this.CreateCloseButton ();

@@ -20,14 +20,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportPdfPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format PDF";
+			this.title = Res.Strings.Popup.ExportPdf.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.PdfStyle,
-				Label                 = "Style",
+				Label                 = Res.Strings.Popup.ExportPdf.Style.ToString (),
 				BottomMargin          = 10,
 			});
 
@@ -35,20 +35,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.PageSize,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Format des pages",
+				Label                 = Res.Strings.Popup.ExportPdf.PageFormat.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Marges des pages",
+				Label                 = Res.Strings.Popup.ExportPdf.PageMargins.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Police",
+				Label                 = Res.Strings.Popup.ExportPdf.FontName.ToString (),
 				MultiLabels           = ExportFontHelpers.Labels,
 				Width                 = 240,
 			});
@@ -57,55 +57,55 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Real,
-				Label                 = "Taille de police",
+				Label                 = Res.Strings.Popup.ExportPdf.FontSize.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Margins,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Marges des cellules",
+				Label                 = Res.Strings.Popup.ExportPdf.CellMargins.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Largeurs des colonnes selon le contenu",
+				Label                 = Res.Strings.Popup.ExportPdf.AutomaticColumnWidths.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 7
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "En-tête",
+				Label                 = Res.Strings.Popup.ExportPdf.Header.ToString (),
 				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 8
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Pied de page",
+				Label                 = Res.Strings.Popup.ExportPdf.Footer.ToString (),
 				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 9
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Indentation",
+				Label                 = Res.Strings.Popup.ExportPdf.Indent.ToString (),
 				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 10
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Filigrane",
+				Label                 = Res.Strings.Popup.ExportPdf.Watermark.ToString (),
 				Width                 = 240,
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Export.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Export.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

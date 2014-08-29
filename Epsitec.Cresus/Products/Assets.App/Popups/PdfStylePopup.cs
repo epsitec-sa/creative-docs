@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public PdfStylePopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Style";
+			this.title = Res.Strings.Popup.PdfStyle.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Style prédéfini",
+				Label                 = Res.Strings.Popup.PdfStyle.Predefined.ToString (),
 				MultiLabels           = PdfPredefinedStyleHelpers.Labels,
 				Width                 = 150,
 				BottomMargin          = 10,
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Couleur en-tête",
+				Label                 = Res.Strings.Popup.PdfStyle.LabelColor.ToString (),
 				MultiLabels           = ExportColorHelpers.Labels,
 				Width                 = 150,
 			});
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Couleur lignes paires",
+				Label                 = Res.Strings.Popup.PdfStyle.EvenColor.ToString (),
 				MultiLabels           = ExportColorHelpers.Labels,
 				Width                 = 150,
 			});
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Couleur lignes impaires",
+				Label                 = Res.Strings.Popup.PdfStyle.OddColor.ToString (),
 				MultiLabels           = ExportColorHelpers.Labels,
 				Width                 = 150,
 				BottomMargin          = 10,
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Couleur traits",
+				Label                 = Res.Strings.Popup.PdfStyle.BorderColor.ToString (),
 				MultiLabels           = ExportColorHelpers.Labels,
 				Width                 = 150,
 			});
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Epaisseur traits",
+				Label                 = Res.Strings.Popup.PdfStyle.Thickness.ToString (),
 			});
 
 			this.SetDescriptions (list);

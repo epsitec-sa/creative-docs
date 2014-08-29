@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public LockedPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Gestion des verrous";
+			this.title = Res.Strings.Popup.Locked.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "Verrouiller<br/>Déverrouiller",
+				MultiLabels           = Res.Strings.Popup.Locked.Radios.IsDelete.ToString (),
 				BottomMargin          = 10,
 			});
 
@@ -29,14 +29,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Jusqu'au",
+				Label                 = Res.Strings.Popup.Locked.Date.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "L'objet sélectionné<br/>Tous les objets",
+				MultiLabels           = Res.Strings.Popup.Locked.Radios.IsAll.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -109,11 +109,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Nomme le bouton principal, selon les boutons radio.
 			if (this.IsDelete)
 			{
-				this.okButton.Text = this.IsAll ? "Tout déverrouiller" : "Déverrouiller un";
+				this.okButton.Text = this.IsAll ?
+					Res.Strings.Popup.Locked.Button.UnlockAll.ToString () :
+					Res.Strings.Popup.Locked.Button.UnlockOne.ToString ();
 			}
 			else
 			{
-				this.okButton.Text = this.IsAll ? "Tout verrouiller" : "Verrouiller un";
+				this.okButton.Text = this.IsAll ?
+					Res.Strings.Popup.Locked.Button.LockAll.ToString () :
+					Res.Strings.Popup.Locked.Button.LockOne.ToString ();
 			}
 
 			this.okButton.Enable = this.IsDelete || (this.Date.HasValue && !this.HasError);

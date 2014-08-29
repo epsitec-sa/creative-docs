@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				new StaticText
 				{
 					Parent           = parent,
-					Text             = "Ce champ n'est jamais défini.",
+					Text             = Res.Strings.Popup.History.Undefined.ToString (),
 					ContentAlignment = ContentAlignment.MiddleCenter,
 					Dock             = DockStyle.Fill,
 				};

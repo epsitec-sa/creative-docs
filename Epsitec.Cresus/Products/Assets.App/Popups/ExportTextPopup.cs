@@ -19,62 +19,62 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportTextPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format texte";
+			this.title = Res.Strings.Popup.ExportText.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Exporter les noms des colonnes",
+				Label                 = Res.Strings.Popup.ExportText.HasHeader.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Transposer les lignes et les colonnes",
+				Label                 = Res.Strings.Popup.ExportText.Inverted.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Colonnes séparées par",
+				Label                 = Res.Strings.Popup.ExportText.ColumnSeparator.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Colonnes entourées par",
+				Label                 = Res.Strings.Popup.ExportText.ColumnBracket.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Caractère d'échappement",
+				Label                 = Res.Strings.Popup.ExportText.Escape.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Lignes terminées par",
+				Label                 = Res.Strings.Popup.Export.EndOfLines.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Encodage",
+				Label                 = Res.Strings.Popup.Export.Encoding.ToString (),
 				MultiLabels           = EncodingHelpers.Labels,
 				Width                 = 200,
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Export.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Export.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

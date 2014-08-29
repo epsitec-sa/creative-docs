@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix du groupe");
+			this.CreateTitle (Res.Strings.Popup.Groups.Title.ToString ());
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox

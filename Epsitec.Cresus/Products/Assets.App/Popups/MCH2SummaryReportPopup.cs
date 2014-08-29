@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public MCH2SummaryReportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Paramètres du tableau des immobilisations MCH2";
+			this.title = Res.Strings.Popup.MCH2SummaryReport.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -25,27 +25,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Etat initial avant le",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.InitialDate.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Int,
-				Label                 = "Durée en mois",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.MonthCount.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Etat final après le",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.FinalDate.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Effectuer un groupement",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.GroupEnable.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 4
@@ -59,12 +59,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Int,
-				Label                 = "Jusqu'au niveau",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.Level.ToString (),
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Show.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Show.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private System.DateTime?					InitialDate
+		private System.DateTime?				InitialDate
 		{
 			get
 			{
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private System.DateTime?					FinalDate
+		private System.DateTime?				FinalDate
 		{
 			get
 			{

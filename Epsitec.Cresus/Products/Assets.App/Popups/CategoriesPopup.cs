@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix de la catégorie d'immobilisation à importer");
+			this.CreateTitle (Res.Strings.Popup.Categories.Title.ToString ());
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox

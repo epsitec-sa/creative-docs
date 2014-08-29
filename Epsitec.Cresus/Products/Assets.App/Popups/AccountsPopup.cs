@@ -73,11 +73,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (this.baseType.AccountsDateRange.IsEmpty)
 			{
-				title = "Aucun plan comptable à cette date";
+				title = Res.Strings.Popup.Accounts.NoAccounts.ToString ();
 			}
 			else
 			{
-				title = string.Format ("Choix du compte (période {0})", this.baseType.AccountsDateRange.ToNiceString ());
+				title = string.Format (Res.Strings.Popup.Accounts.Choice.ToString (), this.baseType.AccountsDateRange.ToNiceString ());
 			}
 
 			this.CreateTitle (title);

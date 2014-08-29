@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public CreateCategoryPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'une nouvelle catégorie d'immobilisation";
+			this.title = Res.Strings.Popup.CreateCategory.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Nom",
+				Label                 = Res.Strings.Popup.CreateCategory.Name.ToString (),
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
 				BottomMargin          = 10,
 			});
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Selon un modèle",
+				Label                 = Res.Strings.Popup.CreateCategory.Model.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 2
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Create.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Create.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

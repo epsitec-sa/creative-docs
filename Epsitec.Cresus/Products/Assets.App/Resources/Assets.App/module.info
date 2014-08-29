@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="2003" name="Assets.App" layer="A" textMode="FormattedText" assemblies="Assets.App" namespace="Epsitec.Cresus.Assets.App">
   <Versions>
-    <Version id="2" build="8" date="2014-08-28T08:53:33.5953980Z" />
+    <Version id="2" build="45" date="2014-08-29T07:54:35.8681732Z" />
   </Versions>
 </ModuleInfo>

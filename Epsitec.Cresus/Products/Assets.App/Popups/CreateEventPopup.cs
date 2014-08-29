@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Création d'un nouvel événement");
+			this.CreateTitle (Res.Strings.Popup.CreateEvent.Title.ToString ());
 
 			var bh = this.ButtonsHeight;
 
@@ -203,28 +203,52 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			switch (type)
 			{
 				case EventType.Input:
-					return new ButtonDescription (type, "Entrée", "Entrée dans l'inventaire, acquisition", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Input.ShortName.ToString (),
+						Res.Strings.Event.Input.Help.ToString (),
+						enable);
 
 				case EventType.Modification:
-					return new ButtonDescription (type, "Modification générale", "Modification de diverses informations,<br/>sauf de la valeur comptable", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Modification.ShortName.ToString (),
+						Res.Strings.Event.Modification.Help.ToString (),
+						enable);
 
 				case EventType.Revaluation:
-					return new ButtonDescription (type, "Réévaluation", "Réévaluation de la valeur comptable", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Revaluation.ShortName.ToString (),
+						Res.Strings.Event.Revaluation.Help.ToString (),
+						enable);
 
 				case EventType.Revalorization:
-					return new ButtonDescription (type, "Revalorisation", "Revalorisation de la valeur comptable", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Revalorization.ShortName.ToString (),
+						Res.Strings.Event.Revalorization.Help.ToString (),
+						enable);
 
 				case EventType.MainValue:
-					return new ButtonDescription (type, "Ajustement de la valeur comptable", "Ajustement extraordinaire de la valeur comptable", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.MainValue.ShortName.ToString (),
+						Res.Strings.Event.MainValue.Help.ToString (),
+						enable);
 
 				case EventType.AmortizationExtra:
-					return new ButtonDescription (type, "Amortissement extraordinaire", "Amortissement de la valeur comptable", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.AmortizationExtra.ShortName.ToString (),
+						Res.Strings.Event.AmortizationExtra.Help.ToString (),
+						enable);
 
 				case EventType.Locked:
-					return new ButtonDescription (type, "Verrou", "Verrouille tous les événements antérieurs", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Locked.ShortName.ToString (),
+						Res.Strings.Event.Locked.Help.ToString (),
+						enable);
 
 				case EventType.Output:
-					return new ButtonDescription (type, "Sortie", "Sortie de l'inventaire, vente, vol, destruction, etc.", enable);
+					return new ButtonDescription (type,
+						Res.Strings.Event.Output.ShortName.ToString (),
+						Res.Strings.Event.Output.Help.ToString (),
+						enable);
 
 				default:
 					return new ButtonDescription (type, null, null, false);

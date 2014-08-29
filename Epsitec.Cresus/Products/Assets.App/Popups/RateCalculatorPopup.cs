@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public RateCalculatorPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Calcul du taux d'amortissement linéaire";
+			this.title = Res.Strings.Popup.RateCalculator.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Int,
-				Label                 = "Nombre d'années",
+				Label                 = Res.Strings.Popup.RateCalculator.TotalYears.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Compute.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Compute.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (this.Rate.HasValue)
 				{
 					var rate = TypeConverters.RateToString (this.Rate);
-					return string.Format ("Taux = {0}", rate);
+					return string.Format (Res.Strings.Popup.RateCalculator.Result.ToString (), rate);
 				}
 				else
 				{

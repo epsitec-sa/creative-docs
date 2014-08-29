@@ -26,35 +26,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Balises en mode CamelCase",
+				Label                 = Res.Strings.Popup.Export.CamelCase.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Indentation avec",
+				Label                 = Res.Strings.Popup.ExportYaml.Indent.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Lignes terminées par",
+				Label                 = Res.Strings.Popup.Export.EndOfLines.ToString (),
 				Width                 = 200,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Encodage",
+				Label                 = Res.Strings.Popup.Export.Encoding.ToString (),
 				MultiLabels           = EncodingHelpers.Labels,
 				Width                 = 200,
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Export.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Export.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

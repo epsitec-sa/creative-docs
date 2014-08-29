@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private AssetPastePopup(DataAccessor accessor, string summary)
 			: base (accessor)
 		{
-			this.title = string.Format ("Coller l'objet d'immobilisation \"{0}\"", summary);
+			this.title = string.Format (Res.Strings.Popup.AssetPaste.Title.ToString (), summary);
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -26,12 +26,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Date d'entrée",
+				Label                 = Res.Strings.Popup.AssetPaste.Date.ToString (),
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Paste.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Paste.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

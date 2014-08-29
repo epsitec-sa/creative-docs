@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private CreateAssetPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'un nouvel objet";
+			this.title = Res.Strings.Popup.CreateAsset.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -30,13 +30,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Date d'entrée",
+				Label                 = Res.Strings.Popup.CreateAsset.Date.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Nom",
+				Label                 = Res.Strings.Popup.CreateAsset.Name.ToString (),
 				Width                 = DateController.controllerWidth - 4,
 			});
 
@@ -44,14 +44,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Amount,
-				Label                 = "Valeur comptable",
+				Label                 = Res.Strings.Popup.CreateAsset.Value.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Catégorie d'immobilisation",
+				Label                 = Res.Strings.Popup.CreateAsset.Category.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 4
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Create.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Create.ToString ();
 			this.defaultControllerRankFocus = 1;
 		}
 

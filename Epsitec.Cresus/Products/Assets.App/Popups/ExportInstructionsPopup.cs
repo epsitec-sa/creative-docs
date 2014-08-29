@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportInstructionsPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données";
+			this.title = Res.Strings.Popup.ExportInstructions.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -31,13 +31,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.ExportFilename,
-				Label                 = "Fichier",
+				Label                 = Res.Strings.Popup.ExportInstructions.Filename.ToString (),
 				Width                 = 300,
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Export.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Export.ToString ();
 			this.defaultControllerRankFocus = 1;
 		}
 

@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Historique");
+			this.CreateTitle (Res.Strings.Popup.History.Title.ToString ());
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Résultats");
+			this.CreateTitle (Res.Strings.Popup.Errors.Title.ToString ());
 			this.CreateCloseButton ();
 			this.CreateTreeTable ();
 		}

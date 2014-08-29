@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Dernières vues utilisées");
+			this.CreateTitle (Res.Strings.Popup.LastViews.Title.ToString ());
 			this.CreateCloseButton ();
 
 			this.CreateController ();

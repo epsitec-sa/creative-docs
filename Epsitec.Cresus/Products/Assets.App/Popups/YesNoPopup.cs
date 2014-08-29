@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private YesNoPopup(string question)
 			: base (null)
 		{
-			this.title = "Question";
+			this.title = Res.Strings.Popup.YesNo.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -30,8 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Yes.ToString ();
-			this.defaultCancelButtonName = Res.Strings.Popup.No.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Yes.ToString ();
+			this.defaultCancelButtonName = Res.Strings.Popup.Button.No.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Helpers
 		public static void ShowAssetsDeleteEventQuestion(Widget target, System.Action action)
 		{
-			YesNoPopup.Show (target, "Voulez-vous supprimer l'événement sélectionné ?", action);
+			YesNoPopup.Show (target, Res.Strings.Popup.YesNo.DeleteEventQuestion.ToString (), action);
 		}
 
 		public static void Show(Widget target, string question, System.Action action)

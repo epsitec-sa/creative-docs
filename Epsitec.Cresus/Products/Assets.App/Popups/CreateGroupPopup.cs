@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public CreateGroupPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'un nouveau groupe";
+			this.title = Res.Strings.Popup.CreateGroup.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Text,
-				Label                 = "Nom",
+				Label                 = Res.Strings.Popup.CreateGroup.Name.ToString (),
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
 				BottomMargin          = 10,
 			});
@@ -34,14 +34,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
-				Label                 = "Dans",
+				Label                 = Res.Strings.Popup.CreateGroup.Parent.ToString (),
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
 				Height                = 260,
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Create.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Create.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

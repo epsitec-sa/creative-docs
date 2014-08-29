@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public AssetsReportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Paramètres de la liste des objets d'immobilisations";
+			this.title = Res.Strings.Popup.AssetsReport.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -24,13 +24,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Etat au",
+				Label                 = Res.Strings.Popup.AssetsReport.State.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Effectuer un groupement",
+				Label                 = Res.Strings.Popup.AssetsReport.Group.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 2
@@ -44,12 +44,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Int,
-				Label                 = "Jusqu'au niveau",
+				Label                 = Res.Strings.Popup.AssetsReport.Level.ToString (),
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Show.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Show.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

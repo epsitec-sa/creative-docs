@@ -51,8 +51,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static void ShowAssetsDeleteEventWarning(Widget target)
 		{
 			var popup = new MessagePopup (
-				"Avertissement",
-				"Il n'est pas possible de supprimer un événement verrouillé.");
+				Res.Strings.Popup.Message.WarningTitle.ToString (),
+				Res.Strings.Popup.Message.DeleteEventWarning.Text.ToString ());
 
 			popup.Create (target);
 		}
@@ -60,29 +60,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static void ShowAssetsPreviewEventWarning(Widget target)
 		{
 			var popup = new MessagePopup (
-				"Avertissement",
-				"Le verrouillage n'est pas possible, car il existe des préamortissements.");
+				Res.Strings.Popup.Message.WarningTitle.ToString (),
+				Res.Strings.Popup.Message.PreviewEventWarning.Text.ToString ());
 
 			popup.Create (target);
 		}
 
 		public static void ShowTodo(Widget target)
 		{
-			var popup = new MessagePopup ("Erreur", "Cette fonction n'est pas encore implémentée.");
+			var popup = new MessagePopup (
+				Res.Strings.Popup.Message.ErrorTitle.ToString (),
+				Res.Strings.Popup.Message.Todo.Text.ToString ());
 
 			popup.Create (target);
 		}
 
 		public static void ShowPasteError(Widget target)
 		{
-			var popup = new MessagePopup ("Erreur", "Les données sont incompatibles.");
+			var popup = new MessagePopup (
+				Res.Strings.Popup.Message.ErrorTitle.ToString (),
+				Res.Strings.Popup.Message.PasteError.Text.ToString ());
 
 			popup.Create (target);
 		}
 
 		public static void ShowError(Widget target, string message)
 		{
-			var popup = new MessagePopup ("Erreur", message);
+			var popup = new MessagePopup (
+				Res.Strings.Popup.Message.ErrorTitle.ToString (),
+				message);
 
 			popup.Create (target);
 		}
@@ -96,7 +102,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public static void ShowMessage(Widget target, string message)
 		{
-			var popup = new MessagePopup ("Message", message);
+			var popup = new MessagePopup (
+				Res.Strings.Popup.Message.MessageTitle.ToString (),
+				message);
 
 			popup.Create (target);
 		}

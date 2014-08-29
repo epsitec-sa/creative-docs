@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Unifiée",
+				Label                 = Res.Strings.Popup.Margins.Unified.ToString (),
 				BottomMargin          = 10,
 			});
 
@@ -35,28 +35,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Gauche",
+				Label                 = Res.Strings.Popup.Margins.Left.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Droite",
+				Label                 = Res.Strings.Popup.Margins.Right.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Supérieure",
+				Label                 = Res.Strings.Popup.Margins.Top.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Inférieure",
+				Label                 = Res.Strings.Popup.Margins.Bottom.ToString (),
 			});
 
 			this.SetDescriptions (list);

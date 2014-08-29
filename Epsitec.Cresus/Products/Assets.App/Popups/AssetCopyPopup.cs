@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.obj = obj;
 
-			this.title = "Copier l'objet d'immobilisation";
+			this.title = Res.Strings.Popup.AssetCopy.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Copy.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Copy.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 
@@ -107,14 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (string.IsNullOrEmpty (date))
 				{
-					label = "Etat lors de l'entrée";
+					label = Res.Strings.Popup.AssetCopy.StateGlobal.ToString ();
 				}
 				else
 				{
-					label = string.Format ("Etat lors de l'entrée au {0}", date);
+					label = string.Format (Res.Strings.Popup.AssetCopy.StateInput.ToString (), date);
 				}
 
-				return string.Join ("<br/>", label, "Etat en date du :");
+				return string.Join ("<br/>", label, Res.Strings.Popup.AssetCopy.StateDate.ToString ());
 			}
 		}
 

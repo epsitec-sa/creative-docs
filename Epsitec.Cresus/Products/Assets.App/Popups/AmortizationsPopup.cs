@@ -14,29 +14,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public AmortizationsPopup(DataAccessor accessor)
 			: base(accessor)
 		{
-			this.title = "Création d'un nouveau mandat";
-
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "Depuis",
+				Label                 = Res.Strings.Popup.Amortizations.FromDate.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "jusqu'au",
+				Label                 = Res.Strings.Popup.Amortizations.ToDate.ToString (),
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "Pour l'objet sélectionné<br/>Pour tous les objets",
+				MultiLabels           = Res.Strings.Popup.Amortizations.Object.ToString (),
 			});
 
 			this.SetDescriptions (list);

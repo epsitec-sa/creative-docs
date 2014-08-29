@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public PageSizePopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Format des pages";
+			this.title = Res.Strings.Popup.PageSize.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Format",
+				Label                 = Res.Strings.Popup.PageSize.Format.ToString (),
 				MultiLabels           = PageSizePopup.Labels,
 				Width                 = 200,
 			});
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = "Portrait<br/>Paysage",
+				MultiLabels           = Res.Strings.Popup.PageSize.Radios.ToString (),
 				BottomMargin          = 10,
 			});
 
@@ -42,14 +42,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Largeur",
+				Label                 = Res.Strings.Popup.PageSize.Width.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Millimeters,
-				Label                 = "Hauteur",
+				Label                 = Res.Strings.Popup.PageSize.Height.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -155,7 +155,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var format = PageSizePopup.RankToFormat (rankFormat);
 				var name = PageSizePopup.FormatToString (format);
 
-				var orientation = rankOrientation == 0 ? "portrait" : "paysage";
+				var orientation = rankOrientation == 0 ?
+					Res.Strings.Popup.PageSize.Description.Portrait.ToString () :
+					Res.Strings.Popup.PageSize.Description.Landscape.ToString ();
 
 				return string.Format ("{0} {1}", name, orientation);
 			}
@@ -227,25 +229,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			switch (format.Type)
 			{
 				case FormatType.A2:
-					return "A2";
+					return Res.Strings.Popup.PageSize.FormatType.A2.ToString ();
 
 				case FormatType.A3:
-					return "A3";
+					return Res.Strings.Popup.PageSize.FormatType.A3.ToString ();
 
 				case FormatType.A4:
-					return "A4";
+					return Res.Strings.Popup.PageSize.FormatType.A4.ToString ();
 
 				case FormatType.A5:
-					return "A5";
+					return Res.Strings.Popup.PageSize.FormatType.A5.ToString ();
 
 				case FormatType.Letter:
-					return "Letter";
+					return Res.Strings.Popup.PageSize.FormatType.Letter.ToString ();
 
 				case FormatType.Legal:
-					return "Legal";
+					return Res.Strings.Popup.PageSize.FormatType.Legal.ToString ();
 
 				default:
-					return "Sur mesure";
+					return Res.Strings.Popup.PageSize.FormatType.Custom.ToString ();
 			}
 		}
 

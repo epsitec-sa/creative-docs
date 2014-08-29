@@ -896,9 +896,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsPreview);
 
 			this.ShowAmortizationsPopup (target, true, true,
-				"Générer les préamortissements",
-				"Générer pour un",
-				"Générer pour tous",
+				Res.Strings.Popup.Amortizations.Preview.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Preview.One.ToString (),
+				Res.Strings.Popup.Amortizations.Preview.All.ToString (),
 				this.DoAmortisationsPreview);
 		}
 
@@ -907,9 +907,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsFix);
 
 			this.ShowAmortizationsPopup (target, false, false,
-				"Fixer les préamortissements",
-				"Fixer pour un",
-				"Fixer pour tous",
+				Res.Strings.Popup.Amortizations.Fix.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Fix.One.ToString (),
+				Res.Strings.Popup.Amortizations.Fix.All.ToString (),
 				this.DoAmortisationsFix);
 		}
 
@@ -944,9 +944,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsUnpreview);
 
 			this.ShowAmortizationsPopup (target, false, false,
-				"Supprimer les préamortissements",
-				"Supprimer pour un",
-				"Supprimer pour tous",
+				Res.Strings.Popup.Amortizations.Unpreview.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Unpreview.One.ToString (),
+				Res.Strings.Popup.Amortizations.Unpreview.All.ToString (),
 				this.DoAmortisationsUnpreview);
 		}
 
@@ -955,9 +955,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsDelete);
 
 			this.ShowAmortizationsPopup (target, true, false,
-				"Supprimer des amortissements ordinaires",
-				"Supprimer pour un",
-				"Supprimer pour tous",
+				Res.Strings.Popup.Amortizations.Delete.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Delete.One.ToString (),
+				Res.Strings.Popup.Amortizations.Delete.All.ToString (),
 				this.DoAmortisationsDelete);
 		}
 

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.eventType = eventType;
 
 			var ed = DataDescriptions.GetEventDescription (this.eventType);
-			this.title = string.Format ("Coller l'événement \"{0}\"", ed);
+			this.title = string.Format (Res.Strings.Popup.EventPaste.Title.ToString (), ed);
 
 			var list = new List<StackedControllerDescription> ();
 
@@ -33,12 +33,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
-				Label                 = "A cette date",
+				Label                 = Res.Strings.Popup.EventPaste.Date.ToString (),
 			});
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Paste.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Paste.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

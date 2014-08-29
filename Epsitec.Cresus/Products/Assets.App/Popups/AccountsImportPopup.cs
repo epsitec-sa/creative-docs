@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.ImportAccountsFilename,
-				Label                 = "Fichier",
+				Label                 = Res.Strings.Popup.AccountsImport.File.ToString (),
 				Width                 = 300,
 				BottomMargin          = 10,
 			});
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetDescriptions (list);
 
-			this.defaultAcceptButtonName = Res.Strings.Popup.Import.ToString ();
+			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Import.ToString ();
 			this.defaultControllerRankFocus = 0;
 		}
 

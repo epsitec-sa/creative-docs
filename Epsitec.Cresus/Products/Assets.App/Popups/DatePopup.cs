@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public override void CreateUI()
 		{
-			this.CreateTitle ("Choix d'une date");
+			this.CreateTitle (Res.Strings.Popup.Date.Title.ToString ());
 
 			this.CreateDateUI ();
 			this.CreateCloseButton ();
