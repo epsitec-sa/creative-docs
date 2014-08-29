@@ -55,27 +55,27 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			if (encoding == Encoding.UTF7)
 			{
-				return "UTF-7";
+				return Res.Strings.Encoding.UTF7.ToString ();
 			}
 			else if (encoding == Encoding.UTF8)
 			{
-				return "UTF-8";
+				return Res.Strings.Encoding.UTF8.ToString ();
 			}
 			else if (encoding == Encoding.UTF32)
 			{
-				return "UTF-32";
+				return Res.Strings.Encoding.UTF32.ToString ();
 			}
 			else if (encoding == Encoding.Unicode)
 			{
-				return "Unicode (normal)";
+				return Res.Strings.Encoding.Unicode.ToString ();
 			}
 			else if (encoding == Encoding.BigEndianUnicode)
 			{
-				return "Unicode (big endian)";
+				return Res.Strings.Encoding.BigEndianUnicode.ToString ();
 			}
 			else if (encoding == Encoding.ASCII)
 			{
-				return "ASCII";
+				return Res.Strings.Encoding.Ascii.ToString ();
 			}
 			else
 			{

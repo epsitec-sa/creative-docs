@@ -29,16 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		public static string GetDescription(PdfStyle style)
 		{
 			var predefined = PdfStyleHelpers.StyleToPredefined (style);
-			var desc = PdfPredefinedStyleHelpers.GetPredefinedName (predefined);
-
-			if (string.IsNullOrEmpty (desc))
-			{
-				return "Sur mesure";
-			}
-			else
-			{
-				return desc;
-			}
+			return PdfPredefinedStyleHelpers.GetPredefinedName (predefined);
 		}
 
 

@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    50, "Vue", "Icône de la vue"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningObject,      TreeTableColumnType.String, 200, "Description"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  70, "Date", "Date de l'événement"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningEventGlyph,  TreeTableColumnType.Glyph,   20, "",     "Icône de l'événement"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningField,       TreeTableColumnType.String, 150, "Champ"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDescription, TreeTableColumnType.String, 400, "Message"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    50, Res.Strings.DataFillers.WarningsTreeTable.Glyph.Title.ToString (), Res.Strings.DataFillers.WarningsTreeTable.Glyph.Tooltip.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningObject,      TreeTableColumnType.String, 200, Res.Strings.DataFillers.WarningsTreeTable.Object.Title.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  70, Res.Strings.DataFillers.WarningsTreeTable.Date.Title.ToString (), Res.Strings.DataFillers.WarningsTreeTable.Date.Tooltip.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningEventGlyph,  TreeTableColumnType.Glyph,   20, "",                                                               Res.Strings.DataFillers.WarningsTreeTable.EventGlyph.Tooltip.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningField,       TreeTableColumnType.String, 150, Res.Strings.DataFillers.WarningsTreeTable.Field.Title.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDescription, TreeTableColumnType.String, 400, Res.Strings.DataFillers.WarningsTreeTable.Description.Title.ToString ()));
 
 				return columns.ToArray ();
 			}

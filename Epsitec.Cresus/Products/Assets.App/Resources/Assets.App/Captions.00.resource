@@ -24,4 +24,31 @@
   <data name="Val.PageFormatType.Letter" id="KQ">&lt;s:data id="_0" f:Name="Letter" f:Labels="{Collection {Text 'Letter'}}" /&gt;</data>
   <data name="Val.PageFormatType.Legal" id="KR">&lt;s:data id="_0" f:Name="Legal" f:Labels="{Collection {Text 'Legal'}}" /&gt;</data>
   <data name="Typ.PageFormatType" id="KK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PageFormatType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Popups.PageFormatType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKL001]'}, {Text '1 [JUKM001]'}, {Text '2 [JUKN001]'}, {Text '3 [JUKO001]'}, {Text '4 [JUKP001]'}, {Text '5 [JUKQ001]'}, {Text '6 [JUKR001]'}}" f:Labels="{Collection {Text ''}}" /&gt;</data>
+  <data name="Val.ExportColor.Unknown" id="KT">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.ExportColor.Transparent" id="KU">&lt;s:data id="_0" f:Name="Transparent" f:Labels="{Collection {Text 'Transparent'}}" /&gt;</data>
+  <data name="Val.ExportColor.White" id="KV">&lt;s:data id="_0" f:Name="White" f:Labels="{Collection {Text 'Blanc'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightGrey" id="K01">&lt;s:data id="_0" f:Name="LightGrey" f:Labels="{Collection {Text 'Gris clair'}}" /&gt;</data>
+  <data name="Val.ExportColor.Grey" id="K11">&lt;s:data id="_0" f:Name="Grey" f:Labels="{Collection {Text 'Gris moyen'}}" /&gt;</data>
+  <data name="Val.ExportColor.DarkGrey" id="K21">&lt;s:data id="_0" f:Name="DarkGrey" f:Labels="{Collection {Text 'Gris foncé'}}" /&gt;</data>
+  <data name="Val.ExportColor.Black" id="K31">&lt;s:data id="_0" f:Name="Black" f:Labels="{Collection {Text 'Noir'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightRed" id="K41">&lt;s:data id="_0" f:Name="LightRed" f:Labels="{Collection {Text 'Rose'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightGreen" id="K51">&lt;s:data id="_0" f:Name="LightGreen" f:Labels="{Collection {Text 'Vert clair'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightBlue" id="K61">&lt;s:data id="_0" f:Name="LightBlue" f:Labels="{Collection {Text 'Bleu clair'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightYellow" id="K71">&lt;s:data id="_0" f:Name="LightYellow" f:Labels="{Collection {Text 'Jaune clair'}}" /&gt;</data>
+  <data name="Val.ExportColor.LightPurple" id="K81">&lt;s:data id="_0" f:Name="LightPurple" f:Labels="{Collection {Text 'Lilas'}}" /&gt;</data>
+  <data name="Typ.ExportColor" id="KS">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ExportColor" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.Export.ExportColor, Assets.Server.Export" f:_2.EnumValues="{Collection {Text '0 [JUKT001]'}, {Text '1 [JUKU001]'}, {Text '2 [JUKV001]'}, {Text '3 [JUK0101]'}, {Text '4 [JUK1101]'}, {Text '5 [JUK2101]'}, {Text '6 [JUK3101]'}, {Text '7 [JUK4101]'}, {Text '8 [JUK5101]'}, {Text '9 [JUK6101]'}, {Text '10 [JUK7101]'}, {Text '11 [JUK8101]'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.Unknown" id="KA1">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Sur mesure'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.Frameless" id="KB1">&lt;s:data id="_0" f:Name="Frameless" f:Labels="{Collection {Text 'Sans cadres'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.LightFrame" id="KC1">&lt;s:data id="_0" f:Name="LightFrame" f:Labels="{Collection {Text 'Cadres discrets'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.StandardFrame" id="KD1">&lt;s:data id="_0" f:Name="StandardFrame" f:Labels="{Collection {Text 'Cadres standards'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.BoldFrame" id="KE1">&lt;s:data id="_0" f:Name="BoldFrame" f:Labels="{Collection {Text 'Cadres gras'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.GreyEvenOdd" id="KF1">&lt;s:data id="_0" f:Name="GreyEvenOdd" f:Labels="{Collection {Text 'Lignes impaires grises'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.BlueEvenOdd" id="KG1">&lt;s:data id="_0" f:Name="BlueEvenOdd" f:Labels="{Collection {Text 'Lignes impaires bleues'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.YellowEvenOdd" id="KH1">&lt;s:data id="_0" f:Name="YellowEvenOdd" f:Labels="{Collection {Text 'Lignes impaires jaunes'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.RedEvenOdd" id="KI1">&lt;s:data id="_0" f:Name="RedEvenOdd" f:Labels="{Collection {Text 'Lignes impaires roses'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.GreenEvenOdd" id="KJ1">&lt;s:data id="_0" f:Name="GreenEvenOdd" f:Labels="{Collection {Text 'Lignes impaires vertes'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.Colored" id="KK1">&lt;s:data id="_0" f:Name="Colored" f:Labels="{Collection {Text 'Lignes colorées'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.Contrast" id="KL1">&lt;s:data id="_0" f:Name="Contrast" f:Labels="{Collection {Text 'Contrasté'}}" /&gt;</data>
+  <data name="Val.PfdPredefinedStyle.Kitch" id="KM1">&lt;s:data id="_0" f:Name="Kitch" f:Labels="{Collection {Text 'Kitch'}}" /&gt;</data>
+  <data name="Typ.PfdPredefinedStyle" id="K91">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PfdPredefinedStyle" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.Export.PdfPredefinedStyle, Assets.Server.Export" f:_2.EnumValues="{Collection {Text '0 [JUKA101]'}, {Text '1 [JUKB101]'}, {Text '2 [JUKC101]'}, {Text '3 [JUKD101]'}, {Text '4 [JUKE101]'}, {Text '5 [JUKF101]'}, {Text '6 [JUKG101]'}, {Text '7 [JUKH101]'}, {Text '8 [JUKI101]'}, {Text '9 [JUKJ101]'}, {Text '10 [JUKK101]'}, {Text '11 [JUKL101]'}, {Text '12 [JUKM101]'}}" /&gt;</data>
 </bundle>

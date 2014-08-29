@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				default:
 					var ext = ExportInstructionsHelpers.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
-					var message = string.Format ("L'extension \"{0}\" n'est pas supportée.", ext);
+					var message = string.Format (Res.Strings.Export.Engine.UnknownFormat.ToString (), ext);
 					this.ShowErrorPopup (message);
 					break;
 			}
@@ -374,7 +374,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ShowErrorPopup(string message)
 		{
 			//	Affiche une erreur.
-			MessagePopup.ShowMessage (this.target, "Exportation impossible", message);
+			MessagePopup.ShowMessage (this.target, Res.Strings.Popup.Message.ExportError.Text.ToString (), message);
 		}
 
 

@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var list = new List<TreeTableColumnDescription> ();
 
 				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPin,         TreeTableColumnType.Pin,    LastViewsTreeTableFiller.TypeColumnWidth, ""));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, "Vue"));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPage,        TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, "Page"));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDate,        TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, "Date"));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, "Sélection"));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Type.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPage,        TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Page.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDate,        TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Date.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Description.ToString ()));
 
 				return list.ToArray ();
 			}

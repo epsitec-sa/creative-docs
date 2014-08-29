@@ -60,33 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static string GetFormatName(ExportFormat format)
 		{
 			//	Retourne le nom en clair d'un format.
-#if true
 			return EnumKeyValues.GetEnumKeyValue (format).Values.Last ().ToString ();
-#else
-			switch (format)
-			{
-				case ExportFormat.Txt:
-					return "TXT — Fichier texte tabulé";
-			
-				case ExportFormat.Csv:
-					return "CSV — Fichier texte pour tableur";
-			
-				case ExportFormat.Xml:
-					return "XML — Fichier texte \"Extensible Markup Language\"";
-			
-				case ExportFormat.Yaml:
-					return "YAML — Fichier texte \"YAML Ain't Markup Language\"";
-			
-				case ExportFormat.Json:
-					return "JSON — Fichier texte \"JavaScript Object Notation\"";
-			
-				case ExportFormat.Pdf:
-					return "PDF — Document mis en pages";
-			
-				default:
-					throw new System.InvalidOperationException (string.Format ("Invalid format", format));
-			}
-#endif
 		}
 
 		public static string GetFormatExt(ExportFormat format)

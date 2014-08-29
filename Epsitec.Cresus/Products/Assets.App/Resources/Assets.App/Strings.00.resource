@@ -165,4 +165,25 @@
   <data name="Popup.RateCalculator.Result" id="KB5">Taux = {0}</data>
   <data name="Popup.YesNo.Title" id="KC5">Question</data>
   <data name="Popup.YesNo.DeleteEventQuestion" id="KD5">Voulez-vous supprimer l'événement sélectionné ?</data>
+  <data name="DataFillers.LastViewsTreeTable.Type" id="KE5">Vue</data>
+  <data name="DataFillers.LastViewsTreeTable.Page" id="KF5">Page</data>
+  <data name="DataFillers.LastViewsTreeTable.Date" id="KG5">Date</data>
+  <data name="DataFillers.LastViewsTreeTable.Description" id="KH5">Sélection</data>
+  <data name="DataFillers.MessagesTreeTable.Title" id="KI5">Messages</data>
+  <data name="DataFillers.WarningsTreeTable.Glyph.Title" id="KJ5">Vue</data>
+  <data name="DataFillers.WarningsTreeTable.Glyph.Tooltip" id="KK5">Icône de la vue</data>
+  <data name="DataFillers.WarningsTreeTable.Object.Title" id="KL5">Description</data>
+  <data name="DataFillers.WarningsTreeTable.Date.Title" id="KM5">Date</data>
+  <data name="DataFillers.WarningsTreeTable.Date.Tooltip" id="KN5">Date de l'événement</data>
+  <data name="DataFillers.WarningsTreeTable.EventGlyph.Tooltip" id="KO5">Icône de l'événement</data>
+  <data name="DataFillers.WarningsTreeTable.Field.Title" id="KP5">Champ</data>
+  <data name="DataFillers.WarningsTreeTable.Description.Title" id="KQ5">Message</data>
+  <data name="Encoding.UTF7" id="KR5">UTF-7</data>
+  <data name="Encoding.UTF8" id="KS5">UTF-8</data>
+  <data name="Encoding.UTF32" id="KT5">UTF-32</data>
+  <data name="Encoding.Unicode" id="KU5">Unicode (normal)</data>
+  <data name="Encoding.BigEndianUnicode" id="KV5">Unicode (big endian)</data>
+  <data name="Encoding.Ascii" id="K06">ASCII</data>
+  <data name="Export.Engine.UnknownFormat" id="K16">L'extension "{0}" n'est pas supportée.</data>
+  <data name="Popup.Message.ExportError.Text" id="K26">Exportation impossible</data>
 </bundle>

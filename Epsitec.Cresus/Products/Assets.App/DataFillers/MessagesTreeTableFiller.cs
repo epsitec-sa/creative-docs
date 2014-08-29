@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private string							title = "Messages";
+		private string							title = Res.Strings.DataFillers.MessagesTreeTable.Title.ToString ();
 		private int								width = 300;
 	}
 }

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Server.Export;
 
 namespace Epsitec.Cresus.Assets.App.Export
@@ -53,47 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		public static string GetPredefinedName(PdfPredefinedStyle predefined)
 		{
-			switch (predefined)
-			{
-				case PdfPredefinedStyle.Frameless:
-					return "Sans cadres";
-
-				case PdfPredefinedStyle.LightFrame:
-					return "Cadres discrets";
-
-				case PdfPredefinedStyle.StandardFrame:
-					return "Cadres standards";
-
-				case PdfPredefinedStyle.BoldFrame:
-					return "Cadres gras";
-
-				case PdfPredefinedStyle.GreyEvenOdd:
-					return "Lignes impaires grises";
-
-				case PdfPredefinedStyle.BlueEvenOdd:
-					return "Lignes impaires bleues";
-
-				case PdfPredefinedStyle.YellowEvenOdd:
-					return "Lignes impaires jaunes";
-
-				case PdfPredefinedStyle.RedEvenOdd:
-					return "Lignes impaires roses";
-
-				case PdfPredefinedStyle.GreenEvenOdd:
-					return "Lignes impaires vertes";
-
-				case PdfPredefinedStyle.Colored:
-					return "Lignes colorées";
-
-				case PdfPredefinedStyle.Contrast:
-					return "Contrasté";
-
-				case PdfPredefinedStyle.Kitch:
-					return "Kitch";
-
-				default:
-					return null;
-			}
+			return EnumKeyValues.GetEnumKeyValue (predefined).Values.Last ().ToString ();
 		}
 
 		public static IEnumerable<PdfPredefinedStyle> Predefined

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Server.Export;
 
 namespace Epsitec.Cresus.Assets.App.Export
@@ -53,44 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static string GetStyleName(ExportColor color)
 		{
-			switch (color)
-			{
-				case ExportColor.Transparent:
-					return "Transparent";
-
-				case ExportColor.White:
-					return "Blanc";
-
-				case ExportColor.LightGrey:
-					return "Gris clair";
-
-				case ExportColor.Grey:
-					return "Gris moyen";
-
-				case ExportColor.DarkGrey:
-					return "Gris foncé";
-
-				case ExportColor.Black:
-					return "Noir";
-
-				case ExportColor.LightRed:
-					return "Rose";
-
-				case ExportColor.LightGreen:
-					return "Vert clair";
-
-				case ExportColor.LightBlue:
-					return "Bleu clair";
-
-				case ExportColor.LightYellow:
-					return "Jaune clair";
-
-				case ExportColor.LightPurple:
-					return "Lilas";
-
-				default:
-					return null;
-			}
+			return EnumKeyValues.GetEnumKeyValue (color).Values.Last ().ToString ();
 		}
 
 		private static IEnumerable<ExportColor> Colors
