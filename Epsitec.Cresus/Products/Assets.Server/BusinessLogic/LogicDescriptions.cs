@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Met la date de l'événement, si elle est connue.
 			if (timestamp == Timestamp.MaxValue)
 			{
-				list.Add ("Etat final");
+				list.Add (Res.Strings.LogicDescription.Event.Final.ToString ());
 			}
 			else
 			{
@@ -159,11 +159,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (eventType == EventType.Unknown)
 				{
-					list.Add ("Etat au " + d);
+					list.Add (string.Format (Res.Strings.LogicDescription.Event.State.ToString (), d));
 				}
 				else
 				{
-					list.Add ("Evénement du " + d);
+					list.Add (string.Format (Res.Strings.LogicDescription.Event.Date.ToString (), d));
 				}
 			}
 

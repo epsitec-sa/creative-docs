@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -64,38 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static string GetErrorDescription(ErrorType errorType)
 		{
-			switch (errorType)
-			{
-				case ErrorType.Unknown:
-					return "Erreur inconnue";
-
-				case ErrorType.AmortizationAlreadyDone:
-					return "L'objet a déja été amorti durant cette période";
-
-				case ErrorType.AmortizationUndefined:
-					return "L'amortissement n'est pas défini";
-
-				case ErrorType.AmortizationInvalidRate:
-					return "Le taux d'amortissement est incorrect";
-
-				case ErrorType.AmortizationInvalidType:
-					return "Le type d'amortissement est incorrect";
-
-				case ErrorType.AmortizationInvalidPeriod:
-					return "La périodicité de l'amortissement est incorrecte";
-
-				case ErrorType.AmortizationEmptyAmount:
-					return "L'objet n'a pas de valeur comptable";
-
-				case ErrorType.AmortizationOutObject:
-					return "L'objet est sorti";
-
-				case ErrorType.AmortizationResidualReached:
-					return "L'amortissement a atteint la valeur résiduelle";
-
-				default:
-					return "?";
-			}
+			return EnumKeyValues.GetEnumKeyValue (errorType).Values.Last ().ToString ();
 		}
 	}
 }

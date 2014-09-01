@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (date.Value == Timestamp.Now.Date)
 				{
-					tooltip = "Aujourd'hui";
+					tooltip = Res.Strings.TimelineData.Now.ToString ();
 				}
 
 				var cell = new TimelineCell

@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (baseType.AccountsDateRange.IsEmpty)
 				{
-					const string desc = "Aucun plan comptable";
+					string desc = Res.Strings.WarningsLogic.NoAccounts.ToString ();
 					var warning = new Warning (BaseType.Categories, cat.Guid, Guid.Empty, accountField, desc);
 					warnings.Add (warning);
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (account == null)
 					{
-						var desc = string.Format ("Le compte {0} est inconnu dans le dernier plan comptable", number);
+						var desc = string.Format (Res.Strings.WarningsLogic.NotInAccounts.ToString (), number);
 						var warning = new Warning (BaseType.Categories, cat.Guid, Guid.Empty, accountField, desc);
 						warnings.Add (warning);
 					}
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (baseType.AccountsDateRange.IsEmpty)
 				{
-					const string desc = "Aucun plan comptable à cette date";
+					string desc = Res.Strings.WarningsLogic.NoAccountsToDate.ToString ();
 					var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, accountField, desc);
 					warnings.Add (warning);
 
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (account == null)
 					{
-						var desc = string.Format ("Le compte {0} est inconnu dans le plan comptable à cette date", number);
+						var desc = string.Format (Res.Strings.WarningsLogic.NotInAccountsToDate.ToString (), number);
 						var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, accountField, desc);
 						warnings.Add (warning);
 					}
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				if (!WarningsLogic.IsDefinableAccount (e.Type))
 				{
-					const string desc = "Aucun plan comptable à cette date";
+					string desc = Res.Strings.WarningsLogic.NoAccountsToDate.ToString ();
 					var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.MainValue, desc);
 					warnings.Add (warning);
 
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (account == null)
 				{
-					var desc = string.Format ("Le compte {0} est inconnu dans le plan comptable à cette date", number);
+					var desc = string.Format (Res.Strings.WarningsLogic.NotInAccountsToDate.ToString (), number);
 					var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.MainValue, desc);
 					warnings.Add (warning);
 				}
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (hasWarning)
 			{
-				const string desc = "Le champ n'est pas défini";
+				string desc = Res.Strings.WarningsLogic.UndefinedField.ToString ();
 				var warning = new Warning (baseType, obj.Guid, eventGuid, field, desc);
 				warnings.Add (warning);
 			}

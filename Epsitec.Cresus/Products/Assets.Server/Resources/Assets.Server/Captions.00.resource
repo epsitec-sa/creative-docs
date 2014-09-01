@@ -45,4 +45,17 @@
   <data name="Val.AccountType.Groupe" id="KB1">&lt;s:data id="_0" f:Name="Groupe" f:Labels="{Collection {Text 'Regroupement'}}" /&gt;</data>
   <data name="Val.AccountType.TVA" id="KC1">&lt;s:data id="_0" f:Name="TVA" f:Labels="{Collection {Text 'TVA'}}" /&gt;</data>
   <data name="Typ.AccountType" id="K91">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="AccountType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.BusinessLogic.AccountType, Assets.Server" f:_2.EnumValues="{Collection {Text '0 [IUKA101]'}, {Text '1 [IUKB101]'}, {Text '2 [IUKC101]'}}" /&gt;</data>
+  <data name="Val.ErrorType.Ok" id="KE1">&lt;s:data id="_0" f:Name="Ok" /&gt;</data>
+  <data name="Val.ErrorType.Unknown" id="KF1">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Erreur inconnue'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationGenerate" id="KG1">&lt;s:data id="_0" f:Name="AmortizationGenerate" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationRemove" id="KH1">&lt;s:data id="_0" f:Name="AmortizationRemove" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationAlreadyDone" id="KI1">&lt;s:data id="_0" f:Name="AmortizationAlreadyDone" f:Labels="{Collection {Text 'L\'objet a déja été amorti durant cette période'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationUndefined" id="KJ1">&lt;s:data id="_0" f:Name="AmortizationUndefined" f:Labels="{Collection {Text 'L\'amortissement n\'est pas défini'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationInvalidRate" id="KK1">&lt;s:data id="_0" f:Name="AmortizationInvalidRate" f:Labels="{Collection {Text 'Le taux d\'amortissement est incorrect'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationInvalidType" id="KL1">&lt;s:data id="_0" f:Name="AmortizationInvalidType" f:Labels="{Collection {Text 'Le type d\'amortissement est incorrect'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationInvalidPeriod" id="KM1">&lt;s:data id="_0" f:Name="AmortizationInvalidPeriod" f:Labels="{Collection {Text 'La périodicité de l\'amortissement est incorrecte'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationEmptyAmount" id="KN1">&lt;s:data id="_0" f:Name="AmortizationEmptyAmount" f:Labels="{Collection {Text 'L\'objet n\'a pas de valeur comptable'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationOutObject" id="KO1">&lt;s:data id="_0" f:Name="AmortizationOutObject" f:Labels="{Collection {Text 'L\'objet est sorti'}}" /&gt;</data>
+  <data name="Val.ErrorType.AmortizationResidualReached" id="KP1">&lt;s:data id="_0" f:Name="AmortizationResidualReached" f:Labels="{Collection {Text 'L\'amortissement a atteint la valeur résiduelle'}}" /&gt;</data>
+  <data name="Typ.ErrorType" id="KD1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ErrorType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.BusinessLogic.ErrorType, Assets.Server" f:_2.EnumValues="{Collection {Text '0 [IUKE101]'}, {Text '1 [IUKF101]'}, {Text '2 [IUKG101]'}, {Text '3 [IUKH101]'}, {Text '4 [IUKI101]'}, {Text '5 [IUKJ101]'}, {Text '6 [IUKK101]'}, {Text '7 [IUKL101]'}, {Text '8 [IUKM101]'}, {Text '9 [IUKN101]'}, {Text '10 [IUKO101]'}, {Text '11 [IUKP101]'}}" /&gt;</data>
 </bundle>
