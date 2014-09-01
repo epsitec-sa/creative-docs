@@ -3522,6 +3522,21 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class ToolbarController
+			{
+				public static class AssetsTreeTable
+				{
+					//	designer:str/JUKDA01
+					public static global::Epsitec.Common.Types.FormattedText New
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544653));
+						}
+					}
+				}
+			}
+			
 			public static class ToolbarControllers
 			{
 				public static class AccountsTreeTable
@@ -3534,12 +3549,12 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544646));
 						}
 					}
-					//	designer:str/JUKDA01
+					//	designer:str/JUK2A01
 					public static global::Epsitec.Common.Types.FormattedText DateRange
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544653));
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544642));
 						}
 					}
 					//	designer:str/JUK4A01
@@ -6647,6 +6662,21 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class ToolbarController
+			{
+				public static class AssetsTreeTable
+				{
+					//	designer:str/JUKDA01
+					public static global::Epsitec.Common.Support.Druid New
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544653);
+						}
+					}
+				}
+			}
+			
 			public static class ToolbarControllers
 			{
 				public static class AccountsTreeTable
@@ -6659,12 +6689,12 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544646);
 						}
 					}
-					//	designer:str/JUKDA01
+					//	designer:str/JUK2A01
 					public static global::Epsitec.Common.Support.Druid DateRange
 					{
 						get
 						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544653);
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544642);
 						}
 					}
 					//	designer:str/JUK4A01

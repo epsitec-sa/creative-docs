@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarController.AssetsTreeTable.New.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'objet d'immobilisation");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'objet d'immobilisation");
 			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
