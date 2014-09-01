@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dateController = new DateFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Date",
+				Label                 = Res.Strings.EntryController.Date.ToString (),
 				HideAdditionalButtons = false,
 				DateRangeCategory     = DateRangeCategory.Mandat,
 				TabIndex              = this.tabIndex,
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.debitController = new AccountFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Débit",
+				Label                 = Res.Strings.EntryController.Debit.ToString (),
 				EditWidth             = AbstractFieldController.maxWidth,
 				HideAdditionalButtons = false,
 				TabIndex              = this.tabIndex,
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.creditController = new AccountFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Crédit",
+				Label                 = Res.Strings.EntryController.Credit.ToString (),
 				EditWidth             = AbstractFieldController.maxWidth,
 				HideAdditionalButtons = false,
 				TabIndex              = this.tabIndex,
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.stampController = new StringFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Pièce",
+				Label                 = Res.Strings.EntryController.Stamp.ToString (),
 				EditWidth             = 100,
 				LineCount             = 1,
 				HideAdditionalButtons = false,
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.titleController = new StringFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Libellé",
+				Label                 = Res.Strings.EntryController.Title.ToString (),
 				EditWidth             = AbstractFieldController.maxWidth,
 				LineCount             = 1,
 				HideAdditionalButtons = false,
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.amountController = new DecimalFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				Label                 = "Montant",
+				Label                 = Res.Strings.EntryController.Amount.ToString (),
 				DecimalFormat         = DecimalFormat.Amount,
 				HideAdditionalButtons = false,
 				TabIndex              = this.tabIndex,

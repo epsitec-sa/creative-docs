@@ -225,18 +225,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateInitLine(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Valeur comptable");
-			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur initiale", this.UpdateInitAmount);
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Init.Title.ToString ());
+			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Init.Value.ToString (), this.UpdateInitAmount);
 		}
 
 		private void CreateMaxLine(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Valeur comptable");
-			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur finale amortie");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Max.Title.ToString ());
+			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Max.Final.ToString ());
 			this.CreateOper (parent, "= Max (");
-			var x = this.CreateArg (parent, "Valeur arrondie");
+			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Max.Rounded.ToString ());
 			this.CreateOper (parent, ",");
-			this.residualAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, "Valeur résiduelle", this.UpdateResidualAmount);
+			this.residualAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, Res.Strings.AmortizedAmountController.Max.Residual.ToString (), this.UpdateResidualAmount);
 			this.CreateOper (parent, ")");
 
 			this.CreateLink (bottomParent, x);
@@ -244,12 +244,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateRoundLine(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Valeur arrondie");
-			this.roundedAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie arrondie");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Round.Title.ToString ());
+			this.roundedAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Round.Rounded.ToString ());
 			this.CreateOper (parent, "= Arrondi (");
-			var x = this.CreateArg (parent, "Valeur brute");
+			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Round.Brut.ToString ());
 			this.CreateOper (parent, ",");
-			this.roundAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, "Arrondi", this.UpdateRoundAmount);
+			this.roundAmountTextField = this.CreateTextField (parent, AmortizedAmountController.RoundWidth, Res.Strings.AmortizedAmountController.Round.Result.ToString (), this.UpdateRoundAmount);
 			this.CreateOper (parent, ")");
 
 			this.CreateLink (bottomParent, x);
@@ -257,38 +257,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateLine1(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Valeur brute");
-			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur amortie non arrondie");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Line1.Title.ToString ());
+			this.brutAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Line1.Brut.ToString ());
 			this.CreateOper (parent, "=");
-			this.initialAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Valeur précédente");
+			this.initialAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Line1.Initial.ToString ());
 			this.CreateOper (parent, "−");
-			var x = this.CreateArg (parent, "Amortissement");
+			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Line1.Result.ToString ());
 
 			this.CreateLink (bottomParent, x);
 		}
 
 		private void CreateLine2(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Amortissement");
-			this.amortizationAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, "Amortissement");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Line2.Title.ToString ());
+			this.amortizationAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Line2.Amortizatiion.ToString ());
 			this.CreateOper (parent, "=");
-			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, this.AmortizationType == AmortizationType.Linear ? "Valeur de base" : "Valeur précédente");
+			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, this.AmortizationType == AmortizationType.Linear ? Res.Strings.AmortizedAmountController.Line2.BaseLinear.ToString () : Res.Strings.AmortizedAmountController.Line2.BaseExp.ToString ());
 			this.CreateOper (parent, "×");
-			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Taux adapté selon la périodicité", this.UpdateEffectiveRate);
+			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Line2.Rate.ToString (), this.UpdateEffectiveRate);
 			this.CreateOper (parent, "×");
-			var x = this.CreateArg (parent, "Prorata");
+			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Line2.Prorata.ToString ());
 
 			this.CreateLink (bottomParent, x);
 		}
 
 		private void CreateProrataLine(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, "Prorata");
-			this.prorataRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, "Facteur correctif si \"au prorata\"");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Prorata.Title.ToString ());
+			this.prorataRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Prorata.Rate.ToString ());
 			this.CreateOper (parent, "=");
-			this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre effectif", this.UpdateProrataNumerator);
+			this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Numerator.ToString (), this.UpdateProrataNumerator);
 			this.CreateOper (parent, "/");
-			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, "Prorata, nombre total", this.UpdateProrataDenominator);
+			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Denominator.ToString (), this.UpdateProrataDenominator);
 		}
 
 		private void CreateButtons(Widget parent)
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.deleteEntryButton = new Button
 			{
 				Parent        = line,
-				Text          = "Supprimer l'écriture",
+				Text          = Res.Strings.AmortizedAmountController.Entry.Delete.Text.ToString (),
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				PreferredSize = new Size (120, h),
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.showEntryButton = new Button
 			{
 				Parent        = line,
-				Text          = "Voir l'écriture",
+				Text          = Res.Strings.AmortizedAmountController.Entry.Show.Text.ToString (),
 				ButtonStyle   = ButtonStyle.Icon,
 				AutoFocus     = false,
 				PreferredSize = new Size (120, h),
@@ -326,8 +326,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Margins       = new Margins (10, 0, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (this.deleteEntryButton, "Supprime l'écriture en mettant un montant nul");
-			ToolTip.Default.SetToolTip (this.showEntryButton,   "Sélectionne l'écriture dans la vue des écritures comptables");
+			ToolTip.Default.SetToolTip (this.deleteEntryButton, Res.Strings.AmortizedAmountController.Entry.Delete.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.showEntryButton,   Res.Strings.AmortizedAmountController.Entry.Show.Tooltip.ToString ());
 
 			this.deleteEntryButton.Clicked += delegate
 			{
@@ -476,7 +476,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				new StaticText
 				{
 					Parent  = line,
-					Text    = "Ecriture comptable générée :",
+					Text    = Res.Strings.AmortizedAmountController.EntrySample.ToString (),
 					Dock    = DockStyle.Fill,
 					Margins = new Margins (100+10, 0, 0, 0),
 				};

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				DateRangeCategory = DateRangeCategory.Mandat,
 			};
 
-			this.DateDescription = "Date";
+			this.DateDescription = Res.Strings.DateController.Description.ToString ();
 			this.DateLabelWidth  = DateController.indent;
 		}
 
@@ -124,9 +124,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.monthButton = this.CreatePartButton (line, 19, 13);
 			this.yearButton  = this.CreatePartButton (line, 33, 23);
 
-			ToolTip.Default.SetToolTip (this.dayButton,   "Sélectionner le jour");
-			ToolTip.Default.SetToolTip (this.monthButton, "Sélectionner le mois");
-			ToolTip.Default.SetToolTip (this.yearButton,  "Sélectionner l'année");
+			ToolTip.Default.SetToolTip (this.dayButton,   Res.Strings.DateController.DaySelect.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.monthButton, Res.Strings.DateController.MonthSelect.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.yearButton,  Res.Strings.DateController.YearSelect.Tooltip.ToString ());
 
 			this.info = new StaticText
 			{

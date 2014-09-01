@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		{
 			if (!this.ViewType.AccountsDateRange.IsEmpty)
 			{
-				return string.Format ("Période {0}", this.ViewType.AccountsDateRange.ToNiceString ());
+				return string.Format (Res.Strings.ViewStates.Accounts.Description.ToString (), this.ViewType.AccountsDateRange.ToNiceString ());
 			}
 
 			return null;

@@ -161,10 +161,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex      = 2,
 			};
 
-			ToolTip.Default.SetToolTip (this.addSubButton,      "Détermine si la valeur est augmentée ou diminuée");
-			ToolTip.Default.SetToolTip (this.argumentTextField, "Valeur de la modification");
-			ToolTip.Default.SetToolTip (this.rateButton,        "Détermine si la modification est en francs ou en pourcents");
-			ToolTip.Default.SetToolTip (this.finalTextField,    "Nouvelle valeur");
+			ToolTip.Default.SetToolTip (this.addSubButton,      Res.Strings.ComputedAmountController.AddSub.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.argumentTextField, Res.Strings.ComputedAmountController.Argument.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.rateButton,        Res.Strings.ComputedAmountController.Rate.Tooltip.ToString ());
+			ToolTip.Default.SetToolTip (this.finalTextField,    Res.Strings.ComputedAmountController.Final.Tooltip.ToString ());
 
 			//	Connexion des événements.
 			this.addSubButton.Clicked += delegate

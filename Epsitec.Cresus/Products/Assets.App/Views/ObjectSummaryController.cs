@@ -166,20 +166,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (s2 <= 1)
 					{
-						return string.Format ("Cet événement de type \"{0}\" définit {1} champ.", s1, s2.ToString ());
+						return string.Format (Res.Strings.ObjectSummaryController.Info.OneDefine.ToString (), s1, s2.ToString ());
 					}
 					else
 					{
-						return string.Format ("Cet événement de type \"{0}\" définit {1} champs.", s1, s2.ToString ());
+						return string.Format (Res.Strings.ObjectSummaryController.Info.ManyDefine.ToString (), s1, s2.ToString ());
 					}
 				}
 				else if (!ObjectSummaryController.IsDefined (this.timestamp))
 				{
-					return "Il n'y a pas de date sélectionnée.";
+					return Res.Strings.ObjectSummaryController.Info.NoDate.ToString ();
 				}
 				else
 				{
-					return "Il n'y a pas d'événement à cette date.";
+					return Res.Strings.ObjectSummaryController.Info.NoEvent.ToString ();
 				}
 			}
 		}
@@ -191,11 +191,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (ObjectSummaryController.IsDefined (this.timestamp))
 				{
 					string d = TypeConverters.DateToString (this.timestamp.Value.Date);
-					return string.Format ("Le tableau ci-dessous montre l'état en date du {0} :", d);
+					return string.Format (Res.Strings.ObjectSummaryController.Info.ShowAt.ToString (), d);
 				}
 				else
 				{
-					return "Le tableau ci-dessous montre l'état final de l'objet :";
+					return Res.Strings.ObjectSummaryController.Info.ShowFinal.ToString ();
 				}
 			}
 		}

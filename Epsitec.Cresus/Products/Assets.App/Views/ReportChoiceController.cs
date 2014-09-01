@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.dataFiller = new MessagesTreeTableFiller (this.accessor, this.nodeGetter)
 			{
-				Title = "Liste des rapports disponibles :",
+				Title = Res.Strings.ReportChoiceController.Title.ToString (),
 				Width = ReportChoiceController.messageWidth - (int) AbstractScroller.DefaultBreadth,
 			};
 

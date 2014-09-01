@@ -381,4 +381,58 @@
   <data name="ToolbarControllers.WarningsTreeTable.Deselect" id="K3C">Désélectionner l'avertissement</data>
   <data name="ToolbarControllers.WarningsTreeTable.Export" id="K4C">Exporter les avertissements</data>
   <data name="ToolbarControllers.WarningsTreeTable.Goto" id="K5C">Aller sur la cause de l'avertissement</data>
+  <data name="ViewStates.Accounts.Description" id="K6C">Période {0}</data>
+  <data name="AmortizedAmountController.Init.Title" id="K7C">Valeur comptable</data>
+  <data name="AmortizedAmountController.Init.Value" id="K8C">Valeur initiale</data>
+  <data name="AmortizedAmountController.Max.Title" id="K9C">Valeur comptable</data>
+  <data name="AmortizedAmountController.Max.Final" id="KAC">Valeur finale amortie</data>
+  <data name="AmortizedAmountController.Max.Rounded" id="KBC">Valeur arrondie</data>
+  <data name="AmortizedAmountController.Max.Residual" id="KCC">Valeur résiduelle</data>
+  <data name="AmortizedAmountController.Round.Title" id="KDC">Valeur arrondie</data>
+  <data name="AmortizedAmountController.Round.Rounded" id="KEC">Valeur amortie arrondie</data>
+  <data name="AmortizedAmountController.Round.Brut" id="KFC">Valeur brute</data>
+  <data name="AmortizedAmountController.Round.Result" id="KGC">Arrondi</data>
+  <data name="AmortizedAmountController.Line1.Title" id="KHC">Valeur brute</data>
+  <data name="AmortizedAmountController.Line1.Brut" id="KIC">Valeur amortie non arrondie</data>
+  <data name="AmortizedAmountController.Line1.Initial" id="KJC">Valeur précédente</data>
+  <data name="AmortizedAmountController.Line1.Result" id="KKC">Amortissement</data>
+  <data name="AmortizedAmountController.Line2.Title" id="KLC">Amortissement</data>
+  <data name="AmortizedAmountController.Line2.Amortizatiion" id="KMC">Amortissement</data>
+  <data name="AmortizedAmountController.Line2.BaseLinear" id="KNC">Valeur de base</data>
+  <data name="AmortizedAmountController.Line2.BaseExp" id="KOC">Valeur précédente</data>
+  <data name="AmortizedAmountController.Line2.Prorata" id="KPC">Prorata</data>
+  <data name="AmortizedAmountController.Prorata.Title" id="KQC">Prorata</data>
+  <data name="AmortizedAmountController.Prorata.Rate" id="KRC">Facteur correctif si "au prorata"</data>
+  <data name="AmortizedAmountController.Prorata.Numerator" id="KSC">Prorata, nombre effectif</data>
+  <data name="AmortizedAmountController.Prorata.Denominator" id="KTC">Prorata, nombre total</data>
+  <data name="AmortizedAmountController.Line2.Rate" id="KUC">Taux adapté selon la périodicité</data>
+  <data name="AmortizedAmountController.Entry.Delete.Text" id="KVC">Supprimer l'écriture</data>
+  <data name="AmortizedAmountController.Entry.Show.Text" id="K0D">Voir l'écriture</data>
+  <data name="AmortizedAmountController.Entry.Delete.Tooltip" id="K1D">Supprime l'écriture en mettant un montant nul</data>
+  <data name="AmortizedAmountController.Entry.Show.Tooltip" id="K2D">Sélectionne l'écriture dans la vue des écritures comptables</data>
+  <data name="AmortizedAmountController.EntrySample" id="K3D">Ecriture comptable générée :</data>
+  <data name="AssetsView.EventsClose.Tooltip" id="K4D">Fermer le volet des événements</data>
+  <data name="ComputedAmountController.AddSub.Tooltip" id="K5D">Détermine si la valeur est augmentée ou diminuée</data>
+  <data name="ComputedAmountController.Argument.Tooltip" id="K6D">Valeur de la modification</data>
+  <data name="ComputedAmountController.Rate.Tooltip" id="K7D">Détermine si la modification est en francs ou en pourcents</data>
+  <data name="ComputedAmountController.Final.Tooltip" id="K8D">Nouvelle valeur</data>
+  <data name="DateController.Description" id="K9D">Date</data>
+  <data name="DateController.DaySelect.Tooltip" id="KAD">Sélectionner le jour</data>
+  <data name="DateController.MonthSelect.Tooltip" id="KBD">Sélectionner le mois</data>
+  <data name="DateController.YearSelect.Tooltip" id="KCD">Sélectionner l'année</data>
+  <data name="EntryController.Date" id="KDD">Date</data>
+  <data name="EntryController.Debit" id="KED">Débit</data>
+  <data name="EntryController.Credit" id="KFD">Crédit</data>
+  <data name="EntryController.Stamp" id="KGD">Pièce</data>
+  <data name="EntryController.Title" id="KHD">Libellé</data>
+  <data name="EntryController.Amount" id="KID">Montant</data>
+  <data name="ObjectSummaryController.Info.OneDefine" id="KJD">Cet événement de type "{0}" définit {1} champ.</data>
+  <data name="ObjectSummaryController.Info.ManyDefine" id="KKD">Cet événement de type "{0}" définit {1} champs.</data>
+  <data name="ObjectSummaryController.Info.NoDate" id="KLD">Il n'y a pas de date sélectionnée.</data>
+  <data name="ObjectSummaryController.Info.NoEvent" id="KMD">Il n'y a pas d'événement à cette date.</data>
+  <data name="ObjectSummaryController.Info.ShowAt" id="KND">Le tableau ci-dessous montre l'état en date du {0} :</data>
+  <data name="ObjectSummaryController.Info.ShowFinal" id="KOD">Le tableau ci-dessous montre l'état final de l'objet :</data>
+  <data name="ReportChoiceController.Title" id="KPD">Liste des rapports disponibles :</data>
+  <data name="StateAtController.Date" id="KQD">Etat au {0}</data>
+  <data name="StateAtController.Final" id="KRD">Etat final</data>
 </bundle>

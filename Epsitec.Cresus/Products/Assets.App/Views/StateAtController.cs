@@ -102,11 +102,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.date.HasValue)
 				{
 					var date = TypeConverters.DateToString (this.date);
-					return "Etat au " + date;
+					return string.Format (Res.Strings.StateAtController.Date.ToString (), date);
 				}
 				else
 				{
-					return "Etat final";
+					return Res.Strings.StateAtController.Final.ToString ();
 				}
 			}
 		}
