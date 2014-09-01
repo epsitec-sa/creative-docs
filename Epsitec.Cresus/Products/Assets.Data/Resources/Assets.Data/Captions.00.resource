@@ -39,4 +39,92 @@
   <data name="Fld.Asset.AssetId" id="A41">&lt;s:data id="_0" f:Name="AssetId" /&gt;</data>
   <data name="Fld.AssetObjectValue.ChangeSet" id="A51">&lt;s:data id="_0" f:Name="ChangeSet" /&gt;</data>
   <data name="Fld.AssetObjectProperty.ChangeSet" id="A61">&lt;s:data id="_0" f:Name="ChangeSet" /&gt;</data>
+  <data name="Val.EventType.Unknown" id="K1">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.EventType.Input" id="K2">&lt;s:data id="_0" f:Name="Input" f:Labels="{Collection {Text 'Entrée'}}" /&gt;</data>
+  <data name="Val.EventType.Modification" id="K3">&lt;s:data id="_0" f:Name="Modification" f:Labels="{Collection {Text 'Modification générale'}}" /&gt;</data>
+  <data name="Val.EventType.Revaluation" id="K4">&lt;s:data id="_0" f:Name="Revaluation" f:Labels="{Collection {Text 'Réévaluation'}}" /&gt;</data>
+  <data name="Val.EventType.Revalorization" id="K5">&lt;s:data id="_0" f:Name="Revalorization" f:Labels="{Collection {Text 'Revalorisation'}}" /&gt;</data>
+  <data name="Val.EventType.MainValue" id="K6">&lt;s:data id="_0" f:Name="MainValue" f:Labels="{Collection {Text 'Modification valeur'}}" /&gt;</data>
+  <data name="Val.EventType.AmortizationAuto" id="K7">&lt;s:data id="_0" f:Name="AmortizationAuto" f:Labels="{Collection {Text 'Amort. ordinaire'}}" /&gt;</data>
+  <data name="Val.EventType.AmortizationPreview" id="K8">&lt;s:data id="_0" f:Name="AmortizationPreview" f:Labels="{Collection {Text 'Préamortissement'}}" /&gt;</data>
+  <data name="Val.EventType.AmortizationExtra" id="K9">&lt;s:data id="_0" f:Name="AmortizationExtra" f:Labels="{Collection {Text 'Amort. extraordinaire'}}" /&gt;</data>
+  <data name="Val.EventType.Locked" id="KA">&lt;s:data id="_0" f:Name="Locked" f:Labels="{Collection {Text 'Verrou'}}" /&gt;</data>
+  <data name="Val.EventType.Output" id="KB">&lt;s:data id="_0" f:Name="Output" f:Labels="{Collection {Text 'Sortie'}}" /&gt;</data>
+  <data name="Typ.EventType" id="K">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="EventType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.EventType, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [HUK1001]'}, {Text '1 [HUK2001]'}, {Text '2 [HUK3001]'}, {Text '3 [HUK4001]'}, {Text '4 [HUK5001]'}, {Text '5 [HUK6001]'}, {Text '6 [HUK7001]'}, {Text '7 [HUK8001]'}, {Text '8 [HUK9001]'}, {Text '9 [HUKA001]'}, {Text '10 [HUKB001]'}}" /&gt;</data>
+  <data name="Val.ObjectField.Unknown" id="KD">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.ObjectField.OneShotNumber" id="KE">&lt;s:data id="_0" f:Name="OneShotNumber" f:Labels="{Collection {Text 'Evénement numéro'}}" /&gt;</data>
+  <data name="Val.ObjectField.OneShotDateEvent" id="KF">&lt;s:data id="_0" f:Name="OneShotDateEvent" f:Labels="{Collection {Text 'Date événement'}}" /&gt;</data>
+  <data name="Val.ObjectField.OneShotDateOperation" id="KG">&lt;s:data id="_0" f:Name="OneShotDateOperation" f:Labels="{Collection {Text 'Date opération'}}" /&gt;</data>
+  <data name="Val.ObjectField.OneShotComment" id="KH">&lt;s:data id="_0" f:Name="OneShotComment" f:Labels="{Collection {Text 'Commentaire'}}" /&gt;</data>
+  <data name="Val.ObjectField.OneShotDocuments" id="KI">&lt;s:data id="_0" f:Name="OneShotDocuments" f:Labels="{Collection {Text 'Documents associés'}}" /&gt;</data>
+  <data name="Val.ObjectField.GroupParent" id="KJ">&lt;s:data id="_0" f:Name="GroupParent" f:Labels="{Collection {Text 'Dans le groupe'}}" /&gt;</data>
+  <data name="Val.ObjectField.Name" id="KK">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
+  <data name="Val.ObjectField.Number" id="KL">&lt;s:data id="_0" f:Name="Number" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
+  <data name="Val.ObjectField.Description" id="KM">&lt;s:data id="_0" f:Name="Description" f:Labels="{Collection {Text 'Description'}}" /&gt;</data>
+  <data name="Val.ObjectField.MainValue" id="KN">&lt;s:data id="_0" f:Name="MainValue" f:Labels="{Collection {Text 'Valeur comptable'}}" /&gt;</data>
+  <data name="Val.ObjectField.CategoryName" id="KO">&lt;s:data id="_0" f:Name="CategoryName" f:Labels="{Collection {Text 'Catégorie d\'immob.'}}" /&gt;</data>
+  <data name="Val.ObjectField.AmortizationRate" id="KP">&lt;s:data id="_0" f:Name="AmortizationRate" f:Labels="{Collection {Text 'Taux'}}" /&gt;</data>
+  <data name="Val.ObjectField.AmortizationType" id="KQ">&lt;s:data id="_0" f:Name="AmortizationType" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
+  <data name="Val.ObjectField.Periodicity" id="KR">&lt;s:data id="_0" f:Name="Periodicity" f:Labels="{Collection {Text 'Périodicité'}}" /&gt;</data>
+  <data name="Val.ObjectField.Prorata" id="KS">&lt;s:data id="_0" f:Name="Prorata" f:Labels="{Collection {Text 'Prorata'}}" /&gt;</data>
+  <data name="Val.ObjectField.Round" id="KT">&lt;s:data id="_0" f:Name="Round" f:Labels="{Collection {Text 'Arrondi'}}" /&gt;</data>
+  <data name="Val.ObjectField.ResidualValue" id="KU">&lt;s:data id="_0" f:Name="ResidualValue" f:Labels="{Collection {Text 'Valeur résiduelle'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account1" id="KV">&lt;s:data id="_0" f:Name="Account1" f:Labels="{Collection {Text 'Contrepartie achat'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account2" id="K01">&lt;s:data id="_0" f:Name="Account2" f:Labels="{Collection {Text 'Contrepartie vente'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account3" id="K11">&lt;s:data id="_0" f:Name="Account3" f:Labels="{Collection {Text 'Compte d\'immob.'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account4" id="K21">&lt;s:data id="_0" f:Name="Account4" f:Labels="{Collection {Text 'Compte d\'amort.'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account5" id="K31">&lt;s:data id="_0" f:Name="Account5" f:Labels="{Collection {Text 'Charge d\'amort.'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account6" id="K41">&lt;s:data id="_0" f:Name="Account6" f:Labels="{Collection {Text 'Compte réévaluation'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account7" id="K51">&lt;s:data id="_0" f:Name="Account7" /&gt;</data>
+  <data name="Val.ObjectField.Account8" id="K61">&lt;s:data id="_0" f:Name="Account8" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedDate" id="K71">&lt;s:data id="_0" f:Name="AssetEntryForcedDate" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedDebit" id="K81">&lt;s:data id="_0" f:Name="AssetEntryForcedDebit" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedCredit" id="K91">&lt;s:data id="_0" f:Name="AssetEntryForcedCredit" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedStamp" id="KA1">&lt;s:data id="_0" f:Name="AssetEntryForcedStamp" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedTitle" id="KB1">&lt;s:data id="_0" f:Name="AssetEntryForcedTitle" /&gt;</data>
+  <data name="Val.ObjectField.AssetEntryForcedAmount" id="KC1">&lt;s:data id="_0" f:Name="AssetEntryForcedAmount" /&gt;</data>
+  <data name="Val.ObjectField.HistoryDate" id="KD1">&lt;s:data id="_0" f:Name="HistoryDate" /&gt;</data>
+  <data name="Val.ObjectField.HistoryGlyph" id="KE1">&lt;s:data id="_0" f:Name="HistoryGlyph" /&gt;</data>
+  <data name="Val.ObjectField.HistoryValue" id="KF1">&lt;s:data id="_0" f:Name="HistoryValue" /&gt;</data>
+  <data name="Val.ObjectField.AccountCategory" id="KG1">&lt;s:data id="_0" f:Name="AccountCategory" f:Labels="{Collection {Text 'Catégorie'}}" /&gt;</data>
+  <data name="Val.ObjectField.AccountType" id="KH1">&lt;s:data id="_0" f:Name="AccountType" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryAssetGuid" id="KI1">&lt;s:data id="_0" f:Name="EntryAssetGuid" /&gt;</data>
+  <data name="Val.ObjectField.EntryEventGuid" id="KJ1">&lt;s:data id="_0" f:Name="EntryEventGuid" /&gt;</data>
+  <data name="Val.ObjectField.EntryDate" id="KK1">&lt;s:data id="_0" f:Name="EntryDate" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryDebitAccount" id="KL1">&lt;s:data id="_0" f:Name="EntryDebitAccount" f:Labels="{Collection {Text 'Débit'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryCreditAccount" id="KM1">&lt;s:data id="_0" f:Name="EntryCreditAccount" f:Labels="{Collection {Text 'Crédit'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryStamp" id="KN1">&lt;s:data id="_0" f:Name="EntryStamp" f:Labels="{Collection {Text 'Pièce'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryTitle" id="KO1">&lt;s:data id="_0" f:Name="EntryTitle" f:Labels="{Collection {Text 'Libellé'}}" /&gt;</data>
+  <data name="Val.ObjectField.EntryAmount" id="KP1">&lt;s:data id="_0" f:Name="EntryAmount" f:Labels="{Collection {Text 'Montant'}}" /&gt;</data>
+  <data name="Val.ObjectField.EventDate" id="KQ1">&lt;s:data id="_0" f:Name="EventDate" /&gt;</data>
+  <data name="Val.ObjectField.EventGlyph" id="KR1">&lt;s:data id="_0" f:Name="EventGlyph" /&gt;</data>
+  <data name="Val.ObjectField.EventType" id="KS1">&lt;s:data id="_0" f:Name="EventType" /&gt;</data>
+  <data name="Val.ObjectField.LastViewsPin" id="KT1">&lt;s:data id="_0" f:Name="LastViewsPin" /&gt;</data>
+  <data name="Val.ObjectField.LastViewsType" id="KU1">&lt;s:data id="_0" f:Name="LastViewsType" /&gt;</data>
+  <data name="Val.ObjectField.LastViewsPage" id="KV1">&lt;s:data id="_0" f:Name="LastViewsPage" /&gt;</data>
+  <data name="Val.ObjectField.LastViewsDate" id="K02">&lt;s:data id="_0" f:Name="LastViewsDate" /&gt;</data>
+  <data name="Val.ObjectField.LastViewsDescription" id="K12">&lt;s:data id="_0" f:Name="LastViewsDescription" /&gt;</data>
+  <data name="Val.ObjectField.MergeImport" id="K22">&lt;s:data id="_0" f:Name="MergeImport" /&gt;</data>
+  <data name="Val.ObjectField.MergeCurrent" id="K32">&lt;s:data id="_0" f:Name="MergeCurrent" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldType" id="K42">&lt;s:data id="_0" f:Name="UserFieldType" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldRequired" id="K52">&lt;s:data id="_0" f:Name="UserFieldRequired" f:Labels="{Collection {Text 'Obligatoire'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldColumnWidth" id="K62">&lt;s:data id="_0" f:Name="UserFieldColumnWidth" f:Labels="{Collection {Text 'Largeur colonne'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldLineWidth" id="K72">&lt;s:data id="_0" f:Name="UserFieldLineWidth" f:Labels="{Collection {Text 'Largeur ligne'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldLineCount" id="K82">&lt;s:data id="_0" f:Name="UserFieldLineCount" f:Labels="{Collection {Text 'Nombre de lignes'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldSummaryOrder" id="K92">&lt;s:data id="_0" f:Name="UserFieldSummaryOrder" f:Labels="{Collection {Text 'Ordre dans résumé'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldTopMargin" id="KA2">&lt;s:data id="_0" f:Name="UserFieldTopMargin" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldField" id="KB2">&lt;s:data id="_0" f:Name="UserFieldField" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldGuid" id="KC2">&lt;s:data id="_0" f:Name="UserFieldGuid" /&gt;</data>
+  <data name="Val.ObjectField.WarningViewGlyph" id="KD2">&lt;s:data id="_0" f:Name="WarningViewGlyph" /&gt;</data>
+  <data name="Val.ObjectField.WarningObject" id="KE2">&lt;s:data id="_0" f:Name="WarningObject" /&gt;</data>
+  <data name="Val.ObjectField.WarningDate" id="KF2">&lt;s:data id="_0" f:Name="WarningDate" /&gt;</data>
+  <data name="Val.ObjectField.WarningEventGlyph" id="KG2">&lt;s:data id="_0" f:Name="WarningEventGlyph" /&gt;</data>
+  <data name="Val.ObjectField.WarningField" id="KH2">&lt;s:data id="_0" f:Name="WarningField" /&gt;</data>
+  <data name="Val.ObjectField.WarningDescription" id="KI2">&lt;s:data id="_0" f:Name="WarningDescription" /&gt;</data>
+  <data name="Val.ObjectField.GroupGuidRatioFirst" id="KJ2">&lt;s:data id="_0" f:Name="GroupGuidRatioFirst" /&gt;</data>
+  <data name="Val.ObjectField.GroupGuidRatioLast" id="KK2">&lt;s:data id="_0" f:Name="GroupGuidRatioLast" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldFirst" id="KL2">&lt;s:data id="_0" f:Name="UserFieldFirst" /&gt;</data>
+  <data name="Val.ObjectField.UserFieldLast" id="KM2">&lt;s:data id="_0" f:Name="UserFieldLast" /&gt;</data>
+  <data name="Val.ObjectField.MCH2Report" id="KN2">&lt;s:data id="_0" f:Name="MCH2Report" /&gt;</data>
+  <data name="Typ.ObjectField" id="KC">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ObjectField" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.ObjectField, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [HUKD001]'}, {Text '1 [HUKE001]'}, {Text '2 [HUKF001]'}, {Text '3 [HUKG001]'}, {Text '4 [HUKH001]'}, {Text '5 [HUKI001]'}, {Text '6 [HUKJ001]'}, {Text '7 [HUKK001]'}, {Text '8 [HUKL001]'}, {Text '9 [HUKM001]'}, {Text '10 [HUKN001]'}, {Text '11 [HUKO001]'}, {Text '12 [HUKP001]'}, {Text '13 [HUKQ001]'}, {Text '14 [HUKR001]'}, {Text '15 [HUKS001]'}, {Text '16 [HUKT001]'}, {Text '17 [HUKU001]'}, {Text '18 [HUKV001]'}, {Text '19 [HUK0101]'}, {Text '20 [HUK1101]'}, {Text '21 [HUK2101]'}, {Text '22 [HUK3101]'}, {Text '23 [HUK4101]'}, {Text '24 [HUK5101]'}, {Text '25 [HUK6101]'}, {Text '26 [HUK7101]'}, {Text '27 [HUK8101]'}, {Text '28 [HUK9101]'}, {Text '29 [HUKA101]'}, {Text '30 [HUKB101]'}, {Text '31 [HUKC101]'}, {Text '32 [HUKD101]'}, {Text '33 [HUKE101]'}, {Text '34 [HUKF101]'}, {Text '35 [HUKG101]'}, {Text '36 [HUKH101]'}, {Text '37 [HUKI101]'}, {Text '38 [HUKJ101]'}, {Text '39 [HUKK101]'}, {Text '40 [HUKL101]'}, {Text '41 [HUKM101]'}, {Text '42 [HUKN101]'}, {Text '43 [HUKO101]'}, {Text '44 [HUKP101]'}, {Text '45 [HUKQ101]'}, {Text '46 [HUKR101]'}, {Text '47 [HUKS101]'}, {Text '48 [HUKT101]'}, {Text '49 [HUKU101]'}, {Text '50 [HUKV101]'}, {Text '51 [HUK0201]'}, {Text '52 [HUK1201]'}, {Text '53 [HUK2201]'}, {Text '54 [HUK3201]'}, {Text '55 [HUK4201]'}, {Text '56 [HUK5201]'}, {Text '57 [HUK6201]'}, {Text '58 [HUK7201]'}, {Text '59 [HUK8201]'}, {Text '60 [HUK9201]'}, {Text '61 [HUKA201]'}, {Text '62 [HUKB201]'}, {Text '63 [HUKC201]'}, {Text '64 [HUKD201]'}, {Text '65 [HUKE201]'}, {Text '66 [HUKF201]'}, {Text '67 [HUKG201]'}, {Text '68 [HUKH201]'}, {Text '69 [HUKI201]'}, {Text '70 [HUKJ201]'}, {Text '71 [HUKK201]'}, {Text '72 [HUKL201]'}, {Text '73 [HUKM201]'}, {Text '74 [HUKN201]'}}" /&gt;</data>
 </bundle>
