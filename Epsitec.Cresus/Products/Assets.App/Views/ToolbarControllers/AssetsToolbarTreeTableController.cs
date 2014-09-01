@@ -176,12 +176,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarController.AssetsTreeTable.New.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'objet d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'objet d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  "Copier l'objet d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", "Coller l'objet d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    "Exporter les objets d'immobilisations");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarControllers.AssetsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.AssetsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  Res.Strings.ToolbarControllers.AssetsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", Res.Strings.ToolbarControllers.AssetsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer l'objet sélectionné ?", delegate
+			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.AssetsTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 				this.UpdateData ();

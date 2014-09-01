@@ -81,12 +81,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Person", "Nouveau contact");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",     "Supprimer le contact");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                   "Désélectionner le contact");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",       "Copier le contact");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",      "Coller le contact");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                   "Exporter les contacts");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Person", Res.Strings.ToolbarControllers.PersonsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",     Res.Strings.ToolbarControllers.PersonsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                   Res.Strings.ToolbarControllers.PersonsTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",       Res.Strings.ToolbarControllers.PersonsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",      Res.Strings.ToolbarControllers.PersonsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                   Res.Strings.ToolbarControllers.PersonsTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer le contact sélectionné ?", delegate
+			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.PersonsTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();

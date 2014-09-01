@@ -102,12 +102,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", "Nouveau groupe");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    "Supprimer le groupe");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  "Désélectionner le groupe");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      "Copier le groupe");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     "Coller le groupe");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  "Exporter les groupes");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    Res.Strings.ToolbarControllers.GroupsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Delesect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      Res.Strings.ToolbarControllers.GroupsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     Res.Strings.ToolbarControllers.GroupsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer le groupe sélectionné ?", delegate
+			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.RemoveObject (BaseType.Groups, this.SelectedGuid);
 				this.UpdateData ();

@@ -81,12 +81,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Category", "Nouvelle catégorie d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",       "Supprimer la catégorie d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                     "Désélectionner la catégorie d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",         "Copier la catégorie d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",        "Coller la catégorie d'immobilisation");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                     "Exporter les catégories d'immobilisations");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Category", Res.Strings.ToolbarControllers.CategoriesTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",       Res.Strings.ToolbarControllers.CategoriesTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                     Res.Strings.ToolbarControllers.CategoriesTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",         Res.Strings.ToolbarControllers.CategoriesTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",        Res.Strings.ToolbarControllers.CategoriesTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                     Res.Strings.ToolbarControllers.CategoriesTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer la catégorie sélectionnée ?", delegate
+			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.CategoriesTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.RemoveObject (BaseType.Categories, this.SelectedGuid);
 				this.UpdateData ();

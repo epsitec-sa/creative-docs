@@ -99,12 +99,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, "Nouveau champ");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, "Supprimer le champ");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, "Désélectionner le champ");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, "Copier le champ");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, "Coller le champ");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, "Exporter les champs");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				return;
 			}
 
-			var userField = new UserField ("Nouveau", newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
+			var userField = new UserField (Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
 			int index = this.VisibleSelectedRow;
 			if (index == -1)  // pas de sélection ?
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
-			YesNoPopup.Show (target, "Voulez-vous supprimer le champ sélectionné ?", delegate
+			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.UserFieldsTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
 				this.UpdateData ();

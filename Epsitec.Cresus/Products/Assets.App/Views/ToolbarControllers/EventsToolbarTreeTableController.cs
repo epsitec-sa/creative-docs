@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.eventsNodeGetter = new ObjectEventsNodeGetter (this.accessor);
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
-			this.title = "Evénements";
+			this.title = Res.Strings.ToolbarControllers.EventsTreeTable.Title.ToString ();
 		}
 
 
@@ -90,12 +90,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   "Nouvel événement");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      "Supprimer l'événement");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'événement");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  "Copier l'événement");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", "Coller l'événement");
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    "Exporter les événements");
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.EventsTreeTable.Delete.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Deselect.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  Res.Strings.ToolbarControllers.EventsTreeTable.Copy.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", Res.Strings.ToolbarControllers.EventsTreeTable.Paste.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Export.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
 			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
 		}
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.EventsTreeTable.CopyError.ToString ());
 			}
 		}
 
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.EventsTreeTable.PasteError.ToString ());
 			}
 		}
 
