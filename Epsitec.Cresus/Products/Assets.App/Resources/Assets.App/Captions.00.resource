@@ -73,4 +73,30 @@
   <data name="Val.DateType.EndNextMonth" id="KB2">&lt;s:data id="_0" f:Name="EndNextMonth" f:Labels="{Collection {Text 'Fin du mois suivant'}}" /&gt;</data>
   <data name="Val.DateType.Now" id="KC2">&lt;s:data id="_0" f:Name="Now" f:Labels="{Collection {Text 'Aujourd\'hui'}}" /&gt;</data>
   <data name="Typ.DateType" id="KS1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="DateType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.FieldControllers.DateFieldController+DateType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKT101]'}, {Text '1 [JUKU101]'}, {Text '2 [JUKV101]'}, {Text '3 [JUK0201]'}, {Text '4 [JUK1201]'}, {Text '5 [JUK2201]'}, {Text '6 [JUK3201]'}, {Text '7 [JUK4201]'}, {Text '8 [JUK5201]'}, {Text '9 [JUK6201]'}, {Text '10 [JUK7201]'}, {Text '11 [JUK8201]'}, {Text '12 [JUK9201]'}, {Text '13 [JUKA201]'}, {Text '14 [JUKB201]'}, {Text '15 [JUKC201]'}}" /&gt;</data>
+  <data name="Val.PageType.Unknown" id="KE2">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.PageType.OneShot" id="KF2">&lt;s:data id="_0" f:Name="OneShot" f:Labels="{Collection {Text 'Evénement'}}" /&gt;</data>
+  <data name="Val.PageType.Summary" id="KG2">&lt;s:data id="_0" f:Name="Summary" f:Labels="{Collection {Text 'Résumé'}}" /&gt;</data>
+  <data name="Val.PageType.Asset" id="KH2">&lt;s:data id="_0" f:Name="Asset" f:Labels="{Collection {Text 'Général'}}" /&gt;</data>
+  <data name="Val.PageType.AmortizationDefinition" id="KI2">&lt;s:data id="_0" f:Name="AmortizationDefinition" f:Labels="{Collection {Text 'Amortissement'}}" /&gt;</data>
+  <data name="Val.PageType.AmortizationValue" id="KJ2">&lt;s:data id="_0" f:Name="AmortizationValue" f:Labels="{Collection {Text 'Valeur'}}" /&gt;</data>
+  <data name="Val.PageType.Groups" id="KK2">&lt;s:data id="_0" f:Name="Groups" f:Labels="{Collection {Text 'Groupes'}}" /&gt;</data>
+  <data name="Val.PageType.Category" id="KL2">&lt;s:data id="_0" f:Name="Category" f:Labels="{Collection {Text 'Définitions de la catégorie'}}" /&gt;</data>
+  <data name="Val.PageType.Group" id="KM2">&lt;s:data id="_0" f:Name="Group" f:Labels="{Collection {Text 'Définitions du groupe'}}" /&gt;</data>
+  <data name="Val.PageType.Person" id="KN2">&lt;s:data id="_0" f:Name="Person" f:Labels="{Collection {Text 'Définitions du contact'}}" /&gt;</data>
+  <data name="Val.PageType.UserFields" id="KO2">&lt;s:data id="_0" f:Name="UserFields" f:Labels="{Collection {Text 'Définitions du champ'}}" /&gt;</data>
+  <data name="Val.PageType.Account" id="KP2">&lt;s:data id="_0" f:Name="Account" f:Labels="{Collection {Text 'Définitions du compte'}}" /&gt;</data>
+  <data name="Typ.PageType" id="KD2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PageType" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.PageType, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKE201]'}, {Text '1 [JUKF201]'}, {Text '2 [JUKG201]'}, {Text '3 [JUKH201]'}, {Text '4 [JUKI201]'}, {Text '5 [JUKJ201]'}, {Text '6 [JUKK201]'}, {Text '7 [JUKL201]'}, {Text '8 [JUKM201]'}, {Text '9 [JUKN201]'}, {Text '10 [JUKO201]'}, {Text '11 [JUKP201]'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Unknown" id="KR2">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
+  <data name="Val.ViewTypeKind.Assets" id="KS2">&lt;s:data id="_0" f:Name="Assets" f:Labels="{Collection {Text 'Objets d\'immobilisation'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Amortizations" id="KT2">&lt;s:data id="_0" f:Name="Amortizations" f:Labels="{Collection {Text 'Amortissements'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Entries" id="KU2">&lt;s:data id="_0" f:Name="Entries" f:Labels="{Collection {Text 'Ecritures comptables'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Categories" id="KV2">&lt;s:data id="_0" f:Name="Categories" f:Labels="{Collection {Text 'Catégories d\'immobilisations'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Groups" id="K03">&lt;s:data id="_0" f:Name="Groups" f:Labels="{Collection {Text 'Groupes'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Persons" id="K13">&lt;s:data id="_0" f:Name="Persons" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Reports" id="K23">&lt;s:data id="_0" f:Name="Reports" f:Labels="{Collection {Text 'Rapports et statistiques'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Warnings" id="K33">&lt;s:data id="_0" f:Name="Warnings" f:Labels="{Collection {Text 'Avertissements'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.AssetsSettings" id="K43">&lt;s:data id="_0" f:Name="AssetsSettings" f:Labels="{Collection {Text 'Champs des objets d\'immobilisations'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.PersonsSettings" id="K53">&lt;s:data id="_0" f:Name="PersonsSettings" f:Labels="{Collection {Text 'Champs des contacts'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Accounts" id="K63">&lt;s:data id="_0" f:Name="Accounts" f:Labels="{Collection {Text 'Plan comptable'}}" /&gt;</data>
+  <data name="Typ.ViewTypeKind" id="KQ2">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="ViewTypeKind" f:_1.SystemType="E:Epsitec.Cresus.Assets.App.Views.ViewTypeKind, Assets.App" f:_2.EnumValues="{Collection {Text '0 [JUKR201]'}, {Text '1 [JUKS201]'}, {Text '2 [JUKT201]'}, {Text '3 [JUKU201]'}, {Text '4 [JUKV201]'}, {Text '5 [JUK0301]'}, {Text '6 [JUK1301]'}, {Text '7 [JUK2301]'}, {Text '8 [JUK3301]'}, {Text '9 [JUK4301]'}, {Text '10 [JUK5301]'}, {Text '11 [JUK6301]'}}" /&gt;</data>
 </bundle>

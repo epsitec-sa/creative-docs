@@ -90,10 +90,14 @@ namespace Epsitec.Cresus.Assets.App
 			public static readonly Epsitec.Common.Types.EnumType ExportFormat = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
 			//	designer:cap/JUKK001
 			public static readonly Epsitec.Common.Types.EnumType PageFormatType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20));
+			//	designer:cap/JUKD201
+			public static readonly Epsitec.Common.Types.EnumType PageType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 77));
 			//	designer:cap/JUK9101
 			public static readonly Epsitec.Common.Types.EnumType PfdPredefinedStyle = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41));
 			//	designer:cap/JUKN101
 			public static readonly Epsitec.Common.Types.EnumType ReportType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
+			//	designer:cap/JUKQ201
+			public static readonly Epsitec.Common.Types.EnumType ViewTypeKind = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 90));
 		}
 		
 		public static class Values
@@ -450,6 +454,106 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class PageType
+			{
+				//	designer:cap/JUKP201
+				public static global::Epsitec.Common.Types.Caption Account
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 89));
+					}
+				}
+				//	designer:cap/JUKI201
+				public static global::Epsitec.Common.Types.Caption AmortizationDefinition
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 82));
+					}
+				}
+				//	designer:cap/JUKJ201
+				public static global::Epsitec.Common.Types.Caption AmortizationValue
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 83));
+					}
+				}
+				//	designer:cap/JUKH201
+				public static global::Epsitec.Common.Types.Caption Asset
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 81));
+					}
+				}
+				//	designer:cap/JUKL201
+				public static global::Epsitec.Common.Types.Caption Category
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 85));
+					}
+				}
+				//	designer:cap/JUKM201
+				public static global::Epsitec.Common.Types.Caption Group
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 86));
+					}
+				}
+				//	designer:cap/JUKK201
+				public static global::Epsitec.Common.Types.Caption Groups
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 84));
+					}
+				}
+				//	designer:cap/JUKF201
+				public static global::Epsitec.Common.Types.Caption OneShot
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 79));
+					}
+				}
+				//	designer:cap/JUKN201
+				public static global::Epsitec.Common.Types.Caption Person
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 87));
+					}
+				}
+				//	designer:cap/JUKG201
+				public static global::Epsitec.Common.Types.Caption Summary
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 80));
+					}
+				}
+				//	designer:cap/JUKE201
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 78));
+					}
+				}
+				//	designer:cap/JUKO201
+				public static global::Epsitec.Common.Types.Caption UserFields
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 88));
+					}
+				}
+			}
+			
 			public static class PfdPredefinedStyle
 			{
 				//	designer:cap/JUKG101
@@ -590,6 +694,106 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
+					}
+				}
+			}
+			
+			public static class ViewTypeKind
+			{
+				//	designer:cap/JUK6301
+				public static global::Epsitec.Common.Types.Caption Accounts
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 102));
+					}
+				}
+				//	designer:cap/JUKT201
+				public static global::Epsitec.Common.Types.Caption Amortizations
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 93));
+					}
+				}
+				//	designer:cap/JUKS201
+				public static global::Epsitec.Common.Types.Caption Assets
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 92));
+					}
+				}
+				//	designer:cap/JUK4301
+				public static global::Epsitec.Common.Types.Caption AssetsSettings
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 100));
+					}
+				}
+				//	designer:cap/JUKV201
+				public static global::Epsitec.Common.Types.Caption Categories
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 95));
+					}
+				}
+				//	designer:cap/JUKU201
+				public static global::Epsitec.Common.Types.Caption Entries
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 94));
+					}
+				}
+				//	designer:cap/JUK0301
+				public static global::Epsitec.Common.Types.Caption Groups
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 96));
+					}
+				}
+				//	designer:cap/JUK1301
+				public static global::Epsitec.Common.Types.Caption Persons
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 97));
+					}
+				}
+				//	designer:cap/JUK5301
+				public static global::Epsitec.Common.Types.Caption PersonsSettings
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 101));
+					}
+				}
+				//	designer:cap/JUK2301
+				public static global::Epsitec.Common.Types.Caption Reports
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 98));
+					}
+				}
+				//	designer:cap/JUKR201
+				public static global::Epsitec.Common.Types.Caption Unknown
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 91));
+					}
+				}
+				//	designer:cap/JUK3301
+				public static global::Epsitec.Common.Types.Caption Warnings
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 99));
 					}
 				}
 			}
