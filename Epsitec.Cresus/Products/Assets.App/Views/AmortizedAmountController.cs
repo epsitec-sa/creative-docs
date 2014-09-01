@@ -952,11 +952,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (combo != null)
 			{
-				foreach (var e in EnumDictionaries.DictEntryScenarios)
+				foreach (var scenario in EnumDictionaries.EnumEntryScenarios)
 				{
-					if (combo.Text == e.Value)
+					if (combo.Text == EnumDictionaries.GetEntryScenarioName (scenario))
 					{
-						return (EntryScenario) e.Key;
+						return (EntryScenario) scenario;
 					}
 				}
 			}
@@ -978,28 +978,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				combo.Items.Clear ();
 
-				foreach (var e in EnumDictionaries.DictEntryScenarios)
+				foreach (var scenario in EnumDictionaries.EnumEntryScenarios)
 				{
-					var s = (EntryScenario) e.Key;
-
 					if (this.IsAmortization)
 					{
-						if (s != EntryScenario.AmortizationAuto &&
-							s != EntryScenario.AmortizationExtra)
+						if (scenario != EntryScenario.AmortizationAuto &&
+							scenario != EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
 					}
 					else
 					{
-						if (s == EntryScenario.AmortizationAuto ||
-							s == EntryScenario.AmortizationExtra)
+						if (scenario == EntryScenario.AmortizationAuto ||
+							scenario == EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
 					}
 
-					combo.Items.Add (e.Value);
+					combo.Items.Add (EnumDictionaries.GetEntryScenarioName (scenario));
 				}
 			}
 		}

@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var stringResidual = TypeConverters.AmountToString (this.Residual);
 			var stringProrata  = EnumDictionaries.GetProrataTypeName (this.ProrataType);
 
-			return string.Format ("{0} {1} — Périodicité {2} — Arrondi {3} — Valeur résiduelle {4} — Au prorata {5}",
+			return string.Format (Res.Strings.AmortizationDefinition.Summary.ToString (),
 				stringTaux, stringType, stringPeriod, stringRound, stringResidual, stringProrata);
 		}
 

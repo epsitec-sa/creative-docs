@@ -90,6 +90,7 @@
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
     <Compile Include="BusinessLogic\AccountCategory.cs" />
     <Compile Include="BusinessLogic\AccountType.cs" />
+    <Compile Include="Resources\Assets.Server\SourceCode\Res.cs" />
     <Compile Include="SimpleEngine\DataClipboard.cs" />
     <Compile Include="BusinessLogic\AccountsImport.cs" />
     <Compile Include="SimpleEngine\DummyAccounts.cs" />
@@ -127,9 +128,7 @@
       <Name>Assets.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\Assets.Server\SourceCode\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

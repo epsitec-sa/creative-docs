@@ -305,26 +305,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var timestamp = new Timestamp (amount.Date, 0);
 
 			var name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
+			var res = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (amount.EntryScenario).Values.Last ().ToString ();
 
-			switch (amount.EntryScenario)
+			if (string.IsNullOrEmpty (res))
 			{
-				case EntryScenario.Purchase:
-					return "Achat " + name;
-
-				case EntryScenario.Sale:
-					return "Vente " + name;
-
-				case EntryScenario.AmortizationAuto:
-					return "Amortissement ordinaire " + name;
-
-				case EntryScenario.AmortizationExtra:
-					return "Amortissement extraordinaire " + name;
-
-				case EntryScenario.Revaluation:
-					return "Réévaluation " + name;
-
-				default:
-					return name;
+				return name;
+			}
+			else
+			{
+				return string.Format (res, name);
 			}
 		}
 

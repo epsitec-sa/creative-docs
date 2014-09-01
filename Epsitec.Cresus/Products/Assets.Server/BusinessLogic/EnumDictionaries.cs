@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -43,79 +43,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetPeriodicityName(Periodicity type)
 		{
-			string s;
-			if (EnumDictionaries.DictPeriodicities.TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetAmortizationTypeName(AmortizationType type)
 		{
-			string s;
-			if (EnumDictionaries.DictAmortizationTypes.TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetProrataTypeName(ProrataType type)
 		{
-			string s;
-			if (EnumDictionaries.DictProrataTypes.TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetFieldTypeName(FieldType type)
 		{
-			string s;
-			if (EnumDictionaries.GetDictFieldTypes ().TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetAccountCategoryName(AccountCategory category)
 		{
-			string s;
-			if (EnumDictionaries.DictAccountCategories.TryGetValue ((int) category, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (category).Values.First ().ToString ();
 		}
 
 		public static string GetAccountTypeName(AccountType type)
 		{
-			string s;
-			if (EnumDictionaries.DictAccountTypes.TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
-			string s;
-			if (EnumDictionaries.DictEntryScenarios.TryGetValue ((int) type, out s))
-			{
-				return s;
-			}
-
-			return null;
+			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 
@@ -132,14 +90,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) Periodicity.Annual,      "Annuel");
-				dict.Add ((int) Periodicity.Semestrial,  "Semestriel");
-				dict.Add ((int) Periodicity.Trimestrial, "Trimestriel");
-				dict.Add ((int) Periodicity.Mensual,     "Mensuel");
+				foreach (var type in EnumDictionaries.EnumPeriodicities)
+				{
+					var text = EnumDictionaries.GetPeriodicityName (type);
+					dict.Add ((int) type, text);
+				}
 
 				return dict;
 			}
 		}
+
+		private static IEnumerable<Periodicity> EnumPeriodicities
+		{
+			get
+			{
+				yield return Periodicity.Annual;
+				yield return Periodicity.Semestrial;
+				yield return Periodicity.Trimestrial;
+				yield return Periodicity.Mensual;
+			}
+		}
+
 
 		public static Dictionary<int, string> DictAmortizationTypes
 		{
@@ -147,12 +118,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) AmortizationType.Linear,     "Linéaire");
-				dict.Add ((int) AmortizationType.Degressive, "Dégressif");
+				foreach (var type in EnumDictionaries.EnumAmortizationTypes)
+				{
+					var text = EnumDictionaries.GetAmortizationTypeName (type);
+					dict.Add ((int) type, text);
+				}
 
 				return dict;
 			}
 		}
+
+		private static IEnumerable<AmortizationType> EnumAmortizationTypes
+		{
+			get
+			{
+				yield return AmortizationType.Linear;
+				yield return AmortizationType.Degressive;
+			}
+		}
+
 
 		public static Dictionary<int, string> DictProrataTypes
 		{
@@ -160,37 +144,60 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) ProrataType.None,       "Aucun");
-				dict.Add ((int) ProrataType.Prorata365, "Sur 365 jours");
-				dict.Add ((int) ProrataType.Prorata360, "Sur 360 jours");
-				dict.Add ((int) ProrataType.Prorata12,  "Sur 12 mois");
+				foreach (var type in EnumDictionaries.EnumProrataTypes)
+				{
+					var text = EnumDictionaries.GetProrataTypeName (type);
+					dict.Add ((int) type, text);
+				}
 
 				return dict;
 			}
 		}
 
+		private static IEnumerable<ProrataType> EnumProrataTypes
+		{
+			get
+			{
+				yield return ProrataType.None;
+				yield return ProrataType.Prorata365;
+				yield return ProrataType.Prorata360;
+				yield return ProrataType.Prorata12;
+			}
+		}
+
+
 		public static Dictionary<int, string> GetDictFieldTypes(bool hasComplexTypes = true)
 		{
 			var dict = new Dictionary<int, string> ();
 
-			dict.Add ((int) FieldType.String, "Texte");
-
-			if (hasComplexTypes)
+			foreach (var type in EnumDictionaries.GetEnumFieldTypes (hasComplexTypes))
 			{
-				dict.Add ((int) FieldType.ComputedAmount, "Montant");
-			}
-
-			dict.Add ((int) FieldType.Decimal, "Nombre réel");
-			dict.Add ((int) FieldType.Int,     "Nombre entier");
-			dict.Add ((int) FieldType.Date,    "Date");
-
-			if (hasComplexTypes)
-			{
-				dict.Add ((int) FieldType.GuidPerson, "Contact");
+				var text = EnumDictionaries.GetFieldTypeName (type);
+				dict.Add ((int) type, text);
 			}
 
 			return dict;
 		}
+
+		private static IEnumerable<FieldType> GetEnumFieldTypes(bool hasComplexTypes = true)
+		{
+			yield return FieldType.String;
+
+			if (hasComplexTypes)
+			{
+				yield return FieldType.ComputedAmount;
+			}
+
+			yield return FieldType.Decimal;
+			yield return FieldType.Int;
+			yield return FieldType.Date;
+
+			if (hasComplexTypes)
+			{
+				yield return FieldType.GuidPerson;
+			}
+		}
+
 
 		public static Dictionary<int, string> DictAccountCategories
 		{
@@ -198,15 +205,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) AccountCategory.Actif,        "Actif");
-				dict.Add ((int) AccountCategory.Passif,       "Passif");
-				dict.Add ((int) AccountCategory.Charge,       "Charge");
-				dict.Add ((int) AccountCategory.Produit,      "Produit");
-				dict.Add ((int) AccountCategory.Exploitation, "Exploitation");
+				foreach (var cat in EnumDictionaries.EnumAccountCategories)
+				{
+					var text = EnumDictionaries.GetAccountCategoryName (cat);
+					dict.Add ((int) cat, text);
+				}
 
 				return dict;
 			}
 		}
+
+		private static IEnumerable<AccountCategory> EnumAccountCategories
+		{
+			get
+			{
+				yield return AccountCategory.Actif;
+				yield return AccountCategory.Passif;
+				yield return AccountCategory.Charge;
+				yield return AccountCategory.Produit;
+				yield return AccountCategory.Exploitation;
+			}
+		}
+
 
 		public static Dictionary<int, string> DictAccountTypes
 		{
@@ -214,28 +234,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var dict = new Dictionary<int, string> ();
 
-				dict.Add ((int) AccountType.Normal, "Normal");
-				dict.Add ((int) AccountType.Groupe, "Regroupement");
-				dict.Add ((int) AccountType.TVA,    "TVA");
+				foreach (var type in EnumDictionaries.EnumAccountTypes)
+				{
+					var text = EnumDictionaries.GetAccountTypeName (type);
+					dict.Add ((int) type, text);
+				}
 
 				return dict;
 			}
 		}
 
-		public static Dictionary<int, string> DictEntryScenarios
+		private static IEnumerable<AccountType> EnumAccountTypes
 		{
 			get
 			{
-				var dict = new Dictionary<int, string> ();
+				yield return AccountType.Normal;
+				yield return AccountType.Groupe;
+				yield return AccountType.TVA;
+			}
+		}
 
-				dict.Add ((int) EntryScenario.None,              "Aucune");
-				dict.Add ((int) EntryScenario.Purchase,          "Achat");
-				dict.Add ((int) EntryScenario.Sale,              "Vente");
-				dict.Add ((int) EntryScenario.AmortizationAuto,  "Amortissement ordinaire");
-				dict.Add ((int) EntryScenario.AmortizationExtra, "Amortissement extraordinaire");
-				dict.Add ((int) EntryScenario.Revaluation,       "Réévaluation");
 
-				return dict;
+		public static IEnumerable<EntryScenario> EnumEntryScenarios
+		{
+			get
+			{
+				yield return EntryScenario.None;
+				yield return EntryScenario.Purchase;
+				yield return EntryScenario.Sale;
+				yield return EntryScenario.AmortizationAuto;
+				yield return EntryScenario.AmortizationExtra;
+				yield return EntryScenario.Revaluation;
 			}
 		}
 	}

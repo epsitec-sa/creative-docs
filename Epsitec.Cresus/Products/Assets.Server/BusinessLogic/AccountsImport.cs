@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void AddAccounts()
 		{
 			//	Importe tous les comptes.
-			this.AddAccount ("0", "Plan comptable", AccountCategory.Unknown, AccountType.Groupe);
+			this.AddAccount ("0", Res.Strings.AccountsImport.DefaultTitle.ToString (), AccountCategory.Unknown, AccountType.Groupe);
 
 			int indexCompte = this.IndexOfLine ("BEGIN=COMPTES");
 
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (string.IsNullOrEmpty (filename))
 			{
-				throw new System.Exception ("Donnez un nom de plan comptable (fichier .cre)");
+				throw new System.Exception (Res.Strings.AccountsImport.ReadEmptyFilename.ToString ());
 			}
 			else
 			{

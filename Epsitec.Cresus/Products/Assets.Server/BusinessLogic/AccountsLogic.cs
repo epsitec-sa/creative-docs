@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 				{
-					explanationsValue = AccountsLogic.AddError (number, "Aucun plan comptable à cette date");
+					explanationsValue = AccountsLogic.AddError (number, Res.Strings.AccountsLogic.InvalidDate.ToString ());
 					hasError = true;
 					gotoVisible = false;
 				}
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (string.IsNullOrEmpty (summary))  // compte inexistant ?
 					{
-						explanationsValue = AccountsLogic.AddError (number, "Inconnu dans le plan comptable");
+						explanationsValue = AccountsLogic.AddError (number, Res.Strings.AccountsLogic.AccountDoesNotExist.ToString ());
 						hasError = true;
 						gotoVisible = false;
 					}
