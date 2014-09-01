@@ -503,12 +503,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				if (this.AllowsSorting)
 				{
-					list.Add ("Cliquer pour trier selon la colonne");
+					list.Add (Res.Strings.AbstractTreeTableColumn.Sort.Tooltip.ToString ());
 				}
 
 				if (this.AllowsMovement)
 				{
-					list.Add ("Tirer pour déplacer la colonne");
+					list.Add (Res.Strings.AbstractTreeTableColumn.Move.Tooltip.ToString ());
 				}
 
 				//	Termine les lignes par un point, mais seulement s'il y en a plusieurs.

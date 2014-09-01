@@ -194,9 +194,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie gauche.
 			this.objectsToolbar = new TreeTableToolbar (this.accessor);
 
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   "Nouvel objet d'immobilisation");
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    "Supprimer l'objet d'immobilisation");
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    "Désélectionner l'objet d'immobilisation");
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString ());
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    Res.Strings.TimelinesArrayController.Delete.ToString ());
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.TimelinesArrayController.Deselect.ToString ());
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				HoverMode         = TreeTableHoverMode.VerticalGradient,
 				HeaderHeight      = TimelinesArrayController.lineHeight*2,
 				FooterHeight      = 0,
-				HeaderDescription = "Objet",
+				HeaderDescription = Res.Strings.TimelinesArrayController.Header.ToString (),
 				RowHeight         = TimelinesArrayController.lineHeight,
 				Margins           = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 				VerticalAdjust    = -1,
@@ -595,7 +595,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnObjectDelete()
 		{
 			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
-			YesNoPopup.Show (target, "Voulez-vous supprimer l'objet sélectionné ?", this.ObjectDeleteSelection);
+			YesNoPopup.Show (target, Res.Strings.TimelinesArrayController.ObjectDelete.ToString (), this.ObjectDeleteSelection);
 		}
 
 		private void ObjectDeleteSelection()
@@ -841,7 +841,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "La copie est impossible, car aucun événement n'est sélectionné.");
+				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.CopyError.ToString ());
 			}
 		}
 
@@ -872,7 +872,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					if (e == null)
 					{
-						MessagePopup.ShowError (target, "Les données sont incompatibles.");
+						MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteIncompatible.ToString ());
 					}
 					else
 					{
@@ -887,7 +887,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				MessagePopup.ShowError (target, "Aucun événement ne peut être collé, car le bloc-notes est vide.");
+				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteError.ToString ());
 			}
 		}
 
@@ -1251,14 +1251,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.timelinesMode == TimelinesMode.Narrow)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Days,   "Jour"));
-					list.Add (new TimelineRowDescription (TimelineRowType.Months, "Mois"));
-					list.Add (new TimelineRowDescription (TimelineRowType.Years,  "Années"));
+					list.Add (new TimelineRowDescription (TimelineRowType.Days,   Res.Strings.TimelinesArrayController.Row.Days.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.TimelinesArrayController.Row.Months.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years,  Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
 				}
 				else
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, "Jour"));
-					list.Add (new TimelineRowDescription (TimelineRowType.Years,      "Années"));
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, Res.Strings.TimelinesArrayController.Row.DaysMonths.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years,      Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
 				}
 
 				return list.ToArray ();

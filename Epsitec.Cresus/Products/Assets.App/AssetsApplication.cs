@@ -10,7 +10,6 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Cresus.Assets.Server.Engine;
-using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App
 {
@@ -24,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return "Crésus Immobilisations";
+				return Res.Strings.AssetsApplication.WindowTitle.ToString ();
 			}
 		}
 		
@@ -116,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App
 			var accessor = new DataAccessor(cb);
 			var factory = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (factory != null);
-			factory.Create (accessor, "Exemple", new System.DateTime (2011, 1, 1), true);
+			factory.Create (accessor, Res.Strings.AssetsApplication.DefaultMandat.ToString (), new System.DateTime (2011, 1, 1), true);
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);

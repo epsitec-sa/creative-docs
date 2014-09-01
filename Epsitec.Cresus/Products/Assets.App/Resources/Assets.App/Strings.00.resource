@@ -435,4 +435,20 @@
   <data name="ReportChoiceController.Title" id="KPD">Liste des rapports disponibles :</data>
   <data name="StateAtController.Date" id="KQD">Etat au {0}</data>
   <data name="StateAtController.Final" id="KRD">Etat final</data>
+  <data name="TimelinesArrayController.New" id="KSD">Nouvel objet d'immobilisation</data>
+  <data name="TimelinesArrayController.Delete" id="KTD">Supprimer l'objet d'immobilisation</data>
+  <data name="TimelinesArrayController.Deselect" id="KUD">Désélectionner l'objet d'immobilisation</data>
+  <data name="TimelinesArrayController.Header" id="KVD">Objet</data>
+  <data name="TimelinesArrayController.ObjectDelete" id="K0E">Voulez-vous supprimer l'objet sélectionné ?</data>
+  <data name="TimelinesArrayController.CopyError" id="K1E">La copie est impossible, car aucun événement n'est sélectionné.</data>
+  <data name="TimelinesArrayController.PasteIncompatible" id="K2E">Les données sont incompatibles.</data>
+  <data name="TimelinesArrayController.PasteError" id="K3E">Aucun événement ne peut être collé, car le bloc-notes est vide.</data>
+  <data name="TimelinesArrayController.Row.Days" id="K4E">Jour</data>
+  <data name="TimelinesArrayController.Row.Months" id="K5E">Mois</data>
+  <data name="TimelinesArrayController.Row.Years" id="K6E">Années</data>
+  <data name="TimelinesArrayController.Row.DaysMonths" id="K7E">Jour</data>
+  <data name="AbstractTreeTableColumn.Sort.Tooltip" id="K8E">Cliquer pour trier selon la colonne</data>
+  <data name="AbstractTreeTableColumn.Move.Tooltip" id="K9E">Tirer pour déplacer la colonne</data>
+  <data name="AssetsApplication.WindowTitle" id="KAE">Crésus Immobilisations</data>
+  <data name="AssetsApplication.DefaultMandat" id="KBE">Exemple</data>
 </bundle>
