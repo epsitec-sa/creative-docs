@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return string.Concat (base.Title, " ", this.Params.DateRange.ToNiceString ());
+				return string.Concat (base.Title, " ", this.ParamsTitle);
 			}
 		}
 
@@ -126,6 +127,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			TreeTableFiller<SortableCumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
+
+		private string ParamsTitle
+		{
+			get
+			{
+				var date = this.Params.DateRange.ToNiceString ();
+
+				if (this.Params.FilterGuid.IsEmpty)
+				{
+					return date;
+				}
+				else
+				{
+					var filter = GroupsLogic.GetShortName (this.accessor, this.Params.FilterGuid);
+					return string.Concat (date, " — ", filter);
+				}
+			}
+		}
 
 		private MCH2SummaryParams Params
 		{

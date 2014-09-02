@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Bâtiment communal
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Bâtiment communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Bâtiment communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine administratif");
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Revaluation);
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Ecole
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Ecole", "101", 500000.0m, 600000.0m, 450000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Ecole", "101", 500000.0m, 600000.0m, 450000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Camion
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Camion", "200", 100000.0m, 80000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Camions", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Camion", "200", 100000.0m, 80000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Camions", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture grise
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (0), "Voiture grise", "201", 40000.0m, 35000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (0), "Voiture grise", "201", 40000.0m, 35000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (188), EventType.Output);
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture blanche
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (35), "Voiture blanche", "202", 35000.0m, 25000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (35), "Voiture blanche", "202", 35000.0m, 25000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 
 				{
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Voiture noire
 			{
-				var obj = this.AddAssetsSamples (year0.AddDays (200), "Voiture noire", "203", 25000.0m, 24000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year0.AddDays (200), "Voiture noire", "203", 25000.0m, 24000.0m, 10000.0m, "Nicolet", null, "Véhicules", "Voitures", "Immobilisations corporelles", "Patrimoine administratif");
 				this.Amortize (range0, obj.Guid);
 				this.Amortize (range1, obj.Guid);
 				this.Amortize (range2, obj.Guid);
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			//	Immeuble locatif
 			{
-				var obj = this.AddAssetsSamples (year2.AddDays (100), "Immeuble locatif", "150", 2000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Administratif");
+				var obj = this.AddAssetsSamples (year2.AddDays (100), "Immeuble locatif", "150", 2000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine financier");
 				this.Amortize (range2, obj.Guid);
 			}
 		}
@@ -211,8 +211,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			var root = this.AddGroup (parent, "Patrimoine MCH2", "300");
 
-			this.AddGroup (root, "Administratif", "10");
-			this.AddGroup (root, "Financier",     "20");
+			this.AddGroup (root, "Patrimoine administratif", "10");
+			this.AddGroup (root, "Patrimoine financier",     "20");
 		}
 
 
