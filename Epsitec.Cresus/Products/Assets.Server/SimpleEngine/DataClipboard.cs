@@ -300,20 +300,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	A partir de "Toto", retourne "Copie de Toto" (par exemple).
 			if (string.IsNullOrEmpty (name))
 			{
-				return "Copie";
+				return Res.Strings.DataClipboard.Copy.ToString ();
 			}
 			else
 			{
 				switch (strategy)
 				{
 					case CopyNameStrategy.NameDashCopy:
-						return string.Format ("{0} - copie", name);
+						return string.Format (Res.Strings.DataClipboard.NameDashCopy.ToString (), name);
 
 					case CopyNameStrategy.NameBracketCopy:
-						return string.Format ("{0} (copie)", name);
+						return string.Format (Res.Strings.DataClipboard.NameBracketCopy.ToString (), name);
 
 					default:
-						return string.Format ("Copie de {0}", name);
+						return string.Format (Res.Strings.DataClipboard.CopyOfName.ToString (), name);
 				}
 			}
 		}

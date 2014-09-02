@@ -14,4 +14,8 @@
   <data name="WarningsLogic.NoAccountsToDate" id="KB">Aucun plan comptable à cette date</data>
   <data name="WarningsLogic.NotInAccountsToDate" id="KC">Le compte {0} est inconnu dans le plan comptable à cette date</data>
   <data name="WarningsLogic.UndefinedField" id="KD">Le champ n'est pas défini</data>
+  <data name="DataClipboard.Copy" id="KE">Copie</data>
+  <data name="DataClipboard.NameDashCopy" id="KF">{0} - copie</data>
+  <data name="DataClipboard.NameBracketCopy" id="KG">{0} (copie)</data>
+  <data name="DataClipboard.CopyOfName" id="KH">Copie de {0}</data>
 </bundle>
