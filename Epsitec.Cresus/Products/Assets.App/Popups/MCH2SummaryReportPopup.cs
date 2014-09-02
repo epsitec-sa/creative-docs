@@ -80,8 +80,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.DateRange = value.DateRange;
 				this.GroupGuid = value.RootGuid;
 				this.Level     = value.Level;
-
-				this.UpdateWidgets (null);
 			}
 		}
 

@@ -45,23 +45,19 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			//	Retourne le Guid de l'objet actuellement sélectionné.
 			get
 			{
-				int sel = this.visibleSelectedRow;
-				if (sel != -1 && sel < this.nodeGetter.Count)
-				{
-					return this.nodeGetter[sel].Guid;
-				}
-				else
-				{
-					return Guid.Empty;
-				}
+				return this.value;
 			}
 			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
 			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
 			//	visible, vers le haut.
 			set
 			{
-				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (value);
-				this.UpdateController ();
+				if (this.value != value)
+				{
+					this.value = value;
+
+					this.UpdateController ();
+				}
 			}
 		}
 
@@ -104,9 +100,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			//	Connexion des événements.
 			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
-				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-
-				var node = this.nodeGetter[this.visibleSelectedRow];
+				int visibleSelectedRow = this.controller.TopVisibleRow + row;
+				var node = this.nodeGetter[visibleSelectedRow];
 				this.Value = node.Guid;
 
 				this.UpdateController ();
@@ -140,7 +135,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		{
 			if (this.controller != null)
 			{
-				TreeTableFiller<TreeNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+				int visibleSelectedRow = this.nodeGetter.SearchBestIndex (value);
+				TreeTableFiller<TreeNode>.FillContent (this.controller, this.dataFiller, visibleSelectedRow, crop);
 			}
 		}
 
@@ -148,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
 
+		private Guid									value;
 		private NavigationTreeTableController			controller;
-		private int										visibleSelectedRow;
 	}
 }

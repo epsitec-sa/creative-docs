@@ -60,13 +60,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void ShowParamsPopup(Widget target)
 		{
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
-			var popup = new MCH2SummaryReportPopup (this.accessor);
+			var popup = new MCH2SummaryReportPopup (this.accessor)
+			{
+				MCH2SummaryParams = this.Params,
+			};
 
 			popup.Create (target, leftOrRight: true);
-
-			//	Il faut impérativement initialiser la propriété après avoir créé
-			//	la UI, sans quoi le calcul de SearchBestIndex est faux !
-			popup.MCH2SummaryParams = this.Params;
 
 			popup.ButtonClicked += delegate (object sender, string name)
 			{
