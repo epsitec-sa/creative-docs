@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateStringController    (parent, ObjectField.Number, editWidth: 90);
 			this.CreateStringController    (parent, ObjectField.Name);
 			this.CreateStringController    (parent, ObjectField.Description, lineCount: 5);
+			this.CreateBoolController      (parent, ObjectField.GroupUsedDuringCreation);
 		}
 	}
 }

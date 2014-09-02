@@ -419,6 +419,14 @@ namespace Epsitec.Cresus.Assets.Data
 						return global::Epsitec.Cresus.Assets.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
 					}
 				}
+				//	designer:cap/HUKO201
+				public static global::Epsitec.Common.Types.Caption GroupUsedDuringCreation
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Data.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 88));
+					}
+				}
 				//	designer:cap/HUKD101
 				public static global::Epsitec.Common.Types.Caption HistoryDate
 				{

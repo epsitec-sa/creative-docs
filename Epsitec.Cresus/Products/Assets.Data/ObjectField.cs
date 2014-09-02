@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.Assets.Data
 		Round,
 		ResidualValue,
 
+		//	Définition d'un groupe.
+		GroupUsedDuringCreation,
+
 		Account1,
 		Account2,
 		Account3,

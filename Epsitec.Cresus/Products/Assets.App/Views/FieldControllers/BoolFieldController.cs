@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				Parent          = this.frameBox,
 				Text            = this.Label,
-				PreferredWidth  = 200,
+				PreferredWidth  = AbstractFieldController.maxWidth,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Dock            = DockStyle.Left,
 				TabIndex        = ++this.TabIndex,

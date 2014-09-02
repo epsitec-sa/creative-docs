@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 		}
 
-		protected DataObject AddGroup(DataObject parent, string name, string number)
+		protected DataObject AddGroup(DataObject parent, string name, string number, bool groupUsedDuringCreation = false)
 		{
 			var groups = this.accessor.Mandat.GetData (BaseType.Groups);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -254,8 +254,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				this.AddField (e, ObjectField.GroupParent, parent.Guid);
 			}
 
-			this.AddField(e, ObjectField.Name,   name);
-			this.AddField(e, ObjectField.Number, number);
+			this.AddField (e, ObjectField.Name,   name);
+			this.AddField (e, ObjectField.Number, number);
+			this.AddField (e, ObjectField.GroupUsedDuringCreation, groupUsedDuringCreation);
 
 			return o;
 		}
@@ -320,6 +321,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			{
 				e.AddProperty (new DataDecimalProperty (field, value.Value));
 			}
+		}
+
+		protected void AddField(DataEvent e, ObjectField field, bool value)
+		{
+			e.AddProperty (new DataIntProperty (field, value ? 1 : 0));
 		}
 
 		protected void AddField(DataEvent e, ObjectField field, Guid value)
