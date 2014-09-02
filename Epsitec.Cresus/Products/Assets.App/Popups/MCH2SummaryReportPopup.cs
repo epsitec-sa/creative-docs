@@ -69,7 +69,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public DateRange						DateRange
+		public MCH2SummaryParams				MCH2SummaryParams
+		{
+			get
+			{
+				return new MCH2SummaryParams (this.DateRange, this.GroupGuid, this.Level);
+			}
+			set
+			{
+				this.DateRange = value.DateRange;
+				this.GroupGuid = value.RootGuid;
+				this.Level     = value.Level;
+
+				this.UpdateWidgets (null);
+			}
+		}
+
+		private DateRange						DateRange
 		{
 			//	Donne la période. Comme les dates spécifiées par l'utilisateur vont
 			//	habituellement du 1 janvier au 31 décembre, il faut adapter la date
@@ -151,7 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								GroupGuid
+		private Guid							GroupGuid
 		{
 			get
 			{
@@ -171,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int?								Level
+		private int?							Level
 		{
 			get
 			{

@@ -18,7 +18,22 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public bool								Value;
+		public bool								Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					this.UpdateButton ();
+				}
+			}
+		}
 
 
 		public override int						RequiredHeight
@@ -48,10 +63,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		public override void CreateUI(Widget parent, int labelWidth, ref int tabIndex)
 		{
-			var button = new CheckButton
+			this.button = new CheckButton
 			{
 				Parent          = parent,
 				Text            = this.description.Label,
+				AutoToggle      = false,
 				ActiveState     = this.Value ? ActiveState.Yes : ActiveState.No,
 				TabIndex        = ++tabIndex,
 				PreferredHeight = BoolStackedController.checkHeight,
@@ -59,14 +75,25 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				Margins         = new Margins (labelWidth+10, 0, 0, 0),
 			};
 
-			button.ActiveStateChanged += delegate
+			this.button.Clicked += delegate
 			{
-				this.Value = button.ActiveState == ActiveState.Yes;
+				this.Value = !this.Value;
 				this.OnValueChanged ();
 			};
 		}
 
+		private void UpdateButton()
+		{
+			if (this.button != null)
+			{
+				this.button.ActiveState = this.value ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
 
 		private const int checkHeight = 17;
+
+		private bool							value;
+		private CheckButton						button;
 	}
 }

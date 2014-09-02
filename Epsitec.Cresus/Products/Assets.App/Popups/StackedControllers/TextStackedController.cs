@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -18,7 +17,25 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
-		public string							Value;
+		public string							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+
+					if (this.controller != null)
+					{
+						this.controller.Value = this.Value;
+					}
+				}
+			}
+		}
 
 
 		public override int						RequiredHeight
@@ -61,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private const int height = AbstractFieldController.lineHeight + 4;
 
+		private string							value;
 		private StringFieldController			controller;
 	}
 }

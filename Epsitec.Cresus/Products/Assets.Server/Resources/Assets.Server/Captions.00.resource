@@ -31,7 +31,7 @@
   <data name="Val.FieldType.Date" id="KT">&lt;s:data id="_0" f:Name="Date" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
   <data name="Val.FieldType.Account" id="KU">&lt;s:data id="_0" f:Name="Account" /&gt;</data>
   <data name="Val.FieldType.GuidGroup" id="KV">&lt;s:data id="_0" f:Name="GuidGroup" /&gt;</data>
-  <data name="Val.FieldType.GuidPerson" id="K01">&lt;s:data id="_0" f:Name="GuidPerson" /&gt;</data>
+  <data name="Val.FieldType.GuidPerson" id="K01">&lt;s:data id="_0" f:Name="GuidPerson" f:Labels="{Collection {Text 'Contact'}}" /&gt;</data>
   <data name="Val.FieldType.GuidRatio" id="K11">&lt;s:data id="_0" f:Name="GuidRatio" /&gt;</data>
   <data name="Typ.FieldType" id="KM">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.FieldType, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [IUKN001]'}, {Text '1 [IUKO001]'}, {Text '2 [IUKP001]'}, {Text '3 [IUKQ001]'}, {Text '4 [IUKR001]'}, {Text '5 [IUKS001]'}, {Text '6 [IUKT001]'}, {Text '7 [IUKU001]'}, {Text '8 [IUKV001]'}, {Text '9 [IUK0101]'}, {Text '10 [IUK1101]'}}" /&gt;</data>
   <data name="Val.AccountCategory.Unknown" id="K31">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
