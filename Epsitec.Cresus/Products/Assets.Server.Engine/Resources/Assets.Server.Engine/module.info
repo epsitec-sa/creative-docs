@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="2005" name="Assets.Server.Engine" layer="A" textMode="FormattedText" assemblies="Assets.Server.Engine" namespace="Epsitec.Cresus.Assets.Server.Engine">
+  <Versions>
+    <Version id="2" build="15" date="2014-09-02T08:17:18.0858549Z" />
+    <Version id="1" build="1" date="2014-09-02T18:19:30.7286478Z" />
+  </Versions>
+</ModuleInfo>
