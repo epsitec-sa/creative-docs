@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Il faut utiliser ToTimestamp.JustBefore pour afficher les noms des objets tels
 			//	qu'ils sont définis le 31.12.xx à 23h59.
 			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.sortingInstructions, ei);
+			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei);
 			this.dataFiller.Timestamp = this.Params.DateRange.ToTimestamp.JustBefore;
 
 			if (this.Params.Level.HasValue)

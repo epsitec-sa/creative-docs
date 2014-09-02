@@ -45,6 +45,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BypassNodeGetter.cs" />
+    <Compile Include="FilterNodeGetter.cs" />
     <Compile Include="WarningNodeGetter.cs" />
     <Compile Include="ExtractionEngine.cs" />
     <Compile Include="SortableCumulNode.cs" />

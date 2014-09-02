@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller.Title = this.Title;
 			this.dataFiller.Timestamp = this.Params.Timestamp;
 
-			this.NodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.Params.Timestamp, this.Params.RootGuid, Guid.Empty, this.sortingInstructions);
 
 			if (this.Params.Level.HasValue)
 			{

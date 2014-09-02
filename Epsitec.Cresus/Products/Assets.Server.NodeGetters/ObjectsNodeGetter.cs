@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |                         |
 	///     o  GuidNode               o  GuidNode
 	///     V                         |
-	/// GroupParentNodeGetter         |
+	/// GroupParentNodeGetter    FilterNodeGetter
 	///     |                         |
-	///     o  ParentNode             |
+	///     o  ParentNode             o  GuidNode
 	///     V                         |
 	/// GroupLevelNodeGetter          |
 	///     |                         |
@@ -51,10 +51,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
+			this.filterNodeGetter = new FilterNodeGetter (accessor, objectNodes);
+
 			this.groupNodeGetter1 = new GroupParentNodeGetter (groupNodes, accessor, BaseType.Groups);
 			this.groupNodeGetter2 = new GroupLevelNodeGetter (this.groupNodeGetter1, accessor, BaseType.Groups);
 
-			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, objectNodes);
+			this.mergeNodeGetter   = new MergeNodeGetter (accessor, this.groupNodeGetter2, this.filterNodeGetter);
 			this.treeObjectsGetter = new TreeObjectsNodeGetter (this.mergeNodeGetter);
 			this.cumulNodeGetter   = new CumulNodeGetter (accessor, this.treeObjectsGetter);
 
@@ -65,11 +67,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(Timestamp? timestamp, Guid rootGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
 		{
 			//	La liste des instructions d'extraction est utile pour la production de rapports.
 			this.timestamp              = timestamp;
 			this.rootGuid               = rootGuid;
+			this.filterGuid             = filterGuid;
 			this.sortingInstructions    = instructions;
 			this.extractionInstructions = extractionInstructions;
 
@@ -110,6 +113,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateData()
 		{
+			this.filterNodeGetter.SetParams (this.timestamp, this.filterGuid);
+
 			this.groupNodeGetter1.SetParams (this.timestamp, this.sortingInstructions);
 			this.groupNodeGetter2.SetParams (this.rootGuid, this.sortingInstructions, this.rootGuid.IsEmpty);
 
@@ -205,6 +210,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
+		private readonly FilterNodeGetter			filterNodeGetter;
 		private readonly GroupParentNodeGetter		groupNodeGetter1;
 		private readonly GroupLevelNodeGetter		groupNodeGetter2;
 		private readonly MergeNodeGetter			mergeNodeGetter;
@@ -215,6 +221,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;
+		private Guid								filterGuid;
 		private SortingInstructions					sortingInstructions;
 		private List<ExtractionInstructions>		extractionInstructions;
 	}

@@ -53,13 +53,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = "",
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
-				Height                = 150,
+				Height                = 100,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Int,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.Level.ToString (),
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 6
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Seulement ces objets",
+			});
+
+			list.Add (new StackedControllerDescription  // 7
+			{
+				StackedControllerType = StackedControllerType.GroupGuid,
+				Label                 = "",
+				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				Height                = 150,
 			});
 
 			this.SetDescriptions (list);
@@ -73,13 +88,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.DateRange, this.GroupGuid, this.Level);
+				return new MCH2SummaryParams (this.DateRange, this.GroupGuid, this.Level, this.FilterGuid);
 			}
 			set
 			{
-				this.DateRange = value.DateRange;
-				this.GroupGuid = value.RootGuid;
-				this.Level     = value.Level;
+				this.DateRange  = value.DateRange;
+				this.GroupGuid  = value.RootGuid;
+				this.FilterGuid = value.FilterGuid;
+				this.Level      = value.Level;
 			}
 		}
 
@@ -197,6 +213,38 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							FilterEnable
+		{
+			get
+			{
+				return this.FilterEnableController.Value;
+			}
+			set
+			{
+				this.FilterEnableController.Value = value;
+			}
+		}
+
+		private Guid							FilterGuid
+		{
+			get
+			{
+				if (this.FilterEnable)
+				{
+					return this.FilterGuidController.Value;
+				}
+				else
+				{
+					return Guid.Empty;
+				}
+			}
+			set
+			{
+				this.FilterGuidController.Value = value;
+				this.FilterEnable = !value.IsEmpty;
+			}
+		}
+
 
 		public override void CreateUI()
 		{
@@ -225,8 +273,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.MonthCount = this.ComputeMonthCount ();
 			}
 
-			this.SetVisibility (MCH2SummaryReportPopup.GroupGuidRank, this.GroupEnable);
-			this.SetVisibility (MCH2SummaryReportPopup.LevelRank,     this.GroupEnable);
+			this.SetEnable     (MCH2SummaryReportPopup.GroupGuidRank,  this.GroupEnable);
+			this.SetVisibility (MCH2SummaryReportPopup.LevelRank,      this.GroupEnable);
+			this.SetEnable     (MCH2SummaryReportPopup.FilterGuidRank, this.FilterEnable);
 
 			this.okButton.Enable = this.InitialDate.HasValue
 								&& this.MonthCount.HasValue
@@ -298,6 +347,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private BoolStackedController FilterEnableController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.FilterEnableRank) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
+		private GroupGuidStackedController FilterGuidController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.FilterGuidRank) as GroupGuidStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
 
 		private System.DateTime? ComputeFinalDate()
 		{
@@ -336,11 +405,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private const int InitialDateRank = 0;
-		private const int MonthCountRank  = 1;
-		private const int FinalDateRank   = 2;
-		private const int GroupEnableRank = 3;
-		private const int GroupGuidRank   = 4;
-		private const int LevelRank       = 5;
+		private const int InitialDateRank  = 0;
+		private const int MonthCountRank   = 1;
+		private const int FinalDateRank    = 2;
+		private const int GroupEnableRank  = 3;
+		private const int GroupGuidRank    = 4;
+		private const int LevelRank        = 5;
+		private const int FilterEnableRank = 6;
+		private const int FilterGuidRank   = 7;
 	}
 }

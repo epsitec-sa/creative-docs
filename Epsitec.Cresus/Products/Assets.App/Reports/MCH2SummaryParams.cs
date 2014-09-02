@@ -9,11 +9,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryParams : AbstractParams
 	{
-		public MCH2SummaryParams(DateRange dateRange, Guid rootGuid, int? level)
+		public MCH2SummaryParams(DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
 		{
-			this.DateRange = dateRange;
-			this.RootGuid  = rootGuid;
-			this.Level     = level;
+			this.DateRange  = dateRange;
+			this.RootGuid   = rootGuid;
+			this.Level      = level;
+			this.FilterGuid = filterGuid;
 		}
 
 		public MCH2SummaryParams()
@@ -43,12 +44,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override AbstractParams ChangePeriod(int direction)
 		{
-			return new MCH2SummaryParams (this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level);
+			return new MCH2SummaryParams (this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
 		}
 
 
 		public readonly DateRange				DateRange;
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;
+		public readonly Guid					FilterGuid;
 	}
 }

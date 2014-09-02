@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
-			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, this.sortingInstructions);
+			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, Guid.Empty, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
 
 			this.UpdateController ();
