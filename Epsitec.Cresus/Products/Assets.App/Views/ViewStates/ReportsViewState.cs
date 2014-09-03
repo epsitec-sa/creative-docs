@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Reports;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ViewStates
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 	public class ReportsViewState : AbstractViewState
 	{
 		public ReportType						ReportType;
-		public AbstractReportParams					ReportParams;
+		public AbstractReportParams				ReportParams;
 
 
 		public override bool ApproximatelyEquals(AbstractViewState other)
