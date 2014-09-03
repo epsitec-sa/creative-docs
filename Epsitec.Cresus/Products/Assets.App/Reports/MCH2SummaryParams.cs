@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class MCH2SummaryParams : AbstractParams
+	public class MCH2SummaryParams : AbstractReportParams
 	{
 		public MCH2SummaryParams(DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
 		{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Level     = 1;
 		}
 
-		public override bool StrictlyEquals(AbstractParams other)
+		public override bool StrictlyEquals(AbstractReportParams other)
 		{
 			if (other is MCH2SummaryParams)
 			{
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return false;
 		}
 
-		public override AbstractParams ChangePeriod(int direction)
+		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			return new MCH2SummaryParams (this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
 		}

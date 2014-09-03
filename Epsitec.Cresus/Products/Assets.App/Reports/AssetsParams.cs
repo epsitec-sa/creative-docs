@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsParams : AbstractParams
+	public class AssetsParams : AbstractReportParams
 	{
 		public AssetsParams(Timestamp timestamp, Guid rootGuid, int? level)
 		{
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.Level     = null;
 		}
 
-		public override bool StrictlyEquals(AbstractParams other)
+		public override bool StrictlyEquals(AbstractReportParams other)
 		{
 			if (other is AssetsParams)
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return false;
 		}
 
-		public override AbstractParams ChangePeriod(int direction)
+		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			var timestamp = new Timestamp (this.Timestamp.Date.AddYears (direction), 0);
 			return new AssetsParams (timestamp, this.RootGuid, this.Level);

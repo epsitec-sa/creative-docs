@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 	public class ReportsViewState : AbstractViewState
 	{
 		public ReportType						ReportType;
-		public AbstractParams					ReportParams;
+		public AbstractReportParams					ReportParams;
 
 
 		public override bool ApproximatelyEquals(AbstractViewState other)

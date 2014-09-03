@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual AbstractParams			DefaultParams
+		public virtual AbstractReportParams			DefaultParams
 		{
 			get
 			{

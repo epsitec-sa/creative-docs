@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public AbstractParams					ReportParams
+		public AbstractReportParams					ReportParams
 		{
 			get
 			{
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private AbstractParams GetHistoryParams(ReportType reportType)
+		private AbstractReportParams GetHistoryParams(ReportType reportType)
 		{
 			//	Retourne le dernier AbstractParams utilisé pour un type de rapport donné.
 			var vs = this.historyViewStates
@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
-		private AbstractParams					reportParams;
+		private AbstractReportParams					reportParams;
 		private ReportType						selectedReportType;
 	}
 }

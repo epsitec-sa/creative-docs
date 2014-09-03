@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override AbstractParams			DefaultParams
+		public override AbstractReportParams			DefaultParams
 		{
 			get
 			{

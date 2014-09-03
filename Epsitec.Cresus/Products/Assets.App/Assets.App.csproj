@@ -174,7 +174,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\AbstractReport.cs" />
     <Compile Include="Reports\AssetsReport.cs" />
-    <Compile Include="Reports\AbstractParams.cs" />
+    <Compile Include="Reports\AbstractReportParams.cs" />
     <Compile Include="Reports\AssetsParams.cs" />
     <Compile Include="Reports\ReportType.cs" />
     <Compile Include="Reports\MCH2SummaryParams.cs" />
