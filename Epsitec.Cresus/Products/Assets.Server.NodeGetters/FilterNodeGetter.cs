@@ -80,6 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private void UpdateData()
 		{
+			//	Si un filtre est défini, on génère la liste filtrée this.outputNodes.
 			this.outputNodes.Clear ();
 
 			if (!this.filterGuid.IsEmpty)
@@ -98,14 +99,65 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 							inputValue: true
 						);
 
-						if (gr.Guid == this.filterGuid)  // objet faisant partie de ce groupe ?
+						if (!gr.IsEmpty)
 						{
-							var node = new GuidNode (obj.Guid);
-							this.outputNodes.Add (node);
+							if (this.IsInsideGroup (gr.Guid))
+							{
+								var node = new GuidNode (obj.Guid);
+								this.outputNodes.Add (node);
+							}
 						}
 					}
 				}
 			}
+		}
+
+		private bool IsInsideGroup(Guid groupGuid)
+		{
+			//	On considère que l'objet appartient au groupe s'il se réfère directement au
+			//	groupe, ou s'il se réfère à un groupe fils.
+			if (groupGuid == this.filterGuid)  // se réfère directement au groupe ?
+			{
+				return true;
+			}
+
+			//	On cherche si le groupe est un fils de this.filterGuid.
+			while (true)
+			{
+				groupGuid = this.GetParentGroup (groupGuid);
+
+				if (groupGuid.IsEmpty)
+				{
+					return false;
+				}
+				else if (groupGuid == this.filterGuid)
+				{
+					return true;
+				}
+			}
+		}
+
+		private Guid GetParentGroup(Guid groupGuid)
+		{
+			var group = this.accessor.GetObject (BaseType.Groups, groupGuid);
+
+			if (group != null)
+			{
+				var parent = ObjectProperties.GetObjectPropertyGuid
+				(
+					group,
+					this.timestamp,
+					ObjectField.GroupParent,
+					inputValue: true
+				);
+
+				if (!parent.IsEmpty)
+				{
+					return parent;
+				}
+			}
+
+			return Guid.Empty;
 		}
 
 
