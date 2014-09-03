@@ -66,6 +66,7 @@
     </Content>
     <Content Include="Resources\Assets.Server.Engine\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Assets.Server.Engine\Strings.00.resource">
       <SubType>Designer</SubType>

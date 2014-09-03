@@ -261,7 +261,7 @@ namespace Epsitec.Common.Tests.UI
 			{
 				return _stringsBundle[druid].AsString;
 			}
-			private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
+			private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundleOrThrow ("Strings");
 			#endregion
 		}
 

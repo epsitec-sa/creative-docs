@@ -714,7 +714,7 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				return _stringsBundle[druid].AsString;
 			}
 			
-			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
+			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundleOrThrow ("Strings");
 			
 			#endregion
 		}
