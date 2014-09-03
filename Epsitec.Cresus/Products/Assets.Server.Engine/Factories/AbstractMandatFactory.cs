@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -386,6 +387,17 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			System.Diagnostics.Debug.Fail (string.Format ("La catégorie {0} n'existe pas !", text));
 			return null;
+		}
+
+
+		protected void AddReports()
+		{
+			var dateRange = new DateRange (this.accessor.Mandat.StartDate, this.accessor.Mandat.StartDate.AddYears (1));
+			var timestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
+
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, Guid.Empty, 1, Guid.Empty));
+			this.accessor.Mandat.Reports.Add (new AssetsParams (timestamp, Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new PersonsParams ());
 		}
 
 

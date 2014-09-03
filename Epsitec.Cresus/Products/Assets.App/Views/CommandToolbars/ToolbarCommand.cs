@@ -51,7 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		Import,
 		Goto,
 
-		ReportSelect,
 		ReportParams,
 		ReportExport,
 		ReportPrevPeriod,

@@ -96,10 +96,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				switch (command)
 				{
-					case ToolbarCommand.ReportSelect:
-						this.OnSelect ();
-						break;
-
 					case ToolbarCommand.ReportParams:
 						this.OnParams ();
 						break;
@@ -139,13 +135,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-
-		private void OnSelect()
-		{
-			//	Affiche le Popup pour choisir un rapport.
-			var target = this.toolbar.GetTarget (ToolbarCommand.ReportSelect);
-			this.ShowReportPopup (target);
-		}
 
 		private void OnParams()
 		{
@@ -192,24 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Ferme le rapport.
 			this.selectedReportType = ReportType.Unknown;
 			this.UpdateUI ();
-		}
-
-
-		private void ShowReportPopup(Widget target)
-		{
-			//	Affiche le Popup pour choisir un rapport.
-			var popup = new ReportPopup()
-			{
-				ReportType = this.selectedReportType,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
-			{
-				this.selectedReportType = ReportsList.GetReportType (rank);
-				this.UpdateUI ();
-			};
 		}
 
 
@@ -345,7 +316,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool isExpandEnable     = this.IsExpandEnable;
 			bool changePeriodEnable = this.ChangePeriodEnable;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportSelect,     true);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,     this.HasParams);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,     this.report != null);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,       isCompactEnable);

@@ -92,6 +92,7 @@
     <Compile Include="ObjectField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyState.cs" />
+    <Compile Include="Reports\PersonsParams.cs" />
     <Compile Include="Reports\AssetsParams.cs" />
     <Compile Include="Reports\MCH2SummaryParams.cs" />
     <Compile Include="Resources\Assets.Data\SourceCode\Entities.cs" />

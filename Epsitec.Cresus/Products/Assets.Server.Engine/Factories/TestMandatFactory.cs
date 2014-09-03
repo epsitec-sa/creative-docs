@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				Amortizations.UpdateAmounts (this.accessor, obj);
 			}
 
+			this.AddReports ();
+
 			return this.accessor.Mandat;
 		}
 
