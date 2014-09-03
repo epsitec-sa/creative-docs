@@ -1,3 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
+  <data name="Val.MCH2Summary.Column.Name" id="K1">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Catérorie'}, {Text 'Catégorie'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.InitialState" id="K2">&lt;s:data id="_0" f:Name="InitialState" f:Labels="{Collection {Text 'Etat \[0\]'}, {Text 'Etat initial le \[0\]'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Inputs" id="K3">&lt;s:data id="_0" f:Name="Inputs" f:Labels="{Collection {Text 'Entrées'}, {Text 'Variations dues aux entrées'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Reorganizations" id="K4">&lt;s:data id="_0" f:Name="Reorganizations" f:Labels="{Collection {Text 'Réorganisations'}, {Text 'Variations dues aux réorganisations'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Revaluations" id="K5">&lt;s:data id="_0" f:Name="Revaluations" f:Labels="{Collection {Text 'Réévaluations'}, {Text 'Valeurs après réévaluations'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Revalorizations" id="K6">&lt;s:data id="_0" f:Name="Revalorizations" f:Labels="{Collection {Text 'Revalorisations'}, {Text 'Valeurs après revalorisations'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Outputs" id="K7">&lt;s:data id="_0" f:Name="Outputs" f:Labels="{Collection {Text 'Sorties'}, {Text 'Variations dues aux sorties'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.AmortizationsAuto" id="K8">&lt;s:data id="_0" f:Name="AmortizationsAuto" f:Labels="{Collection {Text 'Amort. ord.'}, {Text 'Variations dues aux amortissements ordinaires'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.AmortizationsExtra" id="K9">&lt;s:data id="_0" f:Name="AmortizationsExtra" f:Labels="{Collection {Text 'Amort. extra.'}, {Text 'Variations dues aux amortissement extraordinaire'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.FinalState" id="KA">&lt;s:data id="_0" f:Name="FinalState" f:Labels="{Collection {Text 'Etat \[0\]'}, {Text 'Etat final le \[0\]'}}" /&gt;</data>
+  <data name="Typ.MCH2Summary.Column" id="K">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="MCH2Summary.Column" f:_1.SystemType="E:Epsitec.Cresus.Assets.Server.DataFillers.MCH2SummaryTreeTableFiller+Column, Assets.Server.DataFillers" f:_2.EnumValues="{Collection {Text '0 [KUK1001]'}, {Text '1 [KUK2001]'}, {Text '2 [KUK3001]'}, {Text '3 [KUK4001]'}, {Text '4 [KUK5001]'}, {Text '5 [KUK6001]'}, {Text '6 [KUK7001]'}, {Text '7 [KUK8001]'}, {Text '8 [KUK9001]'}, {Text '9 [KUKA001]'}}" /&gt;</data>
 </bundle>

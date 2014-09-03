@@ -45,8 +45,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryDate,  TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth, "Date", "Date de l'événement"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryGlyph, TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, "",    "Icône de l'événement"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryDate,  TreeTableColumnType.Date,  HistoryTreeTableFiller.DateColumnWidth,  Res.Strings.HistoryTreeTableFiller.Date.Text.ToString (), Res.Strings.HistoryTreeTableFiller.Date.Tooltip.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.HistoryGlyph, TreeTableColumnType.Glyph, HistoryTreeTableFiller.GlyphColumnWidth, "",                                                       Res.Strings.HistoryTreeTableFiller.Glyph.Tooltip.ToString ()));
 
 				switch (this.accessor.GetFieldType (this.field))
 				{
@@ -54,47 +54,47 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						switch (Format.GetFieldFormat (this.field))
 						{
 							case DecimalFormat.Rate:
-								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Rate, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Rate, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 								break;
 
 							case DecimalFormat.Amount:
-								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Amount, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Amount, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 								break;
 
 							default:
-								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Decimal, this.ValueColumnWidth, "Valeur"));
+								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Decimal, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 								break;
 						}
 						break;
 
 					case FieldType.Date:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Date, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Date, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.Int:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Int, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Int, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.ComputedAmount:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.DetailedComputedAmount, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.AmortizedAmount:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.DetailedAmortizedAmount, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.DetailedAmortizedAmount, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.GuidGroup:
 					case FieldType.GuidPerson:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.GuidRatio:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 
 					case FieldType.Account:
 					default:
-						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, "Valeur"));
+						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
 				}
 

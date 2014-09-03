@@ -40,21 +40,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,             TreeTableColumnType.String, 180, "Catégorie"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Number,           TreeTableColumnType.String,  50, "N°"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate, TreeTableColumnType.Rate,    80, "Taux"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType, TreeTableColumnType.String,  80, "Type"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,      TreeTableColumnType.String, 100, "Périodicité"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,          TreeTableColumnType.String, 100, "Prorata"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Round,            TreeTableColumnType.Amount, 100, "Arrondi"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,    TreeTableColumnType.Amount, 120, "Valeur résiduelle"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,             TreeTableColumnType.String, 180, Res.Strings.CategoriesTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,           TreeTableColumnType.String,  50, Res.Strings.CategoriesTreeTableFiller.Number.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate, TreeTableColumnType.Rate,    80, Res.Strings.CategoriesTreeTableFiller.AmortizationRate.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType, TreeTableColumnType.String,  80, Res.Strings.CategoriesTreeTableFiller.AmortizationType.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,      TreeTableColumnType.String, 100, Res.Strings.CategoriesTreeTableFiller.Periodicity.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,          TreeTableColumnType.String, 100, Res.Strings.CategoriesTreeTableFiller.Prorata.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Round,            TreeTableColumnType.Amount, 100, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,    TreeTableColumnType.Amount, 120, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account1,         TreeTableColumnType.String, 150, "Contrepartie achat"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account2,         TreeTableColumnType.String, 150, "Contrepartie vente"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account3,         TreeTableColumnType.String, 150, "Compte d'immob."));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account4,         TreeTableColumnType.String, 150, "Compte d'amort."));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account5,         TreeTableColumnType.String, 150, "Charge d'amort."));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account6,         TreeTableColumnType.String, 150, "Compte réévaluation"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account1,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account1.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account2,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account2.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account3,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account3.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account4,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account4.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account5,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account5.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account6,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account6.ToString ()));
 
 				return columns.ToArray ();
 			}

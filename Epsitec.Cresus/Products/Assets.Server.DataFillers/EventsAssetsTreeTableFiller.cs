@@ -131,9 +131,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return new UserField ("Date", ObjectField.EventDate,  FieldType.String, false,  70, null, null, null, 0);
-				yield return new UserField ("",     ObjectField.EventGlyph, FieldType.String, false,  20, null, null, null, 0);
-				yield return new UserField ("Type", ObjectField.EventType,  FieldType.String, false, 110, null, null, null, 0);
+				yield return new UserField (Res.Strings.EventsAssetsTreeTableFiller.Date.ToString (), ObjectField.EventDate,  FieldType.String, false,  70, null, null, null, 0);
+				yield return new UserField ("",                                                       ObjectField.EventGlyph, FieldType.String, false,  20, null, null, null, 0);
+				yield return new UserField (Res.Strings.EventsAssetsTreeTableFiller.Type.ToString (), ObjectField.EventType,  FieldType.String, false, 110, null, null, null, 0);
 
 				foreach (var userField in AssetsLogic.GetUserFields (this.accessor))
 				{

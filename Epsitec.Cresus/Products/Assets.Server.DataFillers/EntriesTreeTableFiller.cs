@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDate,          TreeTableColumnType.Tree,   100, "Date"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String,  60, "Débit"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String,  60, "Crédit"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryStamp,         TreeTableColumnType.String,  70, "Pièce"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   300, "Libellé"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, "Montant"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDate,          TreeTableColumnType.Tree,   100, Res.Strings.EntriesTreeTableFiller.Date.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String,  60, Res.Strings.EntriesTreeTableFiller.Debit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String,  60, Res.Strings.EntriesTreeTableFiller.Credit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryStamp,         TreeTableColumnType.String,  70, Res.Strings.EntriesTreeTableFiller.Stamp.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   300, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 
 				return columns.ToArray ();

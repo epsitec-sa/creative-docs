@@ -265,80 +265,50 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnName(Column column)
 		{
+			var text = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (column).Values.First ().ToString ();
+
 			switch (column)
 			{
-				case Column.Name:
-					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
-
 				case Column.InitialState:
-					return string.Format ("Etat {0}", this.InitialDate);
-
-				case Column.Inputs:
-					return "Entrées";
-
-				case Column.Reorganizations:
-					return "Réorganisations";
-
-				case Column.Revaluations:
-					return "Réévaluations";
-
-				case Column.Revalorizations:
-					return "Revalorisations";
-
-				case Column.Outputs:
-					return "Sorties";
-
-				case Column.AmortizationsAuto:
-					return "Amort. ord.";
-
-				case Column.AmortizationsExtra:
-					return "Amort. extra.";
+					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
+					text = string.Format (text, this.InitialDate);
+					break;
 
 				case Column.FinalState:
-					return string.Format ("Etat {0}", this.FinalDate);
+					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
+					text = string.Format (text, this.FinalDate);
+					break;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));
+					System.Diagnostics.Debug.Assert (!text.Contains("{0}"));
+					break;
 			}
+
+			return text;
 		}
 
 		private string GetColumnTooltip(Column column)
 		{
+			var text = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (column).Values.Last ().ToString ();
+
 			switch (column)
 			{
-				case Column.Name:
-					return "Catégorie";  // nom de l'objet d'immobilisation, selon MCH2
-
 				case Column.InitialState:
-					return string.Format ("Etat initial le {0}", this.InitialDateTooltip);
-
-				case Column.Inputs:
-					return "Variations dues aux entrées";
-
-				case Column.Reorganizations:
-					return "Variations dues aux réorganisations";
-
-				case Column.Revaluations:
-					return "Valeurs après réévaluations";
-
-				case Column.Revalorizations:
-					return "Valeurs après revalorisations";
-
-				case Column.Outputs:
-					return "Variations dues aux sorties";
-
-				case Column.AmortizationsAuto:
-					return "Variations dues aux amortissements ordinaires";
-
-				case Column.AmortizationsExtra:
-					return "Variations dues aux amortissement extraordinaire";
+					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
+					text = string.Format (text, this.InitialDateTooltip);
+					break;
 
 				case Column.FinalState:
-					return string.Format ("Etat final le {0}", this.FinalDateTooltip);
+					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
+					text = string.Format (text, this.FinalDateTooltip);
+					break;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Unknown Columns {0}", column));
+					System.Diagnostics.Debug.Assert (!text.Contains ("{0}"));
+					break;
 			}
+
+			return text;
 		}
 
 		private string InitialDate
@@ -382,7 +352,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				else
 				{
 					var date = TypeConverters.DateToString (this.DateRange.IncludeFrom.AddDays (-1));
-					return string.Format ("{0} à 23h59", date);  // 31.12.xx à 23h59
+					return string.Format (Res.Strings.MCH2Summary.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
 				}
 			}
 		}
@@ -398,7 +368,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				else
 				{
 					var date = TypeConverters.DateToString (this.DateRange.ExcludeTo.AddDays (-1));
-					return string.Format ("{0} à 23h59", date);  // 31.12.xx à 23h59
+					return string.Format (Res.Strings.MCH2Summary.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
 				}
 			}
 		}
@@ -429,6 +399,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+		[Epsitec.Common.Types.DesignerVisible]
 		private enum Column
 		{
 			Name,
