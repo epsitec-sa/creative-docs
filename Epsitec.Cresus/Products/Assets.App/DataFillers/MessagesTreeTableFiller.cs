@@ -15,20 +15,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public MessagesTreeTableFiller(DataAccessor accessor, INodeGetter<MessageNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
+			this.Title = Res.Strings.DataFillers.MessagesTreeTable.Title.ToString ();
 		}
 
-
-		public string							Title
-		{
-			get
-			{
-				return this.title;
-			}
-			set
-			{
-				this.title = value;
-			}
-		}
 
 		public int								Width
 		{
@@ -65,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, this.width, this.title));
+				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, this.width, this.Title));
 
 				return list.ToArray ();
 			}
@@ -101,7 +90,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private string							title = Res.Strings.DataFillers.MessagesTreeTable.Title.ToString ();
 		private int								width = 300;
 	}
 }

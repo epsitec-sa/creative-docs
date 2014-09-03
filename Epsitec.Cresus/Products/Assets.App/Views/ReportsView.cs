@@ -22,14 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public NavigationTreeTableController	TreeTableController
-		{
-			get
-			{
-				return this.treeTableController;
-			}
-		}
-
 		public AbstractParams					ReportParams
 		{
 			get
