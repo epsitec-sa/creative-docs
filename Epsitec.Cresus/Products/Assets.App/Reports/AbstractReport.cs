@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -32,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual AbstractReportParams			DefaultParams
+		public virtual AbstractReportParams		DefaultParams
 		{
 			get
 			{

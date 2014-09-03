@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override AbstractReportParams			DefaultParams
+		public override AbstractReportParams	DefaultParams
 		{
 			get
 			{

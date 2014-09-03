@@ -4,10 +4,27 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Data
+namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public abstract class AbstractReportParams
+	public abstract class AbstractReportParams : IGuid
 	{
+		public AbstractReportParams()
+		{
+			this.guid = Guid.NewGuid ();
+		}
+
+
+		#region IGuid Members
+		public Guid Guid
+		{
+			get
+			{
+				return this.guid;
+			}
+		}
+		#endregion
+
+
 		public virtual bool StrictlyEquals(AbstractReportParams other)
 		{
 			return false;
@@ -17,5 +34,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return null;
 		}
+
+
+		private readonly Guid					guid;
 	}
 }

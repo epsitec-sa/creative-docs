@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Reports;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.persons       = new GuidList<DataObject> ();
 			this.entries       = new GuidList<DataObject> ();
 			this.rangeAccounts = new Dictionary<DateRange, GuidList<DataObject>> ();
+			this.reports       = new GuidList<AbstractReportParams> ();
 		}
 
 		public GlobalSettings					GlobalSettings
@@ -30,6 +32,14 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return this.globalSettings;
+			}
+		}
+
+		public GuidList<AbstractReportParams>	Reports
+		{
+			get
+			{
+				return this.reports;
 			}
 		}
 
@@ -127,5 +137,6 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidList<DataObject>							persons;
 		private readonly GuidList<DataObject>							entries;
 		private readonly Dictionary<DateRange, GuidList<DataObject>>	rangeAccounts;
+		private readonly GuidList<AbstractReportParams>					reports;
 	}
 }
