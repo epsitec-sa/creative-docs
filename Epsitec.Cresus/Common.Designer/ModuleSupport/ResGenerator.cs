@@ -920,7 +920,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			this.formatter.WriteCodeLine ();
 
 			this.formatter.WriteField (CodeHelper.PrivateStaticReadOnlyFieldAttributes,
-				@"global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""",
+				@"global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundleOrThrow (""",
 				bundleId, @""");");
 			this.formatter.WriteCodeLine ();
 			this.formatter.WriteCodeLine ("#endregion");

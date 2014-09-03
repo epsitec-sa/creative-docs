@@ -676,6 +676,19 @@ namespace Epsitec.Common.Support
 			return this.GetBundle (druid.ToBundleId (), level, culture);
 		}
 
+		public ResourceBundle GetBundleOrThrow(string id)
+		{
+			var bundle = this.GetBundle (id);
+
+			if (bundle == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Bundle '{0}' cannot be found for module {1} (root path is {2}). " +
+																		   "Did you properly mark the resource file as 'Content' and did you include the project in the application?", id, this.DefaultModuleName ?? "<null>", this.DefaultPath ?? "<null>"));
+			}
+
+			return bundle;
+		}
+
 		public ResourceBundle GetBundle(string id)
 		{
 			return this.GetBundle (id, ResourceLevel.Merged, this.culture, 0);
