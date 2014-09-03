@@ -451,4 +451,5 @@
   <data name="AbstractTreeTableColumn.Move.Tooltip" id="K9E">Tirer pour déplacer la colonne</data>
   <data name="AssetsApplication.WindowTitle" id="KAE">Crésus Immobilisations</data>
   <data name="AssetsApplication.DefaultMandat" id="KBE">Exemple</data>
+  <data name="Popup.MCH2SummaryReport.FilterEnable" id="KCE">Seulement ces objets</data>
 </bundle>

@@ -3244,6 +3244,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class MCH2SummaryReport
 				{
+					//	designer:str/JUKCE01
+					public static global::Epsitec.Common.Types.FormattedText FilterEnable
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544780));
+						}
+					}
 					//	designer:str/JUK7401
 					public static global::Epsitec.Common.Types.FormattedText FinalDate
 					{
@@ -7488,6 +7496,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class MCH2SummaryReport
 				{
+					//	designer:str/JUKCE01
+					public static global::Epsitec.Common.Support.Druid FilterEnable
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544780);
+						}
+					}
 					//	designer:str/JUK7401
 					public static global::Epsitec.Common.Support.Druid FinalDate
 					{

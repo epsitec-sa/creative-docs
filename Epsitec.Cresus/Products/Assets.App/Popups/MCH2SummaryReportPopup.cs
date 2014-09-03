@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Seulement ces objets",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.FilterEnable.ToString (),
 			});
 
 			list.Add (new StackedControllerDescription  // 7
