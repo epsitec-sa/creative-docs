@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Captions" type="Caption" culture="fr">
-  <data name="Val.MCH2Summary.Column.Name" id="K1">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Catérorie'}, {Text 'Catégorie'}}" /&gt;</data>
+  <data name="Val.MCH2Summary.Column.Name" id="K1">&lt;s:data id="_0" f:Name="Name" f:Labels="{Collection {Text 'Catérorie'}, {Text 'Catégorie d\'immobilisation'}}" /&gt;</data>
   <data name="Val.MCH2Summary.Column.InitialState" id="K2">&lt;s:data id="_0" f:Name="InitialState" f:Labels="{Collection {Text 'Etat \[0\]'}, {Text 'Etat initial le \[0\]'}}" /&gt;</data>
   <data name="Val.MCH2Summary.Column.Inputs" id="K3">&lt;s:data id="_0" f:Name="Inputs" f:Labels="{Collection {Text 'Entrées'}, {Text 'Variations dues aux entrées'}}" /&gt;</data>
   <data name="Val.MCH2Summary.Column.Reorganizations" id="K4">&lt;s:data id="_0" f:Name="Reorganizations" f:Labels="{Collection {Text 'Réorganisations'}, {Text 'Variations dues aux réorganisations'}}" /&gt;</data>

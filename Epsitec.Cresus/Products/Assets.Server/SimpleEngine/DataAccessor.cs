@@ -89,8 +89,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent)
+		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent, bool addDefaultGroups)
 		{
+			System.Diagnostics.Debug.Assert (baseType == BaseType.Assets || !addDefaultGroups);
+
 			var obj = new DataObject ();
 			this.mandat.GetData (baseType).Add (obj);
 
@@ -115,6 +117,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (baseType == BaseType.Assets)
 			{
 				this.AddMainValue (obj, timestamp, e);
+			}
+
+			//	Ajoute les groupes par défaut.
+			if (baseType == BaseType.Assets && addDefaultGroups)
+			{
+				this.AddDefaultGroups (obj, timestamp, e);
 			}
 
 			return obj.Guid;
@@ -283,6 +291,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			Amortizations.SetAmortizedAmount (e, aa);
+		}
+
+		private void AddDefaultGroups(DataObject obj, Timestamp timestamp, DataEvent e)
+		{
+			//	Ajoute les groupes par défaut. Ils sont définis par le champ booléen
+			//	ObjectField.GroupUsedDuringCreation des objets "groupes".
+			int index = 0;
+
+			foreach (var group in this.mandat.GetData (BaseType.Groups))
+			{
+				var i = ObjectProperties.GetObjectPropertyInt (group, timestamp, ObjectField.GroupUsedDuringCreation);
+				if (i == 1)
+				{
+					var ratio = new GuidRatio (group.Guid, 1.0m);
+					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+index, ratio));
+					index++;
+				}
+			}
 		}
 
 

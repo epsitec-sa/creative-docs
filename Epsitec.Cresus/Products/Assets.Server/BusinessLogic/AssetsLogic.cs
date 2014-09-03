@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, string name, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.
-			var guid = accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
+			var guid = accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty, addDefaultGroups: true);
 			var asset = accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (asset != null);
 
