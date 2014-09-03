@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				else
 				{
 					var date = TypeConverters.DateToString (this.DateRange.IncludeFrom.AddDays (-1));
-					return string.Format (Res.Strings.MCH2Summary.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
+					return string.Format (Res.Strings.MCH2SummaryTreeTableFiller.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
 				}
 			}
 		}
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				else
 				{
 					var date = TypeConverters.DateToString (this.DateRange.ExcludeTo.AddDays (-1));
-					return string.Format (Res.Strings.MCH2Summary.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
+					return string.Format (Res.Strings.MCH2SummaryTreeTableFiller.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
 				}
 			}
 		}

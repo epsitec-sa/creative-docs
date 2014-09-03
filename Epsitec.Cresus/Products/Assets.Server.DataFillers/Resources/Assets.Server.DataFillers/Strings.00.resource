@@ -32,5 +32,21 @@
   <data name="HistoryTreeTableFiller.Date.Tooltip" id="KT">Date de l'événement</data>
   <data name="HistoryTreeTableFiller.Glyph.Tooltip" id="KU">Icône de l'événement</data>
   <data name="HistoryTreeTableFiller.Value" id="KV">Valeur</data>
-  <data name="MCH2Summary.DateOneMinuteToMidnight" id="K01">{0} à 23h59</data>
+  <data name="MCH2SummaryTreeTableFiller.DateOneMinuteToMidnight" id="K01">{0} à 23h59</data>
+  <data name="SingleAccountTreeTableFiller.Number" id="K11">Numéro</data>
+  <data name="SingleAccountTreeTableFiller.Name" id="K21">Compte</data>
+  <data name="SingleCategoriesTreeTableFiller.Name" id="K31">Catégories</data>
+  <data name="SingleCategoriesTreeTableFiller.AmortizationRate" id="K41">Taux</data>
+  <data name="SingleCategoriesTreeTableFiller.AmortizationType" id="K51">Type</data>
+  <data name="SingleGroupsTreeTableFiller.Name" id="K61">Objet</data>
+  <data name="SingleObjectsTreeTableFiller.Name" id="K71">Objet</data>
+  <data name="SinglePersonsTreeTableFiller.Name" id="K81">Contacts</data>
+  <data name="UserFieldsTreeTableFiller.Name" id="K91">Nom</data>
+  <data name="UserFieldsTreeTableFiller.Type" id="KA1">Type</data>
+  <data name="UserFieldsTreeTableFiller.Required" id="KB1">Oblig.</data>
+  <data name="UserFieldsTreeTableFiller.ColumnWidth" id="KC1">Lg colonne</data>
+  <data name="UserFieldsTreeTableFiller.LineWidth" id="KD1">Lg ligne</data>
+  <data name="UserFieldsTreeTableFiller.LineCount" id="KE1">Nb lignes</data>
+  <data name="UserFieldsTreeTableFiller.TopMargin" id="KF1">Marge sup.</data>
+  <data name="UserFieldsTreeTableFiller.SummaryOrder" id="KG1">Ds résumé</data>
 </bundle>

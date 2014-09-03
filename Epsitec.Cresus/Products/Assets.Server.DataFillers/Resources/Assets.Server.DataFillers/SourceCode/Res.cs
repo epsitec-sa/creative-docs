@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 			}
 			
-			public static class MCH2Summary
+			public static class MCH2SummaryTreeTableFiller
 			{
 				//	designer:str/KUK0101
 				public static global::Epsitec.Common.Types.FormattedText DateOneMinuteToMidnight
@@ -419,6 +419,158 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544352));
+					}
+				}
+			}
+			
+			public static class SingleAccountTreeTableFiller
+			{
+				//	designer:str/KUK2101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544354));
+					}
+				}
+				//	designer:str/KUK1101
+				public static global::Epsitec.Common.Types.FormattedText Number
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544353));
+					}
+				}
+			}
+			
+			public static class SingleCategoriesTreeTableFiller
+			{
+				//	designer:str/KUK4101
+				public static global::Epsitec.Common.Types.FormattedText AmortizationRate
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544356));
+					}
+				}
+				//	designer:str/KUK5101
+				public static global::Epsitec.Common.Types.FormattedText AmortizationType
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544357));
+					}
+				}
+				//	designer:str/KUK3101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544355));
+					}
+				}
+			}
+			
+			public static class SingleGroupsTreeTableFiller
+			{
+				//	designer:str/KUK6101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544358));
+					}
+				}
+			}
+			
+			public static class SingleObjectsTreeTableFiller
+			{
+				//	designer:str/KUK7101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544359));
+					}
+				}
+			}
+			
+			public static class SinglePersonsTreeTableFiller
+			{
+				//	designer:str/KUK8101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544360));
+					}
+				}
+			}
+			
+			public static class UserFieldsTreeTableFiller
+			{
+				//	designer:str/KUKC101
+				public static global::Epsitec.Common.Types.FormattedText ColumnWidth
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544364));
+					}
+				}
+				//	designer:str/KUKE101
+				public static global::Epsitec.Common.Types.FormattedText LineCount
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544366));
+					}
+				}
+				//	designer:str/KUKD101
+				public static global::Epsitec.Common.Types.FormattedText LineWidth
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544365));
+					}
+				}
+				//	designer:str/KUK9101
+				public static global::Epsitec.Common.Types.FormattedText Name
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544361));
+					}
+				}
+				//	designer:str/KUKB101
+				public static global::Epsitec.Common.Types.FormattedText Required
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544363));
+					}
+				}
+				//	designer:str/KUKG101
+				public static global::Epsitec.Common.Types.FormattedText SummaryOrder
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544368));
+					}
+				}
+				//	designer:str/KUKF101
+				public static global::Epsitec.Common.Types.FormattedText TopMargin
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544367));
+					}
+				}
+				//	designer:str/KUKA101
+				public static global::Epsitec.Common.Types.FormattedText Type
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544362));
 					}
 				}
 			}
@@ -752,7 +904,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 			}
 			
-			public static class MCH2Summary
+			public static class MCH2SummaryTreeTableFiller
 			{
 				//	designer:str/KUK0101
 				public static global::Epsitec.Common.Support.Druid DateOneMinuteToMidnight
@@ -760,6 +912,158 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544352);
+					}
+				}
+			}
+			
+			public static class SingleAccountTreeTableFiller
+			{
+				//	designer:str/KUK2101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544354);
+					}
+				}
+				//	designer:str/KUK1101
+				public static global::Epsitec.Common.Support.Druid Number
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544353);
+					}
+				}
+			}
+			
+			public static class SingleCategoriesTreeTableFiller
+			{
+				//	designer:str/KUK4101
+				public static global::Epsitec.Common.Support.Druid AmortizationRate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544356);
+					}
+				}
+				//	designer:str/KUK5101
+				public static global::Epsitec.Common.Support.Druid AmortizationType
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544357);
+					}
+				}
+				//	designer:str/KUK3101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544355);
+					}
+				}
+			}
+			
+			public static class SingleGroupsTreeTableFiller
+			{
+				//	designer:str/KUK6101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544358);
+					}
+				}
+			}
+			
+			public static class SingleObjectsTreeTableFiller
+			{
+				//	designer:str/KUK7101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544359);
+					}
+				}
+			}
+			
+			public static class SinglePersonsTreeTableFiller
+			{
+				//	designer:str/KUK8101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544360);
+					}
+				}
+			}
+			
+			public static class UserFieldsTreeTableFiller
+			{
+				//	designer:str/KUKC101
+				public static global::Epsitec.Common.Support.Druid ColumnWidth
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544364);
+					}
+				}
+				//	designer:str/KUKE101
+				public static global::Epsitec.Common.Support.Druid LineCount
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544366);
+					}
+				}
+				//	designer:str/KUKD101
+				public static global::Epsitec.Common.Support.Druid LineWidth
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544365);
+					}
+				}
+				//	designer:str/KUK9101
+				public static global::Epsitec.Common.Support.Druid Name
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544361);
+					}
+				}
+				//	designer:str/KUKB101
+				public static global::Epsitec.Common.Support.Druid Required
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544363);
+					}
+				}
+				//	designer:str/KUKG101
+				public static global::Epsitec.Common.Support.Druid SummaryOrder
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544368);
+					}
+				}
+				//	designer:str/KUKF101
+				public static global::Epsitec.Common.Support.Druid TopMargin
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544367);
+					}
+				}
+				//	designer:str/KUKA101
+				public static global::Epsitec.Common.Support.Druid Type
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544362);
 					}
 				}
 			}

@@ -39,14 +39,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 150, "Nom"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldType,         TreeTableColumnType.String, 100, "Type"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldRequired,     TreeTableColumnType.String,  50, "Oblig."));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldColumnWidth,  TreeTableColumnType.Int,     70, "Lg colonne"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineWidth,    TreeTableColumnType.Int,     70, "Lg ligne"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineCount,    TreeTableColumnType.Int,     70, "Nb lignes"));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldTopMargin,    TreeTableColumnType.Int,     70, "Marge sup."));
-				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldSummaryOrder, TreeTableColumnType.Int,     70, "Ds résumé"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 150, Res.Strings.UserFieldsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldType,         TreeTableColumnType.String, 100, Res.Strings.UserFieldsTreeTableFiller.Type.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldRequired,     TreeTableColumnType.String,  50, Res.Strings.UserFieldsTreeTableFiller.Required.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldColumnWidth,  TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.ColumnWidth.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineWidth,    TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.LineWidth.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldLineCount,    TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.LineCount.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldTopMargin,    TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.TopMargin.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldSummaryOrder, TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.SummaryOrder.ToString ()));
 
 				return columns.ToArray ();
 			}
