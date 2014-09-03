@@ -4,12 +4,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -71,9 +68,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.reportChoiceController = new ReportChoiceController (this.accessor);
 			this.reportChoiceController.CreateUI (this.choiceFrame);
 
-			this.reportChoiceController.ReportSelected += delegate (object sender, ReportType reportType)
+			this.reportChoiceController.ReportSelected += delegate (object sender, AbstractReportParams reportParams)
 			{
-				this.selectedReportType = reportType;
+				this.reportParams = reportParams;
 				this.UpdateUI ();
 			};
 
@@ -179,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnClose()
 		{
 			//	Ferme le rapport.
-			this.selectedReportType = ReportType.Unknown;
+			this.reportParams = null;
 			this.UpdateUI ();
 		}
 
@@ -196,26 +193,28 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
-			switch (this.selectedReportType)
-			{
-				case ReportType.MCH2Summary:
-					this.report = new MCH2SummaryReport (this.accessor, this, this.selectedReportType);
-					break;
+			this.report = ReportParamsHelper.CreateReport (this.accessor, this.reportParams);
 
-				case ReportType.AssetsList:
-					this.report = new AssetsReport (this.accessor, this, this.selectedReportType);
-					break;
-
-				case ReportType.PersonsList:
-					this.report = new PersonsReport (this.accessor, this, this.selectedReportType);
-					break;
-			}
+			//?switch (this.selectedReportType)
+			//?{
+			//?	case ReportType.MCH2Summary:
+			//?		this.report = new MCH2SummaryReport (this.accessor, this, this.selectedReportType);
+			//?		break;
+			//?
+			//?	case ReportType.AssetsList:
+			//?		this.report = new AssetsReport (this.accessor, this, this.selectedReportType);
+			//?		break;
+			//?
+			//?	case ReportType.PersonsList:
+			//?		this.report = new PersonsReport (this.accessor, this, this.selectedReportType);
+			//?		break;
+			//?}
 
 			if (this.report != null)
 			{
 				this.CreateTreeTable ();
 
-				this.ReportParams = this.GetHistoryParams (this.selectedReportType);
+				//?this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged  += this.HandleParamsChanged;
 				this.report.UpdateCommands += this.HandleUpdateCommands;
 			}
@@ -267,23 +266,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private AbstractReportParams GetHistoryParams(ReportType reportType)
-		{
-			//	Retourne le dernier AbstractParams utilisé pour un type de rapport donné.
-			var vs = this.historyViewStates
-				.Where (x => x is ReportsViewState && (x as ReportsViewState).ReportType == reportType)
-				.LastOrDefault () as ReportsViewState;
-
-			if (vs == null)
-			{
-				//	Si on n'a pas trouvé, retourne les paramètres par défaut.
-				return this.report.DefaultParams;
-			}
-			else
-			{
-				return vs.ReportParams;
-			}
-		}
+		//?private AbstractReportParams GetHistoryParams(ReportType reportType)
+		//?{
+		//?	//	Retourne le dernier AbstractParams utilisé pour un type de rapport donné.
+		//?	var vs = this.historyViewStates
+		//?		.Where (x => x is ReportsViewState && (x as ReportsViewState).ReportType == reportType)
+		//?		.LastOrDefault () as ReportsViewState;
+		//?
+		//?	if (vs == null)
+		//?	{
+		//?		//	Si on n'a pas trouvé, retourne les paramètres par défaut.
+		//?		return this.report.DefaultParams;
+		//?	}
+		//?	else
+		//?	{
+		//?		return vs.ReportParams;
+		//?	}
+		//?}
 
 
 		public override AbstractViewState ViewState
@@ -293,7 +292,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new ReportsViewState
 				{
 					ViewType     = ViewType.Reports,
-					ReportType   = this.selectedReportType,
 					ReportParams = this.reportParams,
 				};
 			}
@@ -302,8 +300,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var viewState = value as ReportsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.selectedReportType = viewState.ReportType;
-				this.reportParams       = viewState.ReportParams;
+				this.reportParams = viewState.ReportParams;
 
 				this.UpdateUI ();
 			}
@@ -372,7 +369,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
-		private AbstractReportParams					reportParams;
-		private ReportType						selectedReportType;
+		private AbstractReportParams			reportParams;
+		//?private ReportType						selectedReportType;
 	}
 }

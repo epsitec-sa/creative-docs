@@ -8,6 +8,7 @@ using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -16,8 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class PersonsReport : AbstractReport
 	{
-		public PersonsReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
-			: base (accessor, reportView, reportType)
+		public PersonsReport(DataAccessor accessor, AbstractReportParams reportParams)
+			: base (accessor, reportParams)
 		{
 		}
 

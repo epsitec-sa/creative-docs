@@ -11,5 +11,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public PersonsParams()
 		{
 		}
+
+
+		public override string					Title
+		{
+			get
+			{
+				return "Liste des contacts";
+			}
+		}
 	}
 }

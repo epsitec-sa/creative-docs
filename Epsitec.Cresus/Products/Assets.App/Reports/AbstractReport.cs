@@ -17,11 +17,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractReport
 	{
-		public AbstractReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
+		public AbstractReport(DataAccessor accessor, AbstractReportParams reportParams)
 		{
-			this.accessor   = accessor;
-			this.reportView = reportView;
-			this.reportType = reportType;
+			this.accessor     = accessor;
+			this.reportParams = reportParams;
 		}
 
 		public virtual void Dispose()
@@ -33,21 +32,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public virtual AbstractReportParams		DefaultParams
+		public string							Title
 		{
 			get
 			{
-				return null;
+				return ReportParamsHelper.GetTitle (this.accessor, this.reportParams);
 			}
 		}
-
-		public virtual string					Title
-		{
-			get
-			{
-				return AbstractView.GetViewTitle (this.accessor, ReportsList.GetReportName (this.reportType));
-			}
-		}
+		//?public virtual AbstractReportParams		DefaultParams
+		//?{
+		//?	get
+		//?	{
+		//?		return null;
+		//?	}
+		//?}
+		//?
+		//?public virtual string					Title
+		//?{
+		//?	get
+		//?	{
+		//?		return AbstractView.GetViewTitle (this.accessor, this.reportView.ReportParams.Title);
+		//?		//?return AbstractView.GetViewTitle (this.accessor, ReportsList.GetReportName (this.reportType));
+		//?	}
+		//?}
 
 
 		public virtual void Initialize(NavigationTreeTableController treeTableController)
@@ -180,9 +187,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 	
 		protected readonly DataAccessor			accessor;
-		protected readonly ReportsView			reportView;
-		protected readonly ReportType			reportType;
 
+		protected AbstractReportParams			reportParams;
 		protected NavigationTreeTableController treeTableController;
 		protected ITreeFunctions				nodeGetter;
 		protected int							visibleSelectedRow;

@@ -19,27 +19,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsReport : AbstractReport
 	{
-		public AssetsReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
-			: base (accessor, reportView, reportType)
+		public AssetsReport(DataAccessor accessor, AbstractReportParams reportParams)
+			: base (accessor, reportParams)
 		{
 		}
 
 
-		public override AbstractReportParams	DefaultParams
-		{
-			get
-			{
-				return new AssetsParams ();  // paramètres par défaut
-			}
-		}
-
-		public override string					Title
-		{
-			get
-			{
-				return string.Concat (base.Title, " ", TypeConverters.DateToString (this.Params.Timestamp.Date));
-			}
-		}
+		//?public override AbstractReportParams	DefaultParams
+		//?{
+		//?	get
+		//?	{
+		//?		return new AssetsParams ();  // paramètres par défaut
+		//?	}
+		//?}
+		//?
+		//?public override string					Title
+		//?{
+		//?	get
+		//?	{
+		//?		return string.Concat (base.Title, " ", TypeConverters.DateToString (this.Params.Timestamp.Date));
+		//?	}
+		//?}
 
 
 		public override void Initialize(NavigationTreeTableController treeTableController)
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportView.ReportParams = new AssetsParams
+					this.reportParams = new AssetsParams
 					(
 						new Timestamp (popup.Date.GetValueOrDefault (), 0),
 						popup.GroupGuid,
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.reportView.ReportParams as AssetsParams;
+				return this.reportParams as AssetsParams;
 			}
 		}
 

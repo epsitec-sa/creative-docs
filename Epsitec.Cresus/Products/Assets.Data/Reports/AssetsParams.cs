@@ -22,6 +22,16 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			this.Level     = null;
 		}
 
+
+		public override string					Title
+		{
+			get
+			{
+				return "Liste des objets d'immobilisations";
+			}
+		}
+
+
 		public override bool StrictlyEquals(AbstractReportParams other)
 		{
 			if (other is AssetsParams)

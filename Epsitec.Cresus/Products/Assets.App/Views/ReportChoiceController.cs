@@ -7,8 +7,9 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.NodeGetters;
-using Epsitec.Cresus.Assets.App.Reports;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -21,10 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller = new NavigationTreeTableController ();
 
-			this.nodeGetter = new MessagesNodeGetter ();
-			this.nodeGetter.SetParams (this.MessageNodes);
-
-			this.dataFiller = new MessagesTreeTableFiller (this.accessor, this.nodeGetter)
+			this.nodeGetter = new ReportsNodeGetter (this.Nodes);
+			this.dataFiller = new ReportsTreeTableFiller (this.accessor, this.nodeGetter)
 			{
 				Title = Res.Strings.ReportChoiceController.Title.ToString (),
 				Width = ReportChoiceController.messageWidth - (int) AbstractScroller.DefaultBreadth,
@@ -39,13 +38,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.RowClicked += delegate (object sender, int row, int column)
 			{
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
-
-				int sel = this.visibleSelectedRow;
-				var array = ReportsList.ReportTypes.ToArray ();
-				if (sel >= 0 && sel < array.Length)
-				{
-					this.OnReportSelected (array[sel]);
-				}
+				var node = this.nodeGetter[this.visibleSelectedRow];
+				var reportParams = this.accessor.Mandat.Reports[node.Guid];
+				this.OnReportSelected (reportParams);
 			};
 		}
 
@@ -80,31 +75,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<MessageNode>.FillColumns (this.controller, this.dataFiller, "ReportChoiceController");
+			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller, "ReportChoiceController");
 		}
 
 
-		private IEnumerable<MessageNode> MessageNodes
+		private IEnumerable<Guid> Nodes
 		{
 			get
 			{
-				return ReportsList.ReportTypes.Select (x => new MessageNode (ReportsList.GetReportName (x)));
+				return this.accessor.Mandat.Reports.Select (x => x.Guid);
 			}
 		}
+		//?private IEnumerable<MessageNode> MessageNodes
+		//?{
+		//?	get
+		//?	{
+		//?		return ReportsList.ReportTypes.Select (x => new MessageNode (ReportsList.GetReportName (x)));
+		//?	}
+		//?}
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<MessageNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
 		#region Events handler
-		protected void OnReportSelected(ReportType reportType)
+		protected void OnReportSelected(AbstractReportParams reportParams)
 		{
-			this.ReportSelected.Raise (this, reportType);
+			this.ReportSelected.Raise (this, reportParams);
 		}
 
-		public event EventHandler<ReportType> ReportSelected;
+		public event EventHandler<AbstractReportParams> ReportSelected;
 		#endregion
 
 
@@ -115,8 +117,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
-		private readonly MessagesNodeGetter				nodeGetter;
-		private readonly MessagesTreeTableFiller		dataFiller;
+		private readonly ReportsNodeGetter				nodeGetter;
+		private readonly ReportsTreeTableFiller			dataFiller;
 
 		private int										visibleSelectedRow;
 	}

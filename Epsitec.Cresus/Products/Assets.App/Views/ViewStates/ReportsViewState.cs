@@ -11,7 +11,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
 	public class ReportsViewState : AbstractViewState
 	{
-		public ReportType						ReportType;
 		public AbstractReportParams				ReportParams;
 
 
@@ -23,8 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 				return false;
 			}
 
-			return this.ViewType   == o.ViewType
-				&& this.ReportType == o.ReportType;
+			return this.ViewType   == o.ViewType;
 		}
 
 		public override bool StrictlyEquals(AbstractViewState other)
@@ -35,8 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 				return false;
 			}
 
-			if (this.ViewType   != o.ViewType  ||
-				this.ReportType != o.ReportType)
+			if (this.ViewType != o.ViewType)
 			{
 				return false;
 			}
@@ -58,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			return ReportsList.GetReportName (this.ReportType);
+			return ReportParamsHelper.GetTitle (accessor, this.ReportParams);
 		}
 	}
 }

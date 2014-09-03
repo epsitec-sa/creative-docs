@@ -28,6 +28,16 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			this.Level     = 1;
 		}
 
+
+		public override string					Title
+		{
+			get
+			{
+				return "Tableau des immobilisations MCH2";
+			}
+		}
+
+
 		public override bool StrictlyEquals(AbstractReportParams other)
 		{
 			if (other is MCH2SummaryParams)

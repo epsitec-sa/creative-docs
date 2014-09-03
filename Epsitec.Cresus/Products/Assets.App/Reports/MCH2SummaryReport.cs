@@ -10,7 +10,6 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -19,27 +18,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryReport : AbstractReport
 	{
-		public MCH2SummaryReport(DataAccessor accessor, ReportsView reportView, ReportType reportType)
-			: base (accessor, reportView, reportType)
+		public MCH2SummaryReport(DataAccessor accessor, AbstractReportParams reportParams)
+			: base (accessor, reportParams)
 		{
 		}
 
 
-		public override AbstractReportParams	DefaultParams
-		{
-			get
-			{
-				return new MCH2SummaryParams ();  // paramètres par défaut
-			}
-		}
-
-		public override string					Title
-		{
-			get
-			{
-				return string.Concat (base.Title, " ", this.ParamsTitle);
-			}
-		}
+		//?public override AbstractReportParams	DefaultParams
+		//?{
+		//?	get
+		//?	{
+		//?		return new MCH2SummaryParams ();  // paramètres par défaut
+		//?	}
+		//?}
+		//?
+		//?public override string					Title
+		//?{
+		//?	get
+		//?	{
+		//?		return string.Concat (base.Title, " ", this.ParamsTitle);
+		//?	}
+		//?}
 
 
 		public override void Initialize(NavigationTreeTableController treeTableController)
@@ -73,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportView.ReportParams = popup.MCH2SummaryParams;
+					this.reportParams = popup.MCH2SummaryParams;
 				}
 			};
 		}
@@ -129,29 +128,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private string ParamsTitle
-		{
-			get
-			{
-				var date = this.Params.DateRange.ToNiceString ();
-
-				if (this.Params.FilterGuid.IsEmpty)
-				{
-					return date;
-				}
-				else
-				{
-					var filter = GroupsLogic.GetShortName (this.accessor, this.Params.FilterGuid);
-					return string.Concat (date, " — ", filter);
-				}
-			}
-		}
+		//?private string ParamsTitle
+		//?{
+		//?	get
+		//?	{
+		//?		var date = this.Params.DateRange.ToNiceString ();
+		//?
+		//?		if (this.Params.FilterGuid.IsEmpty)
+		//?		{
+		//?			return date;
+		//?		}
+		//?		else
+		//?		{
+		//?			var filter = GroupsLogic.GetShortName (this.accessor, this.Params.FilterGuid);
+		//?			return string.Concat (date, " — ", filter);
+		//?		}
+		//?	}
+		//?}
 
 		private MCH2SummaryParams Params
 		{
 			get
 			{
-				return this.reportView.ReportParams as MCH2SummaryParams;
+				return this.reportParams as MCH2SummaryParams;
 			}
 		}
 

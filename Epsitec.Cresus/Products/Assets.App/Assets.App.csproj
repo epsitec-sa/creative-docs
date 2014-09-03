@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="DataFillers\ReportsTreeTableFiller.cs" />
     <Compile Include="DataFillers\MessagesTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Import\AccountsImportReport.cs" />
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
+    <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
     <Compile Include="NodeGetters\MessagesNodeGetter.cs" />
     <Compile Include="NodeGetters\MessageNode.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Popups\ExportInstructionsPopup.cs" />
     <Compile Include="Popups\StackedControllers\ComboStackedController.cs" />
     <Compile Include="Popups\StackedControllers\LabelStackedController.cs" />
+    <Compile Include="Reports\ReportParamsHelper.cs" />
     <Compile Include="Reports\ReportsList.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
