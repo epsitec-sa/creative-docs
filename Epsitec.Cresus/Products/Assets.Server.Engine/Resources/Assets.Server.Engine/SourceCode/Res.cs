@@ -19,6 +19,14 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
+			//	designer:str/LUK0001
+			public static global::Epsitec.Common.Types.FormattedText Copyright
+			{
+				get
+				{
+					return global::Epsitec.Cresus.Assets.Server.Engine.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544320));
+				}
+			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -62,6 +70,14 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		
 		public static class StringIds
 		{
+			//	designer:str/LUK0001
+			public static global::Epsitec.Common.Support.Druid Copyright
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (335544320);
+				}
+			}
 		}
 		
 		static Res()
