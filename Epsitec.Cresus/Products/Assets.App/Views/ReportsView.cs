@@ -289,8 +289,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool insideFavorites    = this.HasParamsInsideFavorites;
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,         this.HasParams);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportAddFavorite,    this.report != null && !insideFavorites);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportRemoveFavorite, this.report != null &&  insideFavorites);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportAddFavorite,    this.HasParams && this.report != null && !insideFavorites);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportRemoveFavorite, this.HasParams && this.report != null &&  insideFavorites);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,         this.report != null);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,           isCompactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne,           isCompactEnable);
