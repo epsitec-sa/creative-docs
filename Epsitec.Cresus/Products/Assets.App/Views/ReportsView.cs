@@ -359,7 +359,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.report != null
-					&& this.report.ReportParams != null
 					&& this.report.ReportParams.ChangePeriod (1) != null;
 			}
 		}
@@ -369,7 +368,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.report != null
-					&& this.report.ReportParams != null
 					&& this.report.ReportParams.HasParams;
 			}
 		}

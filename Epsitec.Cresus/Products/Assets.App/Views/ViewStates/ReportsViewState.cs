@@ -13,17 +13,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public AbstractReportParams				ReportParams;
 
 
-		public override bool ApproximatelyEquals(AbstractViewState other)
-		{
-			var o = other as ReportsViewState;
-			if (o == null)
-			{
-				return false;
-			}
-
-			return this.ViewType == o.ViewType;
-		}
-
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as ReportsViewState;

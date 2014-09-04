@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		private const int TypeColumnWidth =  32;
 		private const int PageColumnWidth = 100;
 		private const int DateColumnWidth =  70;
-		private const int DescColumnWidth = 250;
+		private const int DescColumnWidth = 500;
 
 		public const int TotalWidth = LastViewsTreeTableFiller.PinColumnWidth
 									+ LastViewsTreeTableFiller.TypeColumnWidth
