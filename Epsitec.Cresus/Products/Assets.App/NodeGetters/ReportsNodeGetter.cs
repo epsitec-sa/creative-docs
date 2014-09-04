@@ -3,15 +3,20 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	public class ReportsNodeGetter : INodeGetter<GuidNode>  // outputNodes
 	{
-		public ReportsNodeGetter(IEnumerable<Guid> inputGuids)
+		public ReportsNodeGetter(DataAccessor accessor, IEnumerable<Guid> inputGuids)
 		{
+			this.accessor   = accessor;
 			this.inputGuids = inputGuids.ToArray ();
+
+			this.Update ();
 		}
 
 
@@ -19,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		{
 			get
 			{
-				return this.inputGuids.Length;
+				return this.outputGuids.Length;
 			}
 		}
 
@@ -27,9 +32,9 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.inputGuids.Length)
+				if (index >= 0 && index < this.outputGuids.Length)
 				{
-					var guid = this.inputGuids[index];
+					var guid = this.outputGuids[index];
 					return new GuidNode (guid);
 				}
 				else
@@ -40,6 +45,29 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		}
 
 
-		private readonly Guid[] inputGuids;
+		private void Update()
+		{
+			this.outputGuids = this.inputGuids.OrderBy (x => this.GetNodeDescription (x)).ToArray ();
+		}
+
+		private string GetNodeDescription(Guid reportGuid)
+		{
+			var report = this.accessor.Mandat.Reports[reportGuid];
+
+			if (report == null)
+			{
+				return "?";
+			}
+			else
+			{
+				return ReportParamsHelper.GetTitle (this.accessor, report);
+			}
+		}
+
+
+		private readonly DataAccessor			accessor;
+		private readonly Guid[]					inputGuids;
+
+		private Guid[]							outputGuids;
 	}
 }

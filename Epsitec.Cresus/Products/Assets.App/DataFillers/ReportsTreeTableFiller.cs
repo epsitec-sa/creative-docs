@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 				var reportParams = this.accessor.Mandat.Reports[node.Guid];
-				string desc = ReportParamsHelper.GetTitle(this.accessor, reportParams);
+				string desc = ReportParamsHelper.GetTitle (this.accessor, reportParams);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
