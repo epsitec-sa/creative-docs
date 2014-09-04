@@ -3659,6 +3659,14 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544783));
 					}
 				}
+				//	designer:str/JUKIE01
+				public static global::Epsitec.Common.Types.FormattedText Specific
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544786));
+					}
+				}
 			}
 			
 			public static class StateAtController
@@ -7953,6 +7961,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544783);
+					}
+				}
+				//	designer:str/JUKIE01
+				public static global::Epsitec.Common.Support.Druid Specific
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544786);
 					}
 				}
 			}

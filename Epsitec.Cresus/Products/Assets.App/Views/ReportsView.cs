@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,         this.HasParams);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportAddFavorite,    this.HasParams && this.report != null && !insideFavorites);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportRemoveFavorite, this.HasParams && this.report != null &&  insideFavorites);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportRemoveFavorite, this.HasParams && this.report != null &&  insideFavorites && !this.IsLastParamsType);
 			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,         this.report != null);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,           isCompactEnable);
 			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne,           isCompactEnable);
@@ -303,6 +303,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private bool HasParamsInsideFavorites
 		{
+			//	Retourne true si les paramètres en cours sont contenus dans les favoris.
 			get
 			{
 				if (this.report == null)
@@ -314,6 +315,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return this.accessor.Mandat.Reports
 						.Where (x => x.StrictlyEquals (this.report.ReportParams))
 						.Any ();
+				}
+			}
+		}
+
+		private bool IsLastParamsType
+		{
+			//	Retourne true si les paramètres en cours sont les derniers de ce type.
+			//	Il doit toujours exister au moins un rapport de chaque type.
+			get
+			{
+				if (this.report == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.accessor.Mandat.Reports
+						.Where (x => x.GetType () == this.report.ReportParams.GetType ())
+						.Count () <= 1;
 				}
 			}
 		}

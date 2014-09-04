@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -10,9 +11,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.DataFillers
 {
-	public class ReportsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
+	public class ReportsTreeTableFiller : AbstractTreeTableFiller<ReportNode>
 	{
-		public ReportsTreeTableFiller(DataAccessor accessor, INodeGetter<GuidNode> nodeGetter)
+		public ReportsTreeTableFiller(DataAccessor accessor, INodeGetter<ReportNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 			this.Title = Res.Strings.DataFillers.MessagesTreeTable.Title.ToString ();
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, this.width, this.Title));
+				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.Tree, this.width, this.Title));
 
 				return list.ToArray ();
 			}
@@ -72,12 +73,28 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				}
 
 				var node = this.nodeGetter[firstRow+i];
-				var reportParams = this.accessor.Mandat.Reports[node.Guid];
-				string desc = ReportParamsHelper.GetTitle (this.accessor, reportParams);
+
+				NodeType nodeType;
+				int level;
+				string desc;
+
+				if (node.IsTitle)
+				{
+					nodeType = NodeType.Expanded;
+					level = 0;
+					desc = node.Title;
+				}
+				else
+				{
+					nodeType = NodeType.Final;
+					level = 1;
+					var reportParams = this.accessor.Mandat.Reports[node.Guid];
+					desc = ReportParamsHelper.GetTitle (this.accessor, reportParams, ReportTitleType.Specific);
+				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellString (desc, cellState);
+				var s1 = new TreeTableCellTree (level, nodeType, desc, cellState);
 
 				c1.AddRow (s1);
 			}

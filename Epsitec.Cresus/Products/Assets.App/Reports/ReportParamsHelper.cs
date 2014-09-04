@@ -40,20 +40,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams)
+		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams, ReportTitleType type)
 		{
 			//	Retourne le titre d'un rapport d'après les paramètres.
 			if (reportParams is MCH2SummaryParams)
 			{
-				return ReportParamsHelper.GetTitle (accessor, reportParams as MCH2SummaryParams);
+				return ReportParamsHelper.GetTitle (accessor, reportParams as MCH2SummaryParams, type);
 			}
 			else if (reportParams is AssetsParams)
 			{
-				return ReportParamsHelper.GetTitle (accessor, reportParams as AssetsParams);
+				return ReportParamsHelper.GetTitle (accessor, reportParams as AssetsParams, type);
 			}
 			else if (reportParams is PersonsParams)
 			{
-				return ReportParamsHelper.GetTitle (accessor, reportParams as PersonsParams);
+				return ReportParamsHelper.GetTitle (accessor, reportParams as PersonsParams, type);
 			}
 			else
 			{
@@ -61,11 +61,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private static string GetTitle(DataAccessor accessor, MCH2SummaryParams reportParams)
+		private static string GetTitle(DataAccessor accessor, MCH2SummaryParams reportParams, ReportTitleType type)
 		{
 			//	Retourne le titre du tableau des immobilisations MCH2. Par exemple:
-			//	"Tableau des immobilisations MCH2 2014 - Catégories MCH2 (1) - Patrimoine administratif
+			//	"Tableau des immobilisations MCH2 2014 - Catégories MCH2 (1) - Patrimoine administratif"
 			var title = Res.Strings.ReportParams.MCH2Summary.ToString ();
+
 			var list = new List<string> ();
 			list.Add (reportParams.DateRange.ToNiceString ());
 
@@ -81,18 +82,49 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (filter);
 			}
 
-			return string.Concat (title, " ", string.Join (" — ", list));
+			var specific = string.Join (" — ", list);
+
+			switch (type)
+			{
+				case ReportTitleType.Title:
+					return title;
+
+				case ReportTitleType.Specific:
+					return specific;
+
+				default:
+					return string.Concat (title, " ", specific);
+			}
 		}
 
-		private static string GetTitle(DataAccessor accessor, AssetsParams reportParams)
+		private static string GetTitle(DataAccessor accessor, AssetsParams reportParams, ReportTitleType type)
 		{
 			var title = Res.Strings.ReportParams.Assets.ToString ();
-			return string.Concat (title, " ", TypeConverters.DateToString (reportParams.Timestamp.Date));
+			var specific = TypeConverters.DateToString (reportParams.Timestamp.Date);
+
+			switch (type)
+			{
+				case ReportTitleType.Title:
+					return title;
+
+				case ReportTitleType.Specific:
+					return specific;
+
+				default:
+					return string.Concat (title, " ", specific);
+			}
 		}
 
-		private static string GetTitle(DataAccessor accessor, PersonsParams reportParams)
+		private static string GetTitle(DataAccessor accessor, PersonsParams reportParams, ReportTitleType type)
 		{
-			return Res.Strings.ReportParams.Persons.ToString ();
+			switch (type)
+			{
+				case ReportTitleType.Specific:
+					return Res.Strings.ReportParams.Specific.ToString ();
+
+				default:
+					return Res.Strings.ReportParams.Persons.ToString ();
+			}
 		}
 	}
 }

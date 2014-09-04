@@ -96,6 +96,7 @@
     <Compile Include="Import\AccountsImportReport.cs" />
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
+    <Compile Include="NodeGetters\ReportNode.cs" />
     <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Popups\ExportInstructionsPopup.cs" />
     <Compile Include="Popups\StackedControllers\ComboStackedController.cs" />
     <Compile Include="Popups\StackedControllers\LabelStackedController.cs" />
+    <Compile Include="Reports\ReportTitleType.cs" />
     <Compile Include="Reports\ReportParamsHelper.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />

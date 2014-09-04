@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
+using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller, "ReportChoiceController");
+			TreeTableFiller<ReportNode>.FillColumns (this.controller, this.dataFiller, "ReportChoiceController");
 		}
 
 
@@ -95,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<ReportNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 

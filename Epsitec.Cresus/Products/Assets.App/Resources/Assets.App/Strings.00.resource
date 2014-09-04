@@ -217,7 +217,7 @@
   <data name="Toolbar.Reports.PrevPeriod" id="KV6">Période précédente</data>
   <data name="Toolbar.Reports.NextPeriod" id="K07">Période suivante</data>
   <data name="Toolbar.Reports.Export" id="K17">Exporter le rapport</data>
-  <data name="Toolbar.Reports.Close" id="K27">Fermer le rapport</data>
+  <data name="Toolbar.Reports.Close" id="K27">Fermer le rapport et retourner à la liste des favoris</data>
   <data name="Toolbar.Timelines.Narrow" id="K37">Affichage étroit</data>
   <data name="Toolbar.Timelines.Wide" id="K47">Affichage large</data>
   <data name="Toolbar.Timelines.First" id="K57">Retourner sur le premier événement</data>
@@ -432,7 +432,7 @@
   <data name="ObjectSummaryController.Info.NoEvent" id="KMD">Il n'y a pas d'événement à cette date.</data>
   <data name="ObjectSummaryController.Info.ShowAt" id="KND">Le tableau ci-dessous montre l'état en date du {0} :</data>
   <data name="ObjectSummaryController.Info.ShowFinal" id="KOD">Le tableau ci-dessous montre l'état final de l'objet :</data>
-  <data name="ReportChoiceController.Title" id="KPD">Liste des rapports disponibles :</data>
+  <data name="ReportChoiceController.Title" id="KPD">Rapports favoris :</data>
   <data name="StateAtController.Date" id="KQD">Etat au {0}</data>
   <data name="StateAtController.Final" id="KRD">Etat final</data>
   <data name="TimelinesArrayController.New" id="KSD">Nouvel objet d'immobilisation</data>
@@ -455,6 +455,7 @@
   <data name="ReportParams.MCH2Summary" id="KDE">Tableau des immobilisations MCH2</data>
   <data name="ReportParams.Assets" id="KEE">Liste des objets d'immobilisations</data>
   <data name="ReportParams.Persons" id="KFE">Liste des contacts</data>
-  <data name="Toolbar.Reports.AddFavorite" id="KGE">Ajoute le rapport à la liste des favoris</data>
-  <data name="Toolbar.Reports.RemoveFavorite" id="KHE">Supprime le rapport de la liste des favoris</data>
+  <data name="Toolbar.Reports.AddFavorite" id="KGE">Ajouter le rapport à la liste des favoris</data>
+  <data name="Toolbar.Reports.RemoveFavorite" id="KHE">Supprimer le rapport de la liste des favoris</data>
+  <data name="ReportParams.Specific" id="KIE">Standard</data>
 </bundle>

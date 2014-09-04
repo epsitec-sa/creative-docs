@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return ReportParamsHelper.GetTitle (this.accessor, this.reportParams);
+				return ReportParamsHelper.GetTitle (this.accessor, this.reportParams, ReportTitleType.Full);
 			}
 		}
 

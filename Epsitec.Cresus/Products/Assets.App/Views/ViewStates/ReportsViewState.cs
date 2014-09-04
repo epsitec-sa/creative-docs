@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		protected override string GetDescription(DataAccessor accessor)
 		{
-			return ReportParamsHelper.GetTitle (accessor, this.ReportParams);
+			return ReportParamsHelper.GetTitle (accessor, this.ReportParams, ReportTitleType.Full);
 		}
 	}
 }

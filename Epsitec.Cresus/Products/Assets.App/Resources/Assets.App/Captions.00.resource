@@ -93,7 +93,7 @@
   <data name="Val.ViewTypeKind.Categories" id="KV2">&lt;s:data id="_0" f:Name="Categories" f:Labels="{Collection {Text 'Catégories d\'immobilisations'}}" /&gt;</data>
   <data name="Val.ViewTypeKind.Groups" id="K03">&lt;s:data id="_0" f:Name="Groups" f:Labels="{Collection {Text 'Groupes'}}" /&gt;</data>
   <data name="Val.ViewTypeKind.Persons" id="K13">&lt;s:data id="_0" f:Name="Persons" f:Labels="{Collection {Text 'Contacts'}}" /&gt;</data>
-  <data name="Val.ViewTypeKind.Reports" id="K23">&lt;s:data id="_0" f:Name="Reports" f:Labels="{Collection {Text 'Rapports et statistiques'}}" /&gt;</data>
+  <data name="Val.ViewTypeKind.Reports" id="K23">&lt;s:data id="_0" f:Name="Reports" f:Labels="{Collection {Text 'Rapports'}}" /&gt;</data>
   <data name="Val.ViewTypeKind.Warnings" id="K33">&lt;s:data id="_0" f:Name="Warnings" f:Labels="{Collection {Text 'Avertissements'}}" /&gt;</data>
   <data name="Val.ViewTypeKind.AssetsSettings" id="K43">&lt;s:data id="_0" f:Name="AssetsSettings" f:Labels="{Collection {Text 'Champs des objets d\'immobilisations'}}" /&gt;</data>
   <data name="Val.ViewTypeKind.PersonsSettings" id="K53">&lt;s:data id="_0" f:Name="PersonsSettings" f:Labels="{Collection {Text 'Champs des contacts'}}" /&gt;</data>
