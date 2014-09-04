@@ -24,23 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		//?public override AbstractReportParams	DefaultParams
-		//?{
-		//?	get
-		//?	{
-		//?		return new AssetsParams ();  // paramètres par défaut
-		//?	}
-		//?}
-		//?
-		//?public override string					Title
-		//?{
-		//?	get
-		//?	{
-		//?		return string.Concat (base.Title, " ", TypeConverters.DateToString (this.Params.Timestamp.Date));
-		//?	}
-		//?}
-
-
 		public override void Initialize(NavigationTreeTableController treeTableController)
 		{
 			this.treeTableController = treeTableController;

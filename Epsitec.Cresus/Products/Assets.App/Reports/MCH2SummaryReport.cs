@@ -24,23 +24,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		//?public override AbstractReportParams	DefaultParams
-		//?{
-		//?	get
-		//?	{
-		//?		return new MCH2SummaryParams ();  // paramètres par défaut
-		//?	}
-		//?}
-		//?
-		//?public override string					Title
-		//?{
-		//?	get
-		//?	{
-		//?		return string.Concat (base.Title, " ", this.ParamsTitle);
-		//?	}
-		//?}
-
-
 		public override void Initialize(NavigationTreeTableController treeTableController)
 		{
 			this.treeTableController = treeTableController;
@@ -128,24 +111,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			TreeTableFiller<SortableCumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
 		}
 
-
-		//?private string ParamsTitle
-		//?{
-		//?	get
-		//?	{
-		//?		var date = this.Params.DateRange.ToNiceString ();
-		//?
-		//?		if (this.Params.FilterGuid.IsEmpty)
-		//?		{
-		//?			return date;
-		//?		}
-		//?		else
-		//?		{
-		//?			var filter = GroupsLogic.GetShortName (this.accessor, this.Params.FilterGuid);
-		//?			return string.Concat (date, " — ", filter);
-		//?		}
-		//?	}
-		//?}
 
 		private MCH2SummaryParams Params
 		{

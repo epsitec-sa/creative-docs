@@ -73,7 +73,6 @@
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
     <Compile Include="DataFillers\ReportsTreeTableFiller.cs" />
-    <Compile Include="DataFillers\MessagesTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
@@ -98,8 +97,6 @@
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
     <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
-    <Compile Include="NodeGetters\MessagesNodeGetter.cs" />
-    <Compile Include="NodeGetters\MessageNode.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
@@ -141,7 +138,6 @@
     <Compile Include="Popups\StackedControllers\ComboStackedController.cs" />
     <Compile Include="Popups\StackedControllers\LabelStackedController.cs" />
     <Compile Include="Reports\ReportParamsHelper.cs" />
-    <Compile Include="Reports\ReportsList.cs" />
     <Compile Include="Popups\MCH2SummaryReportPopup.cs" />
     <Compile Include="Popups\CreateCategoryPopup.cs" />
     <Compile Include="Popups\CreateGroupPopup.cs" />
@@ -176,7 +172,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\AbstractReport.cs" />
     <Compile Include="Reports\AssetsReport.cs" />
-    <Compile Include="Reports\ReportType.cs" />
     <Compile Include="Reports\MCH2SummaryReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
     <Compile Include="Resources\Assets.App\SourceCode\Res.cs" />

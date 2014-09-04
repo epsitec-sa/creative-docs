@@ -49,22 +49,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return ReportParamsHelper.GetTitle (this.accessor, this.reportParams);
 			}
 		}
-		//?public virtual AbstractReportParams		DefaultParams
-		//?{
-		//?	get
-		//?	{
-		//?		return null;
-		//?	}
-		//?}
-		//?
-		//?public virtual string					Title
-		//?{
-		//?	get
-		//?	{
-		//?		return AbstractView.GetViewTitle (this.accessor, this.reportView.ReportParams.Title);
-		//?		//?return AbstractView.GetViewTitle (this.accessor, ReportsList.GetReportName (this.reportType));
-		//?	}
-		//?}
 
 
 		public virtual void Initialize(NavigationTreeTableController treeTableController)

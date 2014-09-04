@@ -86,13 +86,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return this.accessor.Mandat.Reports.Select (x => x.Guid);
 			}
 		}
-		//?private IEnumerable<MessageNode> MessageNodes
-		//?{
-		//?	get
-		//?	{
-		//?		return ReportsList.ReportTypes.Select (x => new MessageNode (ReportsList.GetReportName (x)));
-		//?	}
-		//?}
 
 		private void UpdateController(bool crop = true)
 		{

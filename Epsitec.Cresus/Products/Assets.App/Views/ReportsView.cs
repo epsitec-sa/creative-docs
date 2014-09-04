@@ -59,7 +59,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			//?this.UpdateReport ();
 			this.OnViewStateChanged (this.ViewState);
 		}
 
@@ -180,26 +179,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.report = ReportParamsHelper.CreateReport (this.accessor, reportParams);
 
-			//?switch (this.selectedReportType)
-			//?{
-			//?	case ReportType.MCH2Summary:
-			//?		this.report = new MCH2SummaryReport (this.accessor, this, this.selectedReportType);
-			//?		break;
-			//?
-			//?	case ReportType.AssetsList:
-			//?		this.report = new AssetsReport (this.accessor, this, this.selectedReportType);
-			//?		break;
-			//?
-			//?	case ReportType.PersonsList:
-			//?		this.report = new PersonsReport (this.accessor, this, this.selectedReportType);
-			//?		break;
-			//?}
-
 			if (this.report != null)
 			{
 				this.CreateTreeTable ();
 
-				//?this.ReportParams = this.GetHistoryParams (this.selectedReportType);
 				this.report.ParamsChanged  += this.HandleParamsChanged;
 				this.report.UpdateCommands += this.HandleUpdateCommands;
 			}
@@ -250,25 +233,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.UpdateToolbars ();
 		}
-
-
-		//?private AbstractReportParams GetHistoryParams(ReportType reportType)
-		//?{
-		//?	//	Retourne le dernier AbstractParams utilisé pour un type de rapport donné.
-		//?	var vs = this.historyViewStates
-		//?		.Where (x => x is ReportsViewState && (x as ReportsViewState).ReportType == reportType)
-		//?		.LastOrDefault () as ReportsViewState;
-		//?
-		//?	if (vs == null)
-		//?	{
-		//?		//	Si on n'a pas trouvé, retourne les paramètres par défaut.
-		//?		return this.report.DefaultParams;
-		//?	}
-		//?	else
-		//?	{
-		//?		return vs.ReportParams;
-		//?	}
-		//?}
 
 
 		public override AbstractViewState ViewState
@@ -354,7 +318,5 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
-		//?private AbstractReportParams			reportParams;
-		//?private ReportType						selectedReportType;
 	}
 }
