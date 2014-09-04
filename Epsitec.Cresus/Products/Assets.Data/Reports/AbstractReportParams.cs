@@ -25,9 +25,17 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		#endregion
 
 
-		public abstract string Title
+		public abstract string					Title
 		{
 			get;
+		}
+
+		public virtual bool						HasParams
+		{
+			get
+			{
+				return true;
+			}
 		}
 
 

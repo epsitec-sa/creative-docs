@@ -390,7 +390,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		}
 
 
-		protected void AddReports()
+		protected virtual void AddReports()
 		{
 			var dateRange = new DateRange (this.accessor.Mandat.StartDate, this.accessor.Mandat.StartDate.AddYears (1));
 			var timestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);

@@ -13,35 +13,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public static class ReportParamsHelper
 	{
-		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams)
+		public static AbstractReport CreateReport(DataAccessor accessor, AbstractReportParams reportParams)
 		{
-			//	Retourne le titre d'un rapport.
+			//	Crée le rapport correspondant aux paramètres.
+			AbstractReport report = null;
+
 			if (reportParams is MCH2SummaryParams)
 			{
-				var p = reportParams as MCH2SummaryParams;
-				var title = Res.Strings.ReportParams.MCH2Summary.ToString ();
-				var date = p.DateRange.ToNiceString ();
-
-				if (p.FilterGuid.IsEmpty)
-				{
-					return string.Concat (title, " ", date);
-				}
-				else
-				{
-					var filter = GroupsLogic.GetShortName (accessor, p.FilterGuid);
-					return string.Concat (title, " ", date, " — ", filter);
-				}
+				report = new MCH2SummaryReport (accessor);
 			}
 			else if (reportParams is AssetsParams)
 			{
-				var p = reportParams as AssetsParams;
-				var title = Res.Strings.ReportParams.Assets.ToString ();
-				return string.Concat (title, " ", TypeConverters.DateToString (p.Timestamp.Date));
+				report = new AssetsReport (accessor);
 			}
 			else if (reportParams is PersonsParams)
 			{
-				var title = Res.Strings.ReportParams.Persons.ToString ();
-				return title;
+				report = new PersonsReport (accessor);
+			}
+
+			if (report != null)
+			{
+				report.ReportParams = reportParams;
+			}
+
+			return report;
+		}
+
+
+		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams)
+		{
+			//	Retourne le titre d'un rapport d'après les paramètres.
+			if (reportParams is MCH2SummaryParams)
+			{
+				return ReportParamsHelper.GetTitle (accessor, reportParams as MCH2SummaryParams);
+			}
+			else if (reportParams is AssetsParams)
+			{
+				return ReportParamsHelper.GetTitle (accessor, reportParams as AssetsParams);
+			}
+			else if (reportParams is PersonsParams)
+			{
+				return ReportParamsHelper.GetTitle (accessor, reportParams as PersonsParams);
 			}
 			else
 			{
@@ -49,25 +61,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-
-		public static AbstractReport CreateReport(DataAccessor accessor, AbstractReportParams reportParams)
+		private static string GetTitle(DataAccessor accessor, MCH2SummaryParams reportParams)
 		{
-			if (reportParams is MCH2SummaryParams)
+			//	Retourne le titre du tableau des immobilisations MCH2. Par exemple:
+			//	"Tableau des immobilisations MCH2 2014 - Catégories MCH2 (1) - Patrimoine administratif
+			var title = Res.Strings.ReportParams.MCH2Summary.ToString ();
+			var list = new List<string> ();
+			list.Add (reportParams.DateRange.ToNiceString ());
+
+			if (!reportParams.RootGuid.IsEmpty)
 			{
-				return new MCH2SummaryReport (accessor, reportParams);
+				var group = GroupsLogic.GetShortName (accessor, reportParams.RootGuid);
+				list.Add (string.Format ("{0} ({1})", group, reportParams.Level));
 			}
-			else if (reportParams is AssetsParams)
+
+			if (!reportParams.FilterGuid.IsEmpty)
 			{
-				return new AssetsReport (accessor, reportParams);
+				var filter = GroupsLogic.GetShortName (accessor, reportParams.FilterGuid);
+				list.Add (filter);
 			}
-			else if (reportParams is PersonsParams)
-			{
-				return new PersonsReport (accessor, reportParams);
-			}
-			else
-			{
-				return null;
-			}
+
+			return string.Concat (title, " ", string.Join (" — ", list));
+		}
+
+		private static string GetTitle(DataAccessor accessor, AssetsParams reportParams)
+		{
+			var title = Res.Strings.ReportParams.Assets.ToString ();
+			return string.Concat (title, " ", TypeConverters.DateToString (reportParams.Timestamp.Date));
+		}
+
+		private static string GetTitle(DataAccessor accessor, PersonsParams reportParams)
+		{
+			return Res.Strings.ReportParams.Persons.ToString ();
 		}
 	}
 }

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -201,6 +202,30 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddCat ("Véhicules", null, "20", 0.20m, AmortizationType.Degressive,
 				Periodicity.Annual, ProrataType.Prorata12,  100.0m, 1.0m,
 				"1000", "1010", "1530", "1530", "6920", "6900");
+		}
+
+
+		protected override void AddReports()
+		{
+			var dateRange = new DateRange (this.accessor.Mandat.StartDate, this.accessor.Mandat.StartDate.AddYears (1));
+			var timestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
+
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, Guid.Empty, 1, Guid.Empty));
+
+			{
+				var group = this.GetGroup ("Catégories MCH2");
+				var filter = this.GetGroup ("Patrimoine administratif");
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, group.Guid, 1, filter.Guid));
+			}
+
+			{
+				var group = this.GetGroup ("Catégories MCH2");
+				var filter = this.GetGroup ("Patrimoine financier");
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, group.Guid, 1, filter.Guid));
+			}
+
+			this.accessor.Mandat.Reports.Add (new AssetsParams (timestamp, Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new PersonsParams ());
 		}
 	}
 }

@@ -8,7 +8,6 @@ using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -19,8 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsReport : AbstractReport
 	{
-		public AssetsReport(DataAccessor accessor, AbstractReportParams reportParams)
-			: base (accessor, reportParams)
+		public AssetsReport(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 
@@ -81,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						popup.GroupGuid,
 						popup.Level
 					);
+					this.UpdateParams ();
 				}
 			};
 		}

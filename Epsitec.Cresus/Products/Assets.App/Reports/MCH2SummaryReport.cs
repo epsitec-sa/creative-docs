@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MCH2SummaryReport : AbstractReport
 	{
-		public MCH2SummaryReport(DataAccessor accessor, AbstractReportParams reportParams)
-			: base (accessor, reportParams)
+		public MCH2SummaryReport(DataAccessor accessor)
+			: base (accessor)
 		{
 		}
 
@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (name == "ok")
 				{
 					this.reportParams = popup.MCH2SummaryParams;
+					this.UpdateParams ();
 				}
 			};
 		}

@@ -21,25 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public AbstractReportParams					ReportParams
-		{
-			get
-			{
-				return this.reportParams;
-			}
-			set
-			{
-				this.reportParams = value;
-
-				if (this.report != null)
-				{
-					this.report.UpdateParams ();
-					this.UpdateTitle ();
-				}
-			}
-		}
-
-
 		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);
@@ -70,16 +51,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.reportChoiceController.ReportSelected += delegate (object sender, AbstractReportParams reportParams)
 			{
-				this.reportParams = reportParams;
-				this.UpdateUI ();
+				this.UpdateUI (reportParams);
 			};
 
-			this.UpdateReport ();
+			this.UpdateReport (null);
 		}
 
 		public override void UpdateUI()
 		{
-			this.UpdateReport ();
+			//?this.UpdateReport ();
+			this.OnViewStateChanged (this.ViewState);
+		}
+
+		private void UpdateUI(AbstractReportParams reportParams)
+		{
+			this.UpdateReport (reportParams);
 			this.OnViewStateChanged (this.ViewState);
 		}
 
@@ -169,19 +155,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnChangePeriod(int direction)
 		{
-			this.ReportParams = this.reportParams.ChangePeriod (direction);
+			this.report.ReportParams = this.report.ReportParams.ChangePeriod (direction);
 			this.report.UpdateParams ();
 		}
 
 		private void OnClose()
 		{
 			//	Ferme le rapport.
-			this.reportParams = null;
-			this.UpdateUI ();
+			this.UpdateUI (null);
 		}
 
 
-		private void UpdateReport()
+		private void UpdateReport(AbstractReportParams reportParams)
 		{
 			if (this.report != null)
 			{
@@ -193,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.report = null;
 			}
 
-			this.report = ReportParamsHelper.CreateReport (this.accessor, this.reportParams);
+			this.report = ReportParamsHelper.CreateReport (this.accessor, reportParams);
 
 			//?switch (this.selectedReportType)
 			//?{
@@ -257,6 +242,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void HandleParamsChanged(object sender)
 		{
+			this.UpdateTitle ();
 			this.OnViewStateChanged (this.ViewState);
 		}
 
@@ -292,7 +278,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new ReportsViewState
 				{
 					ViewType     = ViewType.Reports,
-					ReportParams = this.reportParams,
+					ReportParams = this.report == null ? null : this.report.ReportParams,
 				};
 			}
 			set
@@ -300,9 +286,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var viewState = value as ReportsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.reportParams = viewState.ReportParams;
-
-				this.UpdateUI ();
+				this.UpdateUI (viewState.ReportParams);
 			}
 		}
 
@@ -345,8 +329,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.report != null
-					&& this.reportParams != null
-					&& this.reportParams.ChangePeriod (1) != null;
+					&& this.report.ReportParams != null
+					&& this.report.ReportParams.ChangePeriod (1) != null;
 			}
 		}
 
@@ -355,7 +339,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.report != null
-					&& this.reportParams != null;
+					&& this.report.ReportParams != null
+					&& this.report.ReportParams.HasParams;
 			}
 		}
 
@@ -369,7 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private ReportsToolbar					toolbar;
 		private NavigationTreeTableController	treeTableController;
 		private AbstractReport					report;
-		private AbstractReportParams			reportParams;
+		//?private AbstractReportParams			reportParams;
 		//?private ReportType						selectedReportType;
 	}
 }

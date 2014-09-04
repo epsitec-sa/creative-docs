@@ -8,11 +8,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class PersonsParams : AbstractReportParams
 	{
-		public PersonsParams()
-		{
-		}
-
-
 		public override string					Title
 		{
 			get
@@ -20,5 +15,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				return "Liste des contacts";
 			}
 		}
+
+		public override bool					HasParams
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 	}
 }
