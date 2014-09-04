@@ -78,12 +78,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static string GetViewTypeDescription(ViewTypeKind kind)
 		{
-			return EnumKeyValues.GetEnumKeyValue (kind).Values.Last ().ToString ();
+			if (kind == ViewTypeKind.Unknown)
+			{
+				return null;
+			}
+			else
+			{
+				return EnumKeyValues.GetEnumKeyValue (kind).Values.Last ().ToString ();
+			}
 		}
 
 		public static string GetObjectPageDescription(PageType type)
 		{
-			return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
+			if (type == PageType.Unknown)
+			{
+				return null;
+			}
+			else
+			{
+				return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
+			}
 		}
 	}
 }
