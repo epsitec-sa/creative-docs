@@ -9,23 +9,18 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	public struct ReportNode
 	{
-		public ReportNode(string title)
+		public ReportNode(string description, string sortableDescription, Guid guid)
 		{
-			this.Title = title;
-			this.Guid  = Guid.Empty;
-		}
-
-		public ReportNode(Guid guid)
-		{
-			this.Title = null;
-			this.Guid  = guid;
+			this.Description         = description;
+			this.SortableDescription = sortableDescription;
+			this.Guid                = guid;
 		}
 
 		public bool IsTitle
 		{
 			get
 			{
-				return !string.IsNullOrEmpty (this.Title);
+				return this.Guid.IsEmpty;
 			}
 		}
 
@@ -33,14 +28,16 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.Title)
+				return string.IsNullOrEmpty (this.Description)
+					&& string.IsNullOrEmpty (this.SortableDescription)
 					&& this.Guid.IsEmpty;
 			}
 		}
 
-		public static ReportNode Empty = new ReportNode (null);
+		public static ReportNode Empty = new ReportNode (null, null, Guid.Empty);
 
-		public readonly string				Title;
+		public readonly string				Description;
+		public readonly string				SortableDescription;
 		public readonly Guid				Guid;
 	}
 }

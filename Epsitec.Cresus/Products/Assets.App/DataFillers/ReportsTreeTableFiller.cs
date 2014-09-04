@@ -75,21 +75,20 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var node = this.nodeGetter[firstRow+i];
 
 				NodeType nodeType;
-				int level;
-				string desc;
+				int      level;
+				string   desc;
 
 				if (node.IsTitle)
 				{
-					nodeType = NodeType.Expanded;
-					level = 0;
-					desc = node.Title;
+					nodeType = NodeType.Expanded;  // triangle 'v'
+					level    = 0;
+					desc     = node.Description;
 				}
 				else
 				{
-					nodeType = NodeType.Final;
-					level = 1;
-					var reportParams = this.accessor.Mandat.Reports[node.Guid];
-					desc = ReportParamsHelper.GetTitle (this.accessor, reportParams, ReportTitleType.Specific);
+					nodeType = NodeType.Final;  // pas de triangle
+					level    = 1;
+					desc     = node.Description;
 				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
