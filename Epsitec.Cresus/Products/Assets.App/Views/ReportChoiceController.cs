@@ -22,7 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.controller = new NavigationTreeTableController ();
 
-			this.nodeGetter = new ReportsNodeGetter (this.accessor, this.Nodes);
+			this.nodeGetter = new ReportsNodeGetter (this.accessor);
+			this.Update ();
 			this.dataFiller = new ReportsTreeTableFiller (this.accessor, this.nodeGetter)
 			{
 				Title = Res.Strings.ReportChoiceController.Title.ToString (),
@@ -60,6 +61,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.CreateController (frame);
+		}
+
+		public void Update()
+		{
+			this.nodeGetter.SetParams (this.Nodes);
 		}
 
 		private void CreateController(Widget parent)

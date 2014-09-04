@@ -39,7 +39,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				var o = other as AssetsParams;
 
 				return this.Timestamp == o.Timestamp
-					&& this.RootGuid  == o.RootGuid;
+					&& this.RootGuid  == o.RootGuid
+					&& this.Level     == o.Level;
 			}
 
 			return false;

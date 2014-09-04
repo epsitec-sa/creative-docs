@@ -452,4 +452,9 @@
   <data name="AssetsApplication.WindowTitle" id="KAE">Crésus Immobilisations</data>
   <data name="AssetsApplication.DefaultMandat" id="KBE">Exemple</data>
   <data name="Popup.MCH2SummaryReport.FilterEnable" id="KCE">Seulement ces objets</data>
+  <data name="ReportParams.MCH2Summary" id="KDE">Tableau des immobilisations MCH2</data>
+  <data name="ReportParams.Assets" id="KEE">Liste des objets d'immobilisations</data>
+  <data name="ReportParams.Persons" id="KFE">Liste des contacts</data>
+  <data name="Toolbar.Reports.AddFavorite" id="KGE">Ajoute le rapport à la liste des favoris</data>
+  <data name="Toolbar.Reports.RemoveFavorite" id="KHE">Supprime le rapport de la liste des favoris</data>
 </bundle>

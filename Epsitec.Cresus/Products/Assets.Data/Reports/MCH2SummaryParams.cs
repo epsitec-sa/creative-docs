@@ -23,9 +23,10 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			var i = new System.DateTime (year,   1, 1);  // 1 janvier
 			var f = new System.DateTime (year+1, 1, 1);  // 1 janvier de l'année suivante
 
-			this.DateRange = new DateRange (i, f);
-			this.RootGuid  = Guid.Empty;
-			this.Level     = 1;
+			this.DateRange  = new DateRange (i, f);
+			this.RootGuid   = Guid.Empty;
+			this.Level      = 1;
+			this.FilterGuid = Guid.Empty;
 		}
 
 
@@ -44,8 +45,10 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			{
 				var o = other as MCH2SummaryParams;
 
-				return this.DateRange == o.DateRange
-					&& this.RootGuid  == o.RootGuid;
+				return this.DateRange   == o.DateRange
+					&& this.RootGuid    == o.RootGuid
+					&& this.Level       == o.Level
+					&& this.FilterGuid  == o.FilterGuid;
 			}
 
 			return false;

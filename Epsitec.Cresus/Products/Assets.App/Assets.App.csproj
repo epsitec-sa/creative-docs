@@ -480,6 +480,8 @@
     <EmbeddedResource Include="Images\TreeTable.Close.icon" />
     <EmbeddedResource Include="Images\Report.PrevPeriod.icon" />
     <EmbeddedResource Include="Images\Report.NextPeriod.icon" />
+    <EmbeddedResource Include="Images\Report.RemoveFavorite.icon" />
+    <EmbeddedResource Include="Images\Report.AddFavorite.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

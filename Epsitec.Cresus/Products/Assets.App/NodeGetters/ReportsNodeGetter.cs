@@ -11,11 +11,14 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	public class ReportsNodeGetter : INodeGetter<GuidNode>  // outputNodes
 	{
-		public ReportsNodeGetter(DataAccessor accessor, IEnumerable<Guid> inputGuids)
+		public ReportsNodeGetter(DataAccessor accessor)
 		{
 			this.accessor   = accessor;
-			this.inputGuids = inputGuids.ToArray ();
+		}
 
+		public void SetParams(IEnumerable<Guid> inputGuids)
+		{
+			this.inputGuids = inputGuids.ToArray ();
 			this.Update ();
 		}
 
@@ -66,8 +69,8 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 
 
 		private readonly DataAccessor			accessor;
-		private readonly Guid[]					inputGuids;
 
+		private Guid[]							inputGuids;
 		private Guid[]							outputGuids;
 	}
 }

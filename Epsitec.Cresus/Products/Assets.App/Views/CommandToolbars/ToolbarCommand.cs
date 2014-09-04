@@ -55,6 +55,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		ReportExport,
 		ReportPrevPeriod,
 		ReportNextPeriod,
+		ReportAddFavorite,
+		ReportRemoveFavorite,
 		ReportClose,
 
 		NavigateBack,

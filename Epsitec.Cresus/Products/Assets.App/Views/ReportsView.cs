@@ -82,6 +82,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnParams ();
 						break;
 
+					case ToolbarCommand.ReportAddFavorite:
+						this.OnAddFavorite ();
+						break;
+
+					case ToolbarCommand.ReportRemoveFavorite:
+						this.OnRemoveFavorite ();
+						break;
+
 					case ToolbarCommand.ReportExport:
 						this.OnExport ();
 						break;
@@ -123,6 +131,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var target = this.toolbar.GetTarget (ToolbarCommand.ReportParams);
 			this.report.ShowParamsPopup (target);
+		}
+
+		private void OnAddFavorite()
+		{
+			this.accessor.Mandat.Reports.Add (this.report.ReportParams);
+
+			this.reportChoiceController.Update ();
+			this.UpdateToolbars ();
+		}
+
+		private void OnRemoveFavorite()
+		{
+			this.accessor.Mandat.Reports.Remove (this.report.ReportParams);
+
+			this.reportChoiceController.Update ();
+			this.UpdateToolbars ();
 		}
 
 		private void OnExport()
@@ -257,19 +281,41 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			this.toolbar.Visibility = (this.report != null);
+
 			bool isCompactEnable    = this.IsCompactEnable;
 			bool isExpandEnable     = this.IsExpandEnable;
 			bool changePeriodEnable = this.ChangePeriodEnable;
+			bool insideFavorites    = this.HasParamsInsideFavorites;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,     this.HasParams);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,     this.report != null);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,       isCompactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne,       isCompactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,        isExpandEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,        isExpandEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportPrevPeriod, changePeriodEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportNextPeriod, changePeriodEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,      this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportParams,         this.HasParams);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportAddFavorite,    this.report != null && !insideFavorites);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportRemoveFavorite, this.report != null &&  insideFavorites);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportExport,         this.report != null);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll,           isCompactEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne,           isCompactEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,            isExpandEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,            isExpandEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportPrevPeriod,     changePeriodEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportNextPeriod,     changePeriodEnable);
+			this.toolbar.SetCommandEnable (ToolbarCommand.ReportClose,          this.report != null);
+		}
+
+		private bool HasParamsInsideFavorites
+		{
+			get
+			{
+				if (this.report == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.accessor.Mandat.Reports
+						.Where (x => x.StrictlyEquals (this.report.ReportParams))
+						.Any ();
+				}
+			}
 		}
 
 		private bool IsCompactEnable

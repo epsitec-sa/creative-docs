@@ -25,6 +25,30 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateCommands ();
 		}
 
+
+		public bool								Visibility
+		{
+			get
+			{
+				if (this.toolbar == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.toolbar.Visibility;
+				}
+			}
+			set
+			{
+				if (this.toolbar != null)
+				{
+					this.toolbar.Visibility = value;
+				}
+			}
+		}
+
+
 		protected abstract void CreateCommands();
 
 		public abstract FrameBox CreateUI(Widget parent);

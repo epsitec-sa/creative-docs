@@ -3633,6 +3633,34 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class ReportParams
+			{
+				//	designer:str/JUKEE01
+				public static global::Epsitec.Common.Types.FormattedText Assets
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544782));
+					}
+				}
+				//	designer:str/JUKDE01
+				public static global::Epsitec.Common.Types.FormattedText MCH2Summary
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544781));
+					}
+				}
+				//	designer:str/JUKFE01
+				public static global::Epsitec.Common.Types.FormattedText Persons
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544783));
+					}
+				}
+			}
+			
 			public static class StateAtController
 			{
 				//	designer:str/JUKQD01
@@ -3911,6 +3939,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class Reports
 				{
+					//	designer:str/JUKGE01
+					public static global::Epsitec.Common.Types.FormattedText AddFavorite
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544784));
+						}
+					}
 					//	designer:str/JUK2701
 					public static global::Epsitec.Common.Types.FormattedText Close
 					{
@@ -3981,6 +4017,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544543));
+						}
+					}
+					//	designer:str/JUKHE01
+					public static global::Epsitec.Common.Types.FormattedText RemoveFavorite
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544785));
 						}
 					}
 				}
@@ -7885,6 +7929,34 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class ReportParams
+			{
+				//	designer:str/JUKEE01
+				public static global::Epsitec.Common.Support.Druid Assets
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544782);
+					}
+				}
+				//	designer:str/JUKDE01
+				public static global::Epsitec.Common.Support.Druid MCH2Summary
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544781);
+					}
+				}
+				//	designer:str/JUKFE01
+				public static global::Epsitec.Common.Support.Druid Persons
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544783);
+					}
+				}
+			}
+			
 			public static class StateAtController
 			{
 				//	designer:str/JUKQD01
@@ -8163,6 +8235,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class Reports
 				{
+					//	designer:str/JUKGE01
+					public static global::Epsitec.Common.Support.Druid AddFavorite
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544784);
+						}
+					}
 					//	designer:str/JUK2701
 					public static global::Epsitec.Common.Support.Druid Close
 					{
@@ -8233,6 +8313,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544543);
+						}
+					}
+					//	designer:str/JUKHE01
+					public static global::Epsitec.Common.Support.Druid RemoveFavorite
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544785);
 						}
 					}
 				}
