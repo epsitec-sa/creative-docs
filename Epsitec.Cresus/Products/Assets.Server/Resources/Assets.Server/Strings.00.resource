@@ -18,4 +18,20 @@
   <data name="DataClipboard.NameDashCopy" id="KF">{0} - copie</data>
   <data name="DataClipboard.NameBracketCopy" id="KG">{0} (copie)</data>
   <data name="DataClipboard.CopyOfName" id="KH">Copie de {0}</data>
+  <data name="Enum.Periodicity.Annual" id="KI">Annuel</data>
+  <data name="Enum.Periodicity.Semestrial" id="KJ">Semestriel</data>
+  <data name="Enum.Periodicity.Trimestrial" id="KK">Trimestriel</data>
+  <data name="Enum.Periodicity.Mensual" id="KL">Mensuel</data>
+  <data name="Enum.AmortizationType.Linear" id="KM">Linéaire</data>
+  <data name="Enum.AmortizationType.Degressive" id="KN">Dégressif</data>
+  <data name="Enum.ProrataType.None" id="KO">Aucun</data>
+  <data name="Enum.ProrataType.Prorata365" id="KP">Sur 365 jours</data>
+  <data name="Enum.ProrataType.Prorata360" id="KQ">Sur 360 jours</data>
+  <data name="Enum.ProrataType.Prorata12" id="KR">Sur 12 mois</data>
+  <data name="Enum.FieldType.String" id="KS">Texte</data>
+  <data name="Enum.FieldType.Decimal" id="KT">Nombre réel</data>
+  <data name="Enum.FieldType.ComputedAmount" id="KU">Montant</data>
+  <data name="Enum.FieldType.Int" id="KV">Nombre entier</data>
+  <data name="Enum.FieldType.Date" id="K01">Date</data>
+  <data name="Enum.FieldType.GuidPerson" id="K11">Contact</data>
 </bundle>

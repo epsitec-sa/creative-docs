@@ -43,36 +43,115 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetPeriodicityName(Periodicity type)
 		{
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
+			switch (type)
+			{
+				case Periodicity.Annual:
+					return Res.Strings.Enum.Periodicity.Annual.ToString ();
+
+				case Periodicity.Semestrial:
+					return Res.Strings.Enum.Periodicity.Semestrial.ToString ();
+
+				case Periodicity.Trimestrial:
+					return Res.Strings.Enum.Periodicity.Trimestrial.ToString ();
+
+				case Periodicity.Mensual:
+					return Res.Strings.Enum.Periodicity.Mensual.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static string GetAmortizationTypeName(AmortizationType type)
 		{
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
+			switch (type)
+			{
+				case AmortizationType.Linear:
+					return Res.Strings.Enum.AmortizationType.Linear.ToString ();
+
+				case AmortizationType.Degressive:
+					return Res.Strings.Enum.AmortizationType.Degressive.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static string GetProrataTypeName(ProrataType type)
 		{
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
+			switch (type)
+			{
+				case ProrataType.None:
+					return Res.Strings.Enum.ProrataType.None.ToString ();
+
+				case ProrataType.Prorata365:
+					return Res.Strings.Enum.ProrataType.Prorata365.ToString ();
+
+				case ProrataType.Prorata360:
+					return Res.Strings.Enum.ProrataType.Prorata360.ToString ();
+
+				case ProrataType.Prorata12:
+					return Res.Strings.Enum.ProrataType.Prorata12.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static string GetFieldTypeName(FieldType type)
 		{
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
+			switch (type)
+			{
+				case FieldType.String:
+					return Res.Strings.Enum.FieldType.String.ToString ();
+
+				case FieldType.Decimal:
+					return Res.Strings.Enum.FieldType.Decimal.ToString ();
+
+				case FieldType.ComputedAmount:
+					return Res.Strings.Enum.FieldType.ComputedAmount.ToString ();
+
+				case FieldType.Int:
+					return Res.Strings.Enum.FieldType.Int.ToString ();
+
+				case FieldType.Date:
+					return Res.Strings.Enum.FieldType.Date.ToString ();
+
+				case FieldType.GuidPerson:
+					return Res.Strings.Enum.FieldType.GuidPerson.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static string GetAccountCategoryName(AccountCategory category)
 		{
+			switch (category)
+			{
+				default:
+					return null;
+			}
 			return EnumKeyValues.GetEnumKeyValue (category).Values.First ().ToString ();
 		}
 
 		public static string GetAccountTypeName(AccountType type)
 		{
+			switch (type)
+			{
+				default:
+					return null;
+			}
 			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
+			switch (type)
+			{
+				default:
+					return null;
+			}
 			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 

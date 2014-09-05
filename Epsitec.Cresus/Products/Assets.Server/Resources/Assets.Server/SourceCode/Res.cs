@@ -576,6 +576,153 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class Enum
+			{
+				public static class AmortizationType
+				{
+					//	designer:str/IUKN001
+					public static global::Epsitec.Common.Types.FormattedText Degressive
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343));
+						}
+					}
+					//	designer:str/IUKM001
+					public static global::Epsitec.Common.Types.FormattedText Linear
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544342));
+						}
+					}
+				}
+				
+				public static class FieldType
+				{
+					//	designer:str/IUKU001
+					public static global::Epsitec.Common.Types.FormattedText ComputedAmount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544350));
+						}
+					}
+					//	designer:str/IUK0101
+					public static global::Epsitec.Common.Types.FormattedText Date
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544352));
+						}
+					}
+					//	designer:str/IUKT001
+					public static global::Epsitec.Common.Types.FormattedText Decimal
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544349));
+						}
+					}
+					//	designer:str/IUK1101
+					public static global::Epsitec.Common.Types.FormattedText GuidPerson
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544353));
+						}
+					}
+					//	designer:str/IUKV001
+					public static global::Epsitec.Common.Types.FormattedText Int
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544351));
+						}
+					}
+					//	designer:str/IUKS001
+					public static global::Epsitec.Common.Types.FormattedText String
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544348));
+						}
+					}
+				}
+				
+				public static class Periodicity
+				{
+					//	designer:str/IUKI001
+					public static global::Epsitec.Common.Types.FormattedText Annual
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544338));
+						}
+					}
+					//	designer:str/IUKL001
+					public static global::Epsitec.Common.Types.FormattedText Mensual
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544341));
+						}
+					}
+					//	designer:str/IUKJ001
+					public static global::Epsitec.Common.Types.FormattedText Semestrial
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
+						}
+					}
+					//	designer:str/IUKK001
+					public static global::Epsitec.Common.Types.FormattedText Trimestrial
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544340));
+						}
+					}
+				}
+				
+				public static class ProrataType
+				{
+					//	designer:str/IUKO001
+					public static global::Epsitec.Common.Types.FormattedText None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544344));
+						}
+					}
+					//	designer:str/IUKR001
+					public static global::Epsitec.Common.Types.FormattedText Prorata12
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
+						}
+					}
+					//	designer:str/IUKQ001
+					public static global::Epsitec.Common.Types.FormattedText Prorata360
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346));
+						}
+					}
+					//	designer:str/IUKP001
+					public static global::Epsitec.Common.Types.FormattedText Prorata365
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544345));
+						}
+					}
+				}
+			}
+			
 			public static class LogicDescription
 			{
 				public static class Event
@@ -789,6 +936,153 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544335);
+					}
+				}
+			}
+			
+			public static class Enum
+			{
+				public static class AmortizationType
+				{
+					//	designer:str/IUKN001
+					public static global::Epsitec.Common.Support.Druid Degressive
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544343);
+						}
+					}
+					//	designer:str/IUKM001
+					public static global::Epsitec.Common.Support.Druid Linear
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544342);
+						}
+					}
+				}
+				
+				public static class FieldType
+				{
+					//	designer:str/IUKU001
+					public static global::Epsitec.Common.Support.Druid ComputedAmount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544350);
+						}
+					}
+					//	designer:str/IUK0101
+					public static global::Epsitec.Common.Support.Druid Date
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544352);
+						}
+					}
+					//	designer:str/IUKT001
+					public static global::Epsitec.Common.Support.Druid Decimal
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544349);
+						}
+					}
+					//	designer:str/IUK1101
+					public static global::Epsitec.Common.Support.Druid GuidPerson
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544353);
+						}
+					}
+					//	designer:str/IUKV001
+					public static global::Epsitec.Common.Support.Druid Int
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544351);
+						}
+					}
+					//	designer:str/IUKS001
+					public static global::Epsitec.Common.Support.Druid String
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544348);
+						}
+					}
+				}
+				
+				public static class Periodicity
+				{
+					//	designer:str/IUKI001
+					public static global::Epsitec.Common.Support.Druid Annual
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544338);
+						}
+					}
+					//	designer:str/IUKL001
+					public static global::Epsitec.Common.Support.Druid Mensual
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544341);
+						}
+					}
+					//	designer:str/IUKJ001
+					public static global::Epsitec.Common.Support.Druid Semestrial
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
+						}
+					}
+					//	designer:str/IUKK001
+					public static global::Epsitec.Common.Support.Druid Trimestrial
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544340);
+						}
+					}
+				}
+				
+				public static class ProrataType
+				{
+					//	designer:str/IUKO001
+					public static global::Epsitec.Common.Support.Druid None
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544344);
+						}
+					}
+					//	designer:str/IUKR001
+					public static global::Epsitec.Common.Support.Druid Prorata12
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544347);
+						}
+					}
+					//	designer:str/IUKQ001
+					public static global::Epsitec.Common.Support.Druid Prorata360
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544346);
+						}
+					}
+					//	designer:str/IUKP001
+					public static global::Epsitec.Common.Support.Druid Prorata365
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544345);
+						}
 					}
 				}
 			}
