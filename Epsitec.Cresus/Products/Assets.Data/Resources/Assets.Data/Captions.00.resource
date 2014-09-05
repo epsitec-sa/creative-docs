@@ -47,7 +47,7 @@
   <data name="Val.EventType.MainValue" id="K6">&lt;s:data id="_0" f:Name="MainValue" f:Labels="{Collection {Text 'Modification valeur'}}" /&gt;</data>
   <data name="Val.EventType.AmortizationAuto" id="K7">&lt;s:data id="_0" f:Name="AmortizationAuto" f:Labels="{Collection {Text 'Amort. ordinaire'}}" /&gt;</data>
   <data name="Val.EventType.AmortizationPreview" id="K8">&lt;s:data id="_0" f:Name="AmortizationPreview" f:Labels="{Collection {Text 'Préamortissement'}}" /&gt;</data>
-  <data name="Val.EventType.AmortizationExtra" id="K9">&lt;s:data id="_0" f:Name="AmortizationExtra" f:Labels="{Collection {Text 'Amort. extraordinaire'}}" /&gt;</data>
+  <data name="Val.EventType.AmortizationExtra" id="K9">&lt;s:data id="_0" f:Name="AmortizationExtra" f:Labels="{Collection {Text 'Amort. ordinaire'}}" /&gt;</data>
   <data name="Val.EventType.Locked" id="KA">&lt;s:data id="_0" f:Name="Locked" f:Labels="{Collection {Text 'Verrou'}}" /&gt;</data>
   <data name="Val.EventType.Output" id="KB">&lt;s:data id="_0" f:Name="Output" f:Labels="{Collection {Text 'Sortie'}}" /&gt;</data>
   <data name="Typ.EventType" id="K">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="EventType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.EventType, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [HUK1001]'}, {Text '1 [HUK2001]'}, {Text '2 [HUK3001]'}, {Text '3 [HUK4001]'}, {Text '4 [HUKP201]'}, {Text '5 [HUK5001]'}, {Text '6 [HUKQ201]'}, {Text '7 [HUK6001]'}, {Text '8 [HUK7001]'}, {Text '9 [HUK8001]'}, {Text '10 [HUK9001]'}, {Text '11 [HUKA001]'}, {Text '12 [HUKB001]'}}" f:_1.DefaultValue="Epsitec.Cresus.Assets.Data.EventType, Assets.Data/Unknown" /&gt;</data>

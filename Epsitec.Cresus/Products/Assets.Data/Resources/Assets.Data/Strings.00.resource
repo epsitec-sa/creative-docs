@@ -43,4 +43,14 @@
   <data name="Enum.ObjectField.UserFieldTopMargin" id="K71">Marge supérieure</data>
   <data name="Enum.ObjectField.GroupUsedDuringCreation" id="K81">Groupe à utiliser lors de la création d'un objet d'immobilisation</data>
   <data name="Enum.ObjectField.UserFieldType" id="K91">Type</data>
+  <data name="Enum.EventType.Input" id="KA1">Entrée</data>
+  <data name="Enum.EventType.Modification" id="KB1">Modification générale</data>
+  <data name="Enum.EventType.Increase" id="KC1">Augmentation</data>
+  <data name="Enum.EventType.Decrease" id="KD1">Diminution</data>
+  <data name="Enum.EventType.MainValue" id="KE1">Modification valeur</data>
+  <data name="Enum.EventType.AmortizationAuto" id="KF1">Amort. ordinaire</data>
+  <data name="Enum.EventType.AmortizationPreview" id="KG1">Préamortissement</data>
+  <data name="Enum.EventType.AmortizationExtra" id="KH1">Amort. extra.</data>
+  <data name="Enum.EventType.Locked" id="KI1">Verrou</data>
+  <data name="Enum.EventType.Output" id="KJ1">Sortie</data>
 </bundle>

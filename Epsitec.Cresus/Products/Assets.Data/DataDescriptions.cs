@@ -143,6 +143,43 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static string GetEventDescription(EventType type)
 		{
+			switch (type)
+			{
+				case EventType.Input:
+					return Res.Strings.Enum.EventType.Input.ToString ();
+
+				case EventType.Modification:
+					return Res.Strings.Enum.EventType.Modification.ToString ();
+
+				case EventType.Increase:
+					return Res.Strings.Enum.EventType.Increase.ToString ();
+
+				case EventType.Decrease:
+					return Res.Strings.Enum.EventType.Decrease.ToString ();
+
+				case EventType.MainValue:
+					return Res.Strings.Enum.EventType.MainValue.ToString ();
+
+				case EventType.AmortizationAuto:
+					return Res.Strings.Enum.EventType.AmortizationAuto.ToString ();
+
+				case EventType.AmortizationPreview:
+					return Res.Strings.Enum.EventType.AmortizationPreview.ToString ();
+
+				case EventType.AmortizationExtra:
+					return Res.Strings.Enum.EventType.AmortizationExtra.ToString ();
+
+				case EventType.Locked:
+					return Res.Strings.Enum.EventType.Locked.ToString ();
+
+				case EventType.Output:
+					return Res.Strings.Enum.EventType.Output.ToString ();
+
+				default:
+					return null;
+			}
+
+
 			return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
 		}
 	}
