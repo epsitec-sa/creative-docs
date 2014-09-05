@@ -55,7 +55,6 @@
     <Compile Include="CategoriesTreeTableFiller.cs" />
     <Compile Include="CellState.cs" />
     <Compile Include="EntriesTreeTableFiller.cs" />
-    <Compile Include="ErrorsTreeTableFiller.cs" />
     <Compile Include="EventsAssetsTreeTableFiller.cs" />
     <Compile Include="GroupsTreeTableFiller.cs" />
     <Compile Include="HistoryTreeTableFiller.cs" />

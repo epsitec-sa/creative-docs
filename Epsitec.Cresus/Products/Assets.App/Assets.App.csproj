@@ -160,7 +160,6 @@
     <Compile Include="Popups\LastViewsPopup.cs" />
     <Compile Include="Popups\PersonsPopup.cs" />
     <Compile Include="Popups\CreatePersonPopup.cs" />
-    <Compile Include="Popups\ErrorsPopup.cs" />
     <Compile Include="Popups\FilterPopup.cs" />
     <Compile Include="Popups\GroupsPopup.cs" />
     <Compile Include="Popups\DatePopup.cs" />

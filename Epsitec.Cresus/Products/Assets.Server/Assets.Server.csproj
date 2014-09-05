@@ -74,7 +74,6 @@
     <Compile Include="BusinessLogic\EntryProperties.cs" />
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
     <Compile Include="BusinessLogic\Error.cs" />
-    <Compile Include="BusinessLogic\ErrorDescription.cs" />
     <Compile Include="BusinessLogic\ErrorType.cs" />
     <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
