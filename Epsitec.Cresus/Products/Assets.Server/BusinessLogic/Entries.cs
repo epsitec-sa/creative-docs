@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return entryAccouts.Account1;  // compte contrepartie d'achat
+					return entryAccouts.Account3;  // compte d'immobilisation
 
 				case EntryScenario.Sale:
 					return entryAccouts.Account2;  // compte contrepartie de vente
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return entryAccouts.Account3;  // compte d'immobilisation
+					return entryAccouts.Account1;  // compte contrepartie d'achat
 
 				case EntryScenario.Sale:
 					return entryAccouts.Account3;  // compte d'immobilisation 
