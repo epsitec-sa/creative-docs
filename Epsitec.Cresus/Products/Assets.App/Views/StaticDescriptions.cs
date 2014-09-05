@@ -78,25 +78,85 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public static string GetViewTypeDescription(ViewTypeKind kind)
 		{
-			if (kind == ViewTypeKind.Unknown)
+			switch (kind)
 			{
-				return null;
-			}
-			else
-			{
-				return EnumKeyValues.GetEnumKeyValue (kind).Values.Last ().ToString ();
+				case ViewTypeKind.Assets:
+					return Res.Strings.Enum.ViewTypeKind.Assets.ToString ();
+
+				case ViewTypeKind.Amortizations:
+					return Res.Strings.Enum.ViewTypeKind.Amortizations.ToString ();
+
+				case ViewTypeKind.Entries:
+					return Res.Strings.Enum.ViewTypeKind.Entries.ToString ();
+
+				case ViewTypeKind.Categories:
+					return Res.Strings.Enum.ViewTypeKind.Categories.ToString ();
+
+				case ViewTypeKind.Groups:
+					return Res.Strings.Enum.ViewTypeKind.Groups.ToString ();
+
+				case ViewTypeKind.Persons:
+					return Res.Strings.Enum.ViewTypeKind.Persons.ToString ();
+
+				case ViewTypeKind.Reports:
+					return Res.Strings.Enum.ViewTypeKind.Reports.ToString ();
+
+				case ViewTypeKind.Warnings:
+					return Res.Strings.Enum.ViewTypeKind.Warnings.ToString ();
+
+				case ViewTypeKind.AssetsSettings:
+					return Res.Strings.Enum.ViewTypeKind.AssetsSettings.ToString ();
+
+				case ViewTypeKind.PersonsSettings:
+					return Res.Strings.Enum.ViewTypeKind.PersonsSettings.ToString ();
+
+				case ViewTypeKind.Accounts:
+					return Res.Strings.Enum.ViewTypeKind.Accounts.ToString ();
+
+				default:
+					return null;
 			}
 		}
 
 		public static string GetObjectPageDescription(PageType type)
 		{
-			if (type == PageType.Unknown)
+			switch (type)
 			{
-				return null;
-			}
-			else
-			{
-				return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
+				case PageType.OneShot:
+					return Res.Strings.Enum.PageType.OneShot.ToString ();
+
+				case PageType.Summary:
+					return Res.Strings.Enum.PageType.Summary.ToString ();
+
+				case PageType.Asset:
+					return Res.Strings.Enum.PageType.Asset.ToString ();
+
+				case PageType.AmortizationDefinition:
+					return Res.Strings.Enum.PageType.AmortizationDefinition.ToString ();
+
+				case PageType.AmortizationValue:
+					return Res.Strings.Enum.PageType.AmortizationValue.ToString ();
+
+				case PageType.Groups:
+					return Res.Strings.Enum.PageType.Groups.ToString ();
+
+				case PageType.Category:
+					return Res.Strings.Enum.PageType.Category.ToString ();
+
+				case PageType.Group:
+					return Res.Strings.Enum.PageType.Group.ToString ();
+
+				case PageType.Person:
+					return Res.Strings.Enum.PageType.Person.ToString ();
+
+				case PageType.UserFields:
+					return Res.Strings.Enum.PageType.UserFields.ToString ();
+
+				case PageType.Account:
+					return Res.Strings.Enum.PageType.Account.ToString ();
+
+				default:
+					return null;
 			}
 		}
 	}

@@ -54,7 +54,44 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		private static string GetStyleName(ExportColor color)
 		{
-			return EnumKeyValues.GetEnumKeyValue (color).Values.Last ().ToString ();
+			switch (color)
+			{
+				case ExportColor.Transparent:
+					return Res.Strings.Enum.ExportColor.Transparent.ToString ();
+
+				case ExportColor.White:
+					return Res.Strings.Enum.ExportColor.White.ToString ();
+
+				case ExportColor.LightGrey:
+					return Res.Strings.Enum.ExportColor.LightGrey.ToString ();
+
+				case ExportColor.Grey:
+					return Res.Strings.Enum.ExportColor.Grey.ToString ();
+
+				case ExportColor.DarkGrey:
+					return Res.Strings.Enum.ExportColor.DarkGrey.ToString ();
+
+				case ExportColor.Black:
+					return Res.Strings.Enum.ExportColor.Black.ToString ();
+
+				case ExportColor.LightRed:
+					return Res.Strings.Enum.ExportColor.LightRed.ToString ();
+
+				case ExportColor.LightGreen:
+					return Res.Strings.Enum.ExportColor.LightGreen.ToString ();
+
+				case ExportColor.LightBlue:
+					return Res.Strings.Enum.ExportColor.LightBlue.ToString ();
+
+				case ExportColor.LightYellow:
+					return Res.Strings.Enum.ExportColor.LightYellow.ToString ();
+
+				case ExportColor.LightPurple:
+					return Res.Strings.Enum.ExportColor.LightPurple.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		private static IEnumerable<ExportColor> Colors

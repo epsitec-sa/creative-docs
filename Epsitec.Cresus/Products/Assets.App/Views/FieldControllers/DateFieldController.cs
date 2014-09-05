@@ -446,13 +446,52 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private string GetPredefinedDescription(DateType type)
 		{
-			if (type == DateType.Separator)
+			switch (type)
 			{
-				return null;
-			}
-			else
-			{
-				return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
+				case DateType.BeginMandat:
+					return Res.Strings.Enum.DateType.BeginMandat.ToString ();
+
+				case DateType.BeginPreviousYear:
+					return Res.Strings.Enum.DateType.BeginPreviousYear.ToString ();
+
+				case DateType.EndPreviousYear:
+					return Res.Strings.Enum.DateType.EndPreviousYear.ToString ();
+
+				case DateType.BeginCurrentYear:
+					return Res.Strings.Enum.DateType.BeginCurrentYear.ToString ();
+
+				case DateType.EndCurrentYear:
+					return Res.Strings.Enum.DateType.EndCurrentYear.ToString ();
+
+				case DateType.BeginNextYear:
+					return Res.Strings.Enum.DateType.BeginNextYear.ToString ();
+
+				case DateType.EndNextYear:
+					return Res.Strings.Enum.DateType.EndNextYear.ToString ();
+
+				case DateType.BeginPreviousMonth:
+					return Res.Strings.Enum.DateType.BeginPreviousMonth.ToString ();
+
+				case DateType.EndPreviousMonth:
+					return Res.Strings.Enum.DateType.EndPreviousMonth.ToString ();
+
+				case DateType.BeginCurrentMonth:
+					return Res.Strings.Enum.DateType.BeginCurrentMonth.ToString ();
+
+				case DateType.EndCurrentMonth:
+					return Res.Strings.Enum.DateType.EndCurrentMonth.ToString ();
+
+				case DateType.BeginNextMonth:
+					return Res.Strings.Enum.DateType.BeginNextMonth.ToString ();
+
+				case DateType.EndNextMonth:
+					return Res.Strings.Enum.DateType.EndNextMonth.ToString ();
+
+				case DateType.Now:
+					return Res.Strings.Enum.DateType.Now.ToString ();
+
+				default:
+					return null;
 			}
 		}
 

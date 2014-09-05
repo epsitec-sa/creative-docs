@@ -458,4 +458,75 @@
   <data name="Toolbar.Reports.AddFavorite" id="KGE">Ajouter le rapport à la liste des favoris</data>
   <data name="Toolbar.Reports.RemoveFavorite" id="KHE">Supprimer le rapport de la liste des favoris</data>
   <data name="ReportParams.Specific" id="KIE">Standard</data>
+  <data name="Enum.ExportColor.Transparent" id="KJE">Blanc</data>
+  <data name="Enum.ExportColor.LightGrey" id="KKE">Gris clair</data>
+  <data name="Enum.ExportColor.Grey" id="KLE">Gris moyen</data>
+  <data name="Enum.ExportColor.DarkGrey" id="KME">Gris foncé</data>
+  <data name="Enum.ExportColor.Black" id="KNE">Noir</data>
+  <data name="Enum.ExportColor.LightRed" id="KOE">Rose</data>
+  <data name="Enum.ExportColor.LightGreen" id="KPE">Vert clair</data>
+  <data name="Enum.ExportColor.LightBlue" id="KQE">Bleu clair</data>
+  <data name="Enum.ExportColor.LightYellow" id="KRE">Jaune clair</data>
+  <data name="Enum.ExportColor.LightPurple" id="KSE">Liias</data>
+  <data name="Enum.ExportColor.White" id="KTE">Blanc</data>
+  <data name="Enum.ExportFormat.Txt" id="KUE">TXT — Fichier texte tabulé</data>
+  <data name="Enum.ExportFormat.Csv" id="KVE">CSV — Fichier texte pour tableur</data>
+  <data name="Enum.ExportFormat.Xml" id="K0F">XML — Fichier texte "Extensible Markup Language"</data>
+  <data name="Enum.ExportFormat.Yaml" id="K1F">YAML — Fichier texte "YAML Ain't Markup Language"</data>
+  <data name="Enum.ExportFormat.Json" id="K2F">JSON — Fichier texte "JavaScript Object Notation"</data>
+  <data name="Enum.ExportFormat.Pdf" id="K3F">PDF — Document mis en pages</data>
+  <data name="Enum.PdfPredefinedStyle.Frameless" id="K4F">Sans cadres</data>
+  <data name="Enum.PdfPredefinedStyle.LightFrame" id="K5F">Cadres discrets</data>
+  <data name="Enum.PdfPredefinedStyle.StandardFrame" id="K6F">Cadres standards</data>
+  <data name="Enum.PdfPredefinedStyle.BoldFrame" id="K7F">Cadres gras</data>
+  <data name="Enum.PdfPredefinedStyle.Contrast" id="K8F">Contrasté</data>
+  <data name="Enum.PdfPredefinedStyle.GreyEvenOdd" id="K9F">Lignes impaires grises</data>
+  <data name="Enum.PdfPredefinedStyle.BlueEvenOdd" id="KAF">Lignes impaires bleues</data>
+  <data name="Enum.PdfPredefinedStyle.YellowEvenOdd" id="KBF">Lignes impaires jaunes</data>
+  <data name="Enum.PdfPredefinedStyle.RedEvenOdd" id="KCF">Lignes impaires roses</data>
+  <data name="Enum.PdfPredefinedStyle.GreenEvenOdd" id="KDF">Lignes impaires vertes</data>
+  <data name="Enum.PdfPredefinedStyle.Colored" id="KEF">Lignes colorées</data>
+  <data name="Enum.PdfPredefinedStyle.Kitch" id="KFF">Kitch</data>
+  <data name="Enum.PageFormatType.A2" id="KGF">A2</data>
+  <data name="Enum.PageFormatType.A3" id="KHF">A3</data>
+  <data name="Enum.PageFormatType.A4" id="KIF">A4</data>
+  <data name="Enum.PageFormatType.A5" id="KJF">A5</data>
+  <data name="Enum.PageFormatType.Letter" id="KKF">Letter</data>
+  <data name="Enum.PageFormatType.Legal" id="KLF">Legal</data>
+  <data name="Enum.DateType.BeginMandat" id="KMF">Début du mandat</data>
+  <data name="Enum.DateType.BeginPreviousYear" id="KNF">Début de l'année précédente</data>
+  <data name="Enum.DateType.EndPreviousYear" id="KOF">Fin de l'année précédente</data>
+  <data name="Enum.DateType.BeginCurrentYear" id="KPF">Début de l'année courante</data>
+  <data name="Enum.DateType.EndCurrentYear" id="KQF">Fin de l'année courante</data>
+  <data name="Enum.DateType.BeginNextYear" id="KRF">Début de l'année suivante</data>
+  <data name="Enum.DateType.EndNextYear" id="KSF">Fin de l'année suivante</data>
+  <data name="Enum.DateType.BeginPreviousMonth" id="KTF">Début du mois précédent</data>
+  <data name="Enum.DateType.EndPreviousMonth" id="KUF">Fin du mois précédent</data>
+  <data name="Enum.DateType.BeginCurrentMonth" id="KVF">Début du mois courant</data>
+  <data name="Enum.DateType.EndCurrentMonth" id="K0G">Fin du mois courant</data>
+  <data name="Enum.DateType.BeginNextMonth" id="K1G">Début du mois suivant</data>
+  <data name="Enum.DateType.EndNextMonth" id="K2G">Fin du mois suivant</data>
+  <data name="Enum.DateType.Now" id="K3G">Aujourd'hui</data>
+  <data name="Enum.PageType.OneShot" id="K4G">Evénement</data>
+  <data name="Enum.PageType.Summary" id="K5G">Résumé</data>
+  <data name="Enum.PageType.Asset" id="K6G">Général</data>
+  <data name="Enum.PageType.AmortizationDefinition" id="K7G">Amortissement</data>
+  <data name="Enum.PageType.AmortizationValue" id="K8G">Valeur</data>
+  <data name="Enum.PageType.Groups" id="K9G">Groupes</data>
+  <data name="Enum.PageType.Category" id="KAG">Définitions de la catégorie</data>
+  <data name="Enum.PageType.Group" id="KBG">Définitions du groupe</data>
+  <data name="Enum.PageType.Person" id="KCG">Définitions du contact</data>
+  <data name="Enum.PageType.UserFields" id="KDG">Définitions du champ</data>
+  <data name="Enum.PageType.Account" id="KEG">Définitions du compte</data>
+  <data name="Enum.ViewTypeKind.Assets" id="KFG">Objets d'immobilisation</data>
+  <data name="Enum.ViewTypeKind.Amortizations" id="KGG">Amortissements</data>
+  <data name="Enum.ViewTypeKind.Entries" id="KHG">Ecritures comptables</data>
+  <data name="Enum.ViewTypeKind.Categories" id="KIG">Catégories d'immobilisations</data>
+  <data name="Enum.ViewTypeKind.Groups" id="KJG">Groupes</data>
+  <data name="Enum.ViewTypeKind.Persons" id="KKG">Contacts</data>
+  <data name="Enum.ViewTypeKind.Reports" id="KLG">Rapports</data>
+  <data name="Enum.ViewTypeKind.Warnings" id="KMG">Avertissements</data>
+  <data name="Enum.ViewTypeKind.AssetsSettings" id="KNG">Champs des objets d'immobilisations</data>
+  <data name="Enum.ViewTypeKind.PersonsSettings" id="KOG">Champs des contacts</data>
+  <data name="Enum.ViewTypeKind.Accounts" id="KPG">Plan comptable</data>
 </bundle>

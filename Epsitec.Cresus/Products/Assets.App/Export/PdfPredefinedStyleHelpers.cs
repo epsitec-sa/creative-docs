@@ -54,7 +54,47 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		public static string GetPredefinedName(PdfPredefinedStyle predefined)
 		{
-			return EnumKeyValues.GetEnumKeyValue (predefined).Values.Last ().ToString ();
+			switch (predefined)
+			{
+				case PdfPredefinedStyle.Frameless:
+					return Res.Strings.Enum.PdfPredefinedStyle.Frameless.ToString ();
+
+				case PdfPredefinedStyle.LightFrame:
+					return Res.Strings.Enum.PdfPredefinedStyle.LightFrame.ToString ();
+
+				case PdfPredefinedStyle.StandardFrame:
+					return Res.Strings.Enum.PdfPredefinedStyle.StandardFrame.ToString ();
+
+				case PdfPredefinedStyle.BoldFrame:
+					return Res.Strings.Enum.PdfPredefinedStyle.BoldFrame.ToString ();
+
+				case PdfPredefinedStyle.Contrast:
+					return Res.Strings.Enum.PdfPredefinedStyle.Contrast.ToString ();
+
+				case PdfPredefinedStyle.GreyEvenOdd:
+					return Res.Strings.Enum.PdfPredefinedStyle.GreyEvenOdd.ToString ();
+
+				case PdfPredefinedStyle.BlueEvenOdd:
+					return Res.Strings.Enum.PdfPredefinedStyle.BlueEvenOdd.ToString ();
+
+				case PdfPredefinedStyle.YellowEvenOdd:
+					return Res.Strings.Enum.PdfPredefinedStyle.YellowEvenOdd.ToString ();
+
+				case PdfPredefinedStyle.RedEvenOdd:
+					return Res.Strings.Enum.PdfPredefinedStyle.RedEvenOdd.ToString ();
+
+				case PdfPredefinedStyle.GreenEvenOdd:
+					return Res.Strings.Enum.PdfPredefinedStyle.GreenEvenOdd.ToString ();
+
+				case PdfPredefinedStyle.Colored:
+					return Res.Strings.Enum.PdfPredefinedStyle.Colored.ToString ();
+
+				case PdfPredefinedStyle.Kitch:
+					return Res.Strings.Enum.PdfPredefinedStyle.Kitch.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static IEnumerable<PdfPredefinedStyle> Predefined

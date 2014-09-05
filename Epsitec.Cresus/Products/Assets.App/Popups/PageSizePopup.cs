@@ -227,7 +227,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static string FormatToString(Format format)
 		{
-			return EnumKeyValues.GetEnumKeyValue (format.Type).Values.Last ().ToString ();
+			switch (format.Type)
+			{
+				case PageFormatType.A2:
+					return Res.Strings.Enum.PageFormatType.A2.ToString ();
+
+				case PageFormatType.A3:
+					return Res.Strings.Enum.PageFormatType.A3.ToString ();
+
+				case PageFormatType.A4:
+					return Res.Strings.Enum.PageFormatType.A4.ToString ();
+
+				case PageFormatType.A5:
+					return Res.Strings.Enum.PageFormatType.A5.ToString ();
+
+				case PageFormatType.Letter:
+					return Res.Strings.Enum.PageFormatType.Letter.ToString ();
+
+				case PageFormatType.Legal:
+					return Res.Strings.Enum.PageFormatType.Legal.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		private static IEnumerable<Format> Formats

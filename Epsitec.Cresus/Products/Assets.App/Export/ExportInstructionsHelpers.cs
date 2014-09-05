@@ -60,7 +60,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static string GetFormatName(ExportFormat format)
 		{
 			//	Retourne le nom en clair d'un format.
-			return EnumKeyValues.GetEnumKeyValue (format).Values.Last ().ToString ();
+			switch (format)
+			{
+				case ExportFormat.Txt:
+					return Res.Strings.Enum.ExportFormat.Txt.ToString ();
+
+				case ExportFormat.Csv:
+					return Res.Strings.Enum.ExportFormat.Csv.ToString ();
+
+				case ExportFormat.Xml:
+					return Res.Strings.Enum.ExportFormat.Xml.ToString ();
+
+				case ExportFormat.Yaml:
+					return Res.Strings.Enum.ExportFormat.Yaml.ToString ();
+
+				case ExportFormat.Json:
+					return Res.Strings.Enum.ExportFormat.Json.ToString ();
+
+				case ExportFormat.Pdf:
+					return Res.Strings.Enum.ExportFormat.Pdf.ToString ();
+
+				default:
+					return null;
+			}
 		}
 
 		public static string GetFormatExt(ExportFormat format)
