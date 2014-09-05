@@ -2,6 +2,6 @@
 <ModuleInfo id="2001" name="Assets.Data" layer="A" textMode="FormattedText" assemblies="Assets.Data" namespace="Epsitec.Cresus.Assets.Data">
   <Versions>
     <Version id="1" build="21" date="2014-09-02T18:20:43.1647909Z" />
-    <Version id="2" build="7" date="2014-09-05T08:25:37.4566416Z" />
+    <Version id="2" build="11" date="2014-09-05T15:42:20.1025668Z" />
   </Versions>
 </ModuleInfo>

@@ -2,4 +2,45 @@
 <bundle name="Strings" type="String" culture="fr">
   <data name="Copyright" id="A">Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</data>
   <data name="ObjectField.InGroupGuidRation" id="K">Dans</data>
+  <data name="Enum.ObjectField.OneShotNumber" id="K1">Evénement numéro</data>
+  <data name="Enum.ObjectField.OneShotDateEvent" id="K2">Date événement</data>
+  <data name="Enum.ObjectField.OneShotDateOperation" id="K3">Date opération</data>
+  <data name="Enum.ObjectField.OneShotComment" id="K4">Commentaire</data>
+  <data name="Enum.ObjectField.OneShotDocuments" id="K5">Documents</data>
+  <data name="Enum.ObjectField.GroupParent" id="K6">Dans le groupe</data>
+  <data name="Enum.ObjectField.Name" id="K7">Nom</data>
+  <data name="Enum.ObjectField.Description" id="K8">Description</data>
+  <data name="Enum.ObjectField.Number" id="K9">Numéro</data>
+  <data name="Enum.ObjectField.MainValue" id="KA">Valeur comptable</data>
+  <data name="Enum.ObjectField.CategoryName" id="KB">Catégorie d'immob.</data>
+  <data name="Enum.ObjectField.AmortizationRate" id="KC">Taux</data>
+  <data name="Enum.ObjectField.AmortizationType" id="KD">Type</data>
+  <data name="Enum.ObjectField.Periodicity" id="KE">Périodicité</data>
+  <data name="Enum.ObjectField.Prorata" id="KF">Prorata</data>
+  <data name="Enum.ObjectField.Round" id="KG">Arrondi</data>
+  <data name="Enum.ObjectField.ResidualValue" id="KH">Valeur résiduelle</data>
+  <data name="Enum.ObjectField.Account1" id="KI">Contrepartie achat</data>
+  <data name="Enum.ObjectField.Account2" id="KJ">Contrepartie vente</data>
+  <data name="Enum.ObjectField.Account3" id="KK">Compte d'immob.</data>
+  <data name="Enum.ObjectField.Account4" id="KL">Compte d'amort.</data>
+  <data name="Enum.ObjectField.Account5" id="KM">Charge d'amort.</data>
+  <data name="Enum.ObjectField.Account6" id="KN">Compte revalorisation</data>
+  <data name="Enum.ObjectField.Account7" id="KO">Compte réévaluation</data>
+  <data name="Enum.ObjectField.Account8" id="KP">?</data>
+  <data name="Enum.ObjectField.AccountCategory" id="KQ">Catégorie</data>
+  <data name="Enum.ObjectField.AccountType" id="KR">Type</data>
+  <data name="Enum.ObjectField.EntryDate" id="KS">Date</data>
+  <data name="Enum.ObjectField.EntryDebitAccount" id="KT">Débit</data>
+  <data name="Enum.ObjectField.EntryCreditAccount" id="KU">Crédit</data>
+  <data name="Enum.ObjectField.EntryStamp" id="KV">Pièce</data>
+  <data name="Enum.ObjectField.EntryTitle" id="K01">Libellé</data>
+  <data name="Enum.ObjectField.EntryAmount" id="K11">Montant</data>
+  <data name="Enum.ObjectField.UserFieldRequired" id="K21">Obligatoire</data>
+  <data name="Enum.ObjectField.UserFieldColumnWidth" id="K31">Largeur colonne</data>
+  <data name="Enum.ObjectField.UserFieldLineWidth" id="K41">Largeur ligne</data>
+  <data name="Enum.ObjectField.UserFieldLineCount" id="K51">Nombre de lignes</data>
+  <data name="Enum.ObjectField.UserFieldSummaryOrder" id="K61">Ordre dans résumé</data>
+  <data name="Enum.ObjectField.UserFieldTopMargin" id="K71">Marge supérieure</data>
+  <data name="Enum.ObjectField.GroupUsedDuringCreation" id="K81">Groupe à utiliser lors de la création d'un objet d'immobilisation</data>
+  <data name="Enum.ObjectField.UserFieldType" id="K91">Type</data>
 </bundle>
