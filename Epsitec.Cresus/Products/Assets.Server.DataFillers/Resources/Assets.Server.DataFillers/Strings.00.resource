@@ -50,4 +50,24 @@
   <data name="UserFieldsTreeTableFiller.TopMargin" id="KF1">Marge sup.</data>
   <data name="UserFieldsTreeTableFiller.SummaryOrder" id="KG1">Ds résumé</data>
   <data name="CategoriesTreeTableFiller.Account7" id="KH1">Compte réévaluation</data>
+  <data name="Enum.MCH2Summary.Column.Name.Text" id="KI1">Catégorie</data>
+  <data name="Enum.MCH2Summary.Column.Name.Tooltip" id="KJ1">Catégorie d'immobilisation</data>
+  <data name="Enum.MCH2Summary.Column.InitialState.Text" id="KK1">Etat {0}</data>
+  <data name="Enum.MCH2Summary.Column.InitialState.Tooltip" id="KL1">Etat initial le {0}</data>
+  <data name="Enum.MCH2Summary.Column.Inputs.Text" id="KM1">Entrées</data>
+  <data name="Enum.MCH2Summary.Column.Inputs.Tooltip" id="KN1">Variations dues aux entrées</data>
+  <data name="Enum.MCH2Summary.Column.Reorganizations.Text" id="KO1">Réorganisations</data>
+  <data name="Enum.MCH2Summary.Column.Reorganizations.Tooltip" id="KP1">Variations dues aux réorganisations</data>
+  <data name="Enum.MCH2Summary.Column.Revaluations.Text" id="KQ1">Réévaluations</data>
+  <data name="Enum.MCH2Summary.Column.Revaluations.Tooltip" id="KR1">Valeurs après réévaluations</data>
+  <data name="Enum.MCH2Summary.Column.Revalorizations.Text" id="KS1">Revalorisations</data>
+  <data name="Enum.MCH2Summary.Column.Revalorizations.Tooltip" id="KT1">Valeurs après revalorisations</data>
+  <data name="Enum.MCH2Summary.Column.Outputs.Text" id="KU1">Sorties</data>
+  <data name="Enum.MCH2Summary.Column.Outputs.Tooltip" id="KV1">Variations dues aux sorties</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsAuto.Text" id="K02">Amort. ord.</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsAuto.Tooltip" id="K12">Variations dues aux amortissements ordinaires</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsExtra.Text" id="K22">Amort. extra.</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsExtra.Tooltip" id="K32">Variations dues aux amortissements extraordinaires</data>
+  <data name="Enum.MCH2Summary.Column.FinalState.Text" id="K42">Etat {0}</data>
+  <data name="Enum.MCH2Summary.Column.FinalState.Tooltip" id="K52">Etat final le {0}</data>
 </bundle>

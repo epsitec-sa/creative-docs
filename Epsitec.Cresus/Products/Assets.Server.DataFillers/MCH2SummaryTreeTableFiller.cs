@@ -265,50 +265,80 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnName(Column column)
 		{
-			var text = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (column).Values.First ().ToString ();
-
 			switch (column)
 			{
+				case Column.Name:
+					return Res.Strings.Enum.MCH2Summary.Column.Name.Text.ToString ();
+
 				case Column.InitialState:
-					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
-					text = string.Format (text, this.InitialDate);
-					break;
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Text.ToString (), this.InitialDate);
+
+				case Column.Inputs:
+					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Text.ToString ();
+
+				case Column.Reorganizations:
+					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Text.ToString ();
+
+				case Column.Revaluations:
+					return Res.Strings.Enum.MCH2Summary.Column.Revaluations.Text.ToString ();
+
+				case Column.Revalorizations:
+					return Res.Strings.Enum.MCH2Summary.Column.Revalorizations.Text.ToString ();
+
+				case Column.Outputs:
+					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
+
+				case Column.AmortizationsAuto:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Text.ToString ();
+
+				case Column.AmortizationsExtra:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Text.ToString ();
 
 				case Column.FinalState:
-					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
-					text = string.Format (text, this.FinalDate);
-					break;
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Text.ToString (), this.FinalDate);
 
 				default:
-					System.Diagnostics.Debug.Assert (!text.Contains("{0}"));
-					break;
+					return null;
 			}
-
-			return text;
 		}
 
 		private string GetColumnTooltip(Column column)
 		{
-			var text = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (column).Values.Last ().ToString ();
-
 			switch (column)
 			{
+				case Column.Name:
+					return Res.Strings.Enum.MCH2Summary.Column.Name.Tooltip.ToString ();
+
 				case Column.InitialState:
-					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
-					text = string.Format (text, this.InitialDateTooltip);
-					break;
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDateTooltip);
+
+				case Column.Inputs:
+					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
+
+				case Column.Reorganizations:
+					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
+
+				case Column.Revaluations:
+					return Res.Strings.Enum.MCH2Summary.Column.Revaluations.Tooltip.ToString ();
+
+				case Column.Revalorizations:
+					return Res.Strings.Enum.MCH2Summary.Column.Revalorizations.Tooltip.ToString ();
+
+				case Column.Outputs:
+					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
+
+				case Column.AmortizationsAuto:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Tooltip.ToString ();
+
+				case Column.AmortizationsExtra:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Tooltip.ToString ();
 
 				case Column.FinalState:
-					System.Diagnostics.Debug.Assert (text.Contains("{0}"));
-					text = string.Format (text, this.FinalDateTooltip);
-					break;
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.FinalDateTooltip);
 
 				default:
-					System.Diagnostics.Debug.Assert (!text.Contains ("{0}"));
-					break;
+					return null;
 			}
-
-			return text;
 		}
 
 		private string InitialDate
@@ -399,7 +429,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		[Epsitec.Common.Types.DesignerVisible]
 		private enum Column
 		{
 			Name,
