@@ -53,14 +53,37 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (confirmed)
 			{
-				var currentHousehold = this.Entity.MainContact.Household;
-				AiderContactEntity.Delete (this.BusinessContext, this.Entity.MainContact, true);
-				currentHousehold.RefreshCache ();
-				var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
-				if (currentSubscription.IsNotNull ())
+				var mainContact = this.Entity.MainContact;
+
+				if (mainContact.IsNotNull ())
 				{
-					currentSubscription.RefreshCache ();
+					var currentHousehold = mainContact.Household;
+
+					AiderContactEntity.Delete (this.BusinessContext, mainContact, deleteParticipations: true);
+
+					if (currentHousehold.IsNotNull ())
+					{
+						currentHousehold.RefreshCache ();
+						
+						var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
+
+						if (currentSubscription.IsNotNull ())
+						{
+							currentSubscription.RefreshCache ();
+						}
+					}
 				}
+				else
+				{
+					mainContact = this.Entity.Contacts.FirstOrDefault ();
+
+					if (mainContact.IsNotNull ())
+					{
+						AiderContactEntity.Delete (this.BusinessContext, mainContact, deleteParticipations: true);
+					}
+				}
+				
+				
 			}
 		}
 	}
