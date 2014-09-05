@@ -178,9 +178,6 @@ namespace Epsitec.Cresus.Assets.Data
 				default:
 					return null;
 			}
-
-
-			return EnumKeyValues.GetEnumKeyValue (type).Values.Last ().ToString ();
 		}
 	}
 }
