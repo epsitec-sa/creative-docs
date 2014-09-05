@@ -197,6 +197,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static string GetEntryScenarioTitle(EntryScenario type)
+		{
+			switch (type)
+			{
+				case EntryScenario.Purchase:
+					return Res.Strings.Enum.EntryScenario.Title.Purchase.ToString ();
+
+				case EntryScenario.Sale:
+					return Res.Strings.Enum.EntryScenario.Title.Sale.ToString ();
+
+				case EntryScenario.AmortizationAuto:
+					return Res.Strings.Enum.EntryScenario.Title.AmortizationAuto.ToString ();
+
+				case EntryScenario.AmortizationExtra:
+					return Res.Strings.Enum.EntryScenario.Title.AmortizationExtra.ToString ();
+
+				case EntryScenario.Increase:
+					return Res.Strings.Enum.EntryScenario.Title.Increase.ToString ();
+
+				case EntryScenario.Decrease:
+					return Res.Strings.Enum.EntryScenario.Title.Decrease.ToString ();
+
+				default:
+					return null;
+			}
+		}
+
 
 		//	Ici, il est préférable de ne pas avoir de mécanisme automatique pour
 		//	générer les dictionnaires à partir des enumérations C#. En effet, les

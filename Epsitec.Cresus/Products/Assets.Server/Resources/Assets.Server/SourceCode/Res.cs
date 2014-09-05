@@ -728,6 +728,57 @@ namespace Epsitec.Cresus.Assets.Server
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544364));
 						}
 					}
+					public static class Title
+					{
+						//	designer:str/IUKH101
+						public static global::Epsitec.Common.Types.FormattedText AmortizationAuto
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544369));
+							}
+						}
+						//	designer:str/IUKI101
+						public static global::Epsitec.Common.Types.FormattedText AmortizationExtra
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544370));
+							}
+						}
+						//	designer:str/IUKJ101
+						public static global::Epsitec.Common.Types.FormattedText Decrease
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544371));
+							}
+						}
+						//	designer:str/IUKK101
+						public static global::Epsitec.Common.Types.FormattedText Increase
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544372));
+							}
+						}
+						//	designer:str/IUKL101
+						public static global::Epsitec.Common.Types.FormattedText Purchase
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544373));
+							}
+						}
+						//	designer:str/IUKM101
+						public static global::Epsitec.Common.Types.FormattedText Sale
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544374));
+							}
+						}
+					}
 				}
 				
 				public static class FieldType
@@ -1222,6 +1273,57 @@ namespace Epsitec.Cresus.Assets.Server
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544364);
+						}
+					}
+					public static class Title
+					{
+						//	designer:str/IUKH101
+						public static global::Epsitec.Common.Support.Druid AmortizationAuto
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544369);
+							}
+						}
+						//	designer:str/IUKI101
+						public static global::Epsitec.Common.Support.Druid AmortizationExtra
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544370);
+							}
+						}
+						//	designer:str/IUKJ101
+						public static global::Epsitec.Common.Support.Druid Decrease
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544371);
+							}
+						}
+						//	designer:str/IUKK101
+						public static global::Epsitec.Common.Support.Druid Increase
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544372);
+							}
+						}
+						//	designer:str/IUKL101
+						public static global::Epsitec.Common.Support.Druid Purchase
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544373);
+							}
+						}
+						//	designer:str/IUKM101
+						public static global::Epsitec.Common.Support.Druid Sale
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544374);
+							}
 						}
 					}
 				}

@@ -49,4 +49,10 @@
   <data name="Enum.EntryScenario.AmortizationExtra" id="KE1">Amortissement extraordinaire</data>
   <data name="Enum.EntryScenario.Increase" id="KF1">Revalorisation</data>
   <data name="Enum.EntryScenario.Decrease" id="KG1">Réévaluation</data>
+  <data name="Enum.EntryScenario.Title.AmortizationAuto" id="KH1">Amortissement ordinaire {0}</data>
+  <data name="Enum.EntryScenario.Title.AmortizationExtra" id="KI1">Amortissement extraordinaire {0}</data>
+  <data name="Enum.EntryScenario.Title.Decrease" id="KJ1">Réévaluation {0}</data>
+  <data name="Enum.EntryScenario.Title.Increase" id="KK1">Revalorisation {0}</data>
+  <data name="Enum.EntryScenario.Title.Purchase" id="KL1">Achat {0}</data>
+  <data name="Enum.EntryScenario.Title.Sale" id="KM1">Vente {0}</data>
 </bundle>

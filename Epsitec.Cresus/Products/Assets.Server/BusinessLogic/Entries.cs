@@ -309,15 +309,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var timestamp = new Timestamp (amount.Date, 0);
 
 			var name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
-			var res = Epsitec.Common.Types.EnumKeyValues.GetEnumKeyValue (amount.EntryScenario).Values.Last ().ToString ();
+			var title = EnumDictionaries.GetEntryScenarioTitle (amount.EntryScenario);
 
-			if (string.IsNullOrEmpty (res))
+			if (string.IsNullOrEmpty (title))
 			{
 				return name;
 			}
 			else
 			{
-				return string.Format (res, name);
+				return string.Format (title, name);
 			}
 		}
 
