@@ -1812,6 +1812,46 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Decrease
+				{
+					//	designer:str/JUK3201
+					public static global::Epsitec.Common.Types.FormattedText Help
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544387));
+						}
+					}
+					//	designer:str/JUKR101
+					public static global::Epsitec.Common.Types.FormattedText ShortName
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
+						}
+					}
+				}
+				
+				public static class Increase
+				{
+					//	designer:str/JUK4201
+					public static global::Epsitec.Common.Types.FormattedText Help
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
+						}
+					}
+					//	designer:str/JUKS101
+					public static global::Epsitec.Common.Types.FormattedText ShortName
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
+						}
+					}
+				}
+				
 				public static class Input
 				{
 					//	designer:str/JUK1201
@@ -1908,46 +1948,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544384));
-						}
-					}
-				}
-				
-				public static class Revalorization
-				{
-					//	designer:str/JUK4201
-					public static global::Epsitec.Common.Types.FormattedText Help
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
-						}
-					}
-					//	designer:str/JUKS101
-					public static global::Epsitec.Common.Types.FormattedText ShortName
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
-						}
-					}
-				}
-				
-				public static class Revaluation
-				{
-					//	designer:str/JUK3201
-					public static global::Epsitec.Common.Types.FormattedText Help
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544387));
-						}
-					}
-					//	designer:str/JUKR101
-					public static global::Epsitec.Common.Types.FormattedText ShortName
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
 						}
 					}
 				}
@@ -6116,6 +6116,46 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Decrease
+				{
+					//	designer:str/JUK3201
+					public static global::Epsitec.Common.Support.Druid Help
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544387);
+						}
+					}
+					//	designer:str/JUKR101
+					public static global::Epsitec.Common.Support.Druid ShortName
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+						}
+					}
+				}
+				
+				public static class Increase
+				{
+					//	designer:str/JUK4201
+					public static global::Epsitec.Common.Support.Druid Help
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544388);
+						}
+					}
+					//	designer:str/JUKS101
+					public static global::Epsitec.Common.Support.Druid ShortName
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
+						}
+					}
+				}
+				
 				public static class Input
 				{
 					//	designer:str/JUK1201
@@ -6212,46 +6252,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544384);
-						}
-					}
-				}
-				
-				public static class Revalorization
-				{
-					//	designer:str/JUK4201
-					public static global::Epsitec.Common.Support.Druid Help
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544388);
-						}
-					}
-					//	designer:str/JUKS101
-					public static global::Epsitec.Common.Support.Druid ShortName
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
-						}
-					}
-				}
-				
-				public static class Revaluation
-				{
-					//	designer:str/JUK3201
-					public static global::Epsitec.Common.Support.Druid Help
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544387);
-						}
-					}
-					//	designer:str/JUKR101
-					public static global::Epsitec.Common.Support.Druid ShortName
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
 						}
 					}
 				}

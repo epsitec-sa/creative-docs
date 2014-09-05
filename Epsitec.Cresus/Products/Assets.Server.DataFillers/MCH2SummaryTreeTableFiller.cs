@@ -199,13 +199,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
-						EventType.Revaluation);
+						EventType.Decrease);
 
 				case Column.Revalorizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
-						EventType.Revalorization);
+						EventType.Increase);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,

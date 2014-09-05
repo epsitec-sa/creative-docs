@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				var obj = this.AddAssetsSamples (year0.AddDays (0), "Bâtiment communal", "100", 1000000.0m, 1200000.0m, 1800000.0m, "Dupond", "Nicolet", "Immobilier", "Bâtiments", "Immobilisations corporelles", "Patrimoine administratif");
 
 				{
-					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Revaluation);
+					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Decrease);
 					this.AddAssetAmortizedAmount (e, 1200000.0m);
 				}
 
@@ -223,11 +223,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			this.AddCat ("Immobilier", null, "10", 0.04m, AmortizationType.Linear,
 				Periodicity.Annual, ProrataType.None, 1.0m, 1.0m,
-				"1000", "1010", "1600", "1600", "6930", "6900");
+				"1000", "1010", "1600", "1600", "6930", "6900", "6900");
 
 			this.AddCat ("Véhicules", null, "20", 0.10m, AmortizationType.Linear,
 				Periodicity.Annual, ProrataType.None, 1.0m, 1.0m,
-				"1000", "1010", "1530", "1530", "6920", "6900");
+				"1000", "1010", "1530", "1530", "6920", "6900", "6900");
 		}
 
 

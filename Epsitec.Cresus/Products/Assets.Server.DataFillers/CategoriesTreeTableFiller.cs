@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.Account4,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account4.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Account5,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account5.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Account6,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account6.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Account7,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account7.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<8+6; i++)
+			for (int i=0; i<8+7; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -110,8 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell24 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account4), cellState);
 				var cell25 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account5), cellState);
 				var cell26 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account6), cellState);
-				//var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
-				//var cell28 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account8), cellState);
+				var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
 
 				int columnRank = 0;
 
@@ -130,8 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell24);
 				content.Columns[columnRank++].AddRow (cell25);
 				content.Columns[columnRank++].AddRow (cell26);
-				//content.Columns[columnRank++].AddRow (cell27);
-				//content.Columns[columnRank++].AddRow (cell28);
+				content.Columns[columnRank++].AddRow (cell27);
 			}
 
 			return content;

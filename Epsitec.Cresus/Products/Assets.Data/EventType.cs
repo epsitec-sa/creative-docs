@@ -12,10 +12,10 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		Unknown,
 		Input,					// entrée dans l'inventaire, acquisition
-		Modification,			// modification de diverses informations
-		Revaluation,			// réévaluation
-		Revalorization,			// revalorisation
-		MainValue,				// modification de la valeur comptable (revalorisation, réévaluation)
+		Modification,			// modification de diverses informations (sauf valeur comptable)
+		Increase,				// augmentation de la valeur comptable (revalorisation)
+		Decrease,				// diminution de la valeur comptable (réévaluation)
+		MainValue,				// modification de la valeur comptable (obsolète ?)
 		AmortizationAuto,		// amortissement ordinaire
 		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire

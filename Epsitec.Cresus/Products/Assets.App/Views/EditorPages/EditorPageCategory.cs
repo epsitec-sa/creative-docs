@@ -52,8 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateAccountController (parent, ObjectField.Account4, forcedDate);
 			this.CreateAccountController (parent, ObjectField.Account5, forcedDate);
 			this.CreateAccountController (parent, ObjectField.Account6, forcedDate);
-			//this.CreateAccountGuidController (parent, ObjectField.Account7);
-			//this.CreateAccountGuidController (parent, ObjectField.Account8);
+			this.CreateAccountController (parent, ObjectField.Account7, forcedDate);
 		}
 
 		private void CreateCalculatorButton()

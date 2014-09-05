@@ -335,8 +335,8 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 					switch (type)
 					{
 						case EventType.AmortizationExtra:
-						case EventType.Revaluation:
-						case EventType.Revalorization:
+						case EventType.Decrease:
+						case EventType.Increase:
 						case EventType.MainValue:
 							yield return PageType.AmortizationValue;
 							break;

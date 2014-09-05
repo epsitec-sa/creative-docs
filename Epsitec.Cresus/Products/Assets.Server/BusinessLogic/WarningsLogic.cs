@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account4, ref skip);
 				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account5, ref skip);
 				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account6, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account7, ref skip);
 			}
 
 			//	On cherche les champs indéfinis dans les groupes.
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account4, ref skip);
 						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account5, ref skip);
 						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account6, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account7, ref skip);
 					}
 
 					//	On cherche les comptes incorrects dans les écritures.

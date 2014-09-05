@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private BaseType						BaseType;
 		private DataObject						DataObject;
 		private Timestamp						Timestamp;
 
@@ -186,8 +185,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				yield return EventType.Input;
 				yield return EventType.Modification;
-				yield return EventType.Revaluation;
-				yield return EventType.Revalorization;
+				yield return EventType.Increase;
+				yield return EventType.Decrease;
 				//?yield return EventType.MainValue;
 				//?yield return EventType.AmortizationExtra;
 				yield return EventType.Locked;
@@ -214,16 +213,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						Res.Strings.Event.Modification.Help.ToString (),
 						enable);
 
-				case EventType.Revaluation:
+				case EventType.Decrease:
 					return new ButtonDescription (type,
-						Res.Strings.Event.Revaluation.ShortName.ToString (),
-						Res.Strings.Event.Revaluation.Help.ToString (),
+						Res.Strings.Event.Decrease.ShortName.ToString (),
+						Res.Strings.Event.Decrease.Help.ToString (),
 						enable);
 
-				case EventType.Revalorization:
+				case EventType.Increase:
 					return new ButtonDescription (type,
-						Res.Strings.Event.Revalorization.ShortName.ToString (),
-						Res.Strings.Event.Revalorization.Help.ToString (),
+						Res.Strings.Event.Increase.ShortName.ToString (),
+						Res.Strings.Event.Increase.Help.ToString (),
 						enable);
 
 				case EventType.MainValue:
@@ -295,7 +294,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				var popup = new CreateEventPopup (accessor)
 				{
-					BaseType   = baseType,
 					DataObject = obj,
 					Timestamp  = timestamp,
 				};

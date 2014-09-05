@@ -58,16 +58,16 @@
   <data name="Popup.CreateEvent.Title" id="KO1">Création d'un nouvel événement</data>
   <data name="Event.Input.ShortName" id="KP1">Entrée</data>
   <data name="Event.Modification.ShortName" id="KQ1">Modification générale</data>
-  <data name="Event.Revaluation.ShortName" id="KR1">Réévaluation</data>
-  <data name="Event.Revalorization.ShortName" id="KS1">Revalorisation</data>
+  <data name="Event.Decrease.ShortName" id="KR1">Diminution</data>
+  <data name="Event.Increase.ShortName" id="KS1">Augmentation</data>
   <data name="Event.MainValue.ShortName" id="KT1">Ajustement de la valeur comptable</data>
   <data name="Event.AmortizationExtra.ShortName" id="KU1">Amortissement extraordinaire</data>
   <data name="Event.Locked.ShortName" id="KV1">Verrou</data>
   <data name="Event.Output.ShortName" id="K02">Sortie</data>
   <data name="Event.Input.Help" id="K12">Entrée dans l'inventaire, acquisition</data>
   <data name="Event.Modification.Help" id="K22">Modification de diverses informations,&lt;br/&gt;sauf de la valeur comptable</data>
-  <data name="Event.Revaluation.Help" id="K32">Réévaluation de la valeur comptable</data>
-  <data name="Event.Revalorization.Help" id="K42">Revalorisation de la valeur comptable</data>
+  <data name="Event.Decrease.Help" id="K32">Diminution de la valeur comptable (réévaluation)</data>
+  <data name="Event.Increase.Help" id="K42">Augmentation de la valeur comptable (revalorisation)</data>
   <data name="Event.MainValue.Help" id="K52">Ajustement extraordinaire de la valeur comptable</data>
   <data name="Event.AmortizationExtra.Help" id="K62">Amortissement de la valeur comptable</data>
   <data name="Event.Locked.Help" id="K72">Verrouille tous les événements antérieurs</data>

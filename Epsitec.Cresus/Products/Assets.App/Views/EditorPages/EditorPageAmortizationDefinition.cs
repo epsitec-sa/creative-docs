@@ -46,8 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateAccountController (parent, ObjectField.Account4);
 			this.CreateAccountController (parent, ObjectField.Account5);
 			this.CreateAccountController (parent, ObjectField.Account6);
-			//this.CreateAccountGuidController (parent, ObjectField.Account7);
-			//this.CreateAccountGuidController (parent, ObjectField.Account8);
+			this.CreateAccountController (parent, ObjectField.Account7);
 		}
 
 		private void CreateImportButton(Widget parent)

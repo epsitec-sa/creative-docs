@@ -14,7 +14,7 @@
   <data name="CategoriesTreeTableFiller.Account3" id="KB">Compte d'immob.</data>
   <data name="CategoriesTreeTableFiller.Account4" id="KC">Compte d'amort.</data>
   <data name="CategoriesTreeTableFiller.Account5" id="KD">Charge d'amort.</data>
-  <data name="CategoriesTreeTableFiller.Account6" id="KE">Compte réévaluation</data>
+  <data name="CategoriesTreeTableFiller.Account6" id="KE">Compte revalorisation</data>
   <data name="EntriesTreeTableFiller.Date" id="KF">Date</data>
   <data name="EntriesTreeTableFiller.Debit" id="KG">Débit</data>
   <data name="EntriesTreeTableFiller.Credit" id="KH">Crédit</data>
@@ -49,4 +49,5 @@
   <data name="UserFieldsTreeTableFiller.LineCount" id="KE1">Nb lignes</data>
   <data name="UserFieldsTreeTableFiller.TopMargin" id="KF1">Marge sup.</data>
   <data name="UserFieldsTreeTableFiller.SummaryOrder" id="KG1">Ds résumé</data>
+  <data name="CategoriesTreeTableFiller.Account7" id="KH1">Compte réévaluation</data>
 </bundle>

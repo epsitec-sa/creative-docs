@@ -270,8 +270,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected void AddCat(string name, string desc, string number, decimal rate,
 			AmortizationType type, Periodicity periodicity, ProrataType prorata,
 			decimal round, decimal residual,
-			string account1 = null, string account2 = null, string account3 = null,
-			string account4 = null, string account5 = null, string account6 = null)
+			string account1 = null, string account2 = null, string account3 = null, string account4 = null,
+			string account5 = null, string account6 = null, string account7 = null, string account8 = null)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -297,6 +297,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Account4,	        account4);
 			this.AddField (e, ObjectField.Account5,	        account5);
 			this.AddField (e, ObjectField.Account6,	        account6);
+			this.AddField (e, ObjectField.Account7,	        account7);
+			this.AddField (e, ObjectField.Account8,	        account8);
 		}
 
 

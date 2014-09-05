@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Sale,				// vente
 		AmortizationAuto,
 		AmortizationExtra,
-		Revaluation,
+		Increase,
+		Decrease,
 	}
 }

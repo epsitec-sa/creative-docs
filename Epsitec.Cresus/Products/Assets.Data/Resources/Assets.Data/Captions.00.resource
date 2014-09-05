@@ -42,15 +42,15 @@
   <data name="Val.EventType.Unknown" id="K1">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
   <data name="Val.EventType.Input" id="K2">&lt;s:data id="_0" f:Name="Input" f:Labels="{Collection {Text 'Entrée'}}" /&gt;</data>
   <data name="Val.EventType.Modification" id="K3">&lt;s:data id="_0" f:Name="Modification" f:Labels="{Collection {Text 'Modification générale'}}" /&gt;</data>
-  <data name="Val.EventType.Revaluation" id="K4">&lt;s:data id="_0" f:Name="Revaluation" f:Labels="{Collection {Text 'Réévaluation'}}" /&gt;</data>
-  <data name="Val.EventType.Revalorization" id="K5">&lt;s:data id="_0" f:Name="Revalorization" f:Labels="{Collection {Text 'Revalorisation'}}" /&gt;</data>
+  <data name="Val.EventType.Decrease" id="K4">&lt;s:data id="_0" f:Name="Decrease" f:Labels="{Collection {Text 'Diminution'}}" /&gt;</data>
+  <data name="Val.EventType.Increase" id="K5">&lt;s:data id="_0" f:Name="Increase" f:Labels="{Collection {Text 'Augmentation'}}" /&gt;</data>
   <data name="Val.EventType.MainValue" id="K6">&lt;s:data id="_0" f:Name="MainValue" f:Labels="{Collection {Text 'Modification valeur'}}" /&gt;</data>
   <data name="Val.EventType.AmortizationAuto" id="K7">&lt;s:data id="_0" f:Name="AmortizationAuto" f:Labels="{Collection {Text 'Amort. ordinaire'}}" /&gt;</data>
   <data name="Val.EventType.AmortizationPreview" id="K8">&lt;s:data id="_0" f:Name="AmortizationPreview" f:Labels="{Collection {Text 'Préamortissement'}}" /&gt;</data>
   <data name="Val.EventType.AmortizationExtra" id="K9">&lt;s:data id="_0" f:Name="AmortizationExtra" f:Labels="{Collection {Text 'Amort. extraordinaire'}}" /&gt;</data>
   <data name="Val.EventType.Locked" id="KA">&lt;s:data id="_0" f:Name="Locked" f:Labels="{Collection {Text 'Verrou'}}" /&gt;</data>
   <data name="Val.EventType.Output" id="KB">&lt;s:data id="_0" f:Name="Output" f:Labels="{Collection {Text 'Sortie'}}" /&gt;</data>
-  <data name="Typ.EventType" id="K">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="EventType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.EventType, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [HUK1001]'}, {Text '1 [HUK2001]'}, {Text '2 [HUK3001]'}, {Text '3 [HUK4001]'}, {Text '4 [HUK5001]'}, {Text '5 [HUK6001]'}, {Text '6 [HUK7001]'}, {Text '7 [HUK8001]'}, {Text '8 [HUK9001]'}, {Text '9 [HUKA001]'}, {Text '10 [HUKB001]'}}" /&gt;</data>
+  <data name="Typ.EventType" id="K">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="EventType" f:_1.SystemType="E:Epsitec.Cresus.Assets.Data.EventType, Assets.Data" f:_2.EnumValues="{Collection {Text '0 [HUK1001]'}, {Text '1 [HUK2001]'}, {Text '2 [HUK3001]'}, {Text '3 [HUK4001]'}, {Text '4 [HUKP201]'}, {Text '5 [HUK5001]'}, {Text '6 [HUKQ201]'}, {Text '7 [HUK6001]'}, {Text '8 [HUK7001]'}, {Text '9 [HUK8001]'}, {Text '10 [HUK9001]'}, {Text '11 [HUKA001]'}, {Text '12 [HUKB001]'}}" f:_1.DefaultValue="Epsitec.Cresus.Assets.Data.EventType, Assets.Data/Unknown" /&gt;</data>
   <data name="Val.ObjectField.Unknown" id="KD">&lt;s:data id="_0" f:Name="Unknown" /&gt;</data>
   <data name="Val.ObjectField.OneShotNumber" id="KE">&lt;s:data id="_0" f:Name="OneShotNumber" f:Labels="{Collection {Text 'Evénement numéro'}}" /&gt;</data>
   <data name="Val.ObjectField.OneShotDateEvent" id="KF">&lt;s:data id="_0" f:Name="OneShotDateEvent" f:Labels="{Collection {Text 'Date événement'}}" /&gt;</data>
@@ -74,8 +74,8 @@
   <data name="Val.ObjectField.Account3" id="K11">&lt;s:data id="_0" f:Name="Account3" f:Labels="{Collection {Text 'Compte d\'immob.'}}" /&gt;</data>
   <data name="Val.ObjectField.Account4" id="K21">&lt;s:data id="_0" f:Name="Account4" f:Labels="{Collection {Text 'Compte d\'amort.'}}" /&gt;</data>
   <data name="Val.ObjectField.Account5" id="K31">&lt;s:data id="_0" f:Name="Account5" f:Labels="{Collection {Text 'Charge d\'amort.'}}" /&gt;</data>
-  <data name="Val.ObjectField.Account6" id="K41">&lt;s:data id="_0" f:Name="Account6" f:Labels="{Collection {Text 'Compte réévaluation'}}" /&gt;</data>
-  <data name="Val.ObjectField.Account7" id="K51">&lt;s:data id="_0" f:Name="Account7" /&gt;</data>
+  <data name="Val.ObjectField.Account6" id="K41">&lt;s:data id="_0" f:Name="Account6" f:Labels="{Collection {Text 'Compte revalorisation'}}" /&gt;</data>
+  <data name="Val.ObjectField.Account7" id="K51">&lt;s:data id="_0" f:Name="Account7" f:Labels="{Collection {Text 'Compte réévaluation'}}" /&gt;</data>
   <data name="Val.ObjectField.Account8" id="K61">&lt;s:data id="_0" f:Name="Account8" /&gt;</data>
   <data name="Val.ObjectField.AssetEntryForcedDate" id="K71">&lt;s:data id="_0" f:Name="AssetEntryForcedDate" /&gt;</data>
   <data name="Val.ObjectField.AssetEntryForcedDebit" id="K81">&lt;s:data id="_0" f:Name="AssetEntryForcedDebit" /&gt;</data>

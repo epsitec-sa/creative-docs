@@ -163,6 +163,22 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Cresus.Assets.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 					}
 				}
+				//	designer:cap/IUK6001
+				public static global::Epsitec.Common.Types.Caption Decrease
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
+					}
+				}
+				//	designer:cap/IUKQ101
+				public static global::Epsitec.Common.Types.Caption Increase
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
+					}
+				}
 				//	designer:cap/IUK1001
 				public static global::Epsitec.Common.Types.Caption None
 				{
@@ -177,14 +193,6 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Cresus.Assets.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
-					}
-				}
-				//	designer:cap/IUK6001
-				public static global::Epsitec.Common.Types.Caption Revaluation
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Assets.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
 					}
 				}
 				//	designer:cap/IUK3001
