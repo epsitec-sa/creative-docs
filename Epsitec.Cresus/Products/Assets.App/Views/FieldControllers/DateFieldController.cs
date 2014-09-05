@@ -621,7 +621,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
-		[DesignerVisible]
 		private enum DateType
 		{
 			Unknown,

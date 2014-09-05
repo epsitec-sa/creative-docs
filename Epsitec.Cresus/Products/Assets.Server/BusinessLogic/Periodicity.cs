@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -11,7 +10,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	//	ainsi. Il s'agit simplement d'une aide pour le debug, lorsque le
 	//	contrôleur des énumérations EnumFieldController manipule des int.
 
-	[DesignerVisible]
 	public enum Periodicity
 	{
 		Unknown     = 0,
