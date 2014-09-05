@@ -129,30 +129,72 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (category)
 			{
+				case AccountCategory.Actif:
+					return Res.Strings.Enum.AccountCategory.Actif.ToString ();
+
+				case AccountCategory.Passif:
+					return Res.Strings.Enum.AccountCategory.Passif.ToString ();
+
+				case AccountCategory.Charge:
+					return Res.Strings.Enum.AccountCategory.Charge.ToString ();
+
+				case AccountCategory.Produit:
+					return Res.Strings.Enum.AccountCategory.Produit.ToString ();
+
+				case AccountCategory.Exploitation:
+					return Res.Strings.Enum.AccountCategory.Exploitation.ToString ();
+
 				default:
 					return null;
 			}
-			return EnumKeyValues.GetEnumKeyValue (category).Values.First ().ToString ();
 		}
 
 		public static string GetAccountTypeName(AccountType type)
 		{
 			switch (type)
 			{
+				case AccountType.Normal:
+					return Res.Strings.Enum.AccountType.Normal.ToString ();
+
+				case AccountType.Groupe:
+					return Res.Strings.Enum.AccountType.Groupe.ToString ();
+
+				case AccountType.TVA:
+					return Res.Strings.Enum.AccountType.TVA.ToString ();
+
 				default:
 					return null;
 			}
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
 			switch (type)
 			{
+				case EntryScenario.None:
+					return Res.Strings.Enum.EntryScenario.None.ToString ();
+
+				case EntryScenario.Purchase:
+					return Res.Strings.Enum.EntryScenario.Purchase.ToString ();
+
+				case EntryScenario.Sale:
+					return Res.Strings.Enum.EntryScenario.Sale.ToString ();
+
+				case EntryScenario.AmortizationAuto:
+					return Res.Strings.Enum.EntryScenario.AmortizationAuto.ToString ();
+
+				case EntryScenario.AmortizationExtra:
+					return Res.Strings.Enum.EntryScenario.AmortizationExtra.ToString ();
+
+				case EntryScenario.Increase:
+					return Res.Strings.Enum.EntryScenario.Increase.ToString ();
+
+				case EntryScenario.Decrease:
+					return Res.Strings.Enum.EntryScenario.Decrease.ToString ();
+
 				default:
 					return null;
 			}
-			return EnumKeyValues.GetEnumKeyValue (type).Values.First ().ToString ();
 		}
 
 
