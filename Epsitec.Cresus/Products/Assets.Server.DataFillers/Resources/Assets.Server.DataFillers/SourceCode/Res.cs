@@ -10,111 +10,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	{
 		//	Code mapping for 'Caption' resources
 		
-		public static class Types
-		{
-			public static class MCH2Summary
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (MCH2Summary.Column, null);
-				}
-				
-				//	designer:cap/KUK0001
-				public static readonly Epsitec.Common.Types.EnumType Column = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
-			}
-		}
-		
-		public static class Values
-		{
-			public static class MCH2Summary
-			{
-				public static class Column
-				{
-					//	designer:cap/KUK8001
-					public static global::Epsitec.Common.Types.Caption AmortizationsAuto
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
-						}
-					}
-					//	designer:cap/KUK9001
-					public static global::Epsitec.Common.Types.Caption AmortizationsExtra
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
-						}
-					}
-					//	designer:cap/KUKA001
-					public static global::Epsitec.Common.Types.Caption FinalState
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
-						}
-					}
-					//	designer:cap/KUK2001
-					public static global::Epsitec.Common.Types.Caption InitialState
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
-						}
-					}
-					//	designer:cap/KUK3001
-					public static global::Epsitec.Common.Types.Caption Inputs
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
-						}
-					}
-					//	designer:cap/KUK1001
-					public static global::Epsitec.Common.Types.Caption Name
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
-						}
-					}
-					//	designer:cap/KUK7001
-					public static global::Epsitec.Common.Types.Caption Outputs
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
-						}
-					}
-					//	designer:cap/KUK4001
-					public static global::Epsitec.Common.Types.Caption Reorganizations
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
-						}
-					}
-					//	designer:cap/KUK6001
-					public static global::Epsitec.Common.Types.Caption Revalorizations
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6));
-						}
-					}
-					//	designer:cap/KUK5001
-					public static global::Epsitec.Common.Types.Caption Revaluations
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
-						}
-					}
-				}
-			}
-			
-		}
-		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -354,6 +249,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 						}
 						
+						public static class Decreases
+						{
+							//	designer:str/KUKQ101
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544378));
+								}
+							}
+							//	designer:str/KUKR101
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
+								}
+							}
+						}
+						
 						public static class FinalState
 						{
 							//	designer:str/KUK4201
@@ -370,6 +285,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
+								}
+							}
+						}
+						
+						public static class Increases
+						{
+							//	designer:str/KUKS101
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
+								}
+							}
+							//	designer:str/KUKT101
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
 								}
 							}
 						}
@@ -470,46 +405,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544377));
-								}
-							}
-						}
-						
-						public static class Revalorizations
-						{
-							//	designer:str/KUKS101
-							public static global::Epsitec.Common.Types.FormattedText Text
-							{
-								get
-								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
-								}
-							}
-							//	designer:str/KUKT101
-							public static global::Epsitec.Common.Types.FormattedText Tooltip
-							{
-								get
-								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
-								}
-							}
-						}
-						
-						public static class Revaluations
-						{
-							//	designer:str/KUKQ101
-							public static global::Epsitec.Common.Types.FormattedText Text
-							{
-								get
-								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544378));
-								}
-							}
-							//	designer:str/KUKR101
-							public static global::Epsitec.Common.Types.FormattedText Tooltip
-							{
-								get
-								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
 								}
 							}
 						}
@@ -1064,6 +959,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 						}
 						
+						public static class Decreases
+						{
+							//	designer:str/KUKQ101
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544378);
+								}
+							}
+							//	designer:str/KUKR101
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+								}
+							}
+						}
+						
 						public static class FinalState
 						{
 							//	designer:str/KUK4201
@@ -1080,6 +995,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
+								}
+							}
+						}
+						
+						public static class Increases
+						{
+							//	designer:str/KUKS101
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
+								}
+							}
+							//	designer:str/KUKT101
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
 								}
 							}
 						}
@@ -1180,46 +1115,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544377);
-								}
-							}
-						}
-						
-						public static class Revalorizations
-						{
-							//	designer:str/KUKS101
-							public static global::Epsitec.Common.Support.Druid Text
-							{
-								get
-								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
-								}
-							}
-							//	designer:str/KUKT101
-							public static global::Epsitec.Common.Support.Druid Tooltip
-							{
-								get
-								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
-								}
-							}
-						}
-						
-						public static class Revaluations
-						{
-							//	designer:str/KUKQ101
-							public static global::Epsitec.Common.Support.Druid Text
-							{
-								get
-								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544378);
-								}
-							}
-							//	designer:str/KUKR101
-							public static global::Epsitec.Common.Support.Druid Tooltip
-							{
-								get
-								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
 								}
 							}
 						}
@@ -1507,7 +1402,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Assets.Server.DataFillers");
-			Types.MCH2Summary._Initialize ();
 			Strings._Initialize ();
 		}
 		

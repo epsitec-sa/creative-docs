@@ -195,13 +195,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						this.DateRange,
 						EventType.Modification);
 
-				case Column.Revaluations:
+				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
 						EventType.Decrease);
 
-				case Column.Revalorizations:
+				case Column.Increases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
@@ -279,11 +279,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Text.ToString ();
 
-				case Column.Revaluations:
-					return Res.Strings.Enum.MCH2Summary.Column.Revaluations.Text.ToString ();
+				case Column.Decreases:
+					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Text.ToString ();
 
-				case Column.Revalorizations:
-					return Res.Strings.Enum.MCH2Summary.Column.Revalorizations.Text.ToString ();
+				case Column.Increases:
+					return Res.Strings.Enum.MCH2Summary.Column.Increases.Text.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
@@ -318,11 +318,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
 
-				case Column.Revaluations:
-					return Res.Strings.Enum.MCH2Summary.Column.Revaluations.Tooltip.ToString ();
+				case Column.Decreases:
+					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
 
-				case Column.Revalorizations:
-					return Res.Strings.Enum.MCH2Summary.Column.Revalorizations.Tooltip.ToString ();
+				case Column.Increases:
+					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -412,8 +412,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.InitialState;
 				yield return Column.Inputs;
 //?				yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
-				yield return Column.Revaluations;
-				yield return Column.Revalorizations;
+				yield return Column.Decreases;
+				yield return Column.Increases;
 				yield return Column.Outputs;
 				yield return Column.AmortizationsAuto;
 				yield return Column.AmortizationsExtra;
@@ -436,8 +436,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			InitialState,
 			Inputs,
 			Reorganizations,
-			Revaluations,
-			Revalorizations,
+			Decreases,
+			Increases,
 			Outputs,
 			AmortizationsAuto,
 			AmortizationsExtra,

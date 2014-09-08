@@ -58,10 +58,10 @@
   <data name="Enum.MCH2Summary.Column.Inputs.Tooltip" id="KN1">Variations dues aux entrées</data>
   <data name="Enum.MCH2Summary.Column.Reorganizations.Text" id="KO1">Réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Reorganizations.Tooltip" id="KP1">Variations dues aux réorganisations</data>
-  <data name="Enum.MCH2Summary.Column.Revaluations.Text" id="KQ1">Réévaluations</data>
-  <data name="Enum.MCH2Summary.Column.Revaluations.Tooltip" id="KR1">Valeurs après réévaluations</data>
-  <data name="Enum.MCH2Summary.Column.Revalorizations.Text" id="KS1">Revalorisations</data>
-  <data name="Enum.MCH2Summary.Column.Revalorizations.Tooltip" id="KT1">Valeurs après revalorisations</data>
+  <data name="Enum.MCH2Summary.Column.Decreases.Text" id="KQ1">Réévaluations</data>
+  <data name="Enum.MCH2Summary.Column.Decreases.Tooltip" id="KR1">Valeurs après réévaluations (diminutions)</data>
+  <data name="Enum.MCH2Summary.Column.Increases.Text" id="KS1">Revalorisations</data>
+  <data name="Enum.MCH2Summary.Column.Increases.Tooltip" id="KT1">Valeurs après revalorisations (augmentations)</data>
   <data name="Enum.MCH2Summary.Column.Outputs.Text" id="KU1">Sorties</data>
   <data name="Enum.MCH2Summary.Column.Outputs.Tooltip" id="KV1">Variations dues aux sorties</data>
   <data name="Enum.MCH2Summary.Column.AmortizationsAuto.Text" id="K02">Amort. ord.</data>
