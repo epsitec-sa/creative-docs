@@ -24,9 +24,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToNoSubView).IfTrue(!user.CanEditEmployee ())
 				.Attribute (BrickMode.DefaultToCreationOrEditionSubView).IfTrue(user.CanEditEmployee ());
 
-			wall.AddBrick (x => x.PersonContact)
-				.Attribute (BrickMode.DefaultToSummarySubView);
-
 			wall.AddBrick (x => x.EmployeeJobs)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)

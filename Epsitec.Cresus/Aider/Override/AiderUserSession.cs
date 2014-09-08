@@ -73,48 +73,51 @@ namespace Epsitec.Aider.Override
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (!user.HasPowerLevel (UserPowerLevel.Administrator))
+			if (user.HasPowerLevel (UserPowerLevel.Administrator))
 			{
-				return new LambdaFilter<AiderUserEntity> (x => x.LoginName == user.LoginName);
+				return null;
 			}
-
-			return null;
+			
+			return new LambdaFilter<AiderUserEntity> (x => x.LoginName == user.LoginName);
 		}
 
 		private IFilter GetAiderRefereeEntityFilter(AiderRefereeEntity example)
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
+				(user.EnableGroupEditionCanton))
 			{
-				return new LambdaFilter<AiderRefereeEntity> (x => x.ReferenceType == Enumerations.EmployeeReferenceType.PublicReferee);
+				return null;
 			}
 
-			return null;
+			return new LambdaFilter<AiderRefereeEntity> (x => x.ReferenceType == Enumerations.EmployeeReferenceType.PublicReferee);
 		}
 
 		private IFilter GetAiderEmployeeEntityFilter(AiderEmployeeEntity example)
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
+				(user.EnableGroupEditionCanton))
 			{
-				return new LambdaFilter<AiderEmployeeEntity> (x => x.EmployeeType == Enumerations.EmployeeType.PublicEmployee);
+				return null;
 			}
 
-			return null;
+			return new LambdaFilter<AiderEmployeeEntity> (x => x.EmployeeType == Enumerations.EmployeeType.PublicEmployee);
 		}
 
 		private IFilter GetAiderEmployeeJobEntityFilter(AiderEmployeeJobEntity example)
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (!user.EnableGroupEditionCanton || !user.HasPowerLevel (UserPowerLevel.Administrator))
+			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
+				(user.EnableGroupEditionCanton))
 			{
-				return new LambdaFilter<AiderEmployeeJobEntity> (x => x.EmployeeJobFunction == Enumerations.EmployeeJobFunction.PublicJob);			
+				return null;
 			}
 
-			return null;
+			return new LambdaFilter<AiderEmployeeJobEntity> (x => x.EmployeeJobFunction == Enumerations.EmployeeJobFunction.PublicJob);			
 		}
 
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
