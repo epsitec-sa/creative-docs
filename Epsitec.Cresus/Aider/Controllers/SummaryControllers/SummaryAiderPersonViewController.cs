@@ -51,11 +51,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (showEmployeeTile)
 			{
+				var type = canEditEmployee
+						 ? typeof (SummaryAiderEmployeeViewController2WithoutContact)
+						 : typeof (SummaryAiderEmployeeViewController3WithoutContactReadonly);
+
 				wall.AddBrick (x => x.Employee)
 					.Title ("Emploi")
 					.Text (x => x.GetEmployeeSummary ())
 					.Attribute (BrickMode.DefaultToSummarySubView)
-					.WithSpecialController (typeof (SummaryAiderEmployeeViewController1WithPersonDetails)).IfFalse (canEditEmployee);
+					.WithSpecialController (type);
 			}
 
 			wall.AddBrick ()

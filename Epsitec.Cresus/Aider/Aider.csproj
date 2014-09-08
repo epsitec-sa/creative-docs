@@ -229,8 +229,9 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController2OfficeManagement.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController1WithPersonDetails.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController2WithoutContact.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController1ReadOnly.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController1OfficeManagement.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController2Documents.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_DerogationChange.cs" />

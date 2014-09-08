@@ -14,7 +14,7 @@ using Epsitec.Aider.Override;
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
 	[ControllerSubType (2)]
-	public sealed class SummaryAiderEmployeeViewController2OfficeManagement : SummaryViewController<AiderEmployeeEntity>
+	public sealed class SummaryAiderEmployeeViewController2WithoutContact : SummaryViewController<AiderEmployeeEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderEmployeeEntity> wall)
 		{

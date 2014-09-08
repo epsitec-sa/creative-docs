@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.EmployeeType, "(~", this.Description, "~)", "\n", this.EmployeeActivity);
+			return TextFormatter.FormatText (this.Person.GetCompactSummary (), "\n", this.EmployeeType, "(~", this.Description, "~)", "\n", this.EmployeeActivity);
 		}
 
 		public FormattedText GetEmployeeSummary()
