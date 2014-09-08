@@ -662,7 +662,7 @@
   <data name="Val.Enum.OfficeType.None" id="ATK">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.Parish" id="AUK">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.Region" id="AVK">&lt;s:data id="_0" f:Name="Region" f:Labels="{Collection {Text 'Région'}}" /&gt;</data>
-  <data name="Typ.Enum.OfficeType" id="ASK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.OfficeType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.OfficeType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATK]'}, {Text '1 [LVAUK]'}, {Text '2 [LVAVK]'}, {Text '3 [LVABL]'}, {Text '4 [LVACL]'}, {Text '5 [LVADL]'}, {Text '6 [LVAEL]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.OfficeType, Aider/None" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
+  <data name="Typ.Enum.OfficeType" id="ASK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.OfficeType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.OfficeType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATK]'}, {Text '1 [LVAUK]'}, {Text '2 [LVAVK]'}, {Text '3 [LVAFL]'}, {Text '4 [LVAGL]'}, {Text '5 [LVAHL]'}, {Text '6 [LVABL]'}, {Text '7 [LVACL]'}, {Text '8 [LVADL]'}, {Text '9 [LVAEL]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.OfficeType, Aider/None" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.OfficeType" id="A3L">&lt;s:data id="_0" f:Name="OfficeType" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.RegionalReferees" id="A4L">&lt;s:data id="_0" f:Name="RegionalReferees" f:Labels="{Collection {Text 'Répondances régionales'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.ECVD" id="A5L">&lt;s:data id="_0" f:Name="ECVD" f:Labels="{Collection {Text 'Eglise catholique VD'}}" /&gt;</data>
@@ -688,4 +688,7 @@
   <data name="Val.Enum.OfficeType.CantonService" id="ACL">&lt;s:data id="_0" f:Name="CantonService" f:Labels="{Collection {Text 'Service cantonal'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.CantonLieuPhare" id="ADL">&lt;s:data id="_0" f:Name="CantonLieuPhare" f:Labels="{Collection {Text 'Lieu-phare'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.CantonMiCo" id="AEL">&lt;s:data id="_0" f:Name="CantonMiCo" f:Labels="{Collection {Text 'Mission commune'}}" /&gt;</data>
+  <data name="Val.Enum.OfficeType.RegionFA" id="AFL">&lt;s:data id="_0" f:Name="RegionFA" f:Labels="{Collection {Text 'Région – Formation et accompagnement'}}" /&gt;</data>
+  <data name="Val.Enum.OfficeType.RegionPS" id="AGL">&lt;s:data id="_0" f:Name="RegionPS" f:Labels="{Collection {Text 'Région – Présence et solidarité'}}" /&gt;</data>
+  <data name="Val.Enum.OfficeType.RegionCI" id="AHL">&lt;s:data id="_0" f:Name="RegionCI" f:Labels="{Collection {Text 'Région – Coordination et information'}}" /&gt;</data>
 </bundle>

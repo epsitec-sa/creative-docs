@@ -1241,22 +1241,6 @@ namespace Epsitec.Aider
 				
 				public static class OfficeType
 				{
-					//	designer:cap/LVA0L
-					public static global::Epsitec.Common.Types.Caption Canton
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 672));
-						}
-					}
-					//	designer:cap/LVA2L
-					public static global::Epsitec.Common.Types.Caption CantonalGroup
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 674));
-						}
-					}
 					//	designer:cap/LVADL
 					public static global::Epsitec.Common.Types.Caption CantonLieuPhare
 					{
@@ -1313,12 +1297,28 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 671));
 						}
 					}
-					//	designer:cap/LVA1L
-					public static global::Epsitec.Common.Types.Caption RegionalGroup
+					//	designer:cap/LVAHL
+					public static global::Epsitec.Common.Types.Caption RegionCI
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 673));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 689));
+						}
+					}
+					//	designer:cap/LVAFL
+					public static global::Epsitec.Common.Types.Caption RegionFA
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 687));
+						}
+					}
+					//	designer:cap/LVAGL
+					public static global::Epsitec.Common.Types.Caption RegionPS
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 688));
 						}
 					}
 				}
