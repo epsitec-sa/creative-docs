@@ -9,9 +9,10 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
 	public struct ReportNode
 	{
-		public ReportNode(string description, string sortableDescription, Guid guid)
+		public ReportNode(string description1, string description2, string sortableDescription, Guid guid)
 		{
-			this.Description         = description;
+			this.Description1        = description1;
+			this.Description2        = description2;
 			this.SortableDescription = sortableDescription;
 			this.Guid                = guid;
 		}
@@ -28,15 +29,17 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.Description)
+				return string.IsNullOrEmpty (this.Description1)
+					&& string.IsNullOrEmpty (this.Description2)
 					&& string.IsNullOrEmpty (this.SortableDescription)
 					&& this.Guid.IsEmpty;
 			}
 		}
 
-		public static ReportNode Empty = new ReportNode (null, null, Guid.Empty);
+		public static ReportNode Empty = new ReportNode (null, null, null, Guid.Empty);
 
-		public readonly string				Description;
+		public readonly string				Description1;
+		public readonly string				Description2;
 		public readonly string				SortableDescription;
 		public readonly Guid				Guid;
 	}

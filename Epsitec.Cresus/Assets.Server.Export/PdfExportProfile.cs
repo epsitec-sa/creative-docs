@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -32,7 +33,42 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public static PdfExportProfile Default =
 			new PdfExportProfile (PdfStyle.Factory (PdfPredefinedStyle.Frameless), new Size (297.0, 210.0),
 				new Margins (10.0), new Margins (1.0), ExportFont.Arial, 10.0, false,
-				"Crésus <TIRET> <TITLE>", "Epsitec SA", "•   ", "SPECIMEN");
+				TagConverters.Compile ("Crésus <TIRET> <TITLE>"),
+				TagConverters.Compile ("Epsitec SA"),
+				TagConverters.Compile ("<BULLET><SPACE><SPACE><SPACE>"),
+				TagConverters.Compile ("SPECIMEN"));
+
+		public string							FinalHeader
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Header);
+			}
+		}
+
+		public string							FinalFooter
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Footer);
+			}
+		}
+
+		public string							FinalIndent
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Indent);
+			}
+		}
+
+		public string							FinalWatermark
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Watermark);
+			}
+		}
 
 		public readonly PdfStyle				Style;
 		public readonly Size					PageSize;

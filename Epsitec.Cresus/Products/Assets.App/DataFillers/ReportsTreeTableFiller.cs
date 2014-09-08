@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.NodeGetters;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -55,7 +54,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.Tree, this.width, this.Title));
+				list.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.Tree,   this.width/2, this.Title));
+				list.Add (new TreeTableColumnDescription (ObjectField.Name,        TreeTableColumnType.String, this.width/2, null));
 
 				return list.ToArray ();
 			}
@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public override TreeTableContentItem GetContent(int firstRow, int count, int selection)
 		{
 			var c1 = new TreeTableColumnItem ();
+			var c2 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -76,31 +77,36 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				NodeType nodeType;
 				int      level;
-				string   desc;
+				string   desc1, desc2;
 
 				if (node.IsTitle)
 				{
 					nodeType = NodeType.Expanded;  // triangle 'v'
 					level    = 0;
-					desc     = node.Description;
+					desc1    = node.Description1;
+					desc2    = node.Description2;
 				}
 				else
 				{
 					nodeType = NodeType.Final;  // pas de triangle
 					level    = 1;
-					desc     = node.Description;
+					desc1    = node.Description1;
+					desc2    = node.Description2;
 				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var s1 = new TreeTableCellTree (level, nodeType, desc, cellState);
+				var s1 = new TreeTableCellTree   (level, nodeType, desc1, cellState);
+				var s2 = new TreeTableCellString (desc2, cellState);
 
 				c1.AddRow (s1);
+				c2.AddRow (s2);
 			}
 
 			var content = new TreeTableContentItem ();
 
 			content.Columns.Add (c1);
+			content.Columns.Add (c2);
 
 			return content;
 		}

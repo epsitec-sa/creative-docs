@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
+using Epsitec.Cresus.Assets.Export.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -40,11 +42,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static AbstractReportParams Search(DataAccessor accessor, string customTitle)
+		{
+			if (string.IsNullOrEmpty (customTitle))
+			{
+				return null;
+			}
+			else
+			{
+				return accessor.Mandat.Reports
+					.Where (x => x.CustomTitle == customTitle)
+					.FirstOrDefault ();
+			}
+		}
+
+
 		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams, ReportTitleType type)
 		{
 			//	Retourne le titre d'un rapport d'après les paramètres.
 			string title    = null;
 			string specific = null;
+			string custom   = reportParams.CustomTitle;
 
 			if (reportParams is MCH2SummaryParams)
 			{
@@ -59,6 +77,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ReportParamsHelper.GetTitle (accessor, reportParams as PersonsParams, out title, out specific);
 			}
 
+			var tags = new Dictionary<string, string> ();
+			ReportParamsHelper.AddTags (tags, accessor, reportParams);
+			TagConverters.AddDefaultTags (tags);
+
+			title    = TagConverters.GetFinalText (tags, title   );
+			specific = TagConverters.GetFinalText (tags, specific);
+			custom   = TagConverters.GetFinalText (tags, custom  );
+
 			switch (type)
 			{
 				case ReportTitleType.Title:
@@ -67,8 +93,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ReportTitleType.Specific:
 					return specific;
 
+				case ReportTitleType.Custom:
+					return custom;
+
+				case ReportTitleType.Sortable:
+					return string.Concat (title, "_$$_", specific);
+
+				case ReportTitleType.Full:
+					if (string.IsNullOrEmpty (custom))
+					{
+						return string.Concat (title, " — ", specific);
+					}
+					else
+					{
+						return string.Concat (title, " — ", custom);
+					}
+
 				default:
-					return string.Concat (title, " ", specific);
+					throw new System.InvalidOperationException (string.Format ("Invalid type {0}", type));
 			}
 		}
 
@@ -117,6 +159,55 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			title    = Res.Strings.ReportParams.Persons.ToString ();
 			specific = Res.Strings.ReportParams.Specific.ToString ();
+		}
+
+
+
+		private static void AddTags(Dictionary<string, string> dict, DataAccessor accessor, AbstractReportParams reportParams)
+		{
+			if (reportParams is MCH2SummaryParams)
+			{
+				ReportParamsHelper.AddTags (dict, accessor, reportParams as MCH2SummaryParams);
+			}
+			else if (reportParams is AssetsParams)
+			{
+				ReportParamsHelper.AddTags (dict, accessor, reportParams as AssetsParams);
+			}
+			else if (reportParams is PersonsParams)
+			{
+				ReportParamsHelper.AddTags (dict, accessor, reportParams as PersonsParams);
+			}
+		}
+
+		private static void AddTags(Dictionary<string, string> dict, DataAccessor accessor, MCH2SummaryParams reportParams)
+		{
+			var date = reportParams.DateRange.ToNiceString ();
+			dict.Add (TagConverters.Compile ("<DATE>"), date);
+
+			var group = GroupsLogic.GetShortName (accessor, reportParams.RootGuid);
+			dict.Add (TagConverters.Compile ("<GROUP>"), group);
+
+			var level = reportParams.Level.HasValue ? reportParams.Level.ToString () : "";
+			dict.Add (TagConverters.Compile ("<LEVEL>"), level);
+
+			var filter = GroupsLogic.GetShortName (accessor, reportParams.FilterGuid);
+			dict.Add (TagConverters.Compile ("<FILTER>"), filter);
+		}
+
+		private static void AddTags(Dictionary<string, string> dict, DataAccessor accessor, AssetsParams reportParams)
+		{
+			var date = TypeConverters.DateToString (reportParams.Timestamp.Date);
+			dict.Add (TagConverters.Compile ("<DATE>"), date);
+
+			var group = GroupsLogic.GetShortName (accessor, reportParams.RootGuid);
+			dict.Add (TagConverters.Compile ("<GROUP>"), group);
+
+			var level = reportParams.Level.HasValue ? reportParams.Level.ToString () : "";
+			dict.Add (TagConverters.Compile ("<LEVEL>"), level);
+		}
+
+		private static void AddTags(Dictionary<string, string> dict, DataAccessor accessor, PersonsParams reportParams)
+		{
 		}
 	}
 }

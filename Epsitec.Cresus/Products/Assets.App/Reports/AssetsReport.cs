@@ -46,9 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var popup = new AssetsReportPopup (this.accessor)
 			{
-				Date      = this.Params.Timestamp.Date,
-				GroupGuid = this.Params.RootGuid,
-				Level     = this.Params.Level,
+				AssetsParams = this.Params,
 			};
 
 			popup.Create (target, leftOrRight: true);
@@ -57,12 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (name == "ok")
 				{
-					this.reportParams = new AssetsParams
-					(
-						new Timestamp (popup.Date.GetValueOrDefault (), 0),
-						popup.GroupGuid,
-						popup.Level
-					);
+					this.reportParams = popup.AssetsParams;
 					this.UpdateParams ();
 				}
 			};

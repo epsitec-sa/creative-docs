@@ -77,13 +77,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (1) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					indent = Converters.EditableToInternal (controller.Value);
+					indent = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					endOfLine = Converters.EditableToInternal (controller.Value);
+					endOfLine = controller.Value;
 				}
 
 				{
@@ -105,13 +105,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (1) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Indent);
+					controller.Value = value.Indent;
 				}
 
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+					controller.Value = value.EndOfLine;
 				}
 
 				{

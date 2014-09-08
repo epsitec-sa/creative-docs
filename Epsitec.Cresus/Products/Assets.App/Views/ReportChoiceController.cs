@@ -10,7 +10,6 @@ using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -112,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private const int headerHeight     = 35;  // hauteur standard = 22
 		private const int rowHeight        = 18;
-		private const int messageWidth     = 2000;
+		private const int messageWidth     = 800;
 
 
 		private readonly DataAccessor					accessor;

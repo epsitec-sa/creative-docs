@@ -8,7 +8,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class MCH2SummaryParams : AbstractReportParams
 	{
-		public MCH2SummaryParams(DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
+		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
+			: base (customTitle)
 		{
 			this.DateRange  = dateRange;
 			this.RootGuid   = rootGuid;
@@ -16,25 +17,12 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			this.FilterGuid = filterGuid;
 		}
 
-		public MCH2SummaryParams()
-		{
-			var year = Timestamp.Now.Date.Year;  // année en cours
-
-			var i = new System.DateTime (year,   1, 1);  // 1 janvier
-			var f = new System.DateTime (year+1, 1, 1);  // 1 janvier de l'année suivante
-
-			this.DateRange  = new DateRange (i, f);
-			this.RootGuid   = Guid.Empty;
-			this.Level      = 1;
-			this.FilterGuid = Guid.Empty;
-		}
-
 
 		public override string					Title
 		{
 			get
 			{
-				return "Tableau des immobilisations MCH2";
+				return Res.Strings.Reports.MCH2Summary.DefaultTitle.ToString ();
 			}
 		}
 
@@ -45,7 +33,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			{
 				var o = other as MCH2SummaryParams;
 
-				return this.DateRange   == o.DateRange
+				return this.CustomTitle == o.CustomTitle
+					&& this.DateRange   == o.DateRange
 					&& this.RootGuid    == o.RootGuid
 					&& this.Level       == o.Level
 					&& this.FilterGuid  == o.FilterGuid;
@@ -56,7 +45,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
-			return new MCH2SummaryParams (this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
+			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
 		}
 
 

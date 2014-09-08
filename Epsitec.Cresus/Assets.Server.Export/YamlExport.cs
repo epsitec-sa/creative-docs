@@ -33,16 +33,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append ("%YAML 1.1");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 			builder.Append ("---");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 			builder.Append ("# Assets export");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 
 			for (int row=0; row<this.rowCount; row++)
 			{
 				builder.Append ("-");
-				builder.Append (this.Profile.EndOfLine);
+				builder.Append (this.Profile.FinalEndOfLine);
 
 				for (int column=0; column<this.columnCount; column++)
 				{
@@ -51,17 +51,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var content = this.GetOutputString (this.array[column, row]);
 					if (!string.IsNullOrEmpty (content))
 					{
-						builder.Append (this.Profile.Indent);
+						builder.Append (this.Profile.FinalIndent);
 						builder.Append (this.GetTag (description.Header));
 						builder.Append (": ");
 						builder.Append (content);
-						builder.Append (this.Profile.EndOfLine);
+						builder.Append (this.Profile.FinalEndOfLine);
 					}
 				}
 			}
 
 			builder.Append ("...");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 
 			return builder.ToString ();
 		}

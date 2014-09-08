@@ -124,6 +124,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.UserFieldLineWidth:
 					return Res.Strings.Enum.ObjectField.UserFieldLineWidth.ToString ();
 
+				case ObjectField.UserFieldLineCount:
+					return Res.Strings.Enum.ObjectField.UserFieldLineCount.ToString ();
+
 				case ObjectField.UserFieldRequired:
 					return Res.Strings.Enum.ObjectField.UserFieldRequired.ToString ();
 

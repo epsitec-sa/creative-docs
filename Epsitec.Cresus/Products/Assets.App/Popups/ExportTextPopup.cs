@@ -106,25 +106,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					columnSeparator = Converters.EditableToInternal (controller.Value);
+					columnSeparator = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (3) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					columnBracket = Converters.EditableToInternal (controller.Value);
+					columnBracket = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (4) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					escape = Converters.EditableToInternal (controller.Value);
+					escape = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (5) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					endOfLine = Converters.EditableToInternal (controller.Value);
+					endOfLine = controller.Value;
 				}
 
 				{
@@ -152,25 +152,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (2) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.ColumnSeparator);
+					controller.Value = value.ColumnSeparator;
 				}
 
 				{
 					var controller = this.GetController (3) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.ColumnBracket);
+					controller.Value = value.ColumnBracket;
 				}
 
 				{
 					var controller = this.GetController (4) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Escape);
+					controller.Value = value.Escape;
 				}
 
 				{
 					var controller = this.GetController (5) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+					controller.Value = value.EndOfLine;
 				}
 
 				{

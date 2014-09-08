@@ -529,4 +529,5 @@
   <data name="Enum.ViewTypeKind.AssetsSettings" id="KNG">Champs des objets d'immobilisations</data>
   <data name="Enum.ViewTypeKind.PersonsSettings" id="KOG">Champs des contacts</data>
   <data name="Enum.ViewTypeKind.Accounts" id="KPG">Plan comptable</data>
+  <data name="Popup.Report.CustomTitle" id="KQG">Titre personnalisé</data>
 </bundle>

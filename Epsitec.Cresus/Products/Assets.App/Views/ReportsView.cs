@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -135,7 +136,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnAddFavorite()
 		{
-			this.accessor.Mandat.Reports.Add (this.report.ReportParams);
+			bool update = false;
+
+			//	Cherche s'il existe déjà des paramètres avec le même nom.
+			//	Si oui, on les mets à jour, plutôt que de créer une nouvelle ligne.
+			var savedParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
+			if (savedParams != null)
+			{
+				//	Met à jour la ligne existante.
+				this.accessor.Mandat.Reports[savedParams.Guid] = this.report.ReportParams;
+				update = true;
+			}
+
+			if (!update)
+			{
+				//	Si on n'a pas mis à jour des paramètres existants, on crée une nouvelle
+				//	ligne.
+				this.accessor.Mandat.Reports.Add (this.report.ReportParams);
+			}
 
 			this.reportChoiceController.Update ();
 			this.UpdateToolbars ();

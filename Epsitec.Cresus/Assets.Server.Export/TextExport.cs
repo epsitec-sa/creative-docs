@@ -38,11 +38,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 						if (row < rowCount-1)
 						{
-							builder.Append (this.Profile.ColumnSeparator);
+							builder.Append (this.Profile.FinalColumnSeparator);
 						}
 					}
 
-					builder.Append (this.Profile.EndOfLine);
+					builder.Append (this.Profile.FinalEndOfLine);
 				}
 			}
 			else
@@ -55,11 +55,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 						if (column < this.columnCount-1)
 						{
-							builder.Append (this.Profile.ColumnSeparator);
+							builder.Append (this.Profile.FinalColumnSeparator);
 						}
 					}
 
-					builder.Append (this.Profile.EndOfLine);
+					builder.Append (this.Profile.FinalEndOfLine);
 				}
 			}
 
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetOutputString(string text)
 		{
-			if (string.IsNullOrEmpty (this.Profile.ColumnBracket))
+			if (string.IsNullOrEmpty (this.Profile.FinalColumnBracket))
 			{
 				if (string.IsNullOrEmpty (text))
 				{
@@ -83,9 +83,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 				else
 				{
-					if (this.Profile.ColumnSeparator.Length == 1)
+					if (this.Profile.FinalColumnSeparator.Length == 1)
 					{
-						return TextExport<T>.GetEscaped (text, this.Profile.ColumnSeparator[0], this.Profile.Escape);
+						return TextExport<T>.GetEscaped (text, this.Profile.FinalColumnSeparator[0], this.Profile.FinalEscape);
 					}
 					else
 					{
@@ -102,10 +102,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				else
 				{
 					//	Remplace " par "".
-					text = text.Replace (this.Profile.ColumnBracket, this.Profile.ColumnBracket+this.Profile.ColumnBracket);
+					text = text.Replace (this.Profile.FinalColumnBracket, this.Profile.FinalColumnBracket+this.Profile.FinalColumnBracket);
 
 					//	A partir de Toto, retourne "Toto".
-					return string.Concat (this.Profile.ColumnBracket, text, this.Profile.ColumnBracket);
+					return string.Concat (this.Profile.FinalColumnBracket, text, this.Profile.FinalColumnBracket);
 				}
 			}
 		}

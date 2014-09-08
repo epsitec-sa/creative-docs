@@ -89,6 +89,21 @@ namespace Epsitec.Cresus.Assets.Data
 					return null;
 				}
 			}
+			set
+			{
+				this.dict[key] = value;
+				
+				int index = this.list.IndexOf (value);
+				if (index == -1)
+				{
+					this.list.Add (value);
+				}
+				else
+				{
+					this.list.RemoveAt (index);
+					this.list.Insert (index, value);
+				}
+			}
 		}
 
 		public T this[int index]
@@ -102,6 +117,14 @@ namespace Epsitec.Cresus.Assets.Data
 				else
 				{
 					return null;
+				}
+			}
+			set
+			{
+				if (index >= 0 && index < this.list.Count)
+				{
+					this.list[index] = value;
+					this.dict[value.Guid] = value;
 				}
 			}
 		}

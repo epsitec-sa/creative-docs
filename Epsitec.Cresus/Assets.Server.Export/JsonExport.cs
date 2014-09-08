@@ -33,14 +33,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append ("/**");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 			builder.Append (" Export to JSON");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 			builder.Append (" @version 0.1");
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 			builder.Append (" */");
-			builder.Append (this.Profile.EndOfLine);
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 
 			builder.Append ("[");
 

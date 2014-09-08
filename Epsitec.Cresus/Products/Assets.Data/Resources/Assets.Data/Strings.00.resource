@@ -52,4 +52,7 @@
   <data name="Enum.EventType.AmortizationExtra" id="KH1">Amort. extra.</data>
   <data name="Enum.EventType.Locked" id="KI1">Verrou</data>
   <data name="Enum.EventType.Output" id="KJ1">Sortie</data>
+  <data name="Reports.MCH2Summary.DefaultTitle" id="KK1">Tableau des immobilisations MCH2</data>
+  <data name="Reports.Assets.DefaultTitle" id="KL1">Liste des objets d'immobilisations</data>
+  <data name="Reports.Persons.DefaultTitle" id="KM1">Liste des contacts</data>
 </bundle>

@@ -8,18 +8,12 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class AssetsParams : AbstractReportParams
 	{
-		public AssetsParams(Timestamp timestamp, Guid rootGuid, int? level)
+		public AssetsParams(string customTitle, Timestamp timestamp, Guid rootGuid, int? level)
+			: base (customTitle)
 		{
 			this.Timestamp = timestamp;
 			this.RootGuid  = rootGuid;
 			this.Level     = level;
-		}
-
-		public AssetsParams()
-		{
-			this.Timestamp = Timestamp.Now;
-			this.RootGuid  = Guid.Empty;
-			this.Level     = null;
 		}
 
 
@@ -27,7 +21,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		{
 			get
 			{
-				return "Liste des objets d'immobilisations";
+				return Res.Strings.Reports.Assets.DefaultTitle.ToString ();
 			}
 		}
 
@@ -38,9 +32,10 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			{
 				var o = other as AssetsParams;
 
-				return this.Timestamp == o.Timestamp
-					&& this.RootGuid  == o.RootGuid
-					&& this.Level     == o.Level;
+				return this.CustomTitle == o.CustomTitle
+					&& this.Timestamp   == o.Timestamp
+					&& this.RootGuid    == o.RootGuid
+					&& this.Level       == o.Level;
 			}
 
 			return false;
@@ -49,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			var timestamp = new Timestamp (this.Timestamp.Date.AddYears (direction), 0);
-			return new AssetsParams (timestamp, this.RootGuid, this.Level);
+			return new AssetsParams (null, timestamp, this.RootGuid, this.Level);
 		}
 
 

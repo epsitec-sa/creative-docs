@@ -63,11 +63,11 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 
 				if (report != null)
 				{
-					var title = ReportParamsHelper.GetTitle (this.accessor, report, ReportTitleType.Title);
-					var desc  = ReportParamsHelper.GetTitle (this.accessor, report, ReportTitleType.Specific);
-					var sort  = string.Concat (title, "_$$_", desc);
+					var specific = ReportParamsHelper.GetTitle (this.accessor, report, ReportTitleType.Specific);
+					var custom   = ReportParamsHelper.GetTitle (this.accessor, report, ReportTitleType.Custom);
+					var sortable = ReportParamsHelper.GetTitle (this.accessor, report, ReportTitleType.Sortable);
 
-					var node = new ReportNode (desc, sort, guid);
+					var node = new ReportNode (specific, custom, sortable, guid);
 					reportNodes.Add (node);
 				}
 			}
@@ -97,10 +97,10 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 				if (level == 0)
 				{
 					var title = ReportParamsHelper.GetTitle (this.accessor, currentReport, ReportTitleType.Title);
-					this.outputNodes.Add (new ReportNode (title, title, Guid.Empty));
+					this.outputNodes.Add (new ReportNode (title, null, null, Guid.Empty));
 				}
 
-				this.outputNodes.Add (new ReportNode (node.Description, node.SortableDescription, node.Guid));
+				this.outputNodes.Add (new ReportNode (node.Description1, node.Description2, node.SortableDescription, node.Guid));
 
 				lastReport = currentReport;
 				index++;

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -19,7 +20,15 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding  = encoding;
 		}
 
-		public static JsonExportProfile Default = new JsonExportProfile ("\r\n", true, Encoding.UTF8);
+		public static JsonExportProfile Default = new JsonExportProfile (TagConverters.Eol, true, Encoding.UTF8);
+
+		public string							FinalEndOfLine
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.EndOfLine);
+			}
+		}
 
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;

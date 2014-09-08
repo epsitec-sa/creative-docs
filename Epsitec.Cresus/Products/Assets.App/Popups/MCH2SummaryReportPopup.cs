@@ -24,18 +24,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
+				StackedControllerType = StackedControllerType.Text,
+				Label                 = Res.Strings.Popup.Report.CustomTitle.ToString (),
+				Width                 = 200 + (int) AbstractScroller.DefaultBreadth + 16,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.InitialDate.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 1
+			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Int,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.MonthCount.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 2
+			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
@@ -43,13 +51,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 3
+			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.GroupEnable.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 4
+			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = "",
@@ -57,20 +65,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Height                = 100,
 			});
 
-			list.Add (new StackedControllerDescription  // 5
+			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Int,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.Level.ToString (),
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 6
+			list.Add (new StackedControllerDescription  // 7
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.FilterEnable.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 7
+			list.Add (new StackedControllerDescription  // 8
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = "",
@@ -89,14 +97,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.DateRange, this.GroupGuid, this.Level, this.FilterGuid);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid);
 			}
 			set
 			{
-				this.DateRange  = value.DateRange;
-				this.GroupGuid  = value.RootGuid;
-				this.FilterGuid = value.FilterGuid;
-				this.Level      = value.Level;
+				this.initialCustomTitle = value.CustomTitle;
+
+				this.CustomTitle = value.CustomTitle;
+				this.DateRange   = value.DateRange;
+				this.GroupGuid   = value.RootGuid;
+				this.FilterGuid  = value.FilterGuid;
+				this.Level       = value.Level;
 			}
 		}
 
@@ -131,6 +142,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.FinalDate   = value.ExcludeTo.AddDays (-1);
 					this.MonthCount  = this.ComputeMonthCount ();
 				}
+			}
+		}
+
+		private string							CustomTitle
+		{
+			get
+			{
+				return this.CustomTitleController.Value;
+			}
+			set
+			{
+				this.CustomTitleController.Value = value;
 			}
 		}
 
@@ -252,8 +275,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			base.CreateUI ();
 
 			{
-				var controller = this.GetController (4) as GroupGuidStackedController;
-				controller.Level = 1;
+				this.GroupGuidController.Level = 1;
 			}
 		}
 
@@ -278,7 +300,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.SetVisibility (MCH2SummaryReportPopup.LevelRank,      this.GroupEnable);
 			this.SetEnable     (MCH2SummaryReportPopup.FilterGuidRank, this.FilterEnable);
 
-			this.okButton.Enable = this.InitialDate.HasValue
+			this.okButton.Enable = this.IsCustomTitleCorrect
+								&& this.InitialDate.HasValue
 								&& this.MonthCount.HasValue
 								&& this.MonthCount.Value > 0
 								&& this.FinalDate.HasValue
@@ -287,6 +310,33 @@ namespace Epsitec.Cresus.Assets.App.Popups
 								&& !this.HasError;
 		}
 
+
+		private bool IsCustomTitleCorrect
+		{
+			get
+			{
+				if (this.CustomTitle == this.initialCustomTitle)
+				{
+					return true;
+				}
+				else
+				{
+					var savedParams = ReportParamsHelper.Search (this.accessor, this.CustomTitle);
+					return savedParams == null;
+				}
+			}
+		}
+
+
+		private TextStackedController CustomTitleController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.CustomTitleRank) as TextStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
 
 		private DateStackedController InitialDateController
 		{
@@ -406,13 +456,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private const int InitialDateRank  = 0;
-		private const int MonthCountRank   = 1;
-		private const int FinalDateRank    = 2;
-		private const int GroupEnableRank  = 3;
-		private const int GroupGuidRank    = 4;
-		private const int LevelRank        = 5;
-		private const int FilterEnableRank = 6;
-		private const int FilterGuidRank   = 7;
+		private const int CustomTitleRank  = 0;
+		private const int InitialDateRank  = 1;
+		private const int MonthCountRank   = 2;
+		private const int FinalDateRank    = 3;
+		private const int GroupEnableRank  = 4;
+		private const int GroupGuidRank    = 5;
+		private const int LevelRank        = 6;
+		private const int FilterEnableRank = 7;
+		private const int FilterGuidRank   = 8;
+
+
+		private string initialCustomTitle;
 	}
 }

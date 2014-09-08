@@ -450,6 +450,45 @@ namespace Epsitec.Cresus.Assets.Data
 				}
 			}
 			
+			public static class Reports
+			{
+				public static class Assets
+				{
+					//	designer:str/HUKL101
+					public static global::Epsitec.Common.Types.FormattedText DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544373));
+						}
+					}
+				}
+				
+				public static class MCH2Summary
+				{
+					//	designer:str/HUKK101
+					public static global::Epsitec.Common.Types.FormattedText DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544372));
+						}
+					}
+				}
+				
+				public static class Persons
+				{
+					//	designer:str/HUKM101
+					public static global::Epsitec.Common.Types.FormattedText DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544374));
+						}
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
@@ -919,6 +958,45 @@ namespace Epsitec.Cresus.Assets.Data
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544320);
+					}
+				}
+			}
+			
+			public static class Reports
+			{
+				public static class Assets
+				{
+					//	designer:str/HUKL101
+					public static global::Epsitec.Common.Support.Druid DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544373);
+						}
+					}
+				}
+				
+				public static class MCH2Summary
+				{
+					//	designer:str/HUKK101
+					public static global::Epsitec.Common.Support.Druid DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544372);
+						}
+					}
+				}
+				
+				public static class Persons
+				{
+					//	designer:str/HUKM101
+					public static global::Epsitec.Common.Support.Druid DefaultTitle
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544374);
+						}
 					}
 				}
 			}

@@ -8,9 +8,10 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public abstract class AbstractReportParams : IGuid
 	{
-		public AbstractReportParams()
+		public AbstractReportParams(string customTitle)
 		{
-			this.guid = Guid.NewGuid ();
+			this.customTitle = customTitle;
+			this.guid        = Guid.NewGuid ();
 		}
 
 
@@ -24,6 +25,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 		#endregion
 
+
+		public string							CustomTitle
+		{
+			get
+			{
+				return this.customTitle;
+			}
+		}
 
 		public abstract string					Title
 		{
@@ -51,5 +60,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 
 		private readonly Guid					guid;
+		private readonly string					customTitle;
 	}
 }

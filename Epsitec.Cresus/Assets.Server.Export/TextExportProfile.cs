@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -23,8 +24,40 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding        = encoding;
 		}
 
-		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"",  "\"", "\r\n", true, false, Encoding.UTF8);
-		public static TextExportProfile TxtProfile = new TextExportProfile ("\t", null, "\\", "\r\n", true, false, Encoding.UTF8);
+		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"", "\"", TagConverters.Eol, true, false, Encoding.UTF8);
+		public static TextExportProfile TxtProfile = new TextExportProfile (TagConverters.Compile ("<TAB>"), null, "\\", TagConverters.Eol, true, false, Encoding.UTF8);
+
+		public string							FinalColumnSeparator
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.ColumnSeparator);
+			}
+		}
+
+		public string							FinalColumnBracket
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.ColumnBracket);
+			}
+		}
+
+		public string							FinalEscape
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Escape);
+			}
+		}
+
+		public string							FinalEndOfLine
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.EndOfLine);
+			}
+		}
 
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;

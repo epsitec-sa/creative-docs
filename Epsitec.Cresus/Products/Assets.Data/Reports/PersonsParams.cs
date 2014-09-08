@@ -8,11 +8,17 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class PersonsParams : AbstractReportParams
 	{
+		public PersonsParams(string customTitle)
+			: base (customTitle)
+		{
+		}
+
+
 		public override string					Title
 		{
 			get
 			{
-				return "Liste des contacts";
+				return Res.Strings.Reports.Persons.DefaultTitle.ToString ();
 			}
 		}
 

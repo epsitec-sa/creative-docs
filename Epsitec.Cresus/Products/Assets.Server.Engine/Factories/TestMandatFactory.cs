@@ -234,24 +234,27 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected override void AddReports()
 		{
 			var dateRange = new DateRange (this.accessor.Mandat.StartDate, this.accessor.Mandat.StartDate.AddYears (1));
-			var timestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
+			var initialTimestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
+			var finalTimestamp   = new Timestamp (new System.DateTime (2099, 12, 31), 0);
 
-			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, Guid.Empty, 1, Guid.Empty));
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty));
 
 			{
-				var group = this.GetGroup ("Catégories MCH2");
+				var group  = this.GetGroup ("Catégories MCH2");
 				var filter = this.GetGroup ("Patrimoine administratif");
-				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, group.Guid, 1, filter.Guid));
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine administratif MCH2 &lt;DATE&gt;", dateRange, group.Guid, 1, filter.Guid));
 			}
 
 			{
-				var group = this.GetGroup ("Catégories MCH2");
+				var group  = this.GetGroup ("Catégories MCH2");
 				var filter = this.GetGroup ("Patrimoine financier");
-				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, group.Guid, 1, filter.Guid));
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine financier MCH2 &lt;DATE&gt;", dateRange, group.Guid, 1, filter.Guid));
 			}
 
-			this.accessor.Mandat.Reports.Add (new AssetsParams (timestamp, Guid.Empty, null));
-			this.accessor.Mandat.Reports.Add (new PersonsParams ());
+			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial", initialTimestamp, Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat final",   finalTimestamp,   Guid.Empty, null));
+
+			this.accessor.Mandat.Reports.Add (new PersonsParams (null));
 		}
 
 

@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return ".pdf";
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Invalid format", format));
+					throw new System.InvalidOperationException (string.Format ("Invalid format {0}", format));
 			}
 		}
 

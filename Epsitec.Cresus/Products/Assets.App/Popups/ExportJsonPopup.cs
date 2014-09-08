@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (1) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					endOfLine = Converters.EditableToInternal (controller.Value);
+					endOfLine = controller.Value;
 				}
 
 				{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (1) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.EndOfLine);
+					controller.Value = value.EndOfLine;
 				}
 
 				{

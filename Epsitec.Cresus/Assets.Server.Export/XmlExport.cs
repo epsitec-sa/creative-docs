@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append (this.GetOpenTag (this.Profile.BodyTag));
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 
 			int lastLevel = -1;
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 				if (!this.Profile.Compact)
 				{
-					builder.Append (this.Profile.EndOfLine);
+					builder.Append (this.Profile.FinalEndOfLine);
 				}
 
 				for (int column=0; column<this.columnCount; column++)
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 						if (!this.Profile.Compact)
 						{
-							builder.Append (this.Profile.EndOfLine);
+							builder.Append (this.Profile.FinalEndOfLine);
 						}
 					}
 				}
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.AppendCloseTag (builder, lastLevel, 0);
 
 			builder.Append (this.GetCloseTag (this.Profile.BodyTag));
-			builder.Append (this.Profile.EndOfLine);
+			builder.Append (this.Profile.FinalEndOfLine);
 
 			return builder.ToString ();
 		}
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 						this.AppendIndent (builder, i+1);
 					}
 					builder.Append (this.GetCloseTag (this.Profile.RecordTag));
-					builder.Append (this.Profile.EndOfLine);
+					builder.Append (this.Profile.FinalEndOfLine);
 				}
 			}
 		}
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			for (int i=0; i<level; i++)
 			{
-				builder.Append (this.Profile.Indent);
+				builder.Append (this.Profile.FinalIndent);
 			}
 		}
 
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				text = text.Replace ("&", "&amp;");
 				text = text.Replace ("<", "&lt;");
-				text = text.Replace ("<", "&lt;");
+				text = text.Replace (">", "&gt;");
 				text = text.Replace ("'", "&apos;");
 				text = text.Replace ("\"", "&quot;");
 				return text;

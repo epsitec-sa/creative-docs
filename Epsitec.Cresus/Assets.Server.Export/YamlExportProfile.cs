@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -20,7 +21,25 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding  = encoding;
 		}
 
-		public static YamlExportProfile Default = new YamlExportProfile ("  ", "\r\n", true, Encoding.UTF8);
+		public static YamlExportProfile Default = new YamlExportProfile (
+			TagConverters.Compile ("<SPACE><SPACE>"),
+			TagConverters.Eol, true, Encoding.UTF8);
+
+		public string							FinalIndent
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Indent);
+			}
+		}
+
+		public string							FinalEndOfLine
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.EndOfLine);
+			}
+		}
 
 		public readonly string					Indent;
 		public readonly string					EndOfLine;

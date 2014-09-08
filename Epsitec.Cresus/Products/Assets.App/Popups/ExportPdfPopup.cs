@@ -171,25 +171,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (7) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					header = Converters.EditableToInternal (controller.Value);
+					header = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (8) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					footer = Converters.EditableToInternal (controller.Value);
+					footer = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (9) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					indent = Converters.EditableToInternal (controller.Value);
+					indent = controller.Value;
 				}
 
 				{
 					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					watermark = Converters.EditableToInternal (controller.Value);
+					watermark = controller.Value;
 				}
 
 				return new PdfExportProfile (style, pageSize, pageMargins, cellMargins, font, fontSize, automaticColumnWidths, header, footer, indent, watermark);
@@ -241,25 +241,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					var controller = this.GetController (7) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Header);
+					controller.Value = value.Header;
 				}
 
 				{
 					var controller = this.GetController (8) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Footer);
+					controller.Value = value.Footer;
 				}
 
 				{
 					var controller = this.GetController (9) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Indent);
+					controller.Value = value.Indent;
 				}
 
 				{
 					var controller = this.GetController (10) as TextStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = Converters.InternalToEditable (value.Watermark);
+					controller.Value = value.Watermark;
 				}
 			}
 		}

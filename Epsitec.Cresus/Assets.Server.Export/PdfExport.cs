@@ -46,23 +46,23 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				BorderColor          = this.BorderColor,
 			};
 
-			if (!string.IsNullOrEmpty (this.Profile.Header))
+			if (!string.IsNullOrEmpty (this.Profile.FinalHeader))
 			{
-				setup.HeaderText    = this.GetFormattedText (this.GetTitleText (this.Profile.Header, title), 1.5);
+				setup.HeaderText    = this.GetFormattedText (this.GetTitleText (this.Profile.FinalHeader, title), 1.5);
 				setup.HeaderMargins = this.HeaderMargins;
 			}
 
-			if (!string.IsNullOrEmpty (this.Profile.Footer))
+			if (!string.IsNullOrEmpty (this.Profile.FinalFooter))
 			{
-				setup.FooterText    = this.GetFormattedText (this.GetTitleText (this.Profile.Footer, title), 1.5);
+				setup.FooterText    = this.GetFormattedText (this.GetTitleText (this.Profile.FinalFooter, title), 1.5);
 				setup.FooterMargins = this.FooterMargins;
 			}
 
 			var array = new Array (info, setup);
 
-			if (!string.IsNullOrEmpty (this.Profile.Watermark))
+			if (!string.IsNullOrEmpty (this.Profile.FinalWatermark))
 			{
-				array.AddWatermark (this.Profile.Watermark);
+				array.AddWatermark (this.Profile.FinalWatermark);
 			}
 
 			if (!this.Profile.AutomaticColumnWidths)
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				text = text.Replace ("<TITLE>", title);
+				text = text.Replace (TagConverters.Compile ("<TITLE>"), title);
 			}
 
 			return text;
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			for (int i=0; i<level; i++)
 			{
-				builder.Append (this.Profile.Indent);
+				builder.Append (this.Profile.FinalIndent);
 			}
 
 			builder.Append (text);

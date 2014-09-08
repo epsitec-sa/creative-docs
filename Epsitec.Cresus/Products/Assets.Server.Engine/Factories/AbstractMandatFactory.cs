@@ -397,9 +397,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var dateRange = new DateRange (this.accessor.Mandat.StartDate, this.accessor.Mandat.StartDate.AddYears (1));
 			var timestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
 
-			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (dateRange, Guid.Empty, 1, Guid.Empty));
-			this.accessor.Mandat.Reports.Add (new AssetsParams (timestamp, Guid.Empty, null));
-			this.accessor.Mandat.Reports.Add (new PersonsParams ());
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty));
+			this.accessor.Mandat.Reports.Add (new AssetsParams (null, timestamp, Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new PersonsParams (null));
 		}
 
 

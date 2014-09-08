@@ -8,8 +8,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public enum ReportTitleType
 	{
-		Full,		// "Tableau des immobilisations MCH2 2014 - Catégories MCH2 (1) - Patrimoine administratif"
+		Full,		// "Tableau des immobilisations MCH2 - 2014 - Catégories MCH2 (1) - Patrimoine administratif"
 		Title,		// "Tableau des immobilisations MCH2"
 		Specific,	// "2014 - Catégories MCH2 (1) - Patrimoine administratif"
+		Custom,		// "Tralala"
+		Sortable,
 	}
 }

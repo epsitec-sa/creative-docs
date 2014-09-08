@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -23,7 +24,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding  = encoding;
 		}
 
-		public static XmlExportProfile Default = new XmlExportProfile ("data", "record", "\t", "\r\n", true, false, Encoding.UTF8);
+		public static XmlExportProfile Default = new XmlExportProfile ("data", "record",
+			TagConverters.Compile ("<TAB>"), TagConverters.Eol, true, false, Encoding.UTF8);
+
+		public string							FinalIndent
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.Indent);
+			}
+		}
+
+		public string							FinalEndOfLine
+		{
+			get
+			{
+				return TagConverters.GetFinalText (this.EndOfLine);
+			}
+		}
 
 		public readonly string					BodyTag;
 		public readonly string					RecordTag;
