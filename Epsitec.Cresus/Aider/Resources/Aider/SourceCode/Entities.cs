@@ -9365,6 +9365,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Region</c> field.
+		///	designer:fld/LVO613/LVAIL
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAIL]")]
+		public string Region
+		{
+			get
+			{
+				return this.GetField<string> ("[LVAIL]");
+			}
+			set
+			{
+				string oldValue = this.Region;
+				if (oldValue != value || !this.IsFieldDefined("[LVAIL]"))
+				{
+					this.OnRegionChanging (oldValue, value);
+					this.SetField<string> ("[LVAIL]", oldValue, value);
+					this.OnRegionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>ParishGroup</c> field.
 		///	designer:fld/LVO613/LVO713
 		///	</summary>
@@ -9545,26 +9567,26 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Region</c> field.
+		///	The <c>RegionDeprecated</c> field.
 		///	designer:fld/LVO613/LVON33
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVON33]", IsVirtual=true)]
-		public string Region
+		public string RegionDeprecated
 		{
 			get
 			{
 				string value = default (string);
-				this.GetRegion (ref value);
+				this.GetRegionDeprecated (ref value);
 				return value;
 			}
 			set
 			{
-				string oldValue = this.Region;
+				string oldValue = this.RegionDeprecated;
 				if (oldValue != value || !this.IsFieldDefined("[LVON33]"))
 				{
-					this.OnRegionChanging (oldValue, value);
-					this.SetRegion (value);
-					this.OnRegionChanged (oldValue, value);
+					this.OnRegionDeprecatedChanging (oldValue, value);
+					this.SetRegionDeprecated (value);
+					this.OnRegionDeprecatedChanged (oldValue, value);
 				}
 			}
 		}
@@ -9589,6 +9611,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeShortNameChanged(string oldValue, string newValue);
 		partial void OnOfficeTypeChanging(global::Epsitec.Aider.Enumerations.OfficeType oldValue, global::Epsitec.Aider.Enumerations.OfficeType newValue);
 		partial void OnOfficeTypeChanged(global::Epsitec.Aider.Enumerations.OfficeType oldValue, global::Epsitec.Aider.Enumerations.OfficeType newValue);
+		partial void OnRegionChanging(string oldValue, string newValue);
+		partial void OnRegionChanged(string oldValue, string newValue);
 		partial void OnParishGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
@@ -9599,16 +9623,16 @@ namespace Epsitec.Aider.Entities
 		partial void OnPostalTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnOfficeUsersLoginMessageChanging(string oldValue, string newValue);
 		partial void OnOfficeUsersLoginMessageChanged(string oldValue, string newValue);
-		partial void OnRegionChanging(string oldValue, string newValue);
-		partial void OnRegionChanged(string oldValue, string newValue);
+		partial void OnRegionDeprecatedChanging(string oldValue, string newValue);
+		partial void OnRegionDeprecatedChanged(string oldValue, string newValue);
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
 		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		partial void GetRegionalReferees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
-		partial void GetRegion(ref string value);
-		partial void SetRegion(string value);
+		partial void GetRegionDeprecated(ref string value);
+		partial void SetRegionDeprecated(string value);
 		partial void GetAssociatedGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

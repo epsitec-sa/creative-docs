@@ -2655,10 +2655,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 40);
 				//	designer:cap/LVOV23
 				public static readonly global::Epsitec.Common.Support.Druid PostalTown = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 95);
-				//	designer:cap/LVON33
-				public static readonly global::Epsitec.Common.Support.Druid Region = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 119);
+				//	designer:cap/LVAIL
+				public static readonly global::Epsitec.Common.Support.Druid Region = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 690);
 				//	designer:cap/LVA4L
 				public static readonly global::Epsitec.Common.Support.Druid RegionalReferees = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 676);
+				//	designer:cap/LVON33
+				public static readonly global::Epsitec.Common.Support.Druid RegionDeprecated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 119);
 			}
 			
 			public static class AiderOfficeReport

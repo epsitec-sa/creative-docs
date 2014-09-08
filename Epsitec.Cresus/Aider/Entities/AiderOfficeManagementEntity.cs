@@ -289,7 +289,7 @@ namespace Epsitec.Aider.Entities
 			return this.associatedGroups;
 		}
 
-		partial void GetRegion(ref string value)
+		partial void GetRegionDeprecated(ref string value)
 		{
 			if(this.ParishGroup.Parents.Any ())
 			{
