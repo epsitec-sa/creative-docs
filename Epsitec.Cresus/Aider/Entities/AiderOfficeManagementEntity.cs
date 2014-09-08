@@ -181,6 +181,7 @@ namespace Epsitec.Aider.Entities
 
 		public void RefreshOfficeShortName()
 		{
+			var type = this.OfficeType;
 			var name = this.OfficeName;
 			var text = name.ToLowerInvariant ();
 			
@@ -190,18 +191,35 @@ namespace Epsitec.Aider.Entities
 			if (parishMatch != null)
 			{
 				name = name.Substring (parishMatch.Length);
-
-				this.OfficeType = Enumerations.OfficeType.Parish;
+				type = Enumerations.OfficeType.Parish;
+			}
+			else if (this.ParishGroup.IsRegion ())
+			{
+				type = Enumerations.OfficeType.Region;
 			}
 			else
 			{
-				if (this.ParishGroup.IsRegion ())
+				foreach (var tuple in AiderOfficeManagementEntity.GetShortNameReplacementTuples ())
 				{
-					this.OfficeType = Enumerations.OfficeType.Region;
+					if (text.StartsWith (tuple.Item1))
+					{
+						name = tuple.Item2 + name.Substring (tuple.Item1.Length);
+						type = tuple.Item3;
+						break;
+					}
 				}
 			}
 
+			this.OfficeType = type;
 			this.OfficeShortName = name.Trim ();
+		}
+
+		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()
+		{
+			yield return System.Tuple.Create ("formation et accompagnement ", "SFA ", OfficeType.RegionFA);
+			yield return System.Tuple.Create ("présence et solidarité", "PS ", OfficeType.RegionPS);
+			yield return System.Tuple.Create ("coordination et information", "CI ", OfficeType.RegionCI);
+			yield return System.Tuple.Create ("coordination - information", "CI ", OfficeType.RegionCI);
 		}
 
 
