@@ -148,8 +148,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					if (createOperation)  // crée un nouveau favori ?
 					{
-						var name = DataClipboard.GetCopyName (this.report.ReportParams.CustomTitle, this.accessor.GlobalSettings.CopyNameStrategy);
-						this.report.ReportParams = this.report.ReportParams.ChangeCustomTitle (name);
+						//	Modifie le nom "Toto" en "Toto (copie)", car il ne peut pas y avoir
+						//	2 rapports avec le même nom (sous peine de comportements futurs
+						//	erratiques). On répète avec "Toto (copie) (copie)..." autant de fois
+						//	que nécessaire, jusqu'à trouver un nom inexistant.
+						do
+						{
+							var name = DataClipboard.GetCopyName (this.report.ReportParams.CustomTitle, this.accessor.GlobalSettings.CopyNameStrategy);
+							this.report.ReportParams = this.report.ReportParams.ChangeCustomTitle (name);
+
+							existingParams = ReportParamsHelper.Search (this.accessor, name);
+						}
+						while (existingParams != null);
+
 						this.AddFavorite (null);
 					}
 					else  // met à jour le favosi existant ?
