@@ -279,6 +279,17 @@ $.getScript('signalr/hubs', function() {
           this.hubs.registerHub("entitybag",EntityBagHub);
         }
 
+        if (epsitecConfig.featureBigEntityBag) {
+            
+            Epsitec.Cresus.Core.app.entityBagMaxExport = 1000;
+            console.log('Big Entity Bag ON -> ' + Epsitec.Cresus.Core.app.entityBagMaxExport);
+        }
+        else
+        {
+            Epsitec.Cresus.Core.app.entityBagMaxExport = 100;
+            console.log('Big Entity Bag OFF -> ' + Epsitec.Cresus.Core.app.entityBagMaxExport);
+        }
+
         if (epsitecConfig.featureStatusBar) {
             this.hubs.registerHub("statusbar", StatusBarHub);
         }

@@ -1,8 +1,11 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Labels;
+
+using System;
 
 
 namespace Epsitec.Aider.Labels

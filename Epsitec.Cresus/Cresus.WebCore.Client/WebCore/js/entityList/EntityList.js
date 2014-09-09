@@ -543,8 +543,15 @@ function() {
           text: Epsitec.Texts.getExportLabel(),
           iconCls: 'icon-export',
           menu: Ext.create('Ext.menu.Menu', {
-            items: exportMenuItems
-          })
+                    items: exportMenuItems
+          }),
+          listeners: {
+              click: function (comp) {
+                  var item = comp.menu.items.items[1];
+                  item.setText('Ajouter ' + this.store.getTotalCount() + ' lignes au panier');
+              },
+              scope: this
+          }
         });
       }
 
@@ -740,14 +747,14 @@ function() {
             Epsitec.Texts.getExportImpossibleEmpty()
         );
       }
-      else if (count > 100) {
+      else if (count > Epsitec.Cresus.Core.app.entityBagMaxExport) {
         Epsitec.ErrorHandler.showError(
             Epsitec.Texts.getExportImpossibleTitle(),
             Epsitec.Texts.getExportImpossibleTooManyForBag()
         );
       }
       else {
-        this.doExportToBag();
+        this.doExportToBag(count);
       }
     },
 
@@ -760,7 +767,7 @@ function() {
             Epsitec.Texts.getExportImpossibleEmpty()
         );
       }
-      else if (count > 100) {
+      else if (count > Epsitec.Cresus.Core.app.entityBagMaxExport) {
         Epsitec.ErrorHandler.showError(
             Epsitec.Texts.getExportImpossibleTitle(),
             Epsitec.Texts.getExportImpossibleTooManyForBag()
@@ -798,7 +805,7 @@ function() {
       exportWindow.show();
     },
 
-    doExportToBag: function() {
+    doExportToBag: function(count) {
       //Iterate over the buffered store
       var useMenuItemId = Ext.isDefined(this.menuItems[0]);
       var menuItemId = null;
@@ -806,7 +813,7 @@ function() {
       {
         menuItemId = this.menuItems[0].columnName;
       }
-      for (j=01; j<=this.store.data.length; j++) {
+      for (j=1; j<=this.store.data.length; j++) {
         var data = this.store.data.map[j].value;
         for (i=0; i<data.length; i++) {
            if(menuItemId !== null)

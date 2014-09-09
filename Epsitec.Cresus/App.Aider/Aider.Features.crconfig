@@ -19,3 +19,4 @@ ConfigureExperimentalFeature ("Faq");
 ConfigureExperimentalFeature ("Chat");
 ConfigureExperimentalFeature ("DisablePasswordCheck");
 ConfigureExperimentalFeature ("StatusBar");
+ConfigureExperimentalFeature ("BigEntityBag");

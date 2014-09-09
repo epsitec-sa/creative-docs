@@ -18,3 +18,4 @@ ConfigureExperimentalFeature ("DropZones");
 ConfigureExperimentalFeature ("Chat");
 ConfigureExperimentalFeature ("Faq");
 ConfigureExperimentalFeature ("StatusBar");
+# ConfigureExperimentalFeature ("BigEntityBag");

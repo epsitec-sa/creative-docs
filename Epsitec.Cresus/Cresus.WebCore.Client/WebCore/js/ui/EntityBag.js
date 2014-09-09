@@ -21,24 +21,57 @@ function() {
     /* Properties */
     bagStore: null,
     dropZones: null,
+    currentPage: 0,
+    pageSize: 5,
     /* Constructor */
 
     constructor: function(menu) {
-      var config;
+      var config, purgeButton, navButtons;
 
       this.initStores();
       this.dropZones = [];
 
-      var button = {};
-          button.xtype = 'button';
-          button.text = 'Vider le panier';
-          button.width = 400;
-          button.width = 200;
-          button.cls = 'tile-button';
-          button.overCls = 'tile-button-over';
-          button.textAlign = 'left';
-          button.handler = this.purgeEntityBag;
-          button.scope = this;
+      purgeButton = {
+          xtype    : 'button',
+          text     : 'Vider le panier',
+          width    : 200,
+          cls      : 'tile-button',
+          overCls  : 'tile-button-over',
+          textAlign: 'left',
+          handler  : this.purgeEntityBag,
+          scope    : this
+      };
+      navButtons = [{
+          xtype    : 'button',
+          text     : '<-',
+          width    : 60,
+          cls      : 'tile-button',
+          overCls  : 'tile-button-over',
+          textAlign: 'left',
+          handler  : function () {
+            Epsitec.Cresus.Core.app.viewport.setLoading();
+            this.setLoading();
+            this.changePage (true);
+            Epsitec.Cresus.Core.app.viewport.setLoading(false);
+            this.setLoading(false);
+          },
+          scope    : this
+      }, {
+          xtype: 'button',
+          text: '->',
+          width: 60,
+          cls: 'tile-button',
+          overCls: 'tile-button-over',
+          textAlign: 'left',
+          handler: function () {
+            Epsitec.Cresus.Core.app.viewport.setLoading();
+            this.setLoading();
+            this.changePage (false);
+            Epsitec.Cresus.Core.app.viewport.setLoading(false);
+            this.setLoading(false);
+          },
+          scope: this
+      }];
 
       config = {
         headerPosition: 'left',
@@ -55,7 +88,12 @@ function() {
         dockedItems: [{
           xtype: 'toolbar',
           dock: 'top',
-          items: button
+          items: purgeButton
+        },
+        {
+          xtype: 'toolbar',
+          dock: 'top',
+          items: navButtons
         }],
         items: [{
           xtype: 'panel',
@@ -68,7 +106,7 @@ function() {
         listeners: {
           beforerender: this.setSizeAndPosition,
           score: this
-        } 
+        }
       };
 
       menu.on("resize", this.resizeEntityBagHandler, this);
@@ -87,22 +125,22 @@ function() {
       for(var d in this.dropZones)
       {
         this.dropZones[d].show();
-      }       
+      }
     },
 
     hideRegistredDropZone: function (){
       for(var d in this.dropZones)
       {
         this.dropZones[d].hide();
-      }  
+      }
     },
 
     resizeEntityBagHandler: function () {
-        this.setSizeAndPosition();   
+        this.setSizeAndPosition();
     },
 
     setSizeAndPosition: function() {
-      var viewport = Epsitec.Cresus.Core.app.viewport, 
+      var viewport = Epsitec.Cresus.Core.app.viewport,
           menu = Epsitec.Cresus.Core.app.menu;
       if(Ext.isDefined(viewport))
       {
@@ -114,7 +152,7 @@ function() {
         {
           this.setPosition(this.x,this.y);
         }
-      } 
+      }
     },
 
     initStores: function(){
@@ -139,29 +177,76 @@ function() {
       hub.AddToMyBag(title,summary,entityId);
     },
 
-    addEntityToClientBag: function(entity) {
+    addEntityToClientBag: function (entity) {
+      var count = this.bagStore.count();
       var index = this.bagStore.indexOfId(entity.id);
+
+
       if(index===-1)
       {
         this.bagStore.add(entity);
-        var tile = this.createEntityTile(entity);
-        var entityBag = this;
-        this.items.items[0].add(tile);
+        if (count < this.pageSize || this.checkForJob(entity.id)) {
+         var tile = this.createEntityTile(entity);
+         this.items.items[0].add(tile);
+        }
       }
       else
       {
         this.bagStore.removeAt(index);
         this.bagStore.insert(index,entity);
       }
-      
+
       if(!this.isVisible())
       {
         this.show();
       }
 
+      this.setTitle('Panier (' +this.bagStore.count() + ')');
       this.setSizeAndPosition();
       Epsitec.Cresus.Core.app.viewport.setLoading(false);
       this.setLoading(false);
+    },
+
+    changePage: function (reverse) {
+
+      var count = this.bagStore.count();
+      var page  = this.currentPage * this.pageSize;
+      var tilesToClose = [];
+
+      if(reverse && this.currentPage > 0) {
+        this.currentPage--;
+      }
+
+      if(!reverse && page + this.pageSize <= count)
+      {
+        this.currentPage++;
+      }
+
+      //extract tiles to close
+      var scope = this;
+      Ext.Array.each(this.items.items[0].items.items, function (item) {
+          if (Ext.isDefined(item)) {
+            if (!scope.checkForJob(item.entityId)) {
+              tilesToClose.push(item);
+            }
+          }
+      });
+      //close all tiles
+      Ext.Array.each(tilesToClose, function (tile) {
+        tile.close();
+      });
+
+      //add new tiles for page
+      for(var i=page;i<page+this.pageSize;i++)
+      {
+        if(this.bagStore.data.items[i] !== undefined) {
+          var entity = this.bagStore.data.items[i].raw;
+          if(!this.checkForJob(entity.id)) {
+            var tile = this.createEntityTile(entity);
+            this.items.items[0].add(tile);
+          }
+        }
+      }
     },
 
     purgeEntityBag: function () {
@@ -174,14 +259,15 @@ function() {
             entityBag.removeEntityFromBag(record.data);
         });
       }
+      this.setTitle('Panier');
     },
 
     removeEntityFromBag: function(entity) {
       var record = this.bagStore.getById(entity.id);
       var hub = Epsitec.Cresus.Core.app.hubs.getHubByName('entitybag');
-      if (entity.id.substring(0, 3) === "JOB")
-      {
-          Epsitec.Cresus.Core.app.deleteJobAndFile(entity.id);
+
+      if (this.checkForJob (entity.id)) {
+        Epsitec.Cresus.Core.app.deleteJobAndFile(entity.id);
       }
 
       hub.RemoveFromMyBag(entity.id);
@@ -194,7 +280,9 @@ function() {
       if (record !== null) {
           this.bagStore.remove(record);
       }
-      
+
+      var count = this.bagStore.count();
+      this.setTitle('Panier (' + count + ')');
       Ext.Array.each(this.items.items[0].items.items, function(item) {
           if(Ext.isDefined(item))
           {
@@ -202,18 +290,28 @@ function() {
             {
               item.close();
             }
-          }         
+          }
       });
 
       this.setSizeAndPosition();
 
       if(this.bagStore.count()===0)
       {
+        Epsitec.Cresus.Core.app.viewport.setLoading(false);
+        this.setLoading(false);
         this.hide();
       }
-      Epsitec.Cresus.Core.app.viewport.setLoading(false);
-      this.setLoading(false);
 
+
+    },
+
+    checkForJob: function (entityId) {
+      if (entityId.substring(0, 3) === "JOB") {
+        return true;
+      }
+      else {
+        return false;
+      }
     },
 
     createToolbar: function() {
