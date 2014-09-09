@@ -136,24 +136,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void OnAddFavorite()
 		{
-			bool update = false;
-
 			//	Cherche s'il existe déjà des paramètres avec le même nom.
-			//	Si oui, on les mets à jour, plutôt que de créer une nouvelle ligne.
+			//	Si oui, on les supprime, pour les rajouter juste après, ce qui
+			//	équivaut à une mise à jour.
 			var savedParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
 			if (savedParams != null)
 			{
-				//	Met à jour la ligne existante.
-				this.accessor.Mandat.Reports[savedParams.Guid] = this.report.ReportParams;
-				update = true;
+				this.accessor.Mandat.Reports.Remove (savedParams);
 			}
 
-			if (!update)
-			{
-				//	Si on n'a pas mis à jour des paramètres existants, on crée une nouvelle
-				//	ligne.
-				this.accessor.Mandat.Reports.Add (this.report.ReportParams);
-			}
+			this.accessor.Mandat.Reports.Add (this.report.ReportParams);
 
 			this.reportChoiceController.Update ();
 			this.UpdateToolbars ();
@@ -331,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					return this.accessor.Mandat.Reports
-						.Where (x => x.StrictlyEquals (this.report.ReportParams))
+						.Where (x => x == this.report.ReportParams)
 						.Any ();
 				}
 			}

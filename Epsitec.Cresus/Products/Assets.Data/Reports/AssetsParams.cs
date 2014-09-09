@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class AssetsParams : AbstractReportParams
+	public class AssetsParams : AbstractReportParams, System.IEquatable<AssetsParams>
 	{
 		public AssetsParams(string customTitle, Timestamp timestamp, Guid rootGuid, int? level)
 			: base (customTitle)
@@ -26,25 +26,55 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public override bool StrictlyEquals(AbstractReportParams other)
+		public static bool operator ==(AssetsParams a, AssetsParams b)
 		{
-			if (other is AssetsParams)
-			{
-				var o = other as AssetsParams;
+			return a.Equals (b);
+		}
 
-				return this.CustomTitle == o.CustomTitle
-					&& this.Timestamp   == o.Timestamp
-					&& this.RootGuid    == o.RootGuid
-					&& this.Level       == o.Level;
+		public static bool operator !=(AssetsParams a, AssetsParams b)
+		{
+			return !a.Equals (b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is AssetsParams)
+			{
+				return this.Equals ((AssetsParams) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public bool Equals(AssetsParams other)
+		{
+			//	Il ne faut surtout pas comparer les Guid !
+			if (!(other is AssetsParams))
+			{
+				return false;
 			}
 
-			return false;
+			return this.CustomTitle == other.CustomTitle
+				&& this.Timestamp   == other.Timestamp
+				&& this.RootGuid    == other.RootGuid
+				&& this.Level       == other.Level;
 		}
+
+		public override int GetHashCode()
+		{
+			return this.CustomTitle.GetHashCode ()
+				^  this.Timestamp.GetHashCode ()
+				^  this.RootGuid.GetHashCode ()
+				^  this.Level.GetHashCode ();
+		}
+
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			var timestamp = new Timestamp (this.Timestamp.Date.AddYears (direction), 0);
-			return new AssetsParams (null, timestamp, this.RootGuid, this.Level);
+			return new AssetsParams (this.CustomTitle, timestamp, this.RootGuid, this.Level);
 		}
 
 

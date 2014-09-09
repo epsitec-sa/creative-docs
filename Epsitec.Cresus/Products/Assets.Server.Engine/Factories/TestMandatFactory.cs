@@ -251,8 +251,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine financier MCH2 &lt;DATE&gt;", dateRange, group.Guid, 1, filter.Guid));
 			}
 
-			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial", initialTimestamp, Guid.Empty, null));
-			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat final",   finalTimestamp,   Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial au &lt;DATE&gt;", initialTimestamp, Guid.Empty, null));
+			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat final", finalTimestamp, Guid.Empty, null));
 
 			this.accessor.Mandat.Reports.Add (new PersonsParams (null));
 		}

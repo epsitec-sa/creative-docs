@@ -36,8 +36,11 @@ namespace Epsitec.Cresus.Assets.Export.Helpers
 			//	"Compile" un texte écrit dans le source C#. Cette méthode permet, pour
 			//	plus de clarté, d'écrire "<TAB>" au lieu de "&lt;TAB&gt;". Cette méthode
 			//	ne doit jamais être utilisée à partir de textes entrés par l'utilisateur !
-			text = text.Replace ("<", "&lt;");
-			text = text.Replace (">", "&gt;");
+			if (!string.IsNullOrEmpty (text))
+			{
+				text = text.Replace ("<", "&lt;");
+				text = text.Replace (">", "&gt;");
+			}
 
 			return text;
 		}

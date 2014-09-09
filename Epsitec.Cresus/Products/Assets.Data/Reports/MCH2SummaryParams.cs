@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class MCH2SummaryParams : AbstractReportParams
+	public class MCH2SummaryParams : AbstractReportParams, System.IEquatable<MCH2SummaryParams>
 	{
 		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
 			: base (customTitle)
@@ -27,21 +27,52 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public override bool StrictlyEquals(AbstractReportParams other)
+		public static bool operator ==(MCH2SummaryParams a, MCH2SummaryParams b)
 		{
-			if (other is MCH2SummaryParams)
-			{
-				var o = other as MCH2SummaryParams;
+			return a.Equals (b);
+		}
 
-				return this.CustomTitle == o.CustomTitle
-					&& this.DateRange   == o.DateRange
-					&& this.RootGuid    == o.RootGuid
-					&& this.Level       == o.Level
-					&& this.FilterGuid  == o.FilterGuid;
+		public static bool operator !=(MCH2SummaryParams a, MCH2SummaryParams b)
+		{
+			return !a.Equals (b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is MCH2SummaryParams)
+			{
+				return this.Equals ((MCH2SummaryParams) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public bool Equals(MCH2SummaryParams other)
+		{
+			//	Il ne faut surtout pas comparer les Guid !
+			if (!(other is MCH2SummaryParams))
+			{
+				return false;
 			}
 
-			return false;
+			return this.CustomTitle == other.CustomTitle
+				&& this.DateRange   == other.DateRange
+				&& this.RootGuid    == other.RootGuid
+				&& this.Level       == other.Level
+				&& this.FilterGuid  == other.FilterGuid;
 		}
+
+		public override int GetHashCode()
+		{
+			return this.CustomTitle.GetHashCode ()
+				^  this.DateRange.GetHashCode ()
+				^  this.RootGuid.GetHashCode ()
+				^  this.Level.GetHashCode ()
+				^  this.FilterGuid.GetHashCode ();
+		}
+
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{

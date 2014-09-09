@@ -48,11 +48,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public virtual bool StrictlyEquals(AbstractReportParams other)
-		{
-			return false;
-		}
-
 		public virtual AbstractReportParams ChangePeriod(int direction)
 		{
 			return null;
