@@ -77,6 +77,11 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			return new AssetsParams (this.CustomTitle, timestamp, this.RootGuid, this.Level);
 		}
 
+		public override AbstractReportParams ChangeCustomTitle(string customTitle)
+		{
+			return new AssetsParams (customTitle, this.Timestamp, this.RootGuid, this.Level);
+		}
+
 
 		public readonly Timestamp				Timestamp;
 		public readonly Guid					RootGuid;

@@ -79,6 +79,11 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
 		}
 
+		public override AbstractReportParams ChangeCustomTitle(string customTitle)
+		{
+			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid);
+		}
+
 
 		public readonly DateRange				DateRange;
 		public readonly Guid					RootGuid;

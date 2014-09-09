@@ -2094,6 +2094,26 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class AddFavorite
+				{
+					//	designer:str/JUKSG01
+					public static global::Epsitec.Common.Types.FormattedText Radios
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544860));
+						}
+					}
+					//	designer:str/JUKRG01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544859));
+						}
+					}
+				}
+				
 				public static class Amortizations
 				{
 					//	designer:str/JUKL001
@@ -7005,6 +7025,26 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544337);
+						}
+					}
+				}
+				
+				public static class AddFavorite
+				{
+					//	designer:str/JUKSG01
+					public static global::Epsitec.Common.Support.Druid Radios
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544860);
+						}
+					}
+					//	designer:str/JUKRG01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544859);
 						}
 					}
 				}

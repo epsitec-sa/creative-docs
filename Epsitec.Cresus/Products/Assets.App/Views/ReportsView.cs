@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -139,10 +140,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Cherche s'il existe déjà des paramètres avec le même nom.
 			//	Si oui, on les supprime, pour les rajouter juste après, ce qui
 			//	équivaut à une mise à jour.
-			var savedParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
-			if (savedParams != null)
+			var existingParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
+			if (existingParams != null)
 			{
-				this.accessor.Mandat.Reports.Remove (savedParams);
+				var target = this.toolbar.GetTarget (ToolbarCommand.ReportAddFavorite);
+				AddFavoritePopup.Show (target, this.accessor, createOperation =>
+				{
+					if (createOperation)  // crée un nouveau favori ?
+					{
+						var name = DataClipboard.GetCopyName (this.report.ReportParams.CustomTitle, this.accessor.GlobalSettings.CopyNameStrategy);
+						this.report.ReportParams = this.report.ReportParams.ChangeCustomTitle (name);
+						this.AddFavorite (null);
+					}
+					else  // met à jour le favosi existant ?
+					{
+						this.AddFavorite (existingParams);
+					}
+				});
+			}
+			else
+			{
+				this.AddFavorite (null);
+			}
+		}
+
+		private void AddFavorite(AbstractReportParams paramsToRemove)
+		{
+			if (paramsToRemove != null)
+			{
+				this.accessor.Mandat.Reports.Remove (paramsToRemove);
 			}
 
 			this.accessor.Mandat.Reports.Add (this.report.ReportParams);

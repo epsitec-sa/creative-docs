@@ -53,6 +53,11 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			return null;
 		}
 
+		public virtual AbstractReportParams ChangeCustomTitle(string customTitle)
+		{
+			return null;
+		}
+
 
 		private readonly Guid					guid;
 		private readonly string					customTitle;

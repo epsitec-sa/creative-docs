@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
-		private static string GetCopyName(string name, CopyNameStrategy strategy)
+		public static string GetCopyName(string name, CopyNameStrategy strategy)
 		{
 			//	A partir de "Toto", retourne "Copie de Toto" (par exemple).
 			if (string.IsNullOrEmpty (name))

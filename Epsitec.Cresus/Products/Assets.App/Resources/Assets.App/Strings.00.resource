@@ -530,4 +530,6 @@
   <data name="Enum.ViewTypeKind.PersonsSettings" id="KOG">Champs des contacts</data>
   <data name="Enum.ViewTypeKind.Accounts" id="KPG">Plan comptable</data>
   <data name="Popup.Report.CustomTitle" id="KQG">Titre personnalisé</data>
+  <data name="Popup.AddFavorite.Title" id="KRG">Ajouter le rapport aux favoris</data>
+  <data name="Popup.AddFavorite.Radios" id="KSG">Mettre à jour le favori existant&lt;br/&gt;Créer un nouveau favori</data>
 </bundle>
