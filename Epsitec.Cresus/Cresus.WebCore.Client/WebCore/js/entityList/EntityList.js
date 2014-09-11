@@ -57,7 +57,7 @@ function() {
       {
         this.selectedColumnId = options.sorterDefinitions[0].name;
       }
-      
+
       newOptions = {
         dockedItems: [
           this.createToolbar(options),
@@ -99,7 +99,7 @@ function() {
               this.getSelectionModel().select(r);
               contextMenu.showAt(e.getXY());
               return false;
-            };       
+            };
         }
       }
 
@@ -115,7 +115,7 @@ function() {
         items: this.createContextMenuItems(options.menuItems)
       });
     },
-    
+
     createContextMenuItems: function(menuItems) {
       return menuItems.map(this.createContextMenuItem, this);
     },
@@ -141,7 +141,7 @@ function() {
         scope: this
       });
     },
-    
+
     summaryNavigationMenuHandler: function(widget, event) {
         var rec, path, app;
       rec = this.getSelectionModel().getSelection()[0];
@@ -166,7 +166,7 @@ function() {
           entityType: Epsitec.Cresus.Core.app.getCurrentDatabaseEntityType(),
           id: rec.raw.id
         };
-        
+
         app.addEntityToBag(entity);
       }
     },
@@ -572,7 +572,7 @@ function() {
       items.push({
         text: 'Ajouter au panier',
         listeners: {
-          click: function() { this.onExportToBagHandler(); },
+        click: function() { this.onExportHandler('bag'); },
           scope: this
         }
       });
@@ -640,7 +640,7 @@ function() {
       if (this.isSearching) {
         this.isSearching = false;
         this.fullSearchWindow.appliFilters();
-        
+
       }
       if(this.isReloading) {
         this.isReloading = false;
@@ -797,7 +797,17 @@ function() {
             exportUrl: exportUrl
           });
           break;
+        case 'bag':
 
+          exportUrl = Epsitec.Tools.addParameterToUrl(exportUrl, 'type', 'bag');
+
+          Ext.Ajax.request({
+              url: exportUrl,
+              success: function (response) {
+                  //TODO
+              }
+          });
+          break;
         default:
           throw 'invalid export type: ' + type;
       }
@@ -824,9 +834,9 @@ function() {
            {
               Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
            }
-           
+
         }
-      } 
+      }
     },
 
     doExportSelectionToBag: function() {
@@ -837,7 +847,7 @@ function() {
       {
         menuItemId = this.menuItems[0].columnName;
       }
-      
+
         var data = this.getSelectionModel().getSelection();
         for (i=0; i<data.length; i++) {
            if(menuItemId !== null)
@@ -848,12 +858,12 @@ function() {
            {
               Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
            }
-           
+
         }
     },
 
     onRefreshHandler: function() {
-      
+
       if(Ext.isDefined(this.entityListTypeName))
       {
         Epsitec.Cresus.Core.app.reloadCurrentList(this,false);
@@ -862,7 +872,7 @@ function() {
       {
         Epsitec.Cresus.Core.app.reloadCurrentDatabase(false);
       }
-      
+
     },
 
     resetStore: function(autoLoad) {

@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - type:    The type of export to do.
 			//            - array for entity daty as a csv file.
 			//            - label for labels as a pdf file.
+			//			  - bag for entity to user bah
 			// If the type is array, then:
 			// - columns: The id of the columns whose data to return, in the format used by the
 			//            ColumnIO class.
@@ -92,10 +93,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            integer value.
 			Get["/export/{name}"] = (p =>
 			{
-				var		type = this.Request.Query.type == "label" ? "PDF" : "CSV";
+				var type = "inconnu";
 				CoreJob job	 = null;
-				
-				this.Execute (b => this.CreateJob (b, "Export " + type, true, out job));
+
+				if(this.Request.Query.type == "label")
+				{
+					type = "Export fichier PDF";
+				}
+				if(this.Request.Query.type == "array")
+				{
+					type = "Export fichier CSV";
+				}
+				if (this.Request.Query.type == "bag")
+				{
+					type = "Export dans le panier";
+					
+				}
+
+				this.Execute (b => this.CreateJob (b, type, true, out job));
 				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
 				return new Response ()
@@ -179,6 +194,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (var fileStream = System.IO.File.Create (depotPath + "\\" + filename))
 			{
 				stream.CopyTo (fileStream);
+			}
+		}
+
+		internal static void ExportToEntityUserBag(string user, Caches caches, EntityExtractor extractor, dynamic query)
+		{
+			foreach (var entity in extractor.Accessor.GetAllItems ())
+			{
+				EntityBag.Add (entity,"test");
 			}
 		}
 
@@ -272,29 +295,65 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
 			var user		= LoginModule.GetUserName (this);
-			var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
-			var filename    = DownloadsModule.GenerateFileNameForUser (user, fileExt);
-			var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 
-			try
+			if(this.Request.Query.type != "bag")
 			{
-				job.Start ();
-				var caches		= this.CoreServer.Caches;
+				var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
+				var filename    = DownloadsModule.GenerateFileNameForUser (user, fileExt);
+				var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 
-				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+				try
 				{
-					DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+					job.Start ();
+					var caches		= this.CoreServer.Caches;
+
+					using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+					{
+						DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+					}
+				}
+				catch
+				{
+					finishMetaData = "Une erreur est survenue. tâche annulée";
+				}
+				finally
+				{
+					job.Finish (finishMetaData);
 				}
 			}
-			catch
+			else
 			{
-				finishMetaData = "Une erreur est survenue. tâche annulée";
-			}
-			finally
-			{
-				job.Finish (finishMetaData);
+				var finishMetaData = "";
+				try
+				{
+					job.Start ();
+					var caches		= this.CoreServer.Caches;
+					
+					using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+					{
+						var entityCount    = extractor.Accessor.GetItemCount ();
+						if (entityCount < 1000)
+						{
+							finishMetaData = entityCount + "éléments ajouté au panier";
+							DatabaseModule.ExportToEntityUserBag (user, caches, extractor, this.Request.Query);
+						}
+						else
+						{
+							finishMetaData = "Exportation impossible, plus de 1000 éléments";
+						}
+					}
+				}
+				catch
+				{
+					finishMetaData = "Une erreur est survenue. tâche annulée";
+				}
+				finally
+				{
+					job.Finish (finishMetaData);
+				}	
 			}
 
+			
 			
 		}
 
