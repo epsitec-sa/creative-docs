@@ -114,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				this.accessor.Mandat.AddAccounts (range, importedAccounts);
 				//?this.accessor.Mandat.CurrentAccountsDateRange = range;
+				this.accessor.WarningsDirty = true;
 
 				this.updateAction ();
 

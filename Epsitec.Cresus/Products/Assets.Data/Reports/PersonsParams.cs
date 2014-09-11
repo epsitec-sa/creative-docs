@@ -29,15 +29,5 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				return false;
 			}
 		}
-
-		//?public override bool StrictlyEquals(AbstractReportParams other)
-		//?{
-		//?	if (other is PersonsParams)
-		//?	{
-		//?		return true;
-		//?	}
-		//?
-		//?	return false;
-		//?}
 	}
 }
