@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -11,10 +12,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// </summary>
 	public struct CommandDescription
 	{
-		public CommandDescription(string icon, string tooltip)
+		public CommandDescription(string icon, string tooltip, Shortcut shortcut = null)
 		{
-			this.Icon    = icon;
-			this.Tooltip = tooltip;
+			this.Icon     = icon;
+			this.Tooltip  = tooltip;
+			this.Shortcut = shortcut;
 		}
 
 		public bool IsEmpty
@@ -30,5 +32,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public readonly string					Icon;
 		public readonly string					Tooltip;
+		public readonly Shortcut				Shortcut;
 	}
 }

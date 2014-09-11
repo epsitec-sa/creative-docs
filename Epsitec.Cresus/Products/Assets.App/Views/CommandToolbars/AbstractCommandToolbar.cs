@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public abstract FrameBox CreateUI(Widget parent);
 
 
-		public void SetCommandDescription(ToolbarCommand command, string icon, string tooltip)
+		public void SetCommandDescription(ToolbarCommand command, string icon, string tooltip, Shortcut shortcut = null)
 		{
 			//	Modifie la description d'une commande. On peut modifier ainsi une
 			//	commande déjà définie. Si 'icon' ou 'tooltip' sont null, cela
@@ -72,7 +72,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				tooltip = current.Tooltip;
 			}
 
-			this.SetCommandDescription (command, new CommandDescription (icon, tooltip));
+			if (shortcut != null)
+			{
+				if (string.IsNullOrEmpty (tooltip))
+				{
+					tooltip = string.Concat ("(", shortcut.ToString (), ")");
+				}
+				else
+				{
+					tooltip = string.Concat (tooltip, "<br/>(", shortcut.ToString (), ")");
+				}
+			}
+
+			this.SetCommandDescription (command, new CommandDescription (icon, tooltip, shortcut));
 		}
 
 		public void SetCommandDescription(ToolbarCommand command, CommandDescription desc)
