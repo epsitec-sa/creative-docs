@@ -576,6 +576,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
+				if (string.IsNullOrEmpty (this.finalAmountTextField.Text))
+				{
+					this.finalAmountTextField.Name = "Required";
+					this.fieldColorTypes.Add (FieldColorType.Error);
+				}
+				else
+				{
+					this.finalAmountTextField.Name = null;
+				}
+
 				this.UpdateBackColor (this.typeTextFieldCombo);
 				this.UpdateBackColor (this.finalAmountTextField);
 				this.UpdateBackColor (this.residualAmountTextField);
@@ -1016,6 +1026,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else if (textField.Name == "IsReadOnly")
 				{
 					type = FieldColorType.Result;  // gris-bleu
+				}
+				else if (textField.Name == "Required")
+				{
+					type = FieldColorType.Error;  // orange
 				}
 				else
 				{

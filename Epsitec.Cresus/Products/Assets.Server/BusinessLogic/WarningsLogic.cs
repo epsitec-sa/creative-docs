@@ -36,7 +36,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else if (baseType == BaseType.Assets)
 			{
 				//	Liste des champs obligatoires d'un objet d'immobilisation.
-				return field == ObjectField.CategoryName
+				return field == ObjectField.MainValue
+					|| field == ObjectField.CategoryName
 					|| field == ObjectField.AmortizationRate
 					|| field == ObjectField.AmortizationType
 					|| field == ObjectField.Periodicity
@@ -96,6 +97,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				foreach (var e in asset.Events)
 				{
+					//	On cherche si la valeur comptable est indéfinie à l'entrée.
+					if (e.Type == EventType.Input)
+					{
+						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, ObjectField.MainValue);
+					}
+
 					//	On cherche les champs définis par l'utilisateur indéfinis.
 					var requiredFields = accessor.Mandat.GlobalSettings.GetUserFields (BaseType.Assets)
 						.Where (x => x.Required)
@@ -348,6 +355,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var pp  = p as DataStringProperty;
 					hasWarning = string.IsNullOrEmpty (pp.Value);
+				}
+				else if (p is DataAmortizedAmountProperty)
+				{
+					var pp  = p as DataAmortizedAmountProperty;
+					hasWarning = !pp.Value.FinalAmortizedAmount.HasValue;
 				}
 			}
 
