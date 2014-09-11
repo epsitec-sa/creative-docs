@@ -111,6 +111,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController2RemoveSettings.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController14DefineEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController6RemoveAlternateAddress.cs" />
