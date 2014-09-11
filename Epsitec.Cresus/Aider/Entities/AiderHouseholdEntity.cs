@@ -107,6 +107,9 @@ namespace Epsitec.Aider.Entities
 			}
 
 			var honorific = this.HouseholdMrMrs;
+
+		again:
+			
 			switch (honorific)
 			{
 				case HouseholdMrMrs.MonsieurEtMadame:
@@ -123,9 +126,12 @@ namespace Epsitec.Aider.Entities
 					// Only if we have 2 heads, do we use the real title.
 					return honorific.GetText (abbreviated);
 
+				case HouseholdMrMrs.Auto:
+					honorific = this.ResolveAuto ();
+					goto again;
+
 				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.None:
-				case HouseholdMrMrs.Auto:
 					return HouseholdMrMrs.Famille.GetText (abbreviated);
 
 				default:
@@ -182,6 +188,27 @@ namespace Epsitec.Aider.Entities
 			return Tuple.Create (firstnames, lastnames);
 		}
 
+
+		private HouseholdMrMrs ResolveAuto()
+		{
+			var heads   = this.GetHeads ();
+			var members = this.GetMembers ();
+
+			if (heads.Count < members.Count)
+			{
+				return HouseholdMrMrs.Famille;
+			}
+
+			var manCount   = heads.Count (x => x.eCH_Person.PersonSex == PersonSex.Male);
+			var womanCount = heads.Count (x => x.eCH_Person.PersonSex == PersonSex.Female);
+
+			if ((manCount == 1) && (womanCount == 1))
+			{
+				return HouseholdMrMrs.MonsieurEtMadame;
+			}
+
+			return HouseholdMrMrs.Famille;
+		}
 
 		private List<AiderPersonEntity> GetHeadForNames()
 		{
