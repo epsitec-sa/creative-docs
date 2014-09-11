@@ -282,7 +282,7 @@
   <data name="EditorPages.ColorsExplanation.Result.Tooltip" id="K09">Cette couleur indique le résultat d'un calcul&lt;br/&gt;ne pouvant pas être modifié</data>
   <data name="EditorPages.ColorsExplanation.Error.Description" id="K19">Erreur</data>
   <data name="EditorPages.ColorsExplanation.Error.Tooltip" id="K29">Cette couleur indique un champ incorrectement rempli</data>
-  <data name="EditorPages.Category.AccountsSubtitle" id="K39">Res.Strings.EditorPages.ColorsExplanation.Error.Tooltip.ToString ()</data>
+  <data name="EditorPages.Category.AccountsSubtitle" id="K39">Comptes à utiliser pour passer les écritures comptables :</data>
   <data name="EditorPages.AmortizationDefinition.Import" id="K49">Importer</data>
   <data name="EditorPages.AmortizationDefinition.ImportHelp" id="K59">Importez une catégorie d'immobilisation existante, puis modifiez éventuellement sa définition ci-dessous.</data>
   <data name="EditorPages.Category.CalculatorButton" id="K69">Calculer d'après le nombre d'années</data>

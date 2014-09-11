@@ -44,6 +44,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					|| field == ObjectField.Round
 					|| field == ObjectField.ResidualValue;
 			}
+			else if (baseType == BaseType.Groups)
+			{
+				//	Liste des champs obligatoires d'un groupe.
+				return field == ObjectField.Name
+					|| field == ObjectField.Number;
+			}
 			else
 			{
 				return false;

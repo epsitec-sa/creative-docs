@@ -69,6 +69,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public bool								WarningsDirty;
+
 		public INodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
@@ -124,6 +126,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				this.AddDefaultGroups (obj, timestamp, e);
 			}
+
+			this.WarningsDirty = true;
 
 			return obj.Guid;
 		}
@@ -318,19 +322,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public void RemoveObject(BaseType baseType, Guid objectGuid)
 		{
-			var list = this.mandat.GetData (baseType);
 			var obj = this.GetObject (baseType, objectGuid);
-
-			if (obj != null)
-			{
-				list.Remove (obj);
-			}
+			this.RemoveObject (baseType, obj);
 		}
 
 		public void RemoveObject(BaseType baseType, DataObject obj)
 		{
-			var list = this.mandat.GetData (baseType);
-			list.Remove (obj);
+			if (obj != null)
+			{
+				var list = this.mandat.GetData (baseType);
+				list.Remove (obj);
+
+				this.WarningsDirty = true;
+			}
 		}
 
 		public void RemoveObjectEvent(DataObject obj, Timestamp? timestamp)

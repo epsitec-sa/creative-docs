@@ -118,6 +118,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 				}
 
+				this.accessor.WarningsDirty = true;
+
 				this.CancelObjectEdition ();
 				return true;
 			}

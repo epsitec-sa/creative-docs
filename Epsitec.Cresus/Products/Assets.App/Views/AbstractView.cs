@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Met à jour la vue.
 		}
 
+
 		public void CloseUI()
 		{
 			this.accessor.EditionAccessor.CancelObjectEdition ();
@@ -250,6 +251,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				return string.Concat (accessor.Mandat.Name, " — ", title);
+			}
+		}
+
+
+		protected void UpdateWarningsRedDot()
+		{
+			//	Met à jour le nombre d'avertissements dans la pastille rouge sur le
+			//	bouton de la vue des avertissements.
+			//	ATTENTION: Il faut construire la liste complète des avertissements,
+			//	ce qui peut prendre du temps !
+			//	TODO: Rendre cela asynchrone !?
+			if (this.accessor.WarningsDirty)
+			{
+				var list = new List<Warning> ();
+				WarningsLogic.GetWarnings (list, this.accessor);
+
+				this.mainToolbar.WarningsRedDotCount = list.Count;
+
+				this.accessor.WarningsDirty = false;
 			}
 		}
 

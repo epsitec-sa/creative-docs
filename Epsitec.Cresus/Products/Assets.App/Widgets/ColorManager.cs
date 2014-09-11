@@ -156,6 +156,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color RedDotBackgroundColor
+		{
+			get
+			{
+				return Color.FromHexa ("ff2a00");  // orange-rouge
+			}
+		}
+
+		public static Color RedDotTextColor
+		{
+			get
+			{
+				return Color.FromHexa ("ffffff");  // blanc
+			}
+		}
+
 		public static Color HoverColor
 		{
 			get

@@ -94,6 +94,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public int								WarningsRedDotCount
+		{
+			set
+			{
+				var command = MainToolbar.GetViewCommand (ViewTypeKind.Warnings);
+				this.SetCommandRedDotCount (command, value);
+			}
+		}
+
 
 		public override FrameBox CreateUI(Widget parent)
 		{

@@ -188,6 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
+			this.UpdateWarningsRedDot ();
 
 			this.OnViewStateChanged (this.ViewState);
 		}

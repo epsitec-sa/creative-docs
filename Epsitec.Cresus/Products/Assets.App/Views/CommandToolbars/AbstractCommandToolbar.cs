@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
 			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
+			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
 			this.CreateCommands ();
 		}
@@ -126,13 +127,33 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public ToolbarCommandState GetCommandState(ToolbarCommand command)
 		{
-			if (this.commandStates.ContainsKey (command))
+			ToolbarCommandState state;
+			if (this.commandStates.TryGetValue (command, out state))
 			{
-				return this.commandStates[command];
+				return state;
 			}
 			else
 			{
 				return ToolbarCommandState.Hide;
+			}
+		}
+
+		public void SetCommandRedDotCount(ToolbarCommand command, int count)
+		{
+			this.commandRedDotCounts[command] = count;
+			this.UpdateRedDot (command);
+		}
+
+		public int GetCommandRedDotCount(ToolbarCommand command)
+		{
+			int count;
+			if (this.commandRedDotCounts.TryGetValue (command, out count))
+			{
+				return count;
+			}
+			else
+			{
+				return 0;
 			}
 		}
 
@@ -154,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		protected IconButton CreateCommandButton(DockStyle dock, ToolbarCommand command)
+		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, ToolbarCommand command)
 		{
 			var desc = this.GetCommandDescription (command);
 
@@ -165,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			var size = this.toolbar.PreferredHeight;
 
-			var button = new IconButton
+			var button = new ButtonWithRedDot
 			{
 				Parent        = this.toolbar,
 				AutoFocus     = false,
@@ -204,21 +225,36 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		private void UpdateRedDot(ToolbarCommand command)
+		{
+			Widget widget;
+			if (this.commandWidgets.TryGetValue (command, out widget))
+			{
+				if (widget is ButtonWithRedDot)
+				{
+					var button = widget as ButtonWithRedDot;
+					button.RedDotCount = this.GetCommandRedDotCount (command);
+				}
+
+				//	Il pourrait y avoir des widgets autres que des ButtonWithRedDot dans le futur !
+			}
+		}
+
 		private void UpdateWidget(ToolbarCommand command)
 		{
 			Widget widget;
 			if (this.commandWidgets.TryGetValue (command, out widget))
 			{
-				if (widget is IconButton)
+				if (widget is ButtonWithRedDot)
 				{
-					this.UpdateButton (widget as IconButton, command);
+					this.UpdateButton (widget as ButtonWithRedDot, command);
 				}
 
-				//	Il pourrait y avoir des widgets autres que des IconButton dans le futur !
+				//	Il pourrait y avoir des widgets autres que des ButtonWithRedDot dans le futur !
 			}
 		}
 
-		private void UpdateButton(IconButton button, ToolbarCommand command)
+		private void UpdateButton(ButtonWithRedDot button, ToolbarCommand command)
 		{
 			//	Un bouton placé avec SetManualBounds gère différemment la visibilité.
 			if (button.Dock != DockStyle.None)
@@ -269,6 +305,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
+		private readonly Dictionary<ToolbarCommand, int>					commandRedDotCounts;
 		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
 
 		protected FrameBox						toolbar;
