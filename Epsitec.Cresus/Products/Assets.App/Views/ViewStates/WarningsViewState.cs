@@ -27,14 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
-			var o = other as WarningsViewState;
-			if (o == null)
-			{
-				return false;
-			}
-
-			return this.ViewType           == o.ViewType
-				&& this.PersistantUniqueId == o.PersistantUniqueId;
+			return this.ApproximatelyEquals (other);
 		}
 
 
