@@ -15,7 +15,7 @@ function() {
 
     /* Configuration */
 
-    width: 400,
+    width: 500,
     height: 300,
     border: false,
     layout: {
@@ -31,8 +31,16 @@ function() {
     leftGrid: null,
     rightGrid: null,
     exportUrl: null,
-    dataSetConfigs: [],
+    dataSetConfigs: {},
     configStore: null,
+    currentConfig: {
+      name : '',
+      useFilters : false,
+      url : null
+    },
+    comboField : null,
+    configNameField : null,
+    useFilterField : null,
     columnDefinitions: null,
 
     /* Constructor */
@@ -44,13 +52,16 @@ function() {
       this.rightGrid = this.createRightGrid(options);
       this.configStore = this.createConfigStore();
 
-
       newOptions = {
         items: [this.leftGrid, this.rightGrid],
         dockedItems: [{
           xtype: 'toolbar',
           dock: 'top',
-          items: [this.createConfigCombo()]
+          items: this.createConfigurationLoadingTools()
+        },{
+          xtype: 'toolbar',
+          dock: 'left',
+          items: this.createConfigurationSavingTools()
         }],
         buttons: [
           this.createOkButton(),
@@ -66,10 +77,9 @@ function() {
                                   localStorage
                                   .getItem(this.getLocalConfigKey ()));
 
-      console.log(this.dataSetConfigs);
       if(this.dataSetConfigs !== null)
       {
-        this.configStore.data = this.dataSetConfigs;
+        this.loadConfigStore();
       }
 
       return this;
@@ -81,58 +91,166 @@ function() {
       return this.exportUrl.split('?')[0];
     },
 
-    createConfigStore: function() {
-      return Ext.create('Ext.data.ArrayStore', {
-        fields: ['name'],
-        data : this.dataSetConfigs
-      });
-    },
-
-    createConfigCombo : function () {
-      return Ext.create('Ext.form.field.ComboBox', {
-        hideLabel: true,
-        store: this.configStore,
-        displayField: 'name',
-        typeAhead: true,
-        queryMode: 'local',
-        triggerAction: 'all',
-        emptyText: 'Exports précédents...',
-        selectOnFocus: true,
-        width: 135,
-        indent: true,
-        on: {
-          select: function (c, r) {
-              this.loadConfig(r[0]);
-            }
-        }
-      });
-    },
-
     loadConfig: function (config) {
-      this.leftGrid.store.loadData(config.data);
+      this.currentConfig.name = config.name;
+      this.currentConfig.useFilters = config.useFilters;
+      this.configNameField.setValue (this.currentConfig.name);
+      this.useFilterField.setValue (this.currentConfig.useFilters);
+      if(this.currentConfig.useFilters)
+      {
+        this.exportUrl = config.url;
+      }
+      this.leftGrid.store.loadData (config.data);
+    },
+
+    loadConfigStore: function () {
+      //convert hashmap to array
+      var output = [], item;
+      for (var conf in this.dataSetConfigs) {
+          item = {};
+          item.name = conf;
+          item.data = this.dataSetConfigs[conf].data;
+          item.useFilters = this.dataSetConfigs[conf].useFilters;
+          item.url = this.dataSetConfigs[conf].url;
+          output.push(item);
+      }
+      //load available configurations
+      this.configStore.loadData(output);
     },
 
     saveConfig : function () {
       //create key based on dataset url
       var key = this.getLocalConfigKey ();
 
-      //init configs for this key if empty
-      if(this.dataSetConfigs===null)
-      {
-        this.dataSetConfigs = [];
+      //create and push new config
+      var configName = this.configNameField.getValue();
+      if(configName.length < 1) {
+        return;
       }
 
-      //create and push new config
-      var config = {
-        name : new Date().toDateString(),
-        data : this.leftGrid.store.snapshot,
-        url : this.exportUrl
+      var useFilters  = this.useFilterField.getValue();
+
+      if(this.dataSetConfigs === null)
+      {
+        this.dataSetConfigs = {};
+      }
+
+      this.dataSetConfigs[configName] = {
+        name    : configName,
+        data    : this.getSelectedColumns(),
+        useFilters : useFilters,
+        url     : this.exportUrl
       };
-      
-      this.dataSetConfigs.push (config);
 
       //save in local storage
       localStorage.setItem (key, JSON.stringify(this.dataSetConfigs));
+      //relaod available configuration
+      this.loadConfigStore();
+      this.comboField.setValue(configName);
+    },
+
+    removeConfig : function () {
+      //create key based on dataset url
+      var key = this.getLocalConfigKey ();
+
+      if(this.dataSetConfigs === null)
+      {
+        return;
+      }
+
+      var configName = this.configNameField.getValue();
+      delete this.dataSetConfigs[configName];
+
+      this.comboField.setValue(null);
+      this.configNameField.setValue(null);
+      this.useFilterField.setValue(null);
+
+      //save in local storage
+      localStorage.setItem (key, JSON.stringify(this.dataSetConfigs));
+      //relaod available configuration
+      this.loadConfigStore();
+    },
+
+    createConfigStore: function() {
+      return Ext.create('Ext.data.ArrayStore', {
+        fields: ['name','data','useFilters','url']
+      });
+    },
+
+    createConfigurationLoadingTools : function () {
+      this.comboField = Ext.create('Ext.form.field.ComboBox', {
+        hideLabel: true,
+        store: this.configStore,
+        displayField: 'name',
+        typeAhead: true,
+        queryMode: 'local',
+        triggerAction: 'all',
+        emptyText: 'Charger',
+        selectOnFocus: true,
+        width: 130,
+        indent: true,
+        listeners:{
+         scope: this,
+         'select': function (c, r) {
+             this.loadConfig(r[0].data);
+           }
+         }
+       });
+
+      return this.comboField;
+    },
+
+    createConfigurationSavingTools : function () {
+      var buttons = [];
+
+      buttons.push({
+        xtype: 'label',
+        text: 'Enregistrer la configuration'
+      });
+
+      buttons.push({
+        xtype: 'label',
+        text: 'Nom de la config.:'
+      });
+
+      this.configNameField = Ext.create('Ext.form.field.Text',{
+        width: 80,
+        emptyText: '',
+        name: 'configName'
+      });
+
+      buttons.push(this.configNameField);
+
+      buttons.push({
+        xtype: 'label',
+        text: 'Conserver les filtres ?'
+      });
+
+      this.useFilterField = Ext.create('Ext.form.field.Checkbox',{
+        name: 'saveFilter'
+      });
+
+      buttons.push(this.useFilterField);
+
+      buttons.push(Ext.create('Ext.Button', {
+        text: 'Enregistrer',
+        iconCls: 'icon-add',
+        listeners: {
+          click: this.saveConfig,
+          scope: this
+        }
+      }));
+
+      buttons.push(Ext.create('Ext.Button', {
+        text: 'Supprimer',
+        iconCls: 'icon-remove',
+        listeners: {
+          click: this.removeConfig,
+          scope: this
+        }
+      }));
+
+      return buttons;
     },
 
     createLeftGrid: function(options) {
@@ -238,9 +356,11 @@ function() {
       var scope = this;
       columnIds = this.getSelectedColumnIds().join(';');
 
+
       url = this.exportUrl;
       url = Epsitec.Tools.addParameterToUrl(url, 'type', 'array');
       url = Epsitec.Tools.addParameterToUrl(url, 'columns', columnIds);
+
 
       var ajaxTime= new Date().getTime();
       Ext.Ajax.request({
@@ -258,6 +378,14 @@ function() {
           .getRange()
           .map(function(i) {
             return i.get('name');
+          });
+    },
+
+    getSelectedColumns: function() {
+      return this.leftGrid.store
+          .getRange()
+          .map(function(r){
+            return r.data;
           });
     }
   });
