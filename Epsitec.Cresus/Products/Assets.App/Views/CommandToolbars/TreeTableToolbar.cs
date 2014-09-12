@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.MoveUp,     "TreeTable.MoveUp",     Res.Strings.Toolbar.TreeTable.MoveUp.ToString ());
 			this.SetCommandDescription (ToolbarCommand.MoveDown,   "TreeTable.MoveDown",   Res.Strings.Toolbar.TreeTable.MoveDown.ToString ());
 			this.SetCommandDescription (ToolbarCommand.MoveBottom, "TreeTable.MoveBottom", Res.Strings.Toolbar.TreeTable.MoveBottom.ToString ());
-			this.SetCommandDescription (ToolbarCommand.New,        "TreeTable.New",        Res.Strings.Toolbar.TreeTable.New.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,        "TreeTable.New",        Res.Strings.Toolbar.TreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.SetCommandDescription (ToolbarCommand.Delete,     "TreeTable.Delete",     Res.Strings.Toolbar.TreeTable.Delete.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Deselect,   "TreeTable.Deselect",   Res.Strings.Toolbar.TreeTable.Deselect.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Copy,       "TreeTable.Copy",       Res.Strings.Toolbar.TreeTable.Copy.ToString ());
@@ -200,6 +200,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				this.Adjust ();
 			};
+
+			this.AttachShortcuts ();
 
 			return this.toolbar;
 		}

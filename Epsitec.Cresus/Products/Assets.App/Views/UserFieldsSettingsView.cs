@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class UserFieldsSettingsView : AbstractView
+	public class UserFieldsSettingsView : AbstractView, System.IDisposable
 	{
 		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, BaseType baseType)
 			: base (accessor, toolbar, viewType)
@@ -25,12 +25,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.objectEditor   = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
 		}
 
-
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			if (this.mainToolbar != null)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+
+			if (this.listController != null)
+			{
+				this.listController.Dispose ();
+			}
+		}
+
+		public override void Close()
+		{
+			this.listController.Close ();
 		}
 
 

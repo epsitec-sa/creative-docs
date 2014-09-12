@@ -13,7 +13,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AmortizationsView : AbstractView
+	public class AmortizationsView : AbstractView, System.IDisposable
 	{
 		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 			: base (accessor, toolbar, viewType)
@@ -33,9 +33,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			if (this.mainToolbar != null)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+		}
+
+		public override void Close()
+		{
+			this.timelinesArrayController.Close ();
 		}
 
 

@@ -16,7 +16,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class AssetsToolbarTimelineController : IDirty
+	public class AssetsToolbarTimelineController : IDirty, System.IDisposable
 	{
 		public AssetsToolbarTimelineController(DataAccessor accessor, BaseType baseType)
 		{
@@ -25,6 +25,20 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.timelineData = new TimelineData (this.accessor, this.baseType);
 			this.timelineMode = TimelineMode.Compacted;
+		}
+
+		public void Dispose()
+		{
+			if (this.toolbar != null)
+			{
+				this.toolbar.Dispose ();
+				this.toolbar = null;
+			}
+		}
+
+		public void Close()
+		{
+			this.toolbar.Close ();
 		}
 
 

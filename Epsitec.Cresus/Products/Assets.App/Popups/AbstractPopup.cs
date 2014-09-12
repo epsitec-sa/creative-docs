@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateUI ();
 
 			PopupStack.Push (this);
+			this.OpenShortcutsLevel ();
 		}
 
 		public void Create(Widget widget, Point targetPos, bool leftOrRight = false)
@@ -68,6 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateUI ();
 
 			PopupStack.Push (this);
+			this.OpenShortcutsLevel ();
 		}
 
 
@@ -434,11 +436,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			//	Ferme le popup qui est par-dessus tous les autres.
 			var top = PopupStack.Pop ();
+			top.CloseShortcutsLevel ();
 
 			var parent = top.GetParent ();
 			parent.Children.Remove (top);
 
 			top.OnClosed ();
+		}
+
+
+		private void OpenShortcutsLevel()
+		{
+			var shortcutCatcher = this.GetParent ();
+			shortcutCatcher.Level++;
+		}
+
+		private void CloseShortcutsLevel()
+		{
+			var shortcutCatcher = this.GetParent ();
+			shortcutCatcher.Level--;
 		}
 
 
@@ -580,13 +596,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected Widget GetParent()
+		protected ShortcutCatcher GetParent()
 		{
-			//	Retourne le widget FrameBox qui occupe toute la fenêtre.
-			var parent = this.target.Window.Root.Children[0] as FrameBox;
-			System.Diagnostics.Debug.Assert (parent != null);
-			System.Diagnostics.Debug.Assert (parent.Name == "PopupParentFrame");
-			return parent;
+			//	Retourne le widget ShortcutCatcher qui occupe toute la fenêtre.
+			return this.target.GetShortcutCatcher ();
 		}
 
 

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -14,7 +15,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class EventsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty
+	public class EventsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty, System.IDisposable
 	{
 		public EventsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base(accessor, baseType)
@@ -27,6 +28,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 
 			this.title = Res.Strings.ToolbarControllers.EventsTreeTable.Title.ToString ();
+		}
+
+		public void Dispose()
+		{
 		}
 
 
@@ -90,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
 			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.EventsTreeTable.Delete.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Deselect.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  Res.Strings.ToolbarControllers.EventsTreeTable.Copy.ToString ());

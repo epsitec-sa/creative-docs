@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.Prev,                   "Timeline.Prev",           Res.Strings.Toolbar.Timelines.Prev.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Next,                   "Timeline.Next",           Res.Strings.Toolbar.Timelines.Next.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Last,                   "Timeline.Last",           Res.Strings.Toolbar.Timelines.Last.ToString ());
-			this.SetCommandDescription (ToolbarCommand.New,                    "TreeTable.New.Event",     Res.Strings.Toolbar.Timelines.NewEvent.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,                    "TreeTable.New.Event",     Res.Strings.Toolbar.Timelines.NewEvent.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
 			this.SetCommandDescription (ToolbarCommand.Delete,                 "Timeline.Delete",         Res.Strings.Toolbar.Timelines.DeleteEvent.ToString ());
 			this.SetCommandDescription (ToolbarCommand.AmortizationsPreview,   "Amortizations.Preview",   Res.Strings.Popup.Amortizations.Preview.Title.ToString ());
 			this.SetCommandDescription (ToolbarCommand.AmortizationsFix,       "Amortizations.Fix",       Res.Strings.Popup.Amortizations.Fix.Title.ToString ());
@@ -92,6 +92,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			
 			this.buttonCopy  = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Copy);
 			this.buttonPaste = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Paste);
+
+			this.AttachShortcuts ();
 
 			return this.toolbar;
 		}

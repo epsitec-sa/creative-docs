@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class WarningsView : AbstractView
+	public class WarningsView : AbstractView, System.IDisposable
 	{
 		public WarningsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 			: base (accessor, toolbar, viewType)
@@ -22,12 +22,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController = new WarningsToolbarTreeTableController (this.accessor, BaseType.Persons);
 		}
 
-
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			if (this.mainToolbar != null)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+
+			if (this.listController != null)
+			{
+				this.listController.Dispose ();
+			}
+		}
+
+		public override void Close()
+		{
+			this.listController.Close ();
 		}
 
 

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 	/// <summary>
 	/// Classe de base pour tous les contrôleurs TreeTable et/ou TreeGraphic.
 	/// </summary>
-	public abstract class AbstractToolbarTreeController<T>
+	public abstract class AbstractToolbarTreeController<T> : System.IDisposable
 		where T : struct
 	{
 		public AbstractToolbarTreeController(DataAccessor accessor, BaseType baseType)
@@ -26,6 +26,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.accessor = accessor;
 			this.baseType = baseType;
 		}
+
+		public virtual void Dispose()
+		{
+			if (this.toolbar != null)
+			{
+				this.toolbar.Dispose ();
+				this.toolbar = null;
+			}
+		}
+
+		public virtual void Close()
+		{
+			this.toolbar.Close ();
+		}
+
 
 
 		public bool								ShowGraphic

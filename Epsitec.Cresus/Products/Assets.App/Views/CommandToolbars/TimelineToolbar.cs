@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.Last,        "Timeline.Last",         Res.Strings.Toolbar.Timeline.Last.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Now,         "Timeline.Now",          Res.Strings.Toolbar.Timeline.Now.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Date,        "Timeline.Date",         Res.Strings.Toolbar.Timeline.Date.ToString ());
-			this.SetCommandDescription (ToolbarCommand.New,         "TreeTable.New.Event",   Res.Strings.Toolbar.Timeline.New.ToString ());
+			this.SetCommandDescription (ToolbarCommand.New,         "TreeTable.New.Event",   Res.Strings.Toolbar.Timeline.New.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
 			this.SetCommandDescription (ToolbarCommand.Delete ,     "Timeline.Delete",       Res.Strings.Toolbar.Timeline.Delete.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Deselect,    "Timeline.Deselect",     Res.Strings.Toolbar.Timeline.Deselect.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Copy,        "TreeTable.Copy.Event",  Res.Strings.Toolbar.Timeline.Copy.ToString ());
@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonFirst      .Margins = new Margins (10, 0, 0, 0);
 
 			this.UpdateModeButtons ();
+			this.AttachShortcuts ();
 
 			return this.toolbar;
 		}

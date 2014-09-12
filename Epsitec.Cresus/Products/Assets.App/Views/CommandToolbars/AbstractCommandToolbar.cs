@@ -12,7 +12,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
-	public abstract class AbstractCommandToolbar
+	public abstract class AbstractCommandToolbar : System.IDisposable
 	{
 		public AbstractCommandToolbar(DataAccessor accessor)
 		{
@@ -24,6 +24,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
 			this.CreateCommands ();
+		}
+
+		public void Dispose()
+		{
+		}
+
+		public void Close()
+		{
+			this.DetachShortcuts ();
 		}
 
 
@@ -45,6 +54,33 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				if (this.toolbar != null)
 				{
 					this.toolbar.Visibility = value;
+				}
+			}
+		}
+
+		public bool								IsParentVisible
+		{
+			get
+			{
+				if (this.toolbar == null)
+				{
+					return false;
+				}
+				else
+				{
+					Widget x = this.toolbar;
+
+					while (x != null)
+					{
+						if (!x.Visibility)
+						{
+							return false;
+						}
+
+						x = x.Parent;
+					}
+
+					return true;
 				}
 			}
 		}
@@ -187,7 +223,39 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, ToolbarCommand command)
+		public void ActivateCommand(ToolbarCommand command)
+		{
+			//	Appelé par le ShortcutCatcher pour exécuter une commande, lorsqu'un
+			//	raccourci clavier a été activé. L'effet est le même que si l'utilisateur
+			//	avait cliqué sur le bouton.
+
+			if (this.commandStates[command] == ToolbarCommandState.Enable ||
+				this.commandStates[command] == ToolbarCommandState.Activate)
+			{
+				this.OnCommandClicked (command);
+			}
+		}
+
+		protected void AttachShortcuts()
+		{
+			//	Attache toutes les commandes ayant un raccourci clavier au ShortcutCatcher.
+			var shortcutCatcher = this.toolbar.GetShortcutCatcher ();
+
+			foreach (var cd in this.commandDescriptions.Where (x => x.Value.Shortcut != null))
+			{
+				shortcutCatcher.Attach (this, cd.Key, cd.Value.Shortcut);
+			}
+		}
+
+		private void DetachShortcuts()
+		{
+			//	Détache toutes les commandes de cette toolbar.
+			var shortcutCatcher = this.toolbar.GetShortcutCatcher ();
+			shortcutCatcher.Detach (this);
+		}
+
+
+		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, ToolbarCommand command, bool activable = false)
 		{
 			var desc = this.GetCommandDescription (command);
 
@@ -206,6 +274,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				IconUri       = Misc.GetResourceIconUri (desc.Icon),
 				PreferredSize = new Size (size, size),
 			};
+
+			if (activable)
+			{
+				button.ButtonStyle = ButtonStyle.ActivableIcon;
+			}
 
 			ToolTip.Default.SetToolTip (button, desc.Tooltip);
 

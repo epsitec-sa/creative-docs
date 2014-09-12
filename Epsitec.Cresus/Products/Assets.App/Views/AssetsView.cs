@@ -16,7 +16,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AssetsView : AbstractView
+	public class AssetsView : AbstractView, System.IDisposable
 	{
 		public AssetsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 			: base (accessor, toolbar, viewType)
@@ -40,9 +40,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			if (this.mainToolbar != null)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+
+			if (this.listController != null)
+			{
+				this.listController.Dispose ();
+			}
+
+			if (this.timelineController != null)
+			{
+				this.timelineController.Dispose ();
+			}
+
+			if (this.eventsController != null)
+			{
+				this.eventsController.Dispose ();
+			}
+		}
+
+		public override void Close()
+		{
+			this.timelineController.Close ();
+			this.eventsController.Close ();
+			this.timelinesArrayController.Close ();
 		}
 
 
@@ -377,6 +402,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
+			this.mainToolbar.ViewMode = this.viewMode;
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 			this.UpdateWarningsRedDot ();
@@ -803,7 +829,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
 			}
 
-			this.mainToolbar.ViewMode = this.viewMode;
+			//?this.mainToolbar.ViewMode = this.viewMode;
 		}
 
 		private bool IsEditingPossible

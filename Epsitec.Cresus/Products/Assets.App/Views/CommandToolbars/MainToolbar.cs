@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
 				var command = MainToolbar.GetViewCommand (kind);
-				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind));
+				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind), MainToolbar.GetViewShortcut (kind));
 			}
 		}
 
@@ -118,26 +118,26 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonNew             = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NewMandat);
-			this.buttonOpen            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.OpenMandat);
-			this.buttonSave            = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.SaveMandat);
-			this.buttonNavigateBack    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateBack);
-			this.buttonNavigateForward = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateForward);
-			this.buttonNavigateMenu    = this.CreateCommandButton  (DockStyle.Left, ToolbarCommand.NavigateMenu);
+			this.buttonNew             = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NewMandat);
+			this.buttonOpen            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.OpenMandat);
+			this.buttonSave            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.SaveMandat);
+			this.buttonNavigateBack    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateBack);
+			this.buttonNavigateForward = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateForward);
+			this.buttonNavigateMenu    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateMenu);
 
 			this.CreateViewTypeButtons ();							   									     
 			this.buttonPopup           = this.CreatePopupButton ();
-								       													   									     
-			this.buttonSingle          = this.CreateViewModeButton (ViewMode.Single,   ToolbarCommand.ViewModeSingle);
-			this.buttonEvent           = this.CreateViewModeButton (ViewMode.Event,    ToolbarCommand.ViewModeEvent);
-			this.buttonMultiple        = this.CreateViewModeButton (ViewMode.Multiple, ToolbarCommand.ViewModeMultiple);
+
+			this.buttonSingle          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeSingle,   activable: true);
+			this.buttonEvent           = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeEvent,    activable: true);
+			this.buttonMultiple        = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeMultiple, activable: true);
 									   											   				     
-			this.buttonEdit            = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Edit);
-			this.buttonLocked          = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Locked);
-			this.buttonSimulation      = this.CreateCommandButton  (DockStyle.Left,    ToolbarCommand.Simulation);
+			this.buttonEdit            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Edit);
+			this.buttonLocked          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Locked);
+			this.buttonSimulation      = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Simulation);
 									  				 							   				     
-			this.buttonCancel          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Cancel);
-			this.buttonAccept          = this.CreateCommandButton  (DockStyle.Right,   ToolbarCommand.Accept);
+			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
+			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
 
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
@@ -146,6 +146,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
+
+			this.AttachShortcuts ();
 
 			return this.toolbar;
 		}
@@ -165,21 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private IconButton CreateViewTypeButton(ViewTypeKind kind)
 		{
 			var command = MainToolbar.GetViewCommand (kind);
-			return this.CreateViewTypeButton (kind, command);
-		}
-
-		private IconButton CreateViewTypeButton(ViewTypeKind kind, ToolbarCommand command)
-		{
-			var button = this.CreateCommandButton (DockStyle.Left, command);
-			button.ButtonStyle = ButtonStyle.ActivableIcon;
-
-			button.Clicked += delegate
-			{
-				this.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
-				this.OnViewChanged (this.viewType);
-			};
-
-			return button;
+			return this.CreateCommandButton (DockStyle.Left, command, activable: true);
 		}
 
 
@@ -207,20 +195,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			return button;
 		}
 
-
-		private IconButton CreateViewModeButton(ViewMode view, ToolbarCommand command)
-		{
-			var button = this.CreateCommandButton (DockStyle.Left, command);
-			button.ButtonStyle = ButtonStyle.ActivableIcon;
-
-			button.Clicked += delegate
-			{
-				this.ViewMode = view;
-				this.OnCommandClicked (command);
-			};
-
-			return button;
-		}
 
 		private void UpdateViewTypeCommands()
 		{
@@ -274,11 +248,23 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			popup.ViewTypeClicked += delegate (object sender, ViewTypeKind kind)
 			{
-				this.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
-				this.OnViewChanged (this.viewType);
+				this.OnCommandClicked (MainToolbar.GetViewCommand (kind));
 			};
 		}
 
+
+		public static ViewTypeKind GetViewKind(ToolbarCommand command)
+		{
+			foreach (var kind in MainToolbar.ViewTypeKinds.Union (MainToolbar.PopupViewTypeKinds))
+			{
+				if (command == MainToolbar.GetViewCommand (kind))
+				{
+					return kind;
+				}
+			}
+
+			return ViewTypeKind.Unknown;
+		}
 
 		private static ToolbarCommand GetViewCommand(ViewTypeKind kind)
 		{
@@ -350,15 +336,35 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
-
-		#region Events handler
-		private void OnViewChanged(ViewType viewType)
+		private static Shortcut GetViewShortcut(ViewTypeKind kind)
 		{
-			this.ViewChanged.Raise (this, viewType);
-		}
+			switch (kind)
+			{
+				case ViewTypeKind.Assets:
+					return new Shortcut (KeyCode.FuncF2);
 
-		public event EventHandler<ViewType> ViewChanged;
-		#endregion
+				case ViewTypeKind.Amortizations:
+					return new Shortcut (KeyCode.FuncF3);
+
+				case ViewTypeKind.Categories:
+					return new Shortcut (KeyCode.FuncF4);
+
+				case ViewTypeKind.Groups:
+					return new Shortcut (KeyCode.FuncF5);
+
+				case ViewTypeKind.Persons:
+					return new Shortcut (KeyCode.FuncF6);
+
+				case ViewTypeKind.Reports:
+					return new Shortcut (KeyCode.FuncF7);
+
+				case ViewTypeKind.Warnings:
+					return new Shortcut (KeyCode.FuncF8);
+
+				default:
+					return null;
+			}
+		}
 
 
 		private IconButton						buttonNew;

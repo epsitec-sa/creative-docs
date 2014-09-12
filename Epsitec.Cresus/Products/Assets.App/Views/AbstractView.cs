@@ -17,7 +17,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public abstract class AbstractView
+	public abstract class AbstractView : System.IDisposable
 	{
 		public AbstractView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
 		{
@@ -28,8 +28,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ignoreChanges = new SafeCounter ();
 		}
 
-
 		public virtual void Dispose()
+		{
+		}
+
+		public virtual void Close()
 		{
 		}
 

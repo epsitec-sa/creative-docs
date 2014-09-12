@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 {
-	public class GroupsTreeGraphicController : AbstractTreeGraphicController<TreeNode>
+	public class GroupsTreeGraphicController : AbstractTreeGraphicController<TreeNode>, System.IDisposable
 	{
 		public GroupsTreeGraphicController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -20,6 +20,10 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 			this.treeGraphicViewState.FontFactors.Add (1.0);
 
 			this.treeGraphicViewMode = TreeGraphicMode.AutoWidthAllLines;
+		}
+
+		public override void Dispose()
+		{
 		}
 
 

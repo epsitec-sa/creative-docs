@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -16,7 +15,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class UserFieldsToolbarTreeTableController : AbstractToolbarBothTreesController<GuidNode>, IDirty
+	public class UserFieldsToolbarTreeTableController : AbstractToolbarBothTreesController<GuidNode>, IDirty, System.IDisposable
 	{
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -40,6 +39,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 
 			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
+		}
+
+		public void Dispose()
+		{
 		}
 
 
@@ -99,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Delete.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Deselect.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Copy.ToString ());

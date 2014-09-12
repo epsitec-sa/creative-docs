@@ -59,6 +59,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static string GetTitle(DataAccessor accessor, AbstractReportParams reportParams, ReportTitleType type)
 		{
 			//	Retourne le titre d'un rapport d'après les paramètres.
+			if (reportParams == null)
+			{
+				return null;
+			}
+
 			var title    = ReportParamsHelper.GetTag (accessor, reportParams, "<TITLE>");
 			var specific = ReportParamsHelper.GetSpecific (accessor, reportParams);
 

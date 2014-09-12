@@ -15,7 +15,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class GroupsToolbarTreeTableController : AbstractToolbarBothTreesController<TreeNode>, IDirty
+	public class GroupsToolbarTreeTableController : AbstractToolbarBothTreesController<TreeNode>, IDirty, System.IDisposable
 	{
 		public GroupsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -30,6 +30,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
+		}
+
+		public void Dispose()
+		{
 		}
 
 
@@ -102,7 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void AdaptToolbarCommand()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString ());
+			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    Res.Strings.ToolbarControllers.GroupsTreeTable.Delete.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Delesect.ToString ());
 			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      Res.Strings.ToolbarControllers.GroupsTreeTable.Copy.ToString ());

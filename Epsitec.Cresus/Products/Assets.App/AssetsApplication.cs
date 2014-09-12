@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookFlat");
 
-			var frame = new FrameBox
+			var frame = new ShortcutCatcher
 			{
 				Parent    = window.Root,
 				Dock      = DockStyle.Fill,
@@ -119,6 +119,8 @@ namespace Epsitec.Cresus.Assets.App
 
 			var ui = new AssetsUI (accessor);
 			ui.CreateUI (frame);
+
+			frame.Focus ();
 		}
 
 

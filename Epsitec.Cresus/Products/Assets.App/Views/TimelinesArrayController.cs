@@ -19,7 +19,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class TimelinesArrayController : IDirty
+	public class TimelinesArrayController : IDirty, System.IDisposable
 	{
 		public TimelinesArrayController(DataAccessor accessor)
 		{
@@ -41,6 +41,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesMode = TimelinesMode.Wide;
 
 			this.amortizations = new Amortizations (this.accessor);
+		}
+
+		public void Dispose()
+		{
+			if (this.objectsToolbar != null)
+			{
+				this.objectsToolbar.Dispose ();
+				this.objectsToolbar = null;
+			}
+
+			if (this.timelinesToolbar != null)
+			{
+				this.timelinesToolbar.Dispose ();
+				this.timelinesToolbar = null;
+			}
+		}
+
+		public void Close()
+		{
+			this.objectsToolbar.Close ();
+			this.timelinesToolbar.Close ();
 		}
 
 
@@ -194,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie gauche.
 			this.objectsToolbar = new TreeTableToolbar (this.accessor);
 
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString ());
+			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    Res.Strings.TimelinesArrayController.Delete.ToString ());
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.TimelinesArrayController.Deselect.ToString ());
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// navigation en fonction du nombre de lignes RowsCount.
 	/// Il cache complètement le TreeTable sous-jacent à l'aide d'une Facade.
 	/// </summary>
-	public class NavigationTreeTableController
+	public class NavigationTreeTableController : System.IDisposable
 	{
 		public bool								Enable
 		{
@@ -29,6 +29,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				this.treeTable.Enable = value;
 				this.scroller.Enable = value;
+			}
+		}
+
+		public void Dispose()
+		{
+			if (this.treeTable != null)
+			{
+				this.treeTable.Dispose ();
 			}
 		}
 

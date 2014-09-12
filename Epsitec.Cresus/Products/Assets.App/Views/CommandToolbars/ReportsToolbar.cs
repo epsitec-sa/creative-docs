@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.ReportPrevPeriod,     "Report.PrevPeriod",     Res.Strings.Toolbar.Reports.PrevPeriod.ToString ());
 			this.SetCommandDescription (ToolbarCommand.ReportNextPeriod,     "Report.NextPeriod",     Res.Strings.Toolbar.Reports.NextPeriod.ToString ());
 			this.SetCommandDescription (ToolbarCommand.ReportExport,         "Report.Export",         Res.Strings.Toolbar.Reports.Export.ToString ());
-			this.SetCommandDescription (ToolbarCommand.ReportClose,          "Report.Close",          Res.Strings.Toolbar.Reports.Close.ToString ());
+			this.SetCommandDescription (ToolbarCommand.ReportClose,          "Report.Close",          Res.Strings.Toolbar.Reports.Close.ToString (), new Shortcut (KeyCode.AlphaW | KeyCode.ModifierControl));
 		}
 
 
@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateSeparator     (DockStyle.Left);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportExport);
 			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
+
+			this.AttachShortcuts ();
 
 			return this.toolbar;
 		}

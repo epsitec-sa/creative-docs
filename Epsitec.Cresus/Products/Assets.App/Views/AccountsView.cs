@@ -15,7 +15,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class AccountsView : AbstractView
+	public class AccountsView : AbstractView, System.IDisposable
 	{
 		public AccountsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, BaseType baseType)
 			: base (accessor, toolbar, viewType)
@@ -27,11 +27,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void Dispose()
+		public void Dispose()
 		{
-			this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-			this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			if (this.mainToolbar != null)
+			{
+				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
+				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+			}
+		}
+
+		public override void Close()
+		{
+			this.listController.Close ();
 		}
 
 

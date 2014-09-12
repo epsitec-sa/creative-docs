@@ -8,18 +8,43 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ReportsView : AbstractView
+	public class ReportsView : AbstractView, System.IDisposable
 	{
 		public ReportsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, List<AbstractViewState> historyViewStates)
 			: base (accessor, toolbar, viewType)
 		{
 			this.historyViewStates = historyViewStates;
+		}
+
+		public override void Dispose()
+		{
+			if (this.toolbar != null)
+			{
+				this.toolbar.Dispose ();
+				this.toolbar = null;
+			}
+
+			if (this.reportChoiceController != null)
+			{
+				this.reportChoiceController.Dispose ();
+				this.reportChoiceController = null;
+			}
+
+			if (this.treeTableController != null)
+			{
+				this.treeTableController.Dispose ();
+				this.treeTableController = null;
+			}
+		}
+
+		public override void Close()
+		{
+			this.toolbar.Close ();
 		}
 
 

@@ -20,13 +20,17 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 	/// Le graphique est constitué de widgets TreeGraphicTile. Grace au mode DockStyle.Left,
 	/// il a été très simple de réaliser cette vue.
 	/// </summary>
-	public abstract class AbstractTreeGraphicController<T>
+	public abstract class AbstractTreeGraphicController<T> : System.IDisposable
 		where T : struct
 	{
 		public AbstractTreeGraphicController(DataAccessor accessor, BaseType baseType)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
+		}
+
+		public virtual void Dispose()
+		{
 		}
 
 

@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class EntriesToolbarTreeTableController : AbstractToolbarBothTreesController<EntryNode>, IDirty
+	public class EntriesToolbarTreeTableController : AbstractToolbarBothTreesController<EntryNode>, IDirty, System.IDisposable
 	{
 		public EntriesToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
 			this.nodeGetter = new EntriesNodeGetter (this.accessor);
+		}
+
+		public void Dispose()
+		{
 		}
 
 

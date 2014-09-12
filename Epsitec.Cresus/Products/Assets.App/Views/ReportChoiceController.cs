@@ -14,7 +14,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class ReportChoiceController
+	public class ReportChoiceController : System.IDisposable
 	{
 		public ReportChoiceController(DataAccessor accessor)
 		{
@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var reportParams = this.accessor.Mandat.Reports[node.Guid];
 				this.OnReportSelected (reportParams);
 			};
+		}
+
+		public void Dispose()
+		{
+			if (this.controller != null)
+			{
+				this.controller.Dispose ();
+			}
 		}
 
 

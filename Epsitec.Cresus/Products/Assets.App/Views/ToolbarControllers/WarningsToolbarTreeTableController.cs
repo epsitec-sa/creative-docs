@@ -15,7 +15,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class WarningsToolbarTreeTableController : AbstractToolbarBothTreesController<Warning>, IDirty
+	public class WarningsToolbarTreeTableController : AbstractToolbarBothTreesController<Warning>, IDirty, System.IDisposable
 	{
 		public WarningsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
 			: base (accessor, baseType)
@@ -29,6 +29,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var warnings = new List<Warning>();
 			WarningsLogic.GetWarnings (warnings, this.accessor);
 			this.nodeGetter = new WarningNodeGetter (this.accessor, warnings);
+		}
+
+		public void Dispose()
+		{
 		}
 
 
