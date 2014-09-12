@@ -30,7 +30,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionMenu<ActionAiderGroupViewController6AddToBag> ()
 					.EnableActionMenu<ActionAiderGroupViewController2MoveGroup> ().IfTrue (canGroupBeEditedByCurrentUser)
 					.EnableActionMenu<ActionAiderGroupViewController5MergeGroup> ().IfTrue (canGroupBeEditedByCurrentUser && group.Subgroups.Count == 0)
-					.EnableActionMenu<ActionAiderGroupViewController10CreateOfficeManagement> ().IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator));
+					.EnableActionMenu<ActionAiderGroupViewController10CreateOfficeManagement> ().IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
+					.EnableActionMenu<ActionAiderGroupViewController13DeleteOfficeManagement> ().IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator));
 
 				wall.AddBrick (x => x.Subgroups)
 					.IfTrue (group.CanHaveSubgroups ())

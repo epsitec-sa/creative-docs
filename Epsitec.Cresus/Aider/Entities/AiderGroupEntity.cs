@@ -106,9 +106,35 @@ namespace Epsitec.Aider.Entities
 			return this.Parents.First ().Name;
 		}
 
+		public string GetRootRegionCode()
+		{
+			var root = this.GetRootGroup ();
+			if (!root.IsRegion ())
+			{
+				return "";
+			}
+
+			var regionNumber = root.GetRegionId ();
+			if(regionNumber!=12)
+			{
+				return "R" + regionNumber.ToString ("00");
+			}
+			else
+			{
+				return "PLA";
+			}
+		}
+
 		public AiderGroupEntity GetRootGroup()
 		{
-			return this.Parents.First ();
+			if(this.Parents.Any ())
+			{
+				return this.Parents.First ();
+			}
+			else
+			{
+				return this;
+			}
 		}
 
 		public bool CanHaveSubgroups()

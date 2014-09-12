@@ -71,7 +71,7 @@ namespace Epsitec.Aider.Entities
 
 		public bool CanEditReferee()
 		{
-			return ((this.Role.Name == AiderUserRoleEntity.RegionRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			return ((this.Role.Name == AiderUserRoleEntity.RegionRole)  || this.HasPowerLevel (UserPowerLevel.Administrator))
 					&& this.IsOfficeDefined ();
 		}
 

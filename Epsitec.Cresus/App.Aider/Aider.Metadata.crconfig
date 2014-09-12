@@ -2120,6 +2120,10 @@ AiderReferee = [LVADJ]
 
 
     <t eid="@AiderOfficeManagement" n="default">
+    <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVAIL]" title="Région" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeManagement:[LVO913]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />

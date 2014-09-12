@@ -158,10 +158,28 @@ namespace Epsitec.Aider.Entities
 			office.ParishGroup = managementGroup;
 			office.ParishGroupPathCache = managementGroup.Path;
 			office.RefreshOfficeShortName ();
-
+			office.Region = managementGroup.GetRootRegionCode ();
 			AiderUsersGroups.CreateForGroup (businessContext, managementGroup);
 
 			return office;
+		}
+
+		public void Delete(BusinessContext businessContext)
+		{
+			if(this.Documents.Any ())
+			{
+				throw new BusinessRuleException ("Des documents sont encore présent dans cette gestion. Suppresion annulée.");
+			}
+			if(this.Employees.Any ())
+			{
+				throw new BusinessRuleException ("Des employés sont encore présent dans cette gestion. Suppresion annulée.");
+			}
+			if(this.OfficeSenders.Any ())
+			{
+				throw new BusinessRuleException ("Des expéditeurs sont encore présent dans cette gestion. Suppresion annulée.");
+			}
+
+			businessContext.DeleteEntity (this);
 		}
 
 		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
@@ -212,6 +230,7 @@ namespace Epsitec.Aider.Entities
 
 			this.OfficeType = type;
 			this.OfficeShortName = name.Trim ();
+			this.Region = this.ParishGroup.GetRootRegionCode ();
 		}
 
 		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()

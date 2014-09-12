@@ -31,30 +31,109 @@ function() {
     leftGrid: null,
     rightGrid: null,
     exportUrl: null,
+    dataSetConfigs: [],
+    configStore: null,
     columnDefinitions: null,
 
     /* Constructor */
 
     constructor: function(options) {
-      var newOptions;
+      var newOptions, dataSetConfig;
 
       this.leftGrid = this.createLeftGrid(options);
       this.rightGrid = this.createRightGrid(options);
+      this.configStore = this.createConfigStore();
+
 
       newOptions = {
         items: [this.leftGrid, this.rightGrid],
+        dockedItems: [{
+          xtype: 'toolbar',
+          dock: 'top',
+          items: [this.createConfigCombo()]
+        }],
         buttons: [
           this.createOkButton(),
           this.createCancelButton()
         ]
       };
+
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
+
+      this.dataSetConfigs = JSON.parse(
+                                  localStorage
+                                  .getItem(this.getLocalConfigKey ()));
+
+      console.log(this.dataSetConfigs);
+      if(this.dataSetConfigs !== null)
+      {
+        this.configStore.data = this.dataSetConfigs;
+      }
+
       return this;
     },
 
     /* Methods */
+    getLocalConfigKey : function ()
+    {
+      return this.exportUrl.split('?')[0];
+    },
+
+    createConfigStore: function() {
+      return Ext.create('Ext.data.ArrayStore', {
+        fields: ['name'],
+        data : this.dataSetConfigs
+      });
+    },
+
+    createConfigCombo : function () {
+      return Ext.create('Ext.form.field.ComboBox', {
+        hideLabel: true,
+        store: this.configStore,
+        displayField: 'name',
+        typeAhead: true,
+        queryMode: 'local',
+        triggerAction: 'all',
+        emptyText: 'Exports précédents...',
+        selectOnFocus: true,
+        width: 135,
+        indent: true,
+        on: {
+          select: function (c, r) {
+              this.loadConfig(r[0]);
+            }
+        }
+      });
+    },
+
+    loadConfig: function (config) {
+      this.leftGrid.store.loadData(config.data);
+    },
+
+    saveConfig : function () {
+      //create key based on dataset url
+      var key = this.getLocalConfigKey ();
+
+      //init configs for this key if empty
+      if(this.dataSetConfigs===null)
+      {
+        this.dataSetConfigs = [];
+      }
+
+      //create and push new config
+      var config = {
+        name : new Date().toDateString(),
+        data : this.leftGrid.store.snapshot,
+        url : this.exportUrl
+      };
+      
+      this.dataSetConfigs.push (config);
+
+      //save in local storage
+      localStorage.setItem (key, JSON.stringify(this.dataSetConfigs));
+    },
 
     createLeftGrid: function(options) {
       var title = Epsitec.Texts.getExportExportedColumns();
@@ -156,18 +235,18 @@ function() {
 
     onOkClick: function() {
       var url, columnIds;
-
+      var scope = this;
       columnIds = this.getSelectedColumnIds().join(';');
 
       url = this.exportUrl;
       url = Epsitec.Tools.addParameterToUrl(url, 'type', 'array');
       url = Epsitec.Tools.addParameterToUrl(url, 'columns', columnIds);
 
-        //window.open(url);
+      var ajaxTime= new Date().getTime();
       Ext.Ajax.request({
           url: url,
           success: function (response) {
-              //TODO
+
           }
       });
 
