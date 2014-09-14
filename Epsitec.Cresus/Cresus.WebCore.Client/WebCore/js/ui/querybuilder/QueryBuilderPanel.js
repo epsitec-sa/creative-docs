@@ -8,7 +8,6 @@ function() {
     /* Properties */
 
     columnDefinitions: null,
-
     /* Constructor */
 
     constructor: function(columnDefinitions) {

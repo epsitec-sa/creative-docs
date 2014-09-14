@@ -11,8 +11,9 @@ function() {
     /* Properties */
 
     finalQuery: null,
-    myQueryTree: null,
+    queryTree: null,
     builder: null,
+    queryNameField: null,
 
     /* Constructor */
 
@@ -20,7 +21,7 @@ function() {
       var tabManager, store, config;
 
       this.builder = Ext.create('Epsitec.QueryBuilderPanel', columnDefinitions);
-      store = Ext.create('Ext.data.TreeStore', {
+      store = Ext.create('Ext.data.JsonStore', {
         root: {
           expanded: true,
           children: [
@@ -40,7 +41,7 @@ function() {
         }
       });
 
-      this.myQueryTree = Ext.create('Ext.tree.Panel', {
+      this.queryTree = Ext.create('Ext.tree.Panel', {
         store: store,
         border: false,
         rootVisible: false
@@ -61,6 +62,11 @@ function() {
         },
         closable: true,
         closeAction: 'hide',
+        dockedItems: [{
+          xtype: 'toolbar',
+          dock: 'top',
+          items: this.createQuerySavingTools()
+        }],
         items: [{
           region: 'west',
           title: 'Mes requêtes',
@@ -69,13 +75,66 @@ function() {
           collapsible: true,
           collapsed: false,
           floatable: false,
-          items: this.myQueryTree
+          items: this.queryTree
         }, this.builder]
       };
 
       this.builder.init();
 
       this.callParent([config]);
+    },
+
+    saveQuery : function ()
+    {
+
+    },
+
+    removeQuery : function ()
+    {
+
+    },
+
+    createQuerySavingTools : function ()
+    {
+      var buttons = [];
+
+      buttons.push({
+        xtype: 'label',
+        text: 'Nom de la requête :'
+      });
+
+      this.queryNameField = Ext.create('Ext.form.field.Text',{
+        width: 80,
+        emptyText: '',
+        name: 'queryName'
+      });
+
+      buttons.push(this.queryNameField);
+
+      buttons.push({
+        xtype: 'label',
+        text: 'Publique ?'
+      });
+
+      buttons.push(Ext.create('Ext.Button', {
+        text: 'Enregistrer',
+        iconCls: 'icon-add',
+        listeners: {
+          click: this.saveQuery,
+          scope: this
+        }
+      }));
+
+      buttons.push(Ext.create('Ext.Button', {
+        text: 'Supprimer',
+        iconCls: 'icon-remove',
+        listeners: {
+          click: this.removeQuery,
+          scope: this
+        }
+      }));
+
+      return buttons;
     }
   });
 });
