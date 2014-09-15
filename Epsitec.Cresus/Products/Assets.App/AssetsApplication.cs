@@ -19,6 +19,9 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary);
 			this.commandContext = new CommandContext ();
+
+			this.commandDispatcher.RegisterController (this);
+			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 		}
 
 		public override string					ShortWindowTitle
@@ -109,9 +112,6 @@ namespace Epsitec.Cresus.Assets.App
 				BackColor = ColorManager.WindowBackgroundColor,
 				Name      = "PopupParentFrame",
 			};
-
-			this.commandDispatcher.RegisterController (this);
-			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 
 			//	Crée le clipboard unique à l'application.
 			var cb = new DataClipboard ();

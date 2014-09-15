@@ -118,7 +118,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
+			// [-> PA] utile ?
+			//?CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
 
 			this.buttonNew             = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NewMandat);
 			this.buttonOpen            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.OpenMandat);
@@ -153,10 +154,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 					CommandId     = Res.CommandIds.View.Settings,
 				};
 
+				// [-> PA] feedback "target" ok, contrairement à Ctrl+X défini dans les ressources
+				// [-> PA] comment afficher Ctrl+Y dans le tooltip ?
 				button.Shortcuts.Define (new Shortcut (KeyCode.AlphaY | KeyCode.ModifierControl));
 
-				CommandState cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-				//?cs.Enable = false;
+				// [-> PA] pourquoi cela est sans effet ?
+				var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
+				cs.Enable = false;
 				cs.ActiveState = ActiveState.Yes;
 			}
 
@@ -181,11 +185,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			var target = e.Source as Widget;
 			var pos = e.CommandMessage.Cursor;  // position absolue dans la fenêtre
 
-
 			CreateAssetPopup.Show (target, this.accessor, null);
 
-			CommandState cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-			cs.Enable = false;
+			var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
+			//?cs.Enable = false;
 
 			if (cs.ActiveState == ActiveState.Yes)
 			{
