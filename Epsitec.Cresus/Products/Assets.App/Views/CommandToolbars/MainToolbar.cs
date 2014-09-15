@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
 			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
 
-			if (false)
+			if (true)
 			{
 				var size = this.toolbar.PreferredHeight;
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 					AutoFocus     = false,
 					Dock          = DockStyle.Left,
 					PreferredSize = new Size (size, size),
-					CommandId     = Res.CommandIds.View.Settings,
+					CommandObject = Res.Commands.View.Settings,		//	Utiliser CommandObject est plus efficace
 				};
 
 				// [-> PA] feedback "target" ok, contrairement à Ctrl+X défini dans les ressources
@@ -231,7 +231,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
 		void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = e.Source as Widget;
+			//	**PA**
+			var targets = commandDispatcher.FindVisuals (e.Command)
+				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
+				.ToArray ();
+
+			var target = targets.FirstOrDefault () as Widget ?? e.Source as Widget;
 			this.ShowViewPopup (target);
 		}
 

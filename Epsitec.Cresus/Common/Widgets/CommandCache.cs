@@ -1,7 +1,9 @@
-//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -214,6 +216,20 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// Finds the visuals attached to a command.
+		/// </summary>
+		/// <param name="command">The command.</param>
+		/// <returns>The collection of visuals matching the commande.</returns>
+		public IEnumerable<Visual> FindVisuals(Command command)
+		{
+			return from record in this.records
+				   where record.Command == command
+				   let visual = record.Visual
+				   where visual != null
+				   select visual;
 		}
 
 		/// <summary>
