@@ -294,68 +294,86 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
-			var user		= LoginModule.GetUserName (this);
-
-			if(this.Request.Query.type != "bag")
+			if (this.Request.Query.type == "bag")
 			{
-				var fileExt		= this.Request.Query.type == "label" ? ".pdf" : ".csv";
-				var filename    = DownloadsModule.GenerateFileNameForUser (user, fileExt);
-				var finishMetaData = "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
-
-				try
-				{
-					job.Start ();
-					var caches		= this.CoreServer.Caches;
-
-					using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
-					{
-						DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
-					}
-				}
-				catch
-				{
-					finishMetaData = "Une erreur est survenue. tâche annulée";
-				}
-				finally
-				{
-					job.Finish (finishMetaData);
-				}
+				this.LongRunningExportToBag (businessContext, job, parameters);
 			}
 			else
 			{
-				var finishMetaData = "";
-				try
+				this.LongRunningExportToFile (businessContext, job, parameters);
+			}
+		}
+
+		private void LongRunningExportToBag(BusinessContext businessContext, CoreJob job, dynamic parameters)
+		{
+			var user = LoginModule.GetUserName (this);
+			var message = "";
+			
+			try
+			{
+				job.Start ();
+				
+				var caches = this.CoreServer.Caches;
+
+				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 				{
-					job.Start ();
-					var caches		= this.CoreServer.Caches;
+					const int max = 5000;
 					
-					using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+					var entityCount = extractor.Accessor.GetItemCount ();
+					
+					if (entityCount < max)
 					{
-						var entityCount    = extractor.Accessor.GetItemCount ();
-						if (entityCount < 1000)
-						{
-							finishMetaData = entityCount + "éléments ajouté au panier";
-							DatabaseModule.ExportToEntityUserBag (user, caches, extractor, this.Request.Query);
-						}
-						else
-						{
-							finishMetaData = "Exportation impossible, plus de 1000 éléments";
-						}
+						message = string.Format ("{0} éléments ajoutés au panier...", entityCount);
+
+						DatabaseModule.ExportToEntityUserBag (user, caches, extractor, this.Request.Query);
+					}
+					else
+					{
+						message = string.Format ("Exportation impossible; il y a {0} éléments et le maximum est de {1}", entityCount, max);
 					}
 				}
-				catch
-				{
-					finishMetaData = "Une erreur est survenue. tâche annulée";
-				}
-				finally
-				{
-					job.Finish (finishMetaData);
-				}	
 			}
-
-			
-			
+			catch
+			{
+				message = "Une erreur est survenue. Tâche annulée.";
+			}
+			finally
+			{
+				job.Finish (message);
+			}
 		}
+
+		private void LongRunningExportToFile(BusinessContext businessContext, CoreJob job, dynamic parameters)
+		{
+			var user = LoginModule.GetUserName (this);
+			
+			var fileExt  = this.Request.Query.type == "label" ? ".pdf" : ".csv";
+			var fileName = DownloadsModule.GenerateFileNameForUser (user, fileExt);
+				
+			var message = "<br />"
+				/**/    + "<input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + fileName + "\");' value='Télécharger' />";
+
+			try
+			{
+				job.Start ();
+					
+				var caches = this.CoreServer.Caches;
+
+				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
+				{
+					DatabaseModule.ExportToDisk (fileName, caches, extractor, this.Request.Query);
+				}
+			}
+			catch
+			{
+				message = "Une erreur est survenue. Tâche annulée.";
+			}
+			finally
+			{
+				job.Finish (message);
+			}
+		}
+
 
 		private void UpdateTaskStatusInBag(CoreJob task)
 		{
