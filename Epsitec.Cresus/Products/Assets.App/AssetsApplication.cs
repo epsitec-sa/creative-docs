@@ -128,13 +128,6 @@ namespace Epsitec.Cresus.Assets.App
 			frame.Focus ();
 		}
 
-		//?
-		//?[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
-		//?void CommandToto()
-		//?{
-		//?}
-		//?
-
 
 		private readonly CommandDispatcher		commandDispatcher;
 		private readonly CommandContext			commandContext;

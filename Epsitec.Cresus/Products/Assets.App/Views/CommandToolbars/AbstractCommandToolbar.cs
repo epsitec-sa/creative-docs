@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
 			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
+			this.commandDispatcher.RegisterController (this);
 			this.CreateCommands ();
 		}
 
@@ -389,8 +390,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		protected readonly DataAccessor			accessor;
-		private readonly CommandDispatcher		commandDispatcher;
-		private readonly CommandContext			commandContext;
+		protected readonly CommandDispatcher	commandDispatcher;
+		protected readonly CommandContext		commandContext;
 
 		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;

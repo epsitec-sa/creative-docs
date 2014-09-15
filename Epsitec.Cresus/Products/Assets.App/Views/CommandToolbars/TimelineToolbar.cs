@@ -69,7 +69,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonLabels      = this.CreateModeButton    (TimelineMode.Labels,      ToolbarCommand.Labels);
+			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
+
+			this.buttonLabels      = this.CreateModeButton (TimelineMode.Labels, ToolbarCommand.Labels);
 								   							   					   
 			this.buttonCompacted   = this.CreateModeButton    (TimelineMode.Compacted,   ToolbarCommand.CompactAll);
 			this.buttonExpanded    = this.CreateModeButton    (TimelineMode.Expanded,    ToolbarCommand.ExpandAll);

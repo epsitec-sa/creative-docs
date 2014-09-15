@@ -155,6 +155,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
+			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
+
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter);
 			this.buttonDateRange  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.DateRange);
 			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic);

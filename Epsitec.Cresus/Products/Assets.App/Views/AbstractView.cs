@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 		}
 
-		public virtual AbstractViewState ViewState
+		public virtual AbstractViewState		ViewState
 		{
 			get
 			{

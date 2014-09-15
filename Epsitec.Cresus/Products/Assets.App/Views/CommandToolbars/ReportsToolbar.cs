@@ -43,7 +43,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportParams);
+			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
+
+			this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportAddFavorite);
 			this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportRemoveFavorite);
 			this.CreateSeparator     (DockStyle.Left);
