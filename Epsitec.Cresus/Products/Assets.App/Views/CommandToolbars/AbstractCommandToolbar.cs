@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, Druid commandId)
+		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, Command command)
 		{
 			var size = this.toolbar.PreferredHeight;
 
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				AutoFocus     = false,
 				Dock          = dock,
 				PreferredSize = new Size (size, size),
-				CommandId     = commandId,
+				CommandObject = command,
 			};
 		}
 

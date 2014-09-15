@@ -37,12 +37,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       Res.Strings.Toolbar.Main.Simulation.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           Res.Strings.Toolbar.Main.Cancel.ToString (), new Shortcut (KeyCode.Escape));
 			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           Res.Strings.Toolbar.Main.Accept.ToString (), new Shortcut (KeyCode.FuncF12));
-
-			//?foreach (var kind in MainToolbar.ViewTypeKinds)
-			//?{
-			//?	var command = MainToolbar.GetViewCommand (kind);
-			//?	this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind), MainToolbar.GetViewShortcut (kind));
-			//?}
 		}
 
 
@@ -128,19 +122,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonNavigateForward = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateForward);
 			this.buttonNavigateMenu    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateMenu);
 
-			//?this.CreateViewTypeButtons ();
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Assets);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Amortizations);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Entries);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Categories);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Groups);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Persons);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Reports);
-			this.buttonWarnings = this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Warnings);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Settings);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.AssetsSettings);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.PersonsSettings);
-			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Accounts);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Assets);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Amortizations);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Entries);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Categories);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Groups);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Persons);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Reports);
+			this.buttonWarnings = this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Warnings);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Settings);
 
 			this.buttonSingle          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeSingle,   activable: true);
 			this.buttonEvent           = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeEvent,    activable: true);
@@ -152,27 +142,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 									  				 							   				     
 			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
 			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
-
-			if (true)
-			{
-				var size = this.toolbar.PreferredHeight;
-
-				var button = new ButtonWithRedDot
-				{
-					Parent        = this.toolbar,
-					AutoFocus     = false,
-					Dock          = DockStyle.Left,
-					PreferredSize = new Size (size, size),
-					CommandObject = Res.Commands.View.Settings,		//	Utiliser CommandObject est plus efficace
-				};
-
-				// [-> PA] feedback "target" ok, contrairement à Ctrl+X défini dans les ressources
-				// [-> PA] comment afficher Ctrl+Y dans le tooltip ?
-				button.Shortcuts.Define (new Shortcut (KeyCode.AlphaY | KeyCode.ModifierControl));
-
-				var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-				cs.ActiveState = ActiveState.Yes;
-			}
 
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
 			//?this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
@@ -188,7 +157,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		//?
 		//?[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
 		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
 		//?{
@@ -209,7 +177,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		//?		cs.ActiveState = ActiveState.Yes;
 		//?	}
 		//?}
-		//?
 
 		[Epsitec.Common.Support.Command (Res.CommandIds.View.Assets)]
 		[Epsitec.Common.Support.Command (Res.CommandIds.View.Amortizations)]
@@ -254,8 +221,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			//	"Allume" l'engrenage si la vue sélectionnée a été choisie dans le PopUp.
 			{
-				var command = Command.Get (Res.CommandIds.View.Settings);
-				var cs = this.commandContext.GetCommandState (command);
+				var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
 				
 				bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
 				cs.ActiveState = ap ? ActiveState.Yes : ActiveState.No;
@@ -304,25 +270,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			popup.Create (target, leftOrRight: false);
 		}
 
-
-		//?private static IEnumerable<Command> ViewCommands
-		//?{
-		//?	get
-		//?	{
-		//?		yield return Res.Commands.View.Assets;
-		//?		yield return Res.Commands.View.Amortizations;
-		//?		yield return Res.Commands.View.Entries;
-		//?		yield return Res.Commands.View.Categories;
-		//?		yield return Res.Commands.View.Groups;
-		//?		yield return Res.Commands.View.Persons;
-		//?		yield return Res.Commands.View.Reports;
-		//?		yield return Res.Commands.View.Warnings;
-		//?		yield return Res.Commands.View.Settings;
-		//?		yield return Res.Commands.View.AssetsSettings;
-		//?		yield return Res.Commands.View.PersonsSettings;
-		//?		yield return Res.Commands.View.Accounts;
-		//?	}
-		//?}
 
 		public static ViewTypeKind GetViewKind(Command command)
 		{
@@ -429,7 +376,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private IconButton						buttonNavigateMenu;
 
 		private ButtonWithRedDot				buttonWarnings;
-		//?private IconButton						buttonPopup;
 
 		private IconButton						buttonSingle;
 		private IconButton						buttonEvent;
