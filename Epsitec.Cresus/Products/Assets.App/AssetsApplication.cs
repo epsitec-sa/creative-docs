@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Assets.App
 			this.commandContext = new CommandContext ();
 
 			this.commandDispatcher.RegisterController (this);
-			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
 		}
 
 		public override string					ShortWindowTitle
@@ -104,6 +103,9 @@ namespace Epsitec.Cresus.Assets.App
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
 			//?Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookSimply");
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookFlat");
+
+			CommandDispatcher.SetDispatcher (this.Window, this.commandDispatcher);
+			CommandContext.SetContext (this.Window, this.commandContext);
 
 			var frame = new ShortcutCatcher
 			{

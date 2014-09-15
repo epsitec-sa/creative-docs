@@ -158,9 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				// [-> PA] comment afficher Ctrl+Y dans le tooltip ?
 				button.Shortcuts.Define (new Shortcut (KeyCode.AlphaY | KeyCode.ModifierControl));
 
-				// [-> PA] pourquoi cela est sans effet ?
 				var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-				cs.Enable = false;
 				cs.ActiveState = ActiveState.Yes;
 			}
 
