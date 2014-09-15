@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -45,7 +45,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			button.Clicked += delegate
 			{
-				this.ClosePopup ();  // TODO: empêche l'exécution de la commande !!!
+				//	On ferme le popup plus tard, une fois que tout le reste aura été exécuté...
+				Application.QueueAsyncCallback (() => this.ClosePopup ());
 			};
 
 			return button;
