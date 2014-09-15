@@ -9,6 +9,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -257,6 +258,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			shortcutCatcher.Detach (this);
 		}
 
+
+		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, Druid commandId)
+		{
+			var size = this.toolbar.PreferredHeight;
+
+			return new ButtonWithRedDot
+			{
+				Parent        = this.toolbar,
+				AutoFocus     = false,
+				Dock          = dock,
+				PreferredSize = new Size (size, size),
+				CommandId     = commandId,
+			};
+		}
 
 		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, ToolbarCommand command, bool activable = false)
 		{

@@ -75,19 +75,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.OnNavigateForward ();
 						break;
 
-					case ToolbarCommand.ViewTypeAssets:
-					case ToolbarCommand.ViewTypeAmortizations:
-					case ToolbarCommand.ViewTypeEcritures:
-					case ToolbarCommand.ViewTypeCategories:
-					case ToolbarCommand.ViewTypeGroups:
-					case ToolbarCommand.ViewTypePersons:
-					case ToolbarCommand.ViewTypeReports:
-					case ToolbarCommand.ViewTypeAssetsSettings:
-					case ToolbarCommand.ViewTypePersonsSettings:
-					case ToolbarCommand.ViewTypeAccounts:
-					case ToolbarCommand.ViewTypeWarnings:
-						this.OnViewChange (command);
-						break;
+					//?case ToolbarCommand.ViewTypeAssets:
+					//?case ToolbarCommand.ViewTypeAmortizations:
+					//?case ToolbarCommand.ViewTypeEcritures:
+					//?case ToolbarCommand.ViewTypeCategories:
+					//?case ToolbarCommand.ViewTypeGroups:
+					//?case ToolbarCommand.ViewTypePersons:
+					//?case ToolbarCommand.ViewTypeReports:
+					//?case ToolbarCommand.ViewTypeAssetsSettings:
+					//?case ToolbarCommand.ViewTypePersonsSettings:
+					//?case ToolbarCommand.ViewTypeAccounts:
+					//?case ToolbarCommand.ViewTypeWarnings:
+					//?	this.OnViewChange (command);
+					//?	break;
 
 					default:
 						if (this.view != null)
@@ -96,6 +96,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 						break;
 				}
+			};
+
+			this.toolbar.ChangeView += delegate
+			{
+				this.UpdateViewState ();
+				this.CreateView (this.toolbar.ViewType);
 			};
 
 			this.CreateView (ViewType.Assets);
@@ -202,14 +208,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ShowLastViewsPopup ();
 		}
 
-		private void OnViewChange(ToolbarCommand command)
-		{
-			var kind = MainToolbar.GetViewKind (command);
-			this.toolbar.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
-
-			this.UpdateViewState ();
-			this.CreateView (this.toolbar.ViewType);
-		}
+		//?private void OnViewChange(ToolbarCommand command)
+		//?{
+		//?	var kind = MainToolbar.GetViewKind (command);
+		//?	this.toolbar.ViewType = ViewType.FromDefaultKind (this.accessor, kind);
+		//?
+		//?	this.UpdateViewState ();
+		//?	this.CreateView (this.toolbar.ViewType);
+		//?}
 
 
 		private void ShowCreateMandatPopup()

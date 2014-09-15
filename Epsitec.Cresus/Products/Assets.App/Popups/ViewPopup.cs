@@ -4,73 +4,52 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ViewPopup : AbstractPopup
 	{
-		public List<ViewTypeKind>				ViewTypeKinds;
-		public ViewTypeKind						SelectedViewType;
+		public Command[]						ViewCommands;
 
-		protected override Size					DialogSize
+		protected override Size DialogSize
 		{
 			get
 			{
-				return new Size (ViewPopup.margins*2 + ViewPopup.buttonSize*this.ViewTypeKinds.Count, ViewPopup.margins*2 + ViewPopup.buttonSize);
+				return new Size (ViewPopup.margins*2 + ViewPopup.buttonSize*this.ViewCommands.Length, ViewPopup.margins*2 + ViewPopup.buttonSize);
 			}
 		}
 
 		public override void CreateUI()
 		{
-			var frame = this.CreateFrame (ViewPopup.margins, ViewPopup.margins, ViewPopup.buttonSize*this.ViewTypeKinds.Count, ViewPopup.buttonSize);
+			var frame = this.CreateFrame (ViewPopup.margins, ViewPopup.margins, ViewPopup.buttonSize*this.ViewCommands.Length, ViewPopup.buttonSize);
 
-			foreach (var kind in this.ViewTypeKinds)
+			foreach (var command in this.ViewCommands)
 			{
-				this.CreateButton (frame, kind);
+				this.CreateButton (frame, command);
 			}
 		}
 
-		protected IconButton CreateButton(Widget parent, ViewTypeKind kind)
+		protected IconButton CreateButton(Widget parent, Command command)
 		{
-			var icon = StaticDescriptions.GetViewTypeIcon (kind);
-			var text = StaticDescriptions.GetViewTypeDescription (kind);
-
 			var button = new IconButton
 			{
 				Parent        = parent,
 				AutoFocus     = false,
 				Dock          = DockStyle.Left,
-				IconUri       = Misc.GetResourceIconUri (icon),
-				ButtonStyle   = ButtonStyle.ActivableIcon,
-				ActiveState   = (kind == this.SelectedViewType) ? ActiveState.Yes : ActiveState.No,
 				PreferredSize = new Size (ViewPopup.buttonSize, ViewPopup.buttonSize),
+				CommandId     = command.Caption.Id,
 			};
-
-			ToolTip.Default.SetToolTip (button, text);
 
 			button.Clicked += delegate
 			{
-				this.ClosePopup ();
-				this.OnViewTypeClicked (kind);
+				this.ClosePopup ();  // TODO: empêche l'exécution de la commande !!!
 			};
 
 			return button;
 		}
-
-
-
-		#region Events handler
-		private void OnViewTypeClicked(ViewTypeKind kind)
-		{
-			this.ViewTypeClicked.Raise (this, kind);
-		}
-
-		public event EventHandler<ViewTypeKind> ViewTypeClicked;
-		#endregion
 
 
 		private const int margins    = 5;

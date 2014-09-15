@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -37,11 +38,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           Res.Strings.Toolbar.Main.Cancel.ToString (), new Shortcut (KeyCode.Escape));
 			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           Res.Strings.Toolbar.Main.Accept.ToString (), new Shortcut (KeyCode.FuncF12));
 
-			foreach (var kind in MainToolbar.ViewTypeKinds)
-			{
-				var command = MainToolbar.GetViewCommand (kind);
-				this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind), MainToolbar.GetViewShortcut (kind));
-			}
+			//?foreach (var kind in MainToolbar.ViewTypeKinds)
+			//?{
+			//?	var command = MainToolbar.GetViewCommand (kind);
+			//?	this.SetCommandDescription (command, StaticDescriptions.GetViewTypeIcon (kind), StaticDescriptions.GetViewTypeDescription (kind), MainToolbar.GetViewShortcut (kind));
+			//?}
 		}
 
 
@@ -98,8 +99,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			set
 			{
-				var command = MainToolbar.GetViewCommand (ViewTypeKind.Warnings);
-				this.SetCommandRedDotCount (command, value);
+				if (this.buttonWarnings != null)
+				{
+					this.buttonWarnings.RedDotCount = value;
+				}
 			}
 		}
 
@@ -125,8 +128,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonNavigateForward = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateForward);
 			this.buttonNavigateMenu    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateMenu);
 
-			this.CreateViewTypeButtons ();							   									     
-			this.buttonPopup           = this.CreatePopupButton ();
+			//?this.CreateViewTypeButtons ();
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Assets);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Amortizations);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Entries);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Categories);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Groups);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Persons);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Reports);
+			this.buttonWarnings = this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Warnings);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Settings);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.AssetsSettings);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.PersonsSettings);
+			this.CreateCommandButton (DockStyle.Left, Res.CommandIds.View.Accounts);
 
 			this.buttonSingle          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeSingle,   activable: true);
 			this.buttonEvent           = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeEvent,    activable: true);
@@ -139,6 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
 			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
 
+			if (false)
 			{
 				var size = this.toolbar.PreferredHeight;
 
@@ -160,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
-			this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
+			//?this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
 			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewTypeCommands ();
@@ -174,82 +189,72 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		//?
-		
-		void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			var target = e.Source as Widget;
-			var pos = e.CommandMessage.Cursor;  // position absolue dans la fenêtre
-
-			CreateAssetPopup.Show (target, this.accessor, null);
-
-			var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-			//?cs.Enable = false;
-
-			if (cs.ActiveState == ActiveState.Yes)
-			{
-				cs.ActiveState = ActiveState.No;
-			}
-			else
-			{
-				cs.ActiveState = ActiveState.Yes;
-			}
-		}
+		//?[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
+		//?{
+		//?	var target = e.Source as Widget;
+		//?	var pos = e.CommandMessage.Cursor;  // position absolue dans la fenêtre
+		//?
+		//?	CreateAssetPopup.Show (target, this.accessor, null);
+		//?
+		//?	var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
+		//?	//?cs.Enable = false;
+		//?
+		//?	if (cs.ActiveState == ActiveState.Yes)
+		//?	{
+		//?		cs.ActiveState = ActiveState.No;
+		//?	}
+		//?	else
+		//?	{
+		//?		cs.ActiveState = ActiveState.Yes;
+		//?	}
+		//?}
 		//?
 
-
-		private void CreateViewTypeButtons()
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Assets)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Amortizations)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Entries)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Categories)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Groups)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Persons)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Reports)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Warnings)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.AssetsSettings)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.PersonsSettings)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Accounts)]
+		void CommandView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			foreach (var kind in MainToolbar.ViewTypeKinds)
-			{
-				if (!MainToolbar.PopupViewTypeKinds.Contains (kind))
-				{
-					this.CreateViewTypeButton (kind);
-				}
-			}
+			this.ViewType = ViewType.FromDefaultKind (this.accessor, MainToolbar.GetViewKind (e.Command));
+			this.OnChangeView ();
 		}
 
-		private IconButton CreateViewTypeButton(ViewTypeKind kind)
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var command = MainToolbar.GetViewCommand (kind);
-			return this.CreateCommandButton (DockStyle.Left, command, activable: true);
-		}
-
-
-		private IconButton CreatePopupButton()
-		{
-			var size = this.toolbar.PreferredHeight;
-
-			var button = new IconButton
-			{
-				Parent        = this.toolbar,
-				AutoFocus     = false,
-				Dock          = DockStyle.Left,
-				IconUri       = Misc.GetResourceIconUri ("View.Settings"),
-				ButtonStyle   = ButtonStyle.ActivableIcon,
-				PreferredSize = new Size (size, size),
-			};
-
-			ToolTip.Default.SetToolTip (button, Res.Strings.Toolbar.Main.ChoiceSettings.ToString ());
-
-			button.Clicked += delegate
-			{
-				this.ShowViewPopup (button);
-			};
-
-			return button;
+			var target = e.Source as Widget;
+			this.ShowViewPopup (target);
 		}
 
 
 		private void UpdateViewTypeCommands()
 		{
+			//	"Allume" le bouton correspondant à la vue sélectionnée.
 			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
 				var command = MainToolbar.GetViewCommand (kind);
-				this.SetCommandActivate (command, this.viewType.Kind == kind);
+				var cs = this.commandContext.GetCommandState (command);
+
+				cs.ActiveState = (this.viewType.Kind == kind) ? ActiveState.Yes : ActiveState.No;
 			}
 
-			bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
-			this.buttonPopup.ActiveState = ap ? ActiveState.Yes : ActiveState.No;
+			//	"Allume" l'engrenage si la vue sélectionnée a été choisie dans le PopUp.
+			{
+				var command = Command.Get (Res.CommandIds.View.Settings);
+				var cs = this.commandContext.GetCommandState (command);
+				
+				bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
+				cs.ActiveState = ap ? ActiveState.Yes : ActiveState.No;
+			}
 		}
 
 		private void UpdateViewModeCommands()
@@ -282,22 +287,39 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void ShowViewPopup(Widget target)
 		{
+			var commands = MainToolbar.PopupViewTypeKinds
+				.Select (x => MainToolbar.GetViewCommand (x))
+				.ToArray ();
+
 			var popup = new ViewPopup ()
 			{
-				ViewTypeKinds    = MainToolbar.PopupViewTypeKinds.ToList (),
-				SelectedViewType = this.viewType.Kind,
+				ViewCommands = commands,
 			};
 
 			popup.Create (target, leftOrRight: false);
-
-			popup.ViewTypeClicked += delegate (object sender, ViewTypeKind kind)
-			{
-				this.OnCommandClicked (MainToolbar.GetViewCommand (kind));
-			};
 		}
 
 
-		public static ViewTypeKind GetViewKind(ToolbarCommand command)
+		//?private static IEnumerable<Command> ViewCommands
+		//?{
+		//?	get
+		//?	{
+		//?		yield return Res.Commands.View.Assets;
+		//?		yield return Res.Commands.View.Amortizations;
+		//?		yield return Res.Commands.View.Entries;
+		//?		yield return Res.Commands.View.Categories;
+		//?		yield return Res.Commands.View.Groups;
+		//?		yield return Res.Commands.View.Persons;
+		//?		yield return Res.Commands.View.Reports;
+		//?		yield return Res.Commands.View.Warnings;
+		//?		yield return Res.Commands.View.Settings;
+		//?		yield return Res.Commands.View.AssetsSettings;
+		//?		yield return Res.Commands.View.PersonsSettings;
+		//?		yield return Res.Commands.View.Accounts;
+		//?	}
+		//?}
+
+		public static ViewTypeKind GetViewKind(Command command)
 		{
 			foreach (var kind in MainToolbar.ViewTypeKinds.Union (MainToolbar.PopupViewTypeKinds))
 			{
@@ -310,42 +332,42 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			return ViewTypeKind.Unknown;
 		}
 
-		private static ToolbarCommand GetViewCommand(ViewTypeKind kind)
+		private static Command GetViewCommand(ViewTypeKind kind)
 		{
 			switch (kind)
 			{
 				case ViewTypeKind.Assets:
-					return ToolbarCommand.ViewTypeAssets;
+					return Res.Commands.View.Assets;
 
 				case ViewTypeKind.Amortizations:
-					return ToolbarCommand.ViewTypeAmortizations;
+					return Res.Commands.View.Amortizations;
 
 				case ViewTypeKind.Entries:
-					return ToolbarCommand.ViewTypeEcritures;
+					return Res.Commands.View.Entries;
 
 				case ViewTypeKind.Categories:
-					return ToolbarCommand.ViewTypeCategories;
+					return Res.Commands.View.Categories;
 
 				case ViewTypeKind.Groups:
-					return ToolbarCommand.ViewTypeGroups;
+					return Res.Commands.View.Groups;
 
 				case ViewTypeKind.Persons:
-					return ToolbarCommand.ViewTypePersons;
+					return Res.Commands.View.Persons;
 
 				case ViewTypeKind.Reports:
-					return ToolbarCommand.ViewTypeReports;
+					return Res.Commands.View.Reports;
 
 				case ViewTypeKind.Warnings:
-					return ToolbarCommand.ViewTypeWarnings;
+					return Res.Commands.View.Warnings;
 
 				case ViewTypeKind.AssetsSettings:
-					return ToolbarCommand.ViewTypeAssetsSettings;
+					return Res.Commands.View.AssetsSettings;
 
 				case ViewTypeKind.PersonsSettings:
-					return ToolbarCommand.ViewTypePersonsSettings;
+					return Res.Commands.View.PersonsSettings;
 
 				case ViewTypeKind.Accounts:
-					return ToolbarCommand.ViewTypeAccounts;
+					return Res.Commands.View.Accounts;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported ViewType {0}", kind.ToString ()));
@@ -354,6 +376,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private static IEnumerable<ViewTypeKind> PopupViewTypeKinds
 		{
+			//	Enumère uniquement les vues choisies via le ViewPopup.
 			get
 			{
 				yield return ViewTypeKind.AssetsSettings;
@@ -364,6 +387,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private static IEnumerable<ViewTypeKind> ViewTypeKinds
 		{
+			//	Enumère toutes les vues possibles.
 			get
 			{
 				yield return ViewTypeKind.Assets;
@@ -380,35 +404,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
-		private static Shortcut GetViewShortcut(ViewTypeKind kind)
+
+		#region Events handler
+		private void OnChangeView()
 		{
-			switch (kind)
-			{
-				case ViewTypeKind.Assets:
-					return new Shortcut (KeyCode.FuncF2);
-
-				case ViewTypeKind.Amortizations:
-					return new Shortcut (KeyCode.FuncF3);
-
-				case ViewTypeKind.Categories:
-					return new Shortcut (KeyCode.FuncF4);
-
-				case ViewTypeKind.Groups:
-					return new Shortcut (KeyCode.FuncF5);
-
-				case ViewTypeKind.Persons:
-					return new Shortcut (KeyCode.FuncF6);
-
-				case ViewTypeKind.Reports:
-					return new Shortcut (KeyCode.FuncF7);
-
-				case ViewTypeKind.Warnings:
-					return new Shortcut (KeyCode.FuncF8);
-
-				default:
-					return null;
-			}
+			this.ChangeView.Raise (this);
 		}
+
+		public event EventHandler ChangeView;
+		#endregion
 
 
 		private IconButton						buttonNew;
@@ -419,7 +423,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private IconButton						buttonNavigateForward;
 		private IconButton						buttonNavigateMenu;
 
-		private IconButton						buttonPopup;
+		private ButtonWithRedDot				buttonWarnings;
+		//?private IconButton						buttonPopup;
 
 		private IconButton						buttonSingle;
 		private IconButton						buttonEvent;
