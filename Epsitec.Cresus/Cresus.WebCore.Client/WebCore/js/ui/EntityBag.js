@@ -31,20 +31,19 @@ function() {
       this.initStores();
       this.dropZones = [];
 
-      purgeButton = {
+      buttons = [{
           xtype    : 'button',
           text     : 'Vider le panier',
-          width    : 200,
+          width    : 120,
           cls      : 'tile-button',
           overCls  : 'tile-button-over',
           textAlign: 'left',
           handler  : this.purgeEntityBag,
           scope    : this
-      };
-      navButtons = [{
+        },{
           xtype    : 'button',
           text     : '<-',
-          width    : 60,
+          width    : 30,
           cls      : 'tile-button',
           overCls  : 'tile-button-over',
           textAlign: 'left',
@@ -59,7 +58,7 @@ function() {
       }, {
           xtype: 'button',
           text: '->',
-          width: 60,
+          width: 30,
           cls: 'tile-button',
           overCls: 'tile-button-over',
           textAlign: 'left',
@@ -85,15 +84,11 @@ function() {
         layout: {
             type: 'column'
         },
-        dockedItems: [{
-          xtype: 'toolbar',
-          dock: 'top',
-          items: purgeButton
-        },
+        dockedItems: [
         {
           xtype: 'toolbar',
           dock: 'top',
-          items: navButtons
+          items: buttons
         }],
         items: [{
           xtype: 'panel',

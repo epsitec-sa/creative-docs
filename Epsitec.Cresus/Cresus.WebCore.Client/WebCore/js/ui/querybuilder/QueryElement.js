@@ -18,31 +18,40 @@ function() {
 
     /* Constructor */
 
-    constructor: function(builder, columnDefinitions, first) {
+    constructor: function(options) {
+      var first   = options.isFirstElement(options.itemId);
+      var builder = options.builder;
+
       this.components = [];
       var config = {
+        itemId: options.itemId,
         minHeight: 50,
         minWidth: 300,
         layout: 'hbox',
         border: false,
-        closable: true,
+        closable: !first,
+        parent: builder,
         style: {
           borderRight: '1px solid #99BCE8',
           borderBottom: '1px solid #99BCE8',
           borderLeft: '1px solid #99BCE8'
         },
         bodyCls: 'tile',
-        title: 'Condition',
+        title: 'Condition ' + options.itemId,
         tools: [{
           type: 'plus',
           tooltip: 'Ajouter une condition',
           handler: builder.onAddElement,
           scope: builder
         }],
-        items: this.components
+        items: this.components,
+        listeners: {
+          close: builder.onRemoveElement,
+          scope: builder
+        }
       };
 
-      if (first) {
+      if (!first) {
         this.initOperatorDataStore();
         this.operatorCombo.on('select', function(combo, records, eOpts) {
           Ext.Array.each(records, function(record) {
@@ -50,13 +59,43 @@ function() {
           });
         });
       }
-      this.initQueryFieldDataStore(columnDefinitions);
+      this.initQueryFieldDataStore(options.columnDefinitions);
       this.initComparatorDataStore();
       this.initValueField();
+
+      Ext.applyIf(config, options);
       this.callParent([config]);
+
+      if(options.values !== undefined)
+      {
+        var values = options.values;
+        if(values.op!==undefined)
+        {
+          this.operatorCombo.setValue(values.op);
+        }
+
+        this.valueField.setValue (values.condition.value);
+        this.comparatorCombo.setValue (values.condition.comparator);
+        this.fieldCombo.setValue (values.condition.field);
+
+      }
+      return this;
     },
 
     /* Methods */
+    getOperator: function () {
+      return this.operatorCombo !== null ? this.operatorCombo.getValue()
+                                           : undefined;
+    },
+
+    getCondition: function () {
+      return {
+        id : this.itemId,
+        field : this.fieldCombo.getValue(),
+        comparator: this.comparatorCombo.getValue(),
+        value : this.valueField.getValue()
+      };
+    },
 
     initValueField: function() {
       this.valueField = Ext.create('Ext.form.field.Text', {

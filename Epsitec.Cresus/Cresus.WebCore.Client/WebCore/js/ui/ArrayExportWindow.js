@@ -48,20 +48,18 @@ function() {
     constructor: function(options) {
       var newOptions, dataSetConfig;
 
+
+
       this.leftGrid = this.createLeftGrid(options);
       this.rightGrid = this.createRightGrid(options);
       this.configStore = this.createConfigStore();
 
       newOptions = {
-        items: [this.leftGrid, this.rightGrid],
+        items: [this.createConfigurationSavingTools(),this.leftGrid, this.rightGrid],
         dockedItems: [{
           xtype: 'toolbar',
           dock: 'top',
           items: this.createConfigurationLoadingTools()
-        },{
-          xtype: 'toolbar',
-          dock: 'left',
-          items: this.createConfigurationSavingTools()
         }],
         buttons: [
           this.createOkButton(),
@@ -96,8 +94,8 @@ function() {
       this.currentConfig.useFilters = config.useFilters;
       this.configNameField.setValue (this.currentConfig.name);
       this.useFilterField.setValue (this.currentConfig.useFilters);
-      if(this.currentConfig.useFilters)
-      {
+
+      if(this.currentConfig.useFilters) {
         this.exportUrl = config.url;
       }
       this.leftGrid.store.loadData (config.data);
@@ -130,8 +128,7 @@ function() {
 
       var useFilters  = this.useFilterField.getValue();
 
-      if(this.dataSetConfigs === null)
-      {
+      if(this.dataSetConfigs === null) {
         this.dataSetConfigs = {};
       }
 
@@ -205,29 +202,20 @@ function() {
 
       buttons.push({
         xtype: 'label',
-        text: 'Enregistrer la configuration'
-      });
-
-      buttons.push({
-        xtype: 'label',
-        text: 'Nom de la config.:'
+        text: 'Nom de la configuration'
       });
 
       this.configNameField = Ext.create('Ext.form.field.Text',{
-        width: 80,
+        width: 120,
         emptyText: '',
         name: 'configName'
       });
 
       buttons.push(this.configNameField);
 
-      buttons.push({
-        xtype: 'label',
-        text: 'Conserver les filtres ?'
-      });
-
       this.useFilterField = Ext.create('Ext.form.field.Checkbox',{
-        name: 'saveFilter'
+        name: 'saveFilter',
+        boxLabel: 'conserver les filtres'
       });
 
       buttons.push(this.useFilterField);
@@ -250,7 +238,11 @@ function() {
         }
       }));
 
-      return buttons;
+      return Ext.create('Ext.container.Container',{
+        layout: 'auto',
+        margin: '0 5 0 0',
+        items: buttons
+      });
     },
 
     createLeftGrid: function(options) {

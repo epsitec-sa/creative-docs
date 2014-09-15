@@ -686,8 +686,12 @@ function() {
     ///QUERY BUILDER
     onQueryBuildHandler: function(e) {
       if (!this.queryBuilder) {
-        this.queryBuilder = Ext.create(
-            'Epsitec.QueryWindow', this.columnDefinitions);
+        exportUrl = this.buildUrlWithSortersAndFilters(this.exportUrl);
+        this.queryBuilder = Ext.create('Epsitec.QueryWindow', {
+          columnDefinitions: this.columnDefinitions,
+          exportUrl: exportUrl
+        });
+
         this.queryBuilder.showAt(e.container.getXY());
       }
       else {
