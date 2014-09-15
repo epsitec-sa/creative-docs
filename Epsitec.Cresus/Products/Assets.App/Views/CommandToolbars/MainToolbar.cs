@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.SetCommandDescription (ToolbarCommand.NavigateBack,     "Navigate.Back",         Res.Strings.Toolbar.Main.Navigate.Back.ToString (),    new Shortcut (KeyCode.ArrowLeft  | KeyCode.ModifierAlt));
 			this.SetCommandDescription (ToolbarCommand.NavigateForward,  "Navigate.Forward",      Res.Strings.Toolbar.Main.Navigate.Forward.ToString (), new Shortcut (KeyCode.ArrowRight | KeyCode.ModifierAlt));
 			this.SetCommandDescription (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         Res.Strings.Toolbar.Main.Navigate.Menu.ToString ());
-			this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   Res.Strings.Toolbar.Main.Show.TimelineSingle.ToString ());
-			this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    Res.Strings.Toolbar.Main.Show.TimelineEvent.ToString ());
-			this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", Res.Strings.Toolbar.Main.Show.TimelineMultiple.ToString ());
+			//?this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   Res.Strings.Toolbar.Main.Show.TimelineSingle.ToString ());
+			//?this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    Res.Strings.Toolbar.Main.Show.TimelineEvent.ToString ());
+			//?this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", Res.Strings.Toolbar.Main.Show.TimelineMultiple.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Edit,             "Main.Edit",             Res.Strings.Toolbar.Main.Edit.ToString (), new Shortcut (KeyCode.FuncF11));
 			this.SetCommandDescription (ToolbarCommand.Locked,           "Main.Locked",           Res.Strings.Toolbar.Main.Locked.ToString ());
 			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       Res.Strings.Toolbar.Main.Simulation.ToString ());
@@ -132,20 +132,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonWarnings = this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Warnings);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Settings);
 
-			this.buttonSingle          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeSingle,   activable: true);
-			this.buttonEvent           = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeEvent,    activable: true);
-			this.buttonMultiple        = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ViewModeMultiple, activable: true);
-									   											   				     
+			this.CreateSajex (10);
+
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Single);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Event);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Multiple);
+
+			this.CreateSajex (40);
+
 			this.buttonEdit            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Edit);
 			this.buttonLocked          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Locked);
 			this.buttonSimulation      = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Simulation);
 									  				 							   				     
 			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
 			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
-
-			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
-			//?this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
-			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
 
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
@@ -198,13 +198,24 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
 		void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//	**PA**
+			//	Cherche le widget ayant la plus grande surface.
 			var targets = commandDispatcher.FindVisuals (e.Command)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
 			var target = targets.FirstOrDefault () as Widget ?? e.Source as Widget;
+
 			this.ShowViewPopup (target);
+		}
+
+
+		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Single)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Event)]
+		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Multiple)]
+		void CommandViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ViewMode = MainToolbar.GetViewMode (e.Command);
+			this.OnChangeView ();
 		}
 
 
@@ -230,17 +241,23 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void UpdateViewModeCommands()
 		{
-			if (this.viewType == ViewType.Assets)
+			bool enable = (this.viewType.Kind == ViewTypeKind.Assets);
+
+			foreach (var mode in MainToolbar.ViewTypeModes)
 			{
-				this.SetCommandActivate (ToolbarCommand.ViewModeSingle,   this.viewMode == ViewMode.Single  );
-				this.SetCommandActivate (ToolbarCommand.ViewModeEvent,    this.viewMode == ViewMode.Event   );
-				this.SetCommandActivate (ToolbarCommand.ViewModeMultiple, this.viewMode == ViewMode.Multiple);
-			}
-			else
-			{
-				this.SetCommandState (ToolbarCommand.ViewModeSingle,   ToolbarCommandState.Hide);
-				this.SetCommandState (ToolbarCommand.ViewModeEvent,    ToolbarCommandState.Hide);
-				this.SetCommandState (ToolbarCommand.ViewModeMultiple, ToolbarCommandState.Hide);
+				var command = MainToolbar.GetViewCommand (mode);
+				var cs = this.commandContext.GetCommandState (command);
+
+				if (enable)
+				{
+					cs.Enable      = true;
+					cs.ActiveState = (this.viewMode == mode) ? ActiveState.Yes : ActiveState.No;
+				}
+				else
+				{
+					cs.Enable      = false;
+					cs.ActiveState = ActiveState.No;
+				}
 			}
 		}
 
@@ -273,7 +290,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public static ViewTypeKind GetViewKind(Command command)
 		{
-			foreach (var kind in MainToolbar.ViewTypeKinds.Union (MainToolbar.PopupViewTypeKinds))
+			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
 				if (command == MainToolbar.GetViewCommand (kind))
 				{
@@ -357,6 +374,48 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		public static ViewMode GetViewMode(Command command)
+		{
+			foreach (var mode in MainToolbar.ViewTypeModes)
+			{
+				if (command == MainToolbar.GetViewCommand (mode))
+				{
+					return mode;
+				}
+			}
+
+			return ViewMode.Unknown;
+		}
+
+		private static Command GetViewCommand(ViewMode mode)
+		{
+			switch (mode)
+			{
+				case ViewMode.Single:
+					return Res.Commands.ViewMode.Single;
+
+				case ViewMode.Event:
+					return Res.Commands.ViewMode.Event;
+
+				case ViewMode.Multiple:
+					return Res.Commands.ViewMode.Multiple;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported ViewMode {0}", mode.ToString ()));
+			}
+		}
+
+		private static IEnumerable<ViewMode> ViewTypeModes
+		{
+			get
+			{
+				yield return ViewMode.Single;
+				yield return ViewMode.Event;
+				yield return ViewMode.Multiple;
+			}
+		}
+
+
 		#region Events handler
 		private void OnChangeView()
 		{
@@ -376,10 +435,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private IconButton						buttonNavigateMenu;
 
 		private ButtonWithRedDot				buttonWarnings;
-
-		private IconButton						buttonSingle;
-		private IconButton						buttonEvent;
-		private IconButton						buttonMultiple;
 
 		private IconButton						buttonEdit;
 		private IconButton						buttonSimulation;

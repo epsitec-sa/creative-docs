@@ -259,6 +259,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		protected void CreateSajex(int width)
+		{
+			new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
+			};
+		}
+
 		protected ButtonWithRedDot CreateCommandButton(DockStyle dock, Command command)
 		{
 			var size = this.toolbar.PreferredHeight;

@@ -33,8 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: false);
-
-			this.viewMode = ViewMode.Single;
 		}
 
 
@@ -306,14 +304,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			//	Met à jour la géométrie des différents contrôleurs.
-			if (this.lastViewMode     != this.viewMode    ||
-				this.lastIsShowEvents != this.isShowEvents||
-				this.lastIsEditing    != this.isEditing   )
+			if (this.lastViewMode     != this.mainToolbar.ViewMode ||
+				this.lastIsShowEvents != this.isShowEvents         ||
+				this.lastIsEditing    != this.isEditing            )
 			{
 				this.UpdateViewModeGeometry ();
-				this.editFrameBox.Window.ForceLayout ();
+				//?this.editFrameBox.Window.ForceLayout ();
 
-				this.lastViewMode     = this.viewMode;
+				this.lastViewMode     = this.mainToolbar.ViewMode;
 				this.lastIsShowEvents = this.isShowEvents;
 				this.lastIsEditing    = this.isEditing;
 			}
@@ -402,7 +400,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
-			this.mainToolbar.ViewMode = this.viewMode;
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 			this.UpdateWarningsRedDot ();
@@ -435,7 +432,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new AssetsViewState
 				{
 					ViewType            = ViewType.Assets,
-					ViewMode            = this.viewMode,
+					ViewMode            = this.mainToolbar.ViewMode,
 					PageType            = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
 					Field               = this.isEditing ? this.objectEditor.FocusField : ObjectField.Unknown,
 					IsShowEvents        = this.isShowEvents,
@@ -451,10 +448,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var viewState = value as AssetsViewState;
 				System.Diagnostics.Debug.Assert (viewState != null);
 
-				this.viewMode          = viewState.ViewMode;
-				this.isShowEvents      = viewState.IsShowEvents;
-				this.selectedTimestamp = viewState.SelectedTimestamp;
-				this.selectedGuid      = viewState.SelectedGuid;
+				this.mainToolbar.ViewMode = viewState.ViewMode;
+				this.isShowEvents         = viewState.IsShowEvents;
+				this.selectedTimestamp    = viewState.SelectedTimestamp;
+				this.selectedGuid         = viewState.SelectedGuid;
 
 				this.listController.FilterGuid           = viewState.FilterTreeTableGuid;
 				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
@@ -500,28 +497,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ToolbarCommand.Cancel:
 					this.OnEditCancel ();
 					break;
-
-				case ToolbarCommand.ViewModeSingle:
-					this.viewMode = ViewMode.Single;
-					this.UpdateUI ();
-					break;
-
-				case ToolbarCommand.ViewModeEvent:
-					this.viewMode = ViewMode.Event;
-					this.UpdateUI ();
-					break;
-
-				case ToolbarCommand.ViewModeMultiple:
-					this.viewMode = ViewMode.Multiple;
-					this.UpdateUI ();
-					break;
 			}
 		}
 
 
 		private void OnListDoubleClicked()
 		{
-			switch (this.viewMode)
+			switch (this.mainToolbar.ViewMode)
 			{
 				case ViewMode.Single:
 					this.OnStartEdit ();
@@ -705,7 +687,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeGeometry()
 		{
-			switch (this.viewMode)
+			switch (this.mainToolbar.ViewMode)
 			{
 				case ViewMode.Single:
 					this.UpdateSingleGeometry ();
@@ -836,7 +818,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				switch (this.viewMode)
+				switch (this.mainToolbar.ViewMode)
 				{
 					case ViewMode.Single:
 						return this.listController.SelectedRow != -1;
@@ -870,7 +852,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private IconButton									closeButton;
 
-		private ViewMode									viewMode;
 		private bool										isShowEvents;
 		private bool										isEditing;
 		private Guid										selectedGuid;

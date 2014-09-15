@@ -57,6 +57,21 @@ namespace Epsitec.Cresus.Assets.App
 				//	designer:cap/JUKA001
 				public static readonly global::Epsitec.Common.Widgets.Command Warnings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
 			}
+			
+			public static class ViewMode
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (ViewMode.Event, null);
+				}
+				
+				//	designer:cap/JUKG001
+				public static readonly global::Epsitec.Common.Widgets.Command Event = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16));
+				//	designer:cap/JUKH001
+				public static readonly global::Epsitec.Common.Widgets.Command Multiple = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+				//	designer:cap/JUKF001
+				public static readonly global::Epsitec.Common.Widgets.Command Single = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15));
+			}
 		}
 		
 		public static class CommandIds
@@ -95,6 +110,16 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Settings = 0x7D300014000005L;
 				//	designer:cap/JUKA001
 				public const long Warnings = 0x7D30001400000AL;
+			}
+			
+			public static class ViewMode
+			{
+				//	designer:cap/JUKG001
+				public const long Event = 0x7D300014000010L;
+				//	designer:cap/JUKH001
+				public const long Multiple = 0x7D300014000011L;
+				//	designer:cap/JUKF001
+				public const long Single = 0x7D30001400000FL;
 			}
 			
 		}
@@ -9943,6 +9968,7 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Edit._Initialize ();
 			Commands.View._Initialize ();
+			Commands.ViewMode._Initialize ();
 			Strings._Initialize ();
 		}
 		
