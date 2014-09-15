@@ -152,6 +152,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 					PreferredSize = new Size (size, size),
 					CommandId     = Res.CommandIds.View.Settings,
 				};
+
+				button.Shortcuts.Define (new Shortcut (KeyCode.AlphaY | KeyCode.ModifierControl));
+
+				CommandState cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
+				//?cs.Enable = false;
+				cs.ActiveState = ActiveState.Yes;
 			}
 
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
@@ -170,8 +176,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		//?
 		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
-		void CommandToto()
+		void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			var target = e.Source as Widget;
+			var pos = e.CommandMessage.Cursor;  // position absolue dans la fenêtre
+
+
+			CreateAssetPopup.Show (target, this.accessor, null);
+
+			CommandState cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
+			cs.Enable = false;
+
+			if (cs.ActiveState == ActiveState.Yes)
+			{
+				cs.ActiveState = ActiveState.No;
+			}
+			else
+			{
+				cs.ActiveState = ActiveState.Yes;
+			}
 		}
 		//?
 
