@@ -63,22 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		NavigateForward,
 		NavigateMenu,
 
-		ViewTypeAssets,
-		ViewTypeAmortizations,
-		ViewTypeEcritures,
-		ViewTypeCategories,
-		ViewTypeGroups,
-		ViewTypePersons,
-		ViewTypeReports,
-		ViewTypeAssetsSettings,
-		ViewTypePersonsSettings,
-		ViewTypeAccounts,
-		ViewTypeWarnings,
-
-		ViewModeSingle,
-		ViewModeEvent,
-		ViewModeMultiple,
-
 		AmortizationsPreview,
 		AmortizationsFix,
 		AmortizationsToExtra,
