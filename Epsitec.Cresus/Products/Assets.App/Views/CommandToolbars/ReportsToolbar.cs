@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public class ReportsToolbar : AbstractCommandToolbar
 	{
-		public ReportsToolbar(DataAccessor accessor)
-			: base (accessor)
+		public ReportsToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
+			: base (accessor, commandDispatcher, commandContext)
 		{
 		}
 

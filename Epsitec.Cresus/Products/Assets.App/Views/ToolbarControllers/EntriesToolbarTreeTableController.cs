@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
@@ -16,8 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	public class EntriesToolbarTreeTableController : AbstractToolbarBothTreesController<EntryNode>, IDirty, System.IDisposable
 	{
-		public EntriesToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public EntriesToolbarTreeTableController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
+			: base (accessor, commandDispatcher, commandContext, baseType)
 		{
 			this.hasGraphic        = true;
 			this.hasFilter         = false;

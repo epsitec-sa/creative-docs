@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class UserFieldsSettingsView : AbstractView, System.IDisposable
 	{
-		public UserFieldsSettingsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType, BaseType baseType)
-			: base (accessor, toolbar, viewType)
+		public UserFieldsSettingsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, BaseType baseType)
+			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
 		{
 			this.baseType = baseType;
 
-			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.baseType);
+			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, this.baseType);
 			this.objectEditor   = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
 		}
 

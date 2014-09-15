@@ -21,9 +21,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesArrayController : IDirty, System.IDisposable
 	{
-		public TimelinesArrayController(DataAccessor accessor)
+		public TimelinesArrayController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
-			this.accessor = accessor;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
 
 			this.selectedRow    = -1;
 			this.selectedColumn = -1;
@@ -213,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.objectsToolbar = new TreeTableToolbar (this.accessor);
+			this.objectsToolbar = new TreeTableToolbar (this.accessor, this.commandDispatcher, this.commandContext);
 
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    Res.Strings.TimelinesArrayController.Delete.ToString ());
@@ -246,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStateAt (leftBox);
 
 			//	Partie droite.
-			this.timelinesToolbar = new TimelinesToolbar (this.accessor);
+			this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandDispatcher, this.commandContext);
 			this.timelinesToolbar.CreateUI (rightBox);
 			this.timelinesToolbar.TimelinesMode = this.timelinesMode;
 
@@ -1786,6 +1788,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const int leftColumnWidth = 180;
 
 		private readonly DataAccessor						accessor;
+		private readonly CommandDispatcher					commandDispatcher;
+		private readonly CommandContext						commandContext;
 		private readonly ObjectsNodeGetter					nodeGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;

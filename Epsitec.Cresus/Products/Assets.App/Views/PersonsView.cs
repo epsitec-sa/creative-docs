@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class PersonsView : AbstractView, System.IDisposable
 	{
-		public PersonsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, toolbar, viewType)
+		public PersonsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Persons;
 
-			this.listController = new PersonsToolbarTreeTableController (this.accessor, BaseType.Persons);
+			this.listController = new PersonsToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, BaseType.Persons);
 			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 

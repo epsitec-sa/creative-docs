@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	public class AccountsToolbarTreeTableController : AbstractToolbarBothTreesController<TreeNode>, IDirty, System.IDisposable
 	{
-		public AccountsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
-			: base (accessor, baseType)
+		public AccountsToolbarTreeTableController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
+			: base (accessor, commandDispatcher, commandContext, baseType)
 		{
 			this.hasGraphic        = true;
 			this.hasFilter         = false;

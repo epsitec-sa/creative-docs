@@ -19,11 +19,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView : System.IDisposable
 	{
-		public AbstractView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
+		public AbstractView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
 		{
-			this.accessor    = accessor;
-			this.mainToolbar = toolbar;
-			this.viewType    = viewType;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
+			this.mainToolbar       = toolbar;
+			this.viewType          = viewType;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -189,43 +191,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, MainToolbar toolbar, List<AbstractViewState> historyViewStates)
+		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor,
+			CommandDispatcher commandDispatcher, CommandContext commandContext,
+			MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 		{
 			switch (viewType.Kind)
 			{
 				case ViewTypeKind.Assets:
-					return new AssetsView (accessor, toolbar, viewType);
+					return new AssetsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Amortizations:
-					return new AmortizationsView (accessor, toolbar, viewType);
+					return new AmortizationsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Categories:
-					return new CategoriesView (accessor, toolbar, viewType);
+					return new CategoriesView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Groups:
-					return new GroupsView (accessor, toolbar, viewType);
+					return new GroupsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Persons:
-					return new PersonsView (accessor, toolbar, viewType);
+					return new PersonsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Reports:
-					return new ReportsView (accessor, toolbar, viewType, historyViewStates);
+					return new ReportsView (accessor, commandDispatcher, commandContext, toolbar, viewType, historyViewStates);
 
 				case ViewTypeKind.Warnings:
-					return new WarningsView (accessor, toolbar, viewType);
+					return new WarningsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.AssetsSettings:
-					return new UserFieldsSettingsView (accessor, toolbar, viewType, BaseType.Assets);
+					return new UserFieldsSettingsView (accessor, commandDispatcher, commandContext, toolbar, viewType, BaseType.Assets);
 
 				case ViewTypeKind.PersonsSettings:
-					return new UserFieldsSettingsView (accessor, toolbar, viewType, BaseType.Persons);
+					return new UserFieldsSettingsView (accessor, commandDispatcher, commandContext, toolbar, viewType, BaseType.Persons);
 
 				case ViewTypeKind.Entries:
-					return new EntriesView (accessor, toolbar, viewType);
+					return new EntriesView (accessor, commandDispatcher, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Accounts:
 					var baseType = new BaseType (BaseTypeKind.Accounts, viewType.AccountsDateRange);
-					return new AccountsView (accessor, toolbar, viewType, baseType);
+					return new AccountsView (accessor, commandDispatcher, commandContext, toolbar, viewType, baseType);
 
 				default:
 					return null;
@@ -307,6 +311,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public const int editionWidth = AbstractFieldController.labelWidth + AbstractFieldController.maxWidth + 70 + AbstractView.scrollerDefaultBreadth;
 
 		protected readonly DataAccessor			accessor;
+		protected readonly CommandDispatcher	commandDispatcher;
+		protected readonly CommandContext		commandContext;
 		protected readonly MainToolbar			mainToolbar;
 		protected readonly ViewType				viewType;
 		protected readonly SafeCounter			ignoreChanges;

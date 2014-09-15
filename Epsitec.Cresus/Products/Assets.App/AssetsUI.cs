@@ -12,18 +12,22 @@ namespace Epsitec.Cresus.Assets.App
 {
 	public class AssetsUI
 	{
-		public AssetsUI(DataAccessor accessor)
+		public AssetsUI(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
-			this.accessor = accessor;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
 		}
 
 		public void CreateUI(Widget parent)
 		{
-			var mainView = new MainView (this.accessor);
+			var mainView = new MainView (this.accessor, this.commandDispatcher, this.commandContext);
 			mainView.CreateUI (parent);
 		}
 
 
-		private readonly DataAccessor accessor;
+		private readonly DataAccessor			accessor;
+		private readonly CommandDispatcher		commandDispatcher;
+		private readonly CommandContext			commandContext;
 	}
 }

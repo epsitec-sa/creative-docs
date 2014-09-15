@@ -14,12 +14,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class WarningsView : AbstractView, System.IDisposable
 	{
-		public WarningsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, toolbar, viewType)
+		public WarningsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Persons;
 
-			this.listController = new WarningsToolbarTreeTableController (this.accessor, BaseType.Persons);
+			this.listController = new WarningsToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, BaseType.Persons);
 		}
 
 		public override void Dispose()

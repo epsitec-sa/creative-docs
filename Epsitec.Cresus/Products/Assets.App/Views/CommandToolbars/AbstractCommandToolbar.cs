@@ -14,9 +14,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public abstract class AbstractCommandToolbar : System.IDisposable
 	{
-		public AbstractCommandToolbar(DataAccessor accessor)
+		public AbstractCommandToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
-			this.accessor = accessor;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
 
 			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
 			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
@@ -386,7 +388,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public const int separatorWidth         = 11;
 
 
-		protected readonly DataAccessor accessor;
+		protected readonly DataAccessor			accessor;
+		private readonly CommandDispatcher		commandDispatcher;
+		private readonly CommandContext			commandContext;
 
 		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
 		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;

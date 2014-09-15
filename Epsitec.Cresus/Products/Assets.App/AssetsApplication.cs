@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public AssetsApplication()
 		{
+			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary);
+			this.commandContext = new CommandContext ();
 		}
 
 		public override string					ShortWindowTitle
@@ -108,6 +110,9 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
+			this.commandDispatcher.RegisterController (this);
+			CommandDispatcher.SetDispatcher (this, this.commandDispatcher);
+
 			//	Crée le clipboard unique à l'application.
 			var cb = new DataClipboard ();
 
@@ -117,13 +122,22 @@ namespace Epsitec.Cresus.Assets.App
 			System.Diagnostics.Debug.Assert (factory != null);
 			factory.Create (accessor, Res.Strings.AssetsApplication.DefaultMandat.ToString (), new System.DateTime (2011, 1, 1), true);
 
-			var ui = new AssetsUI (accessor);
+			var ui = new AssetsUI (accessor, this.commandDispatcher, this.commandContext);
 			ui.CreateUI (frame);
 
 			frame.Focus ();
 		}
 
+		//?
+		//?[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		//?void CommandToto()
+		//?{
+		//?}
+		//?
 
+
+		private readonly CommandDispatcher		commandDispatcher;
+		private readonly CommandContext			commandContext;
 		private BusinessContext					businessContext;
 	}
 }

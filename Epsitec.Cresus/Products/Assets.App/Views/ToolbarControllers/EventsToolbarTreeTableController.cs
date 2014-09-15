@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	public class EventsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty, System.IDisposable
 	{
-		public EventsToolbarTreeTableController(DataAccessor accessor, BaseType baseType)
-			: base(accessor, baseType)
+		public EventsToolbarTreeTableController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
+			: base(accessor, commandDispatcher, commandContext, baseType)
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;

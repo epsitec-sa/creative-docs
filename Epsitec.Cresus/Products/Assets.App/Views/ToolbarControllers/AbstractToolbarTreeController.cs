@@ -21,10 +21,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 	public abstract class AbstractToolbarTreeController<T> : System.IDisposable
 		where T : struct
 	{
-		public AbstractToolbarTreeController(DataAccessor accessor, BaseType baseType)
+		public AbstractToolbarTreeController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
 		{
-			this.accessor = accessor;
-			this.baseType = baseType;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
+			this.baseType          = baseType;
 		}
 
 		public virtual void Dispose()
@@ -91,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TreeTableToolbar (this.accessor);
+			this.toolbar = new TreeTableToolbar (this.accessor, this.commandDispatcher, this.commandContext);
 			this.AdaptToolbarCommand();
 
 			this.toolbar.CreateUI (parent);
@@ -637,6 +639,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		protected readonly DataAccessor			accessor;
+		protected readonly CommandDispatcher	commandDispatcher;
+		protected readonly CommandContext		commandContext;
 		protected readonly BaseType				baseType;
 
 		protected string						title;

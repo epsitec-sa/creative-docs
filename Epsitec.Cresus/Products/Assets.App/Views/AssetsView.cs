@@ -18,16 +18,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsView : AbstractView, System.IDisposable
 	{
-		public AssetsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, toolbar, viewType)
+		public AssetsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Assets;
 
-			this.listController     = new AssetsToolbarTreeTableController (this.accessor, this.baseType);
-			this.timelineController = new AssetsToolbarTimelineController  (this.accessor, this.baseType);
-			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.baseType);
+			this.listController     = new AssetsToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, this.baseType);
+			this.timelineController = new AssetsToolbarTimelineController  (this.accessor, this.commandDispatcher, this.commandContext, this.baseType);
+			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, this.baseType);
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandDispatcher, this.commandContext)
 			{
 				Title = this.GetViewTitle (ViewType.Assets),
 			};

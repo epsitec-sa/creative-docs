@@ -18,9 +18,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class MainView
 	{
-		public MainView(DataAccessor accessor)
+		public MainView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
 		{
-			this.accessor = accessor;
+			this.accessor          = accessor;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
 
 			this.currentViewStates = new List<AbstractViewState> ();
 			this.historyViewStates = new List<AbstractViewState> ();
@@ -36,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			MouseCursorManager.SetWindow (parent.Window);
 
-			this.toolbar = new MainToolbar (this.accessor);
+			this.toolbar = new MainToolbar (this.accessor, this.commandDispatcher, this.commandContext);
 			this.toolbar.CreateUI (parent);
 
 			this.viewBox = new FrameBox
@@ -122,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.DeleteView ();
 			}
 
-			this.view = AbstractView.CreateView (viewType, this.accessor, this.toolbar, this.historyViewStates);
+			this.view = AbstractView.CreateView (viewType, this.accessor, this.commandDispatcher, this.commandContext, this.toolbar, this.historyViewStates);
 
 			if (this.view != null)
 			{
@@ -473,6 +475,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private readonly DataAccessor				accessor;
+		private readonly CommandDispatcher			commandDispatcher;
+		private readonly CommandContext				commandContext;
 		private readonly List<AbstractViewState>	currentViewStates;  // pour retrouver une vue à l'identique
 		private readonly List<AbstractViewState>	historyViewStates;  // pour les commandes back/forward
 		private readonly List<AbstractViewState>	lastViewStates;     // pour le menu des dernières vues

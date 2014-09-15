@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public class MainToolbar : AbstractCommandToolbar
 	{
-		public MainToolbar(DataAccessor accessor)
-			: base (accessor)
+		public MainToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
+			: base (accessor, commandDispatcher, commandContext)
 		{
 		}
 
@@ -139,6 +139,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
 			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
 
+			{
+				var size = this.toolbar.PreferredHeight;
+
+				var button = new ButtonWithRedDot
+				{
+					Parent        = this.toolbar,
+					AutoFocus     = false,
+					Dock          = DockStyle.Left,
+					PreferredSize = new Size (size, size),
+					CommandId     = Res.CommandIds.View.Settings,
+				};
+			}
+
 			this.buttonSave    .Margins = new Margins (0, 10, 0, 0);
 			this.buttonPopup   .Margins = new Margins (0, 10, 0, 0);
 			this.buttonMultiple.Margins = new Margins (0, 40, 0, 0);
@@ -151,6 +164,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			return this.toolbar;
 		}
+
+
+		//?
+		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		void CommandToto()
+		{
+		}
+		//?
 
 
 		private void CreateViewTypeButtons()

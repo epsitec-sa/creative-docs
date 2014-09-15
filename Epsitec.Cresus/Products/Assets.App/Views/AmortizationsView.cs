@@ -15,12 +15,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizationsView : AbstractView, System.IDisposable
 	{
-		public AmortizationsView(DataAccessor accessor, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, toolbar, viewType)
+		public AmortizationsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Assets;
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandDispatcher, this.commandContext)
 			{
 				Title                = this.GetViewTitle (ViewType.Amortizations),
 				HasAmortizationsOper = true,
