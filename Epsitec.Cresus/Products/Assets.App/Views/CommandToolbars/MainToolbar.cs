@@ -118,9 +118,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			// [-> PA] utile ?
-			//?CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
-
 			this.buttonNew             = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NewMandat);
 			this.buttonOpen            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.OpenMandat);
 			this.buttonSave            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.SaveMandat);
@@ -177,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		//?
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		
 		void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = e.Source as Widget;

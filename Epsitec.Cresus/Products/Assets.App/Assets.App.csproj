@@ -446,9 +446,9 @@
     <EmbeddedResource Include="Images\TreeTable.MoveUp.icon" />
     <EmbeddedResource Include="Images\TreeTable.MoveTop.icon" />
     <EmbeddedResource Include="Images\TreeTable.MoveBottom.icon" />
-    <EmbeddedResource Include="Images\View.Ecritures.icon" />
+    <EmbeddedResource Include="Images\View.Entries.icon" />
     <EmbeddedResource Include="Images\Settings.Accounts.icon" />
-    <EmbeddedResource Include="Images\View.AccountsSettings.icon" />
+    <EmbeddedResource Include="Images\View.Accounts.icon" />
     <EmbeddedResource Include="Images\View.AssetsSettings.icon" />
     <EmbeddedResource Include="Images\View.PersonsSettings.icon" />
     <EmbeddedResource Include="Images\TreeTable.Graphic.icon" />

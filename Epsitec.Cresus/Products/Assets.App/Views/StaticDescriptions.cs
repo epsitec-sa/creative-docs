@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "View.Amortizations";
 
 				case ViewTypeKind.Entries:
-					return "View.Ecritures";
+					return "View.Entries";
 
 				case ViewTypeKind.Categories:
 					return "View.Categories";
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return "View.PersonsSettings";
 
 				case ViewTypeKind.Accounts:
-					return "View.AccountsSettings";
+					return "View.Accounts";
 
 				default:
 					return null;

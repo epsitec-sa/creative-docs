@@ -29,21 +29,33 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (View.Categories, null);
+					global::System.Object.Equals (View.Accounts, null);
 				}
 				
+				//	designer:cap/JUKB001
+				public static readonly global::Epsitec.Common.Widgets.Command Accounts = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+				//	designer:cap/JUKE001
+				public static readonly global::Epsitec.Common.Widgets.Command Amortizations = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
+				//	designer:cap/JUK0001
+				public static readonly global::Epsitec.Common.Widgets.Command Assets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+				//	designer:cap/JUKD001
+				public static readonly global::Epsitec.Common.Widgets.Command AssetsSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
 				//	designer:cap/JUK1001
 				public static readonly global::Epsitec.Common.Widgets.Command Categories = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
-				//	designer:cap/JUK3001
-				public static readonly global::Epsitec.Common.Widgets.Command Events = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+				//	designer:cap/JUK8001
+				public static readonly global::Epsitec.Common.Widgets.Command Entries = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
 				//	designer:cap/JUK2001
 				public static readonly global::Epsitec.Common.Widgets.Command Groups = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
-				//	designer:cap/JUK0001
-				public static readonly global::Epsitec.Common.Widgets.Command Objects = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+				//	designer:cap/JUK9001
+				public static readonly global::Epsitec.Common.Widgets.Command Persons = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
+				//	designer:cap/JUKC001
+				public static readonly global::Epsitec.Common.Widgets.Command PersonsSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12));
 				//	designer:cap/JUK4001
 				public static readonly global::Epsitec.Common.Widgets.Command Reports = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
 				//	designer:cap/JUK5001
 				public static readonly global::Epsitec.Common.Widgets.Command Settings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
+				//	designer:cap/JUKA001
+				public static readonly global::Epsitec.Common.Widgets.Command Warnings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
 			}
 		}
 		
@@ -59,18 +71,30 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class View
 			{
+				//	designer:cap/JUKB001
+				public const long Accounts = 0x7D30001400000BL;
+				//	designer:cap/JUKE001
+				public const long Amortizations = 0x7D30001400000EL;
+				//	designer:cap/JUK0001
+				public const long Assets = 0x7D300014000000L;
+				//	designer:cap/JUKD001
+				public const long AssetsSettings = 0x7D30001400000DL;
 				//	designer:cap/JUK1001
 				public const long Categories = 0x7D300014000001L;
-				//	designer:cap/JUK3001
-				public const long Events = 0x7D300014000003L;
+				//	designer:cap/JUK8001
+				public const long Entries = 0x7D300014000008L;
 				//	designer:cap/JUK2001
 				public const long Groups = 0x7D300014000002L;
-				//	designer:cap/JUK0001
-				public const long Objects = 0x7D300014000000L;
+				//	designer:cap/JUK9001
+				public const long Persons = 0x7D300014000009L;
+				//	designer:cap/JUKC001
+				public const long PersonsSettings = 0x7D30001400000CL;
 				//	designer:cap/JUK4001
 				public const long Reports = 0x7D300014000004L;
 				//	designer:cap/JUK5001
 				public const long Settings = 0x7D300014000005L;
+				//	designer:cap/JUKA001
+				public const long Warnings = 0x7D30001400000AL;
 			}
 			
 		}
