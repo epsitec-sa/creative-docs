@@ -185,14 +185,19 @@ namespace Epsitec.Common.Widgets
 			if (controller != null)
 			{
 				System.Type type = controller.GetType ();
-				
-				foreach (System.Reflection.MemberInfo member in type.GetMembers (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+
+				while (type.BaseType != null)
 				{
-					if ((member.IsDefined (CommandDispatcher.commandAttributeType, true)) &&
-						(member.MemberType == System.Reflection.MemberTypes.Method))
+					foreach (System.Reflection.MemberInfo member in type.GetMembers (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
 					{
-						this.RegisterMethod (target, member as System.Reflection.MethodInfo);
+						if ((member.IsDefined (CommandDispatcher.commandAttributeType, true)) &&
+							(member.MemberType == System.Reflection.MemberTypes.Method))
+						{
+							this.RegisterMethod (target, member as System.Reflection.MethodInfo);
+						}
 					}
+
+					type = type.BaseType;
 				}
 			}
 		}
