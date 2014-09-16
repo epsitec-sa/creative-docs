@@ -40,6 +40,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.treeTableController.Dispose ();
 				this.treeTableController = null;
 			}
+
+			base.Dispose ();
 		}
 
 		public override void Close()

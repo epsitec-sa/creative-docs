@@ -34,6 +34,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void Dispose()
 		{
+			if (this.mainToolbar != null)
+			{
+				this.commandContext.GetCommandState (Res.Commands.Main.Edit  ).Visibility = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Visibility = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Visibility = false;
+			}
+
 			this.commandDispatcher.Dispose ();
 		}
 

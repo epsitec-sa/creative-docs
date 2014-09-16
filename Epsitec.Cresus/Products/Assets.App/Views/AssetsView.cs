@@ -38,13 +38,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			if (this.mainToolbar != null)
-			{
-				this.commandContext.GetCommandState (Res.Commands.Main.Edit).Enable = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Visibility = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Visibility = false;
-			}
-
 			if (this.listController != null)
 			{
 				this.listController.Dispose ();
@@ -59,6 +52,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.eventsController.Dispose ();
 			}
+
+			base.Dispose ();
 		}
 
 		public override void Close()
@@ -783,6 +778,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.isEditing)
 			{
+				edit.Visibility  = true;
 				edit.ActiveState = ActiveState.Yes;
 				edit.Enable      = true;
 
@@ -793,6 +789,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
+				edit.Visibility  = true;
 				edit.ActiveState = ActiveState.No;
 				edit.Enable      = this.IsEditingPossible;
 

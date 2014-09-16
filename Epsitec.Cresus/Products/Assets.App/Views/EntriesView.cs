@@ -24,17 +24,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			if (this.mainToolbar != null)
-			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-			}
-
 			if (this.listController != null)
 			{
 				this.listController.Dispose ();
 			}
+
+			base.Dispose ();
 		}
 
 		public override void Close()
@@ -210,6 +205,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			this.commandContext.GetCommandState (Res.Commands.Main.Edit  ).Visibility = false;
+			this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Visibility = false;
+			this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Visibility = false;
 		}
 
 

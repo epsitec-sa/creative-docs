@@ -9,7 +9,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {

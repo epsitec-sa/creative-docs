@@ -33,12 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			if (this.mainToolbar != null)
-			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
-			}
+			base.Dispose ();
 		}
 
 		public override void Close()
@@ -245,28 +240,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void OnCommand(ToolbarCommand command)
-		{
-			base.OnCommand (command);
-
-			switch (command)
-			{
-				case ToolbarCommand.Edit:
-					this.OnStartStopEdit ();
-					break;
-
-				case ToolbarCommand.Accept:
-					this.OnEditAccept ();
-					break;
-
-				case ToolbarCommand.Cancel:
-					this.OnEditCancel ();
-					break;
-			}
-		}
-
-
-		private void OnStartStopEdit()
+		protected override void CommandMainEdit(Widget target)
 		{
 			if (!this.isEditing && this.selectedGuid.IsEmpty)
 			{
@@ -274,6 +248,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.isEditing = !this.isEditing;
+			this.UpdateUI ();
+		}
+
+		protected override void CommandEditAccept(Widget target)
+		{
+			this.isEditing = false;
+			this.UpdateUI ();
+		}
+
+		protected override void CommandEditCancel(Widget target)
+		{
+			this.accessor.EditionAccessor.CancelObjectEdition ();
+			this.isEditing = false;
 			this.UpdateUI ();
 		}
 
@@ -308,18 +295,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
-		private void OnEditAccept()
-		{
-			this.isEditing = false;
-			this.UpdateUI ();
-		}
-
-		private void OnEditCancel()
-		{
-			this.accessor.EditionAccessor.CancelObjectEdition ();
-			this.isEditing = false;
-			this.UpdateUI ();
-		}
 
 		private void UpdateAfterMultipleChanged()
 		{
@@ -347,17 +322,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			var edit   = this.commandContext.GetCommandState (Res.Commands.Main.Edit);
+			var accept = this.commandContext.GetCommandState (Res.Commands.Edit.Accept);
+			var cancel = this.commandContext.GetCommandState (Res.Commands.Edit.Cancel);
+
 			if (this.isEditing)
 			{
-				this.mainToolbar.SetCommandState  (ToolbarCommand.Edit,   ToolbarCommandState.Activate);
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, !this.objectEditor.HasError);
-				this.mainToolbar.SetCommandState  (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				edit.Visibility  = true;
+				edit.ActiveState = ActiveState.Yes;
+				edit.Enable      = true;
+
+				accept.Visibility = true;
+				cancel.Visibility = true;
+				accept.Enable     = !this.objectEditor.HasError;
+				cancel.Enable     = true;
 			}
 			else
 			{
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit,   this.IsEditingPossible);
-				this.mainToolbar.SetCommandState  (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState  (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+				edit.Visibility  = true;
+				edit.ActiveState = ActiveState.No;
+				edit.Enable      = this.IsEditingPossible;
+
+				accept.Visibility = false;
+				cancel.Visibility = false;
+				accept.Enable     = false;
+				cancel.Enable     = false;
 			}
 		}
 
