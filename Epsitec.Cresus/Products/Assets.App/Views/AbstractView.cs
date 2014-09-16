@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ignoreChanges = new SafeCounter ();
 
 			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
-			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public virtual void Dispose()
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void CreateUI(Widget parent)
 		{
-			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // utile si écoute avec [Command (Res.CommandIds...)]
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public virtual void DataChanged()

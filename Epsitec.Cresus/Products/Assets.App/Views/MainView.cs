@@ -31,11 +31,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.ignoreChanges = new SafeCounter ();
 
-			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public void CreateUI(Widget parent)
 		{
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 			this.parent = parent;
 
 			MouseCursorManager.SetWindow (parent.Window);
