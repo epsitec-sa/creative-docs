@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -218,12 +218,7 @@ namespace Epsitec.Common.Widgets
 		{
 			while (visual != null)
 			{
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (visual);
-
-				if (dispatcher != null)
-				{
-					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
-				}
+				this.AddDispatcher (CommandDispatcher.GetDispatcher (visual));
 
 				AbstractMenu menu = visual as AbstractMenu;
 
@@ -245,7 +240,7 @@ namespace Epsitec.Common.Widgets
 
 				foreach (var dispatcher in activeDispatchers)
 				{
-					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
+					this.AddDispatcher (dispatcher);
 				}
 			}
 		}
@@ -255,12 +250,7 @@ namespace Epsitec.Common.Widgets
 			while (window != null)
 			{
 				this.BuildPartialChainOfPrimaryDispatchers (window);
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (window);
-
-				if (dispatcher != null)
-				{
-					this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
-				}
+				this.AddDispatcher (CommandDispatcher.GetDispatcher (window));
 
 				window = window.Owner ?? window.Parent;
 			}
@@ -277,6 +267,14 @@ namespace Epsitec.Common.Widgets
 			if (primaryDispatchers.Count > 0)
 			{
 				this.dispatchers.AddRange (primaryDispatchers.Select (x => new Weak<CommandDispatcher> (x)));
+			}
+		}
+
+		private void AddDispatcher(CommandDispatcher dispatcher)
+		{
+			if (dispatcher != null)
+			{
+				this.dispatchers.Add (new Weak<CommandDispatcher> (dispatcher));
 			}
 		}
 

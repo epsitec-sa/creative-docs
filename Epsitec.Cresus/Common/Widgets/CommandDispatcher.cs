@@ -23,13 +23,16 @@ namespace Epsitec.Common.Widgets
 		/// <param name="name">The dispatcher name (defaults to <c>"anonymous"</c>).</param>
 		/// <param name="level">The dispatcher level (defaults to <c>Secondary</c>).</param>
 		/// <param name="options">The dispatcher options (defaults to <c>None</c>).</param>
-		public CommandDispatcher(string name = "anonymous", CommandDispatcherLevel level = CommandDispatcherLevel.Secondary, CommandDispatcherOptions options = CommandDispatcherOptions.None)
+		public CommandDispatcher(string name = "anonymous",
+			/**/				 CommandDispatcherLevel level = CommandDispatcherLevel.Secondary,
+			/**/				 CommandDispatcherOptions options = CommandDispatcherOptions.None)
 		{
 			this.eventHandlers = new Dictionary<Command, EventSlot> ();
-			this.name          = name;
-			this.level         = level;
-			this.options       = options;
-			this.id            = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
+			
+			this.name    = name;
+			this.level   = level;
+			this.options = options;
+			this.id      = System.Threading.Interlocked.Increment (ref CommandDispatcher.nextId);
 
 			switch (this.level)
 			{
