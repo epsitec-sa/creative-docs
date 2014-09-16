@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public EntriesView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
 			: base (accessor, commandContext, toolbar, viewType)
 		{
-			this.listController = new EntriesToolbarTreeTableController (this.accessor, this.commandDispatcher, this.commandContext, this.baseType);
+			this.listController = new EntriesToolbarTreeTableController (this.accessor, this.commandContext, this.baseType);
 		}
 
 

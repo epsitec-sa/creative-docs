@@ -21,12 +21,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 	public abstract class AbstractToolbarTreeController<T> : System.IDisposable
 		where T : struct
 	{
-		public AbstractToolbarTreeController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
+		public AbstractToolbarTreeController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 		{
-			this.accessor          = accessor;
-			this.commandDispatcher = commandDispatcher;
-			this.commandContext    = commandContext;
-			this.baseType          = baseType;
+			this.accessor       = accessor;
+			this.commandContext = commandContext;
+			this.baseType       = baseType;
+
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public virtual void Dispose()
@@ -36,6 +38,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.toolbar.Dispose ();
 				this.toolbar = null;
 			}
+
+			this.commandDispatcher.Dispose ();
 		}
 
 		public virtual void Close()

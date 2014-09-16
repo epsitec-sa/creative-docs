@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 	public abstract class AbstractToolbarBothTreesController<T> : AbstractToolbarTreeController<T>, System.IDisposable
 		where T : struct
 	{
-		public AbstractToolbarBothTreesController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
-			: base (accessor, commandDispatcher, commandContext, baseType)
+		public AbstractToolbarBothTreesController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
+			: base (accessor, commandContext, baseType)
 		{
 		}
 

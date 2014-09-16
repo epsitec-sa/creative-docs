@@ -95,6 +95,49 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class Timeline
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Timeline.Compacted, null);
+				}
+				
+				//	designer:cap/JUK5101
+				public static readonly global::Epsitec.Common.Widgets.Command Compacted = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37));
+				//	designer:cap/JUKJ101
+				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
+				//	designer:cap/JUKF101
+				public static readonly global::Epsitec.Common.Widgets.Command Date = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 47));
+				//	designer:cap/JUK8101
+				public static readonly global::Epsitec.Common.Widgets.Command DaysOfWeek = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40));
+				//	designer:cap/JUKH101
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 49));
+				//	designer:cap/JUKI101
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
+				//	designer:cap/JUK6101
+				public static readonly global::Epsitec.Common.Widgets.Command Expanded = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38));
+				//	designer:cap/JUKA101
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42));
+				//	designer:cap/JUK9101
+				public static readonly global::Epsitec.Common.Widgets.Command Graph = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41));
+				//	designer:cap/JUK4101
+				public static readonly global::Epsitec.Common.Widgets.Command Labels = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36));
+				//	designer:cap/JUKD101
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 45));
+				//	designer:cap/JUKG101
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
+				//	designer:cap/JUKC101
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
+				//	designer:cap/JUKE101
+				public static readonly global::Epsitec.Common.Widgets.Command Now = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
+				//	designer:cap/JUKK101
+				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
+				//	designer:cap/JUKB101
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
+				//	designer:cap/JUK7101
+				public static readonly global::Epsitec.Common.Widgets.Command WeeksOfYear = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39));
+			}
+			
 			public static class View
 			{
 				internal static void _Initialize()
@@ -202,6 +245,44 @@ namespace Epsitec.Cresus.Assets.App
 					//	designer:cap/JUK0101
 					public const long Prev = 0x7D300014000020L;
 				}
+			}
+			
+			public static class Timeline
+			{
+				//	designer:cap/JUK5101
+				public const long Compacted = 0x7D300014000025L;
+				//	designer:cap/JUKJ101
+				public const long Copy = 0x7D300014000033L;
+				//	designer:cap/JUKF101
+				public const long Date = 0x7D30001400002FL;
+				//	designer:cap/JUK8101
+				public const long DaysOfWeek = 0x7D300014000028L;
+				//	designer:cap/JUKH101
+				public const long Delete = 0x7D300014000031L;
+				//	designer:cap/JUKI101
+				public const long Deselect = 0x7D300014000032L;
+				//	designer:cap/JUK6101
+				public const long Expanded = 0x7D300014000026L;
+				//	designer:cap/JUKA101
+				public const long First = 0x7D30001400002AL;
+				//	designer:cap/JUK9101
+				public const long Graph = 0x7D300014000029L;
+				//	designer:cap/JUK4101
+				public const long Labels = 0x7D300014000024L;
+				//	designer:cap/JUKD101
+				public const long Last = 0x7D30001400002DL;
+				//	designer:cap/JUKG101
+				public const long New = 0x7D300014000030L;
+				//	designer:cap/JUKC101
+				public const long Next = 0x7D30001400002CL;
+				//	designer:cap/JUKE101
+				public const long Now = 0x7D30001400002EL;
+				//	designer:cap/JUKK101
+				public const long Paste = 0x7D300014000034L;
+				//	designer:cap/JUKB101
+				public const long Prev = 0x7D30001400002BL;
+				//	designer:cap/JUK7101
+				public const long WeeksOfYear = 0x7D300014000027L;
 			}
 			
 			public static class View
@@ -10091,6 +10172,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Main.Navigate._Initialize ();
 			Commands.Reports._Initialize ();
 			Commands.Reports.Period._Initialize ();
+			Commands.Timeline._Initialize ();
 			Commands.View._Initialize ();
 			Commands.ViewMode._Initialize ();
 			Strings._Initialize ();

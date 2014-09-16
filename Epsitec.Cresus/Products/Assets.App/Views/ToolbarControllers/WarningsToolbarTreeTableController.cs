@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	public class WarningsToolbarTreeTableController : AbstractToolbarBothTreesController<Warning>, IDirty, System.IDisposable
 	{
-		public WarningsToolbarTreeTableController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
-			: base (accessor, commandDispatcher, commandContext, baseType)
+		public WarningsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
+			: base (accessor, commandContext, baseType)
 		{
 			this.hasFilter         = false;
 			this.hasTreeOperations = false;
