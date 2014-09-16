@@ -751,12 +751,6 @@ function() {
             Epsitec.Texts.getExportImpossibleEmpty()
         );
       }
-      else if (count > Epsitec.Cresus.Core.app.entityBagMaxExport) {
-        Epsitec.ErrorHandler.showError(
-            Epsitec.Texts.getExportImpossibleTitle(),
-            Epsitec.Texts.getExportImpossibleTooManyForBag()
-        );
-      }
       else {
         this.doExportToBag(count);
       }
@@ -769,12 +763,6 @@ function() {
         Epsitec.ErrorHandler.showError(
             Epsitec.Texts.getExportImpossibleTitle(),
             Epsitec.Texts.getExportImpossibleEmpty()
-        );
-      }
-      else if (count > Epsitec.Cresus.Core.app.entityBagMaxExport) {
-        Epsitec.ErrorHandler.showError(
-            Epsitec.Texts.getExportImpossibleTitle(),
-            Epsitec.Texts.getExportImpossibleTooManyForBag()
         );
       }
       else {
