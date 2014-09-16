@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
 
@@ -23,20 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected override void CreateCommands()
 		{
-			this.SetCommandDescription (ToolbarCommand.NewMandat,        "Main.New",              Res.Strings.Toolbar.Main.New.ToString ());
-			this.SetCommandDescription (ToolbarCommand.OpenMandat,       "Main.Open",             Res.Strings.Toolbar.Main.Open.ToString ());
-			this.SetCommandDescription (ToolbarCommand.SaveMandat,       "Main.Save",             Res.Strings.Toolbar.Main.Save.ToString ());
-			this.SetCommandDescription (ToolbarCommand.NavigateBack,     "Navigate.Back",         Res.Strings.Toolbar.Main.Navigate.Back.ToString (),    new Shortcut (KeyCode.ArrowLeft  | KeyCode.ModifierAlt));
-			this.SetCommandDescription (ToolbarCommand.NavigateForward,  "Navigate.Forward",      Res.Strings.Toolbar.Main.Navigate.Forward.ToString (), new Shortcut (KeyCode.ArrowRight | KeyCode.ModifierAlt));
-			this.SetCommandDescription (ToolbarCommand.NavigateMenu,     "Navigate.Menu",         Res.Strings.Toolbar.Main.Navigate.Menu.ToString ());
-			//?this.SetCommandDescription (ToolbarCommand.ViewModeSingle,   "Show.TimelineSingle",   Res.Strings.Toolbar.Main.Show.TimelineSingle.ToString ());
-			//?this.SetCommandDescription (ToolbarCommand.ViewModeEvent,    "Show.TimelineEvent",    Res.Strings.Toolbar.Main.Show.TimelineEvent.ToString ());
-			//?this.SetCommandDescription (ToolbarCommand.ViewModeMultiple, "Show.TimelineMultiple", Res.Strings.Toolbar.Main.Show.TimelineMultiple.ToString ());
-			this.SetCommandDescription (ToolbarCommand.Edit,             "Main.Edit",             Res.Strings.Toolbar.Main.Edit.ToString (), new Shortcut (KeyCode.FuncF11));
-			this.SetCommandDescription (ToolbarCommand.Locked,           "Main.Locked",           Res.Strings.Toolbar.Main.Locked.ToString ());
-			this.SetCommandDescription (ToolbarCommand.Simulation,       "Main.Simulation",       Res.Strings.Toolbar.Main.Simulation.ToString ());
-			this.SetCommandDescription (ToolbarCommand.Cancel,           "Edit.Cancel",           Res.Strings.Toolbar.Main.Cancel.ToString (), new Shortcut (KeyCode.Escape));
-			this.SetCommandDescription (ToolbarCommand.Accept,           "Edit.Accept",           Res.Strings.Toolbar.Main.Accept.ToString (), new Shortcut (KeyCode.FuncF12));
 		}
 
 
@@ -115,12 +100,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 			};
 
-			this.buttonNew             = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NewMandat);
-			this.buttonOpen            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.OpenMandat);
-			this.buttonSave            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.SaveMandat);
-			this.buttonNavigateBack    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateBack);
-			this.buttonNavigateForward = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateForward);
-			this.buttonNavigateMenu    = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.NavigateMenu);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.New);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Forward);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Menu);
 
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Assets);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Amortizations);
@@ -129,7 +112,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Groups);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Persons);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Reports);
-			this.buttonWarnings = this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Warnings);
+			this.buttonWarnings =
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Warnings);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Settings);
 
 			this.CreateSajex (10);
@@ -140,12 +124,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSajex (40);
 
-			this.buttonEdit            = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Edit);
-			this.buttonLocked          = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Locked);
-			this.buttonSimulation      = this.CreateCommandButton (DockStyle.Left, ToolbarCommand.Simulation);
-									  				 							   				     
-			this.buttonCancel          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Cancel);
-			this.buttonAccept          = this.CreateCommandButton (DockStyle.Right, ToolbarCommand.Accept);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Edit);
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Locked);
+			this.buttonSimulation =
+			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Simulation);
+
+			this.CreateCommandButton (DockStyle.Right, Res.Commands.Edit.Cancel);
+			this.CreateCommandButton (DockStyle.Right, Res.Commands.Edit.Accept);
 
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
@@ -157,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		//?[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		//?[Command (Res.CommandIds.View.Settings)]
 		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
 		//?{
 		//?	var target = e.Source as Widget;
@@ -178,45 +163,68 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		//?	}
 		//?}
 
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Assets)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Amortizations)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Entries)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Categories)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Groups)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Persons)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Reports)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Warnings)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.AssetsSettings)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.PersonsSettings)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Accounts)]
+		[Command (Res.CommandIds.View.Assets)]
+		[Command (Res.CommandIds.View.Amortizations)]
+		[Command (Res.CommandIds.View.Entries)]
+		[Command (Res.CommandIds.View.Categories)]
+		[Command (Res.CommandIds.View.Groups)]
+		[Command (Res.CommandIds.View.Persons)]
+		[Command (Res.CommandIds.View.Reports)]
+		[Command (Res.CommandIds.View.Warnings)]
+		[Command (Res.CommandIds.View.AssetsSettings)]
+		[Command (Res.CommandIds.View.PersonsSettings)]
+		[Command (Res.CommandIds.View.Accounts)]
 		void CommandView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewType = ViewType.FromDefaultKind (this.accessor, MainToolbar.GetViewKind (e.Command));
 			this.OnChangeView ();
 		}
 
-		[Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+		[Command (Res.CommandIds.View.Settings)]
 		void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//	Cherche le widget ayant la plus grande surface.
-			var targets = commandDispatcher.FindVisuals (e.Command)
-				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
-				.ToArray ();
-
-			var target = targets.FirstOrDefault () as Widget ?? e.Source as Widget;
-
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowViewPopup (target);
 		}
 
-
-		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Single)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Event)]
-		[Epsitec.Common.Support.Command (Res.CommandIds.ViewMode.Multiple)]
+		[Command (Res.CommandIds.ViewMode.Single)]
+		[Command (Res.CommandIds.ViewMode.Event)]
+		[Command (Res.CommandIds.ViewMode.Multiple)]
 		void CommandViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewMode = MainToolbar.GetViewMode (e.Command);
 			this.OnChangeView ();
 		}
+
+		[Command (Res.CommandIds.Main.New)]
+		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
+		[Command (Res.CommandIds.Main.Navigate.Back)]
+		void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
+		[Command (Res.CommandIds.Main.Navigate.Forward)]
+		void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
+		[Command (Res.CommandIds.Main.Navigate.Menu)]
+		void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
+		[Command (Res.CommandIds.Main.Locked)]
+		void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
+		//?[Command (Res.CommandIds.Main.Edit)]
+		//?void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
+		//?{
+		//?}
 
 
 		private void UpdateViewTypeCommands()
@@ -264,12 +272,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private void UpdateSimulation()
 		{
 			string icon = "Main.Simulation";
-
+			
 			if (this.simulation >= 0)
 			{
 				icon += this.simulation.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
-
+			
 			this.buttonSimulation.IconUri = Misc.GetResourceIconUri (icon);
 		}
 
@@ -288,6 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		#region View
 		public static ViewTypeKind GetViewKind(Command command)
 		{
 			foreach (var kind in MainToolbar.ViewTypeKinds)
@@ -372,8 +381,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				yield return ViewTypeKind.Accounts;
 			}
 		}
+		#endregion
 
 
+		#region ViewMode
 		public static ViewMode GetViewMode(Command command)
 		{
 			foreach (var mode in MainToolbar.ViewTypeModes)
@@ -414,6 +425,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				yield return ViewMode.Multiple;
 			}
 		}
+		#endregion
 
 
 		#region Events handler
@@ -426,22 +438,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		#endregion
 
 
-		private IconButton						buttonNew;
-		private IconButton						buttonOpen;
-		private IconButton						buttonSave;
-
-		private IconButton						buttonNavigateBack;
-		private IconButton						buttonNavigateForward;
-		private IconButton						buttonNavigateMenu;
-
 		private ButtonWithRedDot				buttonWarnings;
-
-		private IconButton						buttonEdit;
-		private IconButton						buttonSimulation;
-		private IconButton						buttonLocked;
-
-		private IconButton						buttonAccept;
-		private IconButton						buttonCancel;
+		private ButtonWithRedDot				buttonSimulation;
 
 		private ViewType						viewType;
 		private ViewMode						viewMode;

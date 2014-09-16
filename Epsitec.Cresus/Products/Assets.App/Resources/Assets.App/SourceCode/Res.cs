@@ -25,6 +25,37 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7));
 			}
 			
+			public static class Main
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Main.Edit, null);
+				}
+				
+				//	designer:cap/JUKM001
+				public static readonly global::Epsitec.Common.Widgets.Command Edit = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/JUKN001
+				public static readonly global::Epsitec.Common.Widgets.Command Locked = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
+				//	designer:cap/JUKI001
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				//	designer:cap/JUKO001
+				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
+				public static class Navigate
+				{
+					internal static void _Initialize()
+					{
+						global::System.Object.Equals (Main.Navigate.Back, null);
+					}
+					
+					//	designer:cap/JUKJ001
+					public static readonly global::Epsitec.Common.Widgets.Command Back = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+					//	designer:cap/JUKK001
+					public static readonly global::Epsitec.Common.Widgets.Command Forward = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20));
+					//	designer:cap/JUKL001
+					public static readonly global::Epsitec.Common.Widgets.Command Menu = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21));
+				}
+			}
+			
 			public static class View
 			{
 				internal static void _Initialize()
@@ -82,6 +113,27 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Accept = 0x7D300014000006L;
 				//	designer:cap/JUK7001
 				public const long Cancel = 0x7D300014000007L;
+			}
+			
+			public static class Main
+			{
+				//	designer:cap/JUKM001
+				public const long Edit = 0x7D300014000016L;
+				//	designer:cap/JUKN001
+				public const long Locked = 0x7D300014000017L;
+				//	designer:cap/JUKI001
+				public const long New = 0x7D300014000012L;
+				//	designer:cap/JUKO001
+				public const long Simulation = 0x7D300014000018L;
+				public static class Navigate
+				{
+					//	designer:cap/JUKJ001
+					public const long Back = 0x7D300014000013L;
+					//	designer:cap/JUKK001
+					public const long Forward = 0x7D300014000014L;
+					//	designer:cap/JUKL001
+					public const long Menu = 0x7D300014000015L;
+				}
 			}
 			
 			public static class View
@@ -9967,6 +10019,8 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Edit._Initialize ();
+			Commands.Main._Initialize ();
+			Commands.Main.Navigate._Initialize ();
 			Commands.View._Initialize ();
 			Commands.ViewMode._Initialize ();
 			Strings._Initialize ();

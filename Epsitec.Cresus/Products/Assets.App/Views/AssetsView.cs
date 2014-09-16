@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.mainToolbar != null)
 			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit,   ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+				this.commandContext.GetCommandState (Res.Commands.Main.Edit  ).Enable = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Enable = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Enable = false;
 			}
 
 			if (this.listController != null)
@@ -480,26 +480,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public override void OnCommand(ToolbarCommand command)
+		protected override void CommandMainEdit(Widget target)
 		{
-			base.OnCommand (command);
-
-			switch (command)
+			if (!this.isEditing && this.selectedGuid.IsEmpty)
 			{
-				case ToolbarCommand.Edit:
-					this.OnStartStopEdit ();
-					break;
-
-				case ToolbarCommand.Accept:
-					this.OnEditAccept ();
-					break;
-
-				case ToolbarCommand.Cancel:
-					this.OnEditCancel ();
-					break;
+				return;
 			}
+
+			this.isEditing = !this.isEditing;
+			this.UpdateUI ();
 		}
 
+		protected override void CommandEditAccept(Widget target)
+		{
+			this.isEditing = false;
+			this.UpdateUI ();
+		}
+
+		protected override void CommandEditCancel(Widget target)
+		{
+			this.accessor.EditionAccessor.CancelObjectEdition ();
+			this.isEditing = false;
+			this.UpdateUI ();
+		}
 
 		private void OnListDoubleClicked()
 		{
@@ -520,17 +523,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnEventDoubleClicked()
 		{
 			this.OnStartEdit ();
-		}
-
-		private void OnStartStopEdit()
-		{
-			if (!this.isEditing && this.selectedGuid.IsEmpty)
-			{
-				return;
-			}
-
-			this.isEditing = !this.isEditing;
-			this.UpdateUI ();
 		}
 
 		private void OnStartEdit()
@@ -601,19 +593,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.isShowEvents = false;
 			}
 
-			this.UpdateUI ();
-		}
-
-		private void OnEditAccept()
-		{
-			this.isEditing = false;
-			this.UpdateUI ();
-		}
-
-		private void OnEditCancel()
-		{
-			this.accessor.EditionAccessor.CancelObjectEdition ();
-			this.isEditing = false;
 			this.UpdateUI ();
 		}
 
@@ -796,19 +775,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbars()
 		{
+			var edit   = this.commandContext.GetCommandState (Res.Commands.Main.Edit);
+			var accept = this.commandContext.GetCommandState (Res.Commands.Edit.Accept);
+			var cancel = this.commandContext.GetCommandState (Res.Commands.Edit.Cancel);
+
 			if (this.isEditing)
 			{
-				this.mainToolbar.SetCommandState (ToolbarCommand.Edit, ToolbarCommandState.Activate);
+				edit.ActiveState = ActiveState.Yes;
+				edit.Enable = true;
 
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Accept, !this.objectEditor.HasError);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Enable);
+				accept.Enable = !this.objectEditor.HasError;
+				cancel.Enable = true;
 			}
 			else
 			{
-				this.mainToolbar.SetCommandEnable (ToolbarCommand.Edit, this.IsEditingPossible);
+				edit.ActiveState = ActiveState.No;
+				edit.Enable = this.IsEditingPossible;
 
-				this.mainToolbar.SetCommandState (ToolbarCommand.Accept, ToolbarCommandState.Hide);
-				this.mainToolbar.SetCommandState (ToolbarCommand.Cancel, ToolbarCommandState.Hide);
+				accept.Enable = false;
+				cancel.Enable = false;
 			}
 
 			//?this.mainToolbar.ViewMode = this.viewMode;

@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.viewType          = viewType;
 
 			this.ignoreChanges = new SafeCounter ();
+
+			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
 		}
 
 		public virtual void Dispose()
@@ -94,6 +96,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnMainLocked ();
 					break;
 			}
+		}
+
+		[Command (Res.CommandIds.Main.Edit)]
+		void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.CommandMainEdit (target);
+		}
+
+		[Command (Res.CommandIds.Edit.Accept)]
+		void CommandEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.CommandEditAccept (target);
+		}
+
+		[Command (Res.CommandIds.Edit.Cancel)]
+		void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.CommandEditCancel (target);
+		}
+
+		protected virtual void CommandMainEdit(Widget target)
+		{
+		}
+
+		protected virtual void CommandEditAccept(Widget target)
+		{
+		}
+
+		protected virtual void CommandEditCancel(Widget target)
+		{
 		}
 
 

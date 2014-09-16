@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
 			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
-			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Epsitec.Common.Support.Command (Res.CommandIds.View.Settings)]
+			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
 			this.CreateCommands ();
 		}
 
@@ -396,6 +396,17 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			var state = this.GetCommandState (command);
 			return Misc.GetActiveState (state == ToolbarCommandState.Activate);
+		}
+
+
+		public static Widget GetTarget(CommandDispatcher commandDispatcher, CommandEventArgs e)
+		{
+			//	Cherche le widget ayant la plus grande surface.
+			var targets = commandDispatcher.FindVisuals (e.Command)
+				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
+				.ToArray ();
+
+			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
 		}
 
 
