@@ -331,8 +331,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.isEditing)
 			{
 				edit.Visibility  = true;
-				edit.ActiveState = ActiveState.Yes;
 				edit.Enable      = true;
+				edit.ActiveState = ActiveState.Yes;
 
 				accept.Visibility = true;
 				cancel.Visibility = true;
@@ -341,9 +341,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				edit.Visibility  = true;
-				edit.ActiveState = ActiveState.No;
+				edit.Visibility  = this.IsEditingPossible;
 				edit.Enable      = this.IsEditingPossible;
+				edit.ActiveState = ActiveState.No;
 
 				accept.Visibility = false;
 				cancel.Visibility = false;

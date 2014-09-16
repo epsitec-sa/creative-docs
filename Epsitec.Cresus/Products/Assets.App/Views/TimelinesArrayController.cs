@@ -1153,7 +1153,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Il faut forcer le calcul du layout pour pouvoir calculer le nombre
 			//	de lignes visibles. Ceci met à jour la hauteur (ActualHeight).
-			this.topTitle.Window.ForceLayout ();
+			if (this.topTitle.Window != null)
+			{
+				this.topTitle.Window.ForceLayout ();
+			}
 
 			int visibleRows = this.VisibleRows;
 			System.Diagnostics.Debug.Assert (visibleRows > 0);

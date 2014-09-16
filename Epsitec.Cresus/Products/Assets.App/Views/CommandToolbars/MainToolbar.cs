@@ -211,21 +211,21 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void UpdateViewModeCommands()
 		{
-			bool enable = (this.viewType.Kind == ViewTypeKind.Assets);
+			bool visibility = (this.viewType.Kind == ViewTypeKind.Assets);
 
 			foreach (var mode in MainToolbar.ViewTypeModes)
 			{
 				var command = MainToolbar.GetViewCommand (mode);
 				var cs = this.commandContext.GetCommandState (command);
 
-				if (enable)
+				if (visibility)
 				{
-					cs.Enable      = true;
+					cs.Visibility  = true;
 					cs.ActiveState = (this.viewMode == mode) ? ActiveState.Yes : ActiveState.No;
 				}
 				else
 				{
-					cs.Enable      = false;
+					cs.Visibility  = false;
 					cs.ActiveState = ActiveState.No;
 				}
 			}
