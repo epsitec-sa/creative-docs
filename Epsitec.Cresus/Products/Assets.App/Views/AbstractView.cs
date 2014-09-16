@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public AbstractView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
 		{
 			this.accessor          = accessor;
-			this.commandDispatcher = commandDispatcher;
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandContext    = commandContext;
 			this.mainToolbar       = toolbar;
 			this.viewType          = viewType;
@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void Dispose()
 		{
+			this.commandDispatcher.Dispose ();
 		}
 
 		public virtual void Close()
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void CreateUI(Widget parent)
 		{
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);
 		}
 
 		public virtual void DataChanged()
