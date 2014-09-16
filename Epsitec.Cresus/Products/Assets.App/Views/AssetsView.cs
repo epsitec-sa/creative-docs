@@ -788,6 +788,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				accept.Enable = !this.objectEditor.HasError;
 				cancel.Enable = true;
+				accept.Visibility = true;
+				cancel.Visibility = true;
 			}
 			else
 			{
@@ -796,6 +798,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				accept.Enable = false;
 				cancel.Enable = false;
+				accept.Visibility = false;
+				cancel.Visibility = false;
 			}
 
 			//?this.mainToolbar.ViewMode = this.viewMode;

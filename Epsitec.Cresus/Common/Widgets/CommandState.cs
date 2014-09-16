@@ -1,4 +1,4 @@
-//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -59,6 +59,27 @@ namespace Epsitec.Common.Widgets
 				if (this.disable == value)
 				{
 					this.disable = !value;
+					this.Synchronize ();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the visuals associated with this
+		/// command are visible or not.
+		/// </summary>
+		/// <value><c>true</c> if the command is visible; otherwise, <c>false</c>.</value>
+		public bool								Visibility
+		{
+			get
+			{
+				return !this.hidden;
+			}
+			set
+			{
+				if (this.hidden == value)
+				{
+					this.hidden = !value;
 					this.Synchronize ();
 				}
 			}
@@ -183,5 +204,6 @@ namespace Epsitec.Common.Widgets
 
 		private ActiveState						activeState;
 		private bool							disable;
+		private bool							hidden;
 	}
 }

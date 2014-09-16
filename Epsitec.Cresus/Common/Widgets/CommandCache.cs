@@ -546,13 +546,15 @@ namespace Epsitec.Common.Widgets
 						
 						this.records[index].CommandState = state;
 
-						bool        enable = state.Enable && chain.GetLocalEnable (command);
-						ActiveState active = state.ActiveState;
-						string    advanced = state.AdvancedState;
+						bool        enable     = state.Enable && chain.GetLocalEnable (command);
+						bool        visibility = state.Visibility;
+						ActiveState active     = state.ActiveState;
+						string      advanced   = state.AdvancedState;
 
 						//	Synchronize the visual with its command state :
 						
 						visual.Enable      = enable;
+						visual.Visibility  = visibility;
 						visual.ActiveState = active;
 
 						if (Command.GetHideWhenDisabled (visual))
