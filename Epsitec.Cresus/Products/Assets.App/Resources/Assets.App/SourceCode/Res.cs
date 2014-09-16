@@ -56,6 +56,45 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class Reports
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Reports.AddFavorite, null);
+				}
+				
+				//	designer:cap/JUKQ001
+				public static readonly global::Epsitec.Common.Widgets.Command AddFavorite = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 26));
+				//	designer:cap/JUK3101
+				public static readonly global::Epsitec.Common.Widgets.Command Close = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 35));
+				//	designer:cap/JUKS001
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
+				//	designer:cap/JUKT001
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
+				//	designer:cap/JUKV001
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 31));
+				//	designer:cap/JUKU001
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 30));
+				//	designer:cap/JUK2101
+				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 34));
+				//	designer:cap/JUKP001
+				public static readonly global::Epsitec.Common.Widgets.Command Params = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 25));
+				//	designer:cap/JUKR001
+				public static readonly global::Epsitec.Common.Widgets.Command RemoveFavorite = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 27));
+				public static class Period
+				{
+					internal static void _Initialize()
+					{
+						global::System.Object.Equals (Reports.Period.Next, null);
+					}
+					
+					//	designer:cap/JUK1101
+					public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 33));
+					//	designer:cap/JUK0101
+					public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 32));
+				}
+			}
+			
 			public static class View
 			{
 				internal static void _Initialize()
@@ -133,6 +172,35 @@ namespace Epsitec.Cresus.Assets.App
 					public const long Forward = 0x7D300014000014L;
 					//	designer:cap/JUKL001
 					public const long Menu = 0x7D300014000015L;
+				}
+			}
+			
+			public static class Reports
+			{
+				//	designer:cap/JUKQ001
+				public const long AddFavorite = 0x7D30001400001AL;
+				//	designer:cap/JUK3101
+				public const long Close = 0x7D300014000023L;
+				//	designer:cap/JUKS001
+				public const long CompactAll = 0x7D30001400001CL;
+				//	designer:cap/JUKT001
+				public const long CompactOne = 0x7D30001400001DL;
+				//	designer:cap/JUKV001
+				public const long ExpandAll = 0x7D30001400001FL;
+				//	designer:cap/JUKU001
+				public const long ExpandOne = 0x7D30001400001EL;
+				//	designer:cap/JUK2101
+				public const long Export = 0x7D300014000022L;
+				//	designer:cap/JUKP001
+				public const long Params = 0x7D300014000019L;
+				//	designer:cap/JUKR001
+				public const long RemoveFavorite = 0x7D30001400001BL;
+				public static class Period
+				{
+					//	designer:cap/JUK1101
+					public const long Next = 0x7D300014000021L;
+					//	designer:cap/JUK0101
+					public const long Prev = 0x7D300014000020L;
 				}
 			}
 			
@@ -10021,6 +10089,8 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Edit._Initialize ();
 			Commands.Main._Initialize ();
 			Commands.Main.Navigate._Initialize ();
+			Commands.Reports._Initialize ();
+			Commands.Reports.Period._Initialize ();
 			Commands.View._Initialize ();
 			Commands.ViewMode._Initialize ();
 			Strings._Initialize ();
