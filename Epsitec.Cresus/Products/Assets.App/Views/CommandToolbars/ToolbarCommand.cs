@@ -33,8 +33,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		DaysOfWeek,
 		Graph,
 		Labels,
-		Simulation,
-		Locked,
 		Graphic,
 		Filter,
 		DateRange,

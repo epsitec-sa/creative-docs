@@ -143,10 +143,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		public override FrameBox CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
 			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
 			//	boutons non indispensables disparaissent s'il manque de la place.
+			base.CreateUI (parent);
+
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -204,8 +206,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 
 			this.AttachShortcuts ();
-
-			return this.toolbar;
 		}
 
 

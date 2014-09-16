@@ -44,6 +44,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			base.CreateUI (parent);
+
 			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.DataChanged ();

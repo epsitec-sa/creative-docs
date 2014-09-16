@@ -86,8 +86,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		public override FrameBox CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
+			base.CreateUI (parent);
+
 			this.viewType = ViewType.Assets;
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
@@ -137,8 +139,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateSimulation ();
 
 			this.AttachShortcuts ();
-
-			return this.toolbar;
 		}
 
 
@@ -195,36 +195,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.ViewMode = MainToolbar.GetViewMode (e.Command);
 			this.OnChangeView ();
 		}
-
-		[Command (Res.CommandIds.Main.New)]
-		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-
-		[Command (Res.CommandIds.Main.Navigate.Back)]
-		private void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-
-		[Command (Res.CommandIds.Main.Navigate.Forward)]
-		private void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-
-		[Command (Res.CommandIds.Main.Navigate.Menu)]
-		private void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-
-		[Command (Res.CommandIds.Main.Locked)]
-		private void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-		}
-
-		//?[Command (Res.CommandIds.Main.Edit)]
-		//?void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
-		//?{
-		//?}
 
 
 		private void UpdateViewTypeCommands()

@@ -93,7 +93,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected abstract void CreateCommands();
 
-		public abstract FrameBox CreateUI(Widget parent);
+		public virtual void CreateUI(Widget parent)
+		{
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // utile si écoute avec [Command (Res.CommandIds...)]
+		}
 
 
 		public void SetCommandDescription(ToolbarCommand command, string icon, string tooltip, Shortcut shortcut = null)

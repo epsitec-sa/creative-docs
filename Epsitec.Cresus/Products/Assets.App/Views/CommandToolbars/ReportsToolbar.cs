@@ -33,8 +33,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		public override FrameBox CreateUI(Widget parent)
+		public override void CreateUI(Widget parent)
 		{
+			base.CreateUI (parent);
+
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -61,8 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateCommandButton (DockStyle.Right, ToolbarCommand.ReportClose);
 
 			this.AttachShortcuts ();
-
-			return this.toolbar;
 		}
 	}
 }

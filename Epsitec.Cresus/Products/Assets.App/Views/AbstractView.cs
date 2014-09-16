@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public virtual void CreateUI(Widget parent)
 		{
-			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // utile si écoute avec [Command (Res.CommandIds...)]
 		}
 
 		public virtual void DataChanged()
@@ -93,19 +93,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		public virtual void OnCommand(ToolbarCommand command)
-		{
-			switch (command)
-			{
-				case ToolbarCommand.Simulation:
-					this.OnMainSimulation ();
-					break;
-
-				case ToolbarCommand.Locked:
-					this.OnMainLocked ();
-					break;
-			}
-		}
 
 		[Command (Res.CommandIds.Main.Edit)]
 		private void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -140,11 +127,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 		}
 
-
-		private void OnMainSimulation()
+		[Command (Res.CommandIds.Main.Locked)]
+		private void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.mainToolbar.GetTarget (ToolbarCommand.Simulation);
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowLockedPopup (target);
+		}
 
+		[Command (Res.CommandIds.Main.Simulation)]
+		private void CommandMainSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowSimulationPopup (target);
+		}
+
+
+		private void ShowSimulationPopup(Widget target)
+		{
 #if false
 			var popup = new SimulationPopup
 			{
@@ -181,10 +180,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 #endif
 		}
 
-		private void OnMainLocked()
+		private void ShowLockedPopup(Widget target)
 		{
-			var target = this.mainToolbar.GetTarget (ToolbarCommand.Locked);
-
 			var popup = new LockedPopup (this.accessor)
 			{
 				IsDelete            = false,
