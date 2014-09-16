@@ -95,7 +95,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public virtual void CreateUI(Widget parent)
 		{
-			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
+			this.toolbar = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
+				BackColor       = ColorManager.ToolbarBackgroundColor,
+			};
+
+			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 

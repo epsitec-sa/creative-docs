@@ -37,16 +37,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.toolbar = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
-				BackColor       = ColorManager.ToolbarBackgroundColor,
-			};
-
-			//?CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
-			//?
 			//?this.CreateCommandButton (DockStyle.Left, ToolbarCommand.ReportParams);
 			//?this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportAddFavorite);
 			//?this.CreateCommandButton (DockStyle.Left,  ToolbarCommand.ReportRemoveFavorite);

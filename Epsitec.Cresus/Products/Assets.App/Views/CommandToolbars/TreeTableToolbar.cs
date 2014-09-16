@@ -149,16 +149,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			//	boutons non indispensables disparaissent s'il manque de la place.
 			base.CreateUI (parent);
 
-			this.toolbar = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
-				BackColor       = ColorManager.ToolbarBackgroundColor,
-			};
-
-			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);
-
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Filter);
 			this.buttonDateRange  = this.CreateCommandButton (DockStyle.None, ToolbarCommand.DateRange);
 			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, ToolbarCommand.Graphic);

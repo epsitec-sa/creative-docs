@@ -90,17 +90,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
+			this.toolbar.PreferredHeight = AbstractCommandToolbar.primaryToolbarHeight;
+
 			this.viewType = ViewType.Assets;
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
-
-			this.toolbar = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractCommandToolbar.primaryToolbarHeight,
-				BackColor       = ColorManager.ToolbarBackgroundColor,
-			};
 
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.New);
 			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
