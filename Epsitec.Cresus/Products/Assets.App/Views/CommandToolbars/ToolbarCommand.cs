@@ -42,14 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		Import,
 		Goto,
 
-		ReportParams,
-		ReportExport,
-		ReportPrevPeriod,
-		ReportNextPeriod,
-		ReportAddFavorite,
-		ReportRemoveFavorite,
-		ReportClose,
-
 		AmortizationsPreview,
 		AmortizationsFix,
 		AmortizationsToExtra,

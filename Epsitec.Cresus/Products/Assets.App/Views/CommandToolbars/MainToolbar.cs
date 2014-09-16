@@ -137,8 +137,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
-
-			this.AttachShortcuts ();
 		}
 
 
