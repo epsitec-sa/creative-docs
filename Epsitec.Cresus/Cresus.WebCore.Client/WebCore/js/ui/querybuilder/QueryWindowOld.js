@@ -14,6 +14,9 @@ Ext.require([
       /* Properties */
       exportUrl: null,
       columnDefinitions: null,
+      finalQuery: null,
+      composer: null,
+      builder: null,
       queryStore: null,
       queryNameField: null,
       dataSetQueries: {},
@@ -30,6 +33,8 @@ Ext.require([
 
 
         this.queryStore = this.createQueryStore();
+        this.builder = Ext.create('Epsitec.QueryBuilderPanel', options.columnDefinitions);
+        this.composer = Ext.create('Epsitec.QueryComposerPanel', this.builder);
 
         newOptions = {
           title: 'Editeur de requêtes',
@@ -44,14 +49,16 @@ Ext.require([
           },
           closable: true,
           closeAction: 'hide',
-          items: [{
-            xtype : "component",
-            autoEl : {
-                tag : "iframe",
-                frameborder: 0,
-                src : "proxy/page/query.html"
-            }
+          dockedItems: [{
+            xtype: 'toolbar',
+            dock: 'top',
+            items: this.createQueryLoadingTools()
+          }, {
+            xtype: 'toolbar',
+            dock: 'left',
+            items: this.createQuerySavingTools()
           }],
+          items: [this.builder],
           buttons: [
             this.createFilterButton(),
             this.createCancelButton()
@@ -101,7 +108,7 @@ Ext.require([
         this.currentQuery.name = query.name;
         this.queryNameField.setValue(this.currentQuery.name);
 
-        //this.builder.loadElements(query.query);
+        this.builder.loadElements(query.query);
       },
 
       saveQuery: function() {
@@ -148,7 +155,7 @@ Ext.require([
         localStorage.setItem(key, JSON.stringify(this.dataSetQueries));
         //reload available configuration
         this.loadQueryStore();
-        //this.builder.resetElements();
+        this.builder.resetElements();
       },
 
       createQueryLoadingTools: function() {

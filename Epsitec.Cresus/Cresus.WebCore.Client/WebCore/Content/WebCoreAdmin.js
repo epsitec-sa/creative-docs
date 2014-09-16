@@ -2,10 +2,5 @@
     [
         "webCore.Services",
         "webCore.Downloads",
-        "webCore.Jobs"
+        "webCore.Jobs",
     ]);
-
-
-
-
-
