@@ -15,23 +15,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public abstract class AbstractCommandToolbar : System.IDisposable
 	{
-		public AbstractCommandToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
+		public AbstractCommandToolbar(DataAccessor accessor, CommandContext commandContext)
 		{
-			this.accessor          = accessor;
-			this.commandDispatcher = commandDispatcher;
-			this.commandContext    = commandContext;
+			this.accessor       = accessor;
+			this.commandContext = commandContext;
 
 			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
 			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
 			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
+
 			this.CreateCommands ();
 		}
 
 		public void Dispose()
 		{
+			this.commandDispatcher.Dispose ();
 		}
 
 		public void Close()

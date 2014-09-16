@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 	
 		public void CreateUI(Widget parent)
 		{
-			this.toolbar = new TimelineToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.toolbar = new TimelineToolbar (this.accessor, this.commandContext);
 			this.toolbar.CreateUI (parent);
 
 			this.CreateTimeline (parent);

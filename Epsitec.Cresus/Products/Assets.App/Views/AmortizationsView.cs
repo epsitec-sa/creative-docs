@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AmortizationsView : AbstractView, System.IDisposable
 	{
-		public AmortizationsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public AmortizationsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Assets;
 

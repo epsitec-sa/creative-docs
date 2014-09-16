@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			MouseCursorManager.SetWindow (parent.Window);
 
-			this.toolbar = new MainToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.toolbar = new MainToolbar (this.accessor, this.commandContext);
 			this.toolbar.CreateUI (parent);
 
 			this.viewBox = new FrameBox
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.DeleteView ();
 			}
 
-			this.view = AbstractView.CreateView (viewType, this.accessor, this.commandDispatcher, this.commandContext, this.toolbar, this.historyViewStates);
+			this.view = AbstractView.CreateView (viewType, this.accessor, this.commandContext, this.toolbar, this.historyViewStates);
 
 			if (this.view != null)
 			{

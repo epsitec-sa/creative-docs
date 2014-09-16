@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class AssetsView : AbstractView, System.IDisposable
 	{
-		public AssetsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public AssetsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Assets;
 
@@ -40,9 +40,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.mainToolbar != null)
 			{
-				this.commandContext.GetCommandState (Res.Commands.Main.Edit  ).Enable = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Enable = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Enable = false;
+				this.commandContext.GetCommandState (Res.Commands.Main.Edit).Enable = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Visibility = false;
+				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Visibility = false;
 			}
 
 			if (this.listController != null)
@@ -784,25 +784,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.isEditing)
 			{
 				edit.ActiveState = ActiveState.Yes;
-				edit.Enable = true;
+				edit.Enable      = true;
 
-				accept.Enable = !this.objectEditor.HasError;
-				cancel.Enable = true;
 				accept.Visibility = true;
 				cancel.Visibility = true;
+				accept.Enable     = !this.objectEditor.HasError;
+				cancel.Enable     = true;
 			}
 			else
 			{
 				edit.ActiveState = ActiveState.No;
-				edit.Enable = this.IsEditingPossible;
+				edit.Enable      = this.IsEditingPossible;
 
-				accept.Enable = false;
-				cancel.Enable = false;
 				accept.Visibility = false;
 				cancel.Visibility = false;
+				accept.Enable     = false;
+				cancel.Enable     = false;
 			}
-
-			//?this.mainToolbar.ViewMode = this.viewMode;
 		}
 
 		private bool IsEditingPossible

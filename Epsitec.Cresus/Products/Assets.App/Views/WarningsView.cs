@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class WarningsView : AbstractView, System.IDisposable
 	{
-		public WarningsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public WarningsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Persons;
 

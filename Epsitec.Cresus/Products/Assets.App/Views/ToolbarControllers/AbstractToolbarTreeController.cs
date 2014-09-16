@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TreeTableToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.toolbar = new TreeTableToolbar (this.accessor, this.commandContext);
 			this.AdaptToolbarCommand();
 
 			this.toolbar.CreateUI (parent);

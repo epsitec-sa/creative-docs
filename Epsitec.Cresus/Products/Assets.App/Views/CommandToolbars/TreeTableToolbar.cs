@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public class TreeTableToolbar : AbstractCommandToolbar
 	{
-		public TreeTableToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
-			: base (accessor, commandDispatcher, commandContext)
+		public TreeTableToolbar(DataAccessor accessor, CommandContext commandContext)
+			: base (accessor, commandContext)
 		{
 		}
 

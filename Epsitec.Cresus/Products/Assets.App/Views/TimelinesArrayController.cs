@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.objectsToolbar = new TreeTableToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.objectsToolbar = new TreeTableToolbar (this.accessor, this.commandContext);
 
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
 			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    Res.Strings.TimelinesArrayController.Delete.ToString ());
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStateAt (leftBox);
 
 			//	Partie droite.
-			this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandContext);
 			this.timelinesToolbar.CreateUI (rightBox);
 			this.timelinesToolbar.TimelinesMode = this.timelinesMode;
 

@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class CategoriesView : AbstractView, System.IDisposable
 	{
-		public CategoriesView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public CategoriesView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Categories;
 

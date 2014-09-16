@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	public class TimelineToolbar : AbstractCommandToolbar
 	{
-		public TimelineToolbar(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
-			: base (accessor, commandDispatcher, commandContext)
+		public TimelineToolbar(DataAccessor accessor, CommandContext commandContext)
+			: base (accessor, commandContext)
 		{
 		}
 

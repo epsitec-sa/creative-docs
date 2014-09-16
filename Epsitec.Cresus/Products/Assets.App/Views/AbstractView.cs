@@ -19,16 +19,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public abstract class AbstractView : System.IDisposable
 	{
-		public AbstractView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+		public AbstractView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
 		{
-			this.accessor          = accessor;
-			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
-			this.commandContext    = commandContext;
-			this.mainToolbar       = toolbar;
-			this.viewType          = viewType;
+			this.accessor       = accessor;
+			this.commandContext = commandContext;
+			this.mainToolbar    = toolbar;
+			this.viewType       = viewType;
 
 			this.ignoreChanges = new SafeCounter ();
 
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
 		}
 
@@ -228,45 +228,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor,
-			CommandDispatcher commandDispatcher, CommandContext commandContext,
+		public static AbstractView CreateView(ViewType viewType, DataAccessor accessor, CommandContext commandContext,
 			MainToolbar toolbar, List<AbstractViewState> historyViewStates)
 		{
 			switch (viewType.Kind)
 			{
 				case ViewTypeKind.Assets:
-					return new AssetsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new AssetsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Amortizations:
-					return new AmortizationsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new AmortizationsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Categories:
-					return new CategoriesView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new CategoriesView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Groups:
-					return new GroupsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new GroupsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Persons:
-					return new PersonsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new PersonsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Reports:
-					return new ReportsView (accessor, commandDispatcher, commandContext, toolbar, viewType, historyViewStates);
+					return new ReportsView (accessor, commandContext, toolbar, viewType, historyViewStates);
 
 				case ViewTypeKind.Warnings:
-					return new WarningsView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new WarningsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.AssetsSettings:
-					return new UserFieldsSettingsView (accessor, commandDispatcher, commandContext, toolbar, viewType, BaseType.Assets);
+					return new UserFieldsSettingsView (accessor, commandContext, toolbar, viewType, BaseType.Assets);
 
 				case ViewTypeKind.PersonsSettings:
-					return new UserFieldsSettingsView (accessor, commandDispatcher, commandContext, toolbar, viewType, BaseType.Persons);
+					return new UserFieldsSettingsView (accessor, commandContext, toolbar, viewType, BaseType.Persons);
 
 				case ViewTypeKind.Entries:
-					return new EntriesView (accessor, commandDispatcher, commandContext, toolbar, viewType);
+					return new EntriesView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.Accounts:
 					var baseType = new BaseType (BaseTypeKind.Accounts, viewType.AccountsDateRange);
-					return new AccountsView (accessor, commandDispatcher, commandContext, toolbar, viewType, baseType);
+					return new AccountsView (accessor, commandContext, toolbar, viewType, baseType);
 
 				default:
 					return null;

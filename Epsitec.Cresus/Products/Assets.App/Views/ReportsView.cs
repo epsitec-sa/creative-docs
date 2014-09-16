@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class ReportsView : AbstractView, System.IDisposable
 	{
-		public ReportsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, List<AbstractViewState> historyViewStates)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public ReportsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, List<AbstractViewState> historyViewStates)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.historyViewStates = historyViewStates;
 		}
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateToolbar(Widget parent)
 		{
-			this.toolbar = new ReportsToolbar (this.accessor, this.commandDispatcher, this.commandContext);
+			this.toolbar = new ReportsToolbar (this.accessor, this.commandContext);
 			this.toolbar.CreateUI (parent);
 
 			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)

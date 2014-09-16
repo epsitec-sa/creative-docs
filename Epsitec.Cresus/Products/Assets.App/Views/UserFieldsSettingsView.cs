@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class UserFieldsSettingsView : AbstractView, System.IDisposable
 	{
-		public UserFieldsSettingsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, BaseType baseType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public UserFieldsSettingsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, BaseType baseType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = baseType;
 

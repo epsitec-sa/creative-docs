@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class PersonsView : AbstractView, System.IDisposable
 	{
-		public PersonsView(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
-			: base (accessor, commandDispatcher, commandContext, toolbar, viewType)
+		public PersonsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType)
+			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = BaseType.Persons;
 
