@@ -108,21 +108,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Main.Edit)]
-		void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.CommandMainEdit (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Accept)]
-		void CommandEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.CommandEditAccept (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Cancel)]
-		void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.CommandEditCancel (target);

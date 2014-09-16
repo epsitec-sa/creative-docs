@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.historyPosition   = -1;
 
 			this.ignoreChanges = new SafeCounter ();
+
+			this.commandDispatcher.RegisterController (this);  // utile si écoute avec [Command (Res.CommandIds...)]
 		}
 
 		public void CreateUI(Widget parent)
@@ -45,43 +47,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
-			};
-
-			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.NewMandat:
-						this.OnNew ();
-						break;
-
-					case ToolbarCommand.OpenMandat:
-						this.OnOpen ();
-						break;
-
-					case ToolbarCommand.SaveMandat:
-						this.OnSave ();
-						break;
-
-					case ToolbarCommand.NavigateBack:
-						this.OnNavigateBack ();
-						break;
-
-					case ToolbarCommand.NavigateMenu:
-						this.OnNavigateMenu ();
-						break;
-
-					case ToolbarCommand.NavigateForward:
-						this.OnNavigateForward ();
-						break;
-
-					default:
-						if (this.view != null)
-						{
-							this.view.OnCommand (command);
-						}
-						break;
-				}
 			};
 
 			this.toolbar.ChangeView += delegate
@@ -166,39 +131,35 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void OnNew()
+		[Command (Res.CommandIds.Main.New)]
+		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ShowCreateMandatPopup ();
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowCreateMandatPopup (target);
 		}
 
-		private void OnOpen()
-		{
-		}
-
-		private void OnSave()
-		{
-		}
-
-		private void OnNavigateBack()
+		[Command (Res.CommandIds.Main.Navigate.Back)]
+		private void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.GoHistoryBack ();
 		}
 
-		private void OnNavigateForward()
+		[Command (Res.CommandIds.Main.Navigate.Forward)]
+		private void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.GoHistoryForward ();
 		}
 
-		private void OnNavigateMenu()
+		[Command (Res.CommandIds.Main.Navigate.Menu)]
+		private void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ShowLastViewsPopup ();
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowLastViewsPopup (target);
 		}
 
 
-		private void ShowCreateMandatPopup()
+		private void ShowCreateMandatPopup(Widget target)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.NewMandat);
-
 			var popup = new NewMandatPopup (this.accessor)
 			{
 				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
@@ -236,16 +197,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbar()
 		{
-			this.toolbar.SetCommandState (ToolbarCommand.NewMandat,        ToolbarCommandState.Enable);
-			this.toolbar.SetCommandState (ToolbarCommand.OpenMandat,       ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.SaveMandat,       ToolbarCommandState.Hide);
-
-			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateBack,    this.NavigateBackEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateMenu,    this.NavigateMenuEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.NavigateForward, this.NavigateForwardEnable);
-
-			this.toolbar.SetCommandState (ToolbarCommand.Simulation,       ToolbarCommandState.Enable);
-			this.toolbar.SetCommandState (ToolbarCommand.Locked,           ToolbarCommandState.Enable);
+			this.commandContext.GetCommandState (Res.Commands.Main.New             ).Enable = true;
+			this.commandContext.GetCommandState (Res.Commands.Main.Navigate.Back   ).Enable = this.NavigateBackEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.Navigate.Forward).Enable = this.NavigateForwardEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.Navigate.Menu   ).Enable = this.NavigateMenuEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.Locked          ).Enable = true;
+			this.commandContext.GetCommandState (Res.Commands.Main.Simulation      ).Enable = true;
 		}
 
 
@@ -392,14 +349,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void ShowLastViewsPopup()
+		private void ShowLastViewsPopup(Widget target)
 		{
 			var navigationGuid = this.lastViewStates
 				.Where (x => x.ApproximatelyEquals (this.view.ViewState))
 				.Select (x => x.Guid)
 				.FirstOrDefault ();
 
-			var target = this.toolbar.GetTarget (ToolbarCommand.NavigateMenu);
 			var popup = new LastViewsPopup (this.accessor, this.lastViewStates, navigationGuid);
 
 			popup.Create (target);

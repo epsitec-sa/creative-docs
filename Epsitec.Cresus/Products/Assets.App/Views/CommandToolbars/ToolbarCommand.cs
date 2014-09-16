@@ -10,10 +10,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 	{
 		Unknown,
 
-		NewMandat,
-		OpenMandat,
-		SaveMandat,
-
 		New,
 		Delete,
 		Deselect,
@@ -55,10 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		ReportAddFavorite,
 		ReportRemoveFavorite,
 		ReportClose,
-
-		NavigateBack,
-		NavigateForward,
-		NavigateMenu,
 
 		AmortizationsPreview,
 		AmortizationsFix,

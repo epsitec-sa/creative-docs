@@ -174,14 +174,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.View.AssetsSettings)]
 		[Command (Res.CommandIds.View.PersonsSettings)]
 		[Command (Res.CommandIds.View.Accounts)]
-		void CommandView(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewType = ViewType.FromDefaultKind (this.accessor, MainToolbar.GetViewKind (e.Command));
 			this.OnChangeView ();
 		}
 
 		[Command (Res.CommandIds.View.Settings)]
-		void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowViewPopup (target);
@@ -190,34 +190,34 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.ViewMode.Single)]
 		[Command (Res.CommandIds.ViewMode.Event)]
 		[Command (Res.CommandIds.ViewMode.Multiple)]
-		void CommandViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewMode = MainToolbar.GetViewMode (e.Command);
 			this.OnChangeView ();
 		}
 
 		[Command (Res.CommandIds.Main.New)]
-		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Back)]
-		void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Forward)]
-		void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Menu)]
-		void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 
 		[Command (Res.CommandIds.Main.Locked)]
-		void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 		}
 
