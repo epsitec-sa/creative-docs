@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
 			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
 
-			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.AutoForwardCommands);
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 
 			this.CreateCommands ();
