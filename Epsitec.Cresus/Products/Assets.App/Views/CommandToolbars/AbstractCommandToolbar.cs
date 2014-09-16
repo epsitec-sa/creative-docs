@@ -107,6 +107,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		public void SetActiveState(Command command, bool active)
+		{
+			this.commandContext.GetCommandState (command).ActiveState = active ? ActiveState.Yes : ActiveState.No;
+		}
+
+
 		public void SetCommandDescription(ToolbarCommand command, string icon, string tooltip, Shortcut shortcut = null)
 		{
 			//	Modifie la description d'une commande. On peut modifier ainsi une
@@ -158,6 +164,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+
+		public void SetCommandEnable(Command command, bool enable)
+		{
+			this.commandContext.GetCommandState (command).Enable = enable;
+		}
 
 		public void SetCommandEnable(ToolbarCommand command, bool enable)
 		{

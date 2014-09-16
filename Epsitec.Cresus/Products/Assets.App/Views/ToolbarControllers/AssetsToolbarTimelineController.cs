@@ -18,15 +18,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
 	public class AssetsToolbarTimelineController : IDirty, System.IDisposable
 	{
-		public AssetsToolbarTimelineController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext, BaseType baseType)
+		public AssetsToolbarTimelineController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 		{
-			this.accessor          = accessor;
-			this.commandDispatcher = commandDispatcher;
-			this.commandContext    = commandContext;
-			this.baseType          = baseType;
+			this.accessor       = accessor;
+			this.commandContext = commandContext;
+			this.baseType       = baseType;
 
 			this.timelineData = new TimelineData (this.accessor, this.baseType);
 			this.timelineMode = TimelineMode.Compacted;
+
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public void Dispose()
@@ -65,64 +67,240 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.CreateUI (parent);
 
 			this.CreateTimeline (parent);
-			this.toolbar.TimelineMode = this.timelineMode;
+			//?this.toolbar.TimelineMode = this.timelineMode;
 
 			//	Connexion des événements.
-			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			//?this.toolbar.ModeChanged += delegate
+			//?{
+			//?	this.TimelineMode = this.toolbar.TimelineMode;
+			//?};
+		}
+
+		[Command (Res.CommandIds.Timeline.Labels)]
+		private void CommandLabels(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.Labels);
+		}
+
+		[Command (Res.CommandIds.Timeline.Compacted)]
+		private void CommandCompacted(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.Compacted);
+		}
+
+		[Command (Res.CommandIds.Timeline.Expanded)]
+		private void CommandExtended(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.Expanded);
+		}
+
+		[Command (Res.CommandIds.Timeline.WeeksOfYear)]
+		private void CommandWeeksOfYear(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.WeeksOfYear);
+		}
+
+		[Command (Res.CommandIds.Timeline.DaysOfWeek)]
+		private void CommandDaysOfWeek(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.DaysOfWeek);
+		}
+
+		[Command (Res.CommandIds.Timeline.Graph)]
+		private void CommandGraph(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ChangeMode (TimelineMode.Graph);
+		}
+
+		[Command (Res.CommandIds.Timeline.First)]
+		private void CommandFirst(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var index = this.FirstEventIndex;
+
+			if (index.HasValue)
 			{
-				switch (command)
+				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Prev)]
+		private void CommandPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var index = this.PrevEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Next)]
+		private void CommandNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var index = this.NextEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Last)]
+		private void CommandLast(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var index = this.LastEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Now)]
+		private void CommandNow(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var index = this.NowEventIndex;
+
+			if (index.HasValue)
+			{
+				this.SelectedCell = index.Value;
+				this.controller.SetFocus ();
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Date)]
+		private void CommandDate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var popup = new DatePopup (this.accessor)
+			{
+				Date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date,
+			};
+
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			popup.Create (target, leftOrRight: false);
+
+			popup.DateChanged += delegate
+			{
+				if (popup.Date.HasValue)
 				{
-					case ToolbarCommand.First:
-						this.OnFirst ();
-						break;
-
-					case ToolbarCommand.Last:
-						this.OnLast ();
-						break;
-
-					case ToolbarCommand.Prev:
-						this.OnPrev ();
-						break;
-
-					case ToolbarCommand.Next:
-						this.OnNext ();
-						break;
-
-					case ToolbarCommand.Now:
-						this.OnNow ();
-						break;
-
-					case ToolbarCommand.Date:
-						this.OnDate ();
-						break;
-
-					case ToolbarCommand.New:
-						this.OnNew ();
-						break;
-
-					case ToolbarCommand.Delete:
-						this.OnDelete ();
-						break;
-
-					case ToolbarCommand.Deselect:
-						this.OnDeselect ();
-						break;
-
-					case ToolbarCommand.Copy:
-						this.OnCopy ();
-						break;
-
-					case ToolbarCommand.Paste:
-						this.OnPaste ();
-						break;
+					this.UpdateData (popup.Date);
+					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
 				}
 			};
-
-			this.toolbar.ModeChanged += delegate
-			{
-				this.TimelineMode = this.toolbar.TimelineMode;
-			};
 		}
+
+		[Command (Res.CommandIds.Timeline.New)]
+		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var timestamp = this.SelectedTimestamp;
+
+			if (target != null && timestamp.HasValue)
+			{
+				CreateEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
+				timestampChanged: delegate (Timestamp? t)
+				{
+					this.SelectedTimestamp = t;
+				},
+				action: delegate (System.DateTime date, string name)
+				{
+					this.CreateEvent (date, name);
+				});
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Delete)]
+		private void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
+			{
+				MessagePopup.ShowAssetsDeleteEventWarning (target);
+			}
+			else
+			{
+				YesNoPopup.ShowAssetsDeleteEventQuestion (target, delegate
+				{
+					this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
+					this.UpdateData ();
+					this.OnDeepUpdate ();
+				});
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Deselect)]
+		private void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectedTimestamp = null;
+		}
+
+		[Command (Res.CommandIds.Timeline.Copy)]
+		private void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			if (this.obj != null && this.selectedTimestamp.HasValue)
+			{
+				var ev = this.obj.GetEvent (this.selectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, ev);
+
+				this.UpdateToolbar ();
+			}
+			else
+			{
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Copy.EmptySelection.ToString ());
+			}
+		}
+
+		[Command (Res.CommandIds.Timeline.Paste)]
+		private void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			if (this.obj != null && this.accessor.Clipboard.HasEvent)
+			{
+				EventPastePopup.Show (target, this.accessor, this.obj,
+				this.accessor.Clipboard.EventType,
+				this.accessor.Clipboard.EventTimestamp.Value.Date,
+				dateChanged: delegate (System.DateTime? date)
+				{
+					if (date.HasValue)
+					{
+						this.SelectedTimestamp = new Timestamp (date.Value, 0);
+					}
+					else
+					{
+						this.SelectedTimestamp = null;
+					}
+				},
+				action: delegate (System.DateTime date)
+				{
+					var ev = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
+
+					if (ev == null)
+					{
+						MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Wrong.ToString ());
+					}
+					else
+					{
+						this.UpdateData ();
+						this.SelectedTimestamp = ev.Timestamp;
+						this.OnStartEditing (ev.Type, ev.Timestamp);
+						this.OnDeepUpdate ();
+					}
+				});
+			}
+			else
+			{
+				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Empty.ToString ());
+			}
+		}
+
 
 		public void UpdateData()
 		{
@@ -135,7 +313,30 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		public TimelineMode						TimelineMode
+		private void ChangeMode(TimelineMode mode)
+		{
+			var t = this.TimelineMode;
+
+			if (mode == TimelineMode.Compacted)
+			{
+				t |=  TimelineMode.Compacted;
+				t &= ~TimelineMode.Expanded;
+			}
+			else if (mode == TimelineMode.Expanded)
+			{
+				t |=  TimelineMode.Expanded;
+				t &= ~TimelineMode.Compacted;
+			}
+			else
+			{
+				t ^= mode;
+			}
+
+			this.TimelineMode = t;
+			this.UpdateToolbar ();
+		}
+
+		private TimelineMode					TimelineMode
 		{
 			get
 			{
@@ -256,185 +457,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private void OnFirst()
-		{
-			var index = this.FirstEventIndex;
-
-			if (index.HasValue)
-			{
-				this.SelectedCell = index.Value;
-				this.controller.SetFocus ();
-			}
-		}
-
-		private void OnPrev()
-		{
-			var index = this.PrevEventIndex;
-
-			if (index.HasValue)
-			{
-				this.SelectedCell = index.Value;
-				this.controller.SetFocus ();
-			}
-		}
-
-		private void OnNext()
-		{
-			var index = this.NextEventIndex;
-
-			if (index.HasValue)
-			{
-				this.SelectedCell = index.Value;
-				this.controller.SetFocus ();
-			}
-		}
-
-		private void OnLast()
-		{
-			var index = this.LastEventIndex;
-
-			if (index.HasValue)
-			{
-				this.SelectedCell = index.Value;
-				this.controller.SetFocus ();
-			}
-		}
-
-		private void OnNow()
-		{
-			var index = this.NowEventIndex;
-
-			if (index.HasValue)
-			{
-				this.SelectedCell = index.Value;
-				this.controller.SetFocus ();
-			}
-		}
-
-		private void OnDate()
-		{
-			var popup = new DatePopup (this.accessor)
-			{
-				Date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date,
-			};
-
-			var target = this.toolbar.GetTarget (ToolbarCommand.Date);
-			popup.Create (target, leftOrRight: false);
-
-			popup.DateChanged += delegate
-			{
-				if (popup.Date.HasValue)
-				{
-					this.UpdateData (popup.Date);
-					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
-				}
-			};
-		}
-
-		private void OnNew()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
-			var timestamp = this.SelectedTimestamp;
-
-			if (target != null && timestamp.HasValue)
-			{
-				CreateEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
-				timestampChanged: delegate (Timestamp? t)
-				{
-					this.SelectedTimestamp = t;
-				},
-				action: delegate (System.DateTime date, string name)
-				{
-					this.CreateEvent (date, name);
-				});
-			}
-		}
-
-		private void OnDelete()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
-
-			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
-			{
-				MessagePopup.ShowAssetsDeleteEventWarning (target);
-			}
-			else
-			{
-				YesNoPopup.ShowAssetsDeleteEventQuestion (target, delegate
-				{
-					this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
-					this.UpdateData ();
-					this.OnDeepUpdate ();
-				});
-			}
-		}
-
-		private void OnDeselect()
-		{
-			this.SelectedTimestamp = null;
-		}
-
-		private void OnCopy()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
-
-			if (this.obj != null && this.selectedTimestamp.HasValue)
-			{
-				var e = this.obj.GetEvent (this.selectedTimestamp.Value);
-				this.accessor.Clipboard.CopyEvent (this.accessor, e);
-
-				this.UpdateToolbar ();
-			}
-			else
-			{
-				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Copy.EmptySelection.ToString ());
-			}
-		}
-
-		private void OnPaste()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
-
-			if (this.obj != null && this.accessor.Clipboard.HasEvent)
-			{
-				EventPastePopup.Show (target, this.accessor, this.obj,
-				this.accessor.Clipboard.EventType,
-				this.accessor.Clipboard.EventTimestamp.Value.Date,
-				dateChanged: delegate (System.DateTime? date)
-				{
-					if (date.HasValue)
-					{
-						this.SelectedTimestamp = new Timestamp (date.Value, 0);
-					}
-					else
-					{
-						this.SelectedTimestamp = null;
-					}
-				},
-				action: delegate (System.DateTime date)
-				{
-					var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
-
-					if (e == null)
-					{
-						MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Wrong.ToString ());
-					}
-					else
-					{
-						this.UpdateData ();
-						this.SelectedTimestamp = e.Timestamp;
-						this.OnStartEditing (e.Type, e.Timestamp);
-						this.OnDeepUpdate ();
-					}
-				});
-			}
-			else
-			{
-				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.AssetsTimeline.Paste.Empty.ToString ());
-			}
-		}
-
-
 		private void CreateEvent(System.DateTime date, string buttonName)
 		{
 			var guid = this.objectGuid;
@@ -474,6 +496,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				Parent = parent,
 				Dock   = DockStyle.Bottom,
 			};
+
+			CommandDispatcher.SetDispatcher (this.frameBox, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 
 			this.controller.CreateUI (this.frameBox);
 			this.controller.Pivot = 0.0;
@@ -518,10 +542,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				}
 			};
 
-			this.controller.DokeySelect += delegate (object sender, KeyCode key)
-			{
-				this.OnDokeySelect (key);
-			};
+			//?this.controller.DokeySelect += delegate (object sender, KeyCode key)
+			//?{
+			//?	this.OnDokeySelect (key);
+			//?};
 		}
 
 
@@ -726,59 +750,66 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			MenuPopup.Show (this.toolbar, this.frameBox, pos,
-				new MenuPopup.Item (ToolbarCommand.New,    this.OnNew),
-				new MenuPopup.Item (ToolbarCommand.Delete, this.OnDelete),
-				new MenuPopup.Item (),
-				new MenuPopup.Item (ToolbarCommand.Copy,   this.OnCopy),
-				new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
+			//-MenuPopup.Show (this.toolbar, this.frameBox, pos,
+			//-	new MenuPopup.Item (ToolbarCommand.New,    this.OnNew),
+			//-	new MenuPopup.Item (ToolbarCommand.Delete, this.OnDelete),
+			//-	new MenuPopup.Item (),
+			//-	new MenuPopup.Item (ToolbarCommand.Copy,   this.OnCopy),
+			//-	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
 		}
 
-		private void OnDokeySelect(KeyCode key)
-		{
-			switch (key)
-			{
-				case KeyCode.Home:
-					this.OnFirst ();
-					break;
-
-				case KeyCode.ArrowLeft:
-				case KeyCode.PageUp:
-					this.OnPrev ();
-					break;
-
-				case KeyCode.ArrowRight:
-				case KeyCode.PageDown:
-					this.OnNext ();
-					break;
-
-				case KeyCode.End:
-					this.OnLast ();
-					break;
-			}
-		}
+		//?private void OnDokeySelect(KeyCode key)
+		//?{
+		//?	switch (key)
+		//?	{
+		//?		case KeyCode.Home:
+		//?			this.OnFirst ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowLeft:
+		//?		case KeyCode.PageUp:
+		//?			this.OnPrev ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowRight:
+		//?		case KeyCode.PageDown:
+		//?			this.OnNext ();
+		//?			break;
+		//?
+		//?		case KeyCode.End:
+		//?			this.OnLast ();
+		//?			break;
+		//?	}
+		//?}
 
 
 		private void UpdateToolbar()
 		{
 			int sel = this.SelectedCell;
 
-			this.UpdateCommand (ToolbarCommand.First, sel, this.FirstEventIndex);
-			this.UpdateCommand (ToolbarCommand.Prev,  sel, this.PrevEventIndex);
-			this.UpdateCommand (ToolbarCommand.Next,  sel, this.NextEventIndex);
-			this.UpdateCommand (ToolbarCommand.Last,  sel, this.LastEventIndex);
-			this.UpdateCommand (ToolbarCommand.Now,   sel, this.NowEventIndex);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.Labels,      (this.timelineMode & TimelineMode.Labels     ) != 0);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.Compacted,   (this.timelineMode & TimelineMode.Compacted  ) != 0);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.Expanded,    (this.timelineMode & TimelineMode.Expanded   ) != 0);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.WeeksOfYear, (this.timelineMode & TimelineMode.WeeksOfYear) != 0);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.DaysOfWeek,  (this.timelineMode & TimelineMode.DaysOfWeek ) != 0);
+			this.toolbar.SetActiveState (Res.Commands.Timeline.Graph,       (this.timelineMode & TimelineMode.Graph      ) != 0);
+
+			this.UpdateCommand (Res.Commands.Timeline.First, sel, this.FirstEventIndex);
+			this.UpdateCommand (Res.Commands.Timeline.Prev,  sel, this.PrevEventIndex);
+			this.UpdateCommand (Res.Commands.Timeline.Next,  sel, this.NextEventIndex);
+			this.UpdateCommand (Res.Commands.Timeline.Last,  sel, this.LastEventIndex);
+			this.UpdateCommand (Res.Commands.Timeline.Now,   sel, this.NowEventIndex);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Date, true);
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Delete, this.HasSelectedEvent);
+			this.toolbar.SetCommandEnable (Res.Commands.Timeline.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
+			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Delete, this.HasSelectedEvent);
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, sel != -1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,     this.HasSelectedEvent);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,    this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Deselect, sel != -1);
+			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Copy, this.HasSelectedEvent);
+			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Paste, this.accessor.Clipboard.HasEvent);
 		}
 
-		private void UpdateCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		private void UpdateCommand(Command command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
 			this.toolbar.SetCommandEnable (command, enable);
