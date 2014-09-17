@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -93,17 +94,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void AdaptToolbarCommand()
+		protected override void CreateToolbar()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.EventsTreeTable.Delete.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Deselect.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  Res.Strings.ToolbarControllers.EventsTreeTable.Copy.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", Res.Strings.ToolbarControllers.EventsTreeTable.Paste.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Export.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.toolbar = new EventsToolbar (this.accessor, this.commandContext);
 		}
+		//?protected override void AdaptToolbarCommand()
+		//?{
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.EventsTreeTable.Delete.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Deselect.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  Res.Strings.ToolbarControllers.EventsTreeTable.Copy.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", Res.Strings.ToolbarControllers.EventsTreeTable.Paste.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Export.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+		//?}
 
 		protected override void CreateNodeFiller()
 		{
@@ -140,12 +145,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnDeselect()
+		[Command (Res.CommandIds.Events.Deselect)]
+		protected void OnDeselect()
 		{
 			this.SelectedRow = -1;
 		}
 
-		protected override void OnNew()
+		[Command (Res.CommandIds.Events.New)]
+		protected void OnNew()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			var timestamp = this.SelectedTimestamp;
@@ -169,7 +176,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		protected override void OnDelete()
+		[Command (Res.CommandIds.Events.Delete)]
+		protected void OnDelete()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
@@ -188,14 +196,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		protected override void OnCopy()
+		[Command (Res.CommandIds.Events.Copy)]
+		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
 
 			if (this.obj != null && this.SelectedTimestamp.HasValue)
 			{
-				var e = this.obj.GetEvent (this.SelectedTimestamp.Value);
-				this.accessor.Clipboard.CopyEvent (this.accessor, e);
+				var ev = this.obj.GetEvent (this.SelectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, ev);
 
 				this.UpdateToolbar ();
 			}
@@ -205,7 +214,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		protected override void OnPaste()
+		[Command (Res.CommandIds.Events.Paste)]
+		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
 
@@ -220,17 +230,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				},
 				action: delegate (System.DateTime date)
 				{
-					var e = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
+					var ev = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
 
-					if (e == null)
+					if (ev == null)
 					{
 						MessagePopup.ShowPasteError (target);
 					}
 					else
 					{
 						this.UpdateData ();
-						this.SelectedTimestamp = e.Timestamp;
-						this.OnUpdateAfterCreate (e.Guid, e.Type, e.Timestamp);
+						this.SelectedTimestamp = ev.Timestamp;
+						this.OnUpdateAfterCreate (ev.Guid, ev.Type, ev.Timestamp);
 					}
 				});
 			}
@@ -239,6 +249,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				MessagePopup.ShowError (target, Res.Strings.ToolbarControllers.EventsTreeTable.PasteError.ToString ());
 			}
 		}
+
+		[Command (Res.CommandIds.Events.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
+		}
+
 
 		protected override void UpdateToolbar()
 		{

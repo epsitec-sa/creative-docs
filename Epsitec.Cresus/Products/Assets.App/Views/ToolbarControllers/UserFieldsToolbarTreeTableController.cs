@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -100,17 +101,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void AdaptToolbarCommand()
+		protected override void CreateToolbar()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Delete.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Deselect.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Copy.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Paste.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Export.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.toolbar = new UserFieldsToolbar (this.accessor, this.commandContext);
 		}
+		//?protected override void AdaptToolbarCommand()
+		//?{
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Delete.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Deselect.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Copy.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Paste.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.UserFieldsTreeTable.Export.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+		//?}
 
 		protected override void CreateNodeFiller()
 		{
@@ -125,32 +130,38 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnMoveTop()
+		[Command (Res.CommandIds.TreeTable.MoveTop)]
+		protected void OnMoveTop()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.FirstRowIndex);
 		}
 
-		protected override void OnMoveUp()
+		[Command (Res.CommandIds.TreeTable.MoveUp)]
+		protected void OnMoveUp()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.PrevRowIndex);
 		}
 
-		protected override void OnMoveDown()
+		[Command (Res.CommandIds.TreeTable.MoveDown)]
+		protected void OnMoveDown()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.NextRowIndex);
 		}
 
-		protected override void OnMoveBottom()
+		[Command (Res.CommandIds.TreeTable.MoveBottom)]
+		protected void OnMoveBottom()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.LastRowIndex);
 		}
 
-		protected override void OnDeselect()
+		[Command (Res.CommandIds.UserFields.Deselect)]
+		protected void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected override void OnNew()
+		[Command (Res.CommandIds.UserFields.New)]
+		protected void OnNew()
 		{
 			var newField = this.accessor.GlobalSettings.GetNewUserField();
 			if (newField == ObjectField.Unknown)
@@ -172,7 +183,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 		}
 
-		protected override void OnDelete()
+		[Command (Res.CommandIds.UserFields.Delete)]
+		protected void OnDelete()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
@@ -184,7 +196,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			});
 		}
 
-		protected override void OnCopy()
+		[Command (Res.CommandIds.UserFields.Copy)]
+		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var userField = this.accessor.GlobalSettings.GetUserField (this.SelectedGuid);
 			this.accessor.Clipboard.CopyUserField (this.accessor, this.baseType, userField);
@@ -192,7 +205,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateToolbar ();
 		}
 
-		protected override void OnPaste()
+		[Command (Res.CommandIds.UserFields.Paste)]
+		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			int index = this.VisibleSelectedRow;
 			if (index == -1)  // pas de sélection ?
@@ -212,6 +226,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.UpdateData ();
 				this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 			}
+		}
+
+		[Command (Res.CommandIds.UserFields.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
 		}
 
 

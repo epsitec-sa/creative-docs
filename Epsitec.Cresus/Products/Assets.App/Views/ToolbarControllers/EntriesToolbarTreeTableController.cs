@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
@@ -102,17 +103,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void AdaptToolbarCommand()
+		protected override void CreateToolbar()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.EntriesTreeTable.Deselect.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.EntriesTreeTable.Export.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.toolbar = new EntriesToolbar (this.accessor, this.commandContext);
 		}
+		//?protected override void AdaptToolbarCommand()
+		//?{
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.EntriesTreeTable.Deselect.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.EntriesTreeTable.Export.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+		//?}
 
 		protected override void CreateNodeFiller()
 		{
@@ -127,7 +132,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnDeselect()
+		[Command (Res.CommandIds.Entries.Deselect)]
+		protected void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}

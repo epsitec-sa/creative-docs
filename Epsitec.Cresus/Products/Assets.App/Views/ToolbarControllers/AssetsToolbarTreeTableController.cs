@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -178,17 +179,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void AdaptToolbarCommand()
+		protected override void CreateToolbar()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarControllers.AssetsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.AssetsTreeTable.Delete.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Deselect.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  Res.Strings.ToolbarControllers.AssetsTreeTable.Copy.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", Res.Strings.ToolbarControllers.AssetsTreeTable.Paste.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Export.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.toolbar = new AssetsToolbar (this.accessor, this.commandContext);
 		}
+		//?protected override void AdaptToolbarCommand()
+		//?{
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarControllers.AssetsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.AssetsTreeTable.Delete.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Deselect.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  Res.Strings.ToolbarControllers.AssetsTreeTable.Copy.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", Res.Strings.ToolbarControllers.AssetsTreeTable.Paste.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Export.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+		//?}
 
 		protected override void CreateNodeFiller()
 		{
@@ -242,7 +247,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnFilter()
+		[Command (Res.CommandIds.Assets.Filter)]
+		protected void OnFilter()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Filter);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
@@ -260,18 +266,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			};
 		}
 
-		protected override void OnDeselect()
+		[Command (Res.CommandIds.Assets.Deselect)]
+		protected void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected override void OnNew()
+		[Command (Res.CommandIds.Assets.New)]
+		protected void OnNew()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
-		protected override void OnDelete()
+		[Command (Res.CommandIds.Assets.Delete)]
+		protected void OnDelete()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
@@ -283,7 +292,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			});
 		}
 
-		protected override void OnCopy()
+		[Command (Res.CommandIds.Assets.Copy)]
+		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Copier un objet d'immobilisation requiert un popup pour choisir la date à considérer.
 			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
@@ -297,7 +307,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			});
 		}
 
-		protected override void OnPaste()
+		[Command (Res.CommandIds.Assets.Paste)]
+		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Coller un objet d'immobilisation requiert un popup pour choisir la date d'entrée.
 			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
@@ -317,6 +328,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					this.OnUpdateAfterCreate (obj.Guid, EventType.Input, new Timestamp (inputDate, 0));
 				}
 			});
+		}
+
+		[Command (Res.CommandIds.Assets.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
 		}
 
 

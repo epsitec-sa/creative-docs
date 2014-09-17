@@ -182,6 +182,7 @@
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AbstractTreeTableToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AccountsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\EventsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\UserFieldsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\WarningsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\PersonsToolbar.cs" />

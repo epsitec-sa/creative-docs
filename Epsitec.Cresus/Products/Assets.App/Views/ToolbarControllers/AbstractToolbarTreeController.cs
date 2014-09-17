@@ -84,23 +84,32 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public void CreateUI(Widget parent)
 		{
-			this.topTitle = new TopTitle
-			{
-				Parent = parent,
-			};
-
-			this.controllerFrame = new FrameBox
+			var common = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
 			};
 
+			CommandDispatcher.SetDispatcher (common, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			this.topTitle = new TopTitle
+			{
+				Parent = common,
+			};
+
+			this.controllerFrame = new FrameBox
+			{
+				Parent = common,
+				Dock   = DockStyle.Fill,
+			};
+
 			this.topTitle.SetTitle (this.title);
 
-			this.toolbar = new TreeTableToolbar (this.accessor, this.commandContext);
-			this.AdaptToolbarCommand();
+			//?this.toolbar = new TreeTableToolbar (this.accessor, this.commandContext);
+			this.CreateToolbar ();
+			//?this.AdaptToolbarCommand();
 
-			this.toolbar.CreateUI (parent);
+			this.toolbar.CreateUI (common);
 
 			this.toolbar.HasGraphic        = this.hasGraphic;
 			this.toolbar.HasFilter         = this.hasFilter;
@@ -110,108 +119,110 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.CreateControllerUI (this.controllerFrame);
 
-			this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.Graphic:
-						this.OnGraphic ();
-						break;
-
-					case ToolbarCommand.Filter:
-						this.OnFilter ();
-						break;
-
-					case ToolbarCommand.DateRange:
-						this.OnDateRange ();
-						break;
-
-					case ToolbarCommand.First:
-						this.OnFirst ();
-						break;
-
-					case ToolbarCommand.Last:
-						this.OnLast ();
-						break;
-
-					case ToolbarCommand.Prev:
-						this.OnPrev ();
-						break;
-
-					case ToolbarCommand.Next:
-						this.OnNext ();
-						break;
-
-					case ToolbarCommand.CompactAll:
-						this.OnCompactAll ();
-						break;
-
-					case ToolbarCommand.CompactOne:
-						this.OnCompactOne ();
-						break;
-
-					case ToolbarCommand.ExpandOne:
-						this.OnExpandOne ();
-						break;
-
-					case ToolbarCommand.ExpandAll:
-						this.OnExpandAll ();
-						break;
-
-					case ToolbarCommand.MoveTop:
-						this.OnMoveTop ();
-						break;
-
-					case ToolbarCommand.MoveUp:
-						this.OnMoveUp ();
-						break;
-
-					case ToolbarCommand.MoveDown:
-						this.OnMoveDown ();
-						break;
-
-					case ToolbarCommand.MoveBottom:
-						this.OnMoveBottom ();
-						break;
-
-					case ToolbarCommand.New:
-						this.OnNew ();
-						break;
-
-					case ToolbarCommand.Delete:
-						this.OnDelete ();
-						break;
-
-					case ToolbarCommand.Deselect:
-						this.OnDeselect ();
-						break;
-
-					case ToolbarCommand.Copy:
-						this.OnCopy ();
-						break;
-
-					case ToolbarCommand.Paste:
-						this.OnPaste ();
-						break;
-
-					case ToolbarCommand.Export:
-						this.OnExport ();
-						break;
-
-					case ToolbarCommand.Import:
-						this.OnImport ();
-						break;
-
-					case ToolbarCommand.Goto:
-						this.OnGoto ();
-						break;
-				}
-			};
+			//?this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			//?{
+			//?	switch (command)
+			//?	{
+			//?		case ToolbarCommand.Graphic:
+			//?			this.OnGraphic ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Filter:
+			//?			this.OnFilter ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.DateRange:
+			//?			this.OnDateRange ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.First:
+			//?			this.OnFirst ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Last:
+			//?			this.OnLast ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Prev:
+			//?			this.OnPrev ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Next:
+			//?			this.OnNext ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.CompactAll:
+			//?			this.OnCompactAll ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.CompactOne:
+			//?			this.OnCompactOne ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.ExpandOne:
+			//?			this.OnExpandOne ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.ExpandAll:
+			//?			this.OnExpandAll ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.MoveTop:
+			//?			this.OnMoveTop ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.MoveUp:
+			//?			this.OnMoveUp ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.MoveDown:
+			//?			this.OnMoveDown ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.MoveBottom:
+			//?			this.OnMoveBottom ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.New:
+			//?			this.OnNew ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Delete:
+			//?			this.OnDelete ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Deselect:
+			//?			this.OnDeselect ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Copy:
+			//?			this.OnCopy ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Paste:
+			//?			this.OnPaste ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Export:
+			//?			this.OnExport ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Import:
+			//?			this.OnImport ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Goto:
+			//?			this.OnGoto ();
+			//?			break;
+			//?	}
+			//?};
 		}
 
-		protected virtual void AdaptToolbarCommand()
-		{
-		}
+		protected abstract void CreateToolbar();
+
+		//?protected virtual void AdaptToolbarCommand()
+		//?{
+		//?}
 
 		protected virtual void CreateControllerUI(Widget parent)
 		{
@@ -274,19 +285,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		[Command (Res.CommandIds.TreeTable.Graphic)]
 		private void OnGraphic()
 		{
 			this.ShowGraphic = !this.showGraphic;
 		}
 
-		protected virtual void OnFilter()
-		{
-		}
-
-		protected virtual void OnDateRange()
-		{
-		}
-
+		[Command (Res.CommandIds.TreeTable.First)]
 		protected void OnFirst()
 		{
 			var index = this.FirstRowIndex;
@@ -298,6 +303,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Prev)]
 		protected void OnPrev()
 		{
 			var index = this.PrevRowIndex;
@@ -309,6 +315,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Next)]
 		protected void OnNext()
 		{
 			var index = this.NextRowIndex;
@@ -320,6 +327,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Last)]
 		protected void OnLast()
 		{
 			var index = this.LastRowIndex;
@@ -342,6 +350,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.CompactAll)]
 		private void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
@@ -353,6 +362,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.CompactOne)]
 		private void OnCompactOne()
 		{
 			//	Compacte une ligne.
@@ -364,6 +374,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.ExpandOne)]
 		private void OnExpandOne()
 		{
 			//	Etend une ligne.
@@ -375,6 +386,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.ExpandAll)]
 		private void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
@@ -386,35 +398,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		protected virtual void OnMoveTop()
-		{
-		}
-
-		protected virtual void OnMoveUp()
-		{
-		}
-
-		protected virtual void OnMoveDown()
-		{
-		}
-
-		protected virtual void OnMoveBottom()
-		{
-		}
-
-		protected virtual void OnDeselect()
-		{
-		}
-
-		protected virtual void OnNew()
-		{
-		}
-
-		protected virtual void OnDelete()
-		{
-		}
-
-		protected virtual void OnCopy()
+		protected virtual void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var obj = this.accessor.GetObject(this.baseType, this.SelectedGuid);
 			this.accessor.Clipboard.CopyObject (this.accessor, this.baseType, obj);
@@ -422,7 +406,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateToolbar ();
 		}
 
-		protected virtual void OnPaste()
+		protected virtual void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType);
 
@@ -440,21 +424,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		protected virtual void OnExport()
+		protected virtual void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
-			MessagePopup.ShowTodo (target);
-		}
-
-		protected virtual void OnImport()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
-			MessagePopup.ShowTodo (target);
-		}
-
-		protected virtual void OnGoto()
-		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Goto);
 			MessagePopup.ShowTodo (target);
 		}
 
@@ -658,7 +630,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected INodeGetter<T>				nodeGetter;
 		protected TopTitle						topTitle;
-		protected TreeTableToolbar				toolbar;
+		protected AbstractTreeTableToolbar		toolbar;
 		protected SortingInstructions			sortingInstructions;
 		protected int							selectedRow;
 		protected bool							showGraphic;

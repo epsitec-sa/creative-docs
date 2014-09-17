@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnExport()
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
 
@@ -224,12 +224,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected virtual void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			MenuPopup.Show (this.toolbar, this.treeTableFrame, pos,
-				new MenuPopup.Item (ToolbarCommand.New,    this.OnNew),
-				new MenuPopup.Item (ToolbarCommand.Delete, this.OnDelete),
-				new MenuPopup.Item (),
-				new MenuPopup.Item (ToolbarCommand.Copy,   this.OnCopy),
-				new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
+			//?MenuPopup.Show (this.toolbar, this.treeTableFrame, pos,
+			//?	new MenuPopup.Item (ToolbarCommand.New,    this.OnNew),
+			//?	new MenuPopup.Item (ToolbarCommand.Delete, this.OnDelete),
+			//?	new MenuPopup.Item (),
+			//?	new MenuPopup.Item (ToolbarCommand.Copy,   this.OnCopy),
+			//?	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
 		}
 
 		private void OnDokeySelect(KeyCode key)

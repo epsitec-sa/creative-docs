@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -104,17 +105,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void AdaptToolbarCommand()
+		protected override void CreateToolbar()
 		{
-			this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-			this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    Res.Strings.ToolbarControllers.GroupsTreeTable.Delete.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Delesect.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      Res.Strings.ToolbarControllers.GroupsTreeTable.Copy.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     Res.Strings.ToolbarControllers.GroupsTreeTable.Paste.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Export.ToString ());
-			this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.toolbar = new GroupsToolbar (this.accessor, this.commandContext);
 		}
+		//?protected override void AdaptToolbarCommand()
+		//?{
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    Res.Strings.ToolbarControllers.GroupsTreeTable.Delete.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Delesect.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      Res.Strings.ToolbarControllers.GroupsTreeTable.Copy.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     Res.Strings.ToolbarControllers.GroupsTreeTable.Paste.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Export.ToString ());
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
+		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+		//?}
 
 		protected override void CreateNodeFiller()
 		{
@@ -129,18 +134,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void OnDeselect()
+		[Command (Res.CommandIds.Groups.Deselect)]
+		protected void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}
 
-		protected override void OnNew()
+		[Command (Res.CommandIds.Groups.New)]
+		protected void OnNew()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
-		protected override void OnDelete()
+		[Command (Res.CommandIds.Groups.Delete)]
+		protected void OnDelete()
 		{
 			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
 
@@ -150,6 +158,24 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
 			});
+		}
+
+		[Command (Res.CommandIds.Groups.Copy)]
+		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnCopy (dispatcher, e);
+		}
+
+		[Command (Res.CommandIds.Groups.Paste)]
+		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnPaste (dispatcher, e);
+		}
+
+		[Command (Res.CommandIds.Groups.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
 		}
 
 
