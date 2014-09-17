@@ -407,6 +407,7 @@
     <Compile Include="Metadata\ColumnFilterComparisonExpression.cs" />
     <Compile Include="Metadata\ColumnSortOrder.cs" />
     <Compile Include="Metadata\DataSetMenuItem.cs" />
+    <Compile Include="Metadata\DatasetQuery.cs" />
     <Compile Include="Metadata\LambdaFilter`1.cs" />
     <Compile Include="Metadata\DataSetDisplayGroup.cs" />
     <Compile Include="Metadata\DataSetMetadata.cs" />
