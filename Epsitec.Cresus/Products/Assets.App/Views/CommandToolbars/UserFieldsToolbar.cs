@@ -21,18 +21,18 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Last);
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.First);
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Prev);
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Next);
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Last);
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
 
-			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveTop);
-			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveUp);
-			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveDown);
-			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveBottom);
+			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveTop);
+			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveUp);
+			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveDown);
+			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveBottom);
 
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 

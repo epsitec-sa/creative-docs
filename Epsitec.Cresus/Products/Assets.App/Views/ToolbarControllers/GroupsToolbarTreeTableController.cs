@@ -134,6 +134,54 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		[Command (Res.CommandIds.Groups.First)]
+		protected override void OnFirst()
+		{
+			base.OnFirst ();
+		}
+
+		[Command (Res.CommandIds.Groups.Prev)]
+		protected override void OnPrev()
+		{
+			base.OnPrev ();
+		}
+
+		[Command (Res.CommandIds.Groups.Next)]
+		protected override void OnNext()
+		{
+			base.OnNext ();
+		}
+
+		[Command (Res.CommandIds.Groups.Last)]
+		protected override void OnLast()
+		{
+			base.OnLast ();
+		}
+
+		[Command (Res.CommandIds.Groups.CompactAll)]
+		protected override void OnCompactAll()
+		{
+			base.OnCompactAll ();
+		}
+
+		[Command (Res.CommandIds.Groups.CompactOne)]
+		protected override void OnCompactOne()
+		{
+			base.OnCompactOne ();
+		}
+
+		[Command (Res.CommandIds.Groups.ExpandOne)]
+		protected override void OnExpandOne()
+		{
+			base.OnExpandOne ();
+		}
+
+		[Command (Res.CommandIds.Groups.ExpandAll)]
+		protected override void OnExpandAll()
+		{
+			base.OnExpandAll ();
+		}
+
 		[Command (Res.CommandIds.Groups.Deselect)]
 		protected void OnDeselect()
 		{
@@ -218,10 +266,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactAll, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactOne, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandOne,  expandEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandAll,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Groups.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Groups.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Groups.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Groups.ExpandAll,  expandEnable);
 
 			int row = this.VisibleSelectedRow;
 

@@ -113,6 +113,30 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		[Command (Res.CommandIds.Persons.First)]
+		protected override void OnFirst()
+		{
+			base.OnFirst ();
+		}
+
+		[Command (Res.CommandIds.Persons.Prev)]
+		protected override void OnPrev()
+		{
+			base.OnPrev ();
+		}
+
+		[Command (Res.CommandIds.Groups.Next)]
+		protected override void OnNext()
+		{
+			base.OnNext ();
+		}
+
+		[Command (Res.CommandIds.Persons.Last)]
+		protected override void OnLast()
+		{
+			base.OnLast ();
+		}
+
 		[Command (Res.CommandIds.Persons.Deselect)]
 		protected void OnDeselect()
 		{

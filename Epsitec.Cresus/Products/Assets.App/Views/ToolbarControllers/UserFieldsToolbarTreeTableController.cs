@@ -130,6 +130,30 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		[Command (Res.CommandIds.UserFields.First)]
+		protected override void OnFirst()
+		{
+			base.OnFirst ();
+		}
+
+		[Command (Res.CommandIds.UserFields.Prev)]
+		protected override void OnPrev()
+		{
+			base.OnPrev ();
+		}
+
+		[Command (Res.CommandIds.UserFields.Next)]
+		protected override void OnNext()
+		{
+			base.OnNext ();
+		}
+
+		[Command (Res.CommandIds.UserFields.Last)]
+		protected override void OnLast()
+		{
+			base.OnLast ();
+		}
+
 		[Command (Res.CommandIds.UserFields.MoveTop)]
 		protected void OnMoveTop()
 		{

@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Last);
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.First);
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Prev);
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Next);
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Last);
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
 			this.separator2       = this.CreateSeparator     (DockStyle.None);

@@ -1474,18 +1474,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Mise à jour de la toolbar des objets.
 			this.assetsToolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
 
-			this.UpdateObjectCommand (Res.Commands.TreeTable.First, this.selectedRow, this.FirstRowIndex);
-			this.UpdateObjectCommand (Res.Commands.TreeTable.Prev,  this.selectedRow, this.PrevRowIndex);
-			this.UpdateObjectCommand (Res.Commands.TreeTable.Next,  this.selectedRow, this.NextRowIndex);
-			this.UpdateObjectCommand (Res.Commands.TreeTable.Last,  this.selectedRow, this.LastRowIndex);
+			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.First, this.selectedRow, this.FirstRowIndex);
+			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.Prev,  this.selectedRow, this.PrevRowIndex);
+			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.Next,  this.selectedRow, this.NextRowIndex);
+			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.Last,  this.selectedRow, this.LastRowIndex);
 
 			bool compactEnable = !this.nodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.nodeGetter.IsAllExpanded;
 
-			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.First, compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Prev,  compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Next,  expandEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Last,  expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.First, compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Prev, compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Next, expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Last, expandEnable);
 
 			this.assetsToolbar.SetEnable (Res.Commands.Assets.New,      true);
 			this.assetsToolbar.SetEnable (Res.Commands.Assets.Delete,   this.SelectedObject != null);
@@ -1590,7 +1590,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		//?	this.timelinesToolbar.SetCommandEnable (command, enable);
 		//?}
 
-		private void UpdateObjectCommand(Command command, int currentSelection, int? newSelection)
+		private void UpdateAssetsCommand(Command command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
 			this.assetsToolbar.SetEnable (command, enable);

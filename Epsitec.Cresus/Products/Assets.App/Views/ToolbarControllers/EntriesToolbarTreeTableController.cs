@@ -172,14 +172,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();
-
-			bool compactEnable = !this.NodeGetter.IsAllCompacted;
-			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
-
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactAll, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactOne, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandOne,  expandEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandAll,  expandEnable);
 		}
 
 

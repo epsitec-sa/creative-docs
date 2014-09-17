@@ -149,6 +149,60 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.ShowDateRangePopup (target);
 		}
 
+		[Command (Res.CommandIds.Accounts.Graphic)]
+		protected override void OnGraphic()
+		{
+			base.OnGraphic ();
+		}
+
+		[Command (Res.CommandIds.Accounts.First)]
+		protected override void OnFirst()
+		{
+			base.OnFirst ();
+		}
+
+		[Command (Res.CommandIds.Accounts.Prev)]
+		protected override void OnPrev()
+		{
+			base.OnPrev ();
+		}
+
+		[Command (Res.CommandIds.Accounts.Next)]
+		protected override void OnNext()
+		{
+			base.OnNext ();
+		}
+
+		[Command (Res.CommandIds.Accounts.Last)]
+		protected override void OnLast()
+		{
+			base.OnLast ();
+		}
+
+		[Command (Res.CommandIds.Accounts.CompactAll)]
+		protected override void OnCompactAll()
+		{
+			base.OnCompactAll ();
+		}
+
+		[Command (Res.CommandIds.Accounts.CompactOne)]
+		protected override void OnCompactOne()
+		{
+			base.OnCompactOne ();
+		}
+
+		[Command (Res.CommandIds.Accounts.ExpandOne)]
+		protected override void OnExpandOne()
+		{
+			base.OnExpandOne ();
+		}
+
+		[Command (Res.CommandIds.Accounts.ExpandAll)]
+		protected override void OnExpandAll()
+		{
+			base.OnExpandAll ();
+		}
+
 		[Command (Res.CommandIds.Accounts.Deselect)]
 		protected void OnDeselect()
 		{
@@ -214,10 +268,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactAll, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactOne, compactEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandOne,  expandEnable);
-			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandAll,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Accounts.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Accounts.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandAll,  expandEnable);
 		}
 
 
