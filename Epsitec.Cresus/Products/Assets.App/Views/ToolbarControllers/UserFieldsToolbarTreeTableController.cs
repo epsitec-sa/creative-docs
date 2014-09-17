@@ -130,25 +130,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		[Command (Res.CommandIds.TreeTable.MoveTop)]
+		[Command (Res.CommandIds.UserFields.MoveTop)]
 		protected void OnMoveTop()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.FirstRowIndex);
 		}
 
-		[Command (Res.CommandIds.TreeTable.MoveUp)]
+		[Command (Res.CommandIds.UserFields.MoveUp)]
 		protected void OnMoveUp()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.PrevRowIndex);
 		}
 
-		[Command (Res.CommandIds.TreeTable.MoveDown)]
+		[Command (Res.CommandIds.UserFields.MoveDown)]
 		protected void OnMoveDown()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.NextRowIndex);
 		}
 
-		[Command (Res.CommandIds.TreeTable.MoveBottom)]
+		[Command (Res.CommandIds.UserFields.MoveBottom)]
 		protected void OnMoveBottom()
 		{
 			this.MoveUserField (this.VisibleSelectedRow, this.LastRowIndex);
@@ -184,9 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.UserFields.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.UserFieldsTreeTable.DeleteQuestion.ToString (), delegate
 			{
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			if (userField.IsEmpty)
 			{
-				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+				var target = this.toolbar.GetTarget (e);
 				MessagePopup.ShowPasteError (target);
 			}
 			else
@@ -264,8 +264,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			base.UpdateToolbar ();
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,  true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasUserField (this.baseType));
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetEnable (Res.Commands.UserFields.New,      true);
+			this.toolbar.SetEnable (Res.Commands.UserFields.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.UserFields.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.UserFields.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.UserFields.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.UserFields.Export, true);
+
+			this.toolbar.SetEnable (Res.Commands.UserFields.Copy,  true);
+			this.toolbar.SetEnable (Res.Commands.UserFields.Paste, this.accessor.Clipboard.HasUserField (this.baseType));
 		}
 	}
 }

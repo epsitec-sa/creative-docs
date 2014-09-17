@@ -120,16 +120,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Categories.New)]
-		protected void OnNew()
+		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
 		[Command (Res.CommandIds.Categories.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.CategoriesTreeTable.DeleteQuestion.ToString (), delegate
 			{
@@ -193,6 +193,22 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+		}
+
+
+		protected override void UpdateToolbar()
+		{
+			base.UpdateToolbar ();
+
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetEnable (Res.Commands.Categories.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Categories.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Categories.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.Categories.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Categories.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.Categories.Export, true);
 		}
 
 

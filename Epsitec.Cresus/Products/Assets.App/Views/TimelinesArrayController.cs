@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.assetsToolbar = new AssetsToolbar (this.accessor, this.commandContext);
+			this.assetsToolbar = new AssetsLeftToolbar (this.accessor, this.commandContext);
 
 			this.assetsToolbar.CreateUI (leftBox);
 			this.assetsToolbar.HasFilter = true;
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Assets commands
-		[Command (Res.CommandIds.Assets.Filter)]
+		[Command (Res.CommandIds.AssetsLeft.Filter)]
 		private void OnAssetsFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.assetsToolbar.GetTarget (e);
@@ -567,13 +567,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		[Command (Res.CommandIds.TreeTable.Graphic)]
-		private void OnAssetsGraphic()
-		{
-			// TODO...
-		}
-
-		[Command (Res.CommandIds.TreeTable.First)]
+		[Command (Res.CommandIds.AssetsLeft.First)]
 		private void OnAssetsFirst()
 		{
 			var index = this.FirstRowIndex;
@@ -584,7 +578,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Prev)]
+		[Command (Res.CommandIds.AssetsLeft.Prev)]
 		private void OnAssetsPrev()
 		{
 			var index = this.PrevRowIndex;
@@ -595,7 +589,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Next)]
+		[Command (Res.CommandIds.AssetsLeft.Next)]
 		private void OnAssetsNext()
 		{
 			var index = this.NextRowIndex;
@@ -606,7 +600,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Last)]
+		[Command (Res.CommandIds.AssetsLeft.Last)]
 		private void OnAssetsLast()
 		{
 			var index = this.LastRowIndex;
@@ -617,17 +611,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		[Command (Res.CommandIds.Assets.New)]
-		private void OnAssetsNew()
+		[Command (Res.CommandIds.AssetsLeft.New)]
+		private void OnAssetsNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.assetsToolbar.GetTarget (ToolbarCommand.New);
+			var target = this.assetsToolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
-		[Command (Res.CommandIds.Assets.Delete)]
-		private void OnAssetsDelete()
+		[Command (Res.CommandIds.AssetsLeft.Delete)]
+		private void OnAssetsDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.assetsToolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.assetsToolbar.GetTarget (e);
 			YesNoPopup.Show (target, Res.Strings.TimelinesArrayController.ObjectDelete.ToString (), this.AssetsDeleteSelection);
 		}
 
@@ -637,7 +631,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 		}
 
-		[Command (Res.CommandIds.Assets.Deselect)]
+		[Command (Res.CommandIds.AssetsLeft.Deselect)]
 		private void OnAssetsDeselect()
 		{
 			this.SetSelection (-1, -1);
@@ -659,7 +653,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
-		[Command (Res.CommandIds.TreeTable.CompactAll)]
+		[Command (Res.CommandIds.AssetsLeft.CompactAll)]
 		protected void OnAssetsCompactAll()
 		{
 			//	Compacte toutes les lignes.
@@ -676,7 +670,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
-		[Command (Res.CommandIds.TreeTable.CompactOne)]
+		[Command (Res.CommandIds.AssetsLeft.CompactOne)]
 		protected void OnAssetsCompactOne()
 		{
 			//	Compacte une ligne.
@@ -693,7 +687,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
-		[Command (Res.CommandIds.TreeTable.ExpandOne)]
+		[Command (Res.CommandIds.AssetsLeft.ExpandOne)]
 		protected void OnAssetsExpandOne()
 		{
 			//	Compacte une ligne.
@@ -710,7 +704,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
-		[Command (Res.CommandIds.TreeTable.ExpandAll)]
+		[Command (Res.CommandIds.AssetsLeft.ExpandAll)]
 		protected void OnAssetsExpandAll()
 		{
 			//	Etend toutes les lignes.
@@ -1920,7 +1914,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TopTitle									topTitle;
 		private TimelinesMode								timelinesMode;
-		private AssetsToolbar								assetsToolbar;
+		private AssetsLeftToolbar							assetsToolbar;
 		private VSplitter									splitter;
 		private TimelinesToolbar							timelinesToolbar;
 		private TreeTableColumnTree							treeColumn;

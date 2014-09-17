@@ -245,21 +245,21 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		public Widget GetTarget(ToolbarCommand command)
-		{
-			//	Retourne le widget à l'origine d'une commande. On n'utilise jamais
-			//	ceci pour modifier le widget, mais uniquement pour connaître sa
-			//	position, en vue de l'affichage de la queue des popups.
-			Widget widget;
-			if (this.commandWidgets.TryGetValue (command, out widget))
-			{
-				return widget;
-			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Target not found for command {0}", command));
-			}
-		}
+		//?public Widget GetTarget(ToolbarCommand command)
+		//?{
+		//?	//	Retourne le widget à l'origine d'une commande. On n'utilise jamais
+		//?	//	ceci pour modifier le widget, mais uniquement pour connaître sa
+		//?	//	position, en vue de l'affichage de la queue des popups.
+		//?	Widget widget;
+		//?	if (this.commandWidgets.TryGetValue (command, out widget))
+		//?	{
+		//?		return widget;
+		//?	}
+		//?	else
+		//?	{
+		//?		throw new System.InvalidOperationException (string.Format ("Target not found for command {0}", command));
+		//?	}
+		//?}
 
 
 		public void ActivateCommand(ToolbarCommand command)

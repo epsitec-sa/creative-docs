@@ -143,9 +143,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		[Command (Res.CommandIds.Accounts.DateRange)]
-		protected void OnDateRange()
+		protected void OnDateRange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.DateRange);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowDateRangePopup (target);
 		}
 
@@ -156,9 +156,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Accounts.Import)]
-		protected void OnImport()
+		protected void OnImport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Import);
+			var target = this.toolbar.GetTarget (e);
 
 			using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
 			{
@@ -214,16 +214,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.DateRange,  this.accessor.Mandat.AccountsDateRanges.Count () > 1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
-
-			this.toolbar.SetCommandState (ToolbarCommand.New,    ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Delete, ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Copy,   ToolbarCommandState.Hide);
-			this.toolbar.SetCommandState (ToolbarCommand.Paste,  ToolbarCommandState.Hide);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandAll,  expandEnable);
 		}
 
 

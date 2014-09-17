@@ -248,9 +248,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		[Command (Res.CommandIds.Assets.Filter)]
-		protected void OnFilter()
+		protected void OnFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Filter);
+			var target = this.toolbar.GetTarget (e);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -266,6 +266,60 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			};
 		}
 
+		[Command (Res.CommandIds.Assets.Graphic)]
+		protected override void OnGraphic()
+		{
+			base.OnGraphic ();
+		}
+
+		[Command (Res.CommandIds.Assets.First)]
+		protected override void OnFirst()
+		{
+			base.OnFirst ();
+		}
+
+		[Command (Res.CommandIds.Assets.Prev)]
+		protected override void OnPrev()
+		{
+			base.OnPrev ();
+		}
+
+		[Command (Res.CommandIds.Assets.Next)]
+		protected override void OnNext()
+		{
+			base.OnNext ();
+		}
+
+		[Command (Res.CommandIds.Assets.Last)]
+		protected override void OnLast()
+		{
+			base.OnLast ();
+		}
+
+		[Command (Res.CommandIds.Assets.CompactAll)]
+		protected override void OnCompactAll()
+		{
+			base.OnCompactAll ();
+		}
+
+		[Command (Res.CommandIds.Assets.CompactOne)]
+		protected override void OnCompactOne()
+		{
+			base.OnCompactOne ();
+		}
+
+		[Command (Res.CommandIds.Assets.ExpandOne)]
+		protected override void OnExpandOne()
+		{
+			base.OnExpandOne ();
+		}
+
+		[Command (Res.CommandIds.Assets.ExpandAll)]
+		protected override void OnExpandAll()
+		{
+			base.OnExpandAll ();
+		}
+
 		[Command (Res.CommandIds.Assets.Deselect)]
 		protected void OnDeselect()
 		{
@@ -273,16 +327,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Assets.New)]
-		protected void OnNew()
+		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
 		[Command (Res.CommandIds.Assets.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.AssetsTreeTable.DeleteQuestion.ToString (), delegate
 			{
@@ -296,7 +350,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Copier un objet d'immobilisation requiert un popup pour choisir la date à considérer.
-			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+			var target = this.toolbar.GetTarget (e);
 			var obj = this.accessor.GetObject (this.baseType, this.SelectedGuid);
 
 			AssetCopyPopup.Show (target, this.accessor, obj, delegate (System.DateTime date)
@@ -311,7 +365,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Coller un objet d'immobilisation requiert un popup pour choisir la date d'entrée.
-			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+			var target = this.toolbar.GetTarget (e);
 			var summary = this.accessor.Clipboard.GetObjectSummary (this.baseType);
 
 			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime inputDate)
@@ -363,15 +417,31 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			base.UpdateToolbar ();
 
-			this.toolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
+			this.toolbar.SetActiveState (Res.Commands.Assets.Graphic, this.showGraphic);
+
+			this.UpdateSelCommand (Res.Commands.Assets.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (Res.Commands.Assets.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.Assets.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.Assets.Last,  row, this.LastRowIndex);
 
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.ExpandAll,  expandEnable);
+
+			this.toolbar.SetEnable (Res.Commands.Assets.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Assets.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Assets.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.Assets.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.Assets.Export, true);
 		}
 
 		protected override bool IsCopyEnable

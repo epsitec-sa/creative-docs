@@ -120,16 +120,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Persons.New)]
-		protected void OnNew()
+		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
 		[Command (Res.CommandIds.Persons.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.PersonsTreeTable.DeleteQuestion.ToString (), delegate
 			{
@@ -190,6 +190,22 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+		}
+
+
+		protected override void UpdateToolbar()
+		{
+			base.UpdateToolbar ();
+
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetEnable (Res.Commands.Persons.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Persons.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Persons.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.Persons.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Persons.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.Persons.Export, true);
 		}
 
 

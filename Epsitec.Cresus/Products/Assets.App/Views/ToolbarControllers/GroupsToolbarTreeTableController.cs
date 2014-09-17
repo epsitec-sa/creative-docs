@@ -141,16 +141,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Groups.New)]
-		protected void OnNew()
+		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
 		[Command (Res.CommandIds.Groups.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteQuestion.ToString (), delegate
 			{
@@ -218,10 +218,20 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.TreeTable.ExpandAll,  expandEnable);
+
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetEnable (Res.Commands.Groups.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Groups.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Groups.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.Groups.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Groups.Paste,  this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Groups.Export, true);
 		}
 
 

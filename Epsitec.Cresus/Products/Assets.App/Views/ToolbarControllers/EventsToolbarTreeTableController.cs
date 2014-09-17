@@ -152,9 +152,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Events.New)]
-		protected void OnNew()
+		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.New);
+			var target = this.toolbar.GetTarget (e);
 			var timestamp = this.SelectedTimestamp;
 
 			if (!timestamp.HasValue)
@@ -177,9 +177,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Events.Delete)]
-		protected void OnDelete()
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Delete);
+			var target = this.toolbar.GetTarget (e);
 
 			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
 			{
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Events.Copy)]
 		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Copy);
+			var target = this.toolbar.GetTarget (e);
 
 			if (this.obj != null && this.SelectedTimestamp.HasValue)
 			{
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Events.Paste)]
 		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+			var target = this.toolbar.GetTarget (e);
 
 			if (this.obj != null && this.accessor.Clipboard.HasEvent)
 			{
@@ -260,7 +260,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
+
+			int row = this.VisibleSelectedRow;
+
+			this.toolbar.SetEnable (Res.Commands.Events.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Events.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Events.Deselect, row != -1);
+
+			this.toolbar.SetEnable (Res.Commands.Events.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Events.Paste,  this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Events.Export, true);
 		}
 
 		private void CreateEvent(System.DateTime date, string buttonName)

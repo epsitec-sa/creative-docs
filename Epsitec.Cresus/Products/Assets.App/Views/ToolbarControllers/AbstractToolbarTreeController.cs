@@ -285,14 +285,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		[Command (Res.CommandIds.TreeTable.Graphic)]
-		private void OnGraphic()
+		protected virtual void OnGraphic()
 		{
 			this.ShowGraphic = !this.showGraphic;
 		}
 
-		[Command (Res.CommandIds.TreeTable.First)]
-		protected void OnFirst()
+		protected virtual void OnFirst()
 		{
 			var index = this.FirstRowIndex;
 
@@ -303,8 +301,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Prev)]
-		protected void OnPrev()
+		protected virtual void OnPrev()
 		{
 			var index = this.PrevRowIndex;
 
@@ -315,8 +312,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Next)]
-		protected void OnNext()
+		protected virtual void OnNext()
 		{
 			var index = this.NextRowIndex;
 
@@ -327,8 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.Last)]
-		protected void OnLast()
+		protected virtual void OnLast()
 		{
 			var index = this.LastRowIndex;
 
@@ -350,8 +345,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.CompactAll)]
-		private void OnCompactAll()
+		protected virtual void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
 			using (new SaveSelectedGuid (this))
@@ -362,8 +356,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.CompactOne)]
-		private void OnCompactOne()
+		protected virtual void OnCompactOne()
 		{
 			//	Compacte une ligne.
 			using (new SaveSelectedGuid (this))
@@ -374,8 +367,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.ExpandOne)]
-		private void OnExpandOne()
+		protected virtual void OnExpandOne()
 		{
 			//	Etend une ligne.
 			using (new SaveSelectedGuid (this))
@@ -386,8 +378,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		[Command (Res.CommandIds.TreeTable.ExpandAll)]
-		private void OnExpandAll()
+		protected virtual void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
 			using (new SaveSelectedGuid (this))
@@ -412,7 +403,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			if (obj == null)
 			{
-				var target = this.toolbar.GetTarget (ToolbarCommand.Paste);
+				var target = this.toolbar.GetTarget (e);
 				MessagePopup.ShowPasteError (target);
 			}
 			else
@@ -426,7 +417,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected virtual void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
+			var target = this.toolbar.GetTarget (e);
 			MessagePopup.ShowTodo (target);
 		}
 
@@ -438,29 +429,19 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected virtual void UpdateToolbar()
 		{
-			int row = this.VisibleSelectedRow;
-
-			this.toolbar.SetCommandEnable (ToolbarCommand.Filter, true);
-			this.toolbar.SetCommandActivate (ToolbarCommand.Graphic, this.showGraphic);
-
-			this.UpdateSelCommand (ToolbarCommand.First, row, this.FirstRowIndex);
-			this.UpdateSelCommand (ToolbarCommand.Prev,  row, this.PrevRowIndex);
-			this.UpdateSelCommand (ToolbarCommand.Next,  row, this.NextRowIndex);
-			this.UpdateSelCommand (ToolbarCommand.Last,  row, this.LastRowIndex);
-
-			this.UpdateMoveCommand (ToolbarCommand.MoveTop,    row, this.FirstRowIndex);
-			this.UpdateMoveCommand (ToolbarCommand.MoveUp,     row, this.PrevRowIndex);
-			this.UpdateMoveCommand (ToolbarCommand.MoveDown,   row, this.NextRowIndex);
-			this.UpdateMoveCommand (ToolbarCommand.MoveBottom, row, this.LastRowIndex);
-
-			this.toolbar.SetCommandEnable (ToolbarCommand.New,      true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Delete,   row != -1);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Deselect, row != -1);
-
-			this.toolbar.SetCommandEnable (ToolbarCommand.Copy,   this.IsCopyEnable);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
-			this.toolbar.SetCommandEnable (ToolbarCommand.Export, true);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Import, true);
+			//?int row = this.VisibleSelectedRow;
+			//?
+			//?this.toolbar.SetActiveState (Res.Commands.TreeTable.Graphic, this.showGraphic);
+			//?
+			//?this.UpdateSelCommand (Res.Commands.TreeTable.First, row, this.FirstRowIndex);
+			//?this.UpdateSelCommand (Res.Commands.TreeTable.Prev,  row, this.PrevRowIndex);
+			//?this.UpdateSelCommand (Res.Commands.TreeTable.Next,  row, this.NextRowIndex);
+			//?this.UpdateSelCommand (Res.Commands.TreeTable.Last,  row, this.LastRowIndex);
+			//?
+			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveTop,    row, this.FirstRowIndex);
+			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveUp,     row, this.PrevRowIndex);
+			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveDown,   row, this.NextRowIndex);
+			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveBottom, row, this.LastRowIndex);
 		}
 
 		protected virtual bool IsCopyEnable
@@ -471,16 +452,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		private void UpdateSelCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		protected void UpdateSelCommand(Command command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.toolbar.SetCommandEnable (command, enable);
+			this.toolbar.SetEnable (command, enable);
 		}
 
-		private void UpdateMoveCommand(ToolbarCommand command, int selectedCell, int? newSelection)
+		protected void UpdateMoveCommand(Command command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != -1 && selectedCell != newSelection.Value);
-			this.toolbar.SetCommandEnable (command, enable);
+			this.toolbar.SetEnable (command, enable);
 		}
 
 

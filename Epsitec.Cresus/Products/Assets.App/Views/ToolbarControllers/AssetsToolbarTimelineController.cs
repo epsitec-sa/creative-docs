@@ -801,7 +801,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateCommand (Res.Commands.Timeline.Next,  sel, this.NextEventIndex);
 			this.UpdateCommand (Res.Commands.Timeline.Last,  sel, this.LastEventIndex);
 			this.UpdateCommand (Res.Commands.Timeline.Now,   sel, this.NowEventIndex);
-			this.toolbar.SetCommandEnable (ToolbarCommand.Date, true);
+
+			this.toolbar.SetEnable (Res.Commands.Timeline.Date, true);
 
 			this.toolbar.SetEnable (Res.Commands.Timeline.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
 			this.toolbar.SetEnable (Res.Commands.Timeline.Delete, this.HasSelectedEvent);

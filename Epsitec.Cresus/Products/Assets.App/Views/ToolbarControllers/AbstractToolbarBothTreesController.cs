@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.toolbar.GetTarget (ToolbarCommand.Export);
+			var target = this.toolbar.GetTarget (e);
 
 			this.UpdateFillerTitle ();
 			ExportHelpers<T>.StartExportProcess (target, this.accessor, this.dataFiller, this.treeTableController.ColumnsState);

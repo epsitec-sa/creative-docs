@@ -22,19 +22,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			base.CreateUI (parent);
 
 			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Filter);
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Graphic);
+			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Graphic);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Last);
+			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.First);
+			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Prev);
+			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Next);
+			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Last);
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
-			
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.CompactAll);
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.CompactOne);
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.ExpandOne);
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.ExpandAll);
+
+			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.CompactAll);
+			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.CompactOne);
+			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.ExpandOne);
+			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.ExpandAll);
 			
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
