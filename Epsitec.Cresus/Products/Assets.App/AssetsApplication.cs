@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public AssetsApplication()
 		{
-			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary);
+			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandContext = new CommandContext ();
 
 			this.commandDispatcher.RegisterController (this);
