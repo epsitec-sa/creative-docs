@@ -65,6 +65,36 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return entityFilter;
 		}
 
+		//TODO: Create a Query parser for returning a DatasetQuery
+		public static DatasetQueryFilter ParseQuery(BusinessContext businessContext, Caches caches, Database database, string queryParameter)
+		{
+			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
+			var entityId = EntityInfo.GetTypeId (entityType);
+			var datasetQuery = new DatasetQueryFilter (entityId);
+
+			if (string.IsNullOrEmpty (queryParameter))
+			{
+				return datasetQuery;
+			}
+
+			var deserializer = new JavaScriptSerializer ();
+			var query = (object[]) deserializer.DeserializeObject (queryParameter);
+
+			//TODO: parse query parameters for extracting filters
+			foreach (var filter in query.Cast<Dictionary<string, object>> ())
+			{
+				var column = ColumnIO.ParseColumn (caches, database, (string) filter["field"]);
+
+				var columnId = column.MetaData.Id;
+				var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
+				var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+
+				datasetQuery.Columns.Add (columnRef);
+			}
+
+			return datasetQuery;
+		}
+
 
 		private static EntityColumnFilter ParseColumnFilter(BusinessContext businessContext, Caches caches, Column column, Dictionary<string, object> filter)
 		{
