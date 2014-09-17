@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				Date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date,
 			};
 
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			popup.Create (target, leftOrRight: false);
 
 			popup.DateChanged += delegate
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Timeline.New)]
 		private void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			var timestamp = this.SelectedTimestamp;
 
 			if (target != null && timestamp.HasValue)
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Timeline.Delete)]
 		private void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 
 			if (AssetCalculator.IsLocked (this.obj, this.SelectedTimestamp.GetValueOrDefault ()))
 			{
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Timeline.Copy)]
 		private void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 
 			if (this.obj != null && this.selectedTimestamp.HasValue)
 			{
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Timeline.Paste)]
 		private void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 
 			if (this.obj != null && this.accessor.Clipboard.HasEvent)
 			{

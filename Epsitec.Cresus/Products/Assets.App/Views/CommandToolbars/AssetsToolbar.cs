@@ -49,7 +49,5 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Paste);
 			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Export);
 		}
-
-
 	}
 }

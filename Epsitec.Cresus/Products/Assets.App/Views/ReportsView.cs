@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnParams(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			this.report.ShowParamsPopup (target);
 		}
 
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var existingParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
 			if (existingParams != null)
 			{
-				var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+				var target = this.toolbar.GetTarget (e);
 				AddFavoritePopup.Show (target, this.accessor, createOperation =>
 				{
 					if (createOperation)  // crée un nouveau favori ?
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Affiche le Popup pour choisir comment exporter le rapport.
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			this.report.ShowExportPopup (target);
 		}
 

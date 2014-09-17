@@ -185,16 +185,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		
 		public void CreateUI(Widget parent)
 		{
-			this.topTitle = new TopTitle
+			var common = new FrameBox
 			{
 				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			CommandDispatcher.SetDispatcher (common, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			this.topTitle = new TopTitle
+			{
+				Parent = common,
 			};
 
 			this.topTitle.SetTitle (this.Title);
 
 			var box = new FrameBox
 			{
-				Parent = parent,
+				Parent = common,
 				Dock   = DockStyle.Fill,
 			};
 
@@ -547,7 +555,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Assets.Filter)]
 		private void OnObjectFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.objectsToolbar.GetTarget (e);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -817,7 +825,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (timestamp.HasValue)
 			{
-				var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+				var target = this.timelinesToolbar.GetTarget (e);
 				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 
 				CreateEventPopup.Show (target, this.accessor, BaseType.Assets, obj, timestamp.Value,
@@ -842,7 +850,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+				var target = this.timelinesToolbar.GetTarget (e);
 
 				if (AssetCalculator.IsLocked (this.SelectedObject, this.SelectedTimestamp.GetValueOrDefault ()))
 				{
@@ -858,7 +866,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Amortizations.Preview)]
 		private void OnTimelinesAmortizationsPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 
 			this.ShowAmortizationsPopup (target, true, true,
 				Res.Strings.Popup.Amortizations.Preview.Title.ToString (),
@@ -870,7 +878,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Amortizations.Fix)]
 		private void OnTimelinesAmortizationsFix(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 
 			this.ShowAmortizationsPopup (target, false, false,
 				Res.Strings.Popup.Amortizations.Fix.Title.ToString (),
@@ -909,7 +917,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Amortizations.Unpreview)]
 		private void OnTimelinesAmortizationsUnpreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 
 			this.ShowAmortizationsPopup (target, false, false,
 				Res.Strings.Popup.Amortizations.Unpreview.Title.ToString (),
@@ -921,7 +929,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Amortizations.Delete)]
 		private void OnTimelinesAmortizationsDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 
 			this.ShowAmortizationsPopup (target, true, false,
 				Res.Strings.Popup.Amortizations.Delete.Title.ToString (),
@@ -939,7 +947,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Copy)]
 		private void OnTimelinesCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 			var obj = this.SelectedObject;
 
 			if (obj != null && this.SelectedTimestamp.HasValue)
@@ -958,7 +966,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Paste)]
 		private void OnTimelinesPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.timelinesToolbar.GetTarget (e);
 			var obj = this.SelectedObject;
 
 			if (obj != null && this.accessor.Clipboard.HasEvent)

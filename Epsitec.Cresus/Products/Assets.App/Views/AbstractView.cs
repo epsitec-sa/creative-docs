@@ -97,21 +97,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Edit)]
 		private void OnMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.mainToolbar.GetTarget (e);
 			this.OnMainEdit (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void OnEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.mainToolbar.GetTarget (e);
 			this.OnEditAccept (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Cancel)]
 		private void OnEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.mainToolbar.GetTarget (e);
 			this.OnEditCancel (target);
 		}
 
@@ -130,14 +130,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Locked)]
 		private void OnMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.mainToolbar.GetTarget (e);
 			this.ShowLockedPopup (target);
 		}
 
 		[Command (Res.CommandIds.Main.Simulation)]
 		private void OnMainSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.mainToolbar.GetTarget (e);
 			this.ShowSimulationPopup (target);
 		}
 

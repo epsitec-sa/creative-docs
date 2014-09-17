@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.New)]
 		private void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowCreateMandatPopup (target);
 		}
 
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Navigate.Menu)]
 		private void OnNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.toolbar.GetTarget (e);
 			this.ShowLastViewsPopup (target);
 		}
 

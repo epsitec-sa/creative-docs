@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.View.Settings)]
 		private void OnViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var target = this.GetTarget (e);
 			this.ShowViewPopup (target);
 		}
 
@@ -198,10 +198,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				this.SetActiveState (command, this.viewType.Kind == kind);
 			}
 
-			//	"Allume" l'engrenage si la vue sélectionnée a été choisie dans le PopUp.
+			//	"Allume" l'engrenage si la vue sélectionnée a été choisie dans le Popup.
 			{
-				bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
-				this.SetActiveState (Res.Commands.View.Settings, ap);
+				bool active = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
+				this.SetActiveState (Res.Commands.View.Settings, active);
 			}
 		}
 
