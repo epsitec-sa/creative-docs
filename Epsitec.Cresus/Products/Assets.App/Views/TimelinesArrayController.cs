@@ -49,10 +49,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Dispose()
 		{
-			if (this.objectsToolbar != null)
+			if (this.assetsToolbar != null)
 			{
-				this.objectsToolbar.Dispose ();
-				this.objectsToolbar = null;
+				this.assetsToolbar.Dispose ();
+				this.assetsToolbar = null;
 			}
 
 			if (this.timelinesToolbar != null)
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void Close()
 		{
-			this.objectsToolbar.Close ();
+			this.assetsToolbar.Close ();
 			this.timelinesToolbar.Close ();
 		}
 
@@ -227,11 +227,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.objectsToolbar = new AssetsToolbar (this.accessor, this.commandContext);
+			this.assetsToolbar = new AssetsToolbar (this.accessor, this.commandContext);
 
-			this.objectsToolbar.CreateUI (leftBox);
-			this.objectsToolbar.HasFilter = true;
-			this.objectsToolbar.HasTreeOperations = true;
+			this.assetsToolbar.CreateUI (leftBox);
+			this.assetsToolbar.HasFilter = true;
+			this.assetsToolbar.HasTreeOperations = true;
 
 			this.treeColumn = new TreeTableColumnTree
 			{
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.treeColumn.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 				{
-					this.OnCompactOrExpand (this.TopVisibleRow + row);
+					this.OnAssetsCompactOrExpand (this.TopVisibleRow + row);
 				};
 			}
 
@@ -551,11 +551,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		//?}
 
 
-		#region Objects commands
+		#region Assets commands
 		[Command (Res.CommandIds.Assets.Filter)]
-		private void OnObjectFilter(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnAssetsFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.objectsToolbar.GetTarget (e);
+			var target = this.assetsToolbar.GetTarget (e);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -568,13 +568,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.Graphic)]
-		private void OnObjectGraphic()
+		private void OnAssetsGraphic()
 		{
 			// TODO...
 		}
 
 		[Command (Res.CommandIds.TreeTable.First)]
-		private void OnObjectFirst()
+		private void OnAssetsFirst()
 		{
 			var index = this.FirstRowIndex;
 
@@ -585,7 +585,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.Prev)]
-		private void OnObjectPrev()
+		private void OnAssetsPrev()
 		{
 			var index = this.PrevRowIndex;
 
@@ -596,7 +596,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.Next)]
-		private void OnObjectNext()
+		private void OnAssetsNext()
 		{
 			var index = this.NextRowIndex;
 
@@ -607,7 +607,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.Last)]
-		private void OnObjectLast()
+		private void OnAssetsLast()
 		{
 			var index = this.LastRowIndex;
 
@@ -618,32 +618,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Assets.New)]
-		private void OnObjectNew()
+		private void OnAssetsNew()
 		{
-			var target = this.objectsToolbar.GetTarget (ToolbarCommand.New);
+			var target = this.assetsToolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
 		[Command (Res.CommandIds.Assets.Delete)]
-		private void OnObjectDelete()
+		private void OnAssetsDelete()
 		{
-			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
-			YesNoPopup.Show (target, Res.Strings.TimelinesArrayController.ObjectDelete.ToString (), this.ObjectDeleteSelection);
+			var target = this.assetsToolbar.GetTarget (ToolbarCommand.Delete);
+			YesNoPopup.Show (target, Res.Strings.TimelinesArrayController.ObjectDelete.ToString (), this.AssetsDeleteSelection);
 		}
 
-		private void ObjectDeleteSelection()
+		private void AssetsDeleteSelection()
 		{
 			this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 			this.UpdateData ();
 		}
 
 		[Command (Res.CommandIds.Assets.Deselect)]
-		private void OnObjectDeselect()
+		private void OnAssetsDeselect()
 		{
 			this.SetSelection (-1, -1);
 		}
 
-		private void OnCompactOrExpand(int row)
+		private void OnAssetsCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
 			var guid = this.SelectedGuid;
@@ -660,7 +660,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.CompactAll)]
-		protected void OnCompactAll()
+		protected void OnAssetsCompactAll()
 		{
 			//	Compacte toutes les lignes.
 			var guid = this.SelectedGuid;
@@ -677,7 +677,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.CompactOne)]
-		protected void OnCompactOne()
+		protected void OnAssetsCompactOne()
 		{
 			//	Compacte une ligne.
 			var guid = this.SelectedGuid;
@@ -694,7 +694,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.ExpandOne)]
-		protected void OnExpandOne()
+		protected void OnAssetsExpandOne()
 		{
 			//	Compacte une ligne.
 			var guid = this.SelectedGuid;
@@ -711,7 +711,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.TreeTable.ExpandAll)]
-		protected void OnExpandAll()
+		protected void OnAssetsExpandAll()
 		{
 			//	Etend toutes les lignes.
 			var guid = this.SelectedGuid;
@@ -1478,7 +1478,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void UpdateToolbar()
 		{
 			//	Mise à jour de la toolbar des objets.
-			this.objectsToolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
+			this.assetsToolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
 
 			this.UpdateObjectCommand (Res.Commands.TreeTable.First, this.selectedRow, this.FirstRowIndex);
 			this.UpdateObjectCommand (Res.Commands.TreeTable.Prev,  this.selectedRow, this.PrevRowIndex);
@@ -1493,9 +1493,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Next,  expandEnable);
 			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Last,  expandEnable);
 
-			this.objectsToolbar.SetEnable (Res.Commands.Assets.New,      true);
-			this.objectsToolbar.SetEnable (Res.Commands.Assets.Delete,   this.SelectedObject != null);
-			this.objectsToolbar.SetEnable (Res.Commands.Assets.Deselect, this.selectedRow != -1);
+			this.assetsToolbar.SetEnable (Res.Commands.Assets.New,      true);
+			this.assetsToolbar.SetEnable (Res.Commands.Assets.Delete,   this.SelectedObject != null);
+			this.assetsToolbar.SetEnable (Res.Commands.Assets.Deselect, this.selectedRow != -1);
 
 			//	Mise à jour de la toolbar des timelines.
 			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
@@ -1599,7 +1599,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateObjectCommand(Command command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.objectsToolbar.SetEnable (command, enable);
+			this.assetsToolbar.SetEnable (command, enable);
 		}
 
 		private void UpdateTimelineCommand(Command command, int currentSelection, int? newSelection)
@@ -1920,7 +1920,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TopTitle									topTitle;
 		private TimelinesMode								timelinesMode;
-		private AssetsToolbar								objectsToolbar;
+		private AssetsToolbar								assetsToolbar;
 		private VSplitter									splitter;
 		private TimelinesToolbar							timelinesToolbar;
 		private TreeTableColumnTree							treeColumn;
