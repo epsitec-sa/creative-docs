@@ -226,6 +226,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			int row = this.VisibleSelectedRow;
 
+			this.UpdateSelCommand (Res.Commands.Categories.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (Res.Commands.Categories.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.Categories.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.Categories.Last,  row, this.LastRowIndex);
+
 			this.toolbar.SetEnable (Res.Commands.Categories.New,      true);
 			this.toolbar.SetEnable (Res.Commands.Categories.Delete,   row != -1);
 			this.toolbar.SetEnable (Res.Commands.Categories.Deselect, row != -1);

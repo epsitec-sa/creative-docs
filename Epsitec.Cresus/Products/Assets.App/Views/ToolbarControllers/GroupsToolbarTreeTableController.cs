@@ -263,6 +263,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			base.UpdateToolbar ();
 
+			int row = this.VisibleSelectedRow;
+
+			this.UpdateSelCommand (Res.Commands.Groups.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (Res.Commands.Groups.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.Groups.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.Groups.Last,  row, this.LastRowIndex);
+
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
@@ -270,8 +277,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Groups.CompactOne, compactEnable);
 			this.toolbar.SetEnable (Res.Commands.Groups.ExpandOne,  expandEnable);
 			this.toolbar.SetEnable (Res.Commands.Groups.ExpandAll,  expandEnable);
-
-			int row = this.VisibleSelectedRow;
 
 			this.toolbar.SetEnable (Res.Commands.Groups.New,      true);
 			this.toolbar.SetEnable (Res.Commands.Groups.Delete,   row != -1);

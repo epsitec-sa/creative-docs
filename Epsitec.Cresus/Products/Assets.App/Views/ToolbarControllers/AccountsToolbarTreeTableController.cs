@@ -265,6 +265,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			base.UpdateToolbar ();
 
+			int row = this.VisibleSelectedRow;
+
+			this.UpdateSelCommand (Res.Commands.Accounts.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (Res.Commands.Accounts.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.Accounts.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.Accounts.Last,  row, this.LastRowIndex);
+
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 

@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Entries.Last);
 
 			this.separator1       = this.CreateSeparator     (DockStyle.None);
+
+			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.Entries.CompactAll);
+			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.Entries.ExpandAll);
+
 			this.separator2       = this.CreateSeparator     (DockStyle.None);
 			this.separator3       = this.CreateSeparator     (DockStyle.None);
 
