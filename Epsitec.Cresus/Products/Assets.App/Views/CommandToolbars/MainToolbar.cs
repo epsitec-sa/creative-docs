@@ -166,14 +166,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.View.AssetsSettings)]
 		[Command (Res.CommandIds.View.PersonsSettings)]
 		[Command (Res.CommandIds.View.Accounts)]
-		private void CommandView(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewType = ViewType.FromDefaultKind (this.accessor, MainToolbar.GetViewKind (e.Command));
 			this.OnChangeView ();
 		}
 
 		[Command (Res.CommandIds.View.Settings)]
-		private void CommandViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowViewPopup (target);
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.ViewMode.Single)]
 		[Command (Res.CommandIds.ViewMode.Event)]
 		[Command (Res.CommandIds.ViewMode.Multiple)]
-		private void CommandViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnViewMode(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewMode = MainToolbar.GetViewMode (e.Command);
 			this.OnChangeView ();
@@ -195,17 +195,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			foreach (var kind in MainToolbar.ViewTypeKinds)
 			{
 				var command = MainToolbar.GetViewCommand (kind);
-				var cs = this.commandContext.GetCommandState (command);
-
-				cs.ActiveState = (this.viewType.Kind == kind) ? ActiveState.Yes : ActiveState.No;
+				this.SetActiveState (command, this.viewType.Kind == kind);
 			}
 
 			//	"Allume" l'engrenage si la vue sélectionnée a été choisie dans le PopUp.
 			{
-				var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-				
 				bool ap = MainToolbar.PopupViewTypeKinds.Contains (this.viewType.Kind);
-				cs.ActiveState = ap ? ActiveState.Yes : ActiveState.No;
+				this.SetActiveState (Res.Commands.View.Settings, ap);
 			}
 		}
 
@@ -215,18 +211,18 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			foreach (var mode in MainToolbar.ViewTypeModes)
 			{
-				var command = MainToolbar.GetViewCommand (mode);
-				var cs = this.commandContext.GetCommandState (command);
+				var command = MainToolbar.GetViewModeCommand (mode);
 
 				if (visibility)
 				{
-					cs.Visibility  = true;
-					cs.ActiveState = (this.viewMode == mode) ? ActiveState.Yes : ActiveState.No;
+					this.SetVisibility  (command, true);
+					this.SetEnable      (command, true);
+					this.SetActiveState (command, this.viewMode == mode);
 				}
 				else
 				{
-					cs.Visibility  = false;
-					cs.ActiveState = ActiveState.No;
+					this.SetVisibility  (command, false);
+					this.SetActiveState (command, false);
 				}
 			}
 		}
@@ -351,7 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			foreach (var mode in MainToolbar.ViewTypeModes)
 			{
-				if (command == MainToolbar.GetViewCommand (mode))
+				if (command == MainToolbar.GetViewModeCommand (mode))
 				{
 					return mode;
 				}
@@ -360,7 +356,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			return ViewMode.Unknown;
 		}
 
-		private static Command GetViewCommand(ViewMode mode)
+		private static Command GetViewModeCommand(ViewMode mode)
 		{
 			switch (mode)
 			{

@@ -91,7 +91,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		protected abstract void CreateCommands();
+		protected virtual void CreateCommands()
+		{
+		}
 
 		public virtual void CreateUI(Widget parent)
 		{
@@ -106,6 +108,21 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
+
+		public void SetVisibility(Command command, bool visibility)
+		{
+			this.commandContext.GetCommandState (command).Visibility = visibility;
+
+			if (!visibility)
+			{
+				this.SetEnable (command, false);
+			}
+		}
+
+		public void SetEnable(Command command, bool enable)
+		{
+			this.commandContext.GetCommandState (command).Enable = enable;
+		}
 
 		public void SetActiveState(Command command, bool active)
 		{
@@ -164,11 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
-
-		public void SetCommandEnable(Command command, bool enable)
-		{
-			this.commandContext.GetCommandState (command).Enable = enable;
-		}
 
 		public void SetCommandEnable(ToolbarCommand command, bool enable)
 		{

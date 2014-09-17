@@ -36,9 +36,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.mainToolbar != null)
 			{
-				this.commandContext.GetCommandState (Res.Commands.Main.Edit  ).Visibility = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Accept).Visibility = false;
-				this.commandContext.GetCommandState (Res.Commands.Edit.Cancel).Visibility = false;
+				this.mainToolbar.SetVisibility (Res.Commands.Main.Edit,   false);
+				this.mainToolbar.SetVisibility (Res.Commands.Edit.Accept, false);
+				this.mainToolbar.SetVisibility (Res.Commands.Edit.Cancel, false);
 			}
 
 			this.commandDispatcher.Dispose ();
@@ -95,47 +95,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		[Command (Res.CommandIds.Main.Edit)]
-		private void CommandMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnMainEdit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
-			this.CommandMainEdit (target);
+			this.OnMainEdit (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Accept)]
-		private void CommandEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnEditAccept(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
-			this.CommandEditAccept (target);
+			this.OnEditAccept (target);
 		}
 
 		[Command (Res.CommandIds.Edit.Cancel)]
-		private void CommandEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnEditCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
-			this.CommandEditCancel (target);
+			this.OnEditCancel (target);
 		}
 
-		protected virtual void CommandMainEdit(Widget target)
+		protected virtual void OnMainEdit(Widget target)
 		{
 		}
 
-		protected virtual void CommandEditAccept(Widget target)
+		protected virtual void OnEditAccept(Widget target)
 		{
 		}
 
-		protected virtual void CommandEditCancel(Widget target)
+		protected virtual void OnEditCancel(Widget target)
 		{
 		}
 
 		[Command (Res.CommandIds.Main.Locked)]
-		private void CommandMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnMainLocked(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowLockedPopup (target);
 		}
 
 		[Command (Res.CommandIds.Main.Simulation)]
-		private void CommandMainSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnMainSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowSimulationPopup (target);

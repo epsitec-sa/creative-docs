@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Reports.Params)]
-		private void CommandParams(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnParams(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Reports.AddFavorite)]
-		private void CommandAddFavorite(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnAddFavorite(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Cherche s'il existe déjà des paramètres avec le même nom.
 			//	Si oui, on les supprime, pour les rajouter juste après, ce qui
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Reports.RemoveFavorite)]
-		private void CommandRemoveFavorite(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnRemoveFavorite(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.accessor.Mandat.Reports.Remove (this.report.ReportParams);
 
@@ -216,45 +216,45 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Reports.CompactAll)]
-		private void CommandCompactAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnCompactAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.OnCompactAll ();
 		}
 
 		[Command (Res.CommandIds.Reports.CompactOne)]
-		private void CommandCompactOne(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnCompactOne(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.OnCompactOne ();
 		}
 
 		[Command (Res.CommandIds.Reports.ExpandOne)]
-		private void CommandExpandOne(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnExpandOne(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.OnExpandOne ();
 		}
 
 		[Command (Res.CommandIds.Reports.ExpandAll)]
-		private void CommandExpandAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnExpandAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.OnExpandAll ();
 		}
 
 		[Command (Res.CommandIds.Reports.Period.Prev)]
-		private void CommandPeriodPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnPeriodPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.ReportParams = this.report.ReportParams.ChangePeriod (-1);
 			this.report.UpdateParams ();
 		}
 
 		[Command (Res.CommandIds.Reports.Period.Next)]
-		private void CommandPeriodNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnPeriodNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.report.ReportParams = this.report.ReportParams.ChangePeriod (1);
 			this.report.UpdateParams ();
 		}
 
 		[Command (Res.CommandIds.Reports.Export)]
-		private void CommandExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Affiche le Popup pour choisir comment exporter le rapport.
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Reports.Close)]
-		private void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			//	Ferme le rapport.
 			this.UpdateUI (null);

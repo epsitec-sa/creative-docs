@@ -133,26 +133,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		[Command (Res.CommandIds.Main.New)]
-		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowCreateMandatPopup (target);
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Back)]
-		private void CommandNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.GoHistoryBack ();
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Forward)]
-		private void CommandNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNavigateForward(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.GoHistoryForward ();
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Menu)]
-		private void CommandNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNavigateMenu(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			this.ShowLastViewsPopup (target);

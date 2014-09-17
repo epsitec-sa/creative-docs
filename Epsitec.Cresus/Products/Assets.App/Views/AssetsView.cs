@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelineController = new AssetsToolbarTimelineController  (this.accessor, this.commandContext, this.baseType);
 			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.commandContext, this.baseType);
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandDispatcher, this.commandContext)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandContext)
 			{
 				Title = this.GetViewTitle (ViewType.Assets),
 			};
@@ -481,7 +481,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CommandMainEdit(Widget target)
+		protected override void OnMainEdit(Widget target)
 		{
 			if (!this.isEditing && this.selectedGuid.IsEmpty)
 			{
@@ -492,13 +492,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
-		protected override void CommandEditAccept(Widget target)
+		protected override void OnEditAccept(Widget target)
 		{
 			this.isEditing = false;
 			this.UpdateUI ();
 		}
 
-		protected override void CommandEditCancel(Widget target)
+		protected override void OnEditCancel(Widget target)
 		{
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;

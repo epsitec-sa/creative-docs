@@ -180,6 +180,15 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\AbstractTreeTableToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\AccountsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\UserFieldsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\WarningsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\PersonsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\GroupsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\CategoriesToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\EntriesToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\AssetsToolbar.cs" />
     <Compile Include="Views\FieldColorType.cs" />
     <Compile Include="Views\EditorPages\ColorsExplanationController.cs" />
     <Compile Include="Views\Editors\AbstractEditor.cs" />

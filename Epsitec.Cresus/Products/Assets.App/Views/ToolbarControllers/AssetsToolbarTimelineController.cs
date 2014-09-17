@@ -79,43 +79,43 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Labels)]
-		private void CommandLabels(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnLabels(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.Labels);
 		}
 
 		[Command (Res.CommandIds.Timeline.Compacted)]
-		private void CommandCompacted(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnCompacted(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.Compacted);
 		}
 
 		[Command (Res.CommandIds.Timeline.Expanded)]
-		private void CommandExtended(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnExtended(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.Expanded);
 		}
 
 		[Command (Res.CommandIds.Timeline.WeeksOfYear)]
-		private void CommandWeeksOfYear(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnWeeksOfYear(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.WeeksOfYear);
 		}
 
 		[Command (Res.CommandIds.Timeline.DaysOfWeek)]
-		private void CommandDaysOfWeek(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDaysOfWeek(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.DaysOfWeek);
 		}
 
 		[Command (Res.CommandIds.Timeline.Graph)]
-		private void CommandGraph(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnGraph(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ChangeMode (TimelineMode.Graph);
 		}
 
 		[Command (Res.CommandIds.Timeline.First)]
-		private void CommandFirst(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnFirst(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.FirstEventIndex;
 
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Prev)]
-		private void CommandPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.PrevEventIndex;
 
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Next)]
-		private void CommandNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.NextEventIndex;
 
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Last)]
-		private void CommandLast(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnLast(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.LastEventIndex;
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Now)]
-		private void CommandNow(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNow(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.NowEventIndex;
 
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Date)]
-		private void CommandDate(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var popup = new DatePopup (this.accessor)
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.New)]
-		private void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			var timestamp = this.SelectedTimestamp;
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Delete)]
-		private void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 
@@ -236,13 +236,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Deselect)]
-		private void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.SelectedTimestamp = null;
 		}
 
 		[Command (Res.CommandIds.Timeline.Copy)]
-		private void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Paste)]
-		private void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 
@@ -803,18 +803,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateCommand (Res.Commands.Timeline.Now,   sel, this.NowEventIndex);
 			this.toolbar.SetCommandEnable (ToolbarCommand.Date, true);
 
-			this.toolbar.SetCommandEnable (Res.Commands.Timeline.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
-			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Delete, this.HasSelectedEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Delete, this.HasSelectedEvent);
 
-			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Deselect, sel != -1);
-			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Copy, this.HasSelectedEvent);
-			this.toolbar.SetCommandEnable (Res.Commands.Timeline.Paste, this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Deselect, sel != -1);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Copy, this.HasSelectedEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Paste, this.accessor.Clipboard.HasEvent);
 		}
 
 		private void UpdateCommand(Command command, int selectedCell, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.toolbar.SetCommandEnable (command, enable);
+			this.toolbar.SetEnable (command, enable);
 		}
 
 

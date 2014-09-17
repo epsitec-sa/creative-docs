@@ -21,11 +21,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesArrayController : IDirty, System.IDisposable
 	{
-		public TimelinesArrayController(DataAccessor accessor, CommandDispatcher commandDispatcher, CommandContext commandContext)
+		public TimelinesArrayController(DataAccessor accessor, CommandContext commandContext)
 		{
-			this.accessor          = accessor;
-			this.commandDispatcher = commandDispatcher;
-			this.commandContext    = commandContext;
+			this.accessor       = accessor;
+			this.commandContext = commandContext;
 
 			this.selectedRow    = -1;
 			this.selectedColumn = -1;
@@ -43,6 +42,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelinesMode = TimelinesMode.Wide;
 
 			this.amortizations = new Amortizations (this.accessor);
+
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public void Dispose()
@@ -58,6 +60,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.timelinesToolbar.Dispose ();
 				this.timelinesToolbar = null;
 			}
+
+			this.commandDispatcher.Dispose ();
 		}
 
 		public void Close()
@@ -215,16 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			//	Partie gauche.
-			this.objectsToolbar = new TreeTableToolbar (this.accessor, this.commandContext);
-
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.TimelinesArrayController.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Delete,   null,                    Res.Strings.TimelinesArrayController.Delete.ToString ());
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.TimelinesArrayController.Deselect.ToString ());
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Export,   CommandDescription.Empty);
-			this.objectsToolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
+			this.objectsToolbar = new AssetsToolbar (this.accessor, this.commandContext);
 
 			this.objectsToolbar.CreateUI (leftBox);
 			this.objectsToolbar.HasFilter = true;
@@ -250,7 +245,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Partie droite.
 			this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandContext);
 			this.timelinesToolbar.CreateUI (rightBox);
-			this.timelinesToolbar.TimelinesMode = this.timelinesMode;
 
 			var bottomRightBox = new FrameBox
 			{
@@ -327,10 +321,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
-				this.controller.DokeySelect += delegate (object sender, KeyCode key)
-				{
-					this.OnDokeySelect (key);
-				};
+				//?this.controller.DokeySelect += delegate (object sender, KeyCode key)
+				//?{
+				//?	this.OnDokeySelect (key);
+				//?};
 			}
 
 			{
@@ -347,126 +341,121 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
-			this.objectsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.Filter:
-						this.OnObjectFilter ();
-						break;
+			//?this.objectsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			//?{
+			//?	switch (command)
+			//?	{
+			//?		case ToolbarCommand.Filter:
+			//?			this.OnObjectFilter ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.First:
+			//?			this.OnObjectFirst ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Last:
+			//?			this.OnObjectLast ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Prev:
+			//?			this.OnObjectPrev ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Next:
+			//?			this.OnObjectNext ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.CompactAll:
+			//?			this.OnCompactAll ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.CompactOne:
+			//?			this.OnCompactOne ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.ExpandOne:
+			//?			this.OnExpandOne ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.ExpandAll:
+			//?			this.OnExpandAll ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.New:
+			//?			this.OnObjectNew ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Delete:
+			//?			this.OnObjectDelete ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Deselect:
+			//?			this.OnObjectDeselect ();
+			//?			break;
+			//?	}
+			//?};
 
-					case ToolbarCommand.First:
-						this.OnObjectFirst ();
-						break;
-
-					case ToolbarCommand.Last:
-						this.OnObjectLast ();
-						break;
-
-					case ToolbarCommand.Prev:
-						this.OnObjectPrev ();
-						break;
-
-					case ToolbarCommand.Next:
-						this.OnObjectNext ();
-						break;
-
-					case ToolbarCommand.CompactAll:
-						this.OnCompactAll ();
-						break;
-
-					case ToolbarCommand.CompactOne:
-						this.OnCompactOne ();
-						break;
-
-					case ToolbarCommand.ExpandOne:
-						this.OnExpandOne ();
-						break;
-
-					case ToolbarCommand.ExpandAll:
-						this.OnExpandAll ();
-						break;
-
-					case ToolbarCommand.New:
-						this.OnObjectNew ();
-						break;
-
-					case ToolbarCommand.Delete:
-						this.OnObjectDelete ();
-						break;
-
-					case ToolbarCommand.Deselect:
-						this.OnObjectDeselect ();
-						break;
-				}
-			};
-
-			this.timelinesToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			{
-				switch (command)
-				{
-					case ToolbarCommand.First:
-						this.OnTimelineFirst ();
-						break;
-
-					case ToolbarCommand.Last:
-						this.OnTimelineLast ();
-						break;
-
-					case ToolbarCommand.Prev:
-						this.OnTimelinePrev ();
-						break;
-
-					case ToolbarCommand.Next:
-						this.OnTimelineNext ();
-						break;
-
-					case ToolbarCommand.New:
-						this.OnTimelineNew ();
-						break;
-
-					case ToolbarCommand.Delete:
-						this.OnTimelineDelete ();
-						break;
-
-					case ToolbarCommand.AmortizationsPreview:
-						this.OnAmortizationPreview ();
-						break;
-					
-					case ToolbarCommand.AmortizationsFix:
-						this.OnAmortizationFix ();
-						break;
-					
-					case ToolbarCommand.AmortizationsToExtra:
-						this.OnAmortizationToExtra ();
-						break;
-					
-					case ToolbarCommand.AmortizationsUnpreview:
-						this.OnAmortizationUnpreview ();
-						break;
-					
-					case ToolbarCommand.AmortizationsDelete:
-						this.OnAmortizationDelete ();
-						break;
-
-					case ToolbarCommand.Deselect:
-						this.OnTimelineDeselect ();
-						break;
-
-					case ToolbarCommand.Copy:
-						this.OnTimelineCopy ();
-						break;
-
-					case ToolbarCommand.Paste:
-						this.OnTimelinePaste ();
-						break;
-				}
-			};
-
-			this.timelinesToolbar.ModeChanged += delegate
-			{
-				this.TimelinesMode = this.timelinesToolbar.TimelinesMode;
-			};
+			//?this.timelinesToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
+			//?{
+			//?	switch (command)
+			//?	{
+			//?		case ToolbarCommand.First:
+			//?			this.OnTimelineFirst ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Last:
+			//?			this.OnTimelineLast ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Prev:
+			//?			this.OnTimelinePrev ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Next:
+			//?			this.OnTimelineNext ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.New:
+			//?			this.OnTimelineNew ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Delete:
+			//?			this.OnTimelineDelete ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.AmortizationsPreview:
+			//?			this.OnAmortizationPreview ();
+			//?			break;
+			//?		
+			//?		case ToolbarCommand.AmortizationsFix:
+			//?			this.OnAmortizationFix ();
+			//?			break;
+			//?		
+			//?		case ToolbarCommand.AmortizationsToExtra:
+			//?			this.OnAmortizationToExtra ();
+			//?			break;
+			//?		
+			//?		case ToolbarCommand.AmortizationsUnpreview:
+			//?			this.OnAmortizationUnpreview ();
+			//?			break;
+			//?		
+			//?		case ToolbarCommand.AmortizationsDelete:
+			//?			this.OnAmortizationDelete ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Deselect:
+			//?			this.OnTimelineDeselect ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Copy:
+			//?			this.OnTimelineCopy ();
+			//?			break;
+			//?
+			//?		case ToolbarCommand.Paste:
+			//?			this.OnTimelinePaste ();
+			//?			break;
+			//?	}
+			//?};
 		}
 
 		private void CreateStateAt(Widget parent)
@@ -507,57 +496,58 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
-				new MenuPopup.Item (ToolbarCommand.AmortizationsPreview,   this.OnAmortizationPreview),
-				new MenuPopup.Item (ToolbarCommand.AmortizationsFix,       this.OnAmortizationFix),
-				new MenuPopup.Item (ToolbarCommand.AmortizationsToExtra,   this.OnAmortizationToExtra),
-				new MenuPopup.Item (ToolbarCommand.AmortizationsUnpreview, this.OnAmortizationUnpreview),
-				new MenuPopup.Item (ToolbarCommand.AmortizationsDelete,    this.OnAmortizationDelete),
-				new MenuPopup.Item (),
-				new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
-				new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
-				new MenuPopup.Item (),
-				new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
-				new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
+			//?MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
+			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsPreview,   this.OnAmortizationPreview),
+			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsFix,       this.OnAmortizationFix),
+			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsToExtra,   this.OnAmortizationToExtra),
+			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsUnpreview, this.OnAmortizationUnpreview),
+			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsDelete,    this.OnAmortizationDelete),
+			//?	new MenuPopup.Item (),
+			//?	new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
+			//?	new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
+			//?	new MenuPopup.Item (),
+			//?	new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
+			//?	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
 		}
 
-		private void OnDokeySelect(KeyCode key)
-		{
-			switch (key)
-			{
-				case KeyCode.Home:
-					this.OnObjectFirst ();
-					this.OnTimelineFirst ();
-					break;
-
-				case KeyCode.End:
-					this.OnObjectLast ();
-					this.OnTimelineLast ();
-					break;
-
-				case KeyCode.ArrowUp:
-					this.OnObjectPrev ();
-					break;
-
-				case KeyCode.ArrowDown:
-					this.OnObjectNext ();
-					break;
-
-				case KeyCode.ArrowLeft:
-					this.OnTimelinePrev ();
-					break;
-
-				case KeyCode.ArrowRight:
-					this.OnTimelineNext ();
-					break;
-			}
-		}
+		//?private void OnDokeySelect(KeyCode key)
+		//?{
+		//?	switch (key)
+		//?	{
+		//?		case KeyCode.Home:
+		//?			this.OnObjectFirst ();
+		//?			this.OnTimelineFirst ();
+		//?			break;
+		//?
+		//?		case KeyCode.End:
+		//?			this.OnObjectLast ();
+		//?			this.OnTimelineLast ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowUp:
+		//?			this.OnObjectPrev ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowDown:
+		//?			this.OnObjectNext ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowLeft:
+		//?			this.OnTimelinePrev ();
+		//?			break;
+		//?
+		//?		case KeyCode.ArrowRight:
+		//?			this.OnTimelineNext ();
+		//?			break;
+		//?	}
+		//?}
 
 
 		#region Objects commands
-		private void OnObjectFilter()
+		[Command (Res.CommandIds.Assets.Filter)]
+		private void OnObjectFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Filter);
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
 			popup.Create (target, leftOrRight: true);
@@ -569,6 +559,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		[Command (Res.CommandIds.TreeTable.Graphic)]
+		private void OnObjectGraphic()
+		{
+			// TODO...
+		}
+
+		[Command (Res.CommandIds.TreeTable.First)]
 		private void OnObjectFirst()
 		{
 			var index = this.FirstRowIndex;
@@ -579,6 +576,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Prev)]
 		private void OnObjectPrev()
 		{
 			var index = this.PrevRowIndex;
@@ -589,6 +587,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Next)]
 		private void OnObjectNext()
 		{
 			var index = this.NextRowIndex;
@@ -599,6 +598,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		[Command (Res.CommandIds.TreeTable.Last)]
 		private void OnObjectLast()
 		{
 			var index = this.LastRowIndex;
@@ -609,12 +609,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		[Command (Res.CommandIds.Assets.New)]
 		private void OnObjectNew()
 		{
 			var target = this.objectsToolbar.GetTarget (ToolbarCommand.New);
 			this.ShowCreatePopup (target);
 		}
 
+		[Command (Res.CommandIds.Assets.Delete)]
 		private void OnObjectDelete()
 		{
 			var target = this.objectsToolbar.GetTarget (ToolbarCommand.Delete);
@@ -627,6 +629,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateData ();
 		}
 
+		[Command (Res.CommandIds.Assets.Deselect)]
 		private void OnObjectDeselect()
 		{
 			this.SetSelection (-1, -1);
@@ -648,6 +651,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
+		[Command (Res.CommandIds.TreeTable.CompactAll)]
 		protected void OnCompactAll()
 		{
 			//	Compacte toutes les lignes.
@@ -664,6 +668,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
+		[Command (Res.CommandIds.TreeTable.CompactOne)]
 		protected void OnCompactOne()
 		{
 			//	Compacte une ligne.
@@ -680,6 +685,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
+		[Command (Res.CommandIds.TreeTable.ExpandOne)]
 		protected void OnExpandOne()
 		{
 			//	Compacte une ligne.
@@ -696,6 +702,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = timestamp;
 		}
 
+		[Command (Res.CommandIds.TreeTable.ExpandAll)]
 		protected void OnExpandAll()
 		{
 			//	Etend toutes les lignes.
@@ -737,7 +744,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		#region Timeline commands
-		private void OnTimelineFirst()
+		[Command (Res.CommandIds.Timelines.Narrow)]
+		private void OnTimelinesNarrow(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var t = this.TimelinesMode;
+			t |=  TimelinesMode.Narrow;
+			t &= ~TimelinesMode.Wide;
+			this.TimelinesMode = t;
+
+			this.UpdateToolbar ();
+		}
+
+		[Command (Res.CommandIds.Timelines.Wide)]
+		private void OnTimelinesWide(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var t = this.TimelinesMode;
+			t |=  TimelinesMode.Wide;
+			t &= ~TimelinesMode.Narrow;
+			this.TimelinesMode = t;
+
+			this.UpdateToolbar ();
+		}
+
+		[Command (Res.CommandIds.Timelines.First)]
+		private void OnTimelinesFirst(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.FirstColumnIndex;
 
@@ -747,7 +777,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnTimelinePrev()
+		[Command (Res.CommandIds.Timelines.Prev)]
+		private void OnTimelinesPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.PrevColumnIndex;
 
@@ -757,7 +788,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnTimelineNext()
+		[Command (Res.CommandIds.Timelines.Next)]
+		private void OnTimelinesNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.NextColumnIndex;
 
@@ -767,7 +799,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnTimelineLast()
+		[Command (Res.CommandIds.Timelines.Last)]
+		private void OnTimelinesLast(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var index = this.LastColumnIndex;
 
@@ -777,13 +810,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnTimelineNew()
+		[Command (Res.CommandIds.Timelines.New)]
+		private void OnTimelinesNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var timestamp = this.SelectedTimestamp;
 
 			if (timestamp.HasValue)
 			{
-				var target = this.timelinesToolbar.GetTarget (ToolbarCommand.New);
+				var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 
 				CreateEventPopup.Show (target, this.accessor, BaseType.Assets, obj, timestamp.Value,
@@ -798,7 +832,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void OnTimelineDelete()
+		[Command (Res.CommandIds.Timelines.Delete)]
+		private void OnTimelines(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if (this.SelectedEventType == EventType.AmortizationPreview)
 			{
@@ -807,7 +842,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Delete);
+				var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
 
 				if (AssetCalculator.IsLocked (this.SelectedObject, this.SelectedTimestamp.GetValueOrDefault ()))
 				{
@@ -817,6 +852,153 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					YesNoPopup.ShowAssetsDeleteEventQuestion (target, this.TimelineDeleteSelection);
 				}
+			}
+		}
+
+		[Command (Res.CommandIds.Timelines.Amortizations.Preview)]
+		private void OnTimelinesAmortizationsPreview(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			this.ShowAmortizationsPopup (target, true, true,
+				Res.Strings.Popup.Amortizations.Preview.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Preview.One.ToString (),
+				Res.Strings.Popup.Amortizations.Preview.All.ToString (),
+				this.DoAmortisationsPreview);
+		}
+
+		[Command (Res.CommandIds.Timelines.Amortizations.Fix)]
+		private void OnTimelinesAmortizationsFix(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			this.ShowAmortizationsPopup (target, false, false,
+				Res.Strings.Popup.Amortizations.Fix.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Fix.One.ToString (),
+				Res.Strings.Popup.Amortizations.Fix.All.ToString (),
+				this.DoAmortisationsFix);
+		}
+
+		[Command (Res.CommandIds.Timelines.Amortizations.ToExtra)]
+		private void OnTimelinesAmortizationsToExtra(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			//	Transforme un amortissement ordinaire en extraordinaire.
+			if (!this.SelectedGuid.IsEmpty && this.SelectedTimestamp.HasValue)
+			{
+				var asset = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
+				if (asset != null)
+				{
+					var ev = asset.GetEvent (this.SelectedTimestamp.Value);
+					if (ev != null)
+					{
+						//	Supprime l'amortissement ordinaire.
+						asset.RemoveEvent (ev);
+
+						//	Crée un amortissement extraordinaire.
+						var newEvent = new DataEvent (ev.Guid, ev.Timestamp, EventType.AmortizationExtra);
+						newEvent.SetProperties (ev);
+						asset.AddEvent (newEvent);
+
+						this.UpdateData ();
+						this.OnStopEditing ();
+					}
+				}
+			}
+		}
+
+		[Command (Res.CommandIds.Timelines.Amortizations.Unpreview)]
+		private void OnTimelinesAmortizationsUnpreview(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			this.ShowAmortizationsPopup (target, false, false,
+				Res.Strings.Popup.Amortizations.Unpreview.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Unpreview.One.ToString (),
+				Res.Strings.Popup.Amortizations.Unpreview.All.ToString (),
+				this.DoAmortisationsUnpreview);
+		}
+
+		[Command (Res.CommandIds.Timelines.Amortizations.Delete)]
+		private void OnTimelinesAmortizationsDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+
+			this.ShowAmortizationsPopup (target, true, false,
+				Res.Strings.Popup.Amortizations.Delete.Title.ToString (),
+				Res.Strings.Popup.Amortizations.Delete.One.ToString (),
+				Res.Strings.Popup.Amortizations.Delete.All.ToString (),
+				this.DoAmortisationsDelete);
+		}
+
+		[Command (Res.CommandIds.Timelines.Deselect)]
+		private void OnTimelinesDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SetSelection (this.selectedRow, -1);
+		}
+
+		[Command (Res.CommandIds.Timelines.Copy)]
+		private void OnTimelinesCopy(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var obj = this.SelectedObject;
+
+			if (obj != null && this.SelectedTimestamp.HasValue)
+			{
+				var ev = obj.GetEvent (this.SelectedTimestamp.Value);
+				this.accessor.Clipboard.CopyEvent (this.accessor, ev);
+
+				this.UpdateToolbar ();
+			}
+			else
+			{
+				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.CopyError.ToString ());
+			}
+		}
+
+		[Command (Res.CommandIds.Timelines.Paste)]
+		private void OnTimelinesPaste(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			var obj = this.SelectedObject;
+
+			if (obj != null && this.accessor.Clipboard.HasEvent)
+			{
+				EventPastePopup.Show (target, this.accessor, obj,
+				this.accessor.Clipboard.EventType,
+				this.accessor.Clipboard.EventTimestamp.Value.Date,
+				dateChanged: delegate (System.DateTime? date)
+				{
+					if (date.HasValue)
+					{
+						this.SelectedTimestamp = new Timestamp (date.Value, 0);
+					}
+					else
+					{
+						this.SelectedTimestamp = null;
+					}
+				},
+				action: delegate (System.DateTime date)
+				{
+					var ev = this.accessor.Clipboard.PasteEvent (this.accessor, obj, date);
+
+					if (ev == null)
+					{
+						MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteIncompatible.ToString ());
+					}
+					else
+					{
+						this.UpdateDataArray ();
+						this.UpdateScroller ();
+						this.UpdateController ();
+						this.UpdateToolbar ();
+						this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (ev.Timestamp));
+						//?this.OnStartEditing (e.Type, e.Timestamp);
+					}
+				});
+			}
+			else
+			{
+				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteError.ToString ());
 			}
 		}
 
@@ -843,145 +1025,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor.RemoveObjectEvent (this.SelectedObject, this.SelectedTimestamp);
 			this.UpdateData ();
-		}
-
-		private void OnTimelineDeselect()
-		{
-			this.SetSelection (this.selectedRow, -1);
-		}
-
-		private void OnTimelineCopy()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Copy);
-			var obj = this.SelectedObject;
-
-			if (obj != null && this.SelectedTimestamp.HasValue)
-			{
-				var e = obj.GetEvent (this.SelectedTimestamp.Value);
-				this.accessor.Clipboard.CopyEvent (this.accessor, e);
-
-				this.UpdateToolbar ();
-			}
-			else
-			{
-				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.CopyError.ToString ());
-			}
-		}
-
-		private void OnTimelinePaste()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.Paste);
-			var obj = this.SelectedObject;
-
-			if (obj != null && this.accessor.Clipboard.HasEvent)
-			{
-				EventPastePopup.Show (target, this.accessor, obj,
-				this.accessor.Clipboard.EventType,
-				this.accessor.Clipboard.EventTimestamp.Value.Date,
-				dateChanged: delegate (System.DateTime? date)
-				{
-					if (date.HasValue)
-					{
-						this.SelectedTimestamp = new Timestamp (date.Value, 0);
-					}
-					else
-					{
-						this.SelectedTimestamp = null;
-					}
-				},
-				action: delegate (System.DateTime date)
-				{
-					var e = this.accessor.Clipboard.PasteEvent (this.accessor, obj, date);
-
-					if (e == null)
-					{
-						MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteIncompatible.ToString ());
-					}
-					else
-					{
-						this.UpdateDataArray ();
-						this.UpdateScroller ();
-						this.UpdateController ();
-						this.UpdateToolbar ();
-						this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (e.Timestamp));
-						//?this.OnStartEditing (e.Type, e.Timestamp);
-					}
-				});
-			}
-			else
-			{
-				MessagePopup.ShowError (target, Res.Strings.TimelinesArrayController.PasteError.ToString ());
-			}
-		}
-
-		private void OnAmortizationPreview()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsPreview);
-
-			this.ShowAmortizationsPopup (target, true, true,
-				Res.Strings.Popup.Amortizations.Preview.Title.ToString (),
-				Res.Strings.Popup.Amortizations.Preview.One.ToString (),
-				Res.Strings.Popup.Amortizations.Preview.All.ToString (),
-				this.DoAmortisationsPreview);
-		}
-
-		private void OnAmortizationFix()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsFix);
-
-			this.ShowAmortizationsPopup (target, false, false,
-				Res.Strings.Popup.Amortizations.Fix.Title.ToString (),
-				Res.Strings.Popup.Amortizations.Fix.One.ToString (),
-				Res.Strings.Popup.Amortizations.Fix.All.ToString (),
-				this.DoAmortisationsFix);
-		}
-
-		private void OnAmortizationToExtra()
-		{
-			//	Transforme un amortissement ordinaire en extraordinaire.
-			if (!this.SelectedGuid.IsEmpty && this.SelectedTimestamp.HasValue)
-			{
-				var asset = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
-				if (asset != null)
-				{
-					var e = asset.GetEvent (this.SelectedTimestamp.Value);
-					if (e != null)
-					{
-						//	Supprime l'amortissement ordinaire.
-						asset.RemoveEvent (e);
-
-						//	Crée un amortissement extraordinaire.
-						var newEvent = new DataEvent (e.Guid, e.Timestamp, EventType.AmortizationExtra);
-						newEvent.SetProperties (e);
-						asset.AddEvent (newEvent);
-
-						this.UpdateData ();
-						this.OnStopEditing ();
-					}
-				}
-			}
-		}
-
-		private void OnAmortizationUnpreview()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsUnpreview);
-
-			this.ShowAmortizationsPopup (target, false, false,
-				Res.Strings.Popup.Amortizations.Unpreview.Title.ToString (),
-				Res.Strings.Popup.Amortizations.Unpreview.One.ToString (),
-				Res.Strings.Popup.Amortizations.Unpreview.All.ToString (),
-				this.DoAmortisationsUnpreview);
-		}
-
-		private void OnAmortizationDelete()
-		{
-			var target = this.timelinesToolbar.GetTarget (ToolbarCommand.AmortizationsDelete);
-
-			this.ShowAmortizationsPopup (target, true, false,
-				Res.Strings.Popup.Amortizations.Delete.Title.ToString (),
-				Res.Strings.Popup.Amortizations.Delete.One.ToString (),
-				Res.Strings.Popup.Amortizations.Delete.All.ToString (),
-				this.DoAmortisationsDelete);
 		}
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
@@ -1426,67 +1469,135 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		protected void UpdateToolbar()
 		{
-			this.objectsToolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
+			//	Mise à jour de la toolbar des objets.
+			this.objectsToolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
 
-			this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
-			this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
-			this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
-			this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
+			this.UpdateObjectCommand (Res.Commands.TreeTable.First, this.selectedRow, this.FirstRowIndex);
+			this.UpdateObjectCommand (Res.Commands.TreeTable.Prev,  this.selectedRow, this.PrevRowIndex);
+			this.UpdateObjectCommand (Res.Commands.TreeTable.Next,  this.selectedRow, this.NextRowIndex);
+			this.UpdateObjectCommand (Res.Commands.TreeTable.Last,  this.selectedRow, this.LastRowIndex);
 
 			bool compactEnable = !this.nodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.nodeGetter.IsAllExpanded;
 
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.First, compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Prev,  compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Next,  expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.TreeTable.Last,  expandEnable);
 
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);
-			this.objectsToolbar.SetCommandEnable (ToolbarCommand.Deselect, this.selectedRow != -1);
+			this.objectsToolbar.SetEnable (Res.Commands.Assets.New,      true);
+			this.objectsToolbar.SetEnable (Res.Commands.Assets.Delete,   this.SelectedObject != null);
+			this.objectsToolbar.SetEnable (Res.Commands.Assets.Deselect, this.selectedRow != -1);
 
-			this.UpdateTimelineCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
-			this.UpdateTimelineCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
-			this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
-			this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
+			//	Mise à jour de la toolbar des timelines.
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,   (this.timelinesMode & TimelinesMode.Wide  ) != 0);
+
+			this.UpdateTimelineCommand (Res.Commands.Timelines.First, this.selectedColumn, this.FirstColumnIndex);
+			this.UpdateTimelineCommand (Res.Commands.Timelines.Prev,  this.selectedColumn, this.PrevColumnIndex);
+			this.UpdateTimelineCommand (Res.Commands.Timelines.Next,  this.selectedColumn, this.NextColumnIndex);
+			this.UpdateTimelineCommand (Res.Commands.Timelines.Last,  this.selectedColumn, this.LastColumnIndex);
+
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.New,                    !this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Delete,                 !this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Preview,   this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Fix,       this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.ToExtra,   this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Unpreview, this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Delete,    this.HasAmortizationsOper);
 
 			if (this.HasAmortizationsOper)
 			{
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.New,                    ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.Delete,                 ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra,   this.IsToExtraPossible);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Preview,   true);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Fix,       true);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.ToExtra,   this.IsToExtraPossible);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Unpreview, true);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Delete,    true);
 			}
 			else
 			{
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.New,                    this.selectedColumn != -1 && this.HasSelectedTimeline);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Delete,                 this.HasSelectedEvent);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsPreview,   ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsFix,       ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsToExtra,   ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsUnpreview, ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsDelete,    ToolbarCommandState.Hide);
-				this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.New,      this.selectedColumn != -1 && this.HasSelectedTimeline);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Delete,   this.HasSelectedEvent);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Deselect, this.selectedColumn != -1);
 			}
 
-			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Copy,  this.HasSelectedEvent);
-			this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
+			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Copy,  this.HasSelectedEvent);
+			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Paste, this.accessor.Clipboard.HasEvent);
+
+
+			//?this.objectsToolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
+			//?
+			//?this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
+			//?this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
+			//?this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
+			//?this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
+			//?
+			//?bool compactEnable = !this.nodeGetter.IsAllCompacted;
+			//?bool expandEnable  = !this.nodeGetter.IsAllExpanded;
+			//?
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
+			//?
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);
+			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.Deselect, this.selectedRow != -1);
+			//?
+			//?this.UpdateTimelineCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
+			//?this.UpdateTimelineCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
+			//?this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
+			//?this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
+			//?
+			//?if (this.HasAmortizationsOper)
+			//?{
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.New,                    ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.Delete,                 ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra,   this.IsToExtraPossible);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
+			//?}
+			//?else
+			//?{
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.New,                    this.selectedColumn != -1 && this.HasSelectedTimeline);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Delete,                 this.HasSelectedEvent);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsPreview,   ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsFix,       ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsToExtra,   ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsUnpreview, ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsDelete,    ToolbarCommandState.Hide);
+			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
+			//?}
+			//?
+			//?this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Copy,  this.HasSelectedEvent);
+			//?this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
 		}
 
-		private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		//?private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		//?{
+		//?	bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
+		//?	this.objectsToolbar.SetCommandEnable (command, enable);
+		//?}
+		//?
+		//?private void UpdateTimelineCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		//?{
+		//?	bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
+		//?	this.timelinesToolbar.SetCommandEnable (command, enable);
+		//?}
+
+		private void UpdateObjectCommand(Command command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.objectsToolbar.SetCommandEnable (command, enable);
+			this.objectsToolbar.SetEnable (command, enable);
 		}
 
-		private void UpdateTimelineCommand(ToolbarCommand command, int currentSelection, int? newSelection)
+		private void UpdateTimelineCommand(Command command, int currentSelection, int? newSelection)
 		{
 			bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-			this.timelinesToolbar.SetCommandEnable (command, enable);
+			this.timelinesToolbar.SetEnable (command, enable);
 		}
 
 
@@ -1801,7 +1912,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TopTitle									topTitle;
 		private TimelinesMode								timelinesMode;
-		private TreeTableToolbar							objectsToolbar;
+		private AssetsToolbar								objectsToolbar;
 		private VSplitter									splitter;
 		private TimelinesToolbar							timelinesToolbar;
 		private TreeTableColumnTree							treeColumn;

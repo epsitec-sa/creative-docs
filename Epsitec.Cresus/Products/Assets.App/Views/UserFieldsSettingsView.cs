@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void CommandMainEdit(Widget target)
+		protected override void OnMainEdit(Widget target)
 		{
 			if (!this.isEditing && this.selectedGuid.IsEmpty)
 			{
@@ -226,13 +226,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateUI ();
 		}
 
-		protected override void CommandEditAccept(Widget target)
+		protected override void OnEditAccept(Widget target)
 		{
 			this.isEditing = false;
 			this.UpdateUI ();
 		}
 
-		protected override void CommandEditCancel(Widget target)
+		protected override void OnEditCancel(Widget target)
 		{
 			this.accessor.EditionAccessor.CancelObjectEdition ();
 			this.isEditing = false;
