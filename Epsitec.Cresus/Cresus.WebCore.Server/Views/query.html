@@ -11,9 +11,15 @@
     <script src="/content/WebCoreServices.js"></script>
     <script src="/content/modules/QueryBuilder/module.js"></script>
 </head>
-<body>
+<body style="background-color: rgb(223, 232, 246);">
     <div class="container" ng-controller="CoreQueryBuilder">
-        <query-builder group="filter.group"></query-builder>
+        <div class="alert alert-warning">
+            <span ng-bind-html="humanOutput"></span>
+        </div>
+        <query-builder ng-if="filter.group.fields" group="filter.group"></query-builder>
+        <div class="alert alert-danger">
+            <span ng-bind-html="queryOutput"></span>
+        </div>
     </div>
     <style>
         .group {

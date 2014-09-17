@@ -1,10 +1,10 @@
-<div class="alert alert-info alert-group">
+<div class="alert alert-warning alert-group">
     <div class="form-inline">
         <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control input-xs"></select>
         <div class="btn-group">
-            <button style="margin-left: 5px" ng-click="addCondition()" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Condition</button>
-            <button style="margin-left: 5px" ng-click="addGroup()" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Add Group</button>
-            <button style="margin-left: 5px" ng-click="removeGroup()" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Remove Group</button>
+            <button ng-click="addCondition()" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Condition</button>
+            <button ng-click="addGroup()" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Groupe</button>
+            <button ng-click="removeGroup()" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Groupe</button>
         </div>
     </div>
     <div class="group-conditions">
@@ -15,9 +15,22 @@
                 </div>
                 <div ng-switch-default="ng-switch-default">
                     <div class="form-inline">
-                        <select ng-options="t.name as t.name for t in fields" ng-model="rule.field" class="form-control input-xs"></select>
+                        <select ng-options="t as t.name for t in fields" ng-model="rule.field" ng-change="setType(rule)" class="form-control input-xs"></select>
                         <select style="margin-left: 5px" ng-options="c.name as c.name for c in conditions" ng-model="rule.condition" class="form-control input-xs"></select>
-                        <input style="margin-left: 5px" type="text" ng-model="rule.data" class="form-control input-xs" />
+                        <ng-switch on="rule.type">
+                          <span ng-switch-when="date">
+                            <input style="margin-left: 5px" type="date" ng-model="rule.data" class="form-control input-xs" />
+                          </span>
+                          <span ng-switch-when="int">
+                            <input style="margin-left: 5px" type="number" ng-model="rule.data" class="form-control input-xs" />
+                          </span>
+                          <span ng-switch-when="list">
+                            <select ng-options="t.id as t.text for t in rule.possibleValues" ng-model="rule.data"  class="form-control input-xs"></select>
+                          </span>
+                          <span ng-switch-default>
+                            <input style="margin-left: 5px" type="text" ng-model="rule.data" class="form-control input-xs" />
+                          </span>
+                        </ng-switch>
                         <button style="margin-left: 5px" ng-click="removeCondition($index)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span></button>
                     </div>
                 </div>

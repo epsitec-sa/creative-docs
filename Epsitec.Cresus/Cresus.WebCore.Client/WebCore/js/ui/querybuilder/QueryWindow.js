@@ -28,7 +28,6 @@ Ext.require([
         var tabManager;
         tabManager = Epsitec.Cresus.Core.getApplication().tabManager;
 
-
         this.queryStore = this.createQueryStore();
 
         newOptions = {
@@ -49,7 +48,7 @@ Ext.require([
             autoEl : {
                 tag : "iframe",
                 frameborder: 0,
-                src : "proxy/page/query.html"
+                src : "proxy/page/query.html#" + tabManager.currentTab
             }
           }],
           buttons: [
