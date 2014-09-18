@@ -447,14 +447,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void OpenShortcutsLevel()
 		{
-			var shortcutCatcher = this.GetParent ();
-			shortcutCatcher.Level++;
 		}
 
 		private void CloseShortcutsLevel()
 		{
-			var shortcutCatcher = this.GetParent ();
-			shortcutCatcher.Level--;
 		}
 
 
@@ -596,10 +592,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected ShortcutCatcher GetParent()
+		protected FrameBox GetParent()
 		{
 			//	Retourne le widget ShortcutCatcher qui occupe toute la fenêtre.
-			return this.target.GetShortcutCatcher ();
+			return this.target.GetMainFrameBox ();
 		}
 
 

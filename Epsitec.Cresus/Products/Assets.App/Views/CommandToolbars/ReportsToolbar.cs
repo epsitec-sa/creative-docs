@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			
 			this.CreateButton (Res.Commands.Reports.Export, 1);
 
-			this.CreateCommandButton (DockStyle.Right, Res.Commands.Reports.Close);
+			this.CreateButton (DockStyle.Right, Res.Commands.Reports.Close);
 		}
 	}
 }

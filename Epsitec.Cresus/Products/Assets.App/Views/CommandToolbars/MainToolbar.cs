@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -17,10 +18,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 	{
 		public MainToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)
-		{
-		}
-
-		protected override void CreateCommands()
 		{
 		}
 
@@ -96,43 +93,53 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.New);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Forward);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Navigate.Menu);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.New);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Forward);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Menu);
 
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Assets);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Amortizations);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Entries);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Categories);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Groups);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Persons);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Reports);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Assets);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Amortizations);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Entries);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Categories);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Groups);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Persons);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Reports);
 			this.buttonWarnings =
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Warnings);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.View.Settings);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Warnings);
+			this.CreateButton (DockStyle.Left, Res.Commands.View.Settings);
 
 			this.CreateSajex (10);
 
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Single);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Event);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.ViewMode.Multiple);
+			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Single);
+			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Event);
+			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Multiple);
 
 			this.CreateSajex (40);
 
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Edit);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Locked);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Edit);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Locked);
 			this.buttonSimulation =
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Main.Simulation);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.Simulation);
 
-			this.CreateCommandButton (DockStyle.Right, Res.Commands.Edit.Cancel);
-			this.CreateCommandButton (DockStyle.Right, Res.Commands.Edit.Accept);
+			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Cancel);
+			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Accept);
 
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
 		}
 
+
+		private void CreateSajex(int width)
+		{
+			new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
+			};
+		}
 
 		//?[Command (Res.CommandIds.View.Settings)]
 		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)

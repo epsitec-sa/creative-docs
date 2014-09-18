@@ -34,13 +34,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				var state = this.toolbar.GetCommandState (command);
-
-				if (state == ToolbarCommandState.Enable)
-				{
-					this.commands.Add (command);
-					this.actions.Add (command, action);
-				}
+				//?var state = this.toolbar.GetCommandState (command);
+				//?
+				//?if (state == ToolbarCommandState.Enable)
+				//?{
+				//?	this.commands.Add (command);
+				//?	this.actions.Add (command, action);
+				//?}
 			}
 		}
 
@@ -129,23 +129,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void CreateItem(ToolbarCommand command)
 		{
 			//	Crée une ligne contenant un item (icône suivie d'un texte).
-			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
-			var desc = this.toolbar.GetCommandDescription (command);
-
-			var item = new MenuPopupItem
-			{
-				Parent          = this.mainFrameBox,
-				IconUri         = Misc.GetResourceIconUri (desc.Icon),
-				Text            = desc.Tooltip,
-				Dock            = DockStyle.Top,
-				PreferredHeight = MenuPopup.itemHeight,
-				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
-			};
-
-			item.Clicked += delegate
-			{
-				this.DoAction (command);
-			};
+			//?bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
+			//?var desc = this.toolbar.GetCommandDescription (command);
+			//?
+			//?var item = new MenuPopupItem
+			//?{
+			//?	Parent          = this.mainFrameBox,
+			//?	IconUri         = Misc.GetResourceIconUri (desc.Icon),
+			//?	Text            = desc.Tooltip,
+			//?	Dock            = DockStyle.Top,
+			//?	PreferredHeight = MenuPopup.itemHeight,
+			//?	Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
+			//?};
+			//?
+			//?item.Clicked += delegate
+			//?{
+			//?	this.DoAction (command);
+			//?};
 		}
 
 		private void CreateInvisibleCloseButton()
@@ -182,14 +182,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Calcule la largeur nécessaire en fonction de l'ensemble des cases du menu.
 			get
 			{
-				return this.commands.Max
-				(
-					command => MenuPopupItem.GetRequiredWidth
-					(
-						MenuPopup.itemHeight, this.toolbar.GetCommandDescription (command).Tooltip
-					)
-				)
-				+ MenuPopup.margins*2;
+				//?return this.commands.Max
+				//?(
+				//?	command => MenuPopupItem.GetRequiredWidth
+				//?	(
+				//?		MenuPopup.itemHeight, this.toolbar.GetCommandDescription (command).Tooltip
+				//?	)
+				//?)
+				//?+ MenuPopup.margins*2;
+				return 0;
 			}
 		}
 

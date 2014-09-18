@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App
 			CommandDispatcher.SetDispatcher (this.Window, this.commandDispatcher);
 			CommandContext.SetContext (this.Window, this.commandContext);
 
-			var frame = new ShortcutCatcher
+			var frame = new FrameBox
 			{
 				Parent    = window.Root,
 				Dock      = DockStyle.Fill,
