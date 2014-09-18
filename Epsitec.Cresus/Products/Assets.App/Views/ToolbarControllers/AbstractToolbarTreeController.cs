@@ -600,7 +600,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected INodeGetter<T>				nodeGetter;
 		protected TopTitle						topTitle;
-		protected AbstractTreeTableToolbar		toolbar;
+		protected AbstractCommandToolbar		toolbar;
 		protected SortingInstructions			sortingInstructions;
 		protected int							selectedRow;
 		protected bool							showGraphic;

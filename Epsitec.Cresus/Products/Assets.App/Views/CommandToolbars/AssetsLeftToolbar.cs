@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 	/// Toolbar utilisée pour montrer les objets d'immobilisations en mode "plusieurs
 	/// timelines", dans la partie gauche.
 	/// </summary>
-	public class AssetsLeftToolbar : AbstractTreeTableToolbar
+	public class AssetsLeftToolbar : AbstractCommandToolbar
 	{
 		public AssetsLeftToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)

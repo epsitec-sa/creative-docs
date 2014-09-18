@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
-	public class AssetsToolbar : AbstractTreeTableToolbar
+	public class AssetsToolbar : AbstractCommandToolbar
 	{
 		public AssetsToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)

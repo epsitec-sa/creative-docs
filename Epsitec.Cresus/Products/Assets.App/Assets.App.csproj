@@ -180,7 +180,6 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
-    <Compile Include="Views\CommandToolbars\AbstractTreeTableToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AccountsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AssetsLeftToolbar.cs" />
     <Compile Include="Views\CommandToolbars\EventsToolbar.cs" />
