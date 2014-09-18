@@ -335,10 +335,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				};
 
-				//?this.controller.DokeySelect += delegate (object sender, KeyCode key)
-				//?{
-				//?	this.OnDokeySelect (key);
-				//?};
+				this.controller.DokeySelect += delegate (object sender, KeyCode key)
+				{
+					this.OnDokeySelect (key);
+				};
 			}
 
 			{
@@ -354,122 +354,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.UpdateToolbar ();
 				};
 			}
-
-			//?this.objectsToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			//?{
-			//?	switch (command)
-			//?	{
-			//?		case ToolbarCommand.Filter:
-			//?			this.OnObjectFilter ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.First:
-			//?			this.OnObjectFirst ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Last:
-			//?			this.OnObjectLast ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Prev:
-			//?			this.OnObjectPrev ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Next:
-			//?			this.OnObjectNext ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.CompactAll:
-			//?			this.OnCompactAll ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.CompactOne:
-			//?			this.OnCompactOne ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.ExpandOne:
-			//?			this.OnExpandOne ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.ExpandAll:
-			//?			this.OnExpandAll ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.New:
-			//?			this.OnObjectNew ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Delete:
-			//?			this.OnObjectDelete ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Deselect:
-			//?			this.OnObjectDeselect ();
-			//?			break;
-			//?	}
-			//?};
-
-			//?this.timelinesToolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			//?{
-			//?	switch (command)
-			//?	{
-			//?		case ToolbarCommand.First:
-			//?			this.OnTimelineFirst ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Last:
-			//?			this.OnTimelineLast ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Prev:
-			//?			this.OnTimelinePrev ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Next:
-			//?			this.OnTimelineNext ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.New:
-			//?			this.OnTimelineNew ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Delete:
-			//?			this.OnTimelineDelete ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.AmortizationsPreview:
-			//?			this.OnAmortizationPreview ();
-			//?			break;
-			//?		
-			//?		case ToolbarCommand.AmortizationsFix:
-			//?			this.OnAmortizationFix ();
-			//?			break;
-			//?		
-			//?		case ToolbarCommand.AmortizationsToExtra:
-			//?			this.OnAmortizationToExtra ();
-			//?			break;
-			//?		
-			//?		case ToolbarCommand.AmortizationsUnpreview:
-			//?			this.OnAmortizationUnpreview ();
-			//?			break;
-			//?		
-			//?		case ToolbarCommand.AmortizationsDelete:
-			//?			this.OnAmortizationDelete ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Deselect:
-			//?			this.OnTimelineDeselect ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Copy:
-			//?			this.OnTimelineCopy ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Paste:
-			//?			this.OnTimelinePaste ();
-			//?			break;
-			//?	}
-			//?};
 		}
 
 		private void CreateStateAt(Widget parent)
@@ -524,37 +408,37 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//?	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
 		}
 
-		//?private void OnDokeySelect(KeyCode key)
-		//?{
-		//?	switch (key)
-		//?	{
-		//?		case KeyCode.Home:
-		//?			this.OnObjectFirst ();
-		//?			this.OnTimelineFirst ();
-		//?			break;
-		//?
-		//?		case KeyCode.End:
-		//?			this.OnObjectLast ();
-		//?			this.OnTimelineLast ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowUp:
-		//?			this.OnObjectPrev ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowDown:
-		//?			this.OnObjectNext ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowLeft:
-		//?			this.OnTimelinePrev ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowRight:
-		//?			this.OnTimelineNext ();
-		//?			break;
-		//?	}
-		//?}
+		private void OnDokeySelect(KeyCode key)
+		{
+			switch (key)
+			{
+				case KeyCode.Home:
+					this.OnAssetsFirst ();
+					this.OnTimelinesFirst ();
+					break;
+		
+				case KeyCode.End:
+					this.OnAssetsLast ();
+					this.OnTimelinesLast ();
+					break;
+		
+				case KeyCode.ArrowUp:
+					this.OnAssetsPrev ();
+					break;
+		
+				case KeyCode.ArrowDown:
+					this.OnAssetsNext ();
+					break;
+		
+				case KeyCode.ArrowLeft:
+					this.OnTimelinesPrev ();
+					break;
+		
+				case KeyCode.ArrowRight:
+					this.OnTimelinesNext ();
+					break;
+			}
+		}
 
 
 		#region Assets commands
@@ -753,7 +637,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		#region Timeline commands
 		[Command (Res.CommandIds.Timelines.Narrow)]
-		private void OnTimelinesNarrow(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesNarrow()
 		{
 			var t = this.TimelinesMode;
 			t |=  TimelinesMode.Narrow;
@@ -764,7 +648,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.Wide)]
-		private void OnTimelinesWide(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesWide()
 		{
 			var t = this.TimelinesMode;
 			t |=  TimelinesMode.Wide;
@@ -775,7 +659,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.First)]
-		private void OnTimelinesFirst(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesFirst()
 		{
 			var index = this.FirstColumnIndex;
 
@@ -786,7 +670,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.Prev)]
-		private void OnTimelinesPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesPrev()
 		{
 			var index = this.PrevColumnIndex;
 
@@ -797,7 +681,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.Next)]
-		private void OnTimelinesNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesNext()
 		{
 			var index = this.NextColumnIndex;
 
@@ -808,7 +692,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.Last)]
-		private void OnTimelinesLast(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesLast()
 		{
 			var index = this.LastColumnIndex;
 
@@ -939,7 +823,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		[Command (Res.CommandIds.Timelines.Deselect)]
-		private void OnTimelinesDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnTimelinesDeselect()
 		{
 			this.SetSelection (this.selectedRow, -1);
 		}
@@ -1531,70 +1415,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Copy,  this.HasSelectedEvent);
 			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Paste, this.accessor.Clipboard.HasEvent);
-
-
-			//?this.objectsToolbar.SetCommandActivate (ToolbarCommand.Filter, !this.rootGuid.IsEmpty);
-			//?
-			//?this.UpdateObjectCommand (ToolbarCommand.First, this.selectedRow, this.FirstRowIndex);
-			//?this.UpdateObjectCommand (ToolbarCommand.Prev,  this.selectedRow, this.PrevRowIndex);
-			//?this.UpdateObjectCommand (ToolbarCommand.Next,  this.selectedRow, this.NextRowIndex);
-			//?this.UpdateObjectCommand (ToolbarCommand.Last,  this.selectedRow, this.LastRowIndex);
-			//?
-			//?bool compactEnable = !this.nodeGetter.IsAllCompacted;
-			//?bool expandEnable  = !this.nodeGetter.IsAllExpanded;
-			//?
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactAll, compactEnable);
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.CompactOne, compactEnable);
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandOne,  expandEnable);
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.ExpandAll,  expandEnable);
-			//?
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.New,      true);
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.Delete,   this.SelectedObject != null);
-			//?this.objectsToolbar.SetCommandEnable (ToolbarCommand.Deselect, this.selectedRow != -1);
-			//?
-			//?this.UpdateTimelineCommand (ToolbarCommand.First, this.selectedColumn, this.FirstColumnIndex);
-			//?this.UpdateTimelineCommand (ToolbarCommand.Prev,  this.selectedColumn, this.PrevColumnIndex);
-			//?this.UpdateTimelineCommand (ToolbarCommand.Next,  this.selectedColumn, this.NextColumnIndex);
-			//?this.UpdateTimelineCommand (ToolbarCommand.Last,  this.selectedColumn, this.LastColumnIndex);
-			//?
-			//?if (this.HasAmortizationsOper)
-			//?{
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.New,                    ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.Delete,                 ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsPreview,   true);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsFix,       true);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsToExtra,   this.IsToExtraPossible);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsUnpreview, true);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.AmortizationsDelete,    true);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
-			//?}
-			//?else
-			//?{
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.New,                    this.selectedColumn != -1 && this.HasSelectedTimeline);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Delete,                 this.HasSelectedEvent);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsPreview,   ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsFix,       ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsToExtra,   ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsUnpreview, ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandState  (ToolbarCommand.AmortizationsDelete,    ToolbarCommandState.Hide);
-			//?	this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Deselect,               this.selectedColumn != -1);
-			//?}
-			//?
-			//?this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Copy,  this.HasSelectedEvent);
-			//?this.timelinesToolbar.SetCommandEnable (ToolbarCommand.Paste, this.accessor.Clipboard.HasEvent);
 		}
-
-		//?private void UpdateObjectCommand(ToolbarCommand command, int currentSelection, int? newSelection)
-		//?{
-		//?	bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-		//?	this.objectsToolbar.SetCommandEnable (command, enable);
-		//?}
-		//?
-		//?private void UpdateTimelineCommand(ToolbarCommand command, int currentSelection, int? newSelection)
-		//?{
-		//?	bool enable = (newSelection.HasValue && currentSelection != newSelection.Value);
-		//?	this.timelinesToolbar.SetCommandEnable (command, enable);
-		//?}
 
 		private void UpdateAssetsCommand(Command command, int currentSelection, int? newSelection)
 		{

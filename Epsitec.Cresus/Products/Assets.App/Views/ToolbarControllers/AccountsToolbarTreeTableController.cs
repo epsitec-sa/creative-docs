@@ -110,18 +110,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new AccountsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.DateRange, null, Res.Strings.ToolbarControllers.AccountsTreeTable.DateRange.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,       null, Res.Strings.ToolbarControllers.AccountsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Delete.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect,  null, Res.Strings.ToolbarControllers.AccountsTreeTable.Deselect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,      null, Res.Strings.ToolbarControllers.AccountsTreeTable.Copy.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,     null, Res.Strings.ToolbarControllers.AccountsTreeTable.Paste.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,    null, Res.Strings.ToolbarControllers.AccountsTreeTable.Import.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,      CommandDescription.Empty);
-		//?}
 
 		protected override void CreateNodeFiller()
 		{

@@ -199,17 +199,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new WarningsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null, Res.Strings.ToolbarControllers.WarningsTreeTable.Deselect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null, Res.Strings.ToolbarControllers.WarningsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     null, Res.Strings.ToolbarControllers.WarningsTreeTable.Goto.ToString ());
-		//?}
 
 		protected override void CreateNodeFiller()
 		{

@@ -69,53 +69,46 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.CreateUI (parent);
 
 			this.CreateTimeline (parent);
-			//?this.toolbar.TimelineMode = this.timelineMode;
-
-			//	Connexion des événements.
-			//?this.toolbar.ModeChanged += delegate
-			//?{
-			//?	this.TimelineMode = this.toolbar.TimelineMode;
-			//?};
 		}
 
 		[Command (Res.CommandIds.Timeline.Labels)]
-		private void OnLabels(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnLabels()
 		{
 			this.ChangeMode (TimelineMode.Labels);
 		}
 
 		[Command (Res.CommandIds.Timeline.Compacted)]
-		private void OnCompacted(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnCompacted()
 		{
 			this.ChangeMode (TimelineMode.Compacted);
 		}
 
 		[Command (Res.CommandIds.Timeline.Expanded)]
-		private void OnExtended(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnExtended()
 		{
 			this.ChangeMode (TimelineMode.Expanded);
 		}
 
 		[Command (Res.CommandIds.Timeline.WeeksOfYear)]
-		private void OnWeeksOfYear(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnWeeksOfYear()
 		{
 			this.ChangeMode (TimelineMode.WeeksOfYear);
 		}
 
 		[Command (Res.CommandIds.Timeline.DaysOfWeek)]
-		private void OnDaysOfWeek(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDaysOfWeek()
 		{
 			this.ChangeMode (TimelineMode.DaysOfWeek);
 		}
 
 		[Command (Res.CommandIds.Timeline.Graph)]
-		private void OnGraph(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnGraph()
 		{
 			this.ChangeMode (TimelineMode.Graph);
 		}
 
 		[Command (Res.CommandIds.Timeline.First)]
-		private void OnFirst(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnFirst()
 		{
 			var index = this.FirstEventIndex;
 
@@ -127,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Prev)]
-		private void OnPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnPrev()
 		{
 			var index = this.PrevEventIndex;
 
@@ -139,7 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Next)]
-		private void OnNext(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNext()
 		{
 			var index = this.NextEventIndex;
 
@@ -151,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Last)]
-		private void OnLast(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnLast()
 		{
 			var index = this.LastEventIndex;
 
@@ -163,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Now)]
-		private void OnNow(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnNow()
 		{
 			var index = this.NowEventIndex;
 
@@ -236,7 +229,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 		[Command (Res.CommandIds.Timeline.Deselect)]
-		private void OnDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void OnDeselect()
 		{
 			this.SelectedTimestamp = null;
 		}
@@ -544,10 +537,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				}
 			};
 
-			//?this.controller.DokeySelect += delegate (object sender, KeyCode key)
-			//?{
-			//?	this.OnDokeySelect (key);
-			//?};
+			this.controller.DokeySelect += delegate (object sender, KeyCode key)
+			{
+				this.OnDokeySelect (key);
+			};
 		}
 
 
@@ -760,29 +753,29 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			//-	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
 		}
 
-		//?private void OnDokeySelect(KeyCode key)
-		//?{
-		//?	switch (key)
-		//?	{
-		//?		case KeyCode.Home:
-		//?			this.OnFirst ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowLeft:
-		//?		case KeyCode.PageUp:
-		//?			this.OnPrev ();
-		//?			break;
-		//?
-		//?		case KeyCode.ArrowRight:
-		//?		case KeyCode.PageDown:
-		//?			this.OnNext ();
-		//?			break;
-		//?
-		//?		case KeyCode.End:
-		//?			this.OnLast ();
-		//?			break;
-		//?	}
-		//?}
+		private void OnDokeySelect(KeyCode key)
+		{
+			switch (key)
+			{
+				case KeyCode.Home:
+					this.OnFirst ();
+					break;
+		
+				case KeyCode.ArrowLeft:
+				case KeyCode.PageUp:
+					this.OnPrev ();
+					break;
+		
+				case KeyCode.ArrowRight:
+				case KeyCode.PageDown:
+					this.OnNext ();
+					break;
+		
+				case KeyCode.End:
+					this.OnLast ();
+					break;
+			}
+		}
 
 
 		private void UpdateToolbar()

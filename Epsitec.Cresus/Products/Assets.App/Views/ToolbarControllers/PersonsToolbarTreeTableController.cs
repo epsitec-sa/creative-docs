@@ -84,17 +84,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new PersonsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Person", Res.Strings.ToolbarControllers.PersonsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",     Res.Strings.ToolbarControllers.PersonsTreeTable.Delete.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                   Res.Strings.ToolbarControllers.PersonsTreeTable.Deselect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",       Res.Strings.ToolbarControllers.PersonsTreeTable.Copy.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",      Res.Strings.ToolbarControllers.PersonsTreeTable.Paste.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                   Res.Strings.ToolbarControllers.PersonsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
-		//?}
 
 		protected override void CreateNodeFiller()
 		{

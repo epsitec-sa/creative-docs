@@ -104,17 +104,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new GroupsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Group", Res.Strings.ToolbarControllers.GroupsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",    Res.Strings.ToolbarControllers.GroupsTreeTable.Delete.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Delesect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy",      Res.Strings.ToolbarControllers.GroupsTreeTable.Copy.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste",     Res.Strings.ToolbarControllers.GroupsTreeTable.Paste.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                  Res.Strings.ToolbarControllers.GroupsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
-		//?}
 
 		protected override void CreateNodeFiller()
 		{

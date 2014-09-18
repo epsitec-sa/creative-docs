@@ -178,17 +178,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new AssetsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Asset",   Res.Strings.ToolbarControllers.AssetsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaI | KeyCode.ModifierControl));
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.AssetsTreeTable.Delete.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Deselect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Asset",  Res.Strings.ToolbarControllers.AssetsTreeTable.Copy.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Asset", Res.Strings.ToolbarControllers.AssetsTreeTable.Paste.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.AssetsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
-		//?}
 
 		protected override void CreateNodeFiller()
 		{

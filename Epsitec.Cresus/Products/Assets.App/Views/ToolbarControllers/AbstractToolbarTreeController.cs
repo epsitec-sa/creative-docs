@@ -105,118 +105,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.topTitle.SetTitle (this.title);
 
-			//?this.toolbar = new TreeTableToolbar (this.accessor, this.commandContext);
 			this.CreateToolbar ();
-			//?this.AdaptToolbarCommand();
-
 			this.toolbar.CreateUI (common);
 
 			this.CreateControllerUI (this.controllerFrame);
 
-			//?this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
-			//?{
-			//?	switch (command)
-			//?	{
-			//?		case ToolbarCommand.Graphic:
-			//?			this.OnGraphic ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Filter:
-			//?			this.OnFilter ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.DateRange:
-			//?			this.OnDateRange ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.First:
-			//?			this.OnFirst ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Last:
-			//?			this.OnLast ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Prev:
-			//?			this.OnPrev ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Next:
-			//?			this.OnNext ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.CompactAll:
-			//?			this.OnCompactAll ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.CompactOne:
-			//?			this.OnCompactOne ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.ExpandOne:
-			//?			this.OnExpandOne ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.ExpandAll:
-			//?			this.OnExpandAll ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.MoveTop:
-			//?			this.OnMoveTop ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.MoveUp:
-			//?			this.OnMoveUp ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.MoveDown:
-			//?			this.OnMoveDown ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.MoveBottom:
-			//?			this.OnMoveBottom ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.New:
-			//?			this.OnNew ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Delete:
-			//?			this.OnDelete ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Deselect:
-			//?			this.OnDeselect ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Copy:
-			//?			this.OnCopy ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Paste:
-			//?			this.OnPaste ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Export:
-			//?			this.OnExport ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Import:
-			//?			this.OnImport ();
-			//?			break;
-			//?
-			//?		case ToolbarCommand.Goto:
-			//?			this.OnGoto ();
-			//?			break;
-			//?	}
-			//?};
 		}
 
 		protected abstract void CreateToolbar();
 
-		//?protected virtual void AdaptToolbarCommand()
-		//?{
-		//?}
 
 		protected virtual void CreateControllerUI(Widget parent)
 		{
@@ -423,19 +320,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected virtual void UpdateToolbar()
 		{
-			//?int row = this.VisibleSelectedRow;
-			//?
-			//?this.toolbar.SetActiveState (Res.Commands.TreeTable.Graphic, this.showGraphic);
-			//?
-			//?this.UpdateSelCommand (Res.Commands.TreeTable.First, row, this.FirstRowIndex);
-			//?this.UpdateSelCommand (Res.Commands.TreeTable.Prev,  row, this.PrevRowIndex);
-			//?this.UpdateSelCommand (Res.Commands.TreeTable.Next,  row, this.NextRowIndex);
-			//?this.UpdateSelCommand (Res.Commands.TreeTable.Last,  row, this.LastRowIndex);
-			//?
-			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveTop,    row, this.FirstRowIndex);
-			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveUp,     row, this.PrevRowIndex);
-			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveDown,   row, this.NextRowIndex);
-			//?this.UpdateMoveCommand (Res.Commands.TreeTable.MoveBottom, row, this.LastRowIndex);
 		}
 
 		protected virtual bool IsCopyEnable

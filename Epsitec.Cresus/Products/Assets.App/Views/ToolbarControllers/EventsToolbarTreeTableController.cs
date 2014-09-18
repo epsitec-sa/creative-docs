@@ -94,17 +94,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.toolbar = new EventsToolbar (this.accessor, this.commandContext);
 		}
-		//?protected override void AdaptToolbarCommand()
-		//?{
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.New,      "TreeTable.New.Event",   Res.Strings.ToolbarControllers.EventsTreeTable.New.ToString (), new Shortcut (KeyCode.AlphaE | KeyCode.ModifierControl));
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Delete,   "TreeTable.Delete",      Res.Strings.ToolbarControllers.EventsTreeTable.Delete.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Deselect, null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Deselect.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Copy,     "TreeTable.Copy.Event",  Res.Strings.ToolbarControllers.EventsTreeTable.Copy.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Paste,    "TreeTable.Paste.Event", Res.Strings.ToolbarControllers.EventsTreeTable.Paste.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Export,   null,                    Res.Strings.ToolbarControllers.EventsTreeTable.Export.ToString ());
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Import,   CommandDescription.Empty);
-		//?	this.toolbar.SetCommandDescription (ToolbarCommand.Goto,     CommandDescription.Empty);
-		//?}
 
 		protected override void CreateNodeFiller()
 		{
