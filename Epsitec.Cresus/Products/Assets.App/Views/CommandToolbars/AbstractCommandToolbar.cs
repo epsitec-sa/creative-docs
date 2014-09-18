@@ -31,6 +31,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public void Close()
 		{
+			if (this.toolbar != null)
+			{
+				this.toolbar.Children.Clear ();
+			}
 		}
 
 
