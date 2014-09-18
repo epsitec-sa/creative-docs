@@ -111,12 +111,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.toolbar.CreateUI (common);
 
-			this.toolbar.HasGraphic        = this.hasGraphic;
-			this.toolbar.HasFilter         = this.hasFilter;
-			this.toolbar.HasDateRange      = this.hasDateRange;
-			this.toolbar.HasTreeOperations = this.hasTreeOperations;
-			this.toolbar.HasMoveOperations = this.hasMoveOperations;
-
 			this.CreateControllerUI (this.controllerFrame);
 
 			//?this.toolbar.CommandClicked += delegate (object sender, ToolbarCommand command)
@@ -601,11 +595,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected readonly BaseType				baseType;
 
 		protected string						title;
-		protected bool							hasGraphic;
-		protected bool							hasFilter;
-		protected bool							hasDateRange;
-		protected bool							hasTreeOperations;
-		protected bool							hasMoveOperations;
 
 		protected FrameBox						controllerFrame;
 

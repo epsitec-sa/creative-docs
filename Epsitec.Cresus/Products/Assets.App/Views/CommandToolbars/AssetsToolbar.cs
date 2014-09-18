@@ -21,33 +21,32 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Filter);
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Graphic);
+			this.CreateButton (Res.Commands.Assets.Filter, 1);
+			this.CreateButton (Res.Commands.Assets.Graphic, 1);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Last);
+			this.CreateButton (Res.Commands.Assets.First, 3);
+			this.CreateButton (Res.Commands.Assets.Prev, 2);
+			this.CreateButton (Res.Commands.Assets.Next, 2);
+			this.CreateButton (Res.Commands.Assets.Last, 3);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (1);
 
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.CompactAll);
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.CompactOne);
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.ExpandOne);
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.ExpandAll);
+			this.CreateButton (Res.Commands.Assets.CompactAll, 4);
+			this.CreateButton (Res.Commands.Assets.CompactOne, 5);
+			this.CreateButton (Res.Commands.Assets.ExpandOne, 5);
+			this.CreateButton (Res.Commands.Assets.ExpandAll, 4);
 			
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (4);
 
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Deselect);
+			this.CreateButton (Res.Commands.Assets.New, 0);
+			this.CreateButton (Res.Commands.Assets.Delete, 0);
+			this.CreateButton (Res.Commands.Assets.Deselect, 7);
 
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (0);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Copy);
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Paste);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Assets.Export);
+			this.CreateButton (Res.Commands.Assets.Copy, 6);
+			this.CreateButton (Res.Commands.Assets.Paste, 6);
+			this.CreateButton (Res.Commands.Assets.Export, 0);
 		}
 	}
 }

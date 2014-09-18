@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.App.Widgets;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -22,103 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		public bool								HasGraphic
-		{
-			get
-			{
-				return this.hasGraphic;
-			}
-			set
-			{
-				if (this.hasGraphic != value)
-				{
-					this.hasGraphic = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-		public bool								HasFilter
-		{
-			get
-			{
-				return this.hasFilter;
-			}
-			set
-			{
-				if (this.hasFilter != value)
-				{
-					this.hasFilter = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-		public bool								HasDateRange
-		{
-			get
-			{
-				return this.hasDateRange;
-			}
-			set
-			{
-				if (this.hasDateRange != value)
-				{
-					this.hasDateRange = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-		public bool								HasGraphicOperations
-		{
-			get
-			{
-				return this.hasGraphicOperations;
-			}
-			set
-			{
-				if (this.hasGraphicOperations != value)
-				{
-					this.hasGraphicOperations = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-		public bool								HasTreeOperations
-		{
-			get
-			{
-				return this.hasTreeOperations;
-			}
-			set
-			{
-				if (this.hasTreeOperations != value)
-				{
-					this.hasTreeOperations = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-		public bool								HasMoveOperations
-		{
-			get
-			{
-				return this.hasMoveOperations;
-			}
-			set
-			{
-				if (this.hasMoveOperations != value)
-				{
-					this.hasMoveOperations = value;
-					this.Adjust ();
-				}
-			}
-		}
-
-
 		public override void CreateUI(Widget parent)
 		{
 			base.CreateUI (parent);
@@ -129,304 +33,137 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-#if false
-		public override void CreateUI(Widget parent)
-		{
-			//	La toolbar s'adapte en fonction de la largeur disponible. Certains
-			//	boutons non indispensables disparaissent s'il manque de la place.
-			base.CreateUI (parent);
 
-			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Filter);
-			this.buttonDateRange  = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.DateRange);
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Graphic);
-
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Last);
-
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
-			
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.CompactAll);
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.CompactOne);
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.ExpandOne);
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.ExpandAll);
-			
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			
-			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveTop);
-			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveUp);
-			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveDown);
-			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.MoveBottom);
-
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
-			
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Deselect);
-
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
-
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Copy);
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Paste);
-			this.buttonImport     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Import);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Export);
-			this.buttonGoto       = this.CreateCommandButton (DockStyle.None, Res.Commands.TreeTable.Goto);
-
-			this.toolbar.SizeChanged += delegate
-			{
-				this.Adjust ();
-			};
-
-			this.AttachShortcuts ();
-		}
-#endif
-
-
+		#region Magic layout engine
 		private void Adjust()
 		{
-			//	S'il manque de la place en largeur, on supprime des boutons avec
-			//	cette priorité:
-			//	- CompactAll/ExpandAll
-			//	- First/Last
-			//	- Prev/Next
+			//	Adapte la toolbar en fonction de la largeur disponible. Certains boutons
+			//	non indispensables disparaissent s'il manque de la place.
 			if (this.toolbar == null)
 			{
 				return;
 			}
 
-			double size = this.toolbar.ActualHeight;
-			double x = 0;
-
-			foreach (var bs in this.GetButtons (this.toolbar.ActualWidth, size))
+			//	Cache tous les widgets.
+			foreach (var widget in this.toolbar.Children.Widgets.Where (x => x.Dock == DockStyle.None))
 			{
-				if (bs.Widget == null)
+				widget.SetManualBounds (Rectangle.Empty);
+			}
+
+			//	Cherche le level maximal permettant de tout afficher dans la largeur à disposition.
+			int level = this.MaxLevel;
+			double dispo = this.toolbar.ActualWidth - this.ComputeDockedWidth ();
+
+			while (level >= 0)
+			{
+				double width = this.ComputeRequiredWidth (level);
+
+				if (width <= dispo)  // largeur toolbar suffisante ?
 				{
-					continue;
+					//	On positionne les widgets selon leurs largeurs respectives,
+					//	de gauche à droite.
+					double x = 0;
+
+					foreach (var widget in this.GetWidgetsLevel (level))
+					{
+						x += widget.Margins.Left;
+
+						var rect = new Rectangle (x, 0, widget.PreferredWidth, widget.PreferredHeight);
+						widget.SetManualBounds (rect);
+
+						x += widget.PreferredWidth + widget.Margins.Right;
+					}
+
+					break;
 				}
-
-				bs.Widget.Visibility = bs.Visibility;
-
-				if (bs.Visibility)
+				else
 				{
-					if (bs.Widget is IconButton)
-					{
-						bs.Widget.SetManualBounds (new Rectangle (x, 0, size, size));
-						x += size;
-					}
-					else if (bs.Widget is FrameBox)
-					{
-						x += AbstractCommandToolbar.separatorWidth/2;
-						bs.Widget.SetManualBounds (new Rectangle (x, 0, 1, size));
-						x += AbstractCommandToolbar.separatorWidth/2;
-					}
+					level--;  // on essaie à nouveau avec moins de widgets
 				}
 			}
 		}
 
-		private IEnumerable<ButtonState> GetButtons(double width, double size)
+		private int MaxLevel
 		{
-			bool prevNext      = false;
-			bool firstLast     = false;
-			bool compactExpand = false;
-			bool moveLimit     = false;
-			bool moveStep      = false;
-			bool copyPaste     = false;
-			bool sep1          = false;
-			bool sep2          = false;
-			bool sep3          = false;
-			bool sep4          = false;
-
-			double used = size*3;  // place pour New/Delete/Deselect
-
-			if (this.hasGraphic || this.hasFilter || this.hasDateRange)
-			{
-				used += this.hasGraphic   ? size : 0;  // place pour Graphic
-				used += this.hasFilter    ? size : 0;  // place pour Filter
-				used += this.hasDateRange ? size : 0;  // place pour DateRange
-				used += AbstractCommandToolbar.separatorWidth;
-			}
-
-			if (this.hasMoveOperations)
-			{
-				used += AbstractCommandToolbar.separatorWidth;
-				sep3 = true;
-
-				if (width > used + size*2)
-				{
-					used += size*2;
-					moveStep = true;
-				}
-
-				if (width > used + size*2)
-				{
-					used += size*2;
-					moveLimit = true;
-				}
-			}
-
-			if (width > used + size*2 + AbstractCommandToolbar.separatorWidth)
-			{
-				used += size*2 + AbstractCommandToolbar.separatorWidth;
-				prevNext = true;
-				sep1 = true;
-
-				if (width > used + size*2)
-				{
-					used += size*2;
-					firstLast = true;
-				}
-			}
-
-			if (this.hasTreeOperations)
-			{
-				if (width > used + size*4 + AbstractCommandToolbar.separatorWidth)
-				{
-					used += size*4 + AbstractCommandToolbar.separatorWidth;
-					compactExpand = true;
-					sep2 = true;
-				}
-			}
-
-			if (width > used + size*3 + AbstractCommandToolbar.separatorWidth)
-			{
-				used += size*this.CopyPasteGroupCount + AbstractCommandToolbar.separatorWidth;
-				copyPaste = true;
-				sep4 = true;
-			}
-
-			yield return new ButtonState (this.buttonFilter,    this.hasFilter);
-			yield return new ButtonState (this.buttonDateRange, this.hasDateRange);
-			yield return new ButtonState (this.buttonGraphic,   this.hasGraphic);
-			yield return new ButtonState (this.separator1,      this.hasGraphic | this.hasFilter | this.hasDateRange);
-
-			yield return new ButtonState (this.buttonFirst, firstLast);
-			yield return new ButtonState (this.buttonPrev,  prevNext);
-			yield return new ButtonState (this.buttonNext,  prevNext);
-			yield return new ButtonState (this.buttonLast,  firstLast);
-
-			yield return new ButtonState (this.separator1, sep1);
-
-			yield return new ButtonState (this.buttonCompactAll, compactExpand);
-			yield return new ButtonState (this.buttonCompactOne, compactExpand);
-			yield return new ButtonState (this.buttonExpandOne,  compactExpand);
-			yield return new ButtonState (this.buttonExpandAll,  compactExpand);
-
-			yield return new ButtonState (this.separator2, sep2);
-
-			yield return new ButtonState (this.buttonMoveTop,    moveLimit);
-			yield return new ButtonState (this.buttonMoveUp,     moveStep);
-			yield return new ButtonState (this.buttonMoveDown,   moveStep);
-			yield return new ButtonState (this.buttonMoveBottom, moveLimit);
-
-			yield return new ButtonState (this.separator3, sep3);
-
-			yield return new ButtonState (this.buttonNew);
-			yield return new ButtonState (this.buttonDelete);
-			yield return new ButtonState (this.buttonDeselect);
-
-			yield return new ButtonState (this.separator4, sep4);
-
-			if (this.buttonCopy != null)
-			{
-				yield return new ButtonState (this.buttonCopy, copyPaste);
-			}
-
-			if (this.buttonPaste != null)
-			{
-				yield return new ButtonState (this.buttonPaste, copyPaste);
-			}
-
-			if (this.buttonImport != null)
-			{
-				yield return new ButtonState (this.buttonImport, copyPaste);
-			}
-
-			if (this.buttonPaste != null)
-			{
-				yield return new ButtonState (this.buttonExport, copyPaste);
-			}
-
-			if (this.buttonGoto != null)
-			{
-				yield return new ButtonState (this.buttonGoto, copyPaste);
-			}
-		}
-
-		private int CopyPasteGroupCount
-		{
+			//	Retourne le level maximal, donc celui qui permet forcémentde voir
+			//	tous les widgets.
 			get
 			{
-				return this.CopyPasteGroup.Where (x => x != null).Count ();
+				return this.toolbar.Children.Widgets
+					.Where (x => x.Dock == DockStyle.None)
+					.Max (x => x.Index);
 			}
 		}
 
-		private IEnumerable<IconButton> CopyPasteGroup
+		private double ComputeDockedWidth()
 		{
-			get
-			{
-				yield return this.buttonCopy;
-				yield return this.buttonPaste;
-				yield return this.buttonExport;
-				yield return this.buttonImport;
-			}
+			//	Retourne la largeur utilisée par tous les widgets dockés normalement.
+			return this.toolbar.Children.Widgets
+				.Where (x => x.Dock != DockStyle.None)
+				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
 		}
 
-		private struct ButtonState
+		private double ComputeRequiredWidth(int level)
 		{
-			public ButtonState(Widget widget, bool visibility = true)
-			{
-				this.Widget     = widget;
-				this.Visibility = visibility;
-			}
-
-			public readonly Widget		Widget;
-			public readonly bool		Visibility;
+			//	Retourne la largeur requise pour un level ainsi que pour tous les levels inférieurs.
+			return this.GetWidgetsLevel (level)
+				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
 		}
 
+		private IEnumerable<Widget> GetWidgetsLevel(int level)
+		{
+			//	Retourne tous les widgets que l'on souhaite voir présent pour un level
+			//	ainsi que pour tous les levels inférieurs.
+			return this.toolbar.Children.Widgets
+				.Where (x => x.Dock == DockStyle.None && x.Index <= level);
+		}
+		#endregion
 
-		protected IconButton					buttonFilter;
-		protected IconButton					buttonDateRange;
-		protected IconButton					buttonGraphic;
 
-		protected IconButton					buttonFirst;
-		protected IconButton					buttonPrev;
-		protected IconButton					buttonNext;
-		protected IconButton					buttonLast;
+		protected ButtonWithRedDot CreateButton(Command command, int level)
+		{
+			//	Crée un bouton pour une commande.
+			var size = this.toolbar.PreferredHeight;
 
-		protected FrameBox						separator1;
+			return new ButtonWithRedDot
+			{
+				Parent        = this.toolbar,
+				AutoFocus     = false,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (size, size),
+				CommandObject = command,
+				Index         = level,
+			};
+		}
 
-		protected IconButton					buttonCompactAll;
-		protected IconButton					buttonCompactOne;
-		protected IconButton					buttonExpandOne;
-		protected IconButton					buttonExpandAll;
+		protected FrameBox CreateSeparator(int level)
+		{
+			//	Crée un séparateur sous la forme d'une petite barre verticale.
+			var size = this.toolbar.PreferredHeight;
 
-		protected FrameBox						separator2;
+			var sep = new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (1, size),
+				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
+				BackColor     = ColorManager.SeparatorColor,
+				Index         = level,
+			};
 
-		protected IconButton					buttonMoveTop;
-		protected IconButton					buttonMoveUp;
-		protected IconButton					buttonMoveDown;
-		protected IconButton					buttonMoveBottom;
+			return sep;
+		}
 
-		protected FrameBox						separator3;
-
-		protected IconButton					buttonNew;
-		protected IconButton					buttonDelete;
-		protected IconButton					buttonDeselect;
-
-		protected FrameBox						separator4;
-
-		protected IconButton					buttonCopy;
-		protected IconButton					buttonPaste;
-		protected IconButton					buttonExport;
-		protected IconButton					buttonImport;
-		protected IconButton					buttonGoto;
-
-		protected bool							hasGraphic;
-		protected bool							hasFilter;
-		protected bool							hasDateRange;
-		protected bool							hasGraphicOperations;
-		protected bool							hasTreeOperations;
-		protected bool							hasMoveOperations;
+		protected void CreateSajex(int width, int level)
+		{
+			//	Crée un espace vide.
+			new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
+				Index         = level,
+			};
+		}
 	}
 }

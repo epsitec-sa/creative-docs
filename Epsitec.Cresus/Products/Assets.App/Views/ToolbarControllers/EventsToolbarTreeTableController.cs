@@ -21,10 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public EventsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base(accessor, commandContext, baseType)
 		{
-			this.hasFilter         = false;
-			this.hasTreeOperations = false;
-			this.hasMoveOperations = false;
-
 			this.eventsNodeGetter = new ObjectEventsNodeGetter (this.accessor);
 			this.nodeGetter = new SorterNodeGetter (this.eventsNodeGetter);
 

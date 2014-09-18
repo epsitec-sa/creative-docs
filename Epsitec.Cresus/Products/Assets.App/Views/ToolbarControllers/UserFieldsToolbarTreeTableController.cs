@@ -21,10 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.hasFilter         = false;
-			this.hasTreeOperations = false;
-			this.hasMoveOperations = true;
-
 			switch (this.baseType.Kind)
 			{
 				case BaseTypeKind.Assets:

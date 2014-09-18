@@ -230,8 +230,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.assetsToolbar = new AssetsLeftToolbar (this.accessor, this.commandContext);
 
 			this.assetsToolbar.CreateUI (leftBox);
-			this.assetsToolbar.HasFilter = true;
-			this.assetsToolbar.HasTreeOperations = true;
 
 			this.treeColumn = new TreeTableColumnTree
 			{

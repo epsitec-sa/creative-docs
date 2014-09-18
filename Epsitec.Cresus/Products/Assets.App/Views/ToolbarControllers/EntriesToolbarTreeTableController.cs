@@ -21,11 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public EntriesToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.hasGraphic        = true;
-			this.hasFilter         = false;
-			this.hasTreeOperations = true;
-			this.hasMoveOperations = false;
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Entries);
 
 			this.nodeGetter = new EntriesNodeGetter (this.accessor);

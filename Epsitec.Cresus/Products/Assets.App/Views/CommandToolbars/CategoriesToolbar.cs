@@ -21,24 +21,22 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Last);
+			this.CreateButton (Res.Commands.Categories.First, 2);
+			this.CreateButton (Res.Commands.Categories.Prev, 1);
+			this.CreateButton (Res.Commands.Categories.Next, 1);
+			this.CreateButton (Res.Commands.Categories.Last, 2);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (1);
 
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Deselect);
+			this.CreateButton (Res.Commands.Categories.New, 0);
+			this.CreateButton (Res.Commands.Categories.Delete, 0);
+			this.CreateButton (Res.Commands.Categories.Deselect, 4);
 
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (3);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Copy);
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Paste);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Categories.Export);
+			this.CreateButton (Res.Commands.Categories.Copy, 3);
+			this.CreateButton (Res.Commands.Categories.Paste, 3);
+			this.CreateButton (Res.Commands.Categories.Export, 3);
 		}
 	}
 }

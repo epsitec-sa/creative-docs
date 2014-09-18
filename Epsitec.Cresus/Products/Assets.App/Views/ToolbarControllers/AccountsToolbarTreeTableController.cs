@@ -23,12 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public AccountsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.hasGraphic        = true;
-			this.hasFilter         = false;
-			this.hasDateRange      = true;
-			this.hasTreeOperations = true;
-			this.hasMoveOperations = false;
-
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);

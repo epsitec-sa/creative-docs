@@ -22,10 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public WarningsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.hasFilter         = false;
-			this.hasTreeOperations = false;
-			this.hasMoveOperations = false;
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
 
 			var warnings = new List<Warning>();

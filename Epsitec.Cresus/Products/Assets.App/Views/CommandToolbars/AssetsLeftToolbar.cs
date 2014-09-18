@@ -25,28 +25,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFilter     = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Filter);
+			this.CreateButton (Res.Commands.AssetsLeft.Filter, 0);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Last);
+			this.CreateButton (Res.Commands.AssetsLeft.First, 5);
+			this.CreateButton (Res.Commands.AssetsLeft.Prev, 1);
+			this.CreateButton (Res.Commands.AssetsLeft.Next, 1);
+			this.CreateButton (Res.Commands.AssetsLeft.Last, 5);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (2);
 
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.CompactAll);
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.CompactOne);
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.ExpandOne);
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.ExpandAll);
-			
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
+			this.CreateButton (Res.Commands.AssetsLeft.CompactAll, 2);
+			this.CreateButton (Res.Commands.AssetsLeft.CompactOne, 4);
+			this.CreateButton (Res.Commands.AssetsLeft.ExpandOne, 4);
+			this.CreateButton (Res.Commands.AssetsLeft.ExpandAll, 2);
 
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.AssetsLeft.Deselect);
+			this.CreateSeparator (3);
 
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateButton (Res.Commands.AssetsLeft.New, 3);
+			this.CreateButton (Res.Commands.AssetsLeft.Delete, 3);
+			this.CreateButton (Res.Commands.AssetsLeft.Deselect, 6);
 		}
 	}
 }

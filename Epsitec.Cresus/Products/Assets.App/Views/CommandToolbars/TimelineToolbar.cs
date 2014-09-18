@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
-	public class TimelineToolbar : AbstractCommandToolbar
+	public class TimelineToolbar : AbstractTreeTableToolbar
 	{
 		public TimelineToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)
@@ -20,28 +20,38 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Labels);
-			this.CreateSajex (5);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Compacted);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Expanded);
-			this.CreateSajex (5);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.WeeksOfYear);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.DaysOfWeek);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Graph);
-			this.CreateSajex (10);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.First);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Prev);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Next);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Last);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Now);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Date);
-			this.CreateSeparator     (DockStyle.Left);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.New);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Delete);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Deselect);
-			this.CreateSeparator     (DockStyle.Left);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Copy);
-			this.CreateCommandButton (DockStyle.Left, Res.Commands.Timeline.Paste);
+			this.CreateButton (Res.Commands.Timeline.Labels, 2);
+
+			this.CreateSajex (5, 2);
+
+			this.CreateButton (Res.Commands.Timeline.Compacted, 2);
+			this.CreateButton (Res.Commands.Timeline.Expanded, 2);
+			
+			this.CreateSajex (5, 2);
+
+			this.CreateButton (Res.Commands.Timeline.WeeksOfYear, 2);
+			this.CreateButton (Res.Commands.Timeline.DaysOfWeek, 2);
+			this.CreateButton (Res.Commands.Timeline.Graph, 2);
+			
+			this.CreateSajex (10, 2);
+			
+			this.CreateButton (Res.Commands.Timeline.First, 1);
+			this.CreateButton (Res.Commands.Timeline.Prev, 1);
+			this.CreateButton (Res.Commands.Timeline.Next, 1);
+			this.CreateButton (Res.Commands.Timeline.Last, 1);
+			this.CreateButton (Res.Commands.Timeline.Now, 1);
+			this.CreateButton (Res.Commands.Timeline.Date, 1);
+			
+			this.CreateSeparator (1);
+			
+			this.CreateButton (Res.Commands.Timeline.New, 0);
+			this.CreateButton (Res.Commands.Timeline.Delete, 0);
+			this.CreateButton (Res.Commands.Timeline.Deselect, 4);
+			
+			this.CreateSeparator (3);
+			
+			this.CreateButton (Res.Commands.Timeline.Copy, 3);
+			this.CreateButton (Res.Commands.Timeline.Paste, 3);
 		}
 	}
 }

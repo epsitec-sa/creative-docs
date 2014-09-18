@@ -21,24 +21,22 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Last);
+			this.CreateButton (Res.Commands.Events.First, 2);
+			this.CreateButton (Res.Commands.Events.Prev, 1);
+			this.CreateButton (Res.Commands.Events.Next, 1);
+			this.CreateButton (Res.Commands.Events.Last, 2);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (1);
 
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Deselect);
+			this.CreateButton (Res.Commands.Events.New, 0);
+			this.CreateButton (Res.Commands.Events.Delete, 0);
+			this.CreateButton (Res.Commands.Events.Deselect, 4);
 
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (3);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Copy);
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Paste);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Events.Export);
+			this.CreateButton (Res.Commands.Events.Copy, 3);
+			this.CreateButton (Res.Commands.Events.Paste, 3);
+			this.CreateButton (Res.Commands.Events.Export, 3);
 		}
 	}
 }

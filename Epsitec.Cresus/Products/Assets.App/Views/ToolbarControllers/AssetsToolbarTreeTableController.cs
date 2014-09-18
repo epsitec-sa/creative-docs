@@ -23,11 +23,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		public AssetsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.hasGraphic        = true;
-			this.hasFilter         = true;
-			this.hasTreeOperations = true;
-			this.hasMoveOperations = false;
-
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> SortableCumulNode

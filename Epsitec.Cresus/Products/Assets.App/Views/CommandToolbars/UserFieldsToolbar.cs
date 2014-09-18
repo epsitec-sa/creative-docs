@@ -21,30 +21,29 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Last);
+			this.CreateButton (Res.Commands.UserFields.First, 4);
+			this.CreateButton (Res.Commands.UserFields.Prev, 3);
+			this.CreateButton (Res.Commands.UserFields.Next, 3);
+			this.CreateButton (Res.Commands.UserFields.Last, 4);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (3);
 
-			this.buttonMoveTop    = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveTop);
-			this.buttonMoveUp     = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveUp);
-			this.buttonMoveDown   = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveDown);
-			this.buttonMoveBottom = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.MoveBottom);
+			this.CreateButton (Res.Commands.UserFields.MoveTop, 2);
+			this.CreateButton (Res.Commands.UserFields.MoveUp, 1);
+			this.CreateButton (Res.Commands.UserFields.MoveDown, 1);
+			this.CreateButton (Res.Commands.UserFields.MoveBottom, 2);
 
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (1);
 
-			this.buttonNew        = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.New);
-			this.buttonDelete     = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Delete);
-			this.buttonDeselect   = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Deselect);
+			this.CreateButton (Res.Commands.UserFields.New, 0);
+			this.CreateButton (Res.Commands.UserFields.Delete, 0);
+			this.CreateButton (Res.Commands.UserFields.Deselect, 6);
 
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (5);
 
-			this.buttonCopy       = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Copy);
-			this.buttonPaste      = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Paste);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.UserFields.Export);
+			this.CreateButton (Res.Commands.UserFields.Copy, 5);
+			this.CreateButton (Res.Commands.UserFields.Paste, 5);
+			this.CreateButton (Res.Commands.UserFields.Export, 5);
 		}
 	}
 }

@@ -21,27 +21,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			base.CreateUI (parent);
 
-			this.buttonDateRange  = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.DateRange);
-			this.buttonGraphic    = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Graphic);
+			this.CreateButton (Res.Commands.Accounts.DateRange, 0);
+			this.CreateButton (Res.Commands.Accounts.Graphic, 1);
 
-			this.buttonFirst      = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.First);
-			this.buttonPrev       = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Prev);
-			this.buttonNext       = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Next);
-			this.buttonLast       = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Last);
+			this.CreateButton (Res.Commands.Accounts.First, 5);
+			this.CreateButton (Res.Commands.Accounts.Prev, 4);
+			this.CreateButton (Res.Commands.Accounts.Next, 4);
+			this.CreateButton (Res.Commands.Accounts.Last, 5);
 
-			this.separator1       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (2);
 			
-			this.buttonCompactAll = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.CompactAll);
-			this.buttonCompactOne = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.CompactOne);
-			this.buttonExpandOne  = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.ExpandOne);
-			this.buttonExpandAll  = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.ExpandAll);
+			this.CreateButton (Res.Commands.Accounts.CompactAll, 2);
+			this.CreateButton (Res.Commands.Accounts.CompactOne, 3);
+			this.CreateButton (Res.Commands.Accounts.ExpandOne, 3);
+			this.CreateButton (Res.Commands.Accounts.ExpandAll, 2);
 			
-			this.separator2       = this.CreateSeparator     (DockStyle.None);
-			this.separator3       = this.CreateSeparator     (DockStyle.None);
-			this.separator4       = this.CreateSeparator     (DockStyle.None);
+			this.CreateSeparator (1);
 
-			this.buttonImport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Import);
-			this.buttonExport     = this.CreateCommandButton (DockStyle.None, Res.Commands.Accounts.Export);
+			this.CreateButton (Res.Commands.Accounts.Import, 0);
+			this.CreateButton (Res.Commands.Accounts.Export, 0);
 		}
 	}
 }
