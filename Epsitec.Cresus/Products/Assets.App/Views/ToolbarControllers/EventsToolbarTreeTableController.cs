@@ -13,6 +13,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -263,6 +264,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			base.OnExport (dispatcher, e);
+		}
+
+
+		protected override void ShowContextMenu(Point pos)
+		{
+			//	Affiche le menu contextuel.
+			MenuPopup.Show (this.toolbar, this.treeTableFrame, pos,
+				Res.Commands.Events.New,
+				Res.Commands.Events.Delete,
+				null,
+				Res.Commands.Events.Copy,
+				Res.Commands.Events.Paste);
 		}
 
 

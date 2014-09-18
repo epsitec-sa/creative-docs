@@ -745,12 +745,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			//-MenuPopup.Show (this.toolbar, this.frameBox, pos,
-			//-	new MenuPopup.Item (ToolbarCommand.New,    this.OnNew),
-			//-	new MenuPopup.Item (ToolbarCommand.Delete, this.OnDelete),
-			//-	new MenuPopup.Item (),
-			//-	new MenuPopup.Item (ToolbarCommand.Copy,   this.OnCopy),
-			//-	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnPaste));
+			MenuPopup.Show (this.toolbar, this.frameBox, pos,
+				Res.Commands.Timeline.New,
+				Res.Commands.Timeline.Delete,
+				null,
+				Res.Commands.Timeline.Copy,
+				Res.Commands.Timeline.Paste);
 		}
 
 		private void OnDokeySelect(KeyCode key)

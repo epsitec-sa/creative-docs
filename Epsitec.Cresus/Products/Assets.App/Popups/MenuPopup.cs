@@ -21,26 +21,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.toolbar = toolbar;
 
-			this.commands = new List<ToolbarCommand> ();
-			this.actions = new Dictionary<ToolbarCommand, System.Action> ();
+			this.commands = new List<Command> ();
 		}
 
 
-		private void AddItem(ToolbarCommand command, System.Action action)
+		private void AddItem(Command command)
 		{
-			if (action == null)  // séparateur ?
+			if (command == null)  // séparateur ?
 			{
-				this.commands.Add (ToolbarCommand.Unknown);
+				this.commands.Add (null);
 			}
 			else
 			{
-				//?var state = this.toolbar.GetCommandState (command);
-				//?
-				//?if (state == ToolbarCommandState.Enable)
-				//?{
-				//?	this.commands.Add (command);
-				//?	this.actions.Add (command, action);
-				//?}
+				if (this.toolbar.GetEnable (command))
+				{
+					this.commands.Add (command);
+				}
 			}
 		}
 
@@ -55,8 +51,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var c0 = this.commands[i];
 				var c1 = this.commands[i+1];
 
-				if (c0 == ToolbarCommand.Unknown &&
-					c1 == ToolbarCommand.Unknown)  // 2 séparateurs qui se suivent ?
+				if (c0 == null &&
+					c1 == null)  // 2 séparateurs qui se suivent ?
 				{
 					this.commands.RemoveAt (i);
 				}
@@ -69,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Si le menu commence par un séparateur, supprime-le.
 			if (this.commands.Any ())
 			{
-				if (this.commands.First () == ToolbarCommand.Unknown)  // séparateur ?
+				if (this.commands.First () == null)  // séparateur ?
 				{
 					this.commands.RemoveAt (0);
 				}
@@ -78,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Si le menu se termine par un séparateur, supprime-le.
 			if (this.commands.Any ())
 			{
-				if (this.commands.Last () == ToolbarCommand.Unknown)  // séparateur ?
+				if (this.commands.Last () == null)  // séparateur ?
 				{
 					this.commands.RemoveAt (this.commands.Count-1);
 				}
@@ -100,10 +96,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateInvisibleCloseButton ();
 		}
 
-		private void CreateLine(ToolbarCommand command)
+		private void CreateLine(Command command)
 		{
 			//	Crée une ligne du menu, de haut en bas.
-			if (command == ToolbarCommand.Unknown)  // séparateur ?
+			if (command == null)  // séparateur ?
 			{
 				this.CreateSeparator ();
 			}
@@ -126,26 +122,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void CreateItem(ToolbarCommand command)
+		private void CreateItem(Command command)
 		{
 			//	Crée une ligne contenant un item (icône suivie d'un texte).
-			//?bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
-			//?var desc = this.toolbar.GetCommandDescription (command);
-			//?
-			//?var item = new MenuPopupItem
-			//?{
-			//?	Parent          = this.mainFrameBox,
-			//?	IconUri         = Misc.GetResourceIconUri (desc.Icon),
-			//?	Text            = desc.Tooltip,
-			//?	Dock            = DockStyle.Top,
-			//?	PreferredHeight = MenuPopup.itemHeight,
-			//?	Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
-			//?};
-			//?
-			//?item.Clicked += delegate
-			//?{
-			//?	this.DoAction (command);
-			//?};
+#if false
+			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
+			var desc = command.Description;
+			
+			var item = new MenuPopupItem
+			{
+				Parent          = this.mainFrameBox,
+				IconUri         = Misc.GetResourceIconUri (command.Icon),
+				Text            = desc,
+				Dock            = DockStyle.Top,
+				PreferredHeight = MenuPopup.itemHeight,
+				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
+				CommandObject   = command,
+			};
+#else
+			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
+
+			new MenuItem
+			{
+				Parent          = this.mainFrameBox,
+				Dock            = DockStyle.Top,
+				PreferredHeight = MenuPopup.itemHeight,
+				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
+				CommandObject   = command,
+			};
+#endif
 		}
 
 		private void CreateInvisibleCloseButton()
@@ -169,28 +174,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 		}
 
-		private void DoAction(ToolbarCommand command)
-		{
-			//	Effectue l'action correspondant à une commande.
-			this.ClosePopup ();
-			this.actions[command] ();  // effectue l'action
-		}
-
 
 		private int RequiredWidth
 		{
 			//	Calcule la largeur nécessaire en fonction de l'ensemble des cases du menu.
 			get
 			{
-				//?return this.commands.Max
-				//?(
-				//?	command => MenuPopupItem.GetRequiredWidth
-				//?	(
-				//?		MenuPopup.itemHeight, this.toolbar.GetCommandDescription (command).Tooltip
-				//?	)
-				//?)
-				//?+ MenuPopup.margins*2;
-				return 0;
+				return this.commands.Max
+				(
+					command => (command == null) ? 0 : MenuPopupItem.GetRequiredWidth
+					(
+						MenuPopup.itemHeight, command.Description
+					)
+				)
+				+ MenuPopup.margins*2;
 			}
 		}
 
@@ -207,9 +204,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private static int GetRequiredHeight(ToolbarCommand command)
+		private static int GetRequiredHeight(Command command)
 		{
-			if (command == ToolbarCommand.Unknown)  // séparateur ?
+			if (command == null)  // séparateur ?
 			{
 				return MenuPopup.margins + 1 + MenuPopup.margins;
 			}
@@ -221,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, params Item[] items)
+		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, params Command[] commands)
 		{
 			//	Affiche le menu contextuel.
 			//	- La toolbar permet d'obtenir les commandes.
@@ -232,10 +229,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var popup = new MenuPopup (toolbar);
 
-			foreach (var item in items)
+			foreach (var command in commands)
 			{
 
-				popup.AddItem (item.Command, item.Action);
+				popup.AddItem (command);
 			}
 
 			popup.Simplify ();  // supprime les séparateurs superflus
@@ -245,18 +242,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				popup.Create (widget, pos, leftOrRight: false);
 			}
 		}
-
-		public struct Item
-		{
-			public Item(ToolbarCommand command, System.Action action)
-			{
-				this.Command = command;
-				this.Action  = action;
-			}
-
-			public readonly ToolbarCommand		Command;
-			public readonly System.Action		Action;
-		}
 		#endregion
 
 
@@ -264,7 +249,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int							itemHeight	= 26;
 
 		private readonly AbstractCommandToolbar		toolbar;
-		private readonly List<ToolbarCommand>		commands;
-		private readonly Dictionary<ToolbarCommand, System.Action> actions;
+		private readonly List<Command>				commands;
 	}
 }

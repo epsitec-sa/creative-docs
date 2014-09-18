@@ -14,6 +14,8 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -247,6 +249,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected void OnGoto()
 		{
 			this.OnRowDoubleClicked (this.VisibleSelectedRow);
+		}
+
+
+		protected override void ShowContextMenu(Point pos)
+		{
+			//	Affiche le menu contextuel.
+			MenuPopup.Show (this.toolbar, this.treeTableFrame, pos,
+				Res.Commands.Warnings.Goto);
 		}
 
 

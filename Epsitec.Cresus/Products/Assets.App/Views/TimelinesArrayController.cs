@@ -394,18 +394,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			//?MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
-			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsPreview,   this.OnAmortizationPreview),
-			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsFix,       this.OnAmortizationFix),
-			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsToExtra,   this.OnAmortizationToExtra),
-			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsUnpreview, this.OnAmortizationUnpreview),
-			//?	new MenuPopup.Item (ToolbarCommand.AmortizationsDelete,    this.OnAmortizationDelete),
-			//?	new MenuPopup.Item (),
-			//?	new MenuPopup.Item (ToolbarCommand.New,    this.OnTimelineNew),
-			//?	new MenuPopup.Item (ToolbarCommand.Delete, this.OnTimelineDelete),
-			//?	new MenuPopup.Item (),
-			//?	new MenuPopup.Item (ToolbarCommand.Copy,   this.OnTimelineCopy),
-			//?	new MenuPopup.Item (ToolbarCommand.Paste,  this.OnTimelinePaste));
+			MenuPopup.Show (this.timelinesToolbar, this.scroller, pos,
+				Res.Commands.Timelines.Amortizations.Preview,
+				Res.Commands.Timelines.Amortizations.Fix,
+				Res.Commands.Timelines.Amortizations.ToExtra,
+				Res.Commands.Timelines.Amortizations.Unpreview,
+				Res.Commands.Timelines.Amortizations.Delete,
+				null,
+				Res.Commands.Timelines.New,
+				Res.Commands.Timelines.Delete,
+				null,
+				Res.Commands.Timelines.Copy,
+				Res.Commands.Timelines.Paste);
 		}
 
 		private void OnDokeySelect(KeyCode key)

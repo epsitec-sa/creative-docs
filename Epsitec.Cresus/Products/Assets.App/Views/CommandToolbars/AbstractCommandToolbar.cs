@@ -104,6 +104,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public bool GetEnable(Command command)
+		{
+			return this.commandContext.GetCommandState (command).Enable;
+		}
+
 		public void SetEnable(Command command, bool enable)
 		{
 			this.commandContext.GetCommandState (command).Enable = enable;
