@@ -9,9 +9,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
-	public class TimelinesToolbar : AbstractCommandToolbar
+	public class AmortizationToolbar : AbstractCommandToolbar
 	{
-		public TimelinesToolbar(DataAccessor accessor, CommandContext commandContext)
+		public AmortizationToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)
 		{
 		}
@@ -32,8 +32,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			
 			this.CreateSeparator (1);
 			
-			this.CreateButton (Res.Commands.Timelines.New, 0);
-			this.CreateButton (Res.Commands.Timelines.Delete, 0);
+			this.CreateButton (Res.Commands.Timelines.Amortizations.Preview, 0);
+			this.CreateButton (Res.Commands.Timelines.Amortizations.Fix, 0);
+			this.CreateButton (Res.Commands.Timelines.Amortizations.ToExtra, 0);
+			this.CreateButton (Res.Commands.Timelines.Amortizations.Unpreview, 0);
+			this.CreateButton (Res.Commands.Timelines.Amortizations.Delete, 0);
+
+			this.CreateSeparator (5);
+
 			this.CreateButton (Res.Commands.Timelines.Deselect, 5);
 			
 			this.CreateSeparator (3);

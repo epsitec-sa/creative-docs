@@ -249,7 +249,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateStateAt (leftBox);
 
 			//	Partie droite.
-			this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandContext);
+			if (this.HasAmortizationsOper)
+			{
+				this.timelinesToolbar = new AmortizationToolbar (this.accessor, this.commandContext);
+			}
+			else
+			{
+				this.timelinesToolbar = new TimelinesToolbar (this.accessor, this.commandContext);
+			}
+
 			this.timelinesToolbar.CreateUI (rightBox);
 
 			var bottomRightBox = new FrameBox
@@ -1914,7 +1922,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TimelinesMode								timelinesMode;
 		private AssetsLeftToolbar							assetsToolbar;
 		private VSplitter									splitter;
-		private TimelinesToolbar							timelinesToolbar;
+		private AbstractCommandToolbar						timelinesToolbar;
 		private TreeTableColumnTree							treeColumn;
 		private NavigationTimelineController				controller;
 		private VScroller									scroller;

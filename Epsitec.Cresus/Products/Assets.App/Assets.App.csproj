@@ -183,6 +183,7 @@
     <Compile Include="Views\CommandToolbars\AccountsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AssetsLeftToolbar.cs" />
     <Compile Include="Views\CommandToolbars\EventsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\AmortizationToolbar.cs" />
     <Compile Include="Views\CommandToolbars\UserFieldsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\WarningsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\PersonsToolbar.cs" />

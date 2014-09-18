@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 		public static FrameBox GetMainFrameBox(this Widget widget)
 		{
 			//	Retourne le widget 'root' qui occupe toute la fenêtre.
+			System.Diagnostics.Debug.Assert (widget.Window != null);
 			var parent = widget.Window.Root.Children[0] as FrameBox;
 			System.Diagnostics.Debug.Assert (parent != null);
 			System.Diagnostics.Debug.Assert (parent.Name == "PopupParentFrame");
