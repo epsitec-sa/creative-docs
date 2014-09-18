@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	/// <summary>
 	/// Toolbar utilisée pour montrer les objets d'immobilisations en mode "plusieurs
-	/// timelines", dans la partie gauche.
+	/// timelines" (ViewMode.Multiple), dans la partie gauche.
 	/// </summary>
 	public class AssetsLeftToolbar : AbstractCommandToolbar
 	{
@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public override void CreateUI(Widget parent)
 		{
+			//	La valeur zéro pour level indique les commandes importantes.
+			//	Les plus grandes valeurs correspondent à des commandes de moins
+			//	en moins importantes, qui seront absentes si la place à
+			//	disposition dans la toolbar vient à manquer.
+
 			base.CreateUI (parent);
 
 			this.CreateButton (Res.Commands.AssetsLeft.Filter, 0);

@@ -13,6 +13,9 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
+	/// <summary>
+	/// Toolbar principale toujours présente en haut de la fenêtre, avec de gros boutons.
+	/// </summary>
 	public class MainToolbar : AbstractCommandToolbar
 	{
 		public MainToolbar(DataAccessor accessor, CommandContext commandContext)

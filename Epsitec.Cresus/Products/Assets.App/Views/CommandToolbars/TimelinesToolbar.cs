@@ -9,6 +9,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
+	/// <summary>
+	/// Toolbar utilisée pour les timelines des objets d'immobilisations en mode "plusieurs
+	/// timelines" (ViewMode.Multiple), dans la partie droite.
+	/// </summary>
 	public class TimelinesToolbar : AbstractCommandToolbar
 	{
 		public TimelinesToolbar(DataAccessor accessor, CommandContext commandContext)
@@ -18,6 +22,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public override void CreateUI(Widget parent)
 		{
+			//	La valeur zéro pour level indique les commandes importantes.
+			//	Les plus grandes valeurs correspondent à des commandes de moins
+			//	en moins importantes, qui seront absentes si la place à
+			//	disposition dans la toolbar vient à manquer.
+
 			base.CreateUI (parent);
 
 			this.CreateButton (Res.Commands.Timelines.Narrow, 4);
