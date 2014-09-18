@@ -5,32 +5,35 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
     restrict: 'E',
     scope: {
         group: '=',
+        fields: '=',
     },
     templateUrl: '/content/modules/QueryBuilder/view.html',
     compile: function (element, attrs) {
       var content, directive;
       content = element.contents().remove();
       return function (scope, element, attrs) {
+
         scope.operators = [
-            { name: 'ET' },
-            { name: 'OU' }
+            { name: 'ET', value: 'and' },
+            { name: 'OU', value: 'or' }
         ];
 
-        scope.fields = scope.group.fields;
+        scope.enum = {};
 
-        scope.conditions = [
-            { name: '=' },
-            { name: '<>' },
-            { name: '<' },
-            { name: '<=' },
-            { name: '>' },
-            { name: '>=' }
+        scope.comparators = [
+            { name: 'égal a', value: 'eq'},
+            { name: 'pas égal a', value: 'nq'},
+            { name: 'plus petit que', value: 'lt'},
+            { name: 'plus grand que', value: 'gt'}
         ];
 
         scope.addCondition = function () {
             scope.group.rules.push({
                 field: '',
-                condition: '=',
+                comparator: {
+                  name: 'égal a',
+                  value: 'eq'
+                },
                 type: 'string',
                 data: ''
             });
@@ -43,8 +46,10 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
         scope.addGroup = function () {
             scope.group.rules.push({
                 group: {
-                    fields: scope.fields,
-                    operator: 'ET',
+                    operator: {
+                      name: 'ET',
+                      value: 'and'
+                    },
                     rules: []
                 }
             });
@@ -58,11 +63,8 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
 
               if(rule.type === 'list') {
                 webCoreServices.fieldValues(field.enumId).success(function (data, status, headers) {
-                  rule.possibleValues = data.content.values;
+                  scope.enum[field.enumId] = data.content.values;
                 });
-              }
-              else {
-                rule.possibleValues = null;
               }
             }
           });
@@ -77,7 +79,7 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
         element.append(directive(scope, function ($compile) {
             return $compile;
         }));
-      }
+      };
     }
-  }
+  };
 }]);

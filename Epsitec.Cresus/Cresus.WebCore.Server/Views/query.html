@@ -16,9 +16,13 @@
         <div class="alert alert-warning">
             <span ng-bind-html="humanOutput"></span>
         </div>
-        <query-builder ng-if="filter.group.fields" group="filter.group"></query-builder>
+        <query-builder ng-if="ready" group="filter.group" fields="fields"></query-builder>
         <div class="alert alert-danger">
             <span ng-bind-html="queryOutput"></span>
+        </div>
+        <div class="alert alert-danger">
+            {{json}}
+            <button ng-click="testQuery()" value="Test"/>
         </div>
     </div>
     <style>

@@ -187,6 +187,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
+			string rawQuery = Tools.GetOptionalParameter (Request.Query.query);
 
 			string dataSetName = parameters.dataset;
 
@@ -214,7 +215,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return EntityExtractor.Create
 			(
 				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters
+				databaseId, rawSorters, rawFilters, rawQuery
 			);
 		}
 

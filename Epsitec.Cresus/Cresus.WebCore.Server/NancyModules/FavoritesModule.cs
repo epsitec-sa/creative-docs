@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
+			string rawQuery = Tools.GetOptionalParameter (Request.Query.query);
 
 			var databaseId = favorites.DatabaseId;
 			
@@ -119,7 +120,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return EntityExtractor.Create
 			(
 				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters, customizer
+				databaseId, rawSorters, rawFilters, rawQuery, customizer
 			);
 		}
 	}

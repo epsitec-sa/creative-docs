@@ -65,34 +65,55 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return entityFilter;
 		}
 
-		//TODO: Create a Query parser for returning a DatasetQuery
-		public static DatasetQueryFilter ParseQuery(BusinessContext businessContext, Caches caches, Database database, string queryParameter)
+		//TODO: Create a Query parser for returning a complexe Filter
+		public static Filter ParseQuery(BusinessContext businessContext, Caches caches, Database database, string queryParameter)
 		{
 			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
 			var entityId = EntityInfo.GetTypeId (entityType);
-			var datasetQuery = new DatasetQueryFilter (entityId);
-
+			var queryFilter = new Filter ();
+			
 			if (string.IsNullOrEmpty (queryParameter))
 			{
-				return datasetQuery;
+				return queryFilter;
 			}
 
 			var deserializer = new JavaScriptSerializer ();
 			var query = (object[]) deserializer.DeserializeObject (queryParameter);
 
+			var filtersDef = new Dictionary<string, object> ();
 			//TODO: parse query parameters for extracting filters
+			//Tricky: recursive nodeFilter creation...
 			foreach (var filter in query.Cast<Dictionary<string, object>> ())
 			{
-				var column = ColumnIO.ParseColumn (caches, database, (string) filter["field"]);
+				var filterOpContainer = (Dictionary<string, object>)  filter["operator"];
+				var filterOp =  (string) filterOpContainer["value"];
+				var rules    =  (object[]) filter["rules"];
 
-				var columnId = column.MetaData.Id;
-				var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
-				var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+				foreach(var rule in rules)
+				{
+					var type = (Dictionary<string, object>) rule;
 
-				datasetQuery.Columns.Add (columnRef);
+					object group = null;
+					if( type.TryGetValue("group",out group))
+					{
+						//subgroup case	
+					}
+					else
+					{
+						//filter def case
+					}
+				}
+
+				//var column = ColumnIO.ParseColumn (caches, database, (string) filter["field"]);
+
+				//var columnId = column.MetaData.Id;
+				//var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
+				//var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+
+				//datasetQuery.Columns.Add (columnRef);
 			}
 
-			return datasetQuery;
+			return queryFilter;
 		}
 
 

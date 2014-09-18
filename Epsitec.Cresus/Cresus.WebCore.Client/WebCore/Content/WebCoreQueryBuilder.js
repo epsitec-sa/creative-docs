@@ -7,19 +7,18 @@ var app = angular.module("webCoreQueryBuilder",
 
 app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', function ($scope, $location, webCoreServices) {
     var druid = $location.path().replace('/','');
-
+    $scope.fields = [];
     webCoreServices.database(druid).success(function (data, status, headers) {
         $scope.database = data.content;
         $scope.filter   = {
           group : {
-            fields : [],
-            operator : 'ET',
+            operator : {name: 'ET', value: 'and'},
             rules : []
           }
         };
 
         angular.forEach ($scope.database.columns, function (column) {
-          $scope.filter.group.fields.push ({
+          $scope.fields.push ({
             name : column.title,
             id   : column.name,
             type : column.type.type,
@@ -27,9 +26,19 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
           });
 
         });
+
+        $scope.ready = true;
     });
 
+    $scope.testQuery = function ()
+    {
+      var query  = [];
+      query.push ($scope.filter.group);
+      webCoreServices.query(druid,  JSON.stringify(query)).success(function (data, status, headers)
+      {
 
+      });
+    };
 
     function htmlEntities(str) {
         return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -38,10 +47,10 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
     function computedForHuman(group) {
         if (!group) return "";
         for (var str = "(", i = 0; i < group.rules.length; i++) {
-            i > 0 && (str += " <strong>" + group.operator + "</strong> ");
+            i > 0 && (str += " <strong>" + group.operator.name + "</strong> ");
             str += group.rules[i].group ?
                 computedForHuman(group.rules[i].group) :
-                group.rules[i].field.name + " " + htmlEntities(group.rules[i].condition) + " " + group.rules[i].data;
+                group.rules[i].field.name + " " + htmlEntities(group.rules[i].comparator.name) + " " + group.rules[i].data;
         }
 
         return str + ")";
@@ -49,23 +58,22 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
 
     function computedQuery(group) {
         if (!group) return "";
-        for (var str = "[", i = 0; i < group.rules.length; i++) {
-            i > 0 && (str += " " + group.operator + " ");
+        for (var str = "{'op':'"+ group.operator.value +"'", i = 0; i < group.rules.length; i++) {
             str += group.rules[i].group ?
                 computedQuery(group.rules[i].group) :
-                group.rules[i].field.id + " " + group.rules[i].condition + " " + group.rules[i].data;
+                "{field':'" + group.rules[i].field.id + "','comparison':'" + group.rules[i].comparator.value + "','value':' " + group.rules[i].data + "'}";
         }
 
-        return str + "]";
+        return str + "}";
     }
 
     $scope.json = null;
 
     $scope.$watch('filter', function (newValue) {
         if(newValue !== undefined) {
-          $scope.json = JSON.stringify(newValue, null, 2);
+          $scope.json = JSON.stringify(newValue.group, ' ', 2);
           $scope.humanOutput = computedForHuman(newValue.group);
-          $scope.queryOutput = computedQuery(newValue.group);
+          //$scope.queryOutput = computedQuery(newValue.group);
         }
     }, true);
 }]);

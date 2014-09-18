@@ -1,6 +1,6 @@
 <div class="alert alert-warning alert-group">
     <div class="form-inline">
-        <select ng-options="o.name as o.name for o in operators" ng-model="group.operator" class="form-control input-xs"></select>
+        <select ng-options="o as o.name for o in operators" ng-model="group.operator" class="form-control input-xs"></select>
         <div class="btn-group">
             <button ng-click="addCondition()" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Condition</button>
             <button ng-click="addGroup()" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Groupe</button>
@@ -11,12 +11,12 @@
         <div ng-repeat="rule in group.rules | orderBy:'index'" class="condition">
             <div ng-switch="rule.hasOwnProperty('group')">
                 <div ng-switch-when="true">
-                    <query-builder group="rule.group"></query-builder>
+                    <query-builder group="rule.group" fields="fields"></query-builder>
                 </div>
                 <div ng-switch-default="ng-switch-default">
                     <div class="form-inline">
                         <select ng-options="t as t.name for t in fields" ng-model="rule.field" ng-change="setType(rule)" class="form-control input-xs"></select>
-                        <select style="margin-left: 5px" ng-options="c.name as c.name for c in conditions" ng-model="rule.condition" class="form-control input-xs"></select>
+                        <select style="margin-left: 5px" ng-options="c as c.name for c in comparators" ng-model="rule.comparator" class="form-control input-xs"></select>
                         <ng-switch on="rule.type">
                           <span ng-switch-when="date">
                             <input style="margin-left: 5px" type="date" ng-model="rule.data" class="form-control input-xs" />
@@ -25,7 +25,7 @@
                             <input style="margin-left: 5px" type="number" ng-model="rule.data" class="form-control input-xs" />
                           </span>
                           <span ng-switch-when="list">
-                            <select ng-options="t.id as t.text for t in rule.possibleValues" ng-model="rule.data"  class="form-control input-xs"></select>
+                            <select ng-options="t.id as t.text for t in enum[rule.field.enumId]" ng-model="rule.data"  class="form-control input-xs"></select>
                           </span>
                           <span ng-switch-default>
                             <input style="margin-left: 5px" type="text" ng-model="rule.data" class="form-control input-xs" />

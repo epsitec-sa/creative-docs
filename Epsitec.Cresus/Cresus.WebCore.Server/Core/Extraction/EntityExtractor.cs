@@ -75,20 +75,21 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		#endregion
 
 
-		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters, System.Action<DataContext, Request, AbstractEntity> customizer = null)
+		public static EntityExtractor Create(BusinessContext businessContext, Caches caches, UserManager userManager, DatabaseManager databaseManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Druid databaseId, string rawSorters, string rawFilters,string rawQuery, System.Action<DataContext, Request, AbstractEntity> customizer = null)
 		{
 			var database = databaseManager.GetDatabase (databaseId);
 
 			var dataSetMetadata = database.DataSetMetadata;
 			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
 			var filter = FilterIO.ParseFilter (businessContext, caches, database, rawFilters);
+			var query = FilterIO.ParseQuery (businessContext, caches, database, rawQuery);
 
-			var accessor = EntityExtractor.CreateAccessor (userManager, dataSetAccessorGetter, database, sorters, filter, customizer);
+			var accessor = EntityExtractor.CreateAccessor (userManager, dataSetAccessorGetter, database, sorters, filter, query, customizer);
 
 			return new EntityExtractor (database, dataSetMetadata, accessor);
 		}
 
-		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, System.Action<DataContext, Request, AbstractEntity> customizer)
+		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, Filter query, System.Action<DataContext, Request, AbstractEntity> customizer)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
 
@@ -98,6 +99,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			settings.Sort.Clear ();
 			settings.Sort.AddRange (sorters);
 			settings.Filter = filter;
+			settings.Query = query;
 
 			session.SetDataSetSettings (dataSetMetadata, settings);
 

@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            ColumnIO class.
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
+			// - query:   The query, in the format used by FilterIO class.
 			Get["/get/{name}"] = p =>
 				this.Execute (context => this.GetEntities (context, p));
 
@@ -418,11 +419,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string rawSorters = Tools.GetOptionalParameter (Request.Query.sort);
 			string rawFilters = Tools.GetOptionalParameter (Request.Query.filter);
+			string rawQuery   = Tools.GetOptionalParameter (Request.Query.query);
 
 			return EntityExtractor.Create
 			(
 				businessContext, caches, userManager, databaseManager, dataSetAccessorGetter,
-				databaseId, rawSorters, rawFilters
+				databaseId, rawSorters, rawFilters, rawQuery
 			);
 		}
 

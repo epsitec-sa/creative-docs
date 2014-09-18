@@ -49,6 +49,18 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
+		public Filter Query
+		{
+			get
+			{
+				return this.query;
+			}
+			set
+			{
+				this.query = value;
+			}
+		}
+
 		public IList<ColumnRef<EntityColumnDisplay>>	Display
 		{
 			get
@@ -132,5 +144,6 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		private readonly List<ColumnRef<EntityColumnSort>>		sort;
 		private readonly List<ColumnRef<EntityColumnDisplay>>	display;
 		private EntityFilter									filter;
+		private Filter											query;
 	}
 }

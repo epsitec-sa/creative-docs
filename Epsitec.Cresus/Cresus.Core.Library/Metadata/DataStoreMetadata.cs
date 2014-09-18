@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Metadata
 	/// </summary>
 	public class DataStoreMetadata : CoreMetadata
 	{
-		public DataStoreMetadata()
+		public DataStoreMetadata() 
 		{
 			this.tables          = new List<EntityTableMetadata> ();
 			this.dataSets        = new List<DataSetMetadata> ();
