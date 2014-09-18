@@ -10,7 +10,6 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -19,6 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public MainToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)
 		{
+			this.adjustRequired = false;
 		}
 
 
@@ -130,16 +130,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateSimulation ();
 		}
 
-
-		private void CreateSajex(int width)
-		{
-			new FrameBox
-			{
-				Parent        = this.toolbar,
-				Dock          = DockStyle.Left,
-				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
-			};
-		}
 
 		//?[Command (Res.CommandIds.View.Settings)]
 		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)

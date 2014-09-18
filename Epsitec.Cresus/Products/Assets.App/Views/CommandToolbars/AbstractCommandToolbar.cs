@@ -6,7 +6,6 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -19,13 +18,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.accessor       = accessor;
 			this.commandContext = commandContext;
 
-			this.commandDescriptions = new Dictionary<ToolbarCommand, CommandDescription> ();
-			this.commandStates       = new Dictionary<ToolbarCommand, ToolbarCommandState> ();
-			this.commandWidgets      = new Dictionary<ToolbarCommand, Widget> ();
-			this.commandRedDotCounts = new Dictionary<ToolbarCommand, int> ();
-
 			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			this.adjustRequired = true;
 		}
 
 		public void Dispose()
@@ -60,31 +56,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
-		public bool								IsParentVisible
+
+		public Widget GetTarget(CommandEventArgs e)
 		{
-			get
-			{
-				if (this.toolbar == null)
-				{
-					return false;
-				}
-				else
-				{
-					Widget x = this.toolbar;
+			//	Cherche le widget ayant la plus grande surface.
+			var targets = this.commandDispatcher.FindVisuals (e.Command)
+				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
+				.ToArray ();
 
-					while (x != null)
-					{
-						if (!x.Visibility)
-						{
-							return false;
-						}
-
-						x = x.Parent;
-					}
-
-					return true;
-				}
-			}
+			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
 		}
 
 
@@ -99,6 +79,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 
 			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			if (this.adjustRequired)
+			{
+				this.toolbar.SizeChanged += delegate
+				{
+					this.Adjust ();
+				};
+			}
 		}
 
 
@@ -123,9 +111,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-
 		protected ButtonWithRedDot CreateButton(DockStyle dock, Command command)
 		{
+			//	Crée un bouton pour une commande.
 			var size = this.toolbar.PreferredHeight;
 
 			return new ButtonWithRedDot
@@ -138,16 +126,148 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-
-		public Widget GetTarget(CommandEventArgs e)
+		protected ButtonWithRedDot CreateButton(Command command, int level)
 		{
-			//	Cherche le widget ayant la plus grande surface.
-			var targets = this.commandDispatcher.FindVisuals (e.Command)
-				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
-				.ToArray ();
+			//	Crée un bouton pour une commande.
+			var size = this.toolbar.PreferredHeight;
 
-			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
+			return new ButtonWithRedDot
+			{
+				Parent        = this.toolbar,
+				AutoFocus     = false,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (size, size),
+				CommandObject = command,
+				Index         = level,
+			};
 		}
+
+		protected FrameBox CreateSeparator(int level)
+		{
+			//	Crée un séparateur sous la forme d'une petite barre verticale.
+			var size = this.toolbar.PreferredHeight;
+
+			var sep = new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (1, size),
+				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
+				BackColor     = ColorManager.SeparatorColor,
+				Index         = level,
+			};
+
+			return sep;
+		}
+
+		protected void CreateSajex(int width, int level)
+		{
+			//	Crée un espace vide.
+			new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
+				Index         = level,
+			};
+		}
+
+		protected void CreateSajex(int width)
+		{
+			//	Crée un espace vide.
+			new FrameBox
+			{
+				Parent        = this.toolbar,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
+			};
+		}
+
+
+		#region Magic layout engine
+		private void Adjust()
+		{
+			//	Adapte la toolbar en fonction de la largeur disponible. Certains boutons
+			//	non indispensables disparaissent s'il manque de la place.
+			if (this.toolbar == null)
+			{
+				return;
+			}
+
+			//	Cache tous les widgets.
+			foreach (var widget in this.toolbar.Children.Widgets.Where (x => x.Dock == DockStyle.None))
+			{
+				widget.SetManualBounds (Rectangle.Empty);
+			}
+
+			//	Cherche le level maximal permettant de tout afficher dans la largeur à disposition.
+			int level = this.MaxLevel;
+			double dispo = this.toolbar.ActualWidth - this.ComputeDockedWidth ();
+
+			while (level >= 0)
+			{
+				double width = this.ComputeRequiredWidth (level);
+
+				if (width <= dispo)  // largeur toolbar suffisante ?
+				{
+					//	On positionne les widgets selon leurs largeurs respectives,
+					//	de gauche à droite.
+					double x = 0;
+
+					foreach (var widget in this.GetWidgetsLevel (level))
+					{
+						x += widget.Margins.Left;
+
+						var rect = new Rectangle (x, 0, widget.PreferredWidth, widget.PreferredHeight);
+						widget.SetManualBounds (rect);
+
+						x += widget.PreferredWidth + widget.Margins.Right;
+					}
+
+					break;
+				}
+				else
+				{
+					level--;  // on essaie à nouveau avec moins de widgets
+				}
+			}
+		}
+
+		private int MaxLevel
+		{
+			//	Retourne le level maximal, donc celui qui permet forcémentde voir
+			//	tous les widgets.
+			get
+			{
+				return this.toolbar.Children.Widgets
+					.Where (x => x.Dock == DockStyle.None)
+					.Max (x => x.Index);
+			}
+		}
+
+		private double ComputeDockedWidth()
+		{
+			//	Retourne la largeur utilisée par tous les widgets dockés normalement.
+			return this.toolbar.Children.Widgets
+				.Where (x => x.Dock != DockStyle.None)
+				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
+		}
+
+		private double ComputeRequiredWidth(int level)
+		{
+			//	Retourne la largeur requise pour un level ainsi que pour tous les levels inférieurs.
+			return this.GetWidgetsLevel (level)
+				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
+		}
+
+		private IEnumerable<Widget> GetWidgetsLevel(int level)
+		{
+			//	Retourne tous les widgets que l'on souhaite voir présent pour un level
+			//	ainsi que pour tous les levels inférieurs.
+			return this.toolbar.Children.Widgets
+				.Where (x => x.Dock == DockStyle.None && x.Index <= level);
+		}
+		#endregion
 
 
 		public const int primaryToolbarHeight   = 32 + 10;
@@ -159,11 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		protected readonly CommandDispatcher	commandDispatcher;
 		protected readonly CommandContext		commandContext;
 
-		private readonly Dictionary<ToolbarCommand, CommandDescription>		commandDescriptions;
-		private readonly Dictionary<ToolbarCommand, ToolbarCommandState>	commandStates;
-		private readonly Dictionary<ToolbarCommand, int>					commandRedDotCounts;
-		private readonly Dictionary<ToolbarCommand, Widget>					commandWidgets;
-
 		protected FrameBox						toolbar;
+		protected bool							adjustRequired;
 	}
 }

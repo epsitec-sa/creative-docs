@@ -16,38 +16,109 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Accounts.DateRange, null);
+					global::System.Object.Equals (Accounts.CompactAll, null);
 				}
 				
+				//	designer:cap/JUKE501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174));
+				//	designer:cap/JUKF501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175));
 				//	designer:cap/JUKR301
 				public static readonly global::Epsitec.Common.Widgets.Command DateRange = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
+				//	designer:cap/JUK3401
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 131));
+				//	designer:cap/JUKG501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 176));
+				//	designer:cap/JUKH501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 177));
 				//	designer:cap/JUKT301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 125));
+				//	designer:cap/JUK9501
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 169));
+				//	designer:cap/JUKD501
+				public static readonly global::Epsitec.Common.Widgets.Command Graphic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 173));
 				//	designer:cap/JUKS301
 				public static readonly global::Epsitec.Common.Widgets.Command Import = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 124));
+				//	designer:cap/JUKA501
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 170));
+				//	designer:cap/JUKB501
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 171));
+				//	designer:cap/JUKC501
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172));
 			}
 			
 			public static class Assets
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Assets.Copy, null);
+					global::System.Object.Equals (Assets.CompactAll, null);
 				}
 				
+				//	designer:cap/JUKR101
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
+				//	designer:cap/JUKS101
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 60));
 				//	designer:cap/JUK2201
 				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
 				//	designer:cap/JUK0201
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 64));
 				//	designer:cap/JUK1201
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 65));
+				//	designer:cap/JUKU101
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 62));
+				//	designer:cap/JUKT101
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
 				//	designer:cap/JUK4201
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 68));
 				//	designer:cap/JUKL101
 				public static readonly global::Epsitec.Common.Widgets.Command Filter = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
+				//	designer:cap/JUKN101
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
+				//	designer:cap/JUKM101
+				public static readonly global::Epsitec.Common.Widgets.Command Graphic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
+				//	designer:cap/JUKQ101
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
 				//	designer:cap/JUKV101
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
+				//	designer:cap/JUKP101
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
 				//	designer:cap/JUK3201
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 67));
+				//	designer:cap/JUKO101
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
+			}
+			
+			public static class AssetsLeft
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AssetsLeft.CompactAll, null);
+				}
+				
+				//	designer:cap/JUKD401
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 141));
+				//	designer:cap/JUKE401
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 142));
+				//	designer:cap/JUK7401
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 135));
+				//	designer:cap/JUK6401
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 134));
+				//	designer:cap/JUKG401
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 144));
+				//	designer:cap/JUKF401
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 143));
+				//	designer:cap/JUK8401
+				public static readonly global::Epsitec.Common.Widgets.Command Filter = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 136));
+				//	designer:cap/JUK9401
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 137));
+				//	designer:cap/JUKA401
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 138));
+				//	designer:cap/JUK4401
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 132));
+				//	designer:cap/JUKB401
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 139));
+				//	designer:cap/JUKC401
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 140));
 			}
 			
 			public static class Categories
@@ -65,10 +136,18 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 99));
 				//	designer:cap/JUK6301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 102));
+				//	designer:cap/JUKL401
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 149));
+				//	designer:cap/JUKM401
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 150));
 				//	designer:cap/JUK1301
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 97));
+				//	designer:cap/JUKN401
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 151));
 				//	designer:cap/JUK5301
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 101));
+				//	designer:cap/JUKO401
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 152));
 			}
 			
 			public static class Edit
@@ -88,13 +167,29 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Entries.Deselect, null);
+					global::System.Object.Equals (Entries.CompactAll, null);
 				}
 				
+				//	designer:cap/JUKM501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 182));
+				//	designer:cap/JUKN501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 183));
 				//	designer:cap/JUKV201
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 95));
+				//	designer:cap/JUKO501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 184));
+				//	designer:cap/JUKP501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 185));
 				//	designer:cap/JUK0301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 96));
+				//	designer:cap/JUKH401
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 145));
+				//	designer:cap/JUKK401
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 148));
+				//	designer:cap/JUKJ401
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 147));
+				//	designer:cap/JUKI401
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 146));
 			}
 			
 			public static class Events
@@ -122,6 +217,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 71));
 				//	designer:cap/JUKD201
 				public static readonly global::Epsitec.Common.Widgets.Command Paset = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 77));
+				//	designer:cap/JUK2401
+				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 130));
 				//	designer:cap/JUK6201
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 70));
 			}
@@ -130,21 +227,37 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Groups.Copy, null);
+					global::System.Object.Equals (Groups.CompactAll, null);
 				}
 				
+				//	designer:cap/JUKI501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 178));
+				//	designer:cap/JUKJ501
+				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179));
 				//	designer:cap/JUKA301
 				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 106));
 				//	designer:cap/JUK8301
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 104));
 				//	designer:cap/JUK9301
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 105));
+				//	designer:cap/JUKK501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 180));
+				//	designer:cap/JUKL501
+				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 181));
 				//	designer:cap/JUKC301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 108));
+				//	designer:cap/JUKP401
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 153));
+				//	designer:cap/JUKQ401
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 154));
 				//	designer:cap/JUK7301
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 103));
+				//	designer:cap/JUKR401
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 155));
 				//	designer:cap/JUKB301
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 107));
+				//	designer:cap/JUKS401
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 156));
 			}
 			
 			public static class Main
@@ -193,10 +306,18 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 111));
 				//	designer:cap/JUKI301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 114));
+				//	designer:cap/JUKT401
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 157));
+				//	designer:cap/JUKU401
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 158));
 				//	designer:cap/JUKD301
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 109));
+				//	designer:cap/JUKV401
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 159));
 				//	designer:cap/JUKH301
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 113));
+				//	designer:cap/JUK0501
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 160));
 			}
 			
 			public static class Reports
@@ -330,41 +451,6 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
-			public static class TreeTable
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (TreeTable.CompactAll, null);
-				}
-				
-				//	designer:cap/JUKR101
-				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
-				//	designer:cap/JUKS101
-				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 60));
-				//	designer:cap/JUKU101
-				public static readonly global::Epsitec.Common.Widgets.Command ExpandAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 62));
-				//	designer:cap/JUKT101
-				public static readonly global::Epsitec.Common.Widgets.Command ExpandOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
-				//	designer:cap/JUKN101
-				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
-				//	designer:cap/JUKM101
-				public static readonly global::Epsitec.Common.Widgets.Command Graphic = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
-				//	designer:cap/JUKQ101
-				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
-				//	designer:cap/JUK1401
-				public static readonly global::Epsitec.Common.Widgets.Command MoveBottom = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 129));
-				//	designer:cap/JUK0401
-				public static readonly global::Epsitec.Common.Widgets.Command MoveDown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 128));
-				//	designer:cap/JUKU301
-				public static readonly global::Epsitec.Common.Widgets.Command MoveTop = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 126));
-				//	designer:cap/JUKV301
-				public static readonly global::Epsitec.Common.Widgets.Command MoveUp = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 127));
-				//	designer:cap/JUKP101
-				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
-				//	designer:cap/JUKO101
-				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
-			}
-			
 			public static class UserFields
 			{
 				internal static void _Initialize()
@@ -380,10 +466,26 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 119));
 				//	designer:cap/JUKQ301
 				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 122));
+				//	designer:cap/JUK1501
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 161));
+				//	designer:cap/JUK2501
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 162));
+				//	designer:cap/JUK1401
+				public static readonly global::Epsitec.Common.Widgets.Command MoveBottom = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 129));
+				//	designer:cap/JUK0401
+				public static readonly global::Epsitec.Common.Widgets.Command MoveDown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 128));
+				//	designer:cap/JUKU301
+				public static readonly global::Epsitec.Common.Widgets.Command MoveTop = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 126));
+				//	designer:cap/JUKV301
+				public static readonly global::Epsitec.Common.Widgets.Command MoveUp = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 127));
 				//	designer:cap/JUKL301
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 117));
+				//	designer:cap/JUK3501
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 163));
 				//	designer:cap/JUKP301
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 121));
+				//	designer:cap/JUK4501
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 164));
 			}
 			
 			public static class View
@@ -443,8 +545,16 @@ namespace Epsitec.Cresus.Assets.App
 				
 				//	designer:cap/JUKJ301
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 115));
+				//	designer:cap/JUK5501
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 165));
 				//	designer:cap/JUKK301
 				public static readonly global::Epsitec.Common.Widgets.Command Goto = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 116));
+				//	designer:cap/JUK6501
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 166));
+				//	designer:cap/JUK7501
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 167));
+				//	designer:cap/JUK8501
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168));
 			}
 		}
 		
@@ -452,30 +562,96 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			public static class Accounts
 			{
+				//	designer:cap/JUKE501
+				public const long CompactAll = 0x7D3000140000AEL;
+				//	designer:cap/JUKF501
+				public const long CompactOne = 0x7D3000140000AFL;
 				//	designer:cap/JUKR301
 				public const long DateRange = 0x7D30001400007BL;
+				//	designer:cap/JUK3401
+				public const long Deselect = 0x7D300014000083L;
+				//	designer:cap/JUKG501
+				public const long ExpandAll = 0x7D3000140000B0L;
+				//	designer:cap/JUKH501
+				public const long ExpandOne = 0x7D3000140000B1L;
 				//	designer:cap/JUKT301
 				public const long Export = 0x7D30001400007DL;
+				//	designer:cap/JUK9501
+				public const long First = 0x7D3000140000A9L;
+				//	designer:cap/JUKD501
+				public const long Graphic = 0x7D3000140000ADL;
 				//	designer:cap/JUKS301
 				public const long Import = 0x7D30001400007CL;
+				//	designer:cap/JUKA501
+				public const long Last = 0x7D3000140000AAL;
+				//	designer:cap/JUKB501
+				public const long Next = 0x7D3000140000ABL;
+				//	designer:cap/JUKC501
+				public const long Prev = 0x7D3000140000ACL;
 			}
 			
 			public static class Assets
 			{
+				//	designer:cap/JUKR101
+				public const long CompactAll = 0x7D30001400003BL;
+				//	designer:cap/JUKS101
+				public const long CompactOne = 0x7D30001400003CL;
 				//	designer:cap/JUK2201
 				public const long Copy = 0x7D300014000042L;
 				//	designer:cap/JUK0201
 				public const long Delete = 0x7D300014000040L;
 				//	designer:cap/JUK1201
 				public const long Deselect = 0x7D300014000041L;
+				//	designer:cap/JUKU101
+				public const long ExpandAll = 0x7D30001400003EL;
+				//	designer:cap/JUKT101
+				public const long ExpandOne = 0x7D30001400003DL;
 				//	designer:cap/JUK4201
 				public const long Export = 0x7D300014000044L;
 				//	designer:cap/JUKL101
 				public const long Filter = 0x7D300014000035L;
+				//	designer:cap/JUKN101
+				public const long First = 0x7D300014000037L;
+				//	designer:cap/JUKM101
+				public const long Graphic = 0x7D300014000036L;
+				//	designer:cap/JUKQ101
+				public const long Last = 0x7D30001400003AL;
 				//	designer:cap/JUKV101
 				public const long New = 0x7D30001400003FL;
+				//	designer:cap/JUKP101
+				public const long Next = 0x7D300014000039L;
 				//	designer:cap/JUK3201
 				public const long Paste = 0x7D300014000043L;
+				//	designer:cap/JUKO101
+				public const long Prev = 0x7D300014000038L;
+			}
+			
+			public static class AssetsLeft
+			{
+				//	designer:cap/JUKD401
+				public const long CompactAll = 0x7D30001400008DL;
+				//	designer:cap/JUKE401
+				public const long CompactOne = 0x7D30001400008EL;
+				//	designer:cap/JUK7401
+				public const long Delete = 0x7D300014000087L;
+				//	designer:cap/JUK6401
+				public const long Deselect = 0x7D300014000086L;
+				//	designer:cap/JUKG401
+				public const long ExpandAll = 0x7D300014000090L;
+				//	designer:cap/JUKF401
+				public const long ExpandOne = 0x7D30001400008FL;
+				//	designer:cap/JUK8401
+				public const long Filter = 0x7D300014000088L;
+				//	designer:cap/JUK9401
+				public const long First = 0x7D300014000089L;
+				//	designer:cap/JUKA401
+				public const long Last = 0x7D30001400008AL;
+				//	designer:cap/JUK4401
+				public const long New = 0x7D300014000084L;
+				//	designer:cap/JUKB401
+				public const long Next = 0x7D30001400008BL;
+				//	designer:cap/JUKC401
+				public const long Prev = 0x7D30001400008CL;
 			}
 			
 			public static class Categories
@@ -488,10 +664,18 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Deselect = 0x7D300014000063L;
 				//	designer:cap/JUK6301
 				public const long Export = 0x7D300014000066L;
+				//	designer:cap/JUKL401
+				public const long First = 0x7D300014000095L;
+				//	designer:cap/JUKM401
+				public const long Last = 0x7D300014000096L;
 				//	designer:cap/JUK1301
 				public const long New = 0x7D300014000061L;
+				//	designer:cap/JUKN401
+				public const long Next = 0x7D300014000097L;
 				//	designer:cap/JUK5301
 				public const long Paste = 0x7D300014000065L;
+				//	designer:cap/JUKO401
+				public const long Prev = 0x7D300014000098L;
 			}
 			
 			public static class Edit
@@ -504,10 +688,26 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class Entries
 			{
+				//	designer:cap/JUKM501
+				public const long CompactAll = 0x7D3000140000B6L;
+				//	designer:cap/JUKN501
+				public const long CompactOne = 0x7D3000140000B7L;
 				//	designer:cap/JUKV201
 				public const long Deselect = 0x7D30001400005FL;
+				//	designer:cap/JUKO501
+				public const long ExpandAll = 0x7D3000140000B8L;
+				//	designer:cap/JUKP501
+				public const long ExpandOne = 0x7D3000140000B9L;
 				//	designer:cap/JUK0301
 				public const long Export = 0x7D300014000060L;
+				//	designer:cap/JUKH401
+				public const long First = 0x7D300014000091L;
+				//	designer:cap/JUKK401
+				public const long Last = 0x7D300014000094L;
+				//	designer:cap/JUKJ401
+				public const long Next = 0x7D300014000093L;
+				//	designer:cap/JUKI401
+				public const long Prev = 0x7D300014000092L;
 			}
 			
 			public static class Events
@@ -530,24 +730,42 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Next = 0x7D300014000047L;
 				//	designer:cap/JUKD201
 				public const long Paset = 0x7D30001400004DL;
+				//	designer:cap/JUK2401
+				public const long Paste = 0x7D300014000082L;
 				//	designer:cap/JUK6201
 				public const long Prev = 0x7D300014000046L;
 			}
 			
 			public static class Groups
 			{
+				//	designer:cap/JUKI501
+				public const long CompactAll = 0x7D3000140000B2L;
+				//	designer:cap/JUKJ501
+				public const long CompactOne = 0x7D3000140000B3L;
 				//	designer:cap/JUKA301
 				public const long Copy = 0x7D30001400006AL;
 				//	designer:cap/JUK8301
 				public const long Delete = 0x7D300014000068L;
 				//	designer:cap/JUK9301
 				public const long Deselect = 0x7D300014000069L;
+				//	designer:cap/JUKK501
+				public const long ExpandAll = 0x7D3000140000B4L;
+				//	designer:cap/JUKL501
+				public const long ExpandOne = 0x7D3000140000B5L;
 				//	designer:cap/JUKC301
 				public const long Export = 0x7D30001400006CL;
+				//	designer:cap/JUKP401
+				public const long First = 0x7D300014000099L;
+				//	designer:cap/JUKQ401
+				public const long Last = 0x7D30001400009AL;
 				//	designer:cap/JUK7301
 				public const long New = 0x7D300014000067L;
+				//	designer:cap/JUKR401
+				public const long Next = 0x7D30001400009BL;
 				//	designer:cap/JUKB301
 				public const long Paste = 0x7D30001400006BL;
+				//	designer:cap/JUKS401
+				public const long Prev = 0x7D30001400009CL;
 			}
 			
 			public static class Main
@@ -581,10 +799,18 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Deselect = 0x7D30001400006FL;
 				//	designer:cap/JUKI301
 				public const long Export = 0x7D300014000072L;
+				//	designer:cap/JUKT401
+				public const long First = 0x7D30001400009DL;
+				//	designer:cap/JUKU401
+				public const long Last = 0x7D30001400009EL;
 				//	designer:cap/JUKD301
 				public const long New = 0x7D30001400006DL;
+				//	designer:cap/JUKV401
+				public const long Next = 0x7D30001400009FL;
 				//	designer:cap/JUKH301
 				public const long Paste = 0x7D300014000071L;
+				//	designer:cap/JUK0501
+				public const long Prev = 0x7D3000140000A0L;
 			}
 			
 			public static class Reports
@@ -693,36 +919,6 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
-			public static class TreeTable
-			{
-				//	designer:cap/JUKR101
-				public const long CompactAll = 0x7D30001400003BL;
-				//	designer:cap/JUKS101
-				public const long CompactOne = 0x7D30001400003CL;
-				//	designer:cap/JUKU101
-				public const long ExpandAll = 0x7D30001400003EL;
-				//	designer:cap/JUKT101
-				public const long ExpandOne = 0x7D30001400003DL;
-				//	designer:cap/JUKN101
-				public const long First = 0x7D300014000037L;
-				//	designer:cap/JUKM101
-				public const long Graphic = 0x7D300014000036L;
-				//	designer:cap/JUKQ101
-				public const long Last = 0x7D30001400003AL;
-				//	designer:cap/JUK1401
-				public const long MoveBottom = 0x7D300014000081L;
-				//	designer:cap/JUK0401
-				public const long MoveDown = 0x7D300014000080L;
-				//	designer:cap/JUKU301
-				public const long MoveTop = 0x7D30001400007EL;
-				//	designer:cap/JUKV301
-				public const long MoveUp = 0x7D30001400007FL;
-				//	designer:cap/JUKP101
-				public const long Next = 0x7D300014000039L;
-				//	designer:cap/JUKO101
-				public const long Prev = 0x7D300014000038L;
-			}
-			
 			public static class UserFields
 			{
 				//	designer:cap/JUKO301
@@ -733,10 +929,26 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Deselect = 0x7D300014000077L;
 				//	designer:cap/JUKQ301
 				public const long Export = 0x7D30001400007AL;
+				//	designer:cap/JUK1501
+				public const long First = 0x7D3000140000A1L;
+				//	designer:cap/JUK2501
+				public const long Last = 0x7D3000140000A2L;
+				//	designer:cap/JUK1401
+				public const long MoveBottom = 0x7D300014000081L;
+				//	designer:cap/JUK0401
+				public const long MoveDown = 0x7D300014000080L;
+				//	designer:cap/JUKU301
+				public const long MoveTop = 0x7D30001400007EL;
+				//	designer:cap/JUKV301
+				public const long MoveUp = 0x7D30001400007FL;
 				//	designer:cap/JUKL301
 				public const long New = 0x7D300014000075L;
+				//	designer:cap/JUK3501
+				public const long Next = 0x7D3000140000A3L;
 				//	designer:cap/JUKP301
 				public const long Paste = 0x7D300014000079L;
+				//	designer:cap/JUK4501
+				public const long Prev = 0x7D3000140000A4L;
 			}
 			
 			public static class View
@@ -781,8 +993,16 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				//	designer:cap/JUKJ301
 				public const long Deselect = 0x7D300014000073L;
+				//	designer:cap/JUK5501
+				public const long First = 0x7D3000140000A5L;
 				//	designer:cap/JUKK301
 				public const long Goto = 0x7D300014000074L;
+				//	designer:cap/JUK6501
+				public const long Last = 0x7D3000140000A6L;
+				//	designer:cap/JUK7501
+				public const long Next = 0x7D3000140000A7L;
+				//	designer:cap/JUK8501
+				public const long Prev = 0x7D3000140000A8L;
 			}
 			
 		}
@@ -10631,6 +10851,7 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Accounts._Initialize ();
 			Commands.Assets._Initialize ();
+			Commands.AssetsLeft._Initialize ();
 			Commands.Categories._Initialize ();
 			Commands.Edit._Initialize ();
 			Commands.Entries._Initialize ();
@@ -10644,7 +10865,6 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Timeline._Initialize ();
 			Commands.Timelines._Initialize ();
 			Commands.Timelines.Amortizations._Initialize ();
-			Commands.TreeTable._Initialize ();
 			Commands.UserFields._Initialize ();
 			Commands.View._Initialize ();
 			Commands.ViewMode._Initialize ();

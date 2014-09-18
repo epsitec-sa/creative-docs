@@ -289,7 +289,6 @@
     <Compile Include="Views\ToolbarControllers\AssetsToolbarTimelineController.cs" />
     <Compile Include="Views\CommandToolbars\TimelineToolbar.cs" />
     <Compile Include="Views\CommandToolbars\ToolbarCommand.cs" />
-    <Compile Include="Views\CommandToolbars\ToolbarCommandState.cs" />
     <Compile Include="Widgets\AbstractSimpleTreeTableCell.cs" />
     <Compile Include="Helpers\EventExtensions.cs" />
     <Compile Include="Widgets\Calendar.cs" />
