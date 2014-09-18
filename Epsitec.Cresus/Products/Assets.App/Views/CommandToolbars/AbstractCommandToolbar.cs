@@ -185,6 +185,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		#region Magic layout engine
+		//	Le "magic layout engine" permet de peupler intelligemment une toolbar, en fonction
+		//	de la largeur disponible. Plus la largeur devient petite et plus on supprime des
+		//	commandes jugées peu importantes. Pour cela, le paramètre level détermine l’importance,
+		//	zéro était les commandes les plus importantes. Par exemple, si on détermine qu’il
+		//	faut utiliser le niveau deux, toutes les commandes de niveau zéro, un et deux seront
+		//	présentes. Les commandes de niveau trois et plus seront absentes.
+		//	Pour cela, les widgets utilisent le mode DockStyle.None. Ils seront positionnés
+		//	manuellement avec SetManualBounds lorsque la taille de la toolbar change. Pour cacher
+		//	les widgets en trop, on ne peut pas utiliser Visibility (cela ne les cache pas). Il
+		//	faut définir un Bounds avec un rectangle vide.
+		//	Le niveau est stocké dans la propriété Index des widgets, ce qui facilite l'écriture
+		//	du code et ne devrait pas interférer avec le fonctionnement standard.
+
 		private void Adjust()
 		{
 			//	Adapte la toolbar en fonction de la largeur disponible. Certains boutons
