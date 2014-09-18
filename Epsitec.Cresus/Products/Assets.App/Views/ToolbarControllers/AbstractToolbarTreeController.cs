@@ -42,12 +42,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.commandDispatcher.Dispose ();
 		}
 
-		public virtual void Close()
-		{
-			this.toolbar.Close ();
-		}
-
-
 
 		public bool								ShowGraphic
 		{

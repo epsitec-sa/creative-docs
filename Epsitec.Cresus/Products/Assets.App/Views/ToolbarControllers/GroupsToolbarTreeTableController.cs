@@ -29,8 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
+			base.Dispose ();
 		}
 
 

@@ -28,8 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
+			base.Dispose ();
 		}
 
 

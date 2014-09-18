@@ -31,8 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.nodeGetter = new WarningNodeGetter (this.accessor, warnings);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
+			base.Dispose ();
 		}
 
 

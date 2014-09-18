@@ -44,10 +44,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandDispatcher.Dispose ();
 		}
 
-		public virtual void Close()
-		{
-		}
-
 
 		public virtual void CreateUI(Widget parent)
 		{

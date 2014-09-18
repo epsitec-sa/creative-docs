@@ -22,10 +22,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public override void CreateUI(Widget parent)
 		{
-			//	La valeur zéro pour triviality indique les commandes importantes.
+			//	La valeur zéro pour superficiality indique les commandes importantes.
 			//	Les plus grandes valeurs correspondent à des commandes de moins
-			//	en moins importantes, qui seront absentes si la place à
-			//	disposition dans la toolbar vient à manquer.
+			//	en moins importantes (de plus en plus superficielles), qui seront
+			//	absentes si la place à disposition dans la toolbar vient à manquer.
 
 			base.CreateUI (parent);
 

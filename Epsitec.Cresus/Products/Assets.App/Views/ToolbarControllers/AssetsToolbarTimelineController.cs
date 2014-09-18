@@ -36,15 +36,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			if (this.toolbar != null)
 			{
 				this.toolbar.Dispose ();
-				this.toolbar = null;
 			}
 
 			this.commandDispatcher.Dispose ();
-		}
-
-		public void Close()
-		{
-			this.toolbar.Close ();
 		}
 
 

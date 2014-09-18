@@ -27,17 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
-			if (this.listController != null)
-			{
-				this.listController.Dispose ();
-			}
-
+			this.listController.Dispose ();
 			base.Dispose ();
-		}
-
-		public override void Close()
-		{
-			this.listController.Close ();
 		}
 
 

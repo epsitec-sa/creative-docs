@@ -63,11 +63,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateView(ViewType viewType, bool pushViewState = true)
 		{
-			if (this.view != null)
-			{
-				this.view.Close ();
-			}
-
 			this.viewBox.Children.Clear ();
 
 			if (this.view != null)

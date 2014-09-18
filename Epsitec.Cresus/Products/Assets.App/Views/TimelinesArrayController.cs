@@ -64,12 +64,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandDispatcher.Dispose ();
 		}
 
-		public void Close()
-		{
-			this.assetsToolbar.Close ();
-			this.timelinesToolbar.Close ();
-		}
-
 
 		#region IDirty Members
 		public bool InUse

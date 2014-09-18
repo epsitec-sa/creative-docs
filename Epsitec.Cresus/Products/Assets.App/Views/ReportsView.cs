@@ -20,34 +20,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.historyViewStates = historyViewStates;
+
+			this.toolbar = new ReportsToolbar (this.accessor, this.commandContext);
+			this.reportChoiceController = new ReportChoiceController (this.accessor);
 		}
 
 		public override void Dispose()
 		{
-			if (this.toolbar != null)
-			{
-				this.toolbar.Dispose ();
-				this.toolbar = null;
-			}
-
-			if (this.reportChoiceController != null)
-			{
-				this.reportChoiceController.Dispose ();
-				this.reportChoiceController = null;
-			}
-
-			if (this.treeTableController != null)
-			{
-				this.treeTableController.Dispose ();
-				this.treeTableController = null;
-			}
+			this.toolbar.Dispose ();
+			this.reportChoiceController.Dispose ();
+			this.DeleteTreeTable ();
 
 			base.Dispose ();
-		}
-
-		public override void Close()
-		{
-			this.toolbar.Close ();
 		}
 
 
@@ -60,7 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent = parent,
 			};
 
-			this.CreateToolbar (parent);
+			this.toolbar.CreateUI (parent);
 
 			this.mainFrame = new FrameBox
 			{
@@ -76,7 +60,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			this.reportChoiceController = new ReportChoiceController (this.accessor);
 			this.reportChoiceController.CreateUI (this.choiceFrame);
 
 			this.reportChoiceController.ReportSelected += delegate (object sender, AbstractReportParams reportParams)
@@ -100,12 +83,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnViewStateChanged (this.ViewState);
 		}
 
-
-		private void CreateToolbar(Widget parent)
-		{
-			this.toolbar = new ReportsToolbar (this.accessor, this.commandContext);
-			this.toolbar.CreateUI (parent);
-		}
 
 		[Command (Res.CommandIds.Reports.Params)]
 		private void OnParams(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -275,7 +252,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void DeleteTreeTable()
 		{
-			this.treeTableController = null;
+			if (this.treeTableController != null)
+			{
+				this.treeTableController.Dispose ();
+				this.treeTableController = null;
+			}
+
 			this.mainFrame.Children.Clear ();
 		}
 
@@ -421,14 +403,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private readonly List<AbstractViewState> historyViewStates;
+		private readonly List<AbstractViewState>	historyViewStates;
+		private readonly ReportsToolbar				toolbar;
+		private readonly ReportChoiceController		reportChoiceController;
 
-		private TopTitle						topTitle;
-		private FrameBox						choiceFrame;
-		private FrameBox						mainFrame;
-		private ReportChoiceController			reportChoiceController;
-		private ReportsToolbar					toolbar;
-		private NavigationTreeTableController	treeTableController;
-		private AbstractReport					report;
+		private TopTitle							topTitle;
+		private FrameBox							choiceFrame;
+		private FrameBox							mainFrame;
+		private NavigationTreeTableController		treeTableController;
+		private AbstractReport						report;
 	}
 }

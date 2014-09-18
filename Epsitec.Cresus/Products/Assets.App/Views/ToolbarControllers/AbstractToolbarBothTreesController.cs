@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.graphicController.Dispose ();
 				this.graphicController = null;
 			}
+
+			base.Dispose ();
 		}
 
 

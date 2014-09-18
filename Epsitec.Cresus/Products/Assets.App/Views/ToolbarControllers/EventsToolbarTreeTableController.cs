@@ -28,8 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.title = Res.Strings.ToolbarControllers.EventsTreeTable.Title.ToString ();
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
+			base.Dispose ();
 		}
 
 

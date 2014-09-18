@@ -33,12 +33,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void Dispose()
 		{
+			this.timelinesArrayController.Dispose ();
 			base.Dispose ();
-		}
-
-		public override void Close()
-		{
-			this.timelinesArrayController.Close ();
 		}
 
 

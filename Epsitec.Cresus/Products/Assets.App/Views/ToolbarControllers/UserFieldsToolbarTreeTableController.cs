@@ -39,8 +39,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
 		}
 
-		public void Dispose()
+		public override void Dispose()
 		{
+			base.Dispose ();
 		}
 
 

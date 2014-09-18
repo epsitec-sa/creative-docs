@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public void Dispose()
 		{
+			base.Dispose ();
 		}
 
 
