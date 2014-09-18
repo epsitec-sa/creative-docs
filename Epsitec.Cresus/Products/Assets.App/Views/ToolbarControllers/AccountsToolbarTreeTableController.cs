@@ -214,6 +214,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		[Command (Res.CommandIds.Accounts.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
+		}
+
+
 		private void UpdateAfterImport()
 		{
 			this.OnChangeView (ViewType.FromDefaultKind (this.accessor, ViewTypeKind.Accounts));
@@ -258,6 +265,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void UpdateToolbar()
 		{
 			base.UpdateToolbar ();
+
+			this.toolbar.SetEnable (Res.Commands.Accounts.DateRange, this.accessor.Mandat.AccountsDateRanges.Count () > 1);
 
 			int row = this.VisibleSelectedRow;
 

@@ -291,6 +291,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateSelCommand (Res.Commands.UserFields.Next,  row, this.NextRowIndex);
 			this.UpdateSelCommand (Res.Commands.UserFields.Last,  row, this.LastRowIndex);
 
+			this.UpdateSelCommand (Res.Commands.UserFields.MoveTop,    row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.UserFields.MoveUp,     row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.UserFields.MoveDown,   row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.UserFields.MoveBottom, row, this.NextRowIndex);
+
 			this.toolbar.SetEnable (Res.Commands.UserFields.New,      true);
 			this.toolbar.SetEnable (Res.Commands.UserFields.Delete,   row != -1);
 			this.toolbar.SetEnable (Res.Commands.UserFields.Deselect, row != -1);
