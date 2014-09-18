@@ -17,9 +17,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MenuPopup : AbstractPopup
 	{
-		private MenuPopup(AbstractCommandToolbar toolbar)
+		private MenuPopup(AbstractCommandToolbar toolbar, CommandDispatcher commandDispatcher)
 		{
 			this.toolbar = toolbar;
+			this.commandDispatcher = commandDispatcher;
 
 			this.commands = new List<Command> ();
 		}
@@ -125,7 +126,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void CreateItem(Command command)
 		{
 			//	Crée une ligne contenant un item (icône suivie d'un texte).
-#if false
+#if true
 			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
 			var desc = command.Description;
 			
@@ -137,7 +138,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock            = DockStyle.Top,
 				PreferredHeight = MenuPopup.itemHeight,
 				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
-				CommandObject   = command,
+			};
+
+			item.Clicked += delegate
+			{
+				//this.commandDispatcher.Execute (command);  // TODO: [pour PA] comment faire cela ?
+
+				//	On ferme le popup plus tard, une fois que tout le reste aura été exécuté...
+				Application.QueueAsyncCallback (() => this.ClosePopup ());
 			};
 #else
 			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
@@ -218,7 +226,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, params Command[] commands)
+		public static void Show(AbstractCommandToolbar toolbar, CommandDispatcher commandDispatcher, Widget widget, Point pos, params Command[] commands)
 		{
 			//	Affiche le menu contextuel.
 			//	- La toolbar permet d'obtenir les commandes.
@@ -227,7 +235,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	  dans l'espace 'Screen'.
 			//	- La liste d'items décrit le contenu du menu.
 
-			var popup = new MenuPopup (toolbar);
+			var popup = new MenuPopup (toolbar, commandDispatcher);
 
 			foreach (var command in commands)
 			{
@@ -248,6 +256,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int							margins		= 2;
 		private const int							itemHeight	= 26;
 
+		private readonly CommandDispatcher			commandDispatcher;
 		private readonly AbstractCommandToolbar		toolbar;
 		private readonly List<Command>				commands;
 	}
