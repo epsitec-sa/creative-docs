@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected ButtonWithRedDot CreateButton(Command command, int level)
+		protected ButtonWithRedDot CreateButton(Command command, int triviality)
 		{
 			//	Crée un bouton pour une commande, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
@@ -154,12 +154,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Dock          = DockStyle.None,
 				PreferredSize = new Size (size, size),
 				CommandObject = command,
-				Index         = level,
+				Index         = triviality,
 				Name          = (AbstractCommandToolbar.toto++).ToString (),
 			};
 		}
 
-		protected FrameBox CreateSeparator(int level)
+		protected FrameBox CreateSeparator(int triviality)
 		{
 			//	Crée un séparateur sous la forme d'une petite barre verticale, qui
 			//	pourra apparaître ou disparaître selon le choix du "magic layout engine".
@@ -172,13 +172,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (1, size),
 				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
 				BackColor     = ColorManager.SeparatorColor,
-				Index         = level,
+				Index         = triviality,
 			};
 
 			return sep;
 		}
 
-		protected void CreateSajex(int width, int level)
+		protected void CreateSajex(int width, int triviality)
 		{
 			//	Crée un espace vide, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Parent        = this.toolbar,
 				Dock          = DockStyle.None,
 				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
-				Index         = level,
+				Index         = triviality,
 			};
 		}
 
@@ -206,10 +206,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		#region Magic layout engine
 		//	Le "magic layout engine" permet de peupler intelligemment une toolbar, en fonction
 		//	de la largeur disponible. Plus la largeur devient petite et plus on supprime des
-		//	commandes jugées peu importantes. Pour cela, le paramètre level détermine l’importance,
-		//	zéro était les commandes les plus importantes. Par exemple, si on détermine qu’il
-		//	faut utiliser le niveau deux, toutes les commandes de niveau zéro, un et deux seront
-		//	présentes. Les commandes de niveau trois et plus seront absentes.
+		//	commandes jugées peu importantes. Pour cela, le paramètre triviality détermine
+		//	l’importance, zéro était les commandes les plus importantes. Par exemple, si on
+		//	détermine qu’il faut utiliser le niveau deux, toutes les commandes de niveau zéro,
+		//	un et deux seront présentes. Les commandes de niveau trois et plus seront absentes.
 		//	Pour cela, les widgets utilisent le mode DockStyle.None. Ils seront positionnés
 		//	manuellement avec SetManualBounds lorsque la taille de la toolbar change. Pour cacher
 		//	les widgets en trop, on ne peut pas utiliser Visibility (cela ne les cache pas). Il
@@ -232,13 +232,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				widget.SetManualBounds (Rectangle.Empty);
 			}
 
-			//	Cherche le level maximal permettant de tout afficher dans la largeur à disposition.
-			int level = this.MaxLevel;
+			//	Cherche le triviality maximal permettant de tout afficher dans la largeur à disposition.
+			int triviality = this.MaxTriviality;
 			double dispo = this.toolbar.ActualWidth - this.ComputeDockedWidth ();
 
-			while (level >= 0)
+			while (triviality >= 0)
 			{
-				double width = this.ComputeRequiredWidth (level);
+				double width = this.ComputeRequiredWidth (triviality);
 
 				if (width <= dispo)  // largeur toolbar suffisante ?
 				{
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 					//	de gauche à droite.
 					double x = 0;
 
-					foreach (var widget in this.GetWidgetsLevel (level))
+					foreach (var widget in this.GetWidgets (triviality))
 					{
 						x += widget.Margins.Left;
 
@@ -260,14 +260,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				}
 				else
 				{
-					level--;  // on essaie à nouveau avec moins de widgets
+					triviality--;  // on essaie à nouveau avec moins de widgets
 				}
 			}
 		}
 
-		private int MaxLevel
+		private int MaxTriviality
 		{
-			//	Retourne le level maximal, donc celui qui permet forcémentde voir
+			//	Retourne le triviality maximal, donc celui qui permet forcémentde voir
 			//	tous les widgets.
 			get
 			{
@@ -285,19 +285,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
 		}
 
-		private double ComputeRequiredWidth(int level)
+		private double ComputeRequiredWidth(int triviality)
 		{
-			//	Retourne la largeur requise pour un level ainsi que pour tous les levels inférieurs.
-			return this.GetWidgetsLevel (level)
+			//	Retourne la largeur requise pour un triviality donné ainsi que pour
+			//	tous les triviality inférieurs.
+			return this.GetWidgets (triviality)
 				.Sum (x => x.Margins.Left + x.PreferredWidth + x.Margins.Right);
 		}
 
-		private IEnumerable<Widget> GetWidgetsLevel(int level)
+		private IEnumerable<Widget> GetWidgets(int triviality)
 		{
-			//	Retourne tous les widgets que l'on souhaite voir présent pour un level
-			//	ainsi que pour tous les levels inférieurs.
+			//	Retourne tous les widgets que l'on souhaite voir présent pour un triviality
+			//	donné ainsi que pour tous les triviality inférieurs.
 			return this.toolbar.Children.Widgets
-				.Where (x => x.Dock == DockStyle.None && x.Index <= level);
+				.Where (x => x.Dock == DockStyle.None && x.Index <= triviality);
 		}
 		#endregion
 
