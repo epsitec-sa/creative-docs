@@ -65,11 +65,17 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Cherche le widget ayant la plus grande surface.
 			var targets = this.commandDispatcher.FindVisuals (e.Command)
+				.Where  (x => x.Window != null)  // voir (*)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
 			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
 		}
+
+		// (*)	Cette correction provisoire ne devrait pas être nécessaire. Les boutons
+		//		appartenant à des toolbars supprinmées continuent d'êtres trouvés par
+		//		FindVisuals ! C'est-ce moi qui supprime mal les widgets d'une toolbar,
+		//		ou le bug est-il ailleurs ???
 
 
 		public virtual void CreateUI(Widget parent)
@@ -88,7 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				this.toolbar.SizeChanged += delegate
 				{
-					this.Adjust ();
+					this.MagicLayoutEngine ();
 				};
 			}
 		}
@@ -122,7 +128,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected ButtonWithRedDot CreateButton(DockStyle dock, Command command)
 		{
-			//	Crée un bouton pour une commande.
+			//	Crée un bouton pour une commande docké normalement.
 			var size = this.toolbar.PreferredHeight;
 
 			return new ButtonWithRedDot
@@ -137,7 +143,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected ButtonWithRedDot CreateButton(Command command, int level)
 		{
-			//	Crée un bouton pour une commande.
+			//	Crée un bouton pour une commande, qui pourra apparaître ou disparaître
+			//	selon le choix du "magic layout engine".
 			var size = this.toolbar.PreferredHeight;
 
 			return new ButtonWithRedDot
@@ -148,12 +155,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (size, size),
 				CommandObject = command,
 				Index         = level,
+				Name          = (AbstractCommandToolbar.toto++).ToString (),
 			};
 		}
 
 		protected FrameBox CreateSeparator(int level)
 		{
-			//	Crée un séparateur sous la forme d'une petite barre verticale.
+			//	Crée un séparateur sous la forme d'une petite barre verticale, qui
+			//	pourra apparaître ou disparaître selon le choix du "magic layout engine".
 			var size = this.toolbar.PreferredHeight;
 
 			var sep = new FrameBox
@@ -171,7 +180,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected void CreateSajex(int width, int level)
 		{
-			//	Crée un espace vide.
+			//	Crée un espace vide, qui pourra apparaître ou disparaître
+			//	selon le choix du "magic layout engine".
 			new FrameBox
 			{
 				Parent        = this.toolbar,
@@ -183,7 +193,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected void CreateSajex(int width)
 		{
-			//	Crée un espace vide.
+			//	Crée un espace vide docké normalement.
 			new FrameBox
 			{
 				Parent        = this.toolbar,
@@ -207,7 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		//	Le niveau est stocké dans la propriété Index des widgets, ce qui facilite l'écriture
 		//	du code et ne devrait pas interférer avec le fonctionnement standard.
 
-		private void Adjust()
+		private void MagicLayoutEngine()
 		{
 			//	Adapte la toolbar en fonction de la largeur disponible. Certains boutons
 			//	non indispensables disparaissent s'il manque de la place.
@@ -303,5 +313,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected FrameBox						toolbar;
 		protected bool							adjustRequired;
+		private static int toto;
 	}
 }
