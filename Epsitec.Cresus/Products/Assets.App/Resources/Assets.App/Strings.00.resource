@@ -166,7 +166,7 @@
   <data name="Popup.YesNo.Title" id="KC5">Question</data>
   <data name="Popup.YesNo.DeleteEventQuestion" id="KD5">Voulez-vous supprimer l'événement sélectionné ?</data>
   <data name="DataFillers.LastViewsTreeTable.Type" id="KE5">Vue</data>
-  <data name="DataFillers.LastViewsTreeTable.Page" id="KF5">Page</data>
+  <data name="DataFillers.LastViewsTreeTable.Page" id="KF5">Onglet</data>
   <data name="DataFillers.LastViewsTreeTable.Date" id="KG5">Date</data>
   <data name="DataFillers.LastViewsTreeTable.Description" id="KH5">Sélection</data>
   <data name="DataFillers.MessagesTreeTable.Title" id="KI5">Messages</data>

@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		public override LastViewNode GetNavigationNode(DataAccessor accessor)
 		{
-			return new LastViewNode (this.guid, this.ViewType, this.PageType, this.SelectedTimestamp, this.GetDescription (accessor), this.Pin);
+			return new LastViewNode (this.guid, this.ViewType, ViewMode.Unknown, this.PageType, this.SelectedTimestamp, this.GetDescription (accessor), this.Pin);
 		}
 
 		protected override string GetDescription(DataAccessor accessor)

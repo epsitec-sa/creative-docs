@@ -325,6 +325,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.SaveLastViewState (viewState);
 			this.historyViewStates[this.historyPosition] = viewState;
+
+			this.UpdateToolbar ();
 		}
 
 		private void GoHistoryBack()

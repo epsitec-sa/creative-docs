@@ -76,6 +76,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		public static string GetViewModeIcon(ViewMode mode)
+		{
+			switch (mode)
+			{
+				case ViewMode.Single:
+					return "Show.TimelineSingle";
+
+				case ViewMode.Event:
+					return "Show.TimelineEvent";
+
+				case ViewMode.Multiple:
+					return "Show.TimelineMultiple";
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetViewTypeDescription(ViewTypeKind kind)
 		{
 			switch (kind)
