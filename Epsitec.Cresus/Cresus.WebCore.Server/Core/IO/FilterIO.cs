@@ -65,7 +65,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			return entityFilter;
 		}
 
-		//TODO: Create a Query parser for returning a complexe Filter
 		public static Filter ParseQuery(BusinessContext businessContext, Caches caches, Database database, string queryParameter)
 		{
 			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
@@ -81,17 +80,24 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var query = (object[]) deserializer.DeserializeObject (queryParameter);
 
 			var filtersDef = new Dictionary<string, object> ();
-
-			FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) query[0], ref queryFilter);
+			var queryNode = new FilterNode (queryFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
+			FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) query[0],ref queryNode, ref queryFilter);
 			
 			return queryFilter;
 		}
 
-		private static void ParseQueryGroup (BusinessContext businessContext, Caches caches, Database database, Common.Support.Druid entityId, Dictionary<string, object> group, ref Filter richFilter)
+		private static void ParseQueryGroup (BusinessContext businessContext, Caches caches, Database database, Common.Support.Druid entityId, Dictionary<string, object> group, ref FilterNode node, ref Filter rootFilter)
 		{
 			var filterOpContainer = (Dictionary<string, object>) group["operator"];
 			var filterOp =  (string) filterOpContainer["value"];
 			var rules    =  (object[]) group["rules"];
+
+			
+			var richFilter = new Filter ();
+			
+			var currentGroupNode = new FilterNode (richFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
+			
+		
 			if(filterOp == "and")
 			{
 				richFilter.CombineMode = FilterCombineMode.And;
@@ -100,7 +106,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				richFilter.CombineMode = FilterCombineMode.Or;
 			}
-			
+
+			node.RichFilter.Nodes.Add (currentGroupNode);
+
 			foreach (var rule in rules)
 			{
 				var type = (Dictionary<string, object>) rule;
@@ -109,7 +117,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				if (type.TryGetValue ("group", out subGroup))
 				{
 					//find subgroup
-					FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) subGroup, ref richFilter);
+					FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) subGroup,ref currentGroupNode, ref rootFilter);
 				}
 				else
 				{
@@ -123,8 +131,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
 					entityFilter.Columns.Add (columnRef);
 
-					var node = new FilterNode (entityFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
-					richFilter.Nodes.Add (node);				
+					var simpleFilterNode = new FilterNode (entityFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
+					richFilter.Nodes.Add (simpleFilterNode);				
 				}
 			}
 
