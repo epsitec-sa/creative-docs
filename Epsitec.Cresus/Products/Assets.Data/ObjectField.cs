@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Assets.Data
 		LastViewsPin,
 		LastViewsType,
 		LastViewsMode,
+		LastViewsEvent,
 		LastViewsPage,
 		LastViewsDate,
 		LastViewsDescription,

@@ -1432,26 +1432,6 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
-				public static class LastViewsTreeTable
-				{
-					//	designer:str/JUKH501
-					public static global::Epsitec.Common.Types.FormattedText Description
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544497));
-						}
-					}
-					//	designer:str/JUKE501
-					public static global::Epsitec.Common.Types.FormattedText Type
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544494));
-						}
-					}
-				}
-				
 				public static class MessagesTreeTable
 				{
 					//	designer:str/JUKI501
@@ -5685,26 +5665,6 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
-				public static class LastViewsTreeTable
-				{
-					//	designer:str/JUKH501
-					public static global::Epsitec.Common.Support.Druid Description
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544497);
-						}
-					}
-					//	designer:str/JUKE501
-					public static global::Epsitec.Common.Support.Druid Type
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544494);
-						}
-					}
-				}
-				
 				public static class MessagesTreeTable
 				{
 					//	designer:str/JUKI501

@@ -165,8 +165,6 @@
   <data name="Popup.RateCalculator.Result" id="KB5">Taux = {0}</data>
   <data name="Popup.YesNo.Title" id="KC5">Question</data>
   <data name="Popup.YesNo.DeleteEventQuestion" id="KD5">Voulez-vous supprimer l'événement sélectionné ?</data>
-  <data name="DataFillers.LastViewsTreeTable.Type" id="KE5">Vue</data>
-  <data name="DataFillers.LastViewsTreeTable.Description" id="KH5">Sélection</data>
   <data name="DataFillers.MessagesTreeTable.Title" id="KI5">Messages</data>
   <data name="DataFillers.WarningsTreeTable.Glyph.Title" id="KJ5">Vue</data>
   <data name="DataFillers.WarningsTreeTable.Glyph.Tooltip" id="KK5">Icône de la vue</data>

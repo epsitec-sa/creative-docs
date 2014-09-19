@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: LastViewsPopup.headerHeight, footerHeight: 0);
+			this.controller.CreateUI (frame, rowHeight: LastViewsPopup.rowHeight, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
@@ -106,7 +106,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var parent = this.GetParent ();
 
 			double h = parent.ActualHeight
-					 - LastViewsPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 3/4 de la hauteur.
@@ -116,11 +115,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			rows = System.Math.Max (rows, 3);
 
 			int dx = LastViewsTreeTableFiller.TotalWidth
-				   + (int) AbstractScroller.DefaultBreadth
-				   + 3;
+				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + LastViewsPopup.headerHeight
 				   + rows * LastViewsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth;
 
@@ -179,7 +176,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int headerHeight     = 22;
 		private const int rowHeight        = 18;
 
 

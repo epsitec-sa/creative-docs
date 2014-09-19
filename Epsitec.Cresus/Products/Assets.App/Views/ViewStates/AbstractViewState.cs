@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		public virtual LastViewNode GetNavigationNode(DataAccessor accessor)
 		{
-			return new LastViewNode (this.guid, this.ViewType, ViewMode.Unknown, this.PageType, null, this.GetDescription (accessor), this.Pin);
+			return new LastViewNode (this.guid, this.ViewType, ViewMode.Unknown, EventType.Unknown, this.PageType, null, this.GetDescription (accessor), this.Pin);
 		}
 
 		protected abstract string GetDescription(DataAccessor accessor);

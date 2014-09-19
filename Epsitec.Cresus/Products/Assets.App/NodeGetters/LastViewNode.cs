@@ -13,11 +13,12 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 	/// </summary>
 	public struct LastViewNode
 	{
-		public LastViewNode(Guid navigationGuid, ViewType viewType, ViewMode viewMode, PageType pageType, Timestamp? timestamp, string description, bool pin)
+		public LastViewNode(Guid navigationGuid, ViewType viewType, ViewMode viewMode, EventType eventType, PageType pageType, Timestamp? timestamp, string description, bool pin)
 		{
 			this.NavigationGuid = navigationGuid;
 			this.ViewType       = viewType;
 			this.ViewMode       = viewMode;
+			this.EventType      = eventType;
 			this.PageType       = pageType;
 			this.Timestamp      = timestamp;
 			this.Description    = description;
@@ -31,6 +32,7 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 				return this.NavigationGuid.IsEmpty
 					&& this.ViewType    == ViewType.Unknown
 					&& this.ViewMode    == ViewMode.Unknown
+					&& this.EventType   == EventType.Unknown
 					&& this.PageType    == PageType.Unknown
 					&& !this.Timestamp.HasValue
 					&& this.Description == null
@@ -38,11 +40,12 @@ namespace Epsitec.Cresus.Assets.App.NodeGetters
 			}
 		}
 
-		public static LastViewNode Empty = new LastViewNode (Guid.Empty, ViewType.Unknown, ViewMode.Unknown, PageType.Unknown, null, null, false);
+		public static LastViewNode Empty = new LastViewNode (Guid.Empty, ViewType.Unknown, ViewMode.Unknown, EventType.Unknown, PageType.Unknown, null, null, false);
 
 		public readonly Guid				NavigationGuid;
 		public readonly ViewType			ViewType;
 		public readonly ViewMode			ViewMode;
+		public readonly EventType			EventType;
 		public readonly PageType			PageType;
 		public readonly Timestamp?			Timestamp;
 		public readonly string				Description;

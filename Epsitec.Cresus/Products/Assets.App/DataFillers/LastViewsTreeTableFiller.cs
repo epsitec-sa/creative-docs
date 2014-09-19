@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -41,10 +42,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPin,         TreeTableColumnType.Pin,    LastViewsTreeTableFiller.TypeColumnWidth, ""));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Type.ToString ()));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsMode,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.ModeColumnWidth, ""));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Description.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPin,         TreeTableColumnType.Pin,    LastViewsTreeTableFiller.PinColumnWidth,   ""));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth,  ""));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsMode,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.ModeColumnWidth,  ""));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsEvent,       TreeTableColumnType.Glyph,  LastViewsTreeTableFiller.EventColumnWidth, ""));
+				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth,  ""));
 
 				return list.ToArray ();
 			}
@@ -56,6 +58,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			var c2 = new TreeTableColumnItem ();
 			var c3 = new TreeTableColumnItem ();
 			var c4 = new TreeTableColumnItem ();
+			var c5 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -69,6 +72,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				int    pin  = node.Pin ? 1 : 0;
 				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType.Kind);
 				string mode = StaticDescriptions.GetViewModeIcon (node.ViewMode);
+				var    e    = TimelineData.TypeToGlyph (node.EventType);
 				string desc = node.Description;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
@@ -76,12 +80,14 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var s1 = new TreeTableCellInt    (pin,  cellState);
 				var s2 = new TreeTableCellString (icon, cellState);
 				var s3 = new TreeTableCellString (mode, cellState);
-				var s4 = new TreeTableCellString (desc, cellState);
+				var s4 = new TreeTableCellGlyph  (e,    cellState);
+				var s5 = new TreeTableCellString (desc, cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);
 				c3.AddRow (s3);
 				c4.AddRow (s4);
+				c5.AddRow (s5);
 			}
 
 			var content = new TreeTableContentItem ();
@@ -90,19 +96,22 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			content.Columns.Add (c2);
 			content.Columns.Add (c3);
 			content.Columns.Add (c4);
+			content.Columns.Add (c5);
 
 			return content;
 		}
 
 
-		private const int PinColumnWidth  =  29;
-		private const int TypeColumnWidth =  32;
-		private const int ModeColumnWidth =  32;
-		private const int DescColumnWidth = 500;
+		private const int PinColumnWidth   =  29;
+		private const int TypeColumnWidth  =  20;
+		private const int ModeColumnWidth  =  20;
+		private const int EventColumnWidth =  20;
+		private const int DescColumnWidth  = 500;
 
 		public const int TotalWidth = LastViewsTreeTableFiller.PinColumnWidth
 									+ LastViewsTreeTableFiller.TypeColumnWidth
 									+ LastViewsTreeTableFiller.ModeColumnWidth
+									+ LastViewsTreeTableFiller.EventColumnWidth
 									+ LastViewsTreeTableFiller.DescColumnWidth;
 	}
 }
