@@ -18,11 +18,8 @@
         </div>
         <query-builder ng-if="ready" group="filter.group" fields="fields"></query-builder>
         <div class="alert alert-danger">
-            <span ng-bind-html="queryOutput"></span>
-        </div>
-        <div class="alert alert-danger">
             {{json}}
-            <button ng-click="testQuery()" value="Test"/>
+            <button ng-click="testQuery()" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-fire"></span> Tester la requête</button>
         </div>
     </div>
     <style>

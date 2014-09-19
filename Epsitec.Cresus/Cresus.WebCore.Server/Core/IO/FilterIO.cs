@@ -81,39 +81,54 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var query = (object[]) deserializer.DeserializeObject (queryParameter);
 
 			var filtersDef = new Dictionary<string, object> ();
-			//TODO: parse query parameters for extracting filters
-			//Tricky: recursive nodeFilter creation...
-			foreach (var filter in query.Cast<Dictionary<string, object>> ())
+
+			FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) query[0], ref queryFilter);
+			
+			return queryFilter;
+		}
+
+		private static void ParseQueryGroup (BusinessContext businessContext, Caches caches, Database database, Common.Support.Druid entityId, Dictionary<string, object> group, ref Filter richFilter)
+		{
+			var filterOpContainer = (Dictionary<string, object>) group["operator"];
+			var filterOp =  (string) filterOpContainer["value"];
+			var rules    =  (object[]) group["rules"];
+			if(filterOp == "and")
 			{
-				var filterOpContainer = (Dictionary<string, object>)  filter["operator"];
-				var filterOp =  (string) filterOpContainer["value"];
-				var rules    =  (object[]) filter["rules"];
+				richFilter.CombineMode = FilterCombineMode.And;
+			}
+			else
+			{
+				richFilter.CombineMode = FilterCombineMode.Or;
+			}
+			
+			foreach (var rule in rules)
+			{
+				var type = (Dictionary<string, object>) rule;
 
-				foreach(var rule in rules)
+				object subGroup = null;
+				if (type.TryGetValue ("group", out subGroup))
 				{
-					var type = (Dictionary<string, object>) rule;
-
-					object group = null;
-					if( type.TryGetValue("group",out group))
-					{
-						//subgroup case	
-					}
-					else
-					{
-						//filter def case
-					}
+					//find subgroup
+					FilterIO.ParseQueryGroup (businessContext, caches, database, entityId, (Dictionary<string, object>) subGroup, ref richFilter);
 				}
+				else
+				{
+					//Create simple filter and add it to existing filter node
+					var field = (Dictionary<string, object>) type["field"];
+					var entityFilter = new EntityFilter (entityId);
 
-				//var column = ColumnIO.ParseColumn (caches, database, (string) filter["field"]);
+					var column = ColumnIO.ParseColumn (caches, database, (string) field["id"]);
+					var columnId = column.MetaData.Id;
+					var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, type);
+					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
+					entityFilter.Columns.Add (columnRef);
 
-				//var columnId = column.MetaData.Id;
-				//var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, filter);
-				//var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
-
-				//datasetQuery.Columns.Add (columnRef);
+					var node = new FilterNode (entityFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
+					richFilter.Nodes.Add (node);				
+				}
 			}
 
-			return queryFilter;
+			return;
 		}
 
 

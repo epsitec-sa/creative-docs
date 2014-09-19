@@ -34,9 +34,10 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
     {
       var query  = [];
       query.push ($scope.filter.group);
-      webCoreServices.query(druid,  JSON.stringify(query)).success(function (data, status, headers)
+      var columns = "id0;id1";//extractColumnsForQuery($scope.filter.group);
+      webCoreServices.query(druid, columns,  JSON.stringify(query)).success(function (data, status, headers)
       {
-
+        $scope.json = JSON.stringify(data.content, ' ', 2);
       });
     };
 
@@ -50,7 +51,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
             i > 0 && (str += " <strong>" + group.operator.name + "</strong> ");
             str += group.rules[i].group ?
                 computedForHuman(group.rules[i].group) :
-                group.rules[i].field.name + " " + htmlEntities(group.rules[i].comparator.name) + " " + group.rules[i].data;
+                group.rules[i].field.name + " " + htmlEntities(group.rules[i].comparison) + " " + group.rules[i].value;
         }
 
         return str + ")";
@@ -61,19 +62,28 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices', fu
         for (var str = "{'op':'"+ group.operator.value +"'", i = 0; i < group.rules.length; i++) {
             str += group.rules[i].group ?
                 computedQuery(group.rules[i].group) :
-                "{field':'" + group.rules[i].field.id + "','comparison':'" + group.rules[i].comparator.value + "','value':' " + group.rules[i].data + "'}";
+                "{field':'" + group.rules[i].field.id + "','comparison':'" + group.rules[i].comparison + "','value':' " + group.rules[i].value + "'}";
         }
 
         return str + "}";
+    }
+
+    function extractColumnsForQuery(group) {
+        if (!group) return "";
+        for (var str = "", i = 0; i < group.rules.length; i++) {
+            str += group.rules[i].group ?
+                extractColumnsForQuery(group.rules[i].group) :
+                group.rules[i].field.id + ";";
+        }
+
+        return str;
     }
 
     $scope.json = null;
 
     $scope.$watch('filter', function (newValue) {
         if(newValue !== undefined) {
-          $scope.json = JSON.stringify(newValue.group, ' ', 2);
           $scope.humanOutput = computedForHuman(newValue.group);
-          //$scope.queryOutput = computedQuery(newValue.group);
         }
     }, true);
 }]);

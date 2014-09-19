@@ -30,12 +30,9 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
         scope.addCondition = function () {
             scope.group.rules.push({
                 field: '',
-                comparator: {
-                  name: 'égal a',
-                  value: 'eq'
-                },
+                comparison: 'eq',
                 type: 'string',
-                data: ''
+                value: ''
             });
         };
 
@@ -69,6 +66,12 @@ queryBuilder.directive('queryBuilder', ['$compile','webCoreServices', function (
             }
           });
         };
+
+        scope.pushSelectedValue = function (rule)
+        {
+          rule.value = [];
+          rule.value.push(rule.selectedValue);
+        }
 
         scope.removeGroup = function () {
             "group" in scope.$parent && scope.$parent.group.rules.splice(scope.$parent.$index, 1);

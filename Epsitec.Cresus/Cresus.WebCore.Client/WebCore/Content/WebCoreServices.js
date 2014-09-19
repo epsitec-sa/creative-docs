@@ -50,10 +50,10 @@
         });
       };
 
-      var testQuery = function (druid, query) {
+      var testQuery = function (druid, columns, query) {
         return $http({
             method: 'GET',
-            url: '/proxy/database/get/' + druid + '?start=0&limit=100&page=1&query=' + query
+            url: '/proxy/database/get/' + druid + '?start=0&limit=100&page=1&columns=' + columns + '&query=' + query
         });
       };
 
@@ -66,6 +66,6 @@
           databases : function () { return getDatabaseList();},
           database : function(druid) { return getDatabaseDefinition (druid); },
           fieldValues : function(id) { return getFieldValues (id); },
-          query : function(druid, query) { return testQuery (druid, query); },
+          query : function(druid, columns, query) { return testQuery (druid, columns, query); }
       };
   }]);
