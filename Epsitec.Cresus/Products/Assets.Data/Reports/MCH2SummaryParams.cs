@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class MCH2SummaryParams : AbstractReportParams, System.IEquatable<AbstractReportParams>
+	public class MCH2SummaryParams : AbstractReportParams, System.IEquatable<MCH2SummaryParams>
 	{
 		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
 			: base (customTitle)
@@ -27,50 +27,49 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public static bool operator ==(MCH2SummaryParams a, MCH2SummaryParams b)
+		#region IEquatable<AssetsParams> Members
+		public bool Equals(MCH2SummaryParams other)
 		{
-			if (!(a is MCH2SummaryParams) || !(b is MCH2SummaryParams))
-			{
-				return false;
-			}
-
-			return a.Equals (b);
+			return this.Equals (other);
 		}
+		#endregion
 
-		public static bool operator !=(MCH2SummaryParams a, MCH2SummaryParams b)
-		{
-			if (!(a is MCH2SummaryParams) || !(b is MCH2SummaryParams))
-			{
-				return true;
-			}
-
-			return !a.Equals (b);
-		}
-
-		public override bool Equals(AbstractReportParams other)
+		public override bool Equals(object obj)
 		{
 			//	Il ne faut surtout pas comparer les Guid !
-			if (!(other is MCH2SummaryParams))
+			if (!base.Equals (obj))
 			{
 				return false;
 			}
 
-			var o = other as MCH2SummaryParams;
+			var other = obj as MCH2SummaryParams;
 
-			return this.CustomTitle == o.CustomTitle
-				&& this.DateRange   == o.DateRange
-				&& this.RootGuid    == o.RootGuid
-				&& this.Level       == o.Level
-				&& this.FilterGuid  == o.FilterGuid;
+			return !object.ReferenceEquals (other, null)
+				&& this.DateRange   == other.DateRange
+				&& this.RootGuid    == other.RootGuid
+				&& this.Level       == other.Level
+				&& this.FilterGuid  == other.FilterGuid;
 		}
 
 		public override int GetHashCode()
 		{
-			return this.CustomTitle.GetHashCode ()
+			return base.GetHashCode ()
+				^  this.CustomTitle.GetHashCode ()
 				^  this.DateRange.GetHashCode ()
 				^  this.RootGuid.GetHashCode ()
 				^  this.Level.GetHashCode ()
 				^  this.FilterGuid.GetHashCode ();
+		}
+
+
+		public static bool operator ==(MCH2SummaryParams a, MCH2SummaryParams b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(MCH2SummaryParams a, MCH2SummaryParams b)
+		{
+			return !(a == b);
 		}
 
 

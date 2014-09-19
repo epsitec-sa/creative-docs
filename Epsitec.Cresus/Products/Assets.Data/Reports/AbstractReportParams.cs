@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public abstract class AbstractReportParams : IGuid, System.IEquatable<AbstractReportParams>
+	public abstract class AbstractReportParams : IGuid
 	{
 		public AbstractReportParams(string customTitle)
 		{
@@ -48,35 +48,13 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public static bool operator ==(AbstractReportParams a, AbstractReportParams b)
-		{
-			if (!(a is AbstractReportParams) || !(b is AbstractReportParams))
-			{
-				return false;
-			}
-
-			return a.Equals (b);
-		}
-
-		public static bool operator !=(AbstractReportParams a, AbstractReportParams b)
-		{
-			if (!(a is AbstractReportParams) || !(b is AbstractReportParams))
-			{
-				return true;
-			}
-
-			return !a.Equals (b);
-		}
-
-		public virtual bool Equals(AbstractReportParams other)
+		public override bool Equals(object obj)
 		{
 			//	Il ne faut surtout pas comparer les Guid !
-			if (!(other is AbstractReportParams))
-			{
-				return false;
-			}
+			var other = obj as AbstractReportParams;
 
-			return this.CustomTitle == other.CustomTitle;
+			return !object.ReferenceEquals (other, null)
+				&& this.CustomTitle == other.CustomTitle;
 		}
 
 		public override int GetHashCode()

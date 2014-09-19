@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class AssetsParams : AbstractReportParams, System.IEquatable<AbstractReportParams>
+	public class AssetsParams : AbstractReportParams, System.IEquatable<AssetsParams>
 	{
 		public AssetsParams(string customTitle, Timestamp timestamp, Guid rootGuid, int? level)
 			: base (customTitle)
@@ -26,47 +26,47 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public static bool operator ==(AssetsParams a, AssetsParams b)
+		#region IEquatable<AssetsParams> Members
+		public bool Equals(AssetsParams other)
 		{
-			if (!(a is AssetsParams) || !(b is AssetsParams))
+			return this.Equals (other);
+		}
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			//	Il ne faut surtout pas comparer les Guid !
+			if (!base.Equals (obj))
 			{
 				return false;
 			}
 
-			return a.Equals (b);
-		}
+			var other = obj as AssetsParams;
 
-		public static bool operator !=(AssetsParams a, AssetsParams b)
-		{
-			if (!(a is AssetsParams) || !(b is AssetsParams))
-			{
-				return true;
-			}
-
-			return !a.Equals (b);
-		}
-
-		public override bool Equals(AbstractReportParams other)
-		{
-			if (!(other is AssetsParams))
-			{
-				return false;
-			}
-
-			var o = other as AssetsParams;
-
-			return this.CustomTitle == o.CustomTitle
-				&& this.Timestamp   == o.Timestamp
-				&& this.RootGuid    == o.RootGuid
-				&& this.Level       == o.Level;
+			return !object.ReferenceEquals (other, null)
+				&& this.Timestamp == other.Timestamp
+				&& this.RootGuid  == other.RootGuid
+				&& this.Level     == other.Level;
 		}
 
 		public override int GetHashCode()
 		{
-			return this.CustomTitle.GetHashCode ()
+			return base.GetHashCode ()
+				^  this.CustomTitle.GetHashCode ()
 				^  this.Timestamp.GetHashCode ()
 				^  this.RootGuid.GetHashCode ()
 				^  this.Level.GetHashCode ();
+		}
+
+
+		public static bool operator ==(AssetsParams a, AssetsParams b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(AssetsParams a, AssetsParams b)
+		{
+			return !(a == b);
 		}
 
 
