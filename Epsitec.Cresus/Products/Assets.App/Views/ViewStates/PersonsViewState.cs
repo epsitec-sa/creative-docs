@@ -32,7 +32,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return PersonsLogic.GetSummary (accessor, this.SelectedGuid);
+				var list = new List<string> ();
+
+				list.Add (PersonsLogic.GetSummary (accessor, this.SelectedGuid));
+
+				if (this.PageType != Views.PageType.Unknown)
+				{
+					list.Add (StaticDescriptions.GetObjectPageDescription (this.PageType));
+				}
+
+				return string.Join (" — ", list);
 			}
 
 			return null;

@@ -45,8 +45,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsType,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.TypeColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Type.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsMode,        TreeTableColumnType.Icon,   LastViewsTreeTableFiller.ModeColumnWidth, ""));
 				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDescription, TreeTableColumnType.String, LastViewsTreeTableFiller.DescColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Description.ToString ()));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsDate,        TreeTableColumnType.Date,   LastViewsTreeTableFiller.DateColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Date.ToString ()));
-				list.Add (new TreeTableColumnDescription (ObjectField.LastViewsPage,        TreeTableColumnType.String, LastViewsTreeTableFiller.PageColumnWidth, Res.Strings.DataFillers.LastViewsTreeTable.Page.ToString ()));
 
 				return list.ToArray ();
 			}
@@ -58,8 +56,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			var c2 = new TreeTableColumnItem ();
 			var c3 = new TreeTableColumnItem ();
 			var c4 = new TreeTableColumnItem ();
-			var c5 = new TreeTableColumnItem ();
-			var c6 = new TreeTableColumnItem ();
 
 			for (int i=0; i<count; i++)
 			{
@@ -73,18 +69,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				int    pin  = node.Pin ? 1 : 0;
 				string icon = StaticDescriptions.GetViewTypeIcon (node.ViewType.Kind);
 				string mode = StaticDescriptions.GetViewModeIcon (node.ViewMode);
-				string type = StaticDescriptions.GetObjectPageDescription (node.PageType);
 				string desc = node.Description;
-
-				System.DateTime? date;
-				if (node.Timestamp.HasValue)
-				{
-					date = node.Timestamp.Value.Date;
-				}
-				else
-				{
-					date = null;
-				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -92,15 +77,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var s2 = new TreeTableCellString (icon, cellState);
 				var s3 = new TreeTableCellString (mode, cellState);
 				var s4 = new TreeTableCellString (desc, cellState);
-				var s5 = new TreeTableCellDate   (date, cellState);
-				var s6 = new TreeTableCellString (type, cellState);
 
 				c1.AddRow (s1);
 				c2.AddRow (s2);
 				c3.AddRow (s3);
 				c4.AddRow (s4);
-				c5.AddRow (s5);
-				c6.AddRow (s6);
 			}
 
 			var content = new TreeTableContentItem ();
@@ -109,8 +90,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			content.Columns.Add (c2);
 			content.Columns.Add (c3);
 			content.Columns.Add (c4);
-			content.Columns.Add (c5);
-			content.Columns.Add (c6);
 
 			return content;
 		}
@@ -120,14 +99,10 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		private const int TypeColumnWidth =  32;
 		private const int ModeColumnWidth =  32;
 		private const int DescColumnWidth = 500;
-		private const int DateColumnWidth =  70;
-		private const int PageColumnWidth = 100;
 
 		public const int TotalWidth = LastViewsTreeTableFiller.PinColumnWidth
 									+ LastViewsTreeTableFiller.TypeColumnWidth
 									+ LastViewsTreeTableFiller.ModeColumnWidth
-									+ LastViewsTreeTableFiller.DescColumnWidth
-									+ LastViewsTreeTableFiller.DateColumnWidth
-									+ LastViewsTreeTableFiller.PageColumnWidth;
+									+ LastViewsTreeTableFiller.DescColumnWidth;
 	}
 }

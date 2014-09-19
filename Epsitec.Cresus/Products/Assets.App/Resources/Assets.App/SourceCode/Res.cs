@@ -1434,28 +1434,12 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				public static class LastViewsTreeTable
 				{
-					//	designer:str/JUKG501
-					public static global::Epsitec.Common.Types.FormattedText Date
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544496));
-						}
-					}
 					//	designer:str/JUKH501
 					public static global::Epsitec.Common.Types.FormattedText Description
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544497));
-						}
-					}
-					//	designer:str/JUKF501
-					public static global::Epsitec.Common.Types.FormattedText Page
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544495));
 						}
 					}
 					//	designer:str/JUKE501
@@ -5703,28 +5687,12 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				public static class LastViewsTreeTable
 				{
-					//	designer:str/JUKG501
-					public static global::Epsitec.Common.Support.Druid Date
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544496);
-						}
-					}
 					//	designer:str/JUKH501
 					public static global::Epsitec.Common.Support.Druid Description
 					{
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544497);
-						}
-					}
-					//	designer:str/JUKF501
-					public static global::Epsitec.Common.Support.Druid Page
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544495);
 						}
 					}
 					//	designer:str/JUKE501

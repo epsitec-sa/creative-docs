@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.NodeGetters;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -40,7 +41,21 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				return AssetsLogic.GetSummary (accessor, this.SelectedGuid);
+				var list = new List<string> ();
+
+				list.Add (AssetsLogic.GetSummary (accessor, this.SelectedGuid));
+
+				if (this.SelectedTimestamp.HasValue)
+				{
+					list.Add (TypeConverters.DateToString (this.SelectedTimestamp.Value.Date));
+				}
+
+				if (this.PageType != Views.PageType.Unknown)
+				{
+					list.Add (StaticDescriptions.GetObjectPageDescription (this.PageType));
+				}
+
+				return string.Join (" — ", list);
 			}
 
 			return null;
