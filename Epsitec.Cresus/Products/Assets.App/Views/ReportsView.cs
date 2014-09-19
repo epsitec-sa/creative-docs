@@ -314,14 +314,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool changePeriodEnable = this.ChangePeriodEnable;
 			bool insideFavorites    = this.HasParamsInsideFavorites;
 
-			this.commandContext.GetCommandState (Res.Commands.Reports.Params).Enable = this.HasParams;
-			this.commandContext.GetCommandState (Res.Commands.Reports.AddFavorite).Enable = this.HasParams && this.report != null && !insideFavorites;
+			this.commandContext.GetCommandState (Res.Commands.Reports.Params        ).Enable = this.HasParams;
+			this.commandContext.GetCommandState (Res.Commands.Reports.AddFavorite   ).Enable = this.HasParams && this.report != null && !insideFavorites;
 			this.commandContext.GetCommandState (Res.Commands.Reports.RemoveFavorite).Enable = this.HasParams && this.report != null &&  insideFavorites && !this.IsLastParamsType;
 
 			this.commandContext.GetCommandState (Res.Commands.Reports.CompactAll).Enable = isCompactEnable;
 			this.commandContext.GetCommandState (Res.Commands.Reports.CompactOne).Enable = isCompactEnable;
-			this.commandContext.GetCommandState (Res.Commands.Reports.ExpandOne).Enable = isExpandEnable;
-			this.commandContext.GetCommandState (Res.Commands.Reports.ExpandAll).Enable = isExpandEnable;
+			this.commandContext.GetCommandState (Res.Commands.Reports.ExpandOne ).Enable = isExpandEnable;
+			this.commandContext.GetCommandState (Res.Commands.Reports.ExpandAll ).Enable = isExpandEnable;
 
 			this.commandContext.GetCommandState (Res.Commands.Reports.Period.Prev).Enable = changePeriodEnable;
 			this.commandContext.GetCommandState (Res.Commands.Reports.Period.Next).Enable = changePeriodEnable;
@@ -342,9 +342,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					return this.accessor.Mandat.Reports
-						.Where (x => x == this.report.ReportParams)
-						.Any ();
+					//?return this.accessor.Mandat.Reports
+					//?	.Where (x => x == this.report.ReportParams)
+					//?	.Any ();
+
+					foreach (var r in this.accessor.Mandat.Reports)
+					{
+						if (this.report.ReportParams == r)
+						{
+							return true;
+						}
+					}
+
+					return false;
 				}
 			}
 		}

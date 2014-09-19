@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class AssetsParams : AbstractReportParams, System.IEquatable<AssetsParams>
+	public class AssetsParams : AbstractReportParams, System.IEquatable<AbstractReportParams>
 	{
 		public AssetsParams(string customTitle, Timestamp timestamp, Guid rootGuid, int? level)
 			: base (customTitle)
@@ -28,38 +28,37 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public static bool operator ==(AssetsParams a, AssetsParams b)
 		{
+			if (!(a is AssetsParams) || !(b is AssetsParams))
+			{
+				return false;
+			}
+
 			return a.Equals (b);
 		}
 
 		public static bool operator !=(AssetsParams a, AssetsParams b)
 		{
+			if (!(a is AssetsParams) || !(b is AssetsParams))
+			{
+				return true;
+			}
+
 			return !a.Equals (b);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(AbstractReportParams other)
 		{
-			if (obj is AssetsParams)
-			{
-				return this.Equals ((AssetsParams) obj);
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		public bool Equals(AssetsParams other)
-		{
-			//	Il ne faut surtout pas comparer les Guid !
 			if (!(other is AssetsParams))
 			{
 				return false;
 			}
 
-			return this.CustomTitle == other.CustomTitle
-				&& this.Timestamp   == other.Timestamp
-				&& this.RootGuid    == other.RootGuid
-				&& this.Level       == other.Level;
+			var o = other as AssetsParams;
+
+			return this.CustomTitle == o.CustomTitle
+				&& this.Timestamp   == o.Timestamp
+				&& this.RootGuid    == o.RootGuid
+				&& this.Level       == o.Level;
 		}
 
 		public override int GetHashCode()

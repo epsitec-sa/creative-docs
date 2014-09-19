@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Cherche le widget ayant la plus grande surface.
 			var targets = this.commandDispatcher.FindVisuals (e.Command)
-				.Where  (x => x.Window != null)  // voir (*)
+				.Where  (x => x.Window != null)  // TODO: voir (*)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		// (*)	Cette correction provisoire ne devrait pas être nécessaire. Les boutons
 		//		appartenant à des toolbars supprimées continuent d'être trouvés par
-		//		FindVisuals ! C'est-ce moi qui supprime mal les widgets d'une toolbar,
+		//		FindVisuals ! Est-ce moi qui supprime mal les widgets d'une toolbar,
 		//		ou le bug est-il ailleurs ???
 
 
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (size, size),
 				CommandObject = command,
 				Index         = superficiality,
-				Name          = (AbstractCommandToolbar.toto++).ToString (),
+				Name = (AbstractCommandToolbar.toto++).ToString (),  // TODO: Debug à supprimer dès que possible !
 			};
 		}
 
@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private int MaxSuperficiality
 		{
-			//	Retourne le superficiality maximal, donc celui qui permet forcémentde voir
+			//	Retourne le superficiality maximal, donc celui qui permet forcément de voir
 			//	tous les widgets.
 			get
 			{
@@ -313,6 +313,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected FrameBox						toolbar;
 		protected bool							adjustRequired;
-		private static int toto;
+		private static int toto;  // TODO: Debug à supprimer dès que possible !
 	}
 }

@@ -10,7 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
 	/// <summary>
-	/// Toolbar de la vue des catégories d'immobilisation.
+	/// Toolbar de la vue des catégories d'immobilisations.
 	/// </summary>
 	public class CategoriesToolbar : AbstractCommandToolbar
 	{
