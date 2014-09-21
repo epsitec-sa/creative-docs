@@ -15,6 +15,7 @@ using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -59,9 +60,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.NodeGetter.SetParams (null, this.sortingInstructions);
 
-			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Accounts)
-				+ " — "
-				+ this.baseType.AccountsDateRange.ToNiceString ();
+			this.title = UniversalLogic.NiceJoin (
+				AbstractView.GetViewTitle (this.accessor, ViewType.Accounts),
+				this.baseType.AccountsDateRange.ToNiceString ());
 
 			this.topTitle.SetTitle (this.title);
 

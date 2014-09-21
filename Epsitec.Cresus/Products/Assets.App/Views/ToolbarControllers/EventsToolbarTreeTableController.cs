@@ -116,18 +116,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			get
 			{
-				var builder = new System.Text.StringBuilder ();
-				builder.Append (this.title);
+				var list = new List<string> ();
+				list.Add (this.title);
 
 				if (!this.ObjectGuid.IsEmpty)
 				{
-					builder.Append (" — ");
-
 					var name = AssetsLogic.GetSummary (this.accessor, this.ObjectGuid);
-					builder.Append (name);
+					list.Add (name);
 				}
 
-				return builder.ToString ();
+				return UniversalLogic.NiceJoin (list.ToArray ());
 			}
 		}
 

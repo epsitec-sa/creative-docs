@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				return string.Concat (accessor.Mandat.Name, " — ", title);
+				return UniversalLogic.NiceJoin (accessor.Mandat.Name, title);
 			}
 		}
 

@@ -200,35 +200,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			get
 			{
-				var builder = new System.Text.StringBuilder ();
-				builder.Append(this.title);
-
-#if false
-				if (!this.SelectedGuid.IsEmpty)
-				{
-					builder.Append (" — ");
-
-					if (this.stateAtController.Date.HasValue)
-					{
-						var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
-						var name = AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, timestamp);
-						builder.Append (name);
-					}
-					else
-					{
-						var name = AssetsLogic.GetSummary (this.accessor, this.SelectedGuid);
-						builder.Append (name);
-					}
-				}
-#endif
+				var list = new List<string> ();
+				list.Add (this.title);
 
 				if (this.stateAtController != null && this.stateAtController.Date.HasValue)
 				{
-					builder.Append (" — ");
-					builder.Append (TypeConverters.DateToString (this.stateAtController.Date));
+					list.Add (TypeConverters.DateToString (this.stateAtController.Date));
 				}
 
-				return builder.ToString ();
+				return UniversalLogic.NiceJoin (list.ToArray ());
 			}
 		}
 

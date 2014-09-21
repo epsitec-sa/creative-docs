@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				list.Add (ed);
 			}
 
-			return string.Join (" — ", list);
+			return UniversalLogic.NiceJoin (list.ToArray ());
 		}
 
 

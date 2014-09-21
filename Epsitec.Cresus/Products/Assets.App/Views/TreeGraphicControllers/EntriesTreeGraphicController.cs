@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -83,7 +84,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 			if (!string.IsNullOrEmpty (node.Debit) ||
 				!string.IsNullOrEmpty (node.Credit))
 			{
-				list.Add (new TreeGraphicValue (node.Debit + " — " + node.Credit, null));
+				list.Add (new TreeGraphicValue (UniversalLogic.NiceJoin (node.Debit, node.Credit), null));
 			}
 			
 			list.Add (new TreeGraphicValue (node.Title, null));

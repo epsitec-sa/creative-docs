@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 					list.Add (StaticDescriptions.GetObjectPageDescription (this.PageType));
 				}
 
-				return string.Join (" — ", list);
+				return UniversalLogic.NiceJoin (list.ToArray ());
 			}
 
 			return null;

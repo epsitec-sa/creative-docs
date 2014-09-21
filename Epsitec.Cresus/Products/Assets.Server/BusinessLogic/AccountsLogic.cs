@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 				else
 				{
-					return string.Concat (text, " — ", error);
+					return UniversalLogic.NiceJoin (text, error);
 				}
 			}
 		}
@@ -172,6 +172,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				&& name1     == name2
 				&& category1 == category2
 				&& type1     == type2;
+		}
+
+		public static string NiceJoin
+		{
+			get;
+			set;
 		}
 	}
 }

@@ -31,5 +31,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return null;
 			}
 		}
+
+		public static string NiceJoin(params string[] words)
+		{
+			return string.Join (" — ", words);
+		}
 	}
 }

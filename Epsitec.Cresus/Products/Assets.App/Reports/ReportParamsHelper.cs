@@ -89,11 +89,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ReportTitleType.Full:
 					if (string.IsNullOrEmpty (custom))
 					{
-						return string.Concat (title, " — ", specific);
+						return UniversalLogic.NiceJoin (title, specific);
 					}
 					else
 					{
-						return string.Concat (title, " — ", custom);
+						return UniversalLogic.NiceJoin (title, custom);
 					}
 
 				default:
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (filter);
 			}
 
-			return string.Join (" — ", list);
+			return UniversalLogic.NiceJoin (list.ToArray ());
 		}
 
 		private static string GetSpecific(DataAccessor accessor, AssetsParams reportParams)
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				list.Add (group);
 			}
 
-			return string.Join (" — ", list);
+			return UniversalLogic.NiceJoin (list.ToArray ());
 		}
 
 		private static string GetSpecific(DataAccessor accessor, PersonsParams reportParams)

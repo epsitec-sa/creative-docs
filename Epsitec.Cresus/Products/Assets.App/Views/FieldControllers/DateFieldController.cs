@@ -12,6 +12,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
@@ -409,7 +410,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					var date = this.GetPredefinedDate (type);
 					var td = TypeConverters.DateToString (date);
 
-					popup.Items.Add (string.Concat (td, " — ", text));
+					popup.Items.Add (UniversalLogic.NiceJoin (td, text));
 				}
 			}
 
