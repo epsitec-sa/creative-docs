@@ -342,19 +342,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					//?return this.accessor.Mandat.Reports
-					//?	.Where (x => x == this.report.ReportParams)
-					//?	.Any ();
-
-					foreach (var r in this.accessor.Mandat.Reports)
-					{
-						if (this.report.ReportParams == r)
-						{
-							return true;
-						}
-					}
-
-					return false;
+					return this.accessor.Mandat.Reports
+						.Where (x => x == this.report.ReportParams)
+						.Any ();
 				}
 			}
 		}
