@@ -63,6 +63,17 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
+		public static bool operator ==(AbstractReportParams a, AbstractReportParams b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(AbstractReportParams a, AbstractReportParams b)
+		{
+			return !(a == b);
+		}
+
+
 		public virtual AbstractReportParams ChangePeriod(int direction)
 		{
 			return null;

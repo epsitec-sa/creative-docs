@@ -62,17 +62,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public static bool operator ==(MCH2SummaryParams a, MCH2SummaryParams b)
-		{
-			return object.Equals (a, b);
-		}
-
-		public static bool operator !=(MCH2SummaryParams a, MCH2SummaryParams b)
-		{
-			return !(a == b);
-		}
-
-
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);

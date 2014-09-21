@@ -59,17 +59,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public static bool operator ==(AssetsParams a, AssetsParams b)
-		{
-			return object.Equals (a, b);
-		}
-
-		public static bool operator !=(AssetsParams a, AssetsParams b)
-		{
-			return !(a == b);
-		}
-
-
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
 			var timestamp = new Timestamp (this.Timestamp.Date.AddYears (direction), 0);
