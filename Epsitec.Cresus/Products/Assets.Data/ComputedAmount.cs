@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public struct ComputedAmount
+	public struct ComputedAmount : System.IEquatable<ComputedAmount>
 	{
 		public ComputedAmount(decimal? finalAmount)
 		{
@@ -246,28 +246,29 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static bool operator ==(ComputedAmount a, ComputedAmount b)
+		#region IEquatable<ComputedAmount> Members
+		public bool Equals(ComputedAmount other)
 		{
-			return object.Equals (a, b);
-		}
-
-		public static bool operator !=(ComputedAmount a, ComputedAmount b)
-		{
-			return !(a == b);
-		}
-
-		public override bool Equals(object obj)
-		{
-			var other = (ComputedAmount) obj;
-
-			return !object.ReferenceEquals (other, null)
-				&& this.InitialAmount   == other.InitialAmount
+			return this.InitialAmount   == other.InitialAmount
 				&& this.ArgumentAmount  == other.ArgumentAmount
 				&& this.FinalAmount     == other.FinalAmount
 				&& this.Computed        == other.Computed
 				&& this.Subtract        == other.Subtract
 				&& this.Rate            == other.Rate
 				&& this.ArgumentDefined == other.ArgumentDefined;
+		}
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is ComputedAmount)
+			{
+				return this.Equals ((ComputedAmount) obj);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public override int GetHashCode()
@@ -279,6 +280,16 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.Subtract.GetHashCode ()
 				 ^ this.Rate.GetHashCode ()
 				 ^ this.ArgumentDefined.GetHashCode ();
+		}
+
+		public static bool operator ==(ComputedAmount a, ComputedAmount b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(ComputedAmount a, ComputedAmount b)
+		{
+			return !(a == b);
 		}
 
 

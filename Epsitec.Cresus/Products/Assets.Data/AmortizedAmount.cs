@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public struct AmortizedAmount
+	public struct AmortizedAmount : System.IEquatable<AmortizedAmount>
 	{
 		public AmortizedAmount
 		(
@@ -183,22 +183,10 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
+		#region IEquatable<AmortizedAmount> Members
+		public bool Equals(AmortizedAmount other)
 		{
-			return object.Equals (a, b);
-		}
-
-		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
-		{
-			return !(a == b);
-		}
-
-		public override bool Equals(object obj)
-		{
-			var other = (AmortizedAmount) obj;
-
-			return !object.ReferenceEquals (other, null)
-				&& this.AmortizationType   == other.AmortizationType
+			return this.AmortizationType   == other.AmortizationType
 				&& this.PreviousAmount     == other.PreviousAmount
 				&& this.InitialAmount      == other.InitialAmount
 				&& this.BaseAmount         == other.BaseAmount
@@ -213,6 +201,19 @@ namespace Epsitec.Cresus.Assets.Data
 				&& this.EventGuid          == other.EventGuid
 				&& this.EntryGuid          == other.EntryGuid
 				&& this.EntrySeed          == other.EntrySeed;
+		}
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is AmortizedAmount)
+			{
+				return this.Equals ((AmortizedAmount) obj);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public override int GetHashCode()
@@ -232,6 +233,16 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.EventGuid         .GetHashCode ()
 				 ^ this.EntryGuid         .GetHashCode ()
 				 ^ this.EntrySeed         .GetHashCode ();
+		}
+
+		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
+		{
+			return !(a == b);
 		}
 
 

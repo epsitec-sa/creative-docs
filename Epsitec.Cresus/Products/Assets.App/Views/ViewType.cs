@@ -23,12 +23,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		#region IEquatable<Guid> Members
+		#region IEquatable<ViewType> Members
 		public bool Equals(ViewType other)
 		{
-			return this.Equals (other);
+			return this.Kind              == other.Kind
+				&& this.AccountsDateRange == other.AccountsDateRange;
 		}
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is ViewType)
+			{
+				return this.Equals ((ViewType) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.Kind.GetHashCode ()
+				 ^ this.AccountsDateRange.GetHashCode ();
+		}
 
 		public static bool operator ==(ViewType a, ViewType b)
 		{
@@ -38,21 +57,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static bool operator !=(ViewType a, ViewType b)
 		{
 			return !(a == b);
-		}
-
-		public override bool Equals(object obj)
-		{
-			var other = (ViewType) obj;
-
-			return !object.ReferenceEquals (other, null)
-				&& this.Kind              == other.Kind
-				&& this.AccountsDateRange == other.AccountsDateRange;
-		}
-
-		public override int GetHashCode()
-		{
-			return this.Kind.GetHashCode ()
-				 ^ this.AccountsDateRange.GetHashCode ();
 		}
 
 

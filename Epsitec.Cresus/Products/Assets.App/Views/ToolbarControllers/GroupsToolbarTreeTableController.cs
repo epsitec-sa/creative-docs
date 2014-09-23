@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Groups.Deselect, row != -1);
 
 			this.toolbar.SetEnable (Res.Commands.Groups.Copy,   this.IsCopyEnable);
-			this.toolbar.SetEnable (Res.Commands.Groups.Paste,  this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Groups.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
 			this.toolbar.SetEnable (Res.Commands.Groups.Export, true);
 		}
 

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public struct SortingInstructions
+	public struct SortingInstructions : System.IEquatable<SortingInstructions>
 	{
 		public SortingInstructions(ObjectField primaryField, SortedType primaryType, ObjectField secondaryField, SortedType secondaryType)
 		{
@@ -28,25 +28,26 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static bool operator ==(SortingInstructions a, SortingInstructions b)
+		#region IEquatable<SortingInstructions> Members
+		public bool Equals(SortingInstructions other)
 		{
-			return object.Equals (a, b);
-		}
-
-		public static bool operator !=(SortingInstructions a, SortingInstructions b)
-		{
-			return !(a == b);
-		}
-
-		public override bool Equals(object obj)
-		{
-			var other = (SortingInstructions) obj;
-
-			return !object.ReferenceEquals (other, null)
-				&& this.PrimaryField   == other.PrimaryField
+			return this.PrimaryField   == other.PrimaryField
 				&& this.PrimaryType    == other.PrimaryType
 				&& this.SecondaryField == other.SecondaryField
 				&& this.SecondaryType  == other.SecondaryType;
+		}
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is SortingInstructions)
+			{
+				return this.Equals ((SortingInstructions) obj);
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public override int GetHashCode()
@@ -55,6 +56,16 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.PrimaryType.GetHashCode ()
 				 ^ this.SecondaryField.GetHashCode ()
 				 ^ this.SecondaryType.GetHashCode ();
+		}
+
+		public static bool operator ==(SortingInstructions a, SortingInstructions b)
+		{
+			return object.Equals (a, b);
+		}
+
+		public static bool operator !=(SortingInstructions a, SortingInstructions b)
+		{
+			return !(a == b);
 		}
 
 	

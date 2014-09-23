@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class AssetsParams : AbstractReportParams, System.IEquatable<AssetsParams>
+	public class AssetsParams : AbstractReportParams
 	{
 		public AssetsParams(string customTitle, Timestamp timestamp, Guid rootGuid, int? level)
 			: base (customTitle)
@@ -26,27 +26,20 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		#region IEquatable<AssetsParams> Members
-		public bool Equals(AssetsParams other)
-		{
-			return this.Equals (other);
-		}
-		#endregion
-
-		public override bool Equals(object obj)
+		public override bool Equals(AbstractReportParams other)
 		{
 			//	Il ne faut surtout pas comparer les Guid !
-			if (!base.Equals (obj))
+			if (!base.Equals (other))
 			{
 				return false;
 			}
 
-			var other = obj as AssetsParams;
+			var o = other as AssetsParams;
 
 			return !object.ReferenceEquals (other, null)
-				&& this.Timestamp == other.Timestamp
-				&& this.RootGuid  == other.RootGuid
-				&& this.Level     == other.Level;
+				&& this.Timestamp == o.Timestamp
+				&& this.RootGuid  == o.RootGuid
+				&& this.Level     == o.Level;
 		}
 
 		public override int GetHashCode()

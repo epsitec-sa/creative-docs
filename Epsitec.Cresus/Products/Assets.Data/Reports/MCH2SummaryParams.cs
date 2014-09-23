@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public class MCH2SummaryParams : AbstractReportParams, System.IEquatable<MCH2SummaryParams>
+	public class MCH2SummaryParams : AbstractReportParams
 	{
 		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
 			: base (customTitle)
@@ -27,28 +27,21 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		#region IEquatable<AssetsParams> Members
-		public bool Equals(MCH2SummaryParams other)
-		{
-			return this.Equals (other);
-		}
-		#endregion
-
-		public override bool Equals(object obj)
+		public override bool Equals(AbstractReportParams other)
 		{
 			//	Il ne faut surtout pas comparer les Guid !
-			if (!base.Equals (obj))
+			if (!base.Equals (other))
 			{
 				return false;
 			}
 
-			var other = obj as MCH2SummaryParams;
+			var o = other as MCH2SummaryParams;
 
 			return !object.ReferenceEquals (other, null)
-				&& this.DateRange   == other.DateRange
-				&& this.RootGuid    == other.RootGuid
-				&& this.Level       == other.Level
-				&& this.FilterGuid  == other.FilterGuid;
+				&& this.DateRange  == o.DateRange
+				&& this.RootGuid   == o.RootGuid
+				&& this.Level      == o.Level
+				&& this.FilterGuid == o.FilterGuid;
 		}
 
 		public override int GetHashCode()

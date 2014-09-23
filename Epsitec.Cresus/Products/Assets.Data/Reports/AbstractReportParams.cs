@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
-	public abstract class AbstractReportParams : IGuid
+	public abstract class AbstractReportParams : IGuid, System.IEquatable<AbstractReportParams>
 	{
 		public AbstractReportParams(string customTitle)
 		{
@@ -48,13 +48,18 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		}
 
 
-		public override bool Equals(object obj)
+		#region IEquatable<AbstractReportParams> Members
+		public virtual bool Equals(AbstractReportParams other)
 		{
 			//	Il ne faut surtout pas comparer les Guid !
-			var other = obj as AbstractReportParams;
-
 			return !object.ReferenceEquals (other, null)
 				&& this.CustomTitle == other.CustomTitle;
+		}
+		#endregion
+
+		public override sealed bool Equals(object obj)
+		{
+			return this.Equals (obj as AbstractReportParams);
 		}
 
 		public override int GetHashCode()

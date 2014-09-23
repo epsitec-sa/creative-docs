@@ -7,7 +7,7 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public struct DateRange
+	public struct DateRange : System.IEquatable<DateRange>
 	{
 		public DateRange(System.DateTime includeFrom, System.DateTime excludeTo)
 		{
@@ -105,6 +105,32 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		#region IEquatable<DateRange> Members
+		public bool Equals(DateRange other)
+		{
+			return this.IncludeFrom == other.IncludeFrom
+				&& this.ExcludeTo   == other.ExcludeTo;
+		}
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj is DateRange)
+			{
+				return this.Equals ((DateRange) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.IncludeFrom.GetHashCode ()
+				 ^ this.ExcludeTo.GetHashCode ();
+		}
+
 		public static bool operator ==(DateRange a, DateRange b)
 		{
 			return object.Equals (a, b);
@@ -113,21 +139,6 @@ namespace Epsitec.Cresus.Assets.Data
 		public static bool operator !=(DateRange a, DateRange b)
 		{
 			return !(a == b);
-		}
-
-		public override bool Equals(object obj)
-		{
-			var other = (DateRange) obj;
-
-			return !object.ReferenceEquals (other, null)
-				&& this.IncludeFrom == other.IncludeFrom
-				&& this.ExcludeTo   == other.ExcludeTo;
-		}
-
-		public override int GetHashCode()
-		{
-			return this.IncludeFrom.GetHashCode ()
-				 ^ this.ExcludeTo.GetHashCode ();
 		}
 
 
