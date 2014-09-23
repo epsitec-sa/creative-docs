@@ -24,34 +24,27 @@ namespace Epsitec.Cresus.Assets.Data
 		#region IEquatable<Guid> Members
 		public bool Equals(BaseType other)
 		{
-			return this.Kind              == other.Kind
-				&& this.AccountsDateRange == other.AccountsDateRange;
+			return this.Equals (other);
 		}
 		#endregion
 
-
-		public static bool operator ==(BaseType t1, BaseType t2)
+		public static bool operator ==(BaseType a, BaseType b)
 		{
-			return t1.Kind              == t2.Kind
-				&& t1.AccountsDateRange == t2.AccountsDateRange;
+			return object.Equals (a, b);
 		}
 
-		public static bool operator !=(BaseType t1, BaseType t2)
+		public static bool operator !=(BaseType a, BaseType b)
 		{
-			return t1.Kind              != t2.Kind
-				|| t1.AccountsDateRange != t2.AccountsDateRange;
+			return !(a == b);
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (obj is BaseType)
-			{
-				return this.Equals ((BaseType) obj);
-			}
-			else
-			{
-				return false;
-			}
+			var other = (BaseType) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.Kind              == other.Kind
+				&& this.AccountsDateRange == other.AccountsDateRange;
 		}
 
 		public override int GetHashCode()

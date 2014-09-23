@@ -105,16 +105,29 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static bool operator ==(DateRange r1, DateRange r2)
+		public static bool operator ==(DateRange a, DateRange b)
 		{
-			return r1.IncludeFrom == r2.IncludeFrom
-				&& r1.ExcludeTo   == r2.ExcludeTo;
+			return object.Equals (a, b);
 		}
 
-		public static bool operator !=(DateRange r1, DateRange r2)
+		public static bool operator !=(DateRange a, DateRange b)
 		{
-			return r1.IncludeFrom != r2.IncludeFrom
-				|| r1.ExcludeTo   != r2.ExcludeTo;
+			return !(a == b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = (DateRange) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.IncludeFrom == other.IncludeFrom
+				&& this.ExcludeTo   == other.ExcludeTo;
+		}
+
+		public override int GetHashCode()
+		{
+			return this.IncludeFrom.GetHashCode ()
+				 ^ this.ExcludeTo.GetHashCode ();
 		}
 
 

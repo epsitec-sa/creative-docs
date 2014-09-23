@@ -185,52 +185,34 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static bool operator ==(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.AmortizationType   == b.AmortizationType
-				&& a.PreviousAmount     == b.PreviousAmount
-				&& a.InitialAmount      == b.InitialAmount
-				&& a.BaseAmount         == b.BaseAmount
-				&& a.EffectiveRate      == b.EffectiveRate
-				&& a.ProrataNumerator   == b.ProrataNumerator
-				&& a.ProrataDenominator == b.ProrataDenominator
-				&& a.RoundAmount        == b.RoundAmount
-				&& a.ResidualAmount     == b.ResidualAmount
-				&& a.EntryScenario      == b.EntryScenario
-				&& a.Date               == b.Date
-				&& a.AssetGuid          == b.AssetGuid
-				&& a.EventGuid          == b.EventGuid
-				&& a.EntryGuid          == b.EntryGuid
-				&& a.EntrySeed          == b.EntrySeed;
+			return object.Equals (a, b);
 		}
 
 		public static bool operator !=(AmortizedAmount a, AmortizedAmount b)
 		{
-			return a.AmortizationType   != b.AmortizationType
-				|| a.PreviousAmount     != b.PreviousAmount
-				|| a.InitialAmount      != b.InitialAmount
-				|| a.BaseAmount         != b.BaseAmount
-				|| a.EffectiveRate      != b.EffectiveRate
-				|| a.ProrataNumerator   != b.ProrataNumerator
-				|| a.ProrataDenominator != b.ProrataDenominator
-				|| a.RoundAmount        != b.RoundAmount
-				|| a.ResidualAmount     != b.ResidualAmount
-				|| a.EntryScenario      != b.EntryScenario
-				|| a.Date               != b.Date
-				|| a.AssetGuid          != b.AssetGuid
-				|| a.EventGuid          != b.EventGuid
-				|| a.EntryGuid          != b.EntryGuid
-				|| a.EntrySeed          != b.EntrySeed;
+			return !(a == b);
 		}
 
 		public override bool Equals(object obj)
 		{
-			if (obj is AmortizedAmount)
-			{
-				return this.Equals ((AmortizedAmount) obj);
-			}
-			else
-			{
-				return false;
-			}
+			var other = (AmortizedAmount) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.AmortizationType   == other.AmortizationType
+				&& this.PreviousAmount     == other.PreviousAmount
+				&& this.InitialAmount      == other.InitialAmount
+				&& this.BaseAmount         == other.BaseAmount
+				&& this.EffectiveRate      == other.EffectiveRate
+				&& this.ProrataNumerator   == other.ProrataNumerator
+				&& this.ProrataDenominator == other.ProrataDenominator
+				&& this.RoundAmount        == other.RoundAmount
+				&& this.ResidualAmount     == other.ResidualAmount
+				&& this.EntryScenario      == other.EntryScenario
+				&& this.Date               == other.Date
+				&& this.AssetGuid          == other.AssetGuid
+				&& this.EventGuid          == other.EventGuid
+				&& this.EntryGuid          == other.EntryGuid
+				&& this.EntrySeed          == other.EntrySeed;
 		}
 
 		public override int GetHashCode()

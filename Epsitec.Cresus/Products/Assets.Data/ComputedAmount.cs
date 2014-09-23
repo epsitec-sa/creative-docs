@@ -248,24 +248,37 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static bool operator ==(ComputedAmount a, ComputedAmount b)
 		{
-			return a.InitialAmount   == b.InitialAmount
-				&& a.ArgumentAmount  == b.ArgumentAmount
-				&& a.FinalAmount     == b.FinalAmount
-				&& a.Computed        == b.Computed
-				&& a.Subtract        == b.Subtract
-				&& a.Rate            == b.Rate
-				&& a.ArgumentDefined == b.ArgumentDefined;
+			return object.Equals (a, b);
 		}
 
 		public static bool operator !=(ComputedAmount a, ComputedAmount b)
 		{
-			return a.InitialAmount   != b.InitialAmount
-				|| a.ArgumentAmount  != b.ArgumentAmount
-				|| a.FinalAmount     != b.FinalAmount
-				|| a.Computed        != b.Computed
-				|| a.Subtract        != b.Subtract
-				|| a.Rate            != b.Rate
-				|| a.ArgumentDefined != b.ArgumentDefined;
+			return !(a == b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = (ComputedAmount) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.InitialAmount   == other.InitialAmount
+				&& this.ArgumentAmount  == other.ArgumentAmount
+				&& this.FinalAmount     == other.FinalAmount
+				&& this.Computed        == other.Computed
+				&& this.Subtract        == other.Subtract
+				&& this.Rate            == other.Rate
+				&& this.ArgumentDefined == other.ArgumentDefined;
+		}
+
+		public override int GetHashCode()
+		{
+			return this.InitialAmount.GetHashCode ()
+				 ^ this.ArgumentAmount.GetHashCode ()
+				 ^ this.FinalAmount.GetHashCode ()
+				 ^ this.Computed.GetHashCode ()
+				 ^ this.Subtract.GetHashCode ()
+				 ^ this.Rate.GetHashCode ()
+				 ^ this.ArgumentDefined.GetHashCode ();
 		}
 
 

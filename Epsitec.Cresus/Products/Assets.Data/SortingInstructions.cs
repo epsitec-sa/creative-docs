@@ -30,18 +30,31 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static bool operator ==(SortingInstructions a, SortingInstructions b)
 		{
-			return a.PrimaryField   == b.PrimaryField
-				&& a.PrimaryType    == b.PrimaryType
-				&& a.SecondaryField == b.SecondaryField
-				&& a.SecondaryType  == b.SecondaryType;
+			return object.Equals (a, b);
 		}
 
 		public static bool operator !=(SortingInstructions a, SortingInstructions b)
 		{
-			return a.PrimaryField   != b.PrimaryField
-				|| a.PrimaryType    != b.PrimaryType
-				|| a.SecondaryField != b.SecondaryField
-				|| a.SecondaryType  != b.SecondaryType;
+			return !(a == b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = (SortingInstructions) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.PrimaryField   == other.PrimaryField
+				&& this.PrimaryType    == other.PrimaryType
+				&& this.SecondaryField == other.SecondaryField
+				&& this.SecondaryType  == other.SecondaryType;
+		}
+
+		public override int GetHashCode()
+		{
+			return this.PrimaryField.GetHashCode ()
+				 ^ this.PrimaryType.GetHashCode ()
+				 ^ this.SecondaryField.GetHashCode ()
+				 ^ this.SecondaryType.GetHashCode ();
 		}
 
 	

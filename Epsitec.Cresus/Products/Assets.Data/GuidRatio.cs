@@ -26,14 +26,27 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static bool operator ==(GuidRatio a, GuidRatio b)
 		{
-			return a.Guid  == b.Guid
-				&& a.Ratio == b.Ratio;
+			return object.Equals (a, b);
 		}
 
 		public static bool operator !=(GuidRatio a, GuidRatio b)
 		{
-			return a.Guid  != b.Guid
-				|| a.Ratio != b.Ratio;
+			return !(a == b);
+		}
+
+		public override bool Equals(object obj)
+		{
+			var other = (GuidRatio) obj;
+
+			return !object.ReferenceEquals (other, null)
+				&& this.Guid  == other.Guid
+				&& this.Ratio == other.Ratio;
+		}
+
+		public override int GetHashCode()
+		{
+			return this.Guid.GetHashCode ()
+				 ^ this.Ratio.GetHashCode ();
 		}
 
 
