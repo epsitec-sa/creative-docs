@@ -43,11 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 			set
 			{
-				//?if (this.inUse != value)
-				{
-					this.inUse = value;
-					this.UpdateToolbar ();
-				}
+				this.inUse = value;
+				this.UpdateToolbar ();
 			}
 		}
 
