@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			this.dataSetCommandId = dataSetCommandId;
 			this.sort             = new List<ColumnRef<EntityColumnSort>> ();
 			this.display          = new List<ColumnRef<EntityColumnDisplay>> ();
+			this.availableQueries = new List<Filter> ();
 		}
 
 		
@@ -49,15 +50,23 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
-		public Filter Query
+		public Filter ActiveQuery
 		{
 			get
 			{
-				return this.query;
+				return this.activeQuery;
 			}
 			set
 			{
-				this.query = value;
+				this.activeQuery = value;
+			}
+		}
+
+		public IList<Filter> AvailableQueries
+		{
+			get
+			{
+				return this.availableQueries;
 			}
 		}
 
@@ -82,6 +91,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				new XAttribute (Xml.DataSetCommandId, this.dataSetCommandId.ToCompactString ()),
 				new XElement (Xml.SortColumnList, this.sort.Select (x => x.Save (Xml.SortColumnItem))),
 				xmlFilter,
+				new XElement (Xml.QueryItem, this.availableQueries.Select (x => x.Save(Xml.QueryItem))),
 				new XElement (Xml.DisplayColumnList, this.display.Select (x => x.Save (Xml.DisplayColumnItem))));
 		}
 
@@ -103,6 +113,9 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			 *  <f ...>
 			 *   ...
 			 *  </f>
+			 *  <q ...>
+			 *   ...
+			 *  </q>
 			 *  <D>
 			 *   <d id="..."><v ... /></d>
 			 *   ...
@@ -123,7 +136,15 @@ namespace Epsitec.Cresus.Core.Library.Settings
 				settings.filter = (EntityFilter.Restore (xmlFilter));
 			}
 
+			var xmlQuery = xml.Element (Xml.QueryItem);
+
+			if(xmlQuery != null)
+			{
+				settings.availableQueries.AddRange (xml.Element (Xml.QueryItem).Elements ().Select (x => Epsitec.Cresus.Core.Metadata.Filter.Restore (x)));
+			}
+
 			settings.display.AddRange (xml.Element (Xml.DisplayColumnList).Elements ().Select (x => ColumnRef.Restore<EntityColumnDisplay> (x)));
+			
 
 			return settings;
 		}
@@ -135,6 +156,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			public const string					SortColumnList     = "S";
 			public const string					SortColumnItem     = "s";
 			public const string					FilterItem		   = "f";
+			public const string					QueryItem          = "q";
 			public const string					DisplayColumnList  = "D";
 			public const string					DisplayColumnItem  = "d";
 		}
@@ -144,6 +166,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		private readonly List<ColumnRef<EntityColumnSort>>		sort;
 		private readonly List<ColumnRef<EntityColumnDisplay>>	display;
 		private EntityFilter									filter;
-		private Filter											query;
+		private Filter											activeQuery;
+		private List<Filter>									availableQueries;
 	}
 }

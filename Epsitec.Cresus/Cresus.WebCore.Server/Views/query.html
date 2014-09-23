@@ -13,15 +13,42 @@
 </head>
 <body style="background-color: rgb(223, 232, 246);">
     <div class="container" ng-controller="CoreQueryBuilder">
-        <div class="alert alert-warning">
-            <span ng-bind-html="humanOutput"></span>
+        <div class="alert alert-success">
+            <strong>Choix des colonnes</strong>
+            <div class="input-group">
+                <select ng-options="t as t.title for t in database.columns" ng-model="selectedColumn" class="form-control input-xs"></select>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="addSelectedColumn(selectedColumn)"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter</button>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="col in columns">
+                    {{col.title}}
+                    <button type="button" class="close" ng-click="removeColumn(col)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </li>
+            </ul>        
         </div>
         <query-builder ng-if="ready" group="filter.group" fields="fields"></query-builder>
-        <div class="alert alert-danger">
-            {{json}}
-            <button ng-click="testQuery()" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-fire"></span> Tester la requête</button>
+        <div class="alert alert-warning">
+            <strong>Séléctionne :</strong><br/>
+            <span ng-repeat="col in columns"> {{col.title}} </span>
+            <br/><strong>Où :</strong><br/>
+            <span ng-bind-html="humanOutput"></span>
         </div>
-    </div>
+        <div class="alert alert-danger">
+            <button ng-click="testQuery()" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-fire"></span> Tester la requête</button>
+            <span ng-show="displayTotal">{{total}} Résultats</span>
+        </div>
+        <div class="alert alert-success">
+            <strong>Requête existantes: </strong><br />
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="query in availableQueries">{{query}}</li>
+            </ul>
+            <strong>Enregistrer la requête: </strong><br/>
+            <div class="input-group">
+                <span class="input-group-addon">Nom :</span>
+                <input type="text" class="form-control" ng-model="queryName"/>
+            </div>
+            <button type="button" class="btn btn-default" ng-click="saveQuery(queryName)"><span class="glyphicon glyphicon-plus-sign"></span> Enregistrer</button>
+        </div>
     <style>
         .group {
             background-color: #fff;

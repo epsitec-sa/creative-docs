@@ -61,6 +61,7 @@ function() {
       newOptions = {
         dockedItems: [
           this.createToolbar(options),
+          this.createQueryToolbar(),
           this.createSecondaryToolbar()
         ],
         columns: this.createColumns(options),
@@ -512,6 +513,62 @@ function() {
         });
     },
 
+    createQueryToolbar: function() {
+      if (epsitecConfig.featureQueryBuilder) {
+        var buttons = [];
+        var druid = Epsitec.Cresus.Core.getApplication().tabManager.currentTab;
+
+        var queryStore = Ext.create('Ext.data.Store', {
+            fields: ['id','name'],
+            proxy: {
+                type: 'ajax',
+                url: '/proxy/database/query/' + druid + '/load',
+                reader: {
+                  type : 'json',
+                  root : 'content'
+                },
+            },
+            autoLoad:true
+        });
+
+        buttons.push(Ext.create('Ext.form.field.ComboBox', {
+          hideLabel: true,
+          store: queryStore,
+          typeAhead: true,
+          valueField: 'name',
+          queryMode: 'local',
+          triggerAction: 'all',
+          emptyText: 'Choix de la présentation',
+          selectOnFocus: true,
+          width: 150,
+          indent: true,
+          listeners: {
+           scope: this,
+           'select': function (c, r) {
+              //TODO: reload grid with query
+              //this.loadConfig(r[0].data);
+             }
+           }
+         }));
+
+        buttons.push(Ext.create('Ext.Button', {
+          text: '',
+          iconCls: 'icon-filter',
+          listeners: {
+            click: this.onQueryBuildHandler,
+            scope: this
+          }
+        }));
+
+        return Ext.create('Ext.Toolbar', {
+          dock: 'top',
+          items: buttons
+        });
+      }
+      else
+        return null;
+    },
+
     createButtons: function(options) {
       var buttons, exportMenuItems;
 
@@ -618,16 +675,6 @@ function() {
           iconCls: 'icon-search',
           listeners: {
             click: this.onFullSearchHandler,
-            scope: this
-          }
-        }));
-      }
-      if (epsitecConfig.featureQueryBuilder) {
-        buttons.push(Ext.create('Ext.Button', {
-          text: '',
-          iconCls: 'icon-filter',
-          listeners: {
-            click: this.onQueryBuildHandler,
             scope: this
           }
         }));

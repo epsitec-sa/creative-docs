@@ -17,6 +17,7 @@ using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
 
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
@@ -82,14 +83,13 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			var dataSetMetadata = database.DataSetMetadata;
 			var sorters = SorterIO.ParseSorters (caches, database, rawSorters);
 			var filter = FilterIO.ParseFilter (businessContext, caches, database, rawFilters);
-			var query = FilterIO.ParseQuery (businessContext, caches, database, rawQuery);
 
-			var accessor = EntityExtractor.CreateAccessor (userManager, dataSetAccessorGetter, database, sorters, filter, query, customizer);
+			var accessor = EntityExtractor.CreateAccessor (userManager, dataSetAccessorGetter, database, sorters, filter, rawQuery, customizer);
 
 			return new EntityExtractor (database, dataSetMetadata, accessor);
 		}
 
-		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, Filter query, System.Action<DataContext, Request, AbstractEntity> customizer)
+		private static DataSetAccessor CreateAccessor(UserManager userManager, System.Func<Database, DataSetAccessor> dataSetAccessorGetter, Database database, IEnumerable<ColumnRef<EntityColumnSort>> sorters, EntityFilter filter, string queryName, System.Action<DataContext, Request, AbstractEntity> customizer)
 		{
 			var dataSetMetadata = database.DataSetMetadata;
 
@@ -99,8 +99,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			settings.Sort.Clear ();
 			settings.Sort.AddRange (sorters);
 			settings.Filter = filter;
-			settings.Query = query;
 
+			if(queryName != null)
+			{
+				settings.ActiveQuery = settings.AvailableQueries.Where (q => q.Name == queryName).First ();
+			}
+			
 			session.SetDataSetSettings (dataSetMetadata, settings);
 
 			DataSetAccessor accessor = null;

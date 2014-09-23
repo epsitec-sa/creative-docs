@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	using Database = Core.Databases.Database;
 	using Epsitec.Cresus.Core.Library;
+	using Epsitec.Cresus.Core.Entities;
 
 	/// <summary>
 	/// This module is used to retrieve data about the databases, such as the list of defined
@@ -58,9 +59,31 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			//            ColumnIO class.
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
-			// - query:   The query, in the format used by FilterIO class.
+			// - query:   The query name (filter name) to load from user datasetsettings
 			Get["/get/{name}"] = p =>
 				this.Execute (context => this.GetEntities (context, p));
+
+			// Provide user Queries
+			// URL arguments:
+			// - name:    The DRUID of the dataset whose definition to return, in the format used
+			//            by the DataIO class.
+			// GET arguments:
+			//
+			Get["/query/{name}/load"] = p =>
+				this.Execute (context => this.LoadQueries (context, p));
+
+			// Create and persist a query filter for further use for current user
+			// URL arguments:
+			// - name:    The DRUID of the dataset whose definition to return, in the format used
+			//            by the DataIO class.
+			// 
+			// Post arguments:
+			// - columns: The id of the columns whose data to return, in the format used by the
+			//            ColumnIO class.
+			// - query:   The query, in the format used by FilterIO class.
+			// - name:    The query name to persist
+			Post["/query/{name}/save"] = p =>
+				this.Execute (context => this.SaveQuery (context, p));
 
 			// Gets the index of an entity within a database.
 			// URL arguments:
@@ -244,6 +267,68 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
+		}
+
+		private Response SaveQuery(BusinessContext businessContext, dynamic parameters)
+		{	
+			var workerApp	    = WorkerApp.Current;
+			var caches			= this.CoreServer.Caches;		
+			var databaseManager = this.CoreServer.DatabaseManager;
+			var userManager		= workerApp.UserManager;
+			
+			string rawDatabaseId = parameters.name;
+			string queryName    = Request.Query.name;
+
+			if(queryName == null)
+			{
+				return new Response ()
+				{
+					StatusCode = HttpStatusCode.BadRequest
+				};
+			}
+
+			var databaseId		= DataIO.ParseDruid (rawDatabaseId);
+			var database		= databaseManager.GetDatabase (databaseId);
+			var dataset         = database.DataSetMetadata;
+			var settings        = userManager.ActiveSession.GetDataSetSettings (dataset);
+
+			string rawQuery   = Tools.GetOptionalParameter (Request.Query.query);
+			string rawColumns = Request.Query.columns;
+			
+			var query = FilterIO.ParseQuery (businessContext, caches, database, rawQuery);
+			query.Name = queryName;
+			settings.AvailableQueries.Add (query);
+			userManager.ActiveSession.SetDataSetSettings (dataset, settings);
+
+			return new Response ()
+			{
+				StatusCode = HttpStatusCode.OK
+			};
+		}
+
+		private Response LoadQueries(BusinessContext businessContext, dynamic parameters)
+		{
+			var workerApp	    = WorkerApp.Current;
+			var caches			= this.CoreServer.Caches;
+			var databaseManager = this.CoreServer.DatabaseManager;
+			var userManager		= workerApp.UserManager;
+
+			string rawDatabaseId = parameters.name;
+			var databaseId		= DataIO.ParseDruid (rawDatabaseId);
+			var database		= databaseManager.GetDatabase (databaseId);
+			var dataset         = database.DataSetMetadata;
+			var settings        = userManager.ActiveSession.GetDataSetSettings (dataset);
+			var seq				= Enumerable.Range (0, settings.AvailableQueries.Count).Select(x => x);
+			var queries         = settings.AvailableQueries.Select(q => q.Name.ToSimpleText ()).ToArray();
+			var content         = new Dictionary<string, object> ();
+			
+			foreach(var num in seq)
+			{
+				content.Add (Convert.ToString(num), queries[num]);
+			}
+			
+
+			return CoreResponse.Success (content);
 		}
 
 		private Response GetEntityIndex(BusinessContext businessContext, dynamic parameters)
