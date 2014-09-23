@@ -45,8 +45,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#region IDirty Members
 		public bool InUse
 		{
-			get;
-			set;
+			get
+			{
+				return this.inUse;
+			}
+			set
+			{
+				//?if (this.inUse != value)
+				{
+					this.inUse = value;
+					this.UpdateToolbar ();
+				}
+			}
 		}
 
 		public bool DirtyData
@@ -789,14 +799,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateCommand (Res.Commands.Timeline.Last,  sel, this.LastEventIndex);
 			this.UpdateCommand (Res.Commands.Timeline.Now,   sel, this.NowEventIndex);
 
-			this.toolbar.SetEnable (Res.Commands.Timeline.Date, true);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Date, this.inUse);
 
-			this.toolbar.SetEnable (Res.Commands.Timeline.New, !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
-			this.toolbar.SetEnable (Res.Commands.Timeline.Delete, this.HasSelectedEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.New,    this.inUse && !this.objectGuid.IsEmpty && this.SelectedTimestamp.HasValue);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Delete, this.inUse && this.HasSelectedEvent);
 
-			this.toolbar.SetEnable (Res.Commands.Timeline.Deselect, sel != -1);
-			this.toolbar.SetEnable (Res.Commands.Timeline.Copy, this.HasSelectedEvent);
-			this.toolbar.SetEnable (Res.Commands.Timeline.Paste, this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Deselect, this.inUse && sel != -1);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Copy,     this.inUse && this.HasSelectedEvent);
+			this.toolbar.SetEnable (Res.Commands.Timeline.Paste,    this.inUse && this.accessor.Clipboard.HasEvent);
 		}
 
 		private void UpdateCommand(Command command, int selectedCell, int? newSelection)
@@ -1063,5 +1073,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private TimelineMode					timelineMode;
 		private Guid							objectGuid;
 		private DataObject						obj;
+		private bool							inUse;
 	}
 }

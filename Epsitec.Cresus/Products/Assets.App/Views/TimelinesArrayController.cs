@@ -68,8 +68,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#region IDirty Members
 		public bool InUse
 		{
-			get;
-			set;
+			get
+			{
+				return this.inUse;
+			}
+			set
+			{
+				//?if (this.inUse != value)
+				{
+					this.inUse = value;
+					this.UpdateToolbar ();
+				}
+			}
 		}
 
 		public bool DirtyData
@@ -1366,14 +1376,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactEnable = !this.nodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.nodeGetter.IsAllExpanded;
 
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.First, compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Prev, compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Next, expandEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Last, expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.First, this.inUse && compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Prev,  this.inUse && compactEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Next,  this.inUse && expandEnable);
+			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Last,  this.inUse && expandEnable);
 
-			this.assetsToolbar.SetEnable (Res.Commands.Assets.New,      true);
-			this.assetsToolbar.SetEnable (Res.Commands.Assets.Delete,   this.SelectedObject != null);
-			this.assetsToolbar.SetEnable (Res.Commands.Assets.Deselect, this.selectedRow != -1);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.New,      this.inUse);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.Delete,   this.inUse && this.SelectedObject != null);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.Deselect, this.inUse && this.selectedRow != -1);
 
 			//	Mise à jour de la toolbar des timelines.
 			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
@@ -1384,31 +1394,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateTimelineCommand (Res.Commands.Timelines.Next,  this.selectedColumn, this.NextColumnIndex);
 			this.UpdateTimelineCommand (Res.Commands.Timelines.Last,  this.selectedColumn, this.LastColumnIndex);
 
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.New,                    !this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Delete,                 !this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Preview,   this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Fix,       this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.ToExtra,   this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Unpreview, this.HasAmortizationsOper);
-			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Delete,    this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.New,                     this.inUse && !this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Delete,                  this.inUse && !this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Preview,   this.inUse &&  this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Fix,       this.inUse &&  this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.ToExtra,   this.inUse &&  this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Unpreview, this.inUse &&  this.HasAmortizationsOper);
+			this.timelinesToolbar.SetVisibility (Res.Commands.Timelines.Amortizations.Delete,    this.inUse &&  this.HasAmortizationsOper);
 
 			if (this.HasAmortizationsOper)
 			{
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Preview,   true);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Fix,       true);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.ToExtra,   this.IsToExtraPossible);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Unpreview, true);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Delete,    true);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Preview,   this.inUse);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Fix,       this.inUse);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.ToExtra,   this.inUse && this.IsToExtraPossible);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Unpreview, this.inUse);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Amortizations.Delete,    this.inUse);
 			}
 			else
 			{
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.New,      this.selectedColumn != -1 && this.HasSelectedTimeline);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Delete,   this.HasSelectedEvent);
-				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Deselect, this.selectedColumn != -1);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.New,      this.inUse && this.selectedColumn != -1 && this.HasSelectedTimeline);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Delete,   this.inUse && this.HasSelectedEvent);
+				this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Deselect, this.inUse && this.selectedColumn != -1);
 			}
 
-			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Copy,  this.HasSelectedEvent);
-			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Paste, this.accessor.Clipboard.HasEvent);
+			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Copy,  this.inUse && this.HasSelectedEvent);
+			this.timelinesToolbar.SetEnable (Res.Commands.Timelines.Paste, this.inUse && this.accessor.Clipboard.HasEvent);
 		}
 
 		private void UpdateAssetsCommand(Command command, int currentSelection, int? newSelection)
@@ -1745,5 +1755,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private int											selectedRow;
 		private int											selectedColumn;
 		private Guid										rootGuid;
+		private bool										inUse;
 	}
 }

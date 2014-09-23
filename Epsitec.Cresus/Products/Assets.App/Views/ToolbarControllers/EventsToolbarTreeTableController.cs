@@ -37,8 +37,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#region IDirty Members
 		public bool InUse
 		{
-			get;
-			set;
+			get
+			{
+				return this.inUse;
+			}
+			set
+			{
+				//?if (this.inUse != value)
+				{
+					this.inUse = value;
+					this.UpdateToolbar ();
+				}
+			}
 		}
 
 		public bool DirtyData
@@ -289,13 +299,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateSelCommand (Res.Commands.Events.Next,  row, this.NextRowIndex);
 			this.UpdateSelCommand (Res.Commands.Events.Last,  row, this.LastRowIndex);
 
-			this.toolbar.SetEnable (Res.Commands.Events.New,      true);
-			this.toolbar.SetEnable (Res.Commands.Events.Delete,   row != -1);
-			this.toolbar.SetEnable (Res.Commands.Events.Deselect, row != -1);
+			this.toolbar.SetEnable (Res.Commands.Events.New,      this.inUse);
+			this.toolbar.SetEnable (Res.Commands.Events.Delete,   this.inUse && row != -1);
+			this.toolbar.SetEnable (Res.Commands.Events.Deselect, this.inUse && row != -1);
 
-			this.toolbar.SetEnable (Res.Commands.Events.Copy,   this.IsCopyEnable);
-			this.toolbar.SetEnable (Res.Commands.Events.Paste,  this.accessor.Clipboard.HasEvent);
-			this.toolbar.SetEnable (Res.Commands.Events.Export, true);
+			this.toolbar.SetEnable (Res.Commands.Events.Copy,   this.inUse && this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Events.Paste,  this.inUse && this.accessor.Clipboard.HasEvent);
+			this.toolbar.SetEnable (Res.Commands.Events.Export, this.inUse);
 		}
 
 		private void CreateEvent(System.DateTime date, string buttonName)
@@ -370,5 +380,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private Guid								objectGuid;
 		private DataObject							obj;
+		private bool								inUse;
 	}
 }
