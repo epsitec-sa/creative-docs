@@ -1363,7 +1363,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void UpdateToolbar()
 		{
 			//	Mise à jour de la toolbar des objets.
-			this.assetsToolbar.SetActiveState (Res.Commands.Assets.Filter, !this.rootGuid.IsEmpty);
+			this.assetsToolbar.SetActiveState (Res.Commands.AssetsLeft.Filter, !this.rootGuid.IsEmpty);
 
 			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.First, this.selectedRow, this.FirstRowIndex);
 			this.UpdateAssetsCommand (Res.Commands.AssetsLeft.Prev,  this.selectedRow, this.PrevRowIndex);

@@ -61,6 +61,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
+				PreferredWidth = 190,
+			};
+
+			this.splitter = new VSplitter
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 10,
 			};
 
 			this.eventsFrameBox = new FrameBox
@@ -677,6 +685,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.closeButton   .Visibility = false;
 
 			this.listFrameBox          .Visibility = true;
+			this.splitter              .Visibility = false;
 			this.timelineFrameBox      .Visibility = true;
 			this.editFrameBox          .Visibility = this.isEditing;
 			this.timelinesArrayFrameBox.Visibility = false;
@@ -704,6 +713,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (!this.isShowEvents && !this.isEditing)
 			{
 				this.listFrameBox  .Visibility = true;
+				this.splitter      .Visibility = false;
 				this.eventsFrameBox.Visibility = false;
 				this.editFrameBox  .Visibility = false;
 
@@ -712,17 +722,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else if (this.isShowEvents && !this.isEditing)
 			{
 				this.listFrameBox  .Visibility = true;
+				this.splitter      .Visibility = true;
 				this.eventsFrameBox.Visibility = true;
 				this.editFrameBox  .Visibility = false;
 
 				this.listFrameBox.Dock           = DockStyle.Left;
-				this.listFrameBox.PreferredWidth = 190;
+				//?this.listFrameBox.PreferredWidth = 190;
 
 				this.eventsFrameBox.Dock = DockStyle.Fill;
 			}
 			else if (this.isEditing)
 			{
 				this.listFrameBox  .Visibility = false;
+				this.splitter      .Visibility = false;
 				this.eventsFrameBox.Visibility = true;
 				this.editFrameBox  .Visibility = true;
 
@@ -749,6 +761,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.closeButton   .Visibility = false;
 
 			this.listFrameBox          .Visibility = false;
+			this.splitter              .Visibility = false;
 			this.timelineFrameBox      .Visibility = false;
 			this.editFrameBox          .Visibility = this.isEditing;
 			this.timelinesArrayFrameBox.Visibility = true;
@@ -818,6 +831,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly ObjectEditor						objectEditor;
 
 		private FrameBox									listFrameBox;
+		private VSplitter									splitter;
 		private FrameBox									timelineFrameBox;
 		private FrameBox									eventsFrameBox;
 		private FrameBox									timelinesArrayFrameBox;

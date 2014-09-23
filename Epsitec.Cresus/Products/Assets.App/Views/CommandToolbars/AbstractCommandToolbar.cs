@@ -156,11 +156,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected FrameBox CreateSeparator(int superficiality)
+		protected void CreateSeparator(int superficiality)
 		{
 			//	Crée un séparateur sous la forme d'une petite barre verticale, qui
 			//	pourra apparaître ou disparaître selon le choix du "magic layout engine".
 			var size = this.toolbar.PreferredHeight;
+			const int verticalGap = 4;
 
 			var sep = new FrameBox
 			{
@@ -168,11 +169,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Dock          = DockStyle.None,
 				PreferredSize = new Size (1, size),
 				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
-				BackColor     = ColorManager.SeparatorColor,
 				Index         = superficiality,
 			};
 
-			return sep;
+			//	C'est un peu lourd, mais c'est le seul moyen que j'ai trouvé pour avoir
+			//	de petites marges en haut et en bas du séparateur.
+			new FrameBox
+			{
+				Parent          = sep,
+				Dock            = DockStyle.Top,
+				PreferredHeight = verticalGap,
+			};
+
+			new FrameBox
+			{
+				Parent          = sep,
+				Dock            = DockStyle.Top,
+				PreferredHeight = size-verticalGap-verticalGap,
+				BackColor       = ColorManager.SeparatorColor,
+			};
 		}
 
 		protected void CreateSajex(int width, int superficiality)

@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
 	/// Choix d'un filtre dans la base de données des groupes.
+	/// On y accède à partir du bouton "trombone".
 	/// </summary>
 	public class FilterPopup : AbstractPopup
 	{
