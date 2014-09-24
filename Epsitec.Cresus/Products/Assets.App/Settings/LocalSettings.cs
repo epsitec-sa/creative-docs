@@ -47,6 +47,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.ExportPdfProfile  = PdfExportProfile.Default;
 
 			LocalSettings.AccountsImportFilename = null;
+
+			LocalSettings.SplitterAssetsEventPos    = 190;
+			LocalSettings.SplitterAssetsMultiplePos = 180;
 		}
 
 
@@ -96,6 +99,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static JsonExportProfile				ExportJsonProfile;
 		public static PdfExportProfile				ExportPdfProfile;
 		public static string						AccountsImportFilename;
+
+		public static int							SplitterAssetsEventPos;
+		public static int							SplitterAssetsMultiplePos;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}

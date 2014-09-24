@@ -39,19 +39,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		#region IDirty Members
-		public bool InUse
-		{
-			get
-			{
-				return this.inUse;
-			}
-			set
-			{
-				this.inUse = value;
-				this.UpdateToolbar ();
-			}
-		}
-
 		public bool DirtyData
 		{
 			get;
@@ -415,18 +402,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			bool compactEnable = !this.NodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.NodeGetter.IsAllExpanded;
 
-			this.toolbar.SetEnable (Res.Commands.Assets.CompactAll, this.inUse && compactEnable);
-			this.toolbar.SetEnable (Res.Commands.Assets.CompactOne, this.inUse && compactEnable);
-			this.toolbar.SetEnable (Res.Commands.Assets.ExpandOne,  this.inUse && expandEnable);
-			this.toolbar.SetEnable (Res.Commands.Assets.ExpandAll,  this.inUse && expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.CompactAll, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.CompactOne, compactEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.ExpandOne,  expandEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.ExpandAll,  expandEnable);
 
-			this.toolbar.SetEnable (Res.Commands.Assets.New,      this.inUse);
-			this.toolbar.SetEnable (Res.Commands.Assets.Delete,   this.inUse && row != -1);
-			this.toolbar.SetEnable (Res.Commands.Assets.Deselect, this.inUse && row != -1);
+			this.toolbar.SetEnable (Res.Commands.Assets.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Assets.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Assets.Deselect, row != -1);
 
-			this.toolbar.SetEnable (Res.Commands.Assets.Copy,   this.inUse && this.IsCopyEnable);
-			this.toolbar.SetEnable (Res.Commands.Assets.Paste,  this.inUse && this.accessor.Clipboard.HasObject (this.baseType));
-			this.toolbar.SetEnable (Res.Commands.Assets.Export, this.inUse);
+			this.toolbar.SetEnable (Res.Commands.Assets.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Assets.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.Assets.Export, true);
 		}
 
 		protected override bool IsCopyEnable
@@ -452,6 +439,5 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private Timestamp?							selectedTimestamp;
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;
-		private bool								inUse;
 	}
 }

@@ -168,22 +168,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.timelinesArrayController.InUse)
+				if (this.timelinesArrayController.DirtyData)
 				{
-					if (this.timelinesArrayController.DirtyData)
-					{
-						this.timelinesArrayController.UpdateData ();
-						this.timelinesArrayController.SelectedGuid      = this.selectedGuid;
-						this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
+					this.timelinesArrayController.UpdateData ();
+					this.timelinesArrayController.SelectedGuid      = this.selectedGuid;
+					this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
 
-						this.timelinesArrayController.DirtyData = false;
-					}
-					else if (this.timelinesArrayController.SelectedGuid      != this.selectedGuid     ||
-							 this.timelinesArrayController.SelectedTimestamp != this.selectedTimestamp)
-					{
-						this.timelinesArrayController.SelectedGuid      = this.selectedGuid;
-						this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
-					}
+					this.timelinesArrayController.DirtyData = false;
+				}
+				else if (this.timelinesArrayController.SelectedGuid      != this.selectedGuid     ||
+							this.timelinesArrayController.SelectedTimestamp != this.selectedTimestamp)
+				{
+					this.timelinesArrayController.SelectedGuid      = this.selectedGuid;
+					this.timelinesArrayController.SelectedTimestamp = this.selectedTimestamp;
 				}
 			}
 
@@ -309,8 +306,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeGeometry()
 		{
-			this.timelinesArrayController.InUse = true;
-
 			this.editFrameBox.Visibility = this.isEditing;
 			this.timelinesArrayFrameBox.Visibility = true;
 

@@ -122,27 +122,23 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.DataChanged ();
 			}
 
-			this.listController.InUse = true;
 			this.editFrameBox.Visibility = false;
 
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.listController.InUse)
+				this.listController.UpdateGraphicMode ();
+
+				if (this.listController.DirtyData)
 				{
-					this.listController.UpdateGraphicMode ();
+					this.listController.UpdateData ();
+					this.listController.SelectedGuid = this.selectedGuid;
 
-					if (this.listController.DirtyData)
-					{
-						this.listController.UpdateData ();
-						this.listController.SelectedGuid = this.selectedGuid;
-
-						this.listController.DirtyData = false;
-					}
-					else if (this.listController.SelectedGuid != this.selectedGuid)
-					{
-						this.listController.SelectedGuid = this.selectedGuid;
-					}
+					this.listController.DirtyData = false;
+				}
+				else if (this.listController.SelectedGuid != this.selectedGuid)
+				{
+					this.listController.SelectedGuid = this.selectedGuid;
 				}
 			}
 

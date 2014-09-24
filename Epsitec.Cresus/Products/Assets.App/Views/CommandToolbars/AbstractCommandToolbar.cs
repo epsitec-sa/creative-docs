@@ -62,10 +62,18 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Cherche le widget ayant la plus grande surface.
 			var targets = this.commandDispatcher.FindVisuals (e.Command)
+				.Where (x => !x.ActualBounds.IsEmpty)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
-			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
+			if (targets.Any ())
+			{
+				return targets.FirstOrDefault () as Widget;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		public virtual void CreateUI(Widget parent)
@@ -144,7 +152,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (size, size),
 				CommandObject = command,
 				Index         = superficiality,
-				Name = (AbstractCommandToolbar.toto++).ToString (),  // TODO: Debug à supprimer dès que possible !
 			};
 		}
 
@@ -235,7 +242,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			foreach (var widget in this.toolbar.Children.Widgets.Where (x => x.Dock == DockStyle.None))
 			{
 				widget.SetManualBounds (Rectangle.Empty);
-				widget.Visibility = false;  // (*)
 			}
 
 			//	Cherche le superficiality maximal permettant de tout afficher dans
@@ -259,7 +265,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 						var rect = new Rectangle (x, 0, widget.PreferredWidth, widget.PreferredHeight);
 						widget.SetManualBounds (rect);
-						widget.Visibility = true;  // (*)
 
 						x += widget.PreferredWidth + widget.Margins.Right;
 					}
@@ -271,8 +276,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 					superficiality--;  // on essaie à nouveau avec moins de widgets
 				}
 			}
-
-			// (*)	Utile pour le système qui retrouve le widget associé à une commande.
 		}
 
 		private int MaxSuperficiality
@@ -324,6 +327,5 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected FrameBox						toolbar;
 		protected bool							adjustRequired;
-		private static int toto;  // TODO: Debug à supprimer dès que possible !
 	}
 }

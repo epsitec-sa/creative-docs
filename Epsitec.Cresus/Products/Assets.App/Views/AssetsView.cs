@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
@@ -51,6 +52,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
+			switch (this.mainToolbar.ViewMode)
+			{
+				case ViewMode.Single:
+					this.CreateUISingle (parent);
+					break;
+
+				case ViewMode.Event:
+					this.CreateUIEvent (parent);
+					break;
+
+				case ViewMode.Multiple:
+					this.CreateUIMultiple (parent);
+					break;
+			}
+		}
+
+		private void CreateUISingle(Widget parent)
+		{
 			var topBox = new FrameBox
 			{
 				Parent  = parent,
@@ -61,60 +80,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent = topBox,
 				Dock   = DockStyle.Fill,
-				PreferredWidth = 190,
-			};
-
-			this.splitter = new VSplitter
-			{
-				Parent         = topBox,
-				Dock           = DockStyle.Left,
-				PreferredWidth = 10,
-			};
-
-			this.eventsFrameBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.editFrameBox = new FrameBox
-			{
-				Parent         = topBox,
-				Dock           = DockStyle.Right,
-				PreferredWidth = AbstractView.editionWidth,
-				BackColor      = ColorManager.GetBackgroundColor (),
-			};
-
-			this.timelinesArrayFrameBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
 			};
 
 			this.timelineFrameBox = new FrameBox
 			{
-				Parent = parent,
-				Dock   = DockStyle.Bottom,
+				Parent  = parent,
+				Dock    = DockStyle.Bottom,
 				Margins = new Margins (0, 0, 10, 0),
 			};
 
 			this.listController.CreateUI (this.listFrameBox);
 			this.timelineController.CreateUI (this.timelineFrameBox);
-			this.eventsController.CreateUI (this.eventsFrameBox);
-			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
-			this.objectEditor.CreateUI (this.editFrameBox);
 
-			this.closeButton = new IconButton
-			{
-				Parent        = parent,
-				IconUri       = Misc.GetResourceIconUri ("TreeTable.Close"),
-				Anchor        = AnchorStyles.TopRight,
-				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
-				Margins       = new Margins (0, 0, TopTitle.height, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.closeButton, Res.Strings.AssetsView.EventsClose.Tooltip.ToString ());
-
+			this.CreateUIEdit (topBox);
 			this.DeepUpdateUI ();
 
 			//	Connexion des événements de la liste des objets à gauche.
@@ -178,6 +156,94 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartEdit ();
 				};
 			}
+		}
+
+		private void CreateUIEvent(Widget parent)
+		{
+			var topBox = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+			};
+
+			this.listFrameBox = new FrameBox
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Fill,
+				PreferredWidth = LocalSettings.SplitterAssetsEventPos,
+			};
+
+			this.splitter = new VSplitter
+			{
+				Parent         = topBox,
+				Dock           = DockStyle.Left,
+				PreferredWidth = 10,
+			};
+
+			this.eventsFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.listController.CreateUI (this.listFrameBox);
+			this.eventsController.CreateUI (this.eventsFrameBox);
+
+			this.closeButton = new IconButton
+			{
+				Parent        = parent,
+				IconUri       = Misc.GetResourceIconUri ("TreeTable.Close"),
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.TopRight,
+				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
+				Margins       = new Margins (0, 0, TopTitle.height, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.closeButton, Res.Strings.AssetsView.EventsClose.Tooltip.ToString ());
+
+			this.CreateUIEdit (topBox);
+			this.DeepUpdateUI ();
+
+			this.splitter.SplitterDragged += delegate
+			{
+				LocalSettings.SplitterAssetsEventPos = (int) this.listFrameBox.PreferredWidth;
+			};
+
+			//	Connexion des événements de la liste des objets à gauche.
+			{
+				this.listController.SelectedRowChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterListChanged ();
+					}
+				};
+
+				this.listController.RowDoubleClicked += delegate
+				{
+					this.OnListDoubleClicked ();
+				};
+
+				this.listController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
+				{
+					this.OnUpdateAfterObjectCreate (guid);
+				};
+
+				this.listController.UpdateAfterDelete += delegate
+				{
+					this.OnUpdateAfterObjectDelete ();
+				};
+
+				this.listController.UpdateView += delegate (object sender)
+				{
+					this.UpdateUI ();
+				};
+
+				this.listController.ChangeView += delegate (object sender, ViewType viewType)
+				{
+					this.OnChangeView (viewType);
+				};
+			}
 
 			//	Connexion des événements de la liste des événements.
 			{
@@ -205,6 +271,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
+			this.closeButton.Clicked += delegate
+			{
+				this.OnCloseColumn ();
+			};
+		}
+
+		private void CreateUIMultiple(Widget parent)
+		{
+			this.timelinesArrayFrameBox = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
+
+			this.CreateUIEdit (parent);
+			this.DeepUpdateUI ();
+
 			//	Connexion des événements du tableau des objets et timelines.
 			{
 				this.timelinesArrayController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
@@ -225,6 +310,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnStartEdit ();
 				};
 			}
+		}
+
+		private void CreateUIEdit(Widget parent)
+		{
+			this.editFrameBox = new FrameBox
+			{
+				Parent         = parent,
+				Dock           = DockStyle.Right,
+				PreferredWidth = AbstractView.editionWidth,
+				BackColor      = ColorManager.GetBackgroundColor (),
+			};
+
+			this.objectEditor.CreateUI (this.editFrameBox);
 
 			//	Connexion des événements de l'éditeur.
 			{
@@ -254,11 +352,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.DataChanged ();
 				};
 			}
-
-			this.closeButton.Clicked += delegate
-			{
-				this.OnCloseColumn ();
-			};
 		}
 
 
@@ -311,7 +404,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Met à jour les données des différents contrôleurs.
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.listController.InUse)
+				if (this.mainToolbar.ViewMode == ViewMode.Single ||
+					this.mainToolbar.ViewMode == ViewMode.Event)
 				{
 					this.listController.UpdateGraphicMode ();
 
@@ -341,7 +435,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				if (this.timelineController.InUse)
+				if (this.mainToolbar.ViewMode == ViewMode.Single)
 				{
 					if (this.timelineController.DirtyData)
 					{
@@ -357,7 +451,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				if (this.eventsController.InUse)
+				if (this.mainToolbar.ViewMode == ViewMode.Event)
 				{
 					if (this.eventsController.DirtyData)
 					{
@@ -373,7 +467,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				if (this.timelinesArrayController.InUse)
+				if (this.mainToolbar.ViewMode == ViewMode.Multiple)
 				{
 					if (this.timelinesArrayController.DirtyData)
 					{
@@ -658,64 +752,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeGeometry()
 		{
-			switch (this.mainToolbar.ViewMode)
+			if (this.mainToolbar.ViewMode == ViewMode.Event)
 			{
-				case ViewMode.Single:
-					this.UpdateSingleGeometry ();
-					break;
-
-				case ViewMode.Event:
-					this.UpdateEventGeometry ();
-					break;
-
-				case ViewMode.Multiple:
-					this.UpdateMultipleGeometry ();
-					break;
+				this.UpdateEventGeometry ();
 			}
-		}
 
-		private void UpdateSingleGeometry()
-		{
-			this.listController          .InUse = true;
-			this.eventsController        .InUse = false;
-			this.timelineController      .InUse = true;
-			this.timelinesArrayController.InUse = false;
-
-			this.eventsFrameBox.Visibility = false;
-			this.closeButton   .Visibility = false;
-
-			this.listFrameBox          .Visibility = true;
-			this.splitter              .Visibility = false;
-			this.timelineFrameBox      .Visibility = true;
-			this.editFrameBox          .Visibility = this.isEditing;
-			this.timelinesArrayFrameBox.Visibility = false;
-
-			this.listFrameBox.Dock = DockStyle.Fill;
-
-			this.editFrameBox.Dock = DockStyle.Right;
+			this.editFrameBox.Visibility = this.isEditing;
 		}
 
 		private void UpdateEventGeometry()
 		{
-			this.listController          .InUse = true;
-			this.eventsController        .InUse = true;
-			this.timelineController      .InUse = false;
-			this.timelinesArrayController.InUse = false;
-
-			this.timelineFrameBox      .Visibility = false;
-			this.timelinesArrayFrameBox.Visibility = false;
-
-			//-if (this.isEditing)
-			//-{
-			//-	this.isShowEvents = true;
-			//-}
-
 			if (!this.isShowEvents && !this.isEditing)
 			{
 				this.listFrameBox  .Visibility = true;
 				this.splitter      .Visibility = false;
 				this.eventsFrameBox.Visibility = false;
-				this.editFrameBox  .Visibility = false;
 
 				this.listFrameBox.Dock = DockStyle.Fill;
 			}
@@ -724,23 +775,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.listFrameBox  .Visibility = true;
 				this.splitter      .Visibility = true;
 				this.eventsFrameBox.Visibility = true;
-				this.editFrameBox  .Visibility = false;
 
-				this.listFrameBox.Dock           = DockStyle.Left;
-				//?this.listFrameBox.PreferredWidth = 190;
-
-				this.eventsFrameBox.Dock = DockStyle.Fill;
+				this.listFrameBox.Dock = DockStyle.Left;
 			}
 			else if (this.isEditing)
 			{
 				this.listFrameBox  .Visibility = false;
 				this.splitter      .Visibility = false;
 				this.eventsFrameBox.Visibility = true;
-				this.editFrameBox  .Visibility = true;
-
-				this.eventsFrameBox.Dock = DockStyle.Fill;
-
-				this.editFrameBox.Dock = DockStyle.Right;
 			}
 			else
 			{
@@ -748,25 +790,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.closeButton.Visibility = this.isShowEvents || this.isEditing;
-		}
-
-		private void UpdateMultipleGeometry()
-		{
-			this.listController          .InUse = false;
-			this.eventsController        .InUse = false;
-			this.timelineController      .InUse = false;
-			this.timelinesArrayController.InUse = true;
-
-			this.eventsFrameBox.Visibility = false;
-			this.closeButton   .Visibility = false;
-
-			this.listFrameBox          .Visibility = false;
-			this.splitter              .Visibility = false;
-			this.timelineFrameBox      .Visibility = false;
-			this.editFrameBox          .Visibility = this.isEditing;
-			this.timelinesArrayFrameBox.Visibility = true;
-
-			this.editFrameBox.Dock = DockStyle.Right;
 		}
 
 

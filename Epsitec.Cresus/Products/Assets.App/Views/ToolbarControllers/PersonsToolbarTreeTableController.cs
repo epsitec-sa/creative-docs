@@ -35,12 +35,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		#region IDirty Members
-		public bool InUse
-		{
-			get;
-			set;
-		}
-
 		public bool DirtyData
 		{
 			get;

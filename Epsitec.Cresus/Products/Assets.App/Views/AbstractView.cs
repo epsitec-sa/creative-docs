@@ -67,7 +67,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CloseUI()
 		{
-			this.accessor.EditionAccessor.CancelObjectEdition ();
+			Timestamp? newTimestamp;
+			this.accessor.EditionAccessor.SaveObjectEdition (out newTimestamp);
+
+			//?this.accessor.EditionAccessor.CancelObjectEdition ();
 		}
 
 		public virtual AbstractViewState		ViewState
