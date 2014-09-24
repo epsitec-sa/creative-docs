@@ -8786,6 +8786,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>RecipientQuery</c> field.
+		///	designer:fld/LVOA03/LVO243
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO243]")]
+		public global::System.Byte[] RecipientQuery
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[LVO243]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.RecipientQuery;
+				if (oldValue != value || !this.IsFieldDefined("[LVO243]"))
+				{
+					this.OnRecipientQueryChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[LVO243]", oldValue, value);
+					this.OnRecipientQueryChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -8805,6 +8827,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSharingChanged(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
 		partial void OnIsGroupedByHouseholdChanging(bool oldValue, bool newValue);
 		partial void OnIsGroupedByHouseholdChanged(bool oldValue, bool newValue);
+		partial void OnRecipientQueryChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnRecipientQueryChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

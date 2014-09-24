@@ -192,7 +192,7 @@
     <Compile Include="Owin\OwinServer.cs" />
     <Compile Include="Owin\Startup.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
-    <Compile Include="Results\IdValueResult.cs" />
+    <Compile Include="Results\QueryResult.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
     <Compile Include="Core\PropertyAutoCreator\AutoCreator.cs" />

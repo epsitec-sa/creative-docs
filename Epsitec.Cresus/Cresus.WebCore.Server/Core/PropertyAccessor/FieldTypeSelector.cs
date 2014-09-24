@@ -3,6 +3,7 @@
 using Epsitec.Common.Types;
 
 using System;
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
@@ -58,6 +59,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 			else if (FieldTypeSelector.IsTimeType (type))
 			{
 				return FieldType.Time;
+			}
+			else if (FieldTypeSelector.IsStringList (type))
+			{
+				return FieldType.StringCollection;
 			}
 			else
 			{
@@ -137,6 +142,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.PropertyAccessor
 		{
 			return type == typeof (Time)
 				|| type == typeof (Time?);
+		}
+
+		private static bool IsStringList(Type type)
+		{
+			return typeof (List<string>).IsAssignableFrom (type);
 		}
 
 

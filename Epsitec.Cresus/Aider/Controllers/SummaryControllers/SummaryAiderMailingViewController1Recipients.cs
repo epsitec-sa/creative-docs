@@ -33,6 +33,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon ("Data.AiderMailing")
 				.Title ("Détails")
 				.Text (x => x.GetRecipientsOverview ())
+				.EnableActionMenu<ActionAiderMailingViewController18AddQueryExtraction> ()
 				.WithSpecialController (typeof (EditionAiderMailingViewController1Mailing));
 
 			wall.AddBrick (p => p.RecipientGroups)

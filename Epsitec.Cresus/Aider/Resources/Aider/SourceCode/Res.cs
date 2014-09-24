@@ -2542,6 +2542,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RecipientGroups = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 14);
 				//	designer:cap/LVOR03
 				public static readonly global::Epsitec.Common.Support.Druid RecipientHouseholds = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 27);
+				//	designer:cap/LVO243
+				public static readonly global::Epsitec.Common.Support.Druid RecipientQuery = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 130);
 				//	designer:cap/LVA3I
 				public static readonly global::Epsitec.Common.Support.Druid Sharing = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 579);
 			}
