@@ -225,10 +225,14 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The collection of visuals matching the commande.</returns>
 		public IEnumerable<Visual> FindVisuals(Command command)
 		{
+			//	As the records use weak references to point to visuals, these might well
+			//	be 'dead' (attached to no window) and thus we must make sure that we do
+			//	not return them:
+
 			return from record in this.records
 				   where record.Command == command
 				   let visual = record.Visual
-				   where visual != null
+				   where visual != null && visual.Window != null
 				   select visual;
 		}
 

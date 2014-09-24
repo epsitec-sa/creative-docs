@@ -62,18 +62,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Cherche le widget ayant la plus grande surface.
 			var targets = this.commandDispatcher.FindVisuals (e.Command)
-				.Where  (x => x.Window != null)  // TODO: voir (*)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
 			return targets.FirstOrDefault () as Widget ?? e.Source as Widget;
 		}
-
-		// (*)	Cette correction provisoire ne devrait pas être nécessaire. Les boutons
-		//		appartenant à des toolbars supprimées continuent d'être trouvés par
-		//		FindVisuals ! Est-ce moi qui supprime mal les widgets d'une toolbar,
-		//		ou le bug est-il ailleurs ???
-
 
 		public virtual void CreateUI(Widget parent)
 		{
@@ -95,7 +88,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				};
 			}
 		}
-
 
 		public void SetVisibility(Command command, bool visibility)
 		{
