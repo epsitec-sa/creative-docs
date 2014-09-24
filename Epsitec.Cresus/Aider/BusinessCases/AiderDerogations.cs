@@ -91,7 +91,7 @@ namespace Epsitec.Aider.BusinessCases
 
 			if (sender.IsNull ())
 			{
-				var message = "Vous devez d'abord associer votre utilisateur à un secrétariat; la création de la dérogation est impossible.";
+				var message = "Vous devez d'abord associer votre utilisateur à une gestion; la création de la dérogation est impossible.";
 				throw new BusinessRuleException (message);
 			}
 

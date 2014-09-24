@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+
+using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
 using Epsitec.Cresus.Bricks;
@@ -18,7 +21,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> action)
 		{
 			action
-				.Title ("Ajouter un secrétariat")
+				.Title ("Ajouter une gestion")
 				.Field<AiderGroupEntity> ()
 					.Title ("Paroisse de référence")
 					.WithSpecialField<AiderGroupSpecialField<AiderOfficeManagementEntity>> ()

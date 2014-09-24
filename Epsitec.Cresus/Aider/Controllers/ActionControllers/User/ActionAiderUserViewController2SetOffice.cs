@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 using System.Linq;
 using Epsitec.Aider.Entities;
@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return "Définir ou changer le secrétariat";
+			return "Associer à une gestion";
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -38,9 +38,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
 		{
 			form
-				.Title ("Définir le secrétariat")		
+				.Title ("Associer l'utilisateur à une gestion")		
 					.Field<AiderOfficeManagementEntity> ()
-						.Title ("Choix du secrétariat")
+						.Title ("Choix de la gestion")
 						.InitialValue (this.Entity.Office)
 					.End ()
 				.End ();

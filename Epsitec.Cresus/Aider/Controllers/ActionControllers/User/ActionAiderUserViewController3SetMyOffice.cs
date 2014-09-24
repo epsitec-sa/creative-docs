@@ -1,5 +1,6 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
+
 using System.Linq;
 using Epsitec.Aider.Entities;
 
@@ -47,9 +48,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Devenir gestionnaire AIDER pour un secrétariat")		
+				.Title ("Devenir gestionnaire AIDER pour une gestion")		
 					.Field<AiderOfficeManagementEntity> ()
-						.Title ("Choix du secrétariat")
+						.Title ("Choix de la gestion")
 						.InitialValue (initialOffice)
 					.End ()
 				.End ();
