@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Export.Helpers
 {
-	public static class String
+	public static class StringHelpers
 	{
 		public static string ToCamelCase(this string text)
 		{

@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
-	public class SingleAccountsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
+	public class SingleAccountsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public SingleAccountsTreeTableFiller(DataAccessor accessor, INodeGetter<TreeNode> nodeGetter)
+		public SingleAccountsTreeTableFiller(DataAccessor accessor, INodeGetter<GuidNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
 		}
 
+
+		public BaseType							BaseType;
 
 		public override SortingInstructions		DefaultSorting
 		{
@@ -40,8 +41,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Number, TreeTableColumnType.Tree,   100, Res.Strings.SingleAccountTreeTableFiller.Number.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,   TreeTableColumnType.String, 300, Res.Strings.SingleAccountTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,          TreeTableColumnType.String, SingleAccountsTreeTableFiller.numberWidth));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,            TreeTableColumnType.String, SingleAccountsTreeTableFiller.titleWidth));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountCategory, TreeTableColumnType.String, SingleAccountsTreeTableFiller.categoryWidth));
 
 				return columns.ToArray ();
 			}
@@ -53,6 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			content.Columns.Add (new TreeTableColumnItem ());
 			content.Columns.Add (new TreeTableColumnItem ());
+			content.Columns.Add (new TreeTableColumnItem ());
 
 			for (int i=0; i<count; i++)
 			{
@@ -62,23 +65,36 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var node  = this.nodeGetter[firstRow+i];
-				var level = node.Level;
-				var type  = node.Type;
-				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
+				var obj   = this.accessor.GetObject (this.BaseType, node.Guid);
 
-				var number = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
-				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);
+				var number   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number, inputValue: true);
+				var name     = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name);
+				var category = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AccountCategory);
+
+				string c = category.HasValue ? EnumDictionaries.GetAccountCategoryName ((AccountCategory) category) : null;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellTree (level, type, number, cellState);
-				var cell2 = new TreeTableCellString (name, cellState);
+				var cell1 = new TreeTableCellString (number, cellState);
+				var cell2 = new TreeTableCellString (name,   cellState);
+				var cell3 = new TreeTableCellString (c,      cellState);
 
 				content.Columns[0].AddRow (cell1);
 				content.Columns[1].AddRow (cell2);
+				content.Columns[2].AddRow (cell3);
 			}
 
 			return content;
 		}
+
+
+		public const int TotalWidth =
+			SingleAccountsTreeTableFiller.numberWidth +
+			SingleAccountsTreeTableFiller.titleWidth +
+			SingleAccountsTreeTableFiller.categoryWidth;
+
+		private const int numberWidth   = 100;
+		private const int titleWidth    = 300;
+		private const int categoryWidth =  80;
 	}
 }

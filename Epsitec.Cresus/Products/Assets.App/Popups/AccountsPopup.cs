@@ -27,14 +27,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.controller = new NavigationTreeTableController();
 
-			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, this.baseType, primaryNodeGetter);
+			this.nodeGetter = new AccountsFilterNodeGetter (this.accessor, primaryNodeGetter);
 
-			this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter)
+			{
+				BaseType = this.baseType,
+			};
 
-			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
+			this.nodeGetter.SetParams (this.baseType, null, null);
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedAccount);
+
+			if (this.visibleSelectedRow == -1)
+			{
+				this.selectedGuid = Guid.Empty;
+			}
+			else
+			{
+				this.selectedGuid = this.nodeGetter[this.visibleSelectedRow].Guid;
+			}
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -50,11 +61,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var node = this.nodeGetter[this.visibleSelectedRow];
 				this.OnNavigate (this.GetNumber (node.Guid));
 				this.ClosePopup ();
-			};
-
-			this.controller.TreeButtonClicked += delegate (object sender, int row, NodeType type)
-			{
-				this.OnCompactOrExpand (this.controller.TopVisibleRow + row);
 			};
 		}
 
@@ -93,52 +99,79 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
-			//?this.nodeGetter.SetParams (null, TreeTableFiller<TreeNode>.GetSortingInstructions (this.controller));
+			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
+
+			this.CreateFilterUI (this.mainFrameBox);
 
 			this.UpdateController ();
+		}
+
+		private void CreateFilterUI(Widget parent)
+		{
+			//	Crée la partie inférieure permettant la saisie d'un filtre.
+			const int margin = 5;
+			const int height = 20;
+
+			var footer = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = margin + height + margin,
+				Dock            = DockStyle.Bottom,
+				Padding         = new Margins (margin),
+				BackColor       = ColorManager.WindowBackgroundColor,
+			};
+
+			var text = "Chercher";
+
+			new StaticText
+			{
+				Parent           = footer,
+				Text             = text,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth   = 10 + text.GetTextWidth (),
+				Margins          = new Margins (0, 10, 0, 0),
+				Dock             = DockStyle.Left,
+			};
+
+			var field = new TextField
+			{
+				Parent           = footer,
+				Dock             = DockStyle.Fill,
+			};
+
+			var clear = new IconButton
+			{
+				Parent        = footer,
+				IconUri       = Misc.GetResourceIconUri ("Field.Delete"),
+				AutoFocus     = false,
+				Dock          = DockStyle.Right,
+				PreferredSize = new Size (height, height),
+				Margins       = new Margins (2, 0, 0, 0),
+				Enable        = false,
+			};
+
+			//	Connexions des événements.
+
+			field.TextChanged += delegate
+			{
+				this.nodeGetter.SetParams (this.baseType, null, field.Text);
+				this.visibleSelectedRow = this.nodeGetter.SearchIndex (this.selectedGuid);
+				this.UpdateController ();
+				clear.Enable = !string.IsNullOrEmpty (field.Text);
+			};
+
+			clear.Clicked += delegate
+			{
+				field.Text = null;
+			};
+
+			field.Focus ();
 		}
 
 
 		private string GetNumber(Guid guid)
 		{
 			return AccountsLogic.GetNumber (this.accessor, this.baseType, guid);
-		}
-
-		private void OnCompactOrExpand(int row)
-		{
-			//	Etend ou compacte une ligne (inverse son mode actuel).
-			var guid = this.SelectedGuid;
-
-			this.nodeGetter.CompactOrExpand (row);
-			this.UpdateController ();
-
-			this.SelectedGuid = guid;
-		}
-
-		private Guid SelectedGuid
-		{
-			//	Retourne le Guid de l'objet actuellement sélectionné.
-			get
-			{
-				int sel = this.visibleSelectedRow;
-				if (sel != -1 && sel < this.nodeGetter.Count)
-				{
-					return this.nodeGetter[sel].Guid;
-				}
-				else
-				{
-					return Guid.Empty;
-				}
-			}
-			//	Sélectionne l'objet ayant un Guid donné. Si la ligne correspondante
-			//	est cachée, on est assez malin pour sélectionner la prochaine ligne
-			//	visible, vers le haut.
-			set
-			{
-				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (value);
-				this.UpdateController ();
-			}
 		}
 
 
@@ -172,13 +205,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return 100 + 300;  // colonnes numéro et compte
+				return SingleAccountsTreeTableFiller.TotalWidth;
 			}
 		}
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<TreeNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -192,14 +225,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int rowHeight        = 18;
+		private const int rowHeight = 18;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
-		private readonly GroupTreeNodeGetter			nodeGetter;
-		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
+		private readonly AccountsFilterNodeGetter		nodeGetter;
+		private readonly AbstractTreeTableFiller<GuidNode> dataFiller;
 
 		private int										visibleSelectedRow;
+		private Guid									selectedGuid;
 	}
 }

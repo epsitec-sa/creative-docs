@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 
@@ -278,7 +279,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				if (this.lines[index].StartsWith (key))
 				{
-					return this.lines[index].Substring (key.Length).Trim ();
+					var text = this.lines[index].Substring (key.Length).Trim ();
+					text = TextLayout.ConvertToTaggedText (text);
+					return text;
 				}
 
 				if (this.lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrée suivante ?

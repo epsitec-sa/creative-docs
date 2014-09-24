@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
@@ -374,7 +373,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					else
 					{
 						var color = Color.FromBrightness (0.75);
-						var v = 0.75 + this.level * 0.05;  // 0.75 .. 0.95
+						var v = System.Math.Min (0.75 + this.level * 0.05, 1.0);  // 0.75 .. 0.95
 						return color.ForceV (v);
 					}
 				}
