@@ -41,6 +41,7 @@ function() {
     labelExportDefinitions: null,
     getUrl: null,
     exportUrl: null,
+    queryName: null,
     fullSearchWindow: null,
     queryBuilder: null,
     isSearching: false,
@@ -354,6 +355,9 @@ function() {
         proxy: {
           type: 'ajax',
           url: url,
+          extraParams : {
+            query : this.queryName
+          },
           reader: {
             type: 'json',
             root: 'content.entities',
@@ -519,13 +523,12 @@ function() {
         var druid = Epsitec.Cresus.Core.getApplication().tabManager.currentTab;
 
         var queryStore = Ext.create('Ext.data.Store', {
-            fields: ['id','name'],
+            fields: ['Id','Name','RawQuery'],
             proxy: {
                 type: 'ajax',
-                url: '/proxy/database/query/' + druid + '/load',
+                url: '/proxy/query/' + druid + '/load',
                 reader: {
-                  type : 'json',
-                  root : 'content'
+                  type : 'json'
                 },
             },
             autoLoad:true
@@ -535,21 +538,23 @@ function() {
           hideLabel: true,
           store: queryStore,
           typeAhead: true,
-          valueField: 'name',
+          valueField: 'Name',
+          displayField: 'Name',
           queryMode: 'local',
           triggerAction: 'all',
           emptyText: 'Choix de la présentation',
           selectOnFocus: true,
-          width: 150,
+          width: 250,
           indent: true,
           listeners: {
            scope: this,
            'select': function (c, r) {
-              //TODO: reload grid with query
-              //this.loadConfig(r[0].data);
+              this.queryName =  r[0].data.Name;
+              this.store.proxy.setExtraParam("query", this.queryName);
+              this.onRefreshHandler();
              }
            }
-         }));
+        }));
 
         buttons.push(Ext.create('Ext.Button', {
           text: '',
@@ -660,7 +665,7 @@ function() {
       if (epsitecConfig.featureQuickSearch) {
         buttons.push({
           xtype: 'textfield',
-          width: 150,
+          width: 250,
           emptyText: Epsitec.Texts.getSearchLabel(),
           name: 'quicksearch',
           listeners: {
@@ -1089,6 +1094,10 @@ function() {
         key = 'filter';
         value = this.filters.buildQuery(filters).filter;
         parameters.push([key, value]);
+      }
+
+      if (this.queryName !== undefined) {
+        parameters.push(["query", this.queryName]);
       }
 
       return Epsitec.Tools.createUrl(base, parameters);

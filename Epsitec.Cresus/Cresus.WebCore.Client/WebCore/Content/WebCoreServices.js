@@ -65,9 +65,18 @@ angular.module('webCore.Services', [])
         //{druid}/query/{name}/save
         return $http({
           method: 'POST',
-          url: '/proxy/database/query/' + druid + '/save' +
+          url: '/proxy/query/' + druid + '/save' +
             '?columns=' + columns + '&query=' +
             query + '&name=' + queryName
+        });
+      };
+
+      var deleteQuery = function(druid, queryName) {
+        //{druid}/query/{name}/save
+        return $http({
+          method: 'POST',
+          url: '/proxy/query/' + druid + '/delete' +
+            '?name=' + queryName
         });
       };
 
@@ -75,7 +84,7 @@ angular.module('webCore.Services', [])
         ///query/{name}/load
         return $http({
           method: 'GET',
-          url: '/proxy/database/query/' + druid + '/load'
+          url: '/proxy/query/' + druid + '/load'
         });
       };
 
@@ -106,7 +115,10 @@ angular.module('webCore.Services', [])
           return testQuery(druid, columns, query);
         },
         saveQuery: function(druid, queryName, columns, query) {
-          return saveQuery(druid,queryName,columns,query);
+          return saveQuery(druid, queryName, columns, query);
+        },
+        deleteQuery: function(druid, queryName) {
+          return deleteQuery(druid, queryName);
         },
         loadQueries: function(druid) {
           return loadQueries(druid);

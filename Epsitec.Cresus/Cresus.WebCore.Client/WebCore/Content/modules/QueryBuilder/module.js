@@ -23,7 +23,7 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           }];
 
           scope.enum = {};
-
+          scope.fieldEnumMap = {};
           scope.comparators = [{
             name: 'égal a',
             value: 'eq'
@@ -52,12 +52,10 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           };
 
           scope.addGroup = function() {
+            scope.group.operator = scope.operators[0];
             scope.group.rules.push({
               group: {
-                operator: {
-                  name: 'ET',
-                  value: 'and'
-                },
+                operator: scope.operators[0],
                 rules: []
               }
             });
@@ -65,12 +63,13 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
 
           scope.setType = function(rule) {
             angular.forEach(scope.fields, function(field) {
-              if (field.id == rule.field.id) {
+              if (field.id == rule.field) {
                 rule.type = field.type;
 
                 if (rule.type === 'list') {
                   webCoreServices.fieldValues(field.enumId).success(
                     function(data, status, headers) {
+                      scope.fieldEnumMap[field.id] = field.enumId; 
                       scope.enum[field.enumId] = data.content.values;
                     });
                 }
@@ -84,7 +83,7 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           };
 
           scope.removeGroup = function() {
-            "group" in scope.$parent && scope.$parent.group.rules.splice(
+            return "group" in scope.$parent && scope.$parent.group.rules.splice(
               scope.$parent.$index, 1);
           };
 

@@ -102,7 +102,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			if(queryName != null)
 			{
-				settings.ActiveQuery = settings.AvailableQueries.Where (q => q.Name == queryName).First ();
+				var query = settings.AvailableQueries.Where (q => q.Name == queryName).FirstOrDefault ();
+				if(query!= null)
+				{
+					settings.ActiveQuery = query;
+				}
 			}
 			
 			session.SetDataSetSettings (dataSetMetadata, settings);

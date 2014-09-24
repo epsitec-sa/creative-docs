@@ -122,10 +122,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				else
 				{
 					//Create simple filter and add it to existing filter node
-					var field = (Dictionary<string, object>) type["field"];
+					var field = (string) type["field"];
 					var entityFilter = new EntityFilter (entityId);
 
-					var column = ColumnIO.ParseColumn (caches, database, (string) field["id"]);
+					var column = ColumnIO.ParseColumn (caches, database, field);
 					var columnId = column.MetaData.Id;
 					var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, type);
 					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);

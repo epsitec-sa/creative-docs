@@ -162,6 +162,7 @@
     <Compile Include="Core\Databases\Column.cs" />
     <Compile Include="NancyModules\Constants.cs" />
     <Compile Include="Core\Databases\Database.cs" />
+    <Compile Include="NancyModules\QueryModule.cs" />
     <Compile Include="NancyModules\DownloadsModule.cs" />
     <Compile Include="NancyModules\JobsModule.cs" />
     <Compile Include="Owin\Hubs\StatusBarClient.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Owin\OwinServer.cs" />
     <Compile Include="Owin\Startup.cs" />
     <Compile Include="Resources\Cresus.WebCore.Server\SourceCode\Res.cs" />
+    <Compile Include="Results\IdValueResult.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="Core\AbstractLambdaCache`1.cs" />
     <Compile Include="Core\PropertyAutoCreator\AutoCreator.cs" />

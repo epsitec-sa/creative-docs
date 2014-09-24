@@ -11,9 +11,16 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     $scope.columns = [];
     $scope.availableQueries = [];
 
-    webCoreServices.loadQueries(druid).success(function(data, status, headers) {
-      $scope.availableQueries = data.content;
-    });
+    var loadAvailableQueries = function () {
+      webCoreServices.loadQueries(druid).success(function(data, status,
+        headers) {
+
+        data.shift();
+        $scope.availableQueries = data;
+      });
+    };
+
+    loadAvailableQueries();
 
     webCoreServices.database(druid).success(function(data, status, headers) {
       $scope.database = data.content;
@@ -46,6 +53,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       $scope.ready = true;
     });
 
+
     $scope.addSelectedColumn = function(column) {
       $scope.columns.push(column);
     };
@@ -71,7 +79,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
         });
     };
 
-    $scope.saveQuery = function (queryName) {
+    $scope.saveQuery = function(queryName) {
       var query = [];
       query.push($scope.filter.group);
 
@@ -79,11 +87,25 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
         return c.name;
       }).join(';');
 
-      webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(query)).success(function() {
-        webCoreServices.loadQueries(druid).success(function(data, status, headers) {
-          $scope.availableQueries = data.content;
-        });
+      webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
+        query)).success(function() {
+          loadAvailableQueries();
       });
+    };
+
+    $scope.deleteQuery = function(queryName) {
+      webCoreServices.deleteQuery(druid, queryName).success(function() {
+        loadAvailableQueries();
+      });
+    };
+
+    $scope.loadQuery = function(query) {
+      var group = JSON.parse(query)[0];
+      var filter = {
+        group: group
+      };
+
+      $scope.filter = filter;
     };
 
     function htmlEntities(str) {
@@ -93,27 +115,22 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     function computedForHuman(group) {
       if (!group) return "";
       for (var str = "(", i = 0; i < group.rules.length; i++) {
-        i > 0 && (str += " <strong>" + group.operator.name + "</strong> ");
-        str += group.rules[i].group ?
-          computedForHuman(group.rules[i].group) :
-          group.rules[i].field.name + " " + htmlEntities(group.rules[i].comparison) +
-          " " + group.rules[i].value;
+
+        if (i > 0) {
+          str += " <strong>" + group.operator.name + "</strong> ";
+        }
+        if (group.rules[i].group) {
+          str += computedForHuman(group.rules[i].group);
+        } else {
+          str += group.rules[i].field +
+                " " +
+                htmlEntities(group.rules[i].comparison) +
+                " " +
+                group.rules[i].value;
+        }
       }
 
       return str + ")";
-    }
-
-    function computedQuery(group) {
-      if (!group) return "";
-      for (var str = "{'op':'" + group.operator.value + "'", i = 0; i < group
-        .rules.length; i++) {
-        str += group.rules[i].group ?
-          computedQuery(group.rules[i].group) :
-          "{field':'" + group.rules[i].field.id + "','comparison':'" + group.rules[
-            i].comparison + "','value':' " + group.rules[i].value + "'}";
-      }
-
-      return str + "}";
     }
 
     $scope.json = null;
