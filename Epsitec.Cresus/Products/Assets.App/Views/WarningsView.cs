@@ -181,14 +181,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateToolbars()
-		{
-			this.mainToolbar.SetVisibility (Res.Commands.Main.Edit,   false);
-			this.mainToolbar.SetVisibility (Res.Commands.Edit.Accept, false);
-			this.mainToolbar.SetVisibility (Res.Commands.Edit.Cancel, false);
-		}
-
-
 		private readonly WarningsToolbarTreeTableController	listController;
 
 		private FrameBox									listFrameBox;

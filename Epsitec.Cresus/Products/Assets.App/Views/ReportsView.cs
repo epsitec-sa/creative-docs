@@ -305,8 +305,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateToolbars()
+		protected override void UpdateToolbars()
 		{
+			base.UpdateToolbars ();
+
 			this.toolbar.Visibility = (this.report != null);
 
 			bool isCompactEnable    = this.IsCompactEnable;

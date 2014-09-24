@@ -301,37 +301,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateToolbars()
-		{
-			var edit   = this.commandContext.GetCommandState (Res.Commands.Main.Edit);
-			var accept = this.commandContext.GetCommandState (Res.Commands.Edit.Accept);
-			var cancel = this.commandContext.GetCommandState (Res.Commands.Edit.Cancel);
-
-			if (this.isEditing)
-			{
-				edit.Visibility  = true;
-				edit.Enable      = true;
-				edit.ActiveState = ActiveState.Yes;
-
-				accept.Visibility = true;
-				cancel.Visibility = true;
-				accept.Enable     = true;
-				cancel.Enable     = true;
-			}
-			else
-			{
-				edit.Visibility  = this.IsEditingPossible;
-				edit.Enable      = this.IsEditingPossible;
-				edit.ActiveState = ActiveState.No;
-
-				accept.Visibility = false;
-				cancel.Visibility = false;
-				accept.Enable     = false;
-				cancel.Enable     = false;
-			}
-		}
-
-		private bool IsEditingPossible
+		protected override bool IsEditingPossible
 		{
 			get
 			{
@@ -346,7 +316,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox									listFrameBox;
 		private FrameBox									editFrameBox;
 
-		private bool										isEditing;
 		private Guid										selectedGuid;
 	}
 }

@@ -301,6 +301,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		protected virtual void UpdateToolbars()
+		{
+			var edit   = this.commandContext.GetCommandState (Res.Commands.Main.Edit);
+			var accept = this.commandContext.GetCommandState (Res.Commands.Edit.Accept);
+			var cancel = this.commandContext.GetCommandState (Res.Commands.Edit.Cancel);
+
+			if (this.isEditing)
+			{
+				edit.Visibility  = true;
+				edit.Enable      = true;
+				edit.ActiveState = ActiveState.Yes;
+
+				accept.Visibility = true;
+				accept.Enable     = true;
+
+				cancel.Visibility = true;
+				cancel.Enable     = true;
+			}
+			else
+			{
+				edit.Visibility  = this.IsEditingPossible;
+				edit.Enable      = this.IsEditingPossible;
+				edit.ActiveState = ActiveState.No;
+
+				accept.Visibility = false;
+				accept.Enable     = false;
+
+				cancel.Visibility = false;
+				cancel.Enable     = false;
+			}
+		}
+
+		protected virtual bool IsEditingPossible
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 		protected void UpdateWarningsRedDot()
 		{
 			//	Met à jour le nombre d'avertissements dans la pastille rouge sur le
@@ -357,5 +398,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected readonly SafeCounter			ignoreChanges;
 
 		protected BaseType						baseType;
+		protected bool							isEditing;
 	}
 }
