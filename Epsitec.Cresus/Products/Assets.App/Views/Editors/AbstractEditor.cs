@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			}
 		}
 
-		public virtual bool						HasError
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 		public abstract PageType PageType
 		{
 			get;
@@ -56,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 
 		protected void StartEdition(Guid objectGuid, Timestamp? timestamp)
 		{
-			if (!this.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.OnDataChanged ();
 			}

@@ -374,7 +374,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			Timestamp? curTimestamp = this.accessor.EditionAccessor.EditedTimestamp;
 			Timestamp? newTimestamp;
 
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition (out newTimestamp))
+			if (this.accessor.EditionAccessor.SaveObjectEdition (out newTimestamp))
 			{
 				this.DataChanged ();
 
@@ -807,7 +807,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				accept.Visibility = true;
 				cancel.Visibility = true;
-				accept.Enable     = !this.objectEditor.HasError;
+				accept.Enable     = true;
 				cancel.Enable     = true;
 			}
 			else

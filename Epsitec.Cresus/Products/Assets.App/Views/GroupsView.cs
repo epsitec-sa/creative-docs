@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.DataChanged ();
 			}
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			if (!this.objectEditor.HasError && this.accessor.EditionAccessor.SaveObjectEdition ())
+			if (this.accessor.EditionAccessor.SaveObjectEdition ())
 			{
 				this.DataChanged ();
 			}
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				accept.Visibility = true;
 				cancel.Visibility = true;
-				accept.Enable     = !this.objectEditor.HasError;
+				accept.Enable     = true;
 				cancel.Enable     = true;
 			}
 			else

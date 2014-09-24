@@ -31,21 +31,6 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 		#endregion
 
 
-		public override bool					HasError
-		{
-			get
-			{
-				if (this.currentPage == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.currentPage.HasError;
-				}
-			}
-		}
-
 		public ObjectField						FocusField
 		{
 			get
