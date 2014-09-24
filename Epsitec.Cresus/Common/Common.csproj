@@ -180,6 +180,7 @@
     <Compile Include="Debug\FailureException.cs" />
     <Compile Include="Debug\GeneralExceptionCatcher.cs" />
     <Compile Include="Debug\Profiler.cs" />
+    <Compile Include="Debug\Sos.cs" />
     <Compile Include="Debug\Tracker.cs" />
     <Compile Include="Dialogs\AbstractDialog.cs" />
     <Compile Include="Dialogs\AbstractFileDialog.cs" />
