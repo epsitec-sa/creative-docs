@@ -4,8 +4,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -45,16 +45,34 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			button.Clicked += delegate
 			{
+#if false
 				//	On ferme le popup plus tard, une fois que tout le reste aura été exécuté...
 				Application.QueueAsyncCallback (() => this.ClosePopup ());
+#else
+				//	La commande n'est pas exécutée spontanément. Elle est probablement mangée
+				//	par le CommandDispatcher du Popup. En conséquence, il faut poster un
+				//	événement, qui exécutera la commande lorsque le Popup sera fermé et le
+				//	CommandDispatcher détruit.
+				this.ClosePopup ();
+				this.OnChangeView (command);
+#endif
 			};
 
 			return button;
 		}
 
 
+		#region Events handler
+		private void OnChangeView(Command command)
+		{
+			this.ChangeView.Raise (this, command);
+		}
+
+		public event EventHandler<Command> ChangeView;
+		#endregion
+
+
 		private const int margins    = 5;
 		private const int buttonSize = AbstractCommandToolbar.primaryToolbarHeight;
-
 	}
 }

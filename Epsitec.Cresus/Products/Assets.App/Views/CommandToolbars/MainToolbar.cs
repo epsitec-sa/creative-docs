@@ -251,6 +251,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 
 			popup.Create (target, leftOrRight: false);
+
+			popup.ChangeView += delegate (object sender, Command command)
+			{
+				this.toolbar.ExecuteCommand (command);
+			};
 		}
 
 
