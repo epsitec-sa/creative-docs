@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -166,6 +167,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 
 			field.Focus ();
+		}
+
+
+		[Command (Res.CommandIds.AccountsPopup.Prev)]
+		private void DoPrev()
+		{
+		}
+
+		[Command (Res.CommandIds.AccountsPopup.Prev)]
+		private void DoNext()
+		{
 		}
 
 

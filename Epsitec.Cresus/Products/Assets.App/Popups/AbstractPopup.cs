@@ -17,8 +17,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// A la création, un popup s'attache à la fenêtre parent nommée "PopupParentFrame",
 	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surface.
 	/// </summary>
-	public abstract class AbstractPopup : FrameBox
+	public abstract class AbstractPopup : FrameBox, System.IDisposable
 	{
+		public AbstractPopup()
+		{
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.None);
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
+		}
+
+		public void Dispose()
+		{
+			this.commandDispatcher.Dispose ();
+		}
+
+
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup "dialogue", dont la queue pointera vers le widget target.
@@ -45,6 +57,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			PopupStack.Push (this);
 			this.OpenShortcutsLevel ();
+
+			CommandDispatcher.SetDispatcher (this.mainFrameBox, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 		public void Create(Widget widget, Point targetPos, bool leftOrRight = false)
@@ -647,6 +661,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int						footerHeight   = 30;
 		private const double					frameThickness = 8;
 		private const double					spacing        = 20;
+
+		protected readonly CommandDispatcher	commandDispatcher;
 
 		private Color							backColor = ColorManager.GetBackgroundColor ();
 		private Widget							target;

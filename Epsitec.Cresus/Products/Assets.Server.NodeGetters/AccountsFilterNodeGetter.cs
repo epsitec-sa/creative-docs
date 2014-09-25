@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				var accType = (AccountType) ObjectProperties.GetObjectPropertyInt (obj, this.timestamp, ObjectField.AccountType);
 
-				if (accType == AccountType.Normal)
+				if (accType == AccountType.Normal)  // les autres comptes sont filtrés
 				{
 					if (string.IsNullOrEmpty (this.preprocessFilter))
 					{
