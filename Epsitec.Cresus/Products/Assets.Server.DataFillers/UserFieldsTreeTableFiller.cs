@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var text0 = userField.Name;
 				var text1 = EnumDictionaries.GetFieldTypeName (userField.Type);
-				var text2 = userField.Required ? "Oui" : "Non";
+				var text2 = userField.Required ? Res.Strings.UserFieldsTreeTableFiller.RequiredYes.ToString () : Res.Strings.UserFieldsTreeTableFiller.RequiredNo.ToString ();
 				var text3 = userField.ColumnWidth;
 				var text4 = userField.LineWidth;
 				var text5 = userField.LineCount;
