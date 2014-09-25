@@ -111,6 +111,7 @@
     <Compile Include="Popups\CategoriesPopup.cs" />
     <Compile Include="Popups\CalendarPopup.cs" />
     <Compile Include="Popups\MenuPopup.cs" />
+    <Compile Include="Popups\ReasonClosure.cs" />
     <Compile Include="Popups\StackedControllers\AbstractStackedController.cs" />
     <Compile Include="Popups\StackedControllers\BoolStackedController.cs" />
     <Compile Include="Popups\AmortizationsPopup.cs" />

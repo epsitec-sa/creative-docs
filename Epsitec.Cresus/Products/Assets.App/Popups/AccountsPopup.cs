@@ -38,15 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.nodeGetter.SetParams (this.baseType, null, null);
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedAccount);
-
-			if (this.visibleSelectedRow == -1)
-			{
-				this.selectedGuid = Guid.Empty;
-			}
-			else
-			{
-				this.selectedGuid = this.nodeGetter[this.visibleSelectedRow].Guid;
-			}
+			this.UpdateSelectedGuid ();
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -59,10 +51,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				var node = this.nodeGetter[this.visibleSelectedRow];
-				this.OnNavigate (this.GetNumber (node.Guid));
+				this.OnNavigate (this.SelectedAccount);
 				this.ClosePopup ();
 			};
+		}
+
+
+		private string SelectedAccount
+		{
+			get
+			{
+				var node = this.nodeGetter[this.visibleSelectedRow];
+				return this.GetNumber (node.Guid);
+			}
 		}
 
 
@@ -170,14 +171,26 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		//?[Command (Res.CommandIds.AccountsPopup2.Prev2)]
+		[Command (Res.CommandIds.AccountsPopup.Prev)]
 		private void DoPrev()
 		{
+			if (this.visibleSelectedRow > 0)
+			{
+				this.visibleSelectedRow--;
+				this.UpdateSelectedGuid ();
+				this.UpdateController ();
+			}
 		}
 
-		//?[Command (Res.CommandIds.AccountsPopup2.Prev2)]
+		[Command (Res.CommandIds.AccountsPopup.Next)]
 		private void DoNext()
 		{
+			if (this.visibleSelectedRow < this.nodeGetter.Count-1)
+			{
+				this.visibleSelectedRow++;
+				this.UpdateSelectedGuid ();
+				this.UpdateController ();
+			}
 		}
 
 
@@ -221,6 +234,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private void UpdateSelectedGuid()
+		{
+			if (this.visibleSelectedRow == -1)
+			{
+				this.selectedGuid = Guid.Empty;
+			}
+			else
+			{
+				this.selectedGuid = this.nodeGetter[this.visibleSelectedRow].Guid;
+			}
+		}
+
 		private void UpdateController(bool crop = true)
 		{
 			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
@@ -248,6 +273,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			popup.Navigate += delegate (object sender, string account)
 			{
 				action (account);
+			};
+
+			popup.Closed += delegate (object sender, ReasonClosure raison)
+			{
+				if (raison == ReasonClosure.AcceptKey)
+				{
+					action (popup.SelectedAccount);
+				}
 			};
 		}
 		#endregion

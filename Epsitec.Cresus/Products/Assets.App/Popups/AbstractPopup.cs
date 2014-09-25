@@ -17,17 +17,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// A la création, un popup s'attache à la fenêtre parent nommée "PopupParentFrame",
 	/// qui doit remplir toute la fenêtre. Le popup lui-même occupe toute la surface.
 	/// </summary>
-	public abstract class AbstractPopup : FrameBox, System.IDisposable
+	public abstract class AbstractPopup : FrameBox
 	{
 		public AbstractPopup()
 		{
 			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Secondary, CommandDispatcherOptions.None);
 			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
-		}
-
-		public void Dispose()
-		{
-			this.commandDispatcher.Dispose ();
 		}
 
 
@@ -56,7 +51,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateUI ();
 
 			PopupStack.Push (this);
-			this.OpenShortcutsLevel ();
 
 			CommandDispatcher.SetDispatcher (this.mainFrameBox, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
@@ -83,7 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateUI ();
 
 			PopupStack.Push (this);
-			this.OpenShortcutsLevel ();
 		}
 
 
@@ -177,12 +170,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (0, 0, 0, 0),
 			};
 
-			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.CancelShortcut);
-			button.Shortcuts.Add (Epsitec.Common.Widgets.Feel.Factory.Active.AcceptShortcut);
-
 			ToolTip.Default.SetToolTip (button, "Fermer la fenêtre");
 
-			button.Clicked += delegate
+			button.Clicked += delegate (object sender, MessageEventArgs e)
 			{
 				this.ClosePopup ();
 			};
@@ -445,26 +435,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		[Command (Res.CommandIds.Popup.Accept)]
+		private void DoAccept()
+		{
+			this.ClosePopup (ReasonClosure.AcceptKey);
+		}
 
-		protected void ClosePopup()
+		[Command (Res.CommandIds.Popup.Cancel)]
+		private void DoCancel()
+		{
+			this.ClosePopup (ReasonClosure.CancelKey);
+		}
+
+		protected void ClosePopup(ReasonClosure reason = ReasonClosure.Click)
 		{
 			//	Ferme le popup qui est par-dessus tous les autres.
 			var top = PopupStack.Pop ();
-			top.CloseShortcutsLevel ();
 
 			var parent = top.GetParent ();
 			parent.Children.Remove (top);
 
-			top.OnClosed ();
-		}
+			top.OnClosed (reason);
 
-
-		private void OpenShortcutsLevel()
-		{
-		}
-
-		private void CloseShortcutsLevel()
-		{
+			this.commandDispatcher.Dispose ();
 		}
 
 
@@ -608,7 +601,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected FrameBox GetParent()
 		{
-			//	Retourne le widget ShortcutCatcher qui occupe toute la fenêtre.
+			//	Retourne le widget qui occupe toute la fenêtre.
 			return this.target.GetMainFrameBox ();
 		}
 
@@ -648,12 +641,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public event EventHandler<string> ButtonClicked;
 
 
-		protected void OnClosed()
+		protected void OnClosed(ReasonClosure reason)
 		{
-			this.Closed.Raise (this);
+			this.Closed.Raise (this, reason);
 		}
 
-		public event EventHandler Closed;
+		public event EventHandler<ReasonClosure> Closed;
 		#endregion
 
 

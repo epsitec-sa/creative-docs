@@ -333,6 +333,19 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 160));
 			}
 			
+			public static class Popup
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Popup.Accept, null);
+				}
+				
+				//	designer:cap/JUKS501
+				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
+				//	designer:cap/JUKT501
+				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 189));
+			}
+			
 			public static class Reports
 			{
 				internal static void _Initialize()
@@ -832,6 +845,14 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Paste = 0x7D300014000071L;
 				//	designer:cap/JUK0501
 				public const long Prev = 0x7D3000140000A0L;
+			}
+			
+			public static class Popup
+			{
+				//	designer:cap/JUKS501
+				public const long Accept = 0x7D3000140000BCL;
+				//	designer:cap/JUKT501
+				public const long Cancel = 0x7D3000140000BDL;
 			}
 			
 			public static class Reports
@@ -9478,6 +9499,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Main._Initialize ();
 			Commands.Main.Navigate._Initialize ();
 			Commands.Persons._Initialize ();
+			Commands.Popup._Initialize ();
 			Commands.Reports._Initialize ();
 			Commands.Reports.Period._Initialize ();
 			Commands.Timeline._Initialize ();
