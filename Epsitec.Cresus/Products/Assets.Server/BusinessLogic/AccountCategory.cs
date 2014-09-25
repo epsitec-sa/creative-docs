@@ -6,14 +6,15 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
+	[System.Flags]
 	public enum AccountCategory
 	{
-		Unknown,
+		Unknown      = 0x0000,
 
-		Actif,
-		Passif,
-		Charge,
-		Produit,
-		Exploitation,
+		Actif        = 0x0001,
+		Passif       = 0x0002,
+		Charge       = 0x0004,
+		Produit      = 0x0008,
+		Exploitation = 0x0010,
 	}
 }

@@ -3010,12 +3010,63 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
 						}
 					}
+					//	designer:str/JUKTG01
+					public static global::Epsitec.Common.Types.FormattedText Filter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544861));
+						}
+					}
 					//	designer:str/JUKI001
 					public static global::Epsitec.Common.Types.FormattedText NoAccounts
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544338));
+						}
+					}
+					public static class Category
+					{
+						//	designer:str/JUKVG01
+						public static global::Epsitec.Common.Types.FormattedText Actifs
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544863));
+							}
+						}
+						//	designer:str/JUK0H01
+						public static global::Epsitec.Common.Types.FormattedText Charges
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544864));
+							}
+						}
+						//	designer:str/JUK2H01
+						public static global::Epsitec.Common.Types.FormattedText Exploitations
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544866));
+							}
+						}
+						//	designer:str/JUKUG01
+						public static global::Epsitec.Common.Types.FormattedText Passifs
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544862));
+							}
+						}
+						//	designer:str/JUK1H01
+						public static global::Epsitec.Common.Types.FormattedText Produits
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544865));
+							}
 						}
 					}
 				}
@@ -7243,12 +7294,63 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
 						}
 					}
+					//	designer:str/JUKTG01
+					public static global::Epsitec.Common.Support.Druid Filter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544861);
+						}
+					}
 					//	designer:str/JUKI001
 					public static global::Epsitec.Common.Support.Druid NoAccounts
 					{
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544338);
+						}
+					}
+					public static class Category
+					{
+						//	designer:str/JUKVG01
+						public static global::Epsitec.Common.Support.Druid Actifs
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544863);
+							}
+						}
+						//	designer:str/JUK0H01
+						public static global::Epsitec.Common.Support.Druid Charges
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544864);
+							}
+						}
+						//	designer:str/JUK2H01
+						public static global::Epsitec.Common.Support.Druid Exploitations
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544866);
+							}
+						}
+						//	designer:str/JUKUG01
+						public static global::Epsitec.Common.Support.Druid Passifs
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544862);
+							}
+						}
+						//	designer:str/JUK1H01
+						public static global::Epsitec.Common.Support.Druid Produits
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544865);
+							}
 						}
 					}
 				}

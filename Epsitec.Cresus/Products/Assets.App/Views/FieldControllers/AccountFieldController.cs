@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -193,9 +194,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			//	Affiche le popup pour choisir un compte dans le plan comptable.
 			var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
-			AccountsPopup.Show (this.textField, this.accessor, baseType, this.Value, delegate (string account)
+
+			AccountsPopup.Show (this.textField, this.accessor, baseType, this.Value, LocalSettings.AccountCategories,
+				delegate (string account, AccountCategory categories)
 			{
 				this.Value = account;
+				LocalSettings.AccountCategories = categories;
+
 				this.SetFocus ();
 				this.OnValueEdited (this.Field);
 			});

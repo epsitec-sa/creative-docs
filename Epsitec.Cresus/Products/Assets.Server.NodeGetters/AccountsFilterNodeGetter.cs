@@ -24,11 +24,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(BaseType baseType, Timestamp? timestamp, string filter)
+		public void SetParams(BaseType baseType, Timestamp? timestamp, string filter, AccountCategory categories)
 		{
-			this.baseType  = baseType;
-			this.timestamp = timestamp;
-			this.filter    = filter;
+			this.baseType   = baseType;
+			this.timestamp  = timestamp;
+			this.filter     = filter;
+			this.categories = categories;
 
 			if (string.IsNullOrEmpty (this.filter))
 			{
@@ -84,19 +85,24 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				if (accType == AccountType.Normal)  // les autres comptes sont filtrés
 				{
-					if (string.IsNullOrEmpty (this.preprocessFilter))
-					{
-						this.outputNodes.Add (accountNode);
-					}
-					else
-					{
-						var number = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, ObjectField.Number, inputValue: true);
-						var name   = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, ObjectField.Name);
+					var category = (AccountCategory) ObjectProperties.GetObjectPropertyInt (obj, this.timestamp, ObjectField.AccountCategory);
 
-						if (this.IsMatch (number) ||
-							this.IsMatch (name))
+					if ((this.categories & category) != 0)
+					{
+						if (string.IsNullOrEmpty (this.preprocessFilter))
 						{
 							this.outputNodes.Add (accountNode);
+						}
+						else
+						{
+							var number = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, ObjectField.Number, inputValue: true);
+							var name   = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, ObjectField.Name);
+
+							if (this.IsMatch (number) ||
+							this.IsMatch (name))
+							{
+								this.outputNodes.Add (accountNode);
+							}
 						}
 					}
 				}
@@ -124,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private BaseType						baseType;
 		private Timestamp?						timestamp;
 		private string							filter;
+		private AccountCategory					categories;
 		private string							preprocessFilter;
 	}
 }

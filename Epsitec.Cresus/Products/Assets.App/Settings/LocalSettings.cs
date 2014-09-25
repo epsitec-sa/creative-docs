@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Export;
 
@@ -50,6 +51,12 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			LocalSettings.SplitterAssetsEventPos    = 190;
 			LocalSettings.SplitterAssetsMultiplePos = 180;
+
+			LocalSettings.AccountCategories = AccountCategory.Actif |
+											  AccountCategory.Passif |
+											  AccountCategory.Charge |
+											  AccountCategory.Produit |
+											  AccountCategory.Exploitation;
 		}
 
 
@@ -102,6 +109,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		public static int							SplitterAssetsEventPos;
 		public static int							SplitterAssetsMultiplePos;
+
+		public static AccountCategory				AccountCategories;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 	}
