@@ -134,10 +134,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddPersonSample ("Madame",   "Sylvianne", "Galbato",  "Les Bons Tuyaux SA", "Z.I. Budron 12A",                             "1052", "Le Mont-sur-Lausanne", "Suisse", "021 312 28 29", null,            null,            "sylvianne@lesbonstuyaux.ch");
 			this.AddPersonSample ("Monsieur", "André",     "Mercier",  "Mecatronic SA",      "Y-Parc - Swiss Technopole<br/>Rue Galilée 7", "1400", "Yverdon-les-Bains",    "Suisse", "024 444 11 22", "022 871 98 76", null,            "mercier@mecatronic.ch");
 
-			for (int i=0; i<5000; i++)
-			{
-				this.AddPersonSample ("Monsieur", "Daniel", "Roux-"+i.ToString(), "Epsitec SA", "Rte de Neuchâtel 32", "1400", "Yverdon-les-Bains", "Suisse", "024 444 11 22", "022 871 98 76", null, "roux@epsitec.ch");
-			}
+			//?for (int i=0; i<5000; i++)
+			//?{
+			//?	this.AddPersonSample ("Monsieur", "Daniel", "Roux-"+i.ToString(), "Epsitec SA", "Rte de Neuchâtel 32", "1400", "Yverdon-les-Bains", "Suisse", "024 444 11 22", "022 871 98 76", null, "roux@epsitec.ch");
+			//?}
 		}
 
 

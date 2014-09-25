@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.baseType   = baseType;
 
 			this.levelNodes = new List<LevelNode> ();
+			this.parentChildrens = new Dictionary<Guid, List<ParentNode>> ();
 		}
 
 
@@ -85,6 +86,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				return;
 			}
 
+			this.UpdateParentChildrens ();
+
 			var tree = new TreeNode (null, root);
 			this.Insert (tree);
 
@@ -102,17 +105,46 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
+		private void UpdateParentChildrens()
+		{
+			//	Met à jour le dictionnaire this.parentChildrens.
+			//	key   -> Guid du parent
+			//	value -> liste des ParentNode des enfants
+			this.parentChildrens.Clear ();
+
+			foreach (var node in this.inputNodes.GetNodes ())
+			{
+				if (!node.Parent.IsEmpty)
+				{
+					List<ParentNode> childrens;
+					if (!this.parentChildrens.TryGetValue (node.Parent, out childrens))
+					{
+						//	Nouveau parent inconnu pour lequel on crée une liste
+						//	d'enfants vide.
+						childrens = new List<ParentNode> ();
+						this.parentChildrens[node.Parent] = childrens;
+					}
+
+					childrens.Add (node);  // ajoute l'enfant au parent
+				}
+			}
+		}
+
 		private void Insert(TreeNode tree)
 		{
 			//	Insertion récursive des noeuds dans l'arbre.
-			var childrens = this.Sort (this.inputNodes.GetNodes ().Where (x => x.Parent == tree.Node.Guid));
-
-			foreach (var children in childrens)
+			List<ParentNode> childrens;
+			if (this.parentChildrens.TryGetValue (tree.Node.Guid, out childrens))
 			{
-				var n = new TreeNode (tree, children);
-				tree.Childrens.Add (n);
+				var sortedChildrend = this.Sort (childrens);
 
-				this.Insert (n);
+				foreach (var children in sortedChildrend)
+				{
+					var n = new TreeNode (tree, children);
+					tree.Childrens.Add (n);
+
+					this.Insert (n);
+				}
 			}
 		}
 
@@ -197,6 +229,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly DataAccessor				accessor;
 		private readonly BaseType					baseType;
 		private readonly List<LevelNode>			levelNodes;
+		private readonly Dictionary<Guid, List<ParentNode>> parentChildrens;
 
 		private Guid								rootGuid;
 		private SortingInstructions					sortingInstructions;
