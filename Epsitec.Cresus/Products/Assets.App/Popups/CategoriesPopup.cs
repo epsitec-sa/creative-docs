@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public override void CreateUI()
+		protected override void CreateUI()
 		{
 			this.CreateTitle (Res.Strings.Popup.Categories.Title.ToString ());
 			this.CreateCloseButton ();

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public override void CreateUI()
+		protected override void CreateUI()
 		{
 			var frame = this.CreateFrame (ViewPopup.margins, ViewPopup.margins, ViewPopup.buttonSize*this.ViewCommands.Length, ViewPopup.buttonSize);
 

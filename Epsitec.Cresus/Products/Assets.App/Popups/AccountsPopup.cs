@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AccountsPopup : AbstractPopup
 	{
-		public AccountsPopup(DataAccessor accessor, BaseType baseType, string selectedAccount)
+		private AccountsPopup(DataAccessor accessor, BaseType baseType, string selectedAccount)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public override void CreateUI()
+		protected override void CreateUI()
 		{
 			string title;
 
@@ -170,12 +170,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		[Command (Res.CommandIds.AccountsPopup.Prev)]
+		//?[Command (Res.CommandIds.AccountsPopup2.Prev2)]
 		private void DoPrev()
 		{
 		}
 
-		[Command (Res.CommandIds.AccountsPopup.Prev)]
+		//?[Command (Res.CommandIds.AccountsPopup2.Prev2)]
 		private void DoNext()
 		{
 		}
@@ -234,6 +234,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<string> Navigate;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string selectedAccount, System.Action<string> action)
+		{
+			//	Affiche le popup pour choisir un compte dans le plan comptable.
+			var popup = new AccountsPopup (accessor, baseType, selectedAccount);
+			
+			popup.Create (target, leftOrRight: true);
+			
+			popup.Navigate += delegate (object sender, string account)
+			{
+				action (account);
+			};
+		}
 		#endregion
 
 

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public override void CreateUI()
+		protected override void CreateUI()
 		{
 			int h = SimplePopup.margins + this.RequiredHeight;
 			int w = this.RequiredWidth;

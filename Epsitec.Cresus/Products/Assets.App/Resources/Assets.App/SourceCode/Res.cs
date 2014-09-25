@@ -47,19 +47,6 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172));
 			}
 			
-			public static class AccountsPopup
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (AccountsPopup.Next, null);
-				}
-				
-				//	designer:cap/JUKR501
-				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 187));
-				//	designer:cap/JUKQ501
-				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 186));
-			}
-			
 			public static class Assets
 			{
 				internal static void _Initialize()
@@ -601,14 +588,6 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Next = 0x7D3000140000ABL;
 				//	designer:cap/JUKC501
 				public const long Prev = 0x7D3000140000ACL;
-			}
-			
-			public static class AccountsPopup
-			{
-				//	designer:cap/JUKR501
-				public const long Next = 0x7D3000140000BBL;
-				//	designer:cap/JUKQ501
-				public const long Prev = 0x7D3000140000BAL;
 			}
 			
 			public static class Assets
@@ -9467,7 +9446,6 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Accounts._Initialize ();
-			Commands.AccountsPopup._Initialize ();
 			Commands.Assets._Initialize ();
 			Commands.AssetsLeft._Initialize ();
 			Commands.Categories._Initialize ();
