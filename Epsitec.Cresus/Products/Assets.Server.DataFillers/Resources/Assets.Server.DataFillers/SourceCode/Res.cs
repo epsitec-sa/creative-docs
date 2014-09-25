@@ -19,6 +19,42 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
+			public static class AccountsTreeTableFiller
+			{
+				//	designer:str/KUK8201
+				public static global::Epsitec.Common.Types.FormattedText Category
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544392));
+					}
+				}
+				//	designer:str/KUK6201
+				public static global::Epsitec.Common.Types.FormattedText Number
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544390));
+					}
+				}
+				//	designer:str/KUK7201
+				public static global::Epsitec.Common.Types.FormattedText Title
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391));
+					}
+				}
+				//	designer:str/KUK9201
+				public static global::Epsitec.Common.Types.FormattedText Type
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544393));
+					}
+				}
+			}
+			
 			public static class CategoriesTreeTableFiller
 			{
 				//	designer:str/KUK9001
@@ -729,6 +765,42 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		
 		public static class StringIds
 		{
+			public static class AccountsTreeTableFiller
+			{
+				//	designer:str/KUK8201
+				public static global::Epsitec.Common.Support.Druid Category
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544392);
+					}
+				}
+				//	designer:str/KUK6201
+				public static global::Epsitec.Common.Support.Druid Number
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544390);
+					}
+				}
+				//	designer:str/KUK7201
+				public static global::Epsitec.Common.Support.Druid Title
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544391);
+					}
+				}
+				//	designer:str/KUK9201
+				public static global::Epsitec.Common.Support.Druid Type
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544393);
+					}
+				}
+			}
+			
 			public static class CategoriesTreeTableFiller
 			{
 				//	designer:str/KUK9001
