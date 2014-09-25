@@ -7,8 +7,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Helpers;
-using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
@@ -192,12 +190,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void UpdateController(bool crop = true)
 		{
-			if (this.dataFiller != null)
+			if (this.dataFiller != null && !this.showGraphic)
 			{
 				TreeTableFiller<T>.FillContent (this.treeTableController, this.dataFiller, this.VisibleSelectedRow, crop);
 			}
 
-			if (this.graphicController != null)
+			if (this.graphicController != null && this.showGraphic)
 			{
 				this.graphicController.UpdateController (this.nodeGetter, this.SelectedGuid, crop);
 			}

@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 							var name   = ObjectProperties.GetObjectPropertyString (obj, this.timestamp, ObjectField.Name);
 
 							if (this.IsMatch (number) ||
-							this.IsMatch (name))
+								this.IsMatch (name)   )
 							{
 								this.outputNodes.Add (accountNode);
 							}

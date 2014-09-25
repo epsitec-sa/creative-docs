@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				if (this.showGraphic != value)
 				{
 					this.showGraphic = value;
+					this.UpdateController ();
 					this.OnUpdateView ();
 				}
 			}

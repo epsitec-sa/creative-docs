@@ -251,6 +251,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			base.UpdateToolbar ();
 
 			this.toolbar.SetEnable (Res.Commands.Accounts.DateRange, this.accessor.Mandat.AccountsDateRanges.Count () > 1);
+			this.toolbar.SetActiveState (Res.Commands.Accounts.Graphic, this.showGraphic);
 
 			int row = this.VisibleSelectedRow;
 

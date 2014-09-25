@@ -17,7 +17,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'un compte dans le plan comptable.
+	/// Choix d'un compte dans le plan comptable, avec possibilité de divers filtres.
 	/// </summary>
 	public class AccountsPopup : AbstractPopup
 	{

@@ -254,6 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			popup.ChangeView += delegate (object sender, Command command)
 			{
+				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
 				this.toolbar.ExecuteCommand (command);
 			};
 		}
