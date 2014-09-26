@@ -165,6 +165,12 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.VisibleSelectedRow = -1;
 		}
 
+		[Command (Res.CommandIds.Entries.Export)]
+		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.OnExport (dispatcher, e);
+		}
+
 
 		protected override void ShowContextMenu(Point pos)
 		{

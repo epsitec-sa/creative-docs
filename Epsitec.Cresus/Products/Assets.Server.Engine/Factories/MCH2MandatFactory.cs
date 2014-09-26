@@ -202,11 +202,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddCat ("Immobilier", null, "10", 0.10m, AmortizationType.Linear,
 				Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m,
-				"1000", "1010", "1600", "1600", "6930", "6900", "6900");
+				".10020.01", ".10010.01", ".14040.01", ".14040.01", "0290.3300.40", "9610.3499.00", "9610.3499.00");
 
 			this.AddCat ("Véhicules", null, "20", 0.20m, AmortizationType.Degressive,
 				Periodicity.Annual, ProrataType.Prorata12,  100.0m, 1.0m,
-				"1000", "1010", "1530", "1530", "6920", "6900", "6900");
+				".10020.01", ".10010.01", ".14060.01", ".14060.01", "0290.3300.60", "9610.3499.00", "9610.3499.00");
 		}
 
 

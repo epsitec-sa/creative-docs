@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return new SortingInstructions (ObjectField.EntryDate, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
+				return new SortingInstructions (ObjectField.EntryTitle, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 			}
 		}
 
@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var columns = new List<TreeTableColumnDescription> ();
 
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDate,          TreeTableColumnType.Tree,   100, Res.Strings.EntriesTreeTableFiller.Date.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String,  60, Res.Strings.EntriesTreeTableFiller.Debit.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String,  60, Res.Strings.EntriesTreeTableFiller.Credit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String,  90, Res.Strings.EntriesTreeTableFiller.Debit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String,  90, Res.Strings.EntriesTreeTableFiller.Credit.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryStamp,         TreeTableColumnType.String,  70, Res.Strings.EntriesTreeTableFiller.Stamp.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   300, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   350, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 
