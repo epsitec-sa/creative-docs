@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			if (this.withSamples)
 			{
-				DummyAccounts.AddAccounts (this.accessor.Mandat);
+				DummyAccounts.AddAccounts (this.accessor.Mandat, "monvillage 2014");
 			}
 
 			this.CreateGroupsSamples ();

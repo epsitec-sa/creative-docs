@@ -122,7 +122,8 @@ namespace Epsitec.Cresus.Assets.App
 			var accessor = new DataAccessor(cb);
 			var factory = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (factory != null);
-			factory.Create (accessor, Res.Strings.AssetsApplication.DefaultMandat.ToString (), new System.DateTime (2011, 1, 1), true);
+			factory.Create (accessor, Res.Strings.AssetsApplication.DefaultMandat.ToString (),
+				new System.DateTime (2014, 1, 1), true);
 
 			var ui = new AssetsUI (accessor, this.commandDispatcher, this.commandContext);
 			ui.CreateUI (frame);

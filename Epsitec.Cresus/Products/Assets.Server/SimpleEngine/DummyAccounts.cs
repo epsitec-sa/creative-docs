@@ -11,14 +11,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DummyAccounts
 	{
-		public static void AddAccounts(DataMandat mandat)
+		public static void AddAccounts(DataMandat mandat, string name)
 		{
 			//	On lit un plan comptable placé dans "S:\Epsitec.Cresus\App.CresusAssets\External\Data".
 			//	C'est n'importe quoi, mais ça marche.
 			//	TODO: Hack à supprimer dès que possible !
 
 			var exeRootPath = Globals.Directories.ExecutableRoot;
-			var filename = System.IO.Path.Combine (exeRootPath, "External", "Data", "pme 2011.crp");
+			var filename = System.IO.Path.Combine (exeRootPath, "External", "Data", name+".crp");
 
 			using (var importEngine = new AccountsImport ())
 			{

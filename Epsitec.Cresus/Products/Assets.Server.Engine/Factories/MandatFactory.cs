@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				yield return new MandatFactory
 				{
 					Name = "Pour collectivité publique (MCH2)",
-					IsDefault = true,
 					Create = delegate (DataAccessor accessor, string name, System.DateTime startDate, bool withSamples)
 					{
 						using (var factory = new MCH2MandatFactory (accessor))
