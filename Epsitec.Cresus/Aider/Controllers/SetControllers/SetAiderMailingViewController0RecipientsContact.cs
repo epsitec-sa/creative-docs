@@ -15,6 +15,9 @@ using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Metadata;
+using Epsitec.Cresus.Core.Library.Settings;
 
 
 namespace Epsitec.Aider.Controllers.SetControllers
@@ -47,7 +50,15 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
 				var participation = (AiderMailingParticipantEntity) example;
-				request.AddCondition (dataContext, participation, x => x.Mailing== entity);
+
+				if(entity.RecipientQuery != null)
+				{
+					var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (entity.RecipientQuery);
+					var queryFilter		   = Filter.Restore (queryFilterXml);
+					request.AddCondition (dataContext, participation, queryFilter);
+				}
+			
+				request.AddCondition (dataContext, participation, x => x.Mailing== entity);	
 			});
 		}
 

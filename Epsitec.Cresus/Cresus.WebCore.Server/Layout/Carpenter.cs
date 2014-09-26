@@ -981,7 +981,9 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 
 				case FieldType.Time:
 					return this.BuildTimeField (entity, brick, fieldType, actionFieldType, id);
-
+				
+				case FieldType.StringCollection:
+					return this.BuildStringCollectionField (entity, brick, fieldType, actionFieldType, id);
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -1058,6 +1060,16 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 		{
 			var allowBlank = actionFieldType.IsNullable ();
 			var field = this.BuildField<EnumerationField> (entity, brick, fieldType, id, allowBlank);
+
+			field.TypeName = this.caches.TypeCache.GetId (actionFieldType);
+
+			return field;
+		}
+
+		private StringCollectionField BuildStringCollectionField(AbstractEntity entity, Brick brick, FieldType fieldType, System.Type actionFieldType, string id)
+		{
+			var allowBlank = actionFieldType.IsNullable ();
+			var field = this.BuildField<StringCollectionField> (entity, brick, fieldType, id, allowBlank);
 
 			field.TypeName = this.caches.TypeCache.GetId (actionFieldType);
 

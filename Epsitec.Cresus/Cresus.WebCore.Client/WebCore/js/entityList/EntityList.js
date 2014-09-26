@@ -42,6 +42,8 @@ function() {
     getUrl: null,
     exportUrl: null,
     queryName: null,
+    queryStore: null,
+    databaseDruid: null,
     fullSearchWindow: null,
     queryBuilder: null,
     isSearching: false,
@@ -58,6 +60,21 @@ function() {
       {
         this.selectedColumnId = options.sorterDefinitions[0].name;
       }
+
+      this.getUrl = options.getUrl;
+      this.databaseDruid = this.getCurrentDatabaseDruid();
+
+      this.queryStore = Ext.create('Ext.data.Store', {
+          fields: ['Id','Name','RawQuery'],
+          proxy: {
+              type: 'ajax',
+              url: this.getCurrentQueryStoreUrl (),
+              reader: {
+                type : 'json'
+              },
+          },
+          autoLoad:true
+      });
 
       newOptions = {
         dockedItems: [
@@ -108,6 +125,9 @@ function() {
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
+
+      this.queryStore.proxy.url = this.getCurrentQueryStoreUrl ();
+
       return this;
     },
 
@@ -520,23 +540,10 @@ function() {
     createQueryToolbar: function() {
       if (epsitecConfig.featureQueryBuilder) {
         var buttons = [];
-        var druid = Epsitec.Cresus.Core.getApplication().tabManager.currentTab;
-
-        var queryStore = Ext.create('Ext.data.Store', {
-            fields: ['Id','Name','RawQuery'],
-            proxy: {
-                type: 'ajax',
-                url: '/proxy/query/' + druid + '/load',
-                reader: {
-                  type : 'json'
-                },
-            },
-            autoLoad:true
-        });
 
         buttons.push(Ext.create('Ext.form.field.ComboBox', {
           hideLabel: true,
-          store: queryStore,
+          store: this.queryStore,
           typeAhead: true,
           valueField: 'Name',
           displayField: 'Name',
@@ -1075,6 +1082,21 @@ function() {
         id: row.get('id'),
         summary: row.get('summary')
       };
+    },
+
+    getCurrentDatabaseDruid: function () {
+
+      if(this.getUrl.split('/')[2].split('/') === 'set')
+      {
+        return null;
+      }
+      return '[' + this.getUrl
+                       .split('[')[1]
+                       .split(']')[0] + ']';
+    },
+
+    getCurrentQueryStoreUrl: function () {
+      return '/proxy/query/' + this.getCurrentDatabaseDruid () + '/load';
     },
 
     buildUrlWithSortersAndFilters: function(base) {

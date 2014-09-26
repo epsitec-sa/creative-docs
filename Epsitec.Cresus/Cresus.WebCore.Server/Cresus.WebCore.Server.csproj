@@ -147,6 +147,7 @@
     <Compile Include="Layout\ActionTile.cs" />
     <Compile Include="Layout\AbstractField`1.cs" />
     <Compile Include="Layout\DateTimeField.cs" />
+    <Compile Include="Layout\StringCollectionField.cs" />
     <Compile Include="Layout\TimeField.cs" />
     <Compile Include="Layout\EntityActionColumn.cs" />
     <Compile Include="Layout\DecimalField.cs" />

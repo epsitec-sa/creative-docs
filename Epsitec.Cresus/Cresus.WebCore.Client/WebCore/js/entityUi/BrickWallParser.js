@@ -8,6 +8,7 @@ Ext.require([
   'Epsitec.cresus.webcore.field.EntityCollectionField',
   'Epsitec.cresus.webcore.field.EntityReferenceField',
   'Epsitec.cresus.webcore.field.EnumerationField',
+  'Epsitec.cresus.webcore.field.StringCollectionField',
   'Epsitec.cresus.webcore.plugins.AiderGroupSpecialField',
   'Epsitec.cresus.webcore.tile.CollectionSummaryTile',
   'Epsitec.cresus.webcore.tile.EditionTile',
@@ -240,6 +241,9 @@ function() {
           case 'enumerationField':
             return this.parseEnumerationField(brick);
 
+          case 'stringCollectionField':
+            return this.parseStringCollectionField(brick);
+
           case 'globalWarning':
             return this.parseGlobalWarning(brick);
 
@@ -340,6 +344,13 @@ function() {
         var field = this.parseField(brick);
         field.xtype = 'epsitec.enumerationfield';
         field.enumerationName = brick.enumerationName;
+
+        return field;
+      },
+
+      parseStringCollectionField : function(brick) {
+        var field = this.parseField(brick);
+        field.xtype = 'epsitec.stringcollectionfield';
 
         return field;
       },

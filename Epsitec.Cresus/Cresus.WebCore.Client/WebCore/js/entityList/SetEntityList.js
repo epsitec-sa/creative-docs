@@ -20,6 +20,8 @@ function() {
             options.viewId, options.entityId, 'export/pick'
         )
       };
+
+          
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);

@@ -126,6 +126,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 				case FieldType.EntityReference:
 					return FieldIO.ConvertEntityReferenceToClient (dataContext, value);
+				
+				case FieldType.StringCollection:
+					return FieldIO.ConvertStringCollectionToClient (value);
 
 				default:
 					throw new System.NotImplementedException ();
@@ -191,6 +194,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			var intValue = EnumType.ConvertToInt ((System.Enum) value);
 
 			return InvariantConverter.ToString (intValue);
+		}
+
+		private static object ConvertStringCollectionToClient(object value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+
+			return (IEnumerable<string>) value;
 		}
 
 		private static object ConvertIntegerToClient(object value)

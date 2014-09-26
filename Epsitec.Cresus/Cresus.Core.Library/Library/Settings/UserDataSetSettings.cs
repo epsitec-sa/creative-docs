@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
-		public Filter ActiveQuery
+		public Filter									ActiveQuery
 		{
 			get
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Core.Library.Settings
 			}
 		}
 
-		public IList<Filter> AvailableQueries
+		public IList<Filter>							AvailableQueries
 		{
 			get
 			{

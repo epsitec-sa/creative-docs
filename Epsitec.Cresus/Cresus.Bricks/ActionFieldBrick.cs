@@ -69,11 +69,9 @@ namespace Epsitec.Cresus.Bricks
 			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, tuple));
 		}
 
-		public ActionFieldBrick<T, TField, TParent> WithFavoritesString(IEnumerable<string> value)
+		public ActionFieldBrick<T, TField, TParent> WithStringCollection(IEnumerable<string> value)
 		{
-			var tuple = Tuple.Create ((IEnumerable<string>) value, true);
-
-			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.FavoritesCollection, tuple));
+			return Brick.AddProperty (this, new BrickProperty (BrickPropertyKey.Value, (IEnumerable<string>) value));
 		}
 
 		public ActionFieldBrick<T, TField, TParent> WithDataset(Druid dataSetCommandId)

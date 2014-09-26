@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 	using Database = Core.Databases.Database;
 	using Epsitec.Cresus.Core.Library;
+	using Nancy.Responses;
 
 
 	/// <summary>
@@ -61,6 +62,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// - filter:  The filters, in the format used by FilterIO class.
 			Get["/{viewId}/{entityId}/get/{dataset}"] = p =>
 				this.Execute (context => this.GetEntities (context, p));
+			
+			// Gets the display dataset DRUID
+			// URL arguments:
+			// - viewId:    The view id of the SetViewController to use, as used by the DataIO
+			//              class.
+			// - entityId:  The entity key of the entity on which the SetViewController will be
+			//              used, in the format used by the EntityIO class.
+			// - dataset:   The type of dataset to use:
+			//              - display:  for the dataset that displays its elements
+			//              - pick:     for the dataset that displays the elements that can be
+			//                          picked to be added to the dataset.
+			Get["/{viewId}/{entityId}/displayer/{dataset}"] = p =>
+				this.Execute (context => this.GetDisplayDataSet (context, p));
 
 			// Exports the data of the entities that are in a set DataSet.
 			// URL arguments:
@@ -137,6 +151,32 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				return DatabaseModule.GetEntities (caches, extractor, rawColumns, start, limit);
 			}
+		}
+
+		private Response GetDisplayDataSet(BusinessContext businessContext, dynamic parameters)
+		{
+			Druid databaseId;
+			using (ISetViewController controller = this.GetController (businessContext, parameters))
+			{
+				string dataSetName = parameters.dataset;
+				if (dataSetName == "display")
+				{
+					databaseId = controller.GetDisplayDataSetId ();
+				}
+				else if (dataSetName == "pick")
+				{
+					databaseId = controller.GetPickDataSetId ();
+				}
+				else
+				{
+					throw new ArgumentException ("Invalid data set name.");
+				}
+			}
+
+			return new JsonResponse (databaseId, new DefaultJsonSerializer ())
+			{
+				StatusCode = HttpStatusCode.OK,
+			};
 		}
 
 

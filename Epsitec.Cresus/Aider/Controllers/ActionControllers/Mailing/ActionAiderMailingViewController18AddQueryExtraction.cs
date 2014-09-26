@@ -58,14 +58,34 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Title ("Ajouter une requête")
 				.Field<List<string>> ()
 					.Title ("Requête")
-					.WithFavoritesString (queries)
+					.WithStringCollection (queries)
 				.End ()
 			.End ();
 		}
 
 		private void Execute(string queryName)
 		{
-			//this.Entity.RecipientQuery = query.SerializedSettings;
+			this.Entity
+				.RecipientQuery = AiderUserManager
+									.Current
+									.AuthenticatedUser
+									.CustomUISettings
+									.DataSetUISettings
+									.Where
+									(
+										d =>
+										d.DataSetCommandId == Res.Commands.Base.ShowAiderContactFiltered.CommandId
+									).SelectMany
+									(
+										d => d.DataSetSettings.AvailableQueries
+									).Where
+									(
+										q => q.Name == queryName
+									).Select 
+									(
+										q => DataSetUISettingsEntity.XmlToByteArray (q.Save("q"))
+									)
+									.FirstOrDefault();
 		}
 	}
 }
