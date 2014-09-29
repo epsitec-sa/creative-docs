@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter depuis une requête");
+			return Resources.FormattedText ("Ajouter un filtre");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -55,9 +55,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Choix de la requête")
+				.Title ("Choix du filtre")
 				.Field<List<string>> ()
-					.Title ("Requête")
+					.Title ("Filtre")
 					.WithStringCollection (queries)
 				.End ()
 			.End ();
@@ -87,7 +87,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 									)
 									.FirstOrDefault();
 
-			this.Entity.AddContactsFromQuery (this.BusinessContext);
+			this.Entity.UpdateMailingParticipants (this.BusinessContext);
+
 		}
 	}
 }

@@ -22,72 +22,24 @@ using Epsitec.Cresus.Core.Library;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (19)]
-	public sealed class ActionAiderMailingViewController19RemoveContactsFromQuery : ActionViewController<AiderMailingEntity>
+	public sealed class ActionAiderMailingViewController19RemoveCurrentQuery : ActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Enlever depuis une requête");
+			return Resources.FormattedText ("Supprimer le filtre");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string> (this.Execute);
+			return ActionExecutor.Create (this.Execute);
 		}
 
-		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
-		{
 
-			var settings = AiderUserManager
-									.Current
-									.AuthenticatedUser
-									.CustomUISettings
-									.DataSetUISettings
-									.Where 
-									(
-										d => 
-										d.DataSetCommandId == Res.Commands.Base.ShowAiderContactFiltered.CommandId
-									);
-			
-			var queries = new List<string> ();
-			foreach(var setting in settings)
-			{
-				queries.AddRange (setting.DataSetSettings.AvailableQueries.Select (q => q.Name.ToSimpleText ()));
-			}
-
-			form
-				.Title ("Choix de la requête")
-				.Field<List<string>> ()
-					.Title ("Requête")
-					.WithStringCollection (queries)
-				.End ()
-			.End ();
-		}
-
-		private void Execute(string queryName)
+		private void Execute()
 		{
 			this.Entity
-				.RecipientQuery = AiderUserManager
-									.Current
-									.AuthenticatedUser
-									.CustomUISettings
-									.DataSetUISettings
-									.Where
-									(
-										d =>
-										d.DataSetCommandId == Res.Commands.Base.ShowAiderContactFiltered.CommandId
-									).SelectMany
-									(
-										d => d.DataSetSettings.AvailableQueries
-									).Where
-									(
-										q => q.Name == queryName
-									).Select 
-									(
-										q => DataSetUISettingsEntity.XmlToByteArray (q.Save("q"))
-									)
-									.FirstOrDefault();
-
-			this.Entity.RemoveContactsFromQuery (this.BusinessContext);
+				.RecipientQuery = null;
+			this.Entity.UpdateMailingParticipants (this.BusinessContext);
 		}
 	}
 }

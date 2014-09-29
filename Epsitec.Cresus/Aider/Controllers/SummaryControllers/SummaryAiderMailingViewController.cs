@@ -26,32 +26,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderMailingEntity> wall)
 		{
 			wall.AddBrick ()
-//				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
+				//				.Icon (Res.Commands.Base.ShowAiderMailing.Caption.Icon)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderMailingViewController1Recipients))
-//				.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ()
+				//				.EnableActionMenu<ActionAiderMailingViewController3UpdateRecipients> ()
 				.EnableActionMenu<ActionAiderMailingViewController2Duplicate> ()
-				.EnableActionMenu<ActionAiderMailingViewController10AddToBag> ()
+				.EnableActionMenu<ActionAiderMailingViewController10AddToBag> ();
 //				.EnableActionButton<ActionAiderMailingViewController2Duplicate> ()
-				.EnableActionButton<ActionAiderMailingViewController11AddRecipientFromBag> ()
-				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ();
-
-			wall.AddBrick ()
-				.Icon ("Data.AiderGroup.People")
-				.Title (p => p.GetRecipientsTitleSummary ())
-				.Text (p => p.GetRecipientsSummary ())
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
-				.EnableActionButton<ActionAiderMailingViewController3UpdateRecipients> ()
-				.EnableActionButton<ActionAiderMailingViewController17ToggleHouseholdGrouping> ();
-
-			wall.AddBrick ()
-				.Icon ("Data.AiderGroup.Exclusions")
-				.Title (p => p.GetExclusionsTitleSummary ())
-				.Text (p => p.GetExclusionsSummary ())
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact))
-				.EnableActionButton<ActionAiderMailingViewController16UpdateExclusions> ();
 		}
 	}
 }

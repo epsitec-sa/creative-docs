@@ -238,6 +238,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController1ReadOnly.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController1OfficeManagement.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingViewController2Build.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController2Documents.cs" />
     <Compile Include="Controllers\SummaryControllers\SpecializedSummaryAiderPersonWarningViewController_DerogationChange.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderOfficeManagementViewController1Settings.cs" />
