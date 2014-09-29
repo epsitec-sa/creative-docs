@@ -40,10 +40,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(Timestamp? timestamp, SortingInstructions instructions)
+		public void SetParams(Timestamp? timestamp, SortingInstructions instructions, System.Func<Guid, bool> filter = null)
 		{
 			this.timestamp           = timestamp;
 			this.sortingInstructions = instructions;
+			this.filter              = filter;
 
 			this.UpdateData ();
 		}
@@ -75,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private void UpdateData()
 		{
 			this.parentNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
-			this.levelNodeGetter.SetParams(Guid.Empty, this.sortingInstructions, false);
+			this.levelNodeGetter.SetParams(Guid.Empty, this.sortingInstructions, false, this.filter);
 			this.treeObjectsGetter.SetParams (inputIsMerge: false);
 		}
 
@@ -156,5 +157,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private Timestamp?						timestamp;
 		private SortingInstructions				sortingInstructions;
+		private System.Func<Guid, bool>			filter;
 	}
 }

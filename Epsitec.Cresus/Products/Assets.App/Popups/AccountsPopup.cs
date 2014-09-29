@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller = new NavigationTreeTableController();
 
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
-			this.nodeGetter = new AccountsFilterNodeGetter (this.accessor, primaryNodeGetter);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, baseType, primaryNodeGetter);
 
 			this.dataFiller = new SingleAccountsTreeTableFiller (this.accessor, this.nodeGetter)
 			{
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<GuidNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
+			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
 
 			this.CreateCategoriesUI (this.mainFrameBox);
 			this.CreateFilterUI (this.mainFrameBox);
@@ -168,7 +168,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.filterField.TextChanged += delegate
 			{
 				this.UpdateGetter ();
-				this.visibleSelectedRow = this.nodeGetter.SearchIndex (this.selectedGuid);
+				//?this.visibleSelectedRow = this.nodeGetter.SearchIndex (this.selectedGuid);
+				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (this.selectedGuid);
 				this.UpdateController ();
 				clearButton.Enable = !string.IsNullOrEmpty (this.filterField.Text);
 			};
@@ -341,13 +342,69 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateGetter()
 		{
-			string filter = (this.filterField == null) ? null : this.filterField.Text;
-			this.nodeGetter.SetParams (this.baseType, null, filter, this.categories);
+			if (this.filterField == null || string.IsNullOrEmpty (this.filterField.Text))
+			{
+				this.preprocessFilter = null;
+			}
+			else
+			{
+				this.preprocessFilter = this.filterField.Text.ToLowerInvariant ();
+			}
+
+			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting, this.Filter);
+		}
+
+		private bool Filter(Guid guid)
+		{
+			var account = this.accessor.GetObject (this.baseType, guid);
+
+			var accType  = (AccountType) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountType);
+
+			if (accType == AccountType.Normal)
+			{
+				var category = (AccountCategory) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountCategory);
+
+				if ((this.categories & category) == 0)
+				{
+					return false;  // caché
+				}
+
+				if (!string.IsNullOrEmpty (this.preprocessFilter))
+				{
+					var number = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number, inputValue: true);
+					var name   = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Name);
+
+					if (!this.IsMatch (number) &&
+						!this.IsMatch (name))
+					{
+						return false;  // caché
+					}
+				}
+
+				return true;  // visible
+			}
+			else
+			{
+				return false;  // caché
+			}
+		}
+
+		private bool IsMatch(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				if (text.ToLowerInvariant ().Contains (this.preprocessFilter))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<GuidNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
+			TreeTableFiller<TreeNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -390,8 +447,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
 		private readonly NavigationTreeTableController	controller;
-		private readonly AccountsFilterNodeGetter		nodeGetter;
-		private readonly AbstractTreeTableFiller<GuidNode> dataFiller;
+		private readonly GroupTreeNodeGetter			nodeGetter;
+		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
 
 		private AccountCategory							categories;
 		private int										visibleSelectedRow;
@@ -404,5 +461,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private CheckButton								categoriesChargesButton;
 		private CheckButton								categoriesProduitsButton;
 		private CheckButton								categoriesExploitationsButton;
+		private string									preprocessFilter;
 	}
 }

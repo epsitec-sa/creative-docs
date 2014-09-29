@@ -173,11 +173,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				&& category1 == category2
 				&& type1     == type2;
 		}
-
-		public static string NiceJoin
-		{
-			get;
-			set;
-		}
 	}
 }

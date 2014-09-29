@@ -100,7 +100,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						boucles.Add (numéro, boucle);
 					}
 
-					this.AddAccount (numéro, titre, category, type);
+					if (type != AccountType.Normal || category != AccountCategory.Unknown)
+					{
+						this.AddAccount (numéro, titre, category, type);
+					}
 				}
 			}
 
