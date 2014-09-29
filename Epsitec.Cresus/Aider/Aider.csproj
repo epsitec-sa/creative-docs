@@ -218,6 +218,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingCategoryViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderMailingViewController1Mailing.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController0DeceaseDateController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController1Technical.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderPersonWarningViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController1Address.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderContactViewController2LegalContact.cs" />

@@ -67,7 +67,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText ("Détails techniques"))
-				.Text (x => TextFormatter.FormatText ("Visibilité: " + x.Visibility));
+				.Text (x => TextFormatter.FormatText ("Visibilité: " + x.Visibility))
+				.WithSpecialController (typeof (EditionAiderPersonViewController1Technical));
 
 			wall.AddBrick ()
 				.IfTrue (this.HasUserPowerLevel (UserPowerLevel.Administrator))
