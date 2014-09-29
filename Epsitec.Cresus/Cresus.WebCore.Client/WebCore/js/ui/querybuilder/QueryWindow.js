@@ -29,14 +29,14 @@ Ext.require(
           },
           closable: true,
           closeAction: 'hide',
-          items: [{
-            xtype : "component",
-            autoEl : {
-                tag : "iframe",
+          items: [ {
+            xtype: "component",
+            autoEl: {
+                tag: "iframe",
                 frameborder: 0,
-                src : "proxy/page/query.html#" + tabManager.currentTab
+                src: "proxy/page/query.html#" + tabManager.currentTab
             }
-          }]
+          } ]
         };
 
         Ext.applyIf(newOptions, options);

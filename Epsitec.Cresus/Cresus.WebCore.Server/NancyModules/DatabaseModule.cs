@@ -78,6 +78,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// URL arguments:
 			// - name:    The DRUID of the dataset whose definition to return.
 			// GET arguments:
+			// - query:   The query name (filter name) to load from user datasetsettings
 			// - sort:    The sort clauses, in the format used by SorterIO class.
 			// - filter:  The filters, in the format used by FilterIO class.
 			// - type:    The type of export to do.

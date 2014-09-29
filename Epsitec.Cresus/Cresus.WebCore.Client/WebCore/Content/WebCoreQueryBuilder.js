@@ -80,12 +80,15 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     };
 
     $scope.saveQuery = function(queryName) {
-      var query = [];
-      query.push($scope.filter.group);
+      var query = [], columns;
 
-      var columns = $scope.columns.map(function(c) {
+      columns = $scope.columns.map(function(c) {
         return c.name;
       }).join(';');
+
+      $scope.filter.group.columns = columns;
+
+      query.push($scope.filter.group);
 
       webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
         query)).success(function() {

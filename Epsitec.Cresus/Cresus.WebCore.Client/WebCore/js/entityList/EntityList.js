@@ -37,6 +37,7 @@ function() {
 
     onSelectionChangeCallback: null,
     columnDefinitions: null,
+    initialColumns: [],
     sorterDefinitions: null,
     labelExportDefinitions: null,
     getUrl: null,
@@ -56,24 +57,32 @@ function() {
     constructor: function(options) {
       var newOptions, contextMenu;
 
-      if(Ext.isDefined(options.sorterDefinitions[0]))
-      {
+      if (Ext.isDefined(options.sorterDefinitions[0])) {
         this.selectedColumnId = options.sorterDefinitions[0].name;
       }
 
+      var initial = this.initialColumns;
+      Ext.Array.each(options.columnDefinitions, function(col) {
+        if (col.hasOwnProperty('hidden')) {
+          if (!col.hidden) {
+            initial.push(col.name);
+          }
+        }
+      });
+
       this.getUrl = options.getUrl;
       this.databaseDruid = this.getCurrentDatabaseDruid();
-      if(this.databaseDruid !== null) {
+      if (this.databaseDruid !== null) {
         this.queryStore = Ext.create('Ext.data.Store', {
-            fields: ['Id','Name','RawQuery'],
-            proxy: {
-                type: 'ajax',
-                url: this.getCurrentQueryStoreUrl (),
-                reader: {
-                  type : 'json'
-                },
+          fields: ['Id', 'Name', 'RawQuery'] ,
+          proxy: {
+            type: 'ajax' ,
+            url: this.getCurrentQueryStoreUrl () ,
+            reader: {
+              type : 'json'
             },
-            autoLoad:true
+          },
+          autoLoad:true
         });
       }
 
@@ -127,8 +136,6 @@ function() {
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
-
-      //this.queryStore.proxy.url = this.getCurrentQueryStoreUrl ();
 
       return this;
     },
@@ -423,6 +430,7 @@ function() {
       var key, value;
 
       key = 'columns';
+
       value = this.createColumnParameter();
 
       this.store.proxy.setExtraParam(key, value);
@@ -533,10 +541,10 @@ function() {
     },
 
     createSecondaryToolbar: function() {
-        return Ext.create('Ext.Toolbar', {
-          dock: 'top',
-          items: this.createSecondaryButtons()
-        });
+      return Ext.create('Ext.Toolbar', {
+        dock: 'top',
+        items: this.createSecondaryButtons()
+      });
     },
 
     createQueryToolbar: function() {
@@ -544,7 +552,7 @@ function() {
            this.queryStore !== null) {
         var buttons = [];
 
-        buttons.push(Ext.create('Ext.form.field.ComboBox', {
+        buttons.push(Ext.create("Ext.form.field.ComboBox", {
           hideLabel: true,
           store: this.queryStore,
           typeAhead: true,
@@ -557,13 +565,42 @@ function() {
           width: 250,
           indent: true,
           listeners: {
-           scope: this,
-           'select': function (c, r) {
+            scope: this,
+            'select': function(c, r) {
+              var query, columns;
               this.queryName =  r[0].data.Name;
+              if(r[0].data.RawQuery) {
+                query = JSON.parse(r[0].data.RawQuery);
+                columns = query[0].columns.split(';');
+              }
+
+              if (columns !== undefined) {
+                Ext.Array.each(this.columns, function(col) {
+                  if (col.hasOwnProperty('dataIndex')) {
+                    if (columns.indexOf(col.dataIndex) !== -1) {
+                      col.show();
+                    } else {
+                      col.hide();
+                    }
+                  }
+                });
+              } else {
+                var inital = this.initialColumns;
+                Ext.Array.each(this.columns, function(col) {
+                  if (col.hasOwnProperty('dataIndex')) {
+                    if (inital.indexOf(col.dataIndex) !== -1) {
+                      col.show();
+                    } else {
+                      col.hide();
+                    }
+                  }
+                });
+              }
+
               this.store.proxy.setExtraParam("query", this.queryName);
               this.onRefreshHandler();
              }
-           }
+            }
         }));
 
         buttons.push(Ext.create('Ext.Button', {
@@ -580,8 +617,9 @@ function() {
           items: buttons
         });
       }
-      else
+      else {
         return null;
+      }
     },
 
     createButtons: function(options) {
@@ -897,20 +935,17 @@ function() {
       //Iterate over the buffered store
       var useMenuItemId = Ext.isDefined(this.menuItems[0]);
       var menuItemId = null;
-      if(useMenuItemId)
+      if (useMenuItemId)
       {
         menuItemId = this.menuItems[0].columnName;
       }
 
         var data = this.getSelectionModel().getSelection();
-        for (i=0; i<data.length; i++) {
-           if(menuItemId !== null)
-           {
-              Epsitec.Cresus.Core.app.addCustomEntityToBag('Contact',data[i].data.summary,data[i].raw[menuItemId]);
-           }
-           else
-           {
-              Epsitec.Cresus.Core.app.addEntityToBag(data[i].data.summary,data[i].internalId);
+        for (i = 0; i < data.length; i++) {
+           if (menuItemId !== null) {
+              Epsitec.Cresus.Core.app.addCustomEntityToBag ('Contact', data[i].data.summary, data[i].raw[menuItemId]);
+           } else {
+              Epsitec.Cresus.Core.app.addEntityToBag (data[i].data.summary, data[i].internalId);
            }
 
         }
@@ -918,7 +953,7 @@ function() {
 
     onRefreshHandler: function() {
 
-      if(Ext.isDefined(this.entityListTypeName))
+      if (Ext.isDefined (this.entityListTypeName))
       {
         Epsitec.Cresus.Core.app.reloadCurrentList(this,false);
       }
