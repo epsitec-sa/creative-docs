@@ -63,18 +63,20 @@ function() {
 
       this.getUrl = options.getUrl;
       this.databaseDruid = this.getCurrentDatabaseDruid();
+      if(this.databaseDruid !== null) {
+        this.queryStore = Ext.create('Ext.data.Store', {
+            fields: ['Id','Name','RawQuery'],
+            proxy: {
+                type: 'ajax',
+                url: this.getCurrentQueryStoreUrl (),
+                reader: {
+                  type : 'json'
+                },
+            },
+            autoLoad:true
+        });
+      }
 
-      this.queryStore = Ext.create('Ext.data.Store', {
-          fields: ['Id','Name','RawQuery'],
-          proxy: {
-              type: 'ajax',
-              url: this.getCurrentQueryStoreUrl (),
-              reader: {
-                type : 'json'
-              },
-          },
-          autoLoad:true
-      });
 
       newOptions = {
         dockedItems: [
@@ -126,7 +128,7 @@ function() {
 
       this.callParent([newOptions]);
 
-      this.queryStore.proxy.url = this.getCurrentQueryStoreUrl ();
+      //this.queryStore.proxy.url = this.getCurrentQueryStoreUrl ();
 
       return this;
     },
@@ -179,7 +181,7 @@ function() {
 
     //AJOUTER AU PANIER
     onEntityBagAddHandler: function(widget, event) {
-      var rec,entity,app;
+      var rec, entity, app;
       app = Epsitec.Cresus.Core.getApplication();
       rec = this.getSelectionModel().getSelection()[0];
       if (rec) {
@@ -538,7 +540,8 @@ function() {
     },
 
     createQueryToolbar: function() {
-      if (epsitecConfig.featureQueryBuilder) {
+      if (epsitecConfig.featureQueryBuilder &&
+           this.queryStore !== null) {
         var buttons = [];
 
         buttons.push(Ext.create('Ext.form.field.ComboBox', {
@@ -1086,13 +1089,15 @@ function() {
 
     getCurrentDatabaseDruid: function () {
 
-      if(this.getUrl.split('/')[2].split('/') === 'set')
-      {
+      if (this.getUrl.split('/')[2] !== 'get' ||
+          this.getUrl.split('[')[1] === undefined) {
         return null;
       }
-      return '[' + this.getUrl
-                       .split('[')[1]
-                       .split(']')[0] + ']';
+      else {
+        return '[' + this.getUrl
+                         .split('[')[1]
+                         .split(']')[0] + ']';
+      }
     },
 
     getCurrentQueryStoreUrl: function () {

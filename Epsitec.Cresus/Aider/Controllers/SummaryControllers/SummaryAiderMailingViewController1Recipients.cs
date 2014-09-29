@@ -33,8 +33,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon ("Data.AiderMailing")
 				.Title ("Détails")
 				.Text (x => x.GetRecipientsOverview ())
-				.EnableActionMenu<ActionAiderMailingViewController18AddQueryExtraction> ()
 				.WithSpecialController (typeof (EditionAiderMailingViewController1Mailing));
+
+			wall.AddBrick ()
+					.Title ("Contacts")
+					.Text ("Ajouter des contacts...")
+					.EnableActionMenu<ActionAiderMailingViewController9AddContact> ()
+					.EnableActionMenu<ActionAiderMailingViewController18AddQueryExtraction> ()
+					.EnableActionButton<ActionAiderMailingViewController9AddContact> ()
+					.EnableActionButton<ActionAiderMailingViewController18AddQueryExtraction> ();
 
 			wall.AddBrick (p => p.RecipientGroups)
 					.Attribute (BrickMode.DefaultToSummarySubView)
@@ -78,20 +85,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => x.GetCompactSummary ())
 					.End ();
 
-			wall.AddBrick (p => p.RecipientContacts)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.EnableActionMenu<ActionAiderMailingViewController9AddContact> ()
-					.EnableActionMenu<ActionAiderMailingViewController4RemoveContact> ()
-					.EnableActionButton<ActionAiderMailingViewController9AddContact> ()
-					.EnableActionButton<ActionAiderMailingViewController4RemoveContact> ()
-					.Template ()
-						.Title ("Contacts")
-						.Text (x => x.GetCompactSummary ())
-					.End ();
-			
 			wall.AddBrick (p => p.GroupExclusions)
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.Attribute (BrickMode.AutoGroup)

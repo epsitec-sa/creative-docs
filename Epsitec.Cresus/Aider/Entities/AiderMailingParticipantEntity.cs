@@ -14,6 +14,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Helpers;
+using Epsitec.Cresus.Core.Metadata;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Aider.Entities

@@ -50,13 +50,6 @@ namespace Epsitec.Aider.Controllers.SetControllers
 			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
 				var participation = (AiderMailingParticipantEntity) example;
-
-				if(entity.RecipientQuery != null)
-				{
-					var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (entity.RecipientQuery);
-					var queryFilter		   = Filter.Restore (queryFilterXml);
-					request.AddCondition (dataContext, participation, queryFilter);
-				}
 			
 				request.AddCondition (dataContext, participation, x => x.Mailing== entity);	
 			});

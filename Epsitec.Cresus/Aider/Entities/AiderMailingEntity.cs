@@ -16,6 +16,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Helpers;
+using Epsitec.Cresus.Core.Metadata;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Aider.Entities
@@ -192,6 +194,27 @@ namespace Epsitec.Aider.Entities
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+		public void AddContactsFromQuery(BusinessContext businessContext)
+		{
+			if (this.RecipientQuery != null)
+			{
+				var created			   = new List<AiderMailingParticipantEntity> ();
+				var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
+				var queryFilter		   = Filter.Restore (queryFilterXml);
+				var example			   = new AiderContactEntity ();
+				var request			   = new Request ()
+				{
+					RootEntity = example
+				};
+
+				request.AddCondition (businessContext.DataContext, example, queryFilter);
+
+				var contacts = businessContext.GetByRequest<AiderContactEntity> (request);
+				this.AddContacts (businessContext, contacts);
+				
+			}
 		}
 
 		public void AddHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToAdd)

@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter une requête");
+			return Resources.FormattedText ("Ajouter depuis une requête");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Ajouter une requête")
+				.Title ("Choix de la requête")
 				.Field<List<string>> ()
 					.Title ("Requête")
 					.WithStringCollection (queries)
@@ -86,6 +86,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 										q => DataSetUISettingsEntity.XmlToByteArray (q.Save("q"))
 									)
 									.FirstOrDefault();
+
+			this.Entity.AddContactsFromQuery (this.BusinessContext);
 		}
 	}
 }
