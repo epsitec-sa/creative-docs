@@ -217,6 +217,27 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void RemoveContactsFromQuery(BusinessContext businessContext)
+		{
+			if (this.RecipientQuery != null)
+			{
+				var created			   = new List<AiderMailingParticipantEntity> ();
+				var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
+				var queryFilter		   = Filter.Restore (queryFilterXml);
+				var example			   = new AiderContactEntity ();
+				var request			   = new Request ()
+				{
+					RootEntity = example
+				};
+
+				request.AddCondition (businessContext.DataContext, example, queryFilter);
+
+				var contacts = businessContext.GetByRequest<AiderContactEntity> (request);
+				this.RemoveContacts (businessContext, contacts);
+
+			}
+		}
+
 		public void AddHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToAdd)
 		{
 			if (!this.RecipientHouseholds.Contains (householdToAdd))
@@ -275,6 +296,16 @@ namespace Epsitec.Aider.Entities
 			this.UpdateLastUpdateDate ();
 			this.RecipientContacts.Remove (contactToRemove);
 			AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contactToRemove);	
+		}
+
+		public void RemoveContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToRemove)
+		{
+			this.UpdateLastUpdateDate ();
+			foreach (var contact in contactsToRemove)
+			{
+				this.RecipientContacts.Remove (contact);
+				AiderMailingParticipantEntity.FindAndRemove (businessContext, this, contact);
+			}
 		}
 
 		public void RemoveGroup(BusinessContext businessContext, AiderGroupEntity groupToRemove)

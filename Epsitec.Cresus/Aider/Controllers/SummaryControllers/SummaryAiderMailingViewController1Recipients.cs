@@ -37,11 +37,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick ()
 					.Title ("Contacts")
-					.Text ("Ajouter des contacts...")
+					.Text ("")
 					.EnableActionMenu<ActionAiderMailingViewController9AddContact> ()
-					.EnableActionMenu<ActionAiderMailingViewController18AddQueryExtraction> ()
+					.EnableActionMenu<ActionAiderMailingViewController4RemoveContact> ()
+					.EnableActionMenu<ActionAiderMailingViewController18AddContactsFromQuery> ()
+					.EnableActionMenu<ActionAiderMailingViewController19RemoveContactsFromQuery> ()
 					.EnableActionButton<ActionAiderMailingViewController9AddContact> ()
-					.EnableActionButton<ActionAiderMailingViewController18AddQueryExtraction> ();
+					.EnableActionButton<ActionAiderMailingViewController4RemoveContact> ()
+					.EnableActionButton<ActionAiderMailingViewController18AddContactsFromQuery> ()
+					.EnableActionButton<ActionAiderMailingViewController19RemoveContactsFromQuery> ();
 
 			wall.AddBrick (p => p.RecipientGroups)
 					.Attribute (BrickMode.DefaultToSummarySubView)

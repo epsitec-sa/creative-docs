@@ -21,12 +21,12 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (18)]
-	public sealed class ActionAiderMailingViewController18AddQueryExtraction : ActionViewController<AiderMailingEntity>
+	[ControllerSubType (19)]
+	public sealed class ActionAiderMailingViewController19RemoveContactsFromQuery : ActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter depuis une requête");
+			return Resources.FormattedText ("Enlever depuis une requête");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -87,7 +87,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 									)
 									.FirstOrDefault();
 
-			this.Entity.AddContactsFromQuery (this.BusinessContext);
+			this.Entity.RemoveContactsFromQuery (this.BusinessContext);
 		}
 	}
 }

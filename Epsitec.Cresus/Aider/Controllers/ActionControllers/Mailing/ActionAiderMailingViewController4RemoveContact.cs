@@ -19,21 +19,32 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (4)]
-	public sealed class ActionAiderMailingViewController4RemoveContact : TemplateActionViewController<AiderMailingEntity, AiderContactEntity>
+	public sealed class ActionAiderMailingViewController4RemoveContact : ActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Enlever ce contact");
+			return Resources.FormattedText ("Enlever un contact");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create (this.Execute);
+			return ActionExecutor.Create<AiderContactEntity> (this.Execute);
 		}
 
-		private void Execute()
+		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
 		{
-			this.Entity.RemoveContact (this.BusinessContext,this.AdditionalEntity);
+			form
+				.Title ("Enlever un contact")
+				.Field<AiderContactEntity> ()
+					.Title ("Contact")
+					.WithFavorites (this.Entity.RecipientContacts, true)
+				.End ()
+			.End ();
+		}
+
+		private void Execute(AiderContactEntity contact)
+		{
+			this.Entity.RemoveContact (this.BusinessContext, contact);
 		}
 	}
 }
