@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				buffer.Append (" Unavailable");
 			}
 
+			if ((this.CellState & CellState.Dimmed) != 0)
+			{
+				buffer.Append (" Dimmed");
+			}
+
 			return buffer.ToString ();
 		}
 

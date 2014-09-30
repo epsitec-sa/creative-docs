@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				if (((AccountType) accType != AccountType.Normal))
 				{
-					cellState = CellState.Unavailable;
+					cellState |= CellState.Dimmed;
 				}
 
 				var cell1 = new TreeTableCellTree   (level, type, number, cellState);

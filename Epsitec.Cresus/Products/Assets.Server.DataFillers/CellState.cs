@@ -14,5 +14,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		Event       = 0x0002,
 		Error       = 0x0004,
 		Unavailable = 0x0008,
+		Dimmed      = 0x0010,
 	}
 }

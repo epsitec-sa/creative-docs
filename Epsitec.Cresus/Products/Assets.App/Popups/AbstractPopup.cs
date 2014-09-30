@@ -438,13 +438,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		[Command (Res.CommandIds.Popup.Accept)]
 		private void DoAccept()
 		{
-			this.ClosePopup (ReasonClosure.AcceptKey);
+			if (this.IsAcceptEnable)
+			{
+				this.ClosePopup (ReasonClosure.AcceptKey);
+			}
 		}
 
 		[Command (Res.CommandIds.Popup.Cancel)]
 		private void DoCancel()
 		{
 			this.ClosePopup (ReasonClosure.CancelKey);
+		}
+
+		protected virtual bool IsAcceptEnable
+		{
+			get
+			{
+				return true;
+			}
 		}
 
 		protected void ClosePopup(ReasonClosure reason = ReasonClosure.Click)

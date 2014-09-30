@@ -177,6 +177,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					//	Dessine la grille.
 					this.PaintGrid (graphics, rect, y, this.hilitedHoverRow);
 
+					if ((cell.CellState & CellState.Dimmed) != 0)
+					{
+						this.PaintDimmed (graphics, rect);
+					}
+
 					y++;
 				}
 			}
@@ -246,6 +251,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				PaintHatch.Paint (graphics, rect, reference, 0.3);
 			}
+		}
+
+		protected void PaintDimmed(Graphics graphics, Rectangle rect)
+		{
+			//	Dessine une cellule estompée.
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromAlphaRgb (0.6, 1.0, 1.0, 1.0));
 		}
 
 		protected void PaintGrid(Graphics graphics, Rectangle rect, int currentRow, int hilitedRow)

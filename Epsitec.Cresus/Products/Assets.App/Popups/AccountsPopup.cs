@@ -267,6 +267,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		protected override bool IsAcceptEnable
+		{
+			get
+			{
+				var node = this.nodeGetter[this.visibleSelectedRow];
+				return this.Filter (node.Guid);
+			}
+		}
+
+
 		private string GetNumber(Guid guid)
 		{
 			return AccountsLogic.GetNumber (this.accessor, this.baseType, guid);

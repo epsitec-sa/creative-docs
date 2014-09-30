@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.UpdateParentChildrens ();
 
-			var tree = new InternalTreeNode (this.showedNodes, null, root);
+			var tree = new InternalTreeNode (this, null, root);
 			this.Insert (tree);
 
 			//	Parcourt tout l'arbre pour obtenir une liste "à plat" des noeuds.
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					childrens.Add (node);  // ajoute l'enfant au parent
 
-					if (this.filter == null || this.filter (node.Guid))
+					if (this.filter != null && this.filter (node.Guid))
 					{
 						//	S'il s'agit d'une feuille visible, on l'ajoute dans showedNodes.
 						this.showedNodes.Add (node.Guid);
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				foreach (var children in sortedChildrend)
 				{
-					var n = new InternalTreeNode (this.showedNodes, tree, children);
+					var n = new InternalTreeNode (this, tree, children);
 					tree.Childrens.Add (n);
 
 					this.Insert (n);
@@ -186,16 +186,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private class InternalTreeNode
 		{
-			public InternalTreeNode(HashSet<Guid> showedNodes, InternalTreeNode parent, ParentNode node)
+			public InternalTreeNode(GroupLevelNodeGetter nodeGetter, InternalTreeNode parent, ParentNode node)
 			{
-				this.showedNodes = showedNodes;
-				this.parent      = parent;
-				this.node        = node;
+				this.nodeGetter = nodeGetter;
+				this.parent     = parent;
+				this.node       = node;
 
 				this.childrens = new List<InternalTreeNode> ();
 			}
 
-			public InternalTreeNode Parent
+			public InternalTreeNode				Parent
 			{
 				get
 				{
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			public ParentNode Node
+			public ParentNode					Node
 			{
 				get
 				{
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			public List<InternalTreeNode> Childrens
+			public List<InternalTreeNode>		Childrens
 			{
 				get
 				{
@@ -236,15 +236,22 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			private bool IsVisible
+			private bool						IsVisible
 			{
+				//	Indique si une ligne est visible. Elle l'est seulement si l'un de
+				//	ses descendant (fils, petit-fils, etc.) est visible.
 				get
 				{
-					if (this.childrens.Count == 0)
+					if (this.nodeGetter.filter == null)  // pas de filtre ?
 					{
-						return this.showedNodes.Contains (this.node.Guid);
+						return true;
 					}
-					else
+
+					if (this.childrens.Count == 0)  // feuille de l'arbre ?
+					{
+						return this.nodeGetter.showedNodes.Contains (this.node.Guid);
+					}
+					else  // noeud de l'arbre ?
 					{
 						foreach (var children in this.childrens)
 						{
@@ -259,7 +266,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			private readonly HashSet<Guid>			showedNodes;
+			private readonly GroupLevelNodeGetter	nodeGetter;
 			private readonly InternalTreeNode		parent;
 			private readonly ParentNode				node;
 			private readonly List<InternalTreeNode>	childrens;
