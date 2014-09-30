@@ -10,6 +10,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AccountsLogic
 	{
+		public static AccountCategory GetActegories(DataAccessor accessor, BaseType baseType)
+		{
+			//	Retourne toutes les catégories existantes dans un plan comptable.
+			var accounts = accessor.Mandat.GetData (baseType);
+
+			AccountCategory categories = AccountCategory.Unknown;
+
+			foreach (var account in accounts)
+			{
+				var category = (AccountCategory) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountCategory);
+				var type     = (AccountType)     ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountType);
+
+				if (type == AccountType.Normal)
+				{
+					categories |= category;
+				}
+			}
+
+			return categories;
+		}
+
 		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string number,
 			out bool hasError, out bool gotoVisible)
 		{

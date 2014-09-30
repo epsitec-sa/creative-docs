@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedAccount);
 			this.UpdateSelectedGuid ();
 
+			this.existingCategories = AccountsLogic.GetActegories (this.accessor, this.baseType);
+
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
 			{
@@ -246,31 +248,39 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private CheckButton CreateCaregoryButton(Widget parent, string text, AccountCategory category)
 		{
-			var button = new CheckButton
+			if ((this.existingCategories & category) == 0)
 			{
-				Parent         = parent,
-				Text           = text,
-				PreferredWidth = 20 + text.GetTextWidth (),
-				Margins        = new Margins (0, 10, 0, 0),
-				Dock           = DockStyle.Left,
-				AutoToggle     = false,
-			};
-
-			button.Clicked += delegate
+				return null;
+			}
+			else
 			{
-				this.categories ^= category;
-				this.UpdateCategories ();
-				this.UpdateGetter ();
-				this.UpdateController ();
-			};
+				var button = new CheckButton
+				{
+					Parent         = parent,
+					Text           = text,
+					PreferredWidth = 20 + text.GetTextWidth (),
+					Margins        = new Margins (0, 10, 0, 0),
+					Dock           = DockStyle.Left,
+					AutoToggle     = false,
+				};
 
-			return button;
+				button.Clicked += delegate
+				{
+					this.categories ^= category;
+					this.UpdateCategories ();
+					this.UpdateGetter ();
+					this.UpdateController ();
+				};
+
+				return button;
+			}
 		}
 
 
 		[Command (Res.CommandIds.AccountsPopup.Prev)]
 		private void DoPrev()
 		{
+			//	Appelé lorsque l'utilisateur presse sur "flèche en haut".
 			if (this.visibleSelectedRow > 0)
 			{
 				this.visibleSelectedRow--;
@@ -282,6 +292,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		[Command (Res.CommandIds.AccountsPopup.Next)]
 		private void DoNext()
 		{
+			//	Appelé lorsque l'utilisateur presse sur "flèche en bas".
 			if (this.visibleSelectedRow < this.nodeGetter.Count-1)
 			{
 				this.visibleSelectedRow++;
@@ -367,14 +378,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateCategories()
 		{
-			this.categoriesActifsButton       .ActiveState = (this.categories & AccountCategory.Actif       ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesPassifsButton      .ActiveState = (this.categories & AccountCategory.Passif      ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesChargesButton      .ActiveState = (this.categories & AccountCategory.Charge      ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesProduitsButton     .ActiveState = (this.categories & AccountCategory.Produit     ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesExploitationsButton.ActiveState = (this.categories & AccountCategory.Exploitation) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesRevenusButton      .ActiveState = (this.categories & AccountCategory.Revenu      ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesDepensesButton     .ActiveState = (this.categories & AccountCategory.Depense     ) != 0 ? ActiveState.Yes : ActiveState.No;
-			this.categoriesRecettesButton     .ActiveState = (this.categories & AccountCategory.Recette     ) != 0 ? ActiveState.Yes : ActiveState.No;
+			this.UpdateCategory (this.categoriesActifsButton,        AccountCategory.Actif);
+			this.UpdateCategory (this.categoriesPassifsButton,       AccountCategory.Passif);
+			this.UpdateCategory (this.categoriesChargesButton,       AccountCategory.Charge);
+			this.UpdateCategory (this.categoriesProduitsButton,      AccountCategory.Produit);
+			this.UpdateCategory (this.categoriesExploitationsButton, AccountCategory.Exploitation);
+			this.UpdateCategory (this.categoriesRevenusButton,       AccountCategory.Revenu);
+			this.UpdateCategory (this.categoriesDepensesButton,      AccountCategory.Depense);
+			this.UpdateCategory (this.categoriesRecettesButton,      AccountCategory.Recette);
+		}
+
+		private void UpdateCategory(CheckButton button, AccountCategory category)
+		{
+			if (button != null)
+			{
+				button.ActiveState = (this.categories & category) == 0 ? ActiveState.No : ActiveState.Yes;
+			}
 		}
 
 		private void UpdateGetter()
@@ -487,6 +506,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
+		private readonly AccountCategory				existingCategories;
 
 		private AccountCategory							categories;
 		private int										visibleSelectedRow;
