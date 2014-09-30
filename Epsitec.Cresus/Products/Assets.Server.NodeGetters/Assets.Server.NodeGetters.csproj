@@ -45,7 +45,6 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BypassNodeGetter.cs" />
-    <Compile Include="AccountsFilterNodeGetter.cs" />
     <Compile Include="FilterNodeGetter.cs" />
     <Compile Include="WarningNodeGetter.cs" />
     <Compile Include="ExtractionEngine.cs" />
