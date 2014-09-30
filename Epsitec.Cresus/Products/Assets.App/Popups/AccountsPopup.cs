@@ -449,10 +449,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
+#if true
 				if (text.ToLowerInvariant ().Contains (this.preprocessFilter))
 				{
 					return true;
 				}
+#else
+				int ranking = ApproximativeSearching.GetRanking (text, this.preprocessFilter);
+				return ranking > 0;
+#endif
 			}
 
 			return false;

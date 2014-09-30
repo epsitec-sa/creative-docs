@@ -274,6 +274,7 @@
     <Compile Include="Views\SummaryControllerTile.cs" />
     <Compile Include="Views\ViewTypeKind.cs" />
     <Compile Include="Widgets\ButtonWithRedDot.cs" />
+    <Compile Include="Widgets\SearchController.cs" />
     <Compile Include="Widgets\ColoredButton.cs" />
     <Compile Include="Views\EditorPages\EditorPageAmortizationValue.cs" />
     <Compile Include="Views\EditorPages\EditorPageAmortizationDefinition.cs" />

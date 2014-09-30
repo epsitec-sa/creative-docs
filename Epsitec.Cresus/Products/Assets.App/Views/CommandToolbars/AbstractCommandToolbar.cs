@@ -155,6 +155,26 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
+		protected SearchController CreateSearchController(int superficiality)
+		{
+			//	Crée une zone de recherche, qui pourra apparaître ou disparaître
+			//	selon le choix du "magic layout engine".
+			var controller = new SearchController ();
+
+			var box = new FrameBox
+			{
+				Parent        = this.toolbar,
+				AutoFocus     = false,
+				Dock          = DockStyle.None,
+				PreferredSize = new Size (200, this.toolbar.PreferredHeight),
+				Index         = superficiality,
+			};
+
+			controller.CreateUI (box);
+
+			return controller;
+		}
+
 		protected void CreateSeparator(int superficiality)
 		{
 			//	Crée un séparateur sous la forme d'une petite barre verticale, qui

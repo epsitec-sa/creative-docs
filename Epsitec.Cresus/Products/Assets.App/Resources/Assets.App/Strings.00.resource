@@ -458,4 +458,8 @@
   <data name="Popup.Accounts.Category.Revenus" id="K3H">Revenus</data>
   <data name="Popup.Accounts.Category.Depenses" id="K4H">Dépenses</data>
   <data name="Popup.Accounts.Category.Recettes" id="K5H">Recettes</data>
+  <data name="SearchController.Tooltip.Clear" id="K6H">Effacer la recherche</data>
+  <data name="SearchController.Tooltip.Prev" id="K7H">Chercher en arrière</data>
+  <data name="SearchController.Tooltip.Next" id="K8H">Chercher en avant</data>
+  <data name="SearchController.Hint" id="K9H">Chercher</data>
 </bundle>
