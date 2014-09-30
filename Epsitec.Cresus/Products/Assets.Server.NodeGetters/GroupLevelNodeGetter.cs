@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					if (this.nodeGetter.filter == null)  // pas de filtre ?
 					{
-						return true;
+						return true;  // toujours visible
 					}
 
 					if (this.childrens.Count == 0)  // feuille de l'arbre ?
@@ -257,11 +257,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						{
 							if (children.IsVisible)
 							{
-								return true;
+								return true;  // visible si un seul fils visible
 							}
 						}
 
-						return false;
+						return false;  // caché si aucun fils visible
 					}
 				}
 			}

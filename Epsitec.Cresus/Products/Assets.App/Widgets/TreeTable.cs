@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.App.Settings;
+using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -521,6 +522,17 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					}
 					break;
 
+				case MessageType.MouseWheel:
+					if (message.Wheel > 0)
+					{
+						this.OnDokeySelect (KeyCode.ArrowUp);
+					}
+					else if (message.Wheel < 0)
+					{
+						this.OnDokeySelect (KeyCode.ArrowDown);
+					}
+					break;
+
 				case MessageType.MouseLeave:
 					this.ProcessMouseLeave (pos);
 					break;
@@ -881,7 +893,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void OnDokeySelect(KeyCode key)
 		{
-			this.DokeySelect.Raise (this, key);
+			if (!PopupStack.HasPopup)
+			{
+				this.DokeySelect.Raise (this, key);
+			}
 		}
 
 		public event EventHandler<KeyCode> DokeySelect;

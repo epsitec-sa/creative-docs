@@ -12,6 +12,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public static class PopupStack
 	{
+		public static bool						HasPopup
+		{
+			get
+			{
+				return PopupStack.stack.Any ();
+			}
+		}
+
 		public static void Push(AbstractPopup popup)
 		{
 			PopupStack.stack.Push (popup);
