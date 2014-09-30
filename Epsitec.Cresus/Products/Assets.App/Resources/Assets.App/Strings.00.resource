@@ -455,4 +455,7 @@
   <data name="Popup.Accounts.Category.Charges" id="K0H">Charges</data>
   <data name="Popup.Accounts.Category.Produits" id="K1H">Produits</data>
   <data name="Popup.Accounts.Category.Exploitations" id="K2H">Exploitations</data>
+  <data name="Popup.Accounts.Category.Revenus" id="K3H">Revenus</data>
+  <data name="Popup.Accounts.Category.Depenses" id="K4H">Dépenses</data>
+  <data name="Popup.Accounts.Category.Recettes" id="K5H">Recettes</data>
 </bundle>

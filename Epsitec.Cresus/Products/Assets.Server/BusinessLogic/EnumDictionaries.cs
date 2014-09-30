@@ -144,6 +144,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case AccountCategory.Exploitation:
 					return Res.Strings.Enum.AccountCategory.Exploitation.ToString ();
 
+				case AccountCategory.Revenu:
+					return Res.Strings.Enum.AccountCategory.Revenu.ToString ();
+
+				case AccountCategory.Depense:
+					return Res.Strings.Enum.AccountCategory.Depense.ToString ();
+
+				case AccountCategory.Recette:
+					return Res.Strings.Enum.AccountCategory.Recette.ToString ();
+
 				default:
 					return null;
 			}
@@ -372,6 +381,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return AccountCategory.Charge;
 				yield return AccountCategory.Produit;
 				yield return AccountCategory.Exploitation;
+				yield return AccountCategory.Revenu;
+				yield return AccountCategory.Depense;
+				yield return AccountCategory.Recette;
 			}
 		}
 

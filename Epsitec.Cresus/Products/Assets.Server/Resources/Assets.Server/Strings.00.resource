@@ -55,4 +55,7 @@
   <data name="Enum.EntryScenario.Title.Increase" id="KK1">Revalorisation {0}</data>
   <data name="Enum.EntryScenario.Title.Purchase" id="KL1">Achat {0}</data>
   <data name="Enum.EntryScenario.Title.Sale" id="KM1">Vente {0}</data>
+  <data name="Enum.AccountCategory.Revenu" id="KN1">Revenu</data>
+  <data name="Enum.AccountCategory.Depense" id="KO1">Dépense</data>
+  <data name="Enum.AccountCategory.Recette" id="KP1">Recette</data>
 </bundle>

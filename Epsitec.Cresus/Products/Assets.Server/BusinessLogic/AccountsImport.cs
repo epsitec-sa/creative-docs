@@ -219,16 +219,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				switch (value.Value)
 				{
-					case 0x02:
+					case 0x0002:
 						return AccountCategory.Actif;
-					case 0x04:
+					case 0x0004:
 						return AccountCategory.Passif;
-					case 0x08:
+					case 0x0008:
 						return AccountCategory.Charge;
-					case 0x10:
+					case 0x0010:
 						return AccountCategory.Produit;
-					case 0x20:
+					case 0x0020:
 						return AccountCategory.Exploitation;
+					case 0x4010:
+						return AccountCategory.Revenu;
+					case 0x1008:
+						return AccountCategory.Depense;
+					case 0x6010:
+						return AccountCategory.Recette;
 				}
 			}
 

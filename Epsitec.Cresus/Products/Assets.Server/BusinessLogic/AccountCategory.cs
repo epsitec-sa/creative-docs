@@ -16,5 +16,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		Charge       = 0x0004,
 		Produit      = 0x0008,
 		Exploitation = 0x0010,
+		Revenu       = 0x0020,
+		Depense      = 0x0040,
+		Recette      = 0x0080,
 	}
 }

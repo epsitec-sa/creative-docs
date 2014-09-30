@@ -56,7 +56,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 											  AccountCategory.Passif |
 											  AccountCategory.Charge |
 											  AccountCategory.Produit |
-											  AccountCategory.Exploitation;
+											  AccountCategory.Exploitation |
+											  AccountCategory.Revenu |
+											  AccountCategory.Depense |
+											  AccountCategory.Recette;
 		}
 
 

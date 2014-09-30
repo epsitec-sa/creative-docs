@@ -3044,6 +3044,14 @@ namespace Epsitec.Cresus.Assets.App
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544864));
 							}
 						}
+						//	designer:str/JUK4H01
+						public static global::Epsitec.Common.Types.FormattedText Depenses
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544868));
+							}
+						}
 						//	designer:str/JUK2H01
 						public static global::Epsitec.Common.Types.FormattedText Exploitations
 						{
@@ -3066,6 +3074,22 @@ namespace Epsitec.Cresus.Assets.App
 							get
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544865));
+							}
+						}
+						//	designer:str/JUK5H01
+						public static global::Epsitec.Common.Types.FormattedText Recettes
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544869));
+							}
+						}
+						//	designer:str/JUK3H01
+						public static global::Epsitec.Common.Types.FormattedText Revenus
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544867));
 							}
 						}
 					}
@@ -7328,6 +7352,14 @@ namespace Epsitec.Cresus.Assets.App
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544864);
 							}
 						}
+						//	designer:str/JUK4H01
+						public static global::Epsitec.Common.Support.Druid Depenses
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544868);
+							}
+						}
 						//	designer:str/JUK2H01
 						public static global::Epsitec.Common.Support.Druid Exploitations
 						{
@@ -7350,6 +7382,22 @@ namespace Epsitec.Cresus.Assets.App
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544865);
+							}
+						}
+						//	designer:str/JUK5H01
+						public static global::Epsitec.Common.Support.Druid Recettes
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544869);
+							}
+						}
+						//	designer:str/JUK3H01
+						public static global::Epsitec.Common.Support.Druid Revenus
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544867);
 							}
 						}
 					}

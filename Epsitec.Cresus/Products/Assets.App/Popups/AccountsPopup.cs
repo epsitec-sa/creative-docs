@@ -182,7 +182,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			miscButton.Clicked += delegate
 			{
-				this.categoriesFrame.Visibility = !this.categoriesFrame.Visibility;
+				this.categoriesFrame1.Visibility = !this.categoriesFrame1.Visibility;
+				this.categoriesFrame2.Visibility = !this.categoriesFrame2.Visibility;
 				this.UpdateMiscButton ();
 			};
 
@@ -194,29 +195,51 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			const int margin = 5;
 			const int height = 20;
 
-			this.categoriesFrame = new FrameBox
+			this.categoriesFrame2 = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = margin + height + margin,
+				PreferredHeight = height + margin,
 				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (margin),
+				Padding         = new Margins (margin, margin, 0, margin),
 				BackColor       = ColorManager.WindowBackgroundColor,
 				Visibility      = false,
 			};
 
 			new FrameBox
 			{
-				Parent           = this.categoriesFrame,
+				Parent           = this.categoriesFrame2,
 				PreferredWidth   = 10 + Res.Strings.Popup.Accounts.Filter.ToString ().GetTextWidth (),
 				Margins          = new Margins (0, 10, 0, 0),
 				Dock             = DockStyle.Left,
 			};
 
-			this.categoriesActifsButton        = this.CreateCaregoryButton (this.categoriesFrame, Res.Strings.Popup.Accounts.Category.Actifs.ToString (), AccountCategory.Actif);
-			this.categoriesPassifsButton       = this.CreateCaregoryButton (this.categoriesFrame, Res.Strings.Popup.Accounts.Category.Passifs.ToString (),       AccountCategory.Passif);
-			this.categoriesChargesButton       = this.CreateCaregoryButton (this.categoriesFrame, Res.Strings.Popup.Accounts.Category.Charges.ToString (),       AccountCategory.Charge);
-			this.categoriesProduitsButton      = this.CreateCaregoryButton (this.categoriesFrame, Res.Strings.Popup.Accounts.Category.Produits.ToString (),      AccountCategory.Produit);
-			this.categoriesExploitationsButton = this.CreateCaregoryButton (this.categoriesFrame, Res.Strings.Popup.Accounts.Category.Exploitations.ToString (), AccountCategory.Exploitation);
+			this.categoriesRevenusButton       = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Revenus.ToString (),       AccountCategory.Revenu);
+			this.categoriesDepensesButton      = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Depenses.ToString (),      AccountCategory.Depense);
+			this.categoriesRecettesButton      = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Recettes.ToString (),      AccountCategory.Recette);
+
+			this.categoriesFrame1 = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = margin + height,
+				Dock            = DockStyle.Bottom,
+				Padding         = new Margins (margin, margin, margin, 0),
+				BackColor       = ColorManager.WindowBackgroundColor,
+				Visibility      = false,
+			};
+
+			new FrameBox
+			{
+				Parent           = this.categoriesFrame1,
+				PreferredWidth   = 10 + Res.Strings.Popup.Accounts.Filter.ToString ().GetTextWidth (),
+				Margins          = new Margins (0, 10, 0, 0),
+				Dock             = DockStyle.Left,
+			};
+
+			this.categoriesActifsButton        = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Actifs.ToString (),        AccountCategory.Actif);
+			this.categoriesPassifsButton       = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Passifs.ToString (),       AccountCategory.Passif);
+			this.categoriesChargesButton       = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Charges.ToString (),       AccountCategory.Charge);
+			this.categoriesProduitsButton      = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Produits.ToString (),      AccountCategory.Produit);
+			this.categoriesExploitationsButton = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Exploitations.ToString (), AccountCategory.Exploitation);
 
 			this.UpdateCategories ();
 		}
@@ -332,7 +355,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateMiscButton()
 		{
-			if (this.categoriesFrame.Visibility)
+			if (this.categoriesFrame1.Visibility)
 			{
 				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
 			}
@@ -349,6 +372,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.categoriesChargesButton      .ActiveState = (this.categories & AccountCategory.Charge      ) != 0 ? ActiveState.Yes : ActiveState.No;
 			this.categoriesProduitsButton     .ActiveState = (this.categories & AccountCategory.Produit     ) != 0 ? ActiveState.Yes : ActiveState.No;
 			this.categoriesExploitationsButton.ActiveState = (this.categories & AccountCategory.Exploitation) != 0 ? ActiveState.Yes : ActiveState.No;
+			this.categoriesRevenusButton      .ActiveState = (this.categories & AccountCategory.Revenu      ) != 0 ? ActiveState.Yes : ActiveState.No;
+			this.categoriesDepensesButton     .ActiveState = (this.categories & AccountCategory.Depense     ) != 0 ? ActiveState.Yes : ActiveState.No;
+			this.categoriesRecettesButton     .ActiveState = (this.categories & AccountCategory.Recette     ) != 0 ? ActiveState.Yes : ActiveState.No;
 		}
 
 		private void UpdateGetter()
@@ -467,12 +493,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Guid									selectedGuid;
 		private TextField								filterField;
 		private IconButton								miscButton;
-		private FrameBox								categoriesFrame;
+		private FrameBox								categoriesFrame1;
+		private FrameBox								categoriesFrame2;
 		private CheckButton								categoriesActifsButton;
 		private CheckButton								categoriesPassifsButton;
 		private CheckButton								categoriesChargesButton;
 		private CheckButton								categoriesProduitsButton;
 		private CheckButton								categoriesExploitationsButton;
+		private CheckButton								categoriesRevenusButton;
+		private CheckButton								categoriesDepensesButton;
+		private CheckButton								categoriesRecettesButton;
 		private string									preprocessFilter;
 	}
 }
