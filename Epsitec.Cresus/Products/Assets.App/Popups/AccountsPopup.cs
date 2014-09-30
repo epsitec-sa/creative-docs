@@ -21,10 +21,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AccountsPopup : AbstractPopup
 	{
-		private AccountsPopup(DataAccessor accessor, BaseType baseType, string selectedAccount, AccountCategory categories)
+		private AccountsPopup(DataAccessor accessor, BaseType baseType, string title, string selectedAccount, AccountCategory categories)
 		{
 			this.accessor   = accessor;
 			this.baseType   = baseType;
+			this.title      = title;
 			this.categories = categories;
 
 			this.controller = new NavigationTreeTableController();
@@ -89,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				title = string.Format (Res.Strings.Popup.Accounts.Choice.ToString (), this.baseType.AccountsDateRange.ToNiceString ());
 			}
 
-			this.CreateTitle (title);
+			this.CreateTitle (UniversalLogic.NiceJoin (this.title, title));
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
@@ -429,10 +430,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string selectedAccount, AccountCategory categories, System.Action<string, AccountCategory> action)
+		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string title, string selectedAccount, AccountCategory categories, System.Action<string, AccountCategory> action)
 		{
 			//	Affiche le popup pour choisir un compte dans le plan comptable.
-			var popup = new AccountsPopup (accessor, baseType, selectedAccount, categories);
+			var popup = new AccountsPopup (accessor, baseType, title, selectedAccount, categories);
 			
 			popup.Create (target, leftOrRight: true);
 			
@@ -456,6 +457,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
+		private readonly string							title;
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
