@@ -8808,6 +8808,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>RecipientQueryName</c> field.
+		///	designer:fld/LVOA03/LVO343
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO343]")]
+		public string RecipientQueryName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO343]");
+			}
+			set
+			{
+				string oldValue = this.RecipientQueryName;
+				if (oldValue != value || !this.IsFieldDefined("[LVO343]"))
+				{
+					this.OnRecipientQueryNameChanging (oldValue, value);
+					this.SetField<string> ("[LVO343]", oldValue, value);
+					this.OnRecipientQueryNameChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -8829,6 +8851,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnIsGroupedByHouseholdChanged(bool oldValue, bool newValue);
 		partial void OnRecipientQueryChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnRecipientQueryChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnRecipientQueryNameChanging(string oldValue, string newValue);
+		partial void OnRecipientQueryNameChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

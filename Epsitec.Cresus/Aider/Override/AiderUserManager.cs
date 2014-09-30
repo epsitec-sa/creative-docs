@@ -140,6 +140,19 @@ namespace Epsitec.Aider.Override
 				When.Now);
 		}
 
+		public static IEnumerable<DataSetUISettingsEntity> GetCurrentDataSetSettingsUISettings(string dataSetCommandId)
+		{
+			return AiderUserManager.Current
+								   .AuthenticatedUser
+								   .CustomUISettings
+								   .DataSetUISettings
+								   .Where 
+								   (
+										d => 
+										d.DataSetCommandId == dataSetCommandId
+								   );
+		}
+
 		private void NotifyChangePassword(AiderUserEntity user, NotificationManager notif)
 		{
 			var message = new NotificationMessage ()

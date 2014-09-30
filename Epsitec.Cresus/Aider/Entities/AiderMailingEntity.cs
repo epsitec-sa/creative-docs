@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Entities
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
-				/**/						 this.RecipientQuery != null ? "Filtre appliqué\n" : "Non filtré\n",
+				/**/						 this.RecipientQueryName != null ? "Filtre appliqué: " + this.RecipientQueryName + "\n" : "Aucun filtre\n",
 				/**/						 this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
@@ -82,15 +82,7 @@ namespace Epsitec.Aider.Entities
 				if (this.RecipientQuery != null)
 				{
 					var created			   = new List<AiderMailingParticipantEntity> ();
-					var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
-					var queryFilter		   = Filter.Restore (queryFilterXml);
-					var example			   = new AiderContactEntity ();
-					var request			   = new Request ()
-					{
-						RootEntity = example
-					};
-
-					request.AddCondition (businessContext.DataContext, example, queryFilter);
+					var request			   = this.GetRecipientQueryRequest (businessContext);
 
 					contactsHouseholdsFromQuery = businessContext.GetByRequest<AiderContactEntity> (request)
 												.Select (c => c.Household);
@@ -136,15 +128,7 @@ namespace Epsitec.Aider.Entities
 				if (this.RecipientQuery != null)
 				{
 					var created			   = new List<AiderMailingParticipantEntity> ();
-					var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
-					var queryFilter		   = Filter.Restore (queryFilterXml);
-					var example			   = new AiderContactEntity ();
-					var request			   = new Request ()
-					{
-						RootEntity = example
-					};
-
-					request.AddCondition (businessContext.DataContext, example, queryFilter);
+					var request			   = this.GetRecipientQueryRequest (businessContext);
 
 					var contactsFromQuery = businessContext.GetByRequest<AiderContactEntity> (request);
 					foreach (var contact in contactsFromQuery)
@@ -410,7 +394,7 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.FromSimpleText ("Destinataires (", 
 				/**/							 this.GetRecipients ().Count ().ToString (),
 				/**/							 ")",
-				/**/							 this.RecipientQuery != null ? " +Filtre" : "");
+				/**/							 this.RecipientQueryName != null ? " + " + this.RecipientQueryName : "");
 		}
 
 		public FormattedText GetRecipientsSummary()
@@ -512,6 +496,21 @@ namespace Epsitec.Aider.Entities
 		{
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, mailing);
 			businessContext.DeleteEntity (mailing);
+		}
+
+		public Request<AiderContactEntity> GetRecipientQueryRequest(BusinessContext businessContext)
+		{
+			var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
+			var queryFilter		   = Filter.Restore (queryFilterXml);
+			var example			   = new AiderContactEntity ();
+			var request			   = new Request<AiderContactEntity> ()
+			{
+				RootEntity = example
+			};
+
+			request.AddCondition (businessContext.DataContext, example, queryFilter);
+			
+			return request;
 		}
 
 		private void UpdateLastUpdateDate()

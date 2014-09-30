@@ -37,8 +37,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity
-				.RecipientQuery = null;
+			this.Entity.RecipientQuery = null;
+			this.Entity.RecipientQueryName = null;
 			this.Entity.UpdateMailingParticipants (this.BusinessContext);
 		}
 	}
