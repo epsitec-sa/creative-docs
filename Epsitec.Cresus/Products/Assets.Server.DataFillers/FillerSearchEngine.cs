@@ -8,6 +8,9 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
+	/// <summary>
+	/// Algorithme général de recherche d'un pattern dans un DataFiller.
+	/// </summary>
 	public static class FillerSearchEngine<T>
 		where T : struct
 	{
@@ -15,28 +18,32 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			string pattern, int direction,
 			SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
 		{
-			//	A partir d'une ligne sélectionnée, on cherche la prochaine ligne correspondant
-			//	au motif de recherche, cycliquement.
-			int count = nodeGetter.Count;
+			//	A partir d'une ligne donnée, on cherche la prochaine ligne correspondant
+			//	au motif de recherche, dans une direction à choix, cycliquement.
+			//	Retourne la ligne trouvée, ou -1.
+			System.Diagnostics.Debug.Assert (direction == 1 || direction == -1);
 
+			var engine = new SearchEngine (pattern, mode);
+
+			int count = nodeGetter.Count;
 			for (int i=0; i<count; i++)
 			{
 				row += direction;
 
-				if (row < 0)
+				if (row < 0)  // arrivé avant le début ?
 				{
-					row = count-1;
+					row = count-1;  // va à la fin
 				}
 
-				if (row > count-1)
+				if (row > count-1)  // arrivé après le fin ?
 				{
-					row = 0;
+					row = 0;  // va au début
 				}
 
-				var content = dataFiller.GetContent (row, 1, -1);
-				var result = FillerSearchEngine<T>.Search (content, pattern, mode);
+				var content = dataFiller.GetContent (row, 1, -1);  // demande juste une ligne
+				var result = FillerSearchEngine<T>.Search (content, engine);
 
-				if (!result.IsEmpty)
+				if (!result.IsEmpty)  // trouvé ?
 				{
 					return row;
 				}
@@ -46,12 +53,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private static Result Search(TreeTableContentItem content, string pattern, SearchMode mode)
+		private static Result Search(TreeTableContentItem content, SearchEngine engine)
 		{
 			if (content.Columns.Any ())
 			{
-				var engine = new SearchEngine (pattern, mode);
-
 				int rowCount = content.Columns[0].Cells.Count;
 
 				for (int row=0; row<rowCount; row++)
@@ -62,18 +67,20 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 						if (FillerSearchEngine<T>.IsMatching (engine, cell))
 						{
-							return new Result (column, row);
+							return new Result (column, row);  // retourne l'emplacement trouvé
 						}
 					}
 				}
 			}
 
-			return Result.Empty;
+			return Result.Empty;  // pas trouvé
 		}
 
 
 		private static bool IsMatching(SearchEngine engine, AbstractTreeTableCell cell)
 		{
+			//	Cherche si le contenu d'une cellule match avec le pattern, quel que soit
+			//	le type de la cellule.
 			if (cell is TreeTableCellString)
 			{
 				var c = cell as TreeTableCellString;

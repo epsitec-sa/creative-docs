@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public SearchEngine(string pattern, SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
 		{
+			//	Avec pattern = "les", IsMatching retournera true avec text = "Salut les copains"
+			//	(avec le mode par défaut).
 			this.mode = mode;
 
 			if ((this.mode & SearchMode.Regex) != 0)

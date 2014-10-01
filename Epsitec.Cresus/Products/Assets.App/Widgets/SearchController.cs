@@ -10,8 +10,8 @@ using Epsitec.Cresus.Assets.App.Helpers;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Petit widget présent généralement dans les toolbars, permettant d'effectuer
-	/// une recherche textuelle.
+	/// Petit widget présent généralement dans les toolbars, permettant d'effectuer une
+	/// recherche textuelle en avant ou en arrière dans le DataFiller d'un TreeTable.
 	/// </summary>
 	public class SearchController
 	{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.clearButton = new IconButton
 			{
 				Parent          = parent,
-				IconUri         = Misc.GetResourceIconUri ("Field.Delete"),
+				IconUri         = Misc.GetResourceIconUri ("Field.Delete"),  // gomme
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
 				Margins         = new Margins (0, 0, margin, margin),
@@ -100,12 +100,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.prevButton.Clicked += delegate
 			{
-				this.OnSearch (this.textField.Text, -1);
+				this.OnSearch (this.textField.Text, -1);  // cherche en arrière
 			};
 
 			this.nextButton.Clicked += delegate
 			{
-				this.OnSearch (this.textField.Text, 1);
+				this.OnSearch (this.textField.Text, 1);  // cherche en avant
 			};
 
 			this.UpdateWidgets ();
