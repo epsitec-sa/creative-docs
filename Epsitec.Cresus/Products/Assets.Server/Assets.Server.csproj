@@ -53,6 +53,8 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\SearchMode.cs" />
+    <Compile Include="BusinessLogic\SearchEngine.cs" />
     <Compile Include="BusinessLogic\Warning.cs" />
     <Compile Include="BusinessLogic\UniversalLogic.cs" />
     <Compile Include="BusinessLogic\WarningsLogic.cs" />

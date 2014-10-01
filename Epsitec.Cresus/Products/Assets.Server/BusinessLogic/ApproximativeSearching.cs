@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return (int) Ranking.StrictlyEqual;
 			}
 
-			existing  = ApproximativeSearching.RemoveAccent (existing .ToLower ());
-			searching = ApproximativeSearching.RemoveAccent (searching.ToLower ());
+			existing  = ApproximativeSearching.RemoveDiatritic (existing .ToLower ());
+			searching = ApproximativeSearching.RemoveDiatritic (searching.ToLower ());
 
 			if (existing == searching)
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private static string Phonetic(string s)
+		public static string Phonetic(string s)
 		{
 			//	C'est de la bricole, qu'il faudra peut-être améliorer un jour !
 			s = s.Replace ("cc", "c");
@@ -105,19 +105,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return s;
 		}
 
-		private static string RemoveAccent(string s)
+		public static string RemoveDiatritic(string s)
 		{
 			var builder = new System.Text.StringBuilder ();
 
 			foreach (var c in s)
 			{
-				builder.Append (ApproximativeSearching.RemoveAccent(c));
+				builder.Append (ApproximativeSearching.RemoveDiacritic(c));
 			}
 
 			return builder.ToString ();
 		}
 
-		private static char RemoveAccent(char c)
+		private static char RemoveDiacritic(char c)
 		{
 			//	Adapté au français et à l'allemand.
 			switch (c)
@@ -148,6 +148,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case 'ü':
 				case 'ù':
 					return 'u';
+
+				case 'À':
+				case 'Â':
+				case 'Ä':
+					return 'A';
+
+				case 'Ç':
+					return 'C';
+
+				case 'É':
+				case 'È':
+				case 'Ê':
+				case 'Ë':
+					return 'E';
+
+				case 'Î':
+				case 'Ï':
+					return 'I';
+
+				case 'Ô':
+				case 'Ö':
+					return 'O';
+
+				case 'Û':
+				case 'Ü':
+				case 'Ù':
+					return 'U';
 
 				default:
 					return c;

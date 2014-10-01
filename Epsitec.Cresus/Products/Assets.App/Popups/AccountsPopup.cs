@@ -400,11 +400,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (this.filterField == null || string.IsNullOrEmpty (this.filterField.Text))
 			{
-				this.preprocessFilter = null;
+				this.searchEngine = null;
 			}
 			else
 			{
-				this.preprocessFilter = this.filterField.Text.ToLowerInvariant ();
+				this.searchEngine = new SearchEngine (this.filterField.Text);
 			}
 
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting, this.Filter);
@@ -425,13 +425,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return false;  // caché
 				}
 
-				if (!string.IsNullOrEmpty (this.preprocessFilter))
+				if (this.searchEngine != null)
 				{
 					var number = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number, inputValue: true);
 					var name   = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Name);
 
-					if (!this.IsMatch (number) &&
-						!this.IsMatch (name))
+					if (!this.searchEngine.IsMatching (number) &&
+						!this.searchEngine.IsMatching (name))
 					{
 						return false;  // caché
 					}
@@ -443,24 +443,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				return false;  // caché
 			}
-		}
-
-		private bool IsMatch(string text)
-		{
-			if (!string.IsNullOrEmpty (text))
-			{
-#if true
-				if (text.ToLowerInvariant ().Contains (this.preprocessFilter))
-				{
-					return true;
-				}
-#else
-				int ranking = ApproximativeSearching.GetRanking (text, this.preprocessFilter);
-				return ranking > 0;
-#endif
-			}
-
-			return false;
 		}
 
 		private void UpdateController(bool crop = true)
@@ -528,6 +510,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private CheckButton								categoriesRevenusButton;
 		private CheckButton								categoriesDepensesButton;
 		private CheckButton								categoriesRecettesButton;
-		private string									preprocessFilter;
+		private SearchEngine							searchEngine;
 	}
 }
