@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -15,24 +16,24 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class SearchController
 	{
-		public string							SearchText
+		public SearchDefinition					Definition
 		{
 			get
 			{
 				if (this.textField == null)
 				{
-					return null;
+					return SearchDefinition.Default;
 				}
 				else
 				{
-					return this.textField.Text;
+					return SearchDefinition.Default.FromPattern (this.textField.Text);
 				}
 			}
 			set
 			{
 				if (this.textField != null)
 				{
-					this.textField.Text = value;
+					this.textField.Text = value.Pattern;
 				}
 			}
 		}
@@ -94,18 +95,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.clearButton.Clicked += delegate
 			{
-				this.SearchText = null;
+				this.Definition = SearchDefinition.Default;
 				this.UpdateWidgets ();
 			};
 
 			this.prevButton.Clicked += delegate
 			{
-				this.OnSearch (this.textField.Text, -1);  // cherche en arrière
+				this.OnSearch (this.Definition, -1);  // cherche en arrière
 			};
 
 			this.nextButton.Clicked += delegate
 			{
-				this.OnSearch (this.textField.Text, 1);  // cherche en avant
+				this.OnSearch (this.Definition, 1);  // cherche en avant
 			};
 
 			this.UpdateWidgets ();
@@ -114,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateWidgets()
 		{
-			bool enable = !string.IsNullOrEmpty (this.SearchText);
+			bool enable = this.Definition.IsActive;
 
 			if (enable)
 			{
@@ -132,12 +133,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnSearch(string filter, int direction)
+		private void OnSearch(SearchDefinition definition, int direction)
 		{
-			this.Search.Raise (this, filter, direction);
+			this.Search.Raise (this, definition, direction);
 		}
 
-		public event EventHandler<string, int> Search;
+		public event EventHandler<SearchDefinition, int> Search;
 		#endregion
 
 

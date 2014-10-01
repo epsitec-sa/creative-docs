@@ -9,6 +9,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -173,9 +174,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			controller.CreateUI (box);
 
-			controller.Search += delegate (object sender, string filter, int direction)
+			controller.Search += delegate (object sender, SearchDefinition definition, int direction)
 			{
-				this.OnSearch (filter, direction);
+				this.OnSearch (definition, direction);
 			};
 
 			return controller;
@@ -343,12 +344,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		#region Events handler
-		private void OnSearch(string filter, int direction)
+		private void OnSearch(SearchDefinition definition, int direction)
 		{
-			this.Search.Raise (this, filter, direction);
+			this.Search.Raise (this, definition, direction);
 		}
 
-		public event EventHandler<string, int> Search;
+		public event EventHandler<SearchDefinition, int> Search;
 		#endregion
 
 

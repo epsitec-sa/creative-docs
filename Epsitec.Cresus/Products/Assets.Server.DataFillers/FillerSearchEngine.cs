@@ -15,15 +15,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		where T : struct
 	{
 		public static int Search(INodeGetter<T> nodeGetter, AbstractTreeTableFiller<T> dataFiller, int row,
-			string pattern, int direction,
-			SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
+			SearchDefinition definition, int direction)
 		{
 			//	A partir d'une ligne donnée, on cherche la prochaine ligne correspondant
 			//	au motif de recherche, dans une direction à choix, cycliquement.
 			//	Retourne la ligne trouvée, ou -1.
 			System.Diagnostics.Debug.Assert (direction == 1 || direction == -1);
 
-			var engine = new SearchEngine (pattern, mode);
+			var engine = new SearchEngine (definition);
 
 			int count = nodeGetter.Count;
 			for (int i=0; i<count; i++)
@@ -35,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					row = count-1;  // va à la fin
 				}
 
-				if (row > count-1)  // arrivé après le fin ?
+				if (row > count-1)  // arrivé après la fin ?
 				{
 					row = 0;  // va au début
 				}

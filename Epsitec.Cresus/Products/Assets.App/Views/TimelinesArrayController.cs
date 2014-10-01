@@ -218,9 +218,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.assetsToolbar = new AssetsLeftToolbar (this.accessor, this.commandContext);
 			this.assetsToolbar.CreateUI (leftBox);
 
-			this.assetsToolbar.Search += delegate (object sender, string filter, int direction)
+			this.assetsToolbar.Search += delegate (object sender, SearchDefinition definition, int direction)
 			{
-				this.Search (filter, direction);
+				this.Search (definition, direction);
 			};
 
 			this.treeColumn = new TreeTableColumnTree
@@ -367,9 +367,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void Search(string filter, int direction)
+		private void Search(SearchDefinition definition, int direction)
 		{
-			var row = FillerSearchEngine<SortableCumulNode>.Search (this.nodeGetter, this.dataFiller, this.selectedRow, filter, direction);
+			var row = FillerSearchEngine<SortableCumulNode>.Search (this.nodeGetter, this.dataFiller, this.selectedRow, definition, direction);
 
 			if (row != -1)
 			{

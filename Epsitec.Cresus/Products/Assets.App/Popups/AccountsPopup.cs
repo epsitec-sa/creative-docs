@@ -404,7 +404,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				this.searchEngine = new SearchEngine (this.filterField.Text);
+				var definition = SearchDefinition.Default.FromPattern (this.filterField.Text);
+				this.searchEngine = new SearchEngine (definition);
 			}
 
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting, this.Filter);

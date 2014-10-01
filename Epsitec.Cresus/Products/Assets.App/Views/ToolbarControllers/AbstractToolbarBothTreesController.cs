@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -253,15 +254,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected void ConnectSearch()
 		{
-			this.toolbar.Search += delegate (object sender, string filter, int direction)
+			this.toolbar.Search += delegate (object sender, SearchDefinition definition, int direction)
 			{
-				this.Search (filter, direction);
+				this.Search (definition, direction);
 			};
 		}
 
-		private void Search(string filter, int direction)
+		private void Search(SearchDefinition definition, int direction)
 		{
-			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, this.VisibleSelectedRow, filter, direction);
+			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, this.VisibleSelectedRow, definition, direction);
 
 			if (row != -1)
 			{

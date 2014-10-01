@@ -15,17 +15,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public class SearchEngine
 	{
-		public SearchEngine(string pattern, SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
+		public SearchEngine(SearchDefinition definition)
 		{
 			//	Avec pattern = "les", IsMatching retournera true avec text = "Salut les copains"
 			//	(avec le mode par défaut).
-			this.mode = mode;
+			this.definition = definition;
 
-			if ((this.mode & SearchMode.Regex) != 0)
+			if ((this.definition.Mode & SearchMode.Regex) != 0)
 			{
 				try
 				{
-					this.regexPattern = new Regex (pattern, RegexOptions.Compiled);
+					this.regexPattern = new Regex (this.definition.Pattern, RegexOptions.Compiled);
 				}
 				catch
 				{
@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				this.stringPattern  = this.ProcessString (pattern);
-				this.decimalPattern = TypeConverters.ParseAmount (pattern);
-				this.intPattern     = TypeConverters.ParseInt (pattern);
-				this.datePattern    = TypeConverters.ParseDate (pattern, Timestamp.Now.Date, null, null);
+				this.stringPattern  = this.ProcessString (this.definition.Pattern);
+				this.decimalPattern = TypeConverters.ParseAmount (this.definition.Pattern);
+				this.intPattern     = TypeConverters.ParseInt (this.definition.Pattern);
+				this.datePattern    = TypeConverters.ParseDate (this.definition.Pattern, Timestamp.Now.Date, null, null);
 			}
 		}
 
@@ -47,15 +47,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				text = this.ProcessString (text);
 
-				if ((this.mode & SearchMode.FullText) != 0)
+				if ((this.definition.Mode & SearchMode.FullText) != 0)
 				{
 					return this.IsMatchingFullText (text);
 				}
-				else if ((this.mode & SearchMode.Fragment) != 0)
+				else if ((this.definition.Mode & SearchMode.Fragment) != 0)
 				{
 					return this.IsMatchingFragment (text);
 				}
-				else if ((this.mode & SearchMode.Regex) != 0)
+				else if ((this.definition.Mode & SearchMode.Regex) != 0)
 				{
 					return this.IsMatchingRegex (text);
 				}
@@ -148,17 +148,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				if ((this.mode & SearchMode.IgnoreCase) != 0)
+				if ((this.definition.Mode & SearchMode.IgnoreCase) != 0)
 				{
 					text = text.ToLowerInvariant ();
 				}
 
-				if ((this.mode & SearchMode.IgnoreDiacritic) != 0)
+				if ((this.definition.Mode & SearchMode.IgnoreDiacritic) != 0)
 				{
 					text = ApproximativeSearching.RemoveDiatritic (text);
 				}
 
-				if ((this.mode & SearchMode.Phonetic) != 0)
+				if ((this.definition.Mode & SearchMode.Phonetic) != 0)
 				{
 					text = ApproximativeSearching.Phonetic (text);
 				}
@@ -168,11 +168,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		private readonly SearchDefinition		definition;
 		private readonly string					stringPattern;
 		private readonly decimal?				decimalPattern;
 		private readonly int?					intPattern;
 		private readonly System.DateTime?		datePattern;
 		private readonly Regex					regexPattern;
-		private readonly SearchMode				mode;
 	}
 }
