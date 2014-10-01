@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public class SearchEngine
 	{
-		public SearchEngine(string filter, SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
+		public SearchEngine(string pattern, SearchMode mode = SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment)
 		{
 			this.mode = mode;
 
@@ -22,36 +23,39 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				try
 				{
-					this.regexFilter = new Regex (filter, RegexOptions.Compiled);
+					this.regexPattern = new Regex (pattern, RegexOptions.Compiled);
 				}
 				catch
 				{
-					this.regexFilter = null;
+					this.regexPattern = null;
 				}
 			}
 			else
 			{
-				this.processFilter = this.Process (filter);
+				this.stringPattern  = this.ProcessString (pattern);
+				this.decimalPattern = TypeConverters.ParseAmount (pattern);
+				this.intPattern     = TypeConverters.ParseInt (pattern);
+				this.datePattern    = TypeConverters.ParseDate (pattern, Timestamp.Now.Date, null, null);
 			}
 		}
 
 		public bool IsMatching(string text)
 		{
-			if (!this.processFilter.IsEmpty)
+			if (!string.IsNullOrEmpty (this.stringPattern))
 			{
-				var richText = this.Process (text);
+				text = this.ProcessString (text);
 
 				if ((this.mode & SearchMode.FullText) != 0)
 				{
-					return this.IsMatchingFullText (richText);
+					return this.IsMatchingFullText (text);
 				}
 				else if ((this.mode & SearchMode.Fragment) != 0)
 				{
-					return this.IsMatchingFragment (richText);
+					return this.IsMatchingFragment (text);
 				}
 				else if ((this.mode & SearchMode.Regex) != 0)
 				{
-					return this.IsMatchingRegex (richText);
+					return this.IsMatchingRegex (text);
 				}
 				else
 				{
@@ -64,48 +68,82 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-
-		private bool IsMatchingFullText(RichText text)
+		public bool IsMatching(decimal? value)
 		{
-			if (this.processFilter.Amount.HasValue)
+			if (value.HasValue)
 			{
-				return text.Amount == this.processFilter.Amount;
+				return value == this.decimalPattern;
 			}
 			else
 			{
-				return text.Text == this.processFilter.Text;
+				return false;
 			}
 		}
 
-		private bool IsMatchingFragment(RichText text)
+		public bool IsMatching(int? value)
 		{
-			if (this.processFilter.Amount.HasValue)
+			if (value.HasValue)
 			{
-				return text.Amount == this.processFilter.Amount;
+				return value == this.intPattern;
 			}
 			else
 			{
-				return text.Text.Contains (this.processFilter.Text);
+				return false;
 			}
 		}
 
-		private bool IsMatchingRegex(RichText text)
+		public bool IsMatching(System.DateTime? date)
 		{
-			if (this.regexFilter == null)
+			if (date.HasValue)
+			{
+				return date == this.datePattern;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
+		private bool IsMatchingFullText(string text)
+		{
+			if (string.IsNullOrEmpty (text))
 			{
 				return false;
 			}
 			else
 			{
-				return this.regexFilter.IsMatch (text.Text);
+				return text == this.stringPattern;
+			}
+		}
+
+		private bool IsMatchingFragment(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return false;
+			}
+			else
+			{
+				return text.Contains (this.stringPattern);
+			}
+		}
+
+		private bool IsMatchingRegex(string text)
+		{
+			if (this.regexPattern == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.regexPattern.IsMatch (text);
 			}
 		}
 
 
-		private RichText Process(string text)
+		private string ProcessString(string text)
 		{
-			decimal? amount = null;
-
 			if (!string.IsNullOrEmpty (text))
 			{
 				if ((this.mode & SearchMode.IgnoreCase) != 0)
@@ -122,38 +160,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					text = ApproximativeSearching.Phonetic (text);
 				}
-
-				amount = TypeConverters.ParseAmount (text);
 			}
 
-			return new RichText (text, amount);
+			return text;
 		}
 
 
-		private struct RichText
-		{
-			public RichText(string text, decimal? amount)
-			{
-				this.Text   = text;
-				this.Amount = amount;
-			}
-
-			public readonly string				Text;
-			public readonly decimal?			Amount;
-
-			public bool IsEmpty
-			{
-				get
-				{
-					return string.IsNullOrEmpty (this.Text)
-						&& !this.Amount.HasValue;
-				}
-			}
-		}
-
-
-		private readonly RichText				processFilter;
-		private readonly Regex					regexFilter;
+		private readonly string					stringPattern;
+		private readonly decimal?				decimalPattern;
+		private readonly int?					intPattern;
+		private readonly System.DateTime?		datePattern;
+		private readonly Regex					regexPattern;
 		private readonly SearchMode				mode;
 	}
 }

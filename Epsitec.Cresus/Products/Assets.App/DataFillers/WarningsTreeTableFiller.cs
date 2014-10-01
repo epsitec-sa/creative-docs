@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Views;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -47,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningViewGlyph,   TreeTableColumnType.Icon,    50, Res.Strings.DataFillers.WarningsTreeTable.Glyph.Title.ToString (), Res.Strings.DataFillers.WarningsTreeTable.Glyph.Tooltip.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningObject,      TreeTableColumnType.String, 200, Res.Strings.DataFillers.WarningsTreeTable.Object.Title.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.String,  70, Res.Strings.DataFillers.WarningsTreeTable.Date.Title.ToString (), Res.Strings.DataFillers.WarningsTreeTable.Date.Tooltip.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDate,        TreeTableColumnType.Date,    70, Res.Strings.DataFillers.WarningsTreeTable.Date.Title.ToString (), Res.Strings.DataFillers.WarningsTreeTable.Date.Tooltip.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningEventGlyph,  TreeTableColumnType.Glyph,   20, "",                                                               Res.Strings.DataFillers.WarningsTreeTable.EventGlyph.Tooltip.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningField,       TreeTableColumnType.String, 150, Res.Strings.DataFillers.WarningsTreeTable.Field.Title.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.WarningDescription, TreeTableColumnType.String, 400, Res.Strings.DataFillers.WarningsTreeTable.Description.Title.ToString ()));
@@ -94,14 +93,14 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				string icon  = StaticDescriptions.GetViewTypeIcon (StaticDescriptions.GetViewTypeKind (warning.BaseType.Kind));
 				string text  = UniversalLogic.GetObjectSummary (this.accessor, warning.BaseType, obj, timestamp);
-				string date  = timestamp.HasValue ? TypeConverters.DateToString (timestamp.Value.Date) : null;
+				var    date  = timestamp.Value.Date;
 				var    glyph = TimelineData.TypeToGlyph (eventType);
 				string field = UserFieldsLogic.GetFieldName (this.accessor, warning.BaseType, warning.Field);
 				string desc  = warning.Description;
 
 				var cell1 = new TreeTableCellString (icon,  cellState);
 				var cell2 = new TreeTableCellString (text,  cellState);
-				var cell3 = new TreeTableCellString (date,  cellState);
+				var cell3 = new TreeTableCellDate   (date,  cellState);
 				var cell4 = new TreeTableCellGlyph  (glyph, cellState);
 				var cell5 = new TreeTableCellString (field, cellState);
 				var cell6 = new TreeTableCellString (desc,  cellState);

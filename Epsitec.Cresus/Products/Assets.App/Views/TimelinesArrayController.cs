@@ -216,8 +216,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Partie gauche.
 			this.assetsToolbar = new AssetsLeftToolbar (this.accessor, this.commandContext);
-
 			this.assetsToolbar.CreateUI (leftBox);
+
+			this.assetsToolbar.Search += delegate (object sender, string filter, int direction)
+			{
+				this.Search (filter, direction);
+			};
 
 			this.treeColumn = new TreeTableColumnTree
 			{
@@ -363,6 +367,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void Search(string filter, int direction)
+		{
+			var row = FillerSearchEngine<SortableCumulNode>.Search (this.nodeGetter, this.dataFiller, this.selectedRow, filter, direction);
+
+			if (row != -1)
+			{
+				this.SelectedGuid = this.nodeGetter.GetNodes ().ToList ()[row].Guid;
+			}
+		}
 
 		public TimelinesMode					TimelinesMode
 		{

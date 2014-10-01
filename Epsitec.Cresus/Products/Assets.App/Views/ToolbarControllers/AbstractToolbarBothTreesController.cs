@@ -251,6 +251,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		protected void ConnectSearch()
+		{
+			this.toolbar.Search += delegate (object sender, string filter, int direction)
+			{
+				this.Search (filter, direction);
+			};
+		}
+
+		private void Search(string filter, int direction)
+		{
+			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, this.VisibleSelectedRow, filter, direction);
+
+			if (row != -1)
+			{
+				this.VisibleSelectedRow = row;
+			}
+		}
+
+
 		protected FrameBox							treeTableFrame;
 		protected FrameBox							graphicFrame;
 		protected FrameBox							bottomFrame;

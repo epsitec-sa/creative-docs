@@ -100,12 +100,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.prevButton.Clicked += delegate
 			{
-				this.OnSearch (-1);
+				this.OnSearch (this.textField.Text, -1);
 			};
 
 			this.nextButton.Clicked += delegate
 			{
-				this.OnSearch (1);
+				this.OnSearch (this.textField.Text, 1);
 			};
 
 			this.UpdateWidgets ();
@@ -132,12 +132,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 
 		#region Events handler
-		private void OnSearch(int direction)
+		private void OnSearch(string filter, int direction)
 		{
-			this.Search.Raise (this, direction);
+			this.Search.Raise (this, filter, direction);
 		}
 
-		public event EventHandler<int> Search;
+		public event EventHandler<string, int> Search;
 		#endregion
 
 

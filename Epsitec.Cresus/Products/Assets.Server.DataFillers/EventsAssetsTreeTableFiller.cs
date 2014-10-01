@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -102,8 +101,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					if (userField.Field == ObjectField.EventDate)
 					{
-						var date = TypeConverters.DateToString (timestamp.Date);
-						cell = new TreeTableCellString (date, cellState);
+						cell = new TreeTableCellDate (timestamp.Date, cellState);
 					}
 					else if (userField.Field == ObjectField.EventGlyph)
 					{
@@ -131,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				yield return new UserField (Res.Strings.EventsAssetsTreeTableFiller.Date.ToString (), ObjectField.EventDate,  FieldType.String, false,  70, null, null, null, 0);
+				yield return new UserField (Res.Strings.EventsAssetsTreeTableFiller.Date.ToString (), ObjectField.EventDate,  FieldType.Date,   false,  70, null, null, null, 0);
 				yield return new UserField ("",                                                       ObjectField.EventGlyph, FieldType.String, false,  20, null, null, null, 0);
 				yield return new UserField (Res.Strings.EventsAssetsTreeTableFiller.Type.ToString (), ObjectField.EventType,  FieldType.String, false, 110, null, null, null, 0);
 

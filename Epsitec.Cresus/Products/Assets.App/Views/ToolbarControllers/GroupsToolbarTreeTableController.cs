@@ -99,6 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected override void CreateToolbar()
 		{
 			this.toolbar = new GroupsToolbar (this.accessor, this.commandContext);
+			this.ConnectSearch ();
 		}
 
 		protected override void CreateNodeFiller()

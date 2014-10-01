@@ -6,6 +6,7 @@ using System.Linq;
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -172,6 +173,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			controller.CreateUI (box);
 
+			controller.Search += delegate (object sender, string filter, int direction)
+			{
+				this.OnSearch (filter, direction);
+			};
+
 			return controller;
 		}
 
@@ -333,6 +339,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			return this.toolbar.Children.Widgets
 				.Where (x => x.Dock == DockStyle.None && x.Index <= superficiality);
 		}
+		#endregion
+
+
+		#region Events handler
+		private void OnSearch(string filter, int direction)
+		{
+			this.Search.Raise (this, filter, direction);
+		}
+
+		public event EventHandler<string, int> Search;
 		#endregion
 
 

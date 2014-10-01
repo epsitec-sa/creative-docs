@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public IEnumerable<AbstractTreeTableCell> Cells
+		public List<AbstractTreeTableCell> Cells
 		{
 			get
 			{
