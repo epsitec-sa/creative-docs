@@ -9,6 +9,10 @@ using Epsitec.Cresus.Assets.App.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
+	/// <summary>
+	/// Petit widget présent généralement dans les toolbars, permettant d'effectuer
+	/// une recherche textuelle.
+	/// </summary>
 	public class SearchController
 	{
 		public string							SearchText

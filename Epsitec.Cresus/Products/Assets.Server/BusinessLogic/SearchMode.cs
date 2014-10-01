@@ -11,13 +11,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		Unknown            = 0x0000,
 
-		IgnoreCase         = 0x0001,
-		IgnoreDiacritic    = 0x0002,
-		Phonetic           = 0x0004,
+		IgnoreCase         = 0x0001,  // a = A
+		IgnoreDiacritic    = 0x0002,  // e = é
+		Phonetic           = 0x0004,  // ph = f
 		Regex              = 0x0008,
 
-		Fragment           = 0x0100,
-		WholeWords         = 0x0200,
-		FullText           = 0x0400,
+		Fragment           = 0x0100,  // trouve "a" dans "blabla"
+		WholeWords         = 0x0200,  // trouve "les" dans "salut les copains"
+		FullText           = 0x0400,  // trouve "toto" dans "toto"
 	}
 }
