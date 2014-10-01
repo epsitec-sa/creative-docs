@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void Search(SearchDefinition definition, int direction)
 		{
-			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, this.VisibleSelectedRow, definition, direction);
+			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, definition, this.VisibleSelectedRow, direction);
 
 			if (row != -1)
 			{

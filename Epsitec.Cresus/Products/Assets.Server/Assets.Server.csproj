@@ -54,7 +54,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BusinessLogic\SearchDefinition.cs" />
-    <Compile Include="BusinessLogic\SearchMode.cs" />
+    <Compile Include="BusinessLogic\SearchOptions.cs" />
     <Compile Include="BusinessLogic\SearchEngine.cs" />
     <Compile Include="BusinessLogic\Warning.cs" />
     <Compile Include="BusinessLogic\UniversalLogic.cs" />

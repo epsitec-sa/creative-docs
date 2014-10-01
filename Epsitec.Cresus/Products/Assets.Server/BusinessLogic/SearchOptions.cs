@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	[System.Flags]
-	public enum SearchMode
+	public enum SearchOptions
 	{
 		Unknown            = 0x0000,
 
@@ -16,8 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		Phonetic           = 0x0004,  // ph = f
 		Regex              = 0x0008,
 
-		Fragment           = 0x0100,  // trouve "a" dans "blabla"
-		WholeWords         = 0x0200,  // trouve "les" dans "salut les copains"
-		FullText           = 0x0400,  // trouve "toto" dans "toto"
+		WholeWords         = 0x0100,  // trouve "les" dans "salut les copains"
+		FullText           = 0x0200,  // trouve "toto" dans "toto"
 	}
 }

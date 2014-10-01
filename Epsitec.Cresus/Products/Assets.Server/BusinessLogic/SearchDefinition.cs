@@ -6,13 +6,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-
+	/// <summary>
+	/// Cette structure définit ce qu'il faut chercher, c'est-à-dire la chaîne
+	/// cherchée (pattern) et comment chercher (mode).
+	/// </summary>
 	public struct SearchDefinition
 	{
-		public SearchDefinition(string pattern, SearchMode mode)
+		public SearchDefinition(string pattern, SearchOptions options)
 		{
 			this.Pattern = pattern;
-			this.Mode    = mode;
+			this.Options = options;
 		}
 
 		public bool IsActive
@@ -26,19 +29,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public SearchDefinition FromPattern(string pattern)
 		{
-			return new SearchDefinition (pattern, this.Mode);
+			return new SearchDefinition (pattern, this.Options);
 		}
 
-		public SearchDefinition FromMode(SearchMode mode)
+		public SearchDefinition FromOptions(SearchOptions options)
 		{
-			return new SearchDefinition (this.Pattern, mode);
+			return new SearchDefinition (this.Pattern, options);
 		}
 
 
-		public static SearchDefinition Default = new SearchDefinition (null, SearchMode.IgnoreCase | SearchMode.IgnoreDiacritic | SearchMode.Fragment);
+		public static SearchDefinition Default = new SearchDefinition (null, SearchOptions.IgnoreCase | SearchOptions.IgnoreDiacritic);
 
 
 		public readonly string					Pattern;
-		public readonly SearchMode				Mode;
+		public readonly SearchOptions			Options;
 	}
 }

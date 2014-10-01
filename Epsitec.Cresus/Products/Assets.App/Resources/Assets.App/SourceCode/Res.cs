@@ -4598,6 +4598,58 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544873));
 					}
 				}
+				public static class Options
+				{
+					//	designer:str/JUKGH01
+					public static global::Epsitec.Common.Types.FormattedText FullText
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544880));
+						}
+					}
+					//	designer:str/JUKBH01
+					public static global::Epsitec.Common.Types.FormattedText IgnoreCase
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544875));
+						}
+					}
+					//	designer:str/JUKDH01
+					public static global::Epsitec.Common.Types.FormattedText IgnoreDiacritic
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544877));
+						}
+					}
+					//	designer:str/JUKEH01
+					public static global::Epsitec.Common.Types.FormattedText Phonetic
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544878));
+						}
+					}
+					//	designer:str/JUKFH01
+					public static global::Epsitec.Common.Types.FormattedText Regex
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544879));
+						}
+					}
+					//	designer:str/JUKCH01
+					public static global::Epsitec.Common.Types.FormattedText WholeWords
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544876));
+						}
+					}
+				}
+				
 				public static class Tooltip
 				{
 					//	designer:str/JUK6H01
@@ -4614,6 +4666,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544872));
+						}
+					}
+					//	designer:str/JUKAH01
+					public static global::Epsitec.Common.Types.FormattedText Options
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544874));
 						}
 					}
 					//	designer:str/JUK7H01
@@ -8945,6 +9005,58 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544873);
 					}
 				}
+				public static class Options
+				{
+					//	designer:str/JUKGH01
+					public static global::Epsitec.Common.Support.Druid FullText
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544880);
+						}
+					}
+					//	designer:str/JUKBH01
+					public static global::Epsitec.Common.Support.Druid IgnoreCase
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544875);
+						}
+					}
+					//	designer:str/JUKDH01
+					public static global::Epsitec.Common.Support.Druid IgnoreDiacritic
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544877);
+						}
+					}
+					//	designer:str/JUKEH01
+					public static global::Epsitec.Common.Support.Druid Phonetic
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544878);
+						}
+					}
+					//	designer:str/JUKFH01
+					public static global::Epsitec.Common.Support.Druid Regex
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544879);
+						}
+					}
+					//	designer:str/JUKCH01
+					public static global::Epsitec.Common.Support.Druid WholeWords
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544876);
+						}
+					}
+				}
+				
 				public static class Tooltip
 				{
 					//	designer:str/JUK6H01
@@ -8961,6 +9073,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544872);
+						}
+					}
+					//	designer:str/JUKAH01
+					public static global::Epsitec.Common.Support.Druid Options
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544874);
 						}
 					}
 					//	designer:str/JUK7H01

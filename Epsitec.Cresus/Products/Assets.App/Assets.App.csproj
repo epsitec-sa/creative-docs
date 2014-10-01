@@ -102,6 +102,7 @@
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
+    <Compile Include="Popups\SearchOptionsPopup.cs" />
     <Compile Include="Popups\PageFormatType.cs" />
     <Compile Include="Popups\MenuPopupItem.cs" />
     <Compile Include="Popups\PopupStack.cs" />
@@ -496,6 +497,10 @@
     <EmbeddedResource Include="Images\Report.AddFavorite.icon" />
     <EmbeddedResource Include="Images\Triangle.Down.icon" />
     <EmbeddedResource Include="Images\Triangle.Up.icon" />
+    <EmbeddedResource Include="Images\Search.Clear.icon" />
+    <EmbeddedResource Include="Images\Search.Options.icon" />
+    <EmbeddedResource Include="Images\Search.Prev.icon" />
+    <EmbeddedResource Include="Images\Search.Next.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

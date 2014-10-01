@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	public static class FillerSearchEngine<T>
 		where T : struct
 	{
-		public static int Search(INodeGetter<T> nodeGetter, AbstractTreeTableFiller<T> dataFiller, int row,
-			SearchDefinition definition, int direction)
+		public static int Search(INodeGetter<T> nodeGetter, AbstractTreeTableFiller<T> dataFiller,
+			SearchDefinition definition, int row, int direction)
 		{
 			//	A partir d'une ligne donnée, on cherche la prochaine ligne correspondant
 			//	au motif de recherche, dans une direction à choix, cycliquement.

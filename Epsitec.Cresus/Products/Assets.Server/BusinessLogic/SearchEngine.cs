@@ -10,18 +10,18 @@ using Epsitec.Cresus.Assets.Data;
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	/// <summary>
-	/// Moteur général de comparaison de chaînes. Tous les modes ne sont pas encore
-	/// implémentés. A voir au fur et à mesure des besoins.
+	/// Moteur général de comparaison de chaînes. Toutes les options ne sont pas encore
+	/// implémentées. A voir au fur et à mesure des besoins.
 	/// </summary>
 	public class SearchEngine
 	{
 		public SearchEngine(SearchDefinition definition)
 		{
 			//	Avec pattern = "les", IsMatching retournera true avec text = "Salut les copains"
-			//	(avec le mode par défaut).
+			//	(avec les options par défaut).
 			this.definition = definition;
 
-			if ((this.definition.Mode & SearchMode.Regex) != 0)
+			if ((this.definition.Options & SearchOptions.Regex) != 0)
 			{
 				try
 				{
@@ -47,21 +47,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				text = this.ProcessString (text);
 
-				if ((this.definition.Mode & SearchMode.FullText) != 0)
+				if ((this.definition.Options & SearchOptions.FullText) != 0)
 				{
 					return this.IsMatchingFullText (text);
 				}
-				else if ((this.definition.Mode & SearchMode.Fragment) != 0)
+				else if ((this.definition.Options & SearchOptions.WholeWords) != 0)
 				{
-					return this.IsMatchingFragment (text);
+					return this.IsMatchingWholeWords (text);
 				}
-				else if ((this.definition.Mode & SearchMode.Regex) != 0)
+				else if ((this.definition.Options & SearchOptions.Regex) != 0)
 				{
 					return this.IsMatchingRegex (text);
 				}
 				else
 				{
-					return false;
+					return this.IsMatchingFragment (text);
 				}
 			}
 			else
@@ -119,6 +119,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		private bool IsMatchingWholeWords(string text)
+		{
+			// TODO: !!!
+			return this.IsMatchingFragment (text);
+		}
+
 		private bool IsMatchingFragment(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -148,17 +154,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				if ((this.definition.Mode & SearchMode.IgnoreCase) != 0)
+				if ((this.definition.Options & SearchOptions.IgnoreCase) != 0)
 				{
 					text = text.ToLowerInvariant ();
 				}
 
-				if ((this.definition.Mode & SearchMode.IgnoreDiacritic) != 0)
+				if ((this.definition.Options & SearchOptions.IgnoreDiacritic) != 0)
 				{
 					text = ApproximativeSearching.RemoveDiatritic (text);
 				}
 
-				if ((this.definition.Mode & SearchMode.Phonetic) != 0)
+				if ((this.definition.Options & SearchOptions.Phonetic) != 0)
 				{
 					text = ApproximativeSearching.Phonetic (text);
 				}

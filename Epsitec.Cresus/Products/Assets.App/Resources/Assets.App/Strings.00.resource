@@ -462,4 +462,11 @@
   <data name="SearchController.Tooltip.Prev" id="K7H">Chercher en arrière</data>
   <data name="SearchController.Tooltip.Next" id="K8H">Chercher en avant</data>
   <data name="SearchController.Hint" id="K9H">Chercher</data>
+  <data name="SearchController.Tooltip.Options" id="KAH">Options pour les recherches</data>
+  <data name="SearchController.Options.IgnoreCase" id="KBH">a = A</data>
+  <data name="SearchController.Options.WholeWords" id="KCH">Mot entier</data>
+  <data name="SearchController.Options.IgnoreDiacritic" id="KDH">e = é</data>
+  <data name="SearchController.Options.Phonetic" id="KEH">Phonétique (expérimental)</data>
+  <data name="SearchController.Options.Regex" id="KFH">Expression régulière</data>
+  <data name="SearchController.Options.FullText" id="KGH">Texte intégral</data>
 </bundle>
