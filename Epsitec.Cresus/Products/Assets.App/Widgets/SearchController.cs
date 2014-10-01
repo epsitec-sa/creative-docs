@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.textField.Text = null;
 				this.Definition = this.Definition.FromPattern (null);
 				this.UpdateWidgets ();
+				this.textField.Focus ();
 			};
 
 			this.prevButton.Clicked += delegate
