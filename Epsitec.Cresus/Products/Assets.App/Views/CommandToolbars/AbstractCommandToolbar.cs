@@ -59,6 +59,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public SearchController					SearchController
+		{
+			get
+			{
+				return this.searchController;
+			}
+		}
+
 
 		public Widget GetTarget(CommandEventArgs e)
 		{
@@ -157,11 +165,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected SearchController CreateSearchController(int superficiality)
+		protected void CreateSearchController(int superficiality)
 		{
 			//	Crée une zone de recherche, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
-			var controller = new SearchController ();
+			this.searchController = new SearchController ();
 
 			var box = new FrameBox
 			{
@@ -172,14 +180,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Index         = superficiality,
 			};
 
-			controller.CreateUI (box);
+			this.searchController.CreateUI (box);
 
-			controller.Search += delegate (object sender, SearchDefinition definition, int direction)
+			this.searchController.Search += delegate (object sender, SearchDefinition definition, int direction)
 			{
 				this.OnSearch (definition, direction);
 			};
-
-			return controller;
 		}
 
 		protected void CreateSeparator(int superficiality)
@@ -363,6 +369,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		protected readonly CommandContext		commandContext;
 
 		protected FrameBox						toolbar;
+		protected SearchController				searchController;
 		protected bool							adjustRequired;
 	}
 }

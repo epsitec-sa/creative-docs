@@ -13,6 +13,7 @@ using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -501,12 +502,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	PageType.AmortizationValue permet d'éditer directement la valeur comptable
 			return new AssetsViewState
 			{
-				ViewType          = ViewType.Assets,
-				PageType          = pageType,
-				Field             = field,
-				ViewMode          = ViewMode.Single,
-				SelectedGuid      = assetGuid,
-				SelectedTimestamp = timestamp,
+				ViewType               = ViewType.Assets,
+				PageType               = pageType,
+				Field                  = field,
+				ViewMode               = ViewMode.Single,
+				SelectedGuid           = assetGuid,
+				SelectedTimestamp      = timestamp,
+				SearchDefinition       = SearchDefinition.Default,
+				SearchDefinitionEvents = SearchDefinition.Default,
+				SearchDefinitionArray  = SearchDefinition.Default,
 			};
 		}
 
@@ -517,16 +521,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return new AssetsViewState
 				{
-					ViewType            = ViewType.Assets,
-					ViewMode            = this.mainToolbar.ViewMode,
-					PageType            = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
-					Field               = this.isEditing ? this.objectEditor.FocusField : ObjectField.Unknown,
-					IsShowEvents        = this.isShowEvents,
-					SelectedTimestamp   = this.selectedTimestamp,
-					SelectedGuid        = this.selectedGuid,
-					FilterTreeTableGuid = this.listController.FilterGuid,
-					FilterTimelinesGuid = this.timelinesArrayController.FilterGuid,
-					ShowGraphic         = this.listController.ShowGraphic,
+					ViewType               = ViewType.Assets,
+					ViewMode               = this.mainToolbar.ViewMode,
+					PageType               = this.isEditing ? this.objectEditor.PageType : PageType.Unknown,
+					Field                  = this.isEditing ? this.objectEditor.FocusField : ObjectField.Unknown,
+					IsShowEvents           = this.isShowEvents,
+					SelectedTimestamp      = this.selectedTimestamp,
+					SelectedGuid           = this.selectedGuid,
+					FilterTreeTableGuid    = this.listController.FilterGuid,
+					FilterTimelinesGuid    = this.timelinesArrayController.FilterGuid,
+					ShowGraphic            = this.listController.ShowGraphic,
+					SearchDefinition       = this.listController.SearchDefinition,
+					SearchDefinitionEvents = this.eventsController.SearchDefinition,
+					SearchDefinitionArray  = this.timelinesArrayController.SearchDefinition,
 				};
 			}
 			set
@@ -539,9 +546,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.selectedTimestamp    = viewState.SelectedTimestamp;
 				this.selectedGuid         = viewState.SelectedGuid;
 
-				this.listController.FilterGuid           = viewState.FilterTreeTableGuid;
-				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
-				this.listController.ShowGraphic          = viewState.ShowGraphic;
+				this.listController.FilterGuid                 = viewState.FilterTreeTableGuid;
+				this.timelinesArrayController.FilterGuid       = viewState.FilterTimelinesGuid;
+				this.listController.ShowGraphic                = viewState.ShowGraphic;
+				this.listController.SearchDefinition           = viewState.SearchDefinition;
+				this.eventsController.SearchDefinition         = viewState.SearchDefinitionEvents;
+				this.timelinesArrayController.SearchDefinition = viewState.SearchDefinitionArray;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			s = s.Replace ("w", "v");
 			s = s.Replace ("y", "i");
 			s = s.Replace ("an", "en");
+			s = s.Replace ("ain", "in");
 			s = s.Replace ("ai", "e");
 
 			s = s.Replace ("h", "");

@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -72,6 +73,28 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				{
 					this.sortingInstructions = value;
 					this.UpdateData ();
+				}
+			}
+		}
+
+		public SearchDefinition					SearchDefinition
+		{
+			get
+			{
+				if (this.toolbar == null || this.toolbar.SearchController == null)
+				{
+					return SearchDefinition.Default;
+				}
+				else
+				{
+					return this.toolbar.SearchController.Definition;
+				}
+			}
+			set
+			{
+				if (this.toolbar != null && this.toolbar.SearchController != null)
+				{
+					this.toolbar.SearchController.Definition = value;
 				}
 			}
 		}

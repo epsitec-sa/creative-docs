@@ -31,6 +31,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			set
 			{
 				this.definition = value;
+
+				if (this.textField != null)
+				{
+					this.textField.Text = this.definition.Pattern;
+				}
 			}
 		}
 

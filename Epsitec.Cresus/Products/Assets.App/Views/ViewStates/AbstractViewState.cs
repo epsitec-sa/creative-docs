@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ViewStates
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public ViewType							ViewType;
 		public PageType							PageType;
 		public ObjectField						Field;
+		public SearchDefinition					SearchDefinition;
 		public bool								Pin;
 
 
