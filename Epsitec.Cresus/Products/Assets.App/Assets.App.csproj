@@ -179,6 +179,7 @@
     <Compile Include="Reports\MCH2SummaryReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
     <Compile Include="Resources\Assets.App\SourceCode\Res.cs" />
+    <Compile Include="Settings\SearchKind.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />

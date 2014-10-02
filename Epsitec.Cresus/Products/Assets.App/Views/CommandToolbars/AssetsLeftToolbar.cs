@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSeparator (7);
 
-			this.CreateSearchController (7);
+			this.CreateSearchController (SearchKind.Assets, 7);
 		}
 	}
 }

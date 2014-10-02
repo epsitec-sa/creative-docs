@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -17,26 +18,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class SearchController
 	{
-		public SearchController()
+		public SearchController(SearchKind kind)
 		{
-			this.definition = SearchDefinition.Default;
-		}
-
-		public SearchDefinition					Definition
-		{
-			get
-			{
-				return this.definition;
-			}
-			set
-			{
-				this.definition = value;
-
-				if (this.textField != null)
-				{
-					this.textField.Text = this.definition.Pattern;
-				}
-			}
+			this.kind = kind;
 		}
 
 
@@ -106,7 +90,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.clearButton.Clicked += delegate
 			{
-				this.textField.Text = null;
 				this.Definition = this.Definition.FromPattern (null);
 				this.UpdateWidgets ();
 				this.textField.Focus ();
@@ -152,6 +135,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void UpdateWidgets()
 		{
+			if (this.textField.Text != this.Definition.Pattern)
+			{
+				this.textField.Text = this.Definition.Pattern;
+			}
+
 			bool enable = this.Definition.IsActive;
 
 			if (enable)
@@ -169,6 +157,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private SearchDefinition Definition
+		{
+			get
+			{
+				return LocalSettings.GetSearchDefinition (this.kind);
+			}
+			set
+			{
+				LocalSettings.SetSearchDefinition (this.kind, value);
+			}
+		}
+
+
 		#region Events handler
 		private void OnSearch(SearchDefinition definition, int direction)
 		{
@@ -181,7 +182,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private const int buttonWidth = 18;
 
-		private SearchDefinition				definition;
+		private readonly SearchKind				kind;
+
 		private TextField						textField;
 		private IconButton						clearButton;
 		private IconButton						prevButton;
