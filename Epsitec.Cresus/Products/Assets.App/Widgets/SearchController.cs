@@ -4,10 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
+using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
@@ -18,15 +20,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class SearchController
 	{
-		public SearchController(SearchKind kind)
+		public SearchController(CommandDispatcher commandDispatcher, CommandContext commandContext, SearchKind kind)
 		{
-			this.kind = kind;
+			this.commandDispatcher = commandDispatcher;
+			this.commandContext    = commandContext;
+			this.kind              = kind;
+
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 
 		public void CreateUI(Widget parent)
 		{
 			const int margin = 4;
+
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 
 			this.textField = new TextFieldCombo
 			{
@@ -36,50 +44,45 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				Dock            = DockStyle.Fill,
 			};
 
-			this.optionsButton = new IconButton
+			new IconButton
 			{
 				Parent          = parent,
-				IconUri         = Misc.GetResourceIconUri ("Search.Options"),
+				CommandObject   = Res.Commands.Search.Options,
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
 				Margins         = new Margins (0, AbstractScroller.DefaultBreadth, margin, margin),
 				Dock            = DockStyle.Right,
 			};
 
-			this.nextButton = new IconButton
+			new IconButton
 			{
 				Parent          = parent,
-				IconUri         = Misc.GetResourceIconUri ("Search.Next"),
+				CommandObject   = Res.Commands.Search.Next,
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
 				Margins         = new Margins (0, 0, margin, margin),
 				Dock            = DockStyle.Right,
 			};
 
-			this.prevButton = new IconButton
+			new IconButton
 			{
 				Parent          = parent,
-				IconUri         = Misc.GetResourceIconUri ("Search.Prev"),
+				CommandObject   = Res.Commands.Search.Prev,
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
 				Margins         = new Margins (0, 0, margin, margin),
 				Dock            = DockStyle.Right,
 			};
 
-			this.clearButton = new IconButton
+			new IconButton
 			{
 				Parent          = parent,
-				IconUri         = Misc.GetResourceIconUri ("Search.Clear"),  // gomme
+				CommandObject   = Res.Commands.Search.Clear,
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
 				Margins         = new Margins (0, 0, margin, margin),
 				Dock            = DockStyle.Right,
 			};
-
-			ToolTip.Default.SetToolTip (this.clearButton,   Res.Strings.SearchController.Tooltip.Clear.ToString ());
-			ToolTip.Default.SetToolTip (this.prevButton,    Res.Strings.SearchController.Tooltip.Prev.ToString ());
-			ToolTip.Default.SetToolTip (this.nextButton,    Res.Strings.SearchController.Tooltip.Next.ToString ());
-			ToolTip.Default.SetToolTip (this.optionsButton, Res.Strings.SearchController.Tooltip.Options.ToString ());
 
 			//	Connexion des événements.
 			this.textField.TextChanged += delegate
@@ -88,32 +91,38 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateWidgets ();
 			};
 
-			this.clearButton.Clicked += delegate
-			{
-				this.Definition = this.Definition.FromPattern (null);
-				this.UpdateWidgets ();
-				this.textField.Focus ();
-			};
-
-			this.prevButton.Clicked += delegate
-			{
-				this.AddLastPattern ();
-				this.OnSearch (this.Definition, -1);  // cherche en arrière
-			};
-
-			this.nextButton.Clicked += delegate
-			{
-				this.AddLastPattern ();
-				this.OnSearch (this.Definition, 1);  // cherche en avant
-			};
-
-			this.optionsButton.Clicked += delegate
-			{
-				this.ShowOptionsPopup (this.optionsButton);
-			};
-
 			this.UpdateWidgets ();
 			this.InitializeCombo ();
+		}
+
+
+		[Command (Res.CommandIds.Search.Clear)]
+		private void DoClear()
+		{
+			this.Definition = this.Definition.FromPattern (null);
+			this.UpdateWidgets ();
+			this.textField.Focus ();
+		}
+
+		[Command (Res.CommandIds.Search.Prev)]
+		private void DoPrev()
+		{
+			this.AddLastPattern ();
+			this.OnSearch (this.Definition, -1);  // cherche en arrière
+		}
+
+		[Command (Res.CommandIds.Search.Next)]
+		private void DoNext()
+		{
+			this.AddLastPattern ();
+			this.OnSearch (this.Definition, 1);  // cherche en avant
+		}
+
+		[Command (Res.CommandIds.Search.Options)]
+		private void DoOptions(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowOptionsPopup (target);
 		}
 
 
@@ -154,9 +163,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.textField.HintText = Res.Strings.SearchController.Hint.ToString ();
 			}
 
-			this.clearButton.Enable = enable;
-			this.prevButton.Enable = enable;
-			this.nextButton.Enable = enable;
+			this.commandContext.GetCommandState (Res.Commands.Search.Prev).Enable = enable;
+			this.commandContext.GetCommandState (Res.Commands.Search.Next).Enable = enable;
 		}
 
 
@@ -221,12 +229,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private const int buttonWidth = 18;
 
+		private readonly CommandDispatcher		commandDispatcher;
+		private readonly CommandContext			commandContext;
 		private readonly SearchKind				kind;
 
 		private TextFieldCombo					textField;
 		private IconButton						clearButton;
-		private IconButton						prevButton;
-		private IconButton						nextButton;
-		private IconButton						optionsButton;
 	}
 }

@@ -385,6 +385,23 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class Search
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Search.Clear, null);
+				}
+				
+				//	designer:cap/JUKU501
+				public static readonly global::Epsitec.Common.Widgets.Command Clear = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 190));
+				//	designer:cap/JUK0601
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 192));
+				//	designer:cap/JUK1601
+				public static readonly global::Epsitec.Common.Widgets.Command Options = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 193));
+				//	designer:cap/JUKV501
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 191));
+			}
+			
 			public static class Timeline
 			{
 				internal static void _Initialize()
@@ -882,6 +899,18 @@ namespace Epsitec.Cresus.Assets.App
 					//	designer:cap/JUK0101
 					public const long Prev = 0x7D300014000020L;
 				}
+			}
+			
+			public static class Search
+			{
+				//	designer:cap/JUKU501
+				public const long Clear = 0x7D3000140000BEL;
+				//	designer:cap/JUK0601
+				public const long Next = 0x7D3000140000C0L;
+				//	designer:cap/JUK1601
+				public const long Options = 0x7D3000140000C1L;
+				//	designer:cap/JUKV501
+				public const long Prev = 0x7D3000140000BFL;
 			}
 			
 			public static class Timeline
@@ -9850,6 +9879,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Popup._Initialize ();
 			Commands.Reports._Initialize ();
 			Commands.Reports.Period._Initialize ();
+			Commands.Search._Initialize ();
 			Commands.Timeline._Initialize ();
 			Commands.Timelines._Initialize ();
 			Commands.Timelines.Amortizations._Initialize ();

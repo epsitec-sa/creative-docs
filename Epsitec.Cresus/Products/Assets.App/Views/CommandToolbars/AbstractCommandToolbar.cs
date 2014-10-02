@@ -66,7 +66,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public Widget GetTarget(CommandEventArgs e)
 		{
 			//	Cherche le widget ayant la plus grande surface.
-			var targets = this.commandDispatcher.FindVisuals (e.Command)
+			return AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+		}
+
+		public static Widget GetTarget(CommandDispatcher commandDispatcher, CommandEventArgs e)
+		{
+			//	Cherche le widget ayant la plus grande surface.
+			var targets = commandDispatcher.FindVisuals (e.Command)
 				.Where (x => !x.ActualBounds.IsEmpty)
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
@@ -172,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Crée une zone de recherche, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
-			var controller = new SearchController (kind);
+			var controller = new SearchController (this.commandDispatcher, this.commandContext, kind);
 
 			var box = new FrameBox
 			{
