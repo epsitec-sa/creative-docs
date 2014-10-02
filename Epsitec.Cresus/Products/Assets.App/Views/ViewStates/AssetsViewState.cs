@@ -20,8 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public Guid								FilterTreeTableGuid;
 		public Guid								FilterTimelinesGuid;
 		public bool								ShowGraphic;
-		public SearchDefinition					SearchDefinitionEvents;
-		public SearchDefinition					SearchDefinitionArray;
 
 
 		public override bool StrictlyEquals(AbstractViewState other)

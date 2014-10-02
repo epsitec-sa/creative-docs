@@ -65,29 +65,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public SearchDefinition					SearchDefinition
-		{
-			get
-			{
-				if (this.assetsToolbar == null || this.assetsToolbar.SearchController != null)
-				{
-					return SearchDefinition.Default;
-				}
-				else
-				{
-					return this.assetsToolbar.SearchController.Definition;
-				}
-			}
-			set
-			{
-				if (this.assetsToolbar != null && this.assetsToolbar.SearchController != null)
-				{
-					this.assetsToolbar.SearchController.Definition = value;
-				}
-			}
-		}
-
-
 		#region IDirty Members
 		public bool DirtyData
 		{

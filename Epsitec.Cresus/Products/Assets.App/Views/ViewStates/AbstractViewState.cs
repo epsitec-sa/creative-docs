@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public ViewType							ViewType;
 		public PageType							PageType;
 		public ObjectField						Field;
-		public SearchDefinition					SearchDefinition;
 		public bool								Pin;
 
 

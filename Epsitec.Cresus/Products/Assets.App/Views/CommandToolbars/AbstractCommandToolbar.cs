@@ -59,14 +59,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
-		public SearchController					SearchController
-		{
-			get
-			{
-				return this.searchController;
-			}
-		}
-
 
 		public Widget GetTarget(CommandEventArgs e)
 		{

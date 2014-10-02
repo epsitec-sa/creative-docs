@@ -77,28 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		public SearchDefinition					SearchDefinition
-		{
-			get
-			{
-				if (this.toolbar == null || this.toolbar.SearchController == null)
-				{
-					return SearchDefinition.Default;
-				}
-				else
-				{
-					return this.toolbar.SearchController.Definition;
-				}
-			}
-			set
-			{
-				if (this.toolbar != null && this.toolbar.SearchController != null)
-				{
-					this.toolbar.SearchController.Definition = value;
-				}
-			}
-		}
-
 
 		public void CreateUI(Widget parent)
 		{
