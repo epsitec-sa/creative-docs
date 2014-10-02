@@ -88,7 +88,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateToolbar()
 		{
-			this.toolbar = new EventsToolbar (this.accessor, this.commandContext);
+			//	Crée la toolbar, en réservant de la place à droite pour le bouton de
+			//	fermeture 'x' (closeButton).
+			this.toolbar = new EventsToolbar (this.accessor, this.commandContext)
+			{
+				RightMargin = AbstractCommandToolbar.secondaryToolbarHeight,
+			};
+
 			this.ConnectSearch ();
 		}
 

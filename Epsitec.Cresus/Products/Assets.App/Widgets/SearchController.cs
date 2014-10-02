@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				IconUri         = Misc.GetResourceIconUri ("Search.Options"),
 				AutoFocus       = false,
 				PreferredWidth  = SearchController.buttonWidth,
-				Margins         = new Margins (0, 0, margin, margin),
+				Margins         = new Margins (0, AbstractScroller.DefaultBreadth, margin, margin),
 				Dock            = DockStyle.Right,
 			};
 

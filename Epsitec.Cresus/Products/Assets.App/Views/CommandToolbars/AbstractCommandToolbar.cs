@@ -60,6 +60,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public int								RightMargin;
+
 
 		public Widget GetTarget(CommandEventArgs e)
 		{
@@ -87,6 +89,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
 				BackColor       = ColorManager.ToolbarBackgroundColor,
+				Margins         = new Margins (0, this.RightMargin, 0, 0),
 			};
 
 			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
@@ -141,13 +144,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected ButtonWithRedDot CreateButton(Command command, int superficiality)
+		protected ButtonWithRedDot CreateButton(Command command, int superficiality, bool rightDock = false)
 		{
 			//	Crée un bouton pour une commande, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
 			var size = this.toolbar.PreferredHeight;
 
-			return new ButtonWithRedDot
+			var button = new ButtonWithRedDot
 			{
 				Parent        = this.toolbar,
 				AutoFocus     = false,
@@ -156,9 +159,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				CommandObject = command,
 				Index         = superficiality,
 			};
+
+			if (rightDock)
+			{
+				this.RightDock (button);
+			}
+
+			return button;
 		}
 
-		protected void CreateSearchController(SearchKind kind, int superficiality)
+		protected void CreateSearchController(SearchKind kind, int superficiality, bool rightDock = true)
 		{
 			//	Crée une zone de recherche, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
@@ -173,6 +183,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Index         = superficiality,
 			};
 
+			if (rightDock)
+			{
+				this.RightDock (box);
+			}
+
 			controller.CreateUI (box);
 
 			controller.Search += delegate (object sender, SearchDefinition definition, int direction)
@@ -181,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected void CreateSeparator(int superficiality)
+		protected void CreateSeparator(int superficiality, bool rightDock = false)
 		{
 			//	Crée un séparateur sous la forme d'une petite barre verticale, qui
 			//	pourra apparaître ou disparaître selon le choix du "magic layout engine".
@@ -196,6 +211,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Margins       = new Margins (AbstractCommandToolbar.separatorWidth/2, AbstractCommandToolbar.separatorWidth/2, 0, 0),
 				Index         = superficiality,
 			};
+
+			if (rightDock)
+			{
+				this.RightDock (sep);
+			}
 
 			//	C'est un peu lourd, mais c'est le seul moyen que j'ai trouvé pour avoir
 			//	de petites marges en haut et en bas du séparateur.
@@ -215,17 +235,22 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			};
 		}
 
-		protected void CreateSajex(int width, int superficiality)
+		protected void CreateSajex(int width, int superficiality, bool rightDock = false)
 		{
 			//	Crée un espace vide, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
-			new FrameBox
+			var sajex = new FrameBox
 			{
 				Parent        = this.toolbar,
 				Dock          = DockStyle.None,
 				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
 				Index         = superficiality,
 			};
+
+			if (rightDock)
+			{
+				this.RightDock (sajex);
+			}
 		}
 
 		protected void CreateSajex(int width)
@@ -237,6 +262,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				Dock          = DockStyle.Left,
 				PreferredSize = new Size (width, this.toolbar.PreferredHeight),
 			};
+		}
+
+		private void RightDock(Widget widget)
+		{
+			widget.Name = AbstractCommandToolbar.rightDock;
 		}
 
 
@@ -283,16 +313,29 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				{
 					//	On positionne les widgets selon leurs largeurs respectives,
 					//	de gauche à droite.
-					double x = 0;
+					double xLeft = 0;
+					double xRight = this.toolbar.ActualWidth;
 
 					foreach (var widget in this.GetWidgets (superficiality))
 					{
-						x += widget.Margins.Left;
+						if (widget.Name == AbstractCommandToolbar.rightDock)
+						{
+							xRight -= widget.Margins.Right + widget.PreferredWidth;
 
-						var rect = new Rectangle (x, 0, widget.PreferredWidth, widget.PreferredHeight);
-						widget.SetManualBounds (rect);
+							var rect = new Rectangle (xRight, 0, widget.PreferredWidth, widget.PreferredHeight);
+							widget.SetManualBounds (rect);
 
-						x += widget.PreferredWidth + widget.Margins.Right;
+							xRight -= widget.Margins.Left;
+						}
+						else
+						{
+							xLeft += widget.Margins.Left;
+
+							var rect = new Rectangle (xLeft, 0, widget.PreferredWidth, widget.PreferredHeight);
+							widget.SetManualBounds (rect);
+
+							xLeft += widget.PreferredWidth + widget.Margins.Right;
+						}
 					}
 
 					break;
@@ -355,6 +398,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public const int primaryToolbarHeight   = 32 + 10;
 		public const int secondaryToolbarHeight = 24 + 2;
 		public const int separatorWidth         = 11;
+
+		private const string rightDock = "RightDock";
 
 
 		protected readonly DataAccessor			accessor;

@@ -49,8 +49,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.Accounts.Import, 0);
 			this.CreateButton (Res.Commands.Accounts.Export, 0);
 
-			this.CreateSeparator (6);
-
 			this.CreateSearchController (SearchKind.Accounts, 6);
 		}
 	}

@@ -50,8 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.AssetsLeft.Delete, 3);
 			this.CreateButton (Res.Commands.AssetsLeft.Deselect, 6);
 
-			this.CreateSeparator (7);
-
 			this.CreateSearchController (SearchKind.Assets, 7);
 		}
 	}
