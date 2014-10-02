@@ -15,8 +15,8 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// Petit widget présent généralement dans les toolbars, permettant d'effectuer une
-	/// recherche textuelle en avant ou en arrière dans le DataFiller d'un TreeTable.
+	/// Petit widget présent généralement à droite dans les toolbars, permettant d'effectuer
+	/// une recherche textuelle en avant ou en arrière dans le DataFiller d'un TreeTable.
 	/// </summary>
 	public class SearchController
 	{
@@ -234,6 +234,5 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private readonly SearchKind				kind;
 
 		private TextFieldCombo					textField;
-		private IconButton						clearButton;
 	}
 }

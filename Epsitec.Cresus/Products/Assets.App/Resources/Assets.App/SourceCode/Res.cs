@@ -4637,14 +4637,6 @@ namespace Epsitec.Cresus.Assets.App
 				}
 				public static class Options
 				{
-					//	designer:str/JUKGH01
-					public static global::Epsitec.Common.Types.FormattedText FullText
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544880));
-						}
-					}
 					//	designer:str/JUKBH01
 					public static global::Epsitec.Common.Types.FormattedText IgnoreCase
 					{
@@ -4667,6 +4659,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544878));
+						}
+					}
+					//	designer:str/JUKJH01
+					public static global::Epsitec.Common.Types.FormattedText Radios
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544883));
 						}
 					}
 					//	designer:str/JUKFH01
@@ -9016,14 +9016,6 @@ namespace Epsitec.Cresus.Assets.App
 				}
 				public static class Options
 				{
-					//	designer:str/JUKGH01
-					public static global::Epsitec.Common.Support.Druid FullText
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544880);
-						}
-					}
 					//	designer:str/JUKBH01
 					public static global::Epsitec.Common.Support.Druid IgnoreCase
 					{
@@ -9046,6 +9038,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544878);
+						}
+					}
+					//	designer:str/JUKJH01
+					public static global::Epsitec.Common.Support.Druid Radios
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544883);
 						}
 					}
 					//	designer:str/JUKFH01

@@ -66,11 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		{
 			this.radios.Clear ();
 
-			if (labelWidth > 0)
-			{
-				labelWidth += 10;
-			}
-
 			int rank = 0;
 			foreach (var label in this.description.Labels)
 			{
@@ -84,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 					Group           = tabIndex.ToString (System.Globalization.CultureInfo.InvariantCulture),
 					PreferredHeight = RadioStackedController.radioHeight,
 					Dock            = DockStyle.Top,
-					Margins         = new Margins (labelWidth, 0, 0, 0),
+					Margins         = new Margins (labelWidth+10, 0, 0, 0),
 				};
 
 				radio.Clicked += delegate

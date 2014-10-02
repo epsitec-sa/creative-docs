@@ -465,5 +465,5 @@
   <data name="SearchController.Options.IgnoreDiacritic" id="KDH">e = é</data>
   <data name="SearchController.Options.Phonetic" id="KEH">Phonétique (expérimental)</data>
   <data name="SearchController.Options.Regex" id="KFH">Expression régulière</data>
-  <data name="SearchController.Options.FullText" id="KGH">Texte intégral</data>
+  <data name="SearchController.Options.Radios" id="KJH">N'importe où&lt;br/&gt;Au début&lt;br/&gt;A la fin&lt;br/&gt;Texte intégral</data>
 </bundle>

@@ -87,6 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+
 		public virtual void CreateUI(Widget parent)
 		{
 			this.toolbar = new FrameBox

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -47,17 +48,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				text = this.ProcessString (text);
 
-				if ((this.definition.Options & SearchOptions.FullText) != 0)
-				{
-					return this.IsMatchingFullText (text);
-				}
-				else if ((this.definition.Options & SearchOptions.WholeWords) != 0)
-				{
-					return this.IsMatchingWholeWords (text);
-				}
-				else if ((this.definition.Options & SearchOptions.Regex) != 0)
+				if ((this.definition.Options & SearchOptions.Regex) != 0)
 				{
 					return this.IsMatchingRegex (text);
+				}
+				else if ((this.definition.Options & SearchOptions.Prefix) != 0)
+				{
+					return this.IsMatchingPrefix (text);
+				}
+				else if ((this.definition.Options & SearchOptions.Sufffix) != 0)
+				{
+					return this.IsMatchingSuffix (text);
+				}
+				else if ((this.definition.Options & SearchOptions.FullText) != 0)
+				{
+					return this.IsMatchingFullText (text);
 				}
 				else
 				{
@@ -107,6 +112,66 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		private bool IsMatchingFragment(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return false;
+			}
+			else
+			{
+				if ((this.definition.Options & SearchOptions.WholeWords) != 0)
+				{
+					return this.GetWords (text).Contains (this.stringPattern);
+				}
+				else
+				{
+					return text.Contains (this.stringPattern);
+				}
+			}
+		}
+
+		private bool IsMatchingPrefix(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return false;
+			}
+			else
+			{
+				if ((this.definition.Options & SearchOptions.WholeWords) != 0)
+				{
+					return this.GetWords (text).First () == this.stringPattern;
+				}
+				else
+				{
+					int index = text.IndexOf (this.stringPattern);
+					return index == 0;
+				}
+			}
+		}
+
+		private bool IsMatchingSuffix(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return false;
+			}
+			else
+			{
+				if ((this.definition.Options & SearchOptions.WholeWords) != 0)
+				{
+					return this.GetWords (text).Last () == this.stringPattern;
+				}
+				else
+				{
+					int index = text.IndexOf (this.stringPattern);
+					return index != -1
+						&& index == text.Length - this.stringPattern.Length;
+				}
+			}
+		}
+
 		private bool IsMatchingFullText(string text)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -116,24 +181,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else
 			{
 				return text == this.stringPattern;
-			}
-		}
-
-		private bool IsMatchingWholeWords(string text)
-		{
-			// TODO: !!!
-			return this.IsMatchingFragment (text);
-		}
-
-		private bool IsMatchingFragment(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return false;
-			}
-			else
-			{
-				return text.Contains (this.stringPattern);
 			}
 		}
 
@@ -150,10 +197,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		private string[] GetWords(string text)
+		{
+			return text.Split (
+				' ', '.', ',', ':', ';', '!', '?',
+				'+', '-', '*', '/', '=', '<', '>',
+				'(', ')', '[', ']');
+		}
+
 		private string ProcessString(string text)
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
+				//	Converti "&amp;" en "&". Sans cela, le texte "R&D" (codé de façon
+				//	interne en "R&amp;D") n'est pas trouvé en mode SearchOptions.WholeWords,
+				//	puisqu'il serait considéré comme ayant les 2 mots "R&amp" et "D" !
+				text = TextConverter.ConvertToSimpleText (text);
+
 				if ((this.definition.Options & SearchOptions.IgnoreCase) != 0)
 				{
 					text = text.ToLowerInvariant ();

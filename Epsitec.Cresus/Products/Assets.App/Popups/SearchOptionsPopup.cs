@@ -43,12 +43,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.SearchController.Options.WholeWords.ToString (),
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 4
 			{
-				StackedControllerType = StackedControllerType.Bool,
-				Label                 = Res.Strings.SearchController.Options.FullText.ToString (),
+				StackedControllerType = StackedControllerType.Radio,
+				MultiLabels           = Res.Strings.SearchController.Options.Radios.ToString (),
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
@@ -71,8 +73,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (this.IgnoreDiacritic)  options |= SearchOptions.IgnoreDiacritic;
 				if (this.Phonetic       )  options |= SearchOptions.Phonetic;
 				if (this.WholeWords     )  options |= SearchOptions.WholeWords;
-				if (this.FullText       )  options |= SearchOptions.FullText;
 				if (this.Regex          )  options |= SearchOptions.Regex;
+
+				options |= this.Radios;
 
 				return options;
 			}
@@ -82,8 +85,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.IgnoreDiacritic = (value & SearchOptions.IgnoreDiacritic) != 0;
 				this.Phonetic        = (value & SearchOptions.Phonetic       ) != 0;
 				this.WholeWords      = (value & SearchOptions.WholeWords     ) != 0;
-				this.FullText        = (value & SearchOptions.FullText       ) != 0;
 				this.Regex           = (value & SearchOptions.Regex          ) != 0;
+
+				this.Radios = value;
 			}
 		}
 
@@ -151,19 +155,46 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool FullText
+		private SearchOptions Radios
 		{
 			get
 			{
-				var controller = this.GetController (4) as BoolStackedController;
+				var controller = this.GetController (4) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
+
+				switch (controller.Value)
+				{
+					case 1:
+						return SearchOptions.Prefix;
+					case 2:
+						return SearchOptions.Sufffix;
+					case 3:
+						return SearchOptions.FullText;
+					default:
+						return SearchOptions.Unknown;
+				}
 			}
 			set
 			{
-				var controller = this.GetController (4) as BoolStackedController;
+				var controller = this.GetController (4) as RadioStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
+
+				if ((value & SearchOptions.Prefix) != 0)
+				{
+					controller.Value = 1;
+				}
+				else if ((value & SearchOptions.Sufffix) != 0)
+				{
+					controller.Value = 2;
+				}
+				else if ((value & SearchOptions.FullText) != 0)
+				{
+					controller.Value = 3;
+				}
+				else
+				{
+					controller.Value = 0;
+				}
 			}
 		}
 
@@ -182,8 +213,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Value = value;
 			}
 		}
-
-
-
 	}
 }
