@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		public void CreateUI(Widget parent)
 		{
+			//	Crée la UI dans un FrameBox spécifique qu'il faut avoir créé au préalable,
+			//	et qui est donné en tant que parent.
 			const int margin = 4;
 
 			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
@@ -170,6 +172,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void AddLastPattern()
 		{
+			//	Ajoute le pattern utilisé dans la liste des derniers partterns.
+			//	S'il y était déjà, il repasse en tête de liste.
 			var pattern = this.textField.Text;
 			var list = this.LastPatterns;
 
@@ -178,11 +182,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				list.Remove (pattern);
 			}
 
-			list.Insert (0, pattern);
+			list.Insert (0, pattern);  // insère au début
 
-			while (list.Count > 20)
+			while (list.Count > 20)  // répète tant qu'il y en a trop
 			{
-				list.RemoveAt (list.Count-1);
+				list.RemoveAt (list.Count-1);  // supprime le dernier
 			}
 
 			this.InitializeCombo ();
@@ -194,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.textField.Items.AddRange (this.LastPatterns);
 		}
 
-		private List<string> LastPatterns
+		private List<string>					LastPatterns
 		{
 			get
 			{
@@ -202,7 +206,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		private SearchDefinition Definition
+		private SearchDefinition				Definition
 		{
 			get
 			{

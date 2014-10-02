@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public SearchOptions Options
+		public SearchOptions					Options
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool IgnoreCase
+		private bool							IgnoreCase
 		{
 			get
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool IgnoreDiacritic
+		private bool							IgnoreDiacritic
 		{
 			get
 			{
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool Phonetic
+		private bool							Phonetic
 		{
 			get
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool WholeWords
+		private bool							WholeWords
 		{
 			get
 			{
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private SearchOptions Radios
+		private SearchOptions					Radios
 		{
 			get
 			{
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool Regex
+		private bool							Regex
 		{
 			get
 			{

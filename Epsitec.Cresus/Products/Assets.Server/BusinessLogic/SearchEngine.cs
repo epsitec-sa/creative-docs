@@ -22,29 +22,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	(avec les options par défaut).
 			this.definition = definition;
 
-			if ((this.definition.Options & SearchOptions.Regex) != 0)
+			if (this.definition.IsActive)
 			{
-				try
+				if ((this.definition.Options & SearchOptions.Regex) != 0)
 				{
-					this.regexPattern = new Regex (this.definition.Pattern, RegexOptions.Compiled);
+					try
+					{
+						var pattern = TextConverter.ConvertToSimpleText (this.definition.Pattern);
+						this.regexPattern = new Regex (pattern, RegexOptions.Compiled);
+					}
+					catch
+					{
+						this.regexPattern = null;
+					}
 				}
-				catch
+				else
 				{
-					this.regexPattern = null;
+					this.stringPattern  = this.ProcessString (this.definition.Pattern);
+					this.decimalPattern = TypeConverters.ParseAmount (this.definition.Pattern);
+					this.intPattern     = TypeConverters.ParseInt (this.definition.Pattern);
+					this.datePattern    = TypeConverters.ParseDate (this.definition.Pattern, Timestamp.Now.Date, null, null);
 				}
-			}
-			else
-			{
-				this.stringPattern  = this.ProcessString (this.definition.Pattern);
-				this.decimalPattern = TypeConverters.ParseAmount (this.definition.Pattern);
-				this.intPattern     = TypeConverters.ParseInt (this.definition.Pattern);
-				this.datePattern    = TypeConverters.ParseDate (this.definition.Pattern, Timestamp.Now.Date, null, null);
 			}
 		}
 
 		public bool IsMatching(string text)
 		{
-			if (!string.IsNullOrEmpty (this.stringPattern))
+			if (this.definition.IsActive)
 			{
 				text = this.ProcessString (text);
 
@@ -71,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return true;
+				return false;
 			}
 		}
 
@@ -186,12 +190,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private bool IsMatchingRegex(string text)
 		{
-			if (this.regexPattern == null)
+			if (string.IsNullOrEmpty (text))
 			{
 				return false;
 			}
 			else
 			{
+				text = TextConverter.ConvertToSimpleText (text);
 				return this.regexPattern.IsMatch (text);
 			}
 		}
@@ -200,7 +205,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private string[] GetWords(string text)
 		{
 			return text.Split (
-				' ', '.', ',', ':', ';', '!', '?',
+				' ', '.', ',', ':', ';', '!', '?', '"',
 				'+', '-', '*', '/', '=', '<', '>',
 				'(', ')', '[', ']');
 		}
