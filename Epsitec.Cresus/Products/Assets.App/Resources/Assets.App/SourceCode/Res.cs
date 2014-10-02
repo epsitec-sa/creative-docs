@@ -4627,6 +4627,14 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544873));
 					}
 				}
+				//	designer:str/JUKAH01
+				public static global::Epsitec.Common.Types.FormattedText Title
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544874));
+					}
+				}
 				public static class Options
 				{
 					//	designer:str/JUKGH01
@@ -4675,42 +4683,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544876));
-						}
-					}
-				}
-				
-				public static class Tooltip
-				{
-					//	designer:str/JUK6H01
-					public static global::Epsitec.Common.Types.FormattedText Clear
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544870));
-						}
-					}
-					//	designer:str/JUK8H01
-					public static global::Epsitec.Common.Types.FormattedText Next
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544872));
-						}
-					}
-					//	designer:str/JUKAH01
-					public static global::Epsitec.Common.Types.FormattedText Options
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544874));
-						}
-					}
-					//	designer:str/JUK7H01
-					public static global::Epsitec.Common.Types.FormattedText Prev
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544871));
 						}
 					}
 				}
@@ -9034,6 +9006,14 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544873);
 					}
 				}
+				//	designer:str/JUKAH01
+				public static global::Epsitec.Common.Support.Druid Title
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544874);
+					}
+				}
 				public static class Options
 				{
 					//	designer:str/JUKGH01
@@ -9082,42 +9062,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544876);
-						}
-					}
-				}
-				
-				public static class Tooltip
-				{
-					//	designer:str/JUK6H01
-					public static global::Epsitec.Common.Support.Druid Clear
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544870);
-						}
-					}
-					//	designer:str/JUK8H01
-					public static global::Epsitec.Common.Support.Druid Next
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544872);
-						}
-					}
-					//	designer:str/JUKAH01
-					public static global::Epsitec.Common.Support.Druid Options
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544874);
-						}
-					}
-					//	designer:str/JUK7H01
-					public static global::Epsitec.Common.Support.Druid Prev
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544871);
 						}
 					}
 				}

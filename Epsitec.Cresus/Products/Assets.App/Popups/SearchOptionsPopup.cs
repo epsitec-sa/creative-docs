@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public SearchOptionsPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = Res.Strings.SearchController.Tooltip.Options.ToString ();
+			this.title = Res.Strings.SearchController.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 

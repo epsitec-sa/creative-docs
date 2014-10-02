@@ -458,11 +458,8 @@
   <data name="Popup.Accounts.Category.Revenus" id="K3H">Revenus</data>
   <data name="Popup.Accounts.Category.Depenses" id="K4H">Dépenses</data>
   <data name="Popup.Accounts.Category.Recettes" id="K5H">Recettes</data>
-  <data name="SearchController.Tooltip.Clear" id="K6H">Effacer la recherche</data>
-  <data name="SearchController.Tooltip.Prev" id="K7H">Chercher en arrière</data>
-  <data name="SearchController.Tooltip.Next" id="K8H">Chercher en avant</data>
   <data name="SearchController.Hint" id="K9H">Chercher</data>
-  <data name="SearchController.Tooltip.Options" id="KAH">Options pour les recherches</data>
+  <data name="SearchController.Title" id="KAH">Options pour les recherches</data>
   <data name="SearchController.Options.IgnoreCase" id="KBH">a = A</data>
   <data name="SearchController.Options.WholeWords" id="KCH">Mot entier</data>
   <data name="SearchController.Options.IgnoreDiacritic" id="KDH">e = é</data>
