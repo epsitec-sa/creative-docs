@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 				else
 				{
-					int index = text.IndexOf (this.stringPattern);
+					int index = text.LastIndexOf (this.stringPattern);
 					return index != -1
 						&& index == text.Length - this.stringPattern.Length;
 				}
@@ -196,7 +196,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				text = TextConverter.ConvertToSimpleText (text);
 				return this.regexPattern.IsMatch (text);
 			}
 		}
