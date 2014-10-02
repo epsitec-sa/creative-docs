@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		static LocalSettings()
 		{
 			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
-			LocalSettings.searchDefinitions = new Dictionary<SearchKind, SearchDefinition> ();
+			LocalSettings.searchInfos = new Dictionary<SearchKind, SearchInfo> ();
 
 			LocalSettings.Initialize (Timestamp.Now.Date);
 		}
@@ -83,22 +83,22 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
-		public static SearchDefinition GetSearchDefinition(SearchKind kind)
+		public static SearchInfo GetSearchInfo(SearchKind kind)
 		{
-			SearchDefinition definition;
-			if (LocalSettings.searchDefinitions.TryGetValue (kind, out definition))
+			SearchInfo info;
+			if (LocalSettings.searchInfos.TryGetValue (kind, out info))
 			{
-				return definition;
+				return info;
 			}
 			else
 			{
-				return SearchDefinition.Default;
+				return SearchInfo.Default;
 			}
 		}
 
-		public static void SetSearchDefinition(SearchKind kind, SearchDefinition definition)
+		public static void SetSearchInfo(SearchKind kind, SearchInfo info)
 		{
-			LocalSettings.searchDefinitions[kind] = definition;
+			LocalSettings.searchInfos[kind] = info;
 		}
 
 
@@ -136,6 +136,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static AccountCategory				AccountCategories;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
-		private static readonly Dictionary<SearchKind, SearchDefinition> searchDefinitions;
+		private static readonly Dictionary<SearchKind, SearchInfo> searchInfos;
 	}
 }

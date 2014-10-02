@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.Events.Paste, 3);
 			this.CreateButton (Res.Commands.Events.Export, 3);
 
-			this.CreateSeparator (5, rightDock: true);
+			this.CreateSeparator (5, rightDock: true);  // pour séparer du bouton de fermeture 'x'
 			this.CreateSearchController (SearchKind.Events, 5);
 		}
 	}

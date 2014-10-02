@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			const int margin = 4;
 
-			this.textField = new TextField
+			this.textField = new TextFieldCombo
 			{
 				Parent          = parent,
 				TextDisplayMode = TextFieldDisplayMode.ActiveHint,
@@ -97,11 +97,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 			this.prevButton.Clicked += delegate
 			{
+				this.AddLastPattern ();
 				this.OnSearch (this.Definition, -1);  // cherche en arrière
 			};
 
 			this.nextButton.Clicked += delegate
 			{
+				this.AddLastPattern ();
 				this.OnSearch (this.Definition, 1);  // cherche en avant
 			};
 
@@ -111,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 
 			this.UpdateWidgets ();
+			this.InitializeCombo ();
 		}
 
 
@@ -157,15 +160,51 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
+		private void AddLastPattern()
+		{
+			var pattern = this.textField.Text;
+			var list = this.LastPatterns;
+
+			if (list.Contains (pattern))
+			{
+				list.Remove (pattern);
+			}
+
+			list.Insert (0, pattern);
+
+			while (list.Count > 20)
+			{
+				list.RemoveAt (list.Count-1);
+			}
+
+			this.InitializeCombo ();
+		}
+
+		private void InitializeCombo()
+		{
+			this.textField.Items.Clear ();
+			this.textField.Items.AddRange (this.LastPatterns);
+		}
+
+		private List<string> LastPatterns
+		{
+			get
+			{
+				return LocalSettings.GetSearchInfo (this.kind).LastPatterns;
+			}
+		}
+
 		private SearchDefinition Definition
 		{
 			get
 			{
-				return LocalSettings.GetSearchDefinition (this.kind);
+				return LocalSettings.GetSearchInfo (this.kind).Definition;
 			}
 			set
 			{
-				LocalSettings.SetSearchDefinition (this.kind, value);
+				var info = LocalSettings.GetSearchInfo (this.kind);
+				info = info.FromDefinition (value);
+				LocalSettings.SetSearchInfo (this.kind, info);
 			}
 		}
 
@@ -184,7 +223,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly SearchKind				kind;
 
-		private TextField						textField;
+		private TextFieldCombo					textField;
 		private IconButton						clearButton;
 		private IconButton						prevButton;
 		private IconButton						nextButton;
