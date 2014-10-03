@@ -108,6 +108,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							BottomMargin          = bottomMargin,
 						});
 						break;
+
+					case FieldType.GuidPerson:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.PersonGuid,
+							Label                 = userField.Name,
+							Height                = 100,
+							BottomMargin          = bottomMargin,
+						});
+						break;
 				}
 			}
 		}
@@ -170,6 +181,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							if (controller.Value.HasValue)
 							{
 								yield return new DataDateProperty (userField.Field, controller.Value.Value);
+							}
+						}
+						break;
+
+					case FieldType.GuidPerson:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as PersonGuidStackedController;
+							if (!controller.Value.IsEmpty)
+							{
+								yield return new DataGuidProperty (userField.Field, controller.Value);
 							}
 						}
 						break;
