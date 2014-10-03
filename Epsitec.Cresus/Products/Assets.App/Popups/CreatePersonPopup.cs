@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -23,26 +24,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var list = new List<StackedControllerDescription> ();
 
-			list.Add (new StackedControllerDescription  // 0
-			{
-				StackedControllerType = StackedControllerType.Text,
-				Label                 = Res.Strings.Popup.CreatePerson.Name.ToString (),
-				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
-				BottomMargin          = 10,
-			});
+			this.CreateRequiredUserFields (list, BaseType.Persons);
+			this.userFieldsCount = list.Count;
 
-			list.Add (new StackedControllerDescription  // 1
+			list.Add (new StackedControllerDescription  // userFieldsCount + 0
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.Popup.CreatePerson.Model.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 2
+			list.Add (new StackedControllerDescription  // userFieldsCount + 1
 			{
 				StackedControllerType = StackedControllerType.PersonGuid,
 				Label                 = "",
 				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
-				Height                = 300,
+				Height                = 250,
 			});
 
 			this.SetDescriptions (list);
@@ -52,33 +48,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							PersonName
-		{
-			get
-			{
-				var controller = this.GetController (0) as TextStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
-			}
-			set
-			{
-				var controller = this.GetController (0) as TextStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
-			}
-		}
-
 		private bool							UseModel
 		{
 			get
 			{
-				var controller = this.GetController (1) as BoolStackedController;
+				var controller = this.GetController (this.userFieldsCount+0) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (1) as BoolStackedController;
+				var controller = this.GetController (this.userFieldsCount+0) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -90,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.UseModel)
 				{
-					var controller = this.GetController (2) as PersonGuidStackedController;
+					var controller = this.GetController (this.userFieldsCount+1) as PersonGuidStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					return controller.Value;
 				}
@@ -101,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			set
 			{
-				var controller = this.GetController (2) as PersonGuidStackedController;
+				var controller = this.GetController (this.userFieldsCount+1) as PersonGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 				this.UseModel = !value.IsEmpty;
@@ -112,9 +92,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			this.SetEnable (2, this.UseModel);
+			this.SetEnable (this.userFieldsCount+1, this.UseModel);
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.PersonName);
+			this.okButton.Enable = this.GetequiredProperties (BaseType.Persons).Count () == this.userFieldsCount;
 		}
+
+
+		private readonly int userFieldsCount;
 	}
 }

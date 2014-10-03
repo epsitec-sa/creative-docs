@@ -13,6 +13,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -186,15 +187,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.CreateObject (popup.PersonName, popup.PersonModel);
+					this.CreateObject (popup.GetequiredProperties (BaseType.Persons), popup.PersonModel);
 				}
 			};
 		}
 
-		private void CreateObject(string name, Guid model)
+		private void CreateObject(IEnumerable<AbstractDataProperty> requiredProperties, Guid model)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Persons, date, name, Guid.Empty, addDefaultGroups: false);
+			var guid = this.accessor.CreateObject (BaseType.Persons, date, Guid.Empty, addDefaultGroups: false, requiredProperties: requiredProperties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Persons, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 

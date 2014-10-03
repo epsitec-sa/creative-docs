@@ -71,7 +71,8 @@
   <data name="Enum.MCH2Summary.Column.FinalState.Text" id="K42">Etat {0}</data>
   <data name="Enum.MCH2Summary.Column.FinalState.Tooltip" id="K52">Etat final le {0}</data>
   <data name="UserFieldsTreeTableFiller.RequiredYes" id="K62">Oui</data>
-  <data name="UserFieldsTreeTableFiller.RequiredNo" id="K72">Non</data>
+  <data name="UserFieldsTreeTableFiller.RequiredNo" id="K72">
+  </data>
   <data name="AccountsTreeTableFiller.Number" id="K82">Numéro</data>
   <data name="AccountsTreeTableFiller.Title" id="K92">Titre du compte</data>
   <data name="AccountsTreeTableFiller.Category" id="KA2">Catégorie</data>

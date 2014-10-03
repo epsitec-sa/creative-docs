@@ -93,6 +93,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent, bool addDefaultGroups)
 		{
+			//	Ajoute le nom de l'objet.
+			var field = this.GetMainStringField (baseType);
+			var p = new DataStringProperty (field, name);
+
+			return this.CreateObject (baseType, date, parent, addDefaultGroups, p);
+		}
+
+		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool addDefaultGroups, params AbstractDataProperty[] requiredProperties)
+		{
 			System.Diagnostics.Debug.Assert (baseType == BaseType.Assets || !addDefaultGroups);
 
 			var obj = new DataObject ();
@@ -111,9 +120,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				e.AddProperty (new DataGuidProperty (ObjectField.GroupParent, parent));
 			}
 
-			//	Ajoute le nom de l'objet.
-			var field = this.GetMainStringField (baseType);
-			e.AddProperty (new DataStringProperty (field, name));
+			//	Ajoute les propriétés requises.
+			foreach (var property in requiredProperties)
+			{
+				e.AddProperty (property);
+			}
 
 			//	Ajoute la valeur comptable.
 			if (baseType == BaseType.Assets)

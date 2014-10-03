@@ -8,6 +8,7 @@ using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -33,14 +34,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = Res.Strings.Popup.CreateAsset.Date.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 1
-			{
-				StackedControllerType = StackedControllerType.Text,
-				Label                 = Res.Strings.Popup.CreateAsset.Name.ToString (),
-				Width                 = DateController.controllerWidth - 4,
-			});
+			this.CreateRequiredUserFields (list, BaseType.Assets);
+			this.userFieldsCount = list.Count - 1;
 
-			list.Add (new StackedControllerDescription  // 2
+			list.Add (new StackedControllerDescription  // userFieldsCount+1
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				DecimalFormat         = DecimalFormat.Amount,
@@ -48,13 +45,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
-			list.Add (new StackedControllerDescription  // 3
+			list.Add (new StackedControllerDescription  // userFieldsCount+2
 			{
 				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.Popup.CreateAsset.Category.ToString (),
 			});
 
-			list.Add (new StackedControllerDescription  // 4
+			list.Add (new StackedControllerDescription  // userFieldsCount+3
 			{
 				StackedControllerType = StackedControllerType.CategoryGuid,
 				Label                 = "",
@@ -85,33 +82,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private string							ObjectName
-		{
-			get
-			{
-				var controller = this.GetController (1) as TextStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
-			}
-			set
-			{
-				var controller = this.GetController (1) as TextStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
-			}
-		}
-
 		private decimal?						MainValue
 		{
 			get
 			{
-				var controller = this.GetController (2) as DecimalStackedController;
+				var controller = this.GetController (this.userFieldsCount+1) as DecimalStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (2) as DecimalStackedController;
+				var controller = this.GetController (this.userFieldsCount+1) as DecimalStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -121,13 +102,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var controller = this.GetController (3) as BoolStackedController;
+				var controller = this.GetController (this.userFieldsCount+2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (3) as BoolStackedController;
+				var controller = this.GetController (this.userFieldsCount+2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -139,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.UseCategory)
 				{
-					var controller = this.GetController (4) as CategoryGuidStackedController;
+					var controller = this.GetController (this.userFieldsCount+3) as CategoryGuidStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					return controller.Value;
 				}
@@ -150,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			set
 			{
-				var controller = this.GetController (4) as CategoryGuidStackedController;
+				var controller = this.GetController (this.userFieldsCount+3) as CategoryGuidStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -159,17 +140,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			this.SetEnable (4, this.UseCategory);
+			this.SetEnable (this.userFieldsCount+3, this.UseCategory);
 
 			this.okButton.Enable = this.ObjectDate.HasValue
-								&& !string.IsNullOrEmpty (this.ObjectName)
+								&& this.GetequiredProperties (BaseType.Assets).Count () == this.userFieldsCount
 								&& (!this.UseCategory || !this.ObjectCategory.IsEmpty)
 								&& !this.HasError;
 		}
 
 	
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, string, decimal?, Guid> action)
+		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, IEnumerable<AbstractDataProperty>, decimal?, Guid> action)
 		{
 			if (target != null)
 			{
@@ -191,11 +172,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
 						}
 
-						action (popup.ObjectDate.Value, popup.ObjectName, popup.MainValue, popup.ObjectCategory);
+						action (popup.ObjectDate.Value, popup.GetequiredProperties (BaseType.Assets), popup.MainValue, popup.ObjectCategory);
 					}
 				};
 			}
 		}
 		#endregion
+
+
+		private readonly int userFieldsCount;
 	}
 }

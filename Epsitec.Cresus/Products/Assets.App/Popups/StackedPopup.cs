@@ -7,7 +7,11 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -27,10 +31,157 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controllers = new List<AbstractStackedController> ();
 			this.controllerVisibleFrames = new List<FrameBox> ();
 			this.controllerHiddenFrames = new List<FrameBox> ();
+			this.userFieldsControllersIndexes = new List<int> ();
 
 			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Ok.ToString ();
 			this.defaultCancelButtonName = Res.Strings.Popup.Button.Cancel.ToString ();
 			this.defaultControllerRankFocus = 0;
+		}
+
+
+		protected void CreateRequiredUserFields(List<StackedControllerDescription> list, BaseType baseType)
+		{
+			//	Pour les Popup de création (Asset ou Person), on crée tous les contrôleurs
+			//	permettant de remplir les champs obligatoires (UserField.Required).
+			this.userFieldsControllersIndexes.Clear ();
+			var userFields = this.GetRequiredUserFields (baseType);
+
+			for (int i=0; i<userFields.Count; i++)
+			{
+				var userField = userFields[i];
+				bool last = (i == userFields.Count-1);
+				int bottomMargin = last ? 10 : 0;
+				int width = System.Math.Min (userField.LineWidth.HasValue ? userField.LineWidth.GetValueOrDefault () : 1000, DateController.controllerWidth-4);
+
+				switch (userField.Type)
+				{
+					case FieldType.String:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Text,
+							Label                 = userField.Name,
+							Width                 = width,
+							BottomMargin          = bottomMargin,
+						});
+						break;
+
+					case FieldType.Int:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Int,
+							Label                 = userField.Name,
+							BottomMargin          = bottomMargin,
+						});
+						break;
+
+					case FieldType.Decimal:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Decimal,
+							Label                 = userField.Name,
+							DecimalFormat         = DecimalFormat.Real,
+							BottomMargin          = bottomMargin,
+						});
+						break;
+
+					case FieldType.ComputedAmount:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Decimal,
+							Label                 = userField.Name,
+							DecimalFormat         = DecimalFormat.Amount,
+							BottomMargin          = bottomMargin,
+						});
+						break;
+
+					case FieldType.Date:
+						this.userFieldsControllersIndexes.Add (list.Count);
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Date,
+							Label                 = userField.Name,
+							DateRangeCategory     = DateRangeCategory.Mandat,
+							BottomMargin          = bottomMargin,
+						});
+						break;
+				}
+			}
+		}
+
+		public IEnumerable<AbstractDataProperty> GetequiredProperties(BaseType baseType)
+		{
+			//	Pour les Popup de création (Asset ou Person), retourne les propriétés
+			//	correspondant aux valeurs entrées dans champs obligatoires (UserField.Required).
+			var userFields = this.GetRequiredUserFields (baseType);
+
+			int i = 0;
+			foreach (var userField in userFields)
+			{
+				switch (userField.Type)
+				{
+					case FieldType.String:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as TextStackedController;
+							if (!string.IsNullOrEmpty (controller.Value))
+							{
+								yield return new DataStringProperty (userField.Field, controller.Value);
+							}
+						}
+						break;
+
+					case FieldType.Int:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as IntStackedController;
+							if (controller.Value.HasValue)
+							{
+								yield return new DataIntProperty (userField.Field, controller.Value.Value);
+							}
+						}
+						break;
+
+					case FieldType.Decimal:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as DecimalStackedController;
+							if (controller.Value.HasValue)
+							{
+								yield return new DataDecimalProperty (userField.Field, controller.Value.Value);
+							}
+						}
+						break;
+
+					case FieldType.ComputedAmount:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as DecimalStackedController;
+							if (controller.Value.HasValue)
+							{
+								var ca = new ComputedAmount (controller.Value);
+								yield return new DataComputedAmountProperty (userField.Field, ca);
+							}
+						}
+						break;
+
+					case FieldType.Date:
+						{
+							var controller = this.GetController (this.userFieldsControllersIndexes[i++]) as DateStackedController;
+							if (controller.Value.HasValue)
+							{
+								yield return new DataDateProperty (userField.Field, controller.Value.Value);
+							}
+						}
+						break;
+				}
+			}
+		}
+
+		private List<UserField> GetRequiredUserFields(BaseType baseType)
+		{
+			return this.accessor.GlobalSettings.GetUserFields (baseType)
+				.Where (x => x.Required)
+				.ToList ();
 		}
 
 
@@ -245,6 +396,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly List<AbstractStackedController>	controllers;
 		private readonly List<FrameBox>						controllerVisibleFrames;
 		private readonly List<FrameBox>						controllerHiddenFrames;
+		private readonly List<int>							userFieldsControllersIndexes;
 
 		protected string									defaultAcceptButtonName;
 		protected string									defaultCancelButtonName;

@@ -11,10 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
-		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, string name, decimal? value, Guid cat)
+		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.
-			var guid = accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty, addDefaultGroups: true);
+			var guid = accessor.CreateObject (BaseType.Assets, date, Guid.Empty, addDefaultGroups: true, requiredProperties: requiredProperties.ToArray ());
 			var asset = accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (asset != null);
 

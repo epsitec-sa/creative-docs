@@ -16,6 +16,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -366,15 +367,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, string name, decimal? value, Guid cat)
+			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 			{
-				this.CreateAsset (date, name, value, cat);
+				this.CreateAsset (date, requiredProperties, value, cat);
 			});
 		}
 
-		private void CreateAsset(System.DateTime date, string name, decimal? value, Guid cat)
+		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
-			var asset = AssetsLogic.CreateAsset (this.accessor, date, name, value, cat);
+			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
 
 			this.UpdateData ();
