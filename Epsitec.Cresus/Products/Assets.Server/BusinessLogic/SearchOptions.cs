@@ -14,11 +14,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		IgnoreCase         = 0x0001,  // a = A
 		IgnoreDiacritic    = 0x0002,  // e = é
 		Phonetic           = 0x0004,  // ph = f
-		Regex              = 0x0008,
-		WholeWords         = 0x0010,  // trouve "les" dans "salut les copains"
+		WholeWords         = 0x0008,  // trouve "les" dans "salut les copains"
 
 		Prefix             = 0x0200,  // trouve "salut" dans "salut les copains"
 		Sufffix            = 0x0400,  // trouve "copains" dans "salut les copains"
 		FullText           = 0x0800,  // trouve "toto" dans "toto"
+		Regex              = 0x1000,
 	}
 }

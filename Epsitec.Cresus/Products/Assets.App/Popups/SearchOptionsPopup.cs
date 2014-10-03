@@ -50,13 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Radio,
 				MultiLabels           = Res.Strings.SearchController.Options.Radios.ToString (),
-				BottomMargin          = 10,
-			});
-
-			list.Add (new StackedControllerDescription  // 5
-			{
-				StackedControllerType = StackedControllerType.Bool,
-				Label                 = Res.Strings.SearchController.Options.Regex.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -73,7 +66,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				if (this.IgnoreDiacritic)  options |= SearchOptions.IgnoreDiacritic;
 				if (this.Phonetic       )  options |= SearchOptions.Phonetic;
 				if (this.WholeWords     )  options |= SearchOptions.WholeWords;
-				if (this.Regex          )  options |= SearchOptions.Regex;
 
 				options |= this.Radios;
 
@@ -85,7 +77,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.IgnoreDiacritic = (value & SearchOptions.IgnoreDiacritic) != 0;
 				this.Phonetic        = (value & SearchOptions.Phonetic       ) != 0;
 				this.WholeWords      = (value & SearchOptions.WholeWords     ) != 0;
-				this.Regex           = (value & SearchOptions.Regex          ) != 0;
 
 				this.Radios = value;
 			}
@@ -170,6 +161,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						return SearchOptions.Sufffix;
 					case 3:
 						return SearchOptions.FullText;
+					case 4:
+						return SearchOptions.Regex;
 					default:
 						return SearchOptions.Unknown;
 				}
@@ -191,6 +184,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					controller.Value = 3;
 				}
+				else if ((value & SearchOptions.Regex) != 0)
+				{
+					controller.Value = 4;
+				}
 				else
 				{
 					controller.Value = 0;
@@ -198,20 +195,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool							Regex
+
+		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			get
-			{
-				var controller = this.GetController (5) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
-			}
-			set
-			{
-				var controller = this.GetController (5) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
-			}
+			bool enable = (this.Radios & SearchOptions.FullText) == 0 &&
+						  (this.Radios & SearchOptions.Regex   ) == 0;
+
+			this.SetEnable (3, enable);
 		}
 	}
 }

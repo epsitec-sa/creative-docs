@@ -4669,14 +4669,6 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544883));
 						}
 					}
-					//	designer:str/JUKFH01
-					public static global::Epsitec.Common.Types.FormattedText Regex
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544879));
-						}
-					}
 					//	designer:str/JUKCH01
 					public static global::Epsitec.Common.Types.FormattedText WholeWords
 					{
@@ -9046,14 +9038,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544883);
-						}
-					}
-					//	designer:str/JUKFH01
-					public static global::Epsitec.Common.Support.Druid Regex
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544879);
 						}
 					}
 					//	designer:str/JUKCH01

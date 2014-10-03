@@ -18,6 +18,18 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
+		public override bool					Enable
+		{
+			get
+			{
+				return this.button.Enable;
+			}
+			set
+			{
+				this.button.Enable = value;
+			}
+		}
+
 		public bool								Value
 		{
 			get
