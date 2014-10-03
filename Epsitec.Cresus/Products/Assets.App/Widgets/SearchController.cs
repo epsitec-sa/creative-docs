@@ -87,6 +87,26 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			};
 
 			//	Connexion des événements.
+			this.textField.PreProcessing += delegate (object sender, MessageEventArgs e)
+			{
+				if (e.Message.MessageType == MessageType.KeyDown)
+				{
+					if (e.Message.KeyCode == KeyCode.Return ||
+						e.Message.KeyCode == KeyCode.NumericEnter)
+					{
+						if (e.Message.IsShiftPressed)
+						{
+							this.DoPrev ();
+						}
+						else
+						{
+							this.DoNext ();
+						}
+						e.Cancel = true;
+					}
+				}
+			};
+
 			this.textField.TextChanged += delegate
 			{
 				this.Definition = this.Definition.FromPattern (this.textField.Text);
