@@ -19,6 +19,25 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		}
 
 
+		public override bool					Enable
+		{
+			get
+			{
+				if (this.radios.Any ())
+				{
+					return this.radios.First ().Enable;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				this.radios.ForEach (x => x.Enable = value);
+			}
+		}
+
 		public int?								Value
 		{
 			get
