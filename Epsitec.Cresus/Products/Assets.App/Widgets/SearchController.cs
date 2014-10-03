@@ -101,8 +101,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		[Command (Res.CommandIds.Search.Clear)]
 		private void DoClear()
 		{
-			this.Definition = this.Definition.FromPattern (null);
 			this.UpdateWidgets ();
+			this.textField.SelectAll ();
 			this.textField.Focus ();
 		}
 
