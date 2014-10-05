@@ -185,21 +185,21 @@ $.getScript('signalr/hubs', function() {
 
       fixDragAndDropManager: function () {
         Ext.dd.DragDropMgr.getLocation = function (i) {
-          if (!this.isTypeOfDD(i)) { 
+          if (!this.isTypeOfDD(i)) {
               return null;
           }
-          if (i.getRegion){ 
+          if (i.getRegion){
               return i.getRegion();
           }
           var g = i.getEl(), m, d, c, o, n, p, a, k, h;
 
           if(g!==null) {
-            try { 
+            try {
                 m = Ext.Element.getXY(g);
             }
             catch (j) { }
 
-            if (!m) { 
+            if (!m) {
                 return null;
             }
 
@@ -210,12 +210,12 @@ $.getScript('signalr/hubs', function() {
             p = o - i.padding[0];
             a = c + i.padding[1];
             k = n + i.padding[2];
-            h = d - i.padding[3];       
+            h = d - i.padding[3];
             return new Ext.util.Region(p, a, k, h);
           }
         };
       },
-      
+
 
       showLoginPanel: function() {
         this.loginPanel = Ext.create('Epsitec.LoginPanel', {
@@ -255,16 +255,16 @@ $.getScript('signalr/hubs', function() {
             this.tabManager,
           ];
         }
-        
+
 
         this.hubs = Ext.create('Epsitec.Hubs',username);
 
-        
+
 
         if(epsitecConfig.featureChat)
         {
           this.hubs.registerHub("chat",SignalRChat);
-        } 
+        }
 
         if(epsitecConfig.featureElasticSearch)
         {
@@ -303,16 +303,16 @@ $.getScript('signalr/hubs', function() {
 
         if(epsitecConfig.featureFaq) {
           this.faqWindow = Ext.create('Epsitec.FaqWindow');
-        }      
+        }
       },
 
       reloadCurrentDatabase: function(samePage) {
         var key = this.tabManager.currentTab;
         var columnManager = this.tabManager.entityTabs[key];
         var currentSelection, selectionIndex;
-        
+
         if(Ext.isDefined(columnManager))
-        {   
+        {
             currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
             if(currentSelection.length>0)
             {
@@ -324,18 +324,34 @@ $.getScript('signalr/hubs', function() {
             {
               columnManager.leftList.entityList.reload(columnManager);
             }
-                
+
         }
-        
+
+      },
+
+      reloadCurrentQueries: function() {
+        var key = this.tabManager.currentTab;
+        var columnManager = this.tabManager.entityTabs[key];
+        var currentQueryStore = null;
+
+        if(Ext.isDefined(columnManager))
+        {
+            currentQueryStore = columnManager.leftList.entityList.queryStore;
+            if(currentQueryStore)
+            {
+              currentQueryStore.load();
+            }
+        }
+
       },
 
       reloadCurrentList: function(entityList,samePage) {
         var key = this.tabManager.currentTab;
         var columnManager = this.tabManager.entityTabs[key];
         var currentSelection, selectionIndex;
-        
+
         if(Ext.isDefined(columnManager))
-        {   
+        {
             currentSelection = entityList.getSelectionModel().getSelection();
             if(currentSelection.length>0)
             {
@@ -346,8 +362,8 @@ $.getScript('signalr/hubs', function() {
             else
             {
               entityList.reload(columnManager);
-            }             
-        }     
+            }
+        }
       },
 
       reloadCurrentTile: function(callback) {
@@ -355,9 +371,9 @@ $.getScript('signalr/hubs', function() {
         var columnManager = this.tabManager.entityTabs[key];
         var currentSelection, selectionIndex;
         var path = {};
-        
+
         if(Ext.isDefined(columnManager))
-        {   
+        {
           currentSelection = columnManager.leftList.entityList.getSelectionModel().getSelection();
           if(Ext.isDefined(currentSelection[0]))
           {
@@ -366,15 +382,15 @@ $.getScript('signalr/hubs', function() {
             {
               this.reloadCurrentDatabase(true);
             }
-            
+
             //if more do nothing...
-          }              
+          }
         }
         else
         {
           this.reloadCurrentDatabase(true);
         }
-        
+
       },
 
       getCurrentDatabaseEntityType: function() {
@@ -387,30 +403,30 @@ $.getScript('signalr/hubs', function() {
         else
           return "type inconnu";
       },
-        
+
       addEntityToBag: function(summary,entityId) {
         var title = this.getCurrentDatabaseEntityType();
-        this.entityBag.addEntityToBag(title,summary,entityId);      
+        this.entityBag.addEntityToBag(title,summary,entityId);
       },
 
       addCustomEntityToBag: function(title,summary,entityId) {
-        this.entityBag.addEntityToBag(title,summary,entityId);      
+        this.entityBag.addEntityToBag(title,summary,entityId);
       },
 
       addEntityToClientBag: function(entity) {
-        this.entityBag.addEntityToClientBag(entity);      
+        this.entityBag.addEntityToClientBag(entity);
       },
 
       removeEntityFromBag: function(entity) {
-        this.entityBag.removeEntityFromBag(entity);      
+        this.entityBag.removeEntityFromBag(entity);
       },
 
       removeEntityFromClientBag: function(entity) {
-        this.entityBag.removeEntityFromClientBag(entity);      
+        this.entityBag.removeEntityFromClientBag(entity);
       },
 
       addEntityToTarget: function(entity) {
-        this.actionPage.addTargetEntity(entity);      
+        this.actionPage.addTargetEntity(entity);
       },
 
 
@@ -522,7 +538,7 @@ $.getScript('signalr/hubs', function() {
                       window.location = "/proxy/downloads/get/" + filename;
                   }
                   else
-                  {                   
+                  {
                     toastr.options = null;
                     toastr.options = {
                         debug: false,
@@ -575,14 +591,14 @@ $.getScript('signalr/hubs', function() {
       addEntityToStatusBar: function (status) {
           var sb = this.tabManager.dockedItems.items[0];
           var item;
-          var changeStatus = false;  
+          var changeStatus = false;
           var oldItem = sb.getComponent(status.id);
 
           if (Ext.isDefined(oldItem)) {
               sb.remove(status.id, true);
           }
 
-          if (status.type == "text") {           
+          if (status.type == "text") {
               item = new Ext.Toolbar.TextItem({ id: status.id, text: status.text });
               sb.add(item);
               changeStatus = true;
@@ -593,7 +609,7 @@ $.getScript('signalr/hubs', function() {
               sb.add(item);
               changeStatus = true;
           }
-           
+
           if (changeStatus) {
               sb.setStatus({
                   text: 'Travail en cours',
@@ -604,7 +620,7 @@ $.getScript('signalr/hubs', function() {
                       useDefaults: true
                   }
               });
-          }        
+          }
       },
 
       removeEntityFromStatusBar: function (status) {

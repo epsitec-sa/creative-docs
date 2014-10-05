@@ -14,9 +14,9 @@
 <body style="background-color: rgb(223, 232, 246);">
     <div class="container" ng-controller="CoreQueryBuilder">
         <div class="alert alert-success">
-            <strong>Choix des colonnes</strong>
+            <strong>Choix des colonnes à afficher</strong>
             <div class="input-group">
-                <select ng-options="t as t.title for t in database.columns" ng-model="selectedColumn" class="form-control input-xs"></select>
+                <select ng-options="t as t.title for t in selectableColumns" ng-model="selectedColumn" class="form-control input-xs"></select>
             </div>
             <button type="button" class="btn btn-default" ng-click="addSelectedColumn(selectedColumn)"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter</button>
             <ul class="list-group">

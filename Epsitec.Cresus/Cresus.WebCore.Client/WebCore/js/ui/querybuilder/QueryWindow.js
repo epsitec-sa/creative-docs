@@ -28,7 +28,12 @@ Ext.require(
             padding: 5
           },
           closable: true,
-          closeAction: 'hide',
+          closeAction: 'close',
+          listeners: {
+            'close': function () {
+              Epsitec.Cresus.Core.app.reloadCurrentQueries();
+            }
+          },
           items: [ {
             xtype: "component",
             autoEl: {

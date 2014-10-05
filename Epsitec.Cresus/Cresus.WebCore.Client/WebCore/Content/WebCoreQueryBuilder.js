@@ -10,6 +10,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     $scope.fields = [];
     $scope.columns = [];
     $scope.availableQueries = [];
+    $scope.selectableColumns = [];
 
     var loadAvailableQueries = function () {
       webCoreServices.loadQueries(druid).success(function(data, status,
@@ -35,12 +36,15 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       };
 
       angular.forEach($scope.database.columns, function(column) {
+        //populate displayed/displayable columns
+        if (column.hidden === false) {
+          $scope.columns.push(column);
+        } else {
+          $scope.selectableColumns.push(column);
+        }
 
+        //populate filterable
         if (column.filter.filterable) {
-          if (column.hidden === false) {
-            $scope.columns.push(column);
-          }
-
           $scope.fields.push({
             name: column.title,
             id: column.name,
@@ -56,9 +60,12 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
 
     $scope.addSelectedColumn = function(column) {
       $scope.columns.push(column);
+      var index = $scope.selectableColumns.indexOf(column);
+      $scope.selectableColumns.splice(index, 1);
     };
 
     $scope.removeColumn = function(column) {
+      $scope.selectableColumns.push(column);
       var index = $scope.columns.indexOf(column);
       $scope.columns.splice(index, 1);
     };
@@ -104,6 +111,37 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
 
     $scope.loadQuery = function(query) {
       var group = JSON.parse(query)[0];
+      var columnsId = group.columns.split(';');
+      var toRemove = [];
+      var toAdd = [];
+      //for each displayed columns
+      angular.forEach($scope.columns, function(col) {
+        //if displayed is not in query
+        if(columnsId.indexOf(col.name) === -1) {
+          //tag column index for removal
+          toRemove.push($scope.columns.indexOf(col));
+        }
+      });
+      //remove tagged index from displayed
+      angular.forEach(toRemove, function(index) {
+        $scope.columns.splice(index, 1);
+      });
+
+      //for each database columns
+      angular.forEach($scope.database.columns, function(col) {
+        //if column is in query
+        if(columnsId.indexOf(col.name) !== -1) {
+            //if column is in selectable
+            if($scope.selectableColumns.indexOf(col) !== -1) {
+              //remove from selectable
+              var index = $scope.selectableColumns.indexOf(col);
+              $scope.selectableColumns.splice(index, 1);
+            }
+            //add column to displayed
+            $scope.columns.push(col);
+        }
+      });
+
       var filter = {
         group: group
       };

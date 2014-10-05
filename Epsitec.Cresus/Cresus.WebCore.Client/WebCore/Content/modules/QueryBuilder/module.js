@@ -52,10 +52,10 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           };
 
           scope.addGroup = function() {
-            scope.group.operator = scope.operators[0];
+            scope.group.operator = scope.operators[0].value;
             scope.group.rules.push({
               group: {
-                operator: scope.operators[0],
+                operator: scope.operators[0].value,
                 rules: []
               }
             });
@@ -69,7 +69,7 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
                 if (rule.type === 'list') {
                   webCoreServices.fieldValues(field.enumId).success(
                     function(data, status, headers) {
-                      scope.fieldEnumMap[field.id] = field.enumId; 
+                      scope.fieldEnumMap[field.id] = field.enumId;
                       scope.enum[field.enumId] = data.content.values;
                     });
                 }

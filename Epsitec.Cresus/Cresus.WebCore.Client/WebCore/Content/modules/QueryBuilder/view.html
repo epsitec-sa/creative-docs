@@ -1,7 +1,7 @@
 <div class="alert alert-warning alert-group alert-dismissible">
   <button type="button" class="close" ng-click="removeGroup()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <div class="form-inline">
-      <select ng-options="o as o.name for o in operators" ng-model="group.operator" class="form-control input-xs"></select>
+      <select ng-options="o.value as o.name for o in operators" ng-model="group.operator" class="form-control input-xs"></select>
       <div class="btn-group">
           <button ng-click="addCondition()" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-plus-sign"></span> Condition</button>
           <button ng-click="addGroup()" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-plus-sign"></span> Groupe</button>

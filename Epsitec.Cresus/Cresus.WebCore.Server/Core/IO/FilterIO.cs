@@ -88,11 +88,9 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 		private static void ParseQueryGroup (BusinessContext businessContext, Caches caches, Database database, Common.Support.Druid entityId, Dictionary<string, object> group, ref FilterNode node, ref Filter rootFilter)
 		{
-			var filterOpContainer = (Dictionary<string, object>) group["operator"];
-			var filterOp =  (string) filterOpContainer["value"];
-			var rules    =  (object[]) group["rules"];
+			var filterOp = (string) group["operator"];
+			var rules    = (object[]) group["rules"];
 
-			
 			var richFilter = new Filter ();
 			
 			var currentGroupNode = new FilterNode (richFilter, FilterIncludeMode.Inclusive, FilterActiveMode.Enabled);
