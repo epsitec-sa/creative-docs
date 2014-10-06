@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -52,10 +53,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent              = topBox,
 				Dock                = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				BackColor           = ColorManager.TreeTableBackgroundColor,
 			};
 
 			this.listController.CreateUI (this.listFrameBox);
-			this.CreatePerfectUI ();
+			this.CreatePerfectUI (this.perfectFrameBox);
 
 			this.DeepUpdateUI ();
 
@@ -86,11 +88,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void CreatePerfectUI()
+		private void CreatePerfectUI(Widget parent)
 		{
+			var topTitle = new TopTitle
+			{
+				Parent = parent,
+			};
+
+			var title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
+			topTitle.SetTitle (title);
+
 			new StaticText
 			{
-				Parent           = this.perfectFrameBox,
+				Parent           = parent,
 				Text             = Misc.GetRichTextImg ("Perfect", 0),
 				ContentAlignment = ContentAlignment.BottomCenter,
 				Margins          = new Margins (0, 0, 0, 10),
@@ -99,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			new StaticText
 			{
-				Parent           = this.perfectFrameBox,
+				Parent           = parent,
 				Text             = Res.Strings.WarningView.Perfect.ToString (),
 				ContentAlignment = ContentAlignment.TopCenter,
 				Margins          = new Margins (0, 0, 10, 0),
@@ -122,16 +132,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateUI()
 		{
 			//	Met à jour les données des différents contrôleurs.
-			if (this.listController.IsEmpty)
+			//?if (this.listController.IsEmpty)
 			{
 				this.listFrameBox.Visibility = false;
 				this.perfectFrameBox.Visibility = true;
 			}
-			else
-			{
-				this.listFrameBox.Visibility = true;
-				this.perfectFrameBox.Visibility = false;
-			}
+			//?else
+			//?{
+			//?	this.listFrameBox.Visibility = true;
+			//?	this.perfectFrameBox.Visibility = false;
+			//?}
 
 			using (this.ignoreChanges.Enter ())
 			{

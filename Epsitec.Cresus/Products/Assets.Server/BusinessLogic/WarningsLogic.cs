@@ -178,6 +178,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (checkAssets && !accessor.Mandat.GetData (BaseType.Assets).Any ())
 			{
+				//	Si les catégories et les groupes sont définis, on vérifie si les objets
+				//	d'immobilisation sont définis.
 				var warning = new Warning (BaseType.Assets, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Assets.ToString ());
 				warnings.Add (warning);
 			}
