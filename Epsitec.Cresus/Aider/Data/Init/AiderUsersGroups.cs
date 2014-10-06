@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Data.Groups
 {
@@ -24,7 +25,51 @@ namespace Epsitec.Aider.Data.Groups
 	/// This job create missing Aider Users groups if needed
 	/// </summary>
 	public static class AiderUsersGroups
-	{		
+	{	
+		public static void PopulateUserGroupsWithUsers(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var exempleUser = new AiderUserEntity ()
+				{
+					Disabled = false
+				};
+
+				var usersToPlace = businessContext.GetByExample<AiderUserEntity> (exempleUser);
+
+				foreach(var user in usersToPlace)
+				{
+					if(user.Parish.IsNotNull() && user.Contact.IsNotNull())
+					{
+						var contact = user.Contact;
+						var newUserGroup = user.Parish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+						if(!newUserGroup.FindParticipationsByGroup (businessContext, contact, newUserGroup).Any ())
+						{
+							var participationData = new List<ParticipationData> ();
+							participationData.Add (new ParticipationData (contact));
+							newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
+						}
+						
+					}
+
+					if (user.Office.IsNotNull () && user.Contact.IsNotNull ())
+					{
+						var contact = user.Contact;
+						var newUserGroup = user.Office.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
+						if (!newUserGroup.FindParticipationsByGroup (businessContext, contact, newUserGroup).Any ())
+						{
+							var participationData = new List<ParticipationData> ();
+							participationData.Add (new ParticipationData (contact));
+							newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
+						}
+						
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
 		public static void InitParishUserGroups(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))

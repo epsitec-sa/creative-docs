@@ -117,6 +117,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-populateusergroups"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.PopulateUserGroups (args));
+					return;
+				}
+
 				if (args.Contains ("-initfunctions"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.InitFunctions (args));
@@ -478,6 +484,14 @@ namespace Epsitec.Aider
 				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroups.InitParishUserGroups (coreData);
+			});
+		}
+
+		private static void PopulateUserGroups(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				AiderUsersGroups.PopulateUserGroupsWithUsers (coreData);
 			});
 		}
 
