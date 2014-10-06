@@ -132,16 +132,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateUI()
 		{
 			//	Met à jour les données des différents contrôleurs.
-			//?if (this.listController.IsEmpty)
+			if (this.listController.IsEmpty)
 			{
 				this.listFrameBox.Visibility = false;
 				this.perfectFrameBox.Visibility = true;
 			}
-			//?else
-			//?{
-			//?	this.listFrameBox.Visibility = true;
-			//?	this.perfectFrameBox.Visibility = false;
-			//?}
+			else
+			{
+				this.listFrameBox.Visibility = true;
+				this.perfectFrameBox.Visibility = false;
+			}
 
 			using (this.ignoreChanges.Enter ())
 			{
