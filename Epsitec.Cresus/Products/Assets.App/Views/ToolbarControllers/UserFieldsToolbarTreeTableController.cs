@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 
 			this.accessor.GlobalSettings.InsertUserField (this.baseType, index, userField);
-
+			accessor.WarningsDirty = true;
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 		}
@@ -197,6 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.UserFieldsTreeTable.DeleteQuestion.ToString (), delegate
 			{
 				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
+				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
 			});

@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les options pour la recherche.
 	/// </summary>
-	public class SearchOptionsPopup : StackedPopup
+	public class SearchOptionsPopup : AbstractStackedPopup
 	{
 		public SearchOptionsPopup(DataAccessor accessor)
 			: base (accessor)

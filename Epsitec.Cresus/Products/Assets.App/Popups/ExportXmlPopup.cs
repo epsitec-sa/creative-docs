@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les paramètres pour l'exportation au format xml.
 	/// </summary>
-	public class ExportXmlPopup : StackedPopup
+	public class ExportXmlPopup : AbstractStackedPopup
 	{
 		public ExportXmlPopup(DataAccessor accessor)
 			: base (accessor)

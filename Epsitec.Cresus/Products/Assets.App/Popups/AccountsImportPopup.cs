@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à l'importation d'un plan comptable.
 	/// Un rapport indique l'éventuel impact de l'importation, si elle est effectuée.
 	/// </summary>
-	public class AccountsImportPopup : StackedPopup
+	public class AccountsImportPopup : AbstractStackedPopup
 	{
 		public AccountsImportPopup(DataAccessor accessor)
 			: base (accessor)

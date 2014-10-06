@@ -289,6 +289,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var name = DataClipboard.GetCopyName (data.UserField.Name, accessor.GlobalSettings.CopyNameStrategy);
 			var userField = new UserField (data.UserField, field, name);
 			accessor.GlobalSettings.InsertUserField (baseType, index, userField);
+			accessor.WarningsDirty = true;
 
 			return userField;
 		}

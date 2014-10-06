@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouveau groupe, à savoir le nom du groupe et son parent.
 	/// </summary>
-	public class CreateGroupPopup : StackedPopup
+	public class CreateGroupPopup : AbstractStackedPopup
 	{
 		public CreateGroupPopup(DataAccessor accessor)
 			: base (accessor)

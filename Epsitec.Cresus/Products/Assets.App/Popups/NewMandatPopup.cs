@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisie des informations nécessaires à la création d'un
 	/// nouveau mandat.
 	/// </summary>
-	public class NewMandatPopup : StackedPopup
+	public class NewMandatPopup : AbstractStackedPopup
 	{
 		public NewMandatPopup(DataAccessor accessor)
 			: base (accessor)

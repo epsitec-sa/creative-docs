@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les paramètres pour l'exportation au format pdf.
 	/// </summary>
-	public class ExportPdfPopup : StackedPopup
+	public class ExportPdfPopup : AbstractStackedPopup
 	{
 		public ExportPdfPopup(DataAccessor accessor)
 			: base (accessor)

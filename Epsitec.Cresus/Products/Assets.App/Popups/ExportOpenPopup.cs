@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant d'ouvrir le fichier ou l'emplacement résultant d'une exportation.
 	/// </summary>
-	public class ExportOpenPopup : StackedPopup
+	public class ExportOpenPopup : AbstractStackedPopup
 	{
 		public ExportOpenPopup(DataAccessor accessor)
 			: base (accessor)

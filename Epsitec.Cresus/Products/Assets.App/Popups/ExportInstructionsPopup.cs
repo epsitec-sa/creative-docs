@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant la saisir des informations nécessaires à l'exportation d'un TreeTable.
 	/// </summary>
-	public class ExportInstructionsPopup : StackedPopup
+	public class ExportInstructionsPopup : AbstractStackedPopup
 	{
 		public ExportInstructionsPopup(DataAccessor accessor)
 			: base (accessor)

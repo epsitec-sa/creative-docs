@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'un
 	/// nouveau contact, à savoir son nom.
 	/// </summary>
-	public class CreatePersonPopup : StackedPopup
+	public class CreatePersonPopup : AbstractStackedPopup
 	{
 		public CreatePersonPopup(DataAccessor accessor)
 			: base (accessor)

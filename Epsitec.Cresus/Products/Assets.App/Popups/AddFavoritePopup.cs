@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class AddFavoritePopup : StackedPopup
+	public class AddFavoritePopup : AbstractStackedPopup
 	{
 		private AddFavoritePopup(DataAccessor accessor)
 			: base (accessor)

@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// empilement de contrôleurs pour saisir divers types de valeurs (textes, dates,
 	/// booléens, énumérations, etc.).
 	/// </summary>
-	public abstract class StackedPopup : AbstractPopup
+	public abstract class AbstractStackedPopup : AbstractPopup
 	{
-		public StackedPopup(DataAccessor accessor)
+		public AbstractStackedPopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 
@@ -264,8 +264,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					labelsWidth += 10;
 				}
 
-				int w = StackedPopup.margin*2 + labelsWidth + this.ControllersWidth;
-				int h = AbstractPopup.titleHeight + StackedPopup.margin*2 + this.ControllersHeight + StackedPopup.footerHeight;
+				int w = AbstractStackedPopup.margin*2 + labelsWidth + this.ControllersWidth;
+				int h = AbstractPopup.titleHeight + AbstractStackedPopup.margin*2 + this.ControllersHeight + AbstractStackedPopup.footerHeight;
 
 				return new Size (w, h);
 			}
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent  = parent,
 				Anchor  = AnchorStyles.All,
-				Margins = new Margins (StackedPopup.margin, StackedPopup.margin, AbstractPopup.titleHeight + StackedPopup.margin, 0),
+				Margins = new Margins (AbstractStackedPopup.margin, AbstractStackedPopup.margin, AbstractPopup.titleHeight + AbstractStackedPopup.margin, 0),
 			};
 
 			int labelsWidth = this.LabelsWidth;
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Parent          = globalFrame,
 					PreferredHeight = controller.RequiredHeight,
 					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
+					Margins         = new Margins (0, 0, 0, description.BottomMargin + AbstractStackedPopup.verticalGap),
 				};
 
 				var hiddenFrame = new FrameBox
@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					Parent          = globalFrame,
 					PreferredHeight = controller.RequiredHeight,
 					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, description.BottomMargin + StackedPopup.verticalGap),
+					Margins         = new Margins (0, 0, 0, description.BottomMargin + AbstractStackedPopup.verticalGap),
 					Visibility      = false,
 				};
 
@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne la hauteur totale nécessaire pour les contrôleurs inclus.
 			get
 			{
-				return this.controllers.Select (x => x.RequiredHeight + x.Description.BottomMargin + StackedPopup.verticalGap).Sum ();
+				return this.controllers.Select (x => x.RequiredHeight + x.Description.BottomMargin + AbstractStackedPopup.verticalGap).Sum ();
 			}
 		}
 
@@ -374,6 +374,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				return this.controllers.Select (x => x.RequiredLabelsWidth).Max ();
+			}
+		}
+
+
+		protected override bool IsAcceptEnable
+		{
+			get
+			{
+				return this.okButton.Enable;
 			}
 		}
 

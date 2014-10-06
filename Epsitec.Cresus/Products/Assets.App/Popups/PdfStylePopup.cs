@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir le style d'exportation pdf.
 	/// </summary>
-	public class PdfStylePopup : StackedPopup
+	public class PdfStylePopup : AbstractStackedPopup
 	{
 		public PdfStylePopup(DataAccessor accessor)
 			: base (accessor)

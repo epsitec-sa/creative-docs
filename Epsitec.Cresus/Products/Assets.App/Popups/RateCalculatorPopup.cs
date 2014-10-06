@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class RateCalculatorPopup : StackedPopup
+	public class RateCalculatorPopup : AbstractStackedPopup
 	{
 		public RateCalculatorPopup(DataAccessor accessor)
 			: base (accessor)

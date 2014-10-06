@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Choix de la date à considérer pour copier un objet d'immobilisation.
 	/// </summary>
-	public class AssetCopyPopup : StackedPopup
+	public class AssetCopyPopup : AbstractStackedPopup
 	{
 		private AssetCopyPopup(DataAccessor accessor, DataObject obj)
 			: base (accessor)

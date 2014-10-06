@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class StackedTestPopup : StackedPopup
+	public class StackedTestPopup : AbstractStackedPopup
 	{
 		public StackedTestPopup(DataAccessor accessor)
 			: base (accessor)

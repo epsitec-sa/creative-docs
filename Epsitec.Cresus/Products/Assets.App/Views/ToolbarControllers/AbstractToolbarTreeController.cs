@@ -328,14 +328,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected void UpdateSelCommand(Command command, int selectedCell, int? newSelection)
 		{
+			bool empty = this.nodeGetter.Count == 0;
 			bool enable = (newSelection.HasValue && selectedCell != newSelection.Value);
-			this.toolbar.SetEnable (command, enable);
+			this.toolbar.SetEnable (command, !empty && enable);
 		}
 
 		protected void UpdateMoveCommand(Command command, int selectedCell, int? newSelection)
 		{
+			bool empty = this.nodeGetter.Count == 0;
 			bool enable = (newSelection.HasValue && selectedCell != -1 && selectedCell != newSelection.Value);
-			this.toolbar.SetEnable (command, enable);
+			this.toolbar.SetEnable (command, !empty && enable);
 		}
 
 

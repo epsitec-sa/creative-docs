@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir le format des pages en millimètres.
 	/// </summary>
-	public class PageSizePopup : StackedPopup
+	public class PageSizePopup : AbstractStackedPopup
 	{
 		public PageSizePopup(DataAccessor accessor)
 			: base (accessor)

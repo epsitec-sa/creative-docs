@@ -154,7 +154,7 @@
     <Compile Include="Popups\StackedControllers\TextStackedController.cs" />
     <Compile Include="Popups\StackedControllers\IntStackedController.cs" />
     <Compile Include="Popups\StackedTestPopup.cs" />
-    <Compile Include="Popups\StackedPopup.cs" />
+    <Compile Include="Popups\AbstractStackedPopup.cs" />
     <Compile Include="Popups\StackedControllers\DateStackedController.cs" />
     <Compile Include="Popups\StackedControllers\StackedControllerDescription.cs" />
     <Compile Include="Popups\MessagePopup.cs" />

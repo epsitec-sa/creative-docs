@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class LockedPopup : StackedPopup
+	public class LockedPopup : AbstractStackedPopup
 	{
 		public LockedPopup(DataAccessor accessor)
 			: base (accessor)

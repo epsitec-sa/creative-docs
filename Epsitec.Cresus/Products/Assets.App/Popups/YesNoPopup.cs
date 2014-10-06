@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Affiche un dialogue oui/non avec une question.
 	/// </summary>
-	public class YesNoPopup : StackedPopup
+	public class YesNoPopup : AbstractStackedPopup
 	{
 		private YesNoPopup(string question)
 			: base (null)

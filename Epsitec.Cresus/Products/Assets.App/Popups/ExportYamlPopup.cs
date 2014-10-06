@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les paramètres pour l'exportation au format yaml.
 	/// </summary>
-	public class ExportYamlPopup : StackedPopup
+	public class ExportYamlPopup : AbstractStackedPopup
 	{
 		public ExportYamlPopup(DataAccessor accessor)
 			: base (accessor)

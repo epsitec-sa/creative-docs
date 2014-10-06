@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les paramètres pour l'exportation au format json.
 	/// </summary>
-	public class ExportJsonPopup : StackedPopup
+	public class ExportJsonPopup : AbstractStackedPopup
 	{
 		public ExportJsonPopup(DataAccessor accessor)
 			: base (accessor)

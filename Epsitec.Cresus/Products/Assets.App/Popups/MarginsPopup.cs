@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Popup permettant de choisir les 4 valeurs en millimètres d'un Drawing.Margins.
 	/// </summary>
-	public class MarginsPopup : StackedPopup
+	public class MarginsPopup : AbstractStackedPopup
 	{
 		public MarginsPopup(DataAccessor accessor, string title)
 			: base (accessor)

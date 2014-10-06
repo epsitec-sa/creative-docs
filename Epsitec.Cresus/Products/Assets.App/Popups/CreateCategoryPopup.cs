@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant la saisir des informations nécessaires à la création d'une
 	/// nouvelle catégorie, à savoir le nom de la catégorie et son éventuel modèle.
 	/// </summary>
-	public class CreateCategoryPopup : StackedPopup
+	public class CreateCategoryPopup : AbstractStackedPopup
 	{
 		public CreateCategoryPopup(DataAccessor accessor)
 			: base (accessor)

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// <summary>
 	/// Choix de la date à laquelle coller l'événement dans le clipboard.
 	/// </summary>
-	public class EventPastePopup : StackedPopup
+	public class EventPastePopup : AbstractStackedPopup
 	{
 		private EventPastePopup(DataAccessor accessor, DataObject obj, EventType eventType)
 			: base (accessor)
