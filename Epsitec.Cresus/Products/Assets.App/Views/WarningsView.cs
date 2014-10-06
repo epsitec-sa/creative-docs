@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
@@ -48,8 +49,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.perfectFrameBox = new FrameBox
 			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
+				Parent              = topBox,
+				Dock                = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 			};
 
 			this.listController.CreateUI (this.listFrameBox);
@@ -89,8 +91,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			new StaticText
 			{
 				Parent           = this.perfectFrameBox,
+				Text             = Misc.GetRichTextImg ("Perfect", 0),
+				ContentAlignment = ContentAlignment.BottomCenter,
+				Margins          = new Margins (0, 0, 0, 10),
+				Dock             = DockStyle.Fill,
+			};
+
+			new StaticText
+			{
+				Parent           = this.perfectFrameBox,
 				Text             = Res.Strings.WarningView.Perfect.ToString (),
-				ContentAlignment = ContentAlignment.MiddleCenter,
+				ContentAlignment = ContentAlignment.TopCenter,
+				Margins          = new Margins (0, 0, 10, 0),
 				Dock             = DockStyle.Fill,
 			};
 		}
