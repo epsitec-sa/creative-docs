@@ -49,7 +49,6 @@
   <data name="Popup.Categories.Title" id="KF1">Choix de la catégorie d'immobilisation à importer</data>
   <data name="Popup.CreateAsset.Title" id="KG1">Création d'un nouvel objet</data>
   <data name="Popup.CreateAsset.Date" id="KH1">Date d'entrée</data>
-  <data name="Popup.CreateAsset.Name" id="KI1">Nom</data>
   <data name="Popup.CreateAsset.Value" id="KJ1">Valeur comptable</data>
   <data name="Popup.CreateAsset.Category" id="KK1">Catégorie d'immobilisation</data>
   <data name="Popup.CreateCategory.Title" id="KL1">Création d'une nouvelle catégorie d'immobilisation</data>
@@ -76,7 +75,6 @@
   <data name="Popup.CreateGroup.Name" id="KA2">Nom</data>
   <data name="Popup.CreateGroup.Parent" id="KB2">Dans</data>
   <data name="Popup.CreatePerson.Title" id="KC2">Création d'un nouveau contact</data>
-  <data name="Popup.CreatePerson.Name" id="KD2">Nom</data>
   <data name="Popup.CreatePerson.Model" id="KE2">Selon un modèle</data>
   <data name="Popup.Date.Title" id="KF2">Choix d'une date</data>
   <data name="Popup.Errors.Title" id="KG2">Résultats</data>

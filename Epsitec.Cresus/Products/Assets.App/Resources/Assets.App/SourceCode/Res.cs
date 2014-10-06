@@ -3549,14 +3549,6 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544369));
 						}
 					}
-					//	designer:str/JUKI101
-					public static global::Epsitec.Common.Types.FormattedText Name
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544370));
-						}
-					}
 					//	designer:str/JUKG101
 					public static global::Epsitec.Common.Types.FormattedText Title
 					{
@@ -3659,14 +3651,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
-						}
-					}
-					//	designer:str/JUKD201
-					public static global::Epsitec.Common.Types.FormattedText Name
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544397));
 						}
 					}
 					//	designer:str/JUKC201
@@ -7928,14 +7912,6 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544369);
 						}
 					}
-					//	designer:str/JUKI101
-					public static global::Epsitec.Common.Support.Druid Name
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544370);
-						}
-					}
 					//	designer:str/JUKG101
 					public static global::Epsitec.Common.Support.Druid Title
 					{
@@ -8038,14 +8014,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
-						}
-					}
-					//	designer:str/JUKD201
-					public static global::Epsitec.Common.Support.Druid Name
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
 						}
 					}
 					//	designer:str/JUKC201
