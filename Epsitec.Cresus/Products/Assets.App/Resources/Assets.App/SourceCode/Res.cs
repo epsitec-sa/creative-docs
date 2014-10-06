@@ -5408,6 +5408,18 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class WarningView
+			{
+				//	designer:str/JUKLH01
+				public static global::Epsitec.Common.Types.FormattedText Perfect
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544885));
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
@@ -9767,6 +9779,18 @@ namespace Epsitec.Cresus.Assets.App
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544710);
 						}
+					}
+				}
+			}
+			
+			public static class WarningView
+			{
+				//	designer:str/JUKLH01
+				public static global::Epsitec.Common.Support.Druid Perfect
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544885);
 					}
 				}
 			}

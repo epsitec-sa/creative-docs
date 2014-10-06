@@ -59,4 +59,7 @@
   <data name="Enum.AccountCategory.Depense" id="KO1">Dépense</data>
   <data name="Enum.AccountCategory.Recette" id="KP1">Recette</data>
   <data name="WarningsLogic.RequiredUserFields.Missing" id="KQ1">Il doit y avoir au moins un champ obligatoire</data>
+  <data name="WarningsLogic.Undefined.Categories" id="KR1">Il n'existe aucune catégorie d'immobilisation</data>
+  <data name="WarningsLogic.Undefined.Groups" id="KS1">Il n'existe aucun groupe</data>
+  <data name="WarningsLogic.Undefined.Accounts" id="KT1">Le plan comptable n'est pas défini</data>
 </bundle>

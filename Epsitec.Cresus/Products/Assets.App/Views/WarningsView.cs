@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ToolbarControllers;
@@ -45,7 +46,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock   = DockStyle.Fill,
 			};
 
+			this.perfectFrameBox = new FrameBox
+			{
+				Parent = topBox,
+				Dock   = DockStyle.Fill,
+			};
+
 			this.listController.CreateUI (this.listFrameBox);
+			this.CreatePerfectUI ();
 
 			this.DeepUpdateUI ();
 
@@ -76,6 +84,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void CreatePerfectUI()
+		{
+			new StaticText
+			{
+				Parent           = this.perfectFrameBox,
+				Text             = Res.Strings.WarningView.Perfect.ToString (),
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Dock             = DockStyle.Fill,
+			};
+		}
+
 
 		public override void DataChanged()
 		{
@@ -91,6 +110,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateUI()
 		{
 			//	Met à jour les données des différents contrôleurs.
+			if (this.listController.IsEmpty)
+			{
+				this.listFrameBox.Visibility = false;
+				this.perfectFrameBox.Visibility = true;
+			}
+			else
+			{
+				this.listFrameBox.Visibility = true;
+				this.perfectFrameBox.Visibility = false;
+			}
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.listController.UpdateGraphicMode ();
@@ -184,6 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly WarningsToolbarTreeTableController	listController;
 
 		private FrameBox									listFrameBox;
+		private FrameBox									perfectFrameBox;
 		private Guid										selectedGuid;
 	}
 }

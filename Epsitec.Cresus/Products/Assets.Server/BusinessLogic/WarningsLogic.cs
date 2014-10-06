@@ -162,19 +162,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie si certaines bases sont vides.
 			if (!accessor.Mandat.GetData (BaseType.Categories).Any ())
 			{
-				var warning = new Warning (BaseType.Categories, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Il n'existe aucune catégorie d'immobilisation");
+				var warning = new Warning (BaseType.Categories, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Categories.ToString ());
 				warnings.Add (warning);
 			}
 
 			if (accessor.Mandat.GetData (BaseType.Groups).Count () <= 1)
 			{
-				var warning = new Warning (BaseType.Groups, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Il n'existe aucun groupe");
+				var warning = new Warning (BaseType.Groups, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Groups.ToString ());
 				warnings.Add (warning);
 			}
 
 			if (!accessor.Mandat.AccountsDateRanges.Any ())
 			{
-				var warning = new Warning (BaseType.Accounts, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Le plan comptable n'est pas défini");
+				var warning = new Warning (BaseType.Accounts, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Accounts.ToString ());
 				warnings.Add (warning);
 			}
 		}

@@ -241,7 +241,7 @@
     <Compile Include="Views\EditorPages\EditorPageUserField.cs" />
     <Compile Include="Views\CommandDescription.cs" />
     <Compile Include="Views\ToolbarControllers\UserFieldsToolbarTreeTableController.cs" />
-    <Compile Include="Views\UserFieldsSettingsView.cs" />
+    <Compile Include="Views\UserFieldsView.cs" />
     <Compile Include="Views\ViewStates\SettingsViewState.cs" />
     <Compile Include="Views\FieldControllers\EnumFieldController.cs" />
     <Compile Include="Views\IDirty.cs" />

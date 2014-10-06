@@ -77,6 +77,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.nodeGetter.Count == 0;
+			}
+		}
+
 
 		public void CreateUI(Widget parent)
 		{
