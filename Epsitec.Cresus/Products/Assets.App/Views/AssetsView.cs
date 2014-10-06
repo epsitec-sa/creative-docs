@@ -495,7 +495,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp timestamp, PageType pageType, ObjectField field)
+		public static AbstractViewState GetViewState(Guid assetGuid, Timestamp? timestamp, PageType pageType, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir l'écriture d'un objet
 			//	à un instant donné.

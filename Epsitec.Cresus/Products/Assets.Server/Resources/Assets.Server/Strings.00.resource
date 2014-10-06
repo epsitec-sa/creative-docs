@@ -62,4 +62,5 @@
   <data name="WarningsLogic.Undefined.Categories" id="KR1">Il n'existe aucune catégorie d'immobilisation</data>
   <data name="WarningsLogic.Undefined.Groups" id="KS1">Il n'existe aucun groupe</data>
   <data name="WarningsLogic.Undefined.Accounts" id="KT1">Le plan comptable n'est pas défini</data>
+  <data name="WarningsLogic.Undefined.Assets" id="KU1">Il n'existe aucun objet d'immobilisation</data>
 </bundle>

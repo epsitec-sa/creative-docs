@@ -160,15 +160,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			WarningsLogic.CheckRequired (warnings, accessor, BaseType.PersonsUserFields);
 
 			//	Vérifie si certaines bases sont vides.
+			bool checkAssets = true;
+
 			if (!accessor.Mandat.GetData (BaseType.Categories).Any ())
 			{
 				var warning = new Warning (BaseType.Categories, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Categories.ToString ());
 				warnings.Add (warning);
+				checkAssets = false;
 			}
 
 			if (accessor.Mandat.GetData (BaseType.Groups).Count () <= 1)
 			{
 				var warning = new Warning (BaseType.Groups, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Groups.ToString ());
+				warnings.Add (warning);
+				checkAssets = false;
+			}
+
+			if (checkAssets && !accessor.Mandat.GetData (BaseType.Assets).Any ())
+			{
+				var warning = new Warning (BaseType.Assets, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Assets.ToString ());
 				warnings.Add (warning);
 			}
 

@@ -166,11 +166,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private AbstractViewState GotoAsset(Warning warning)
 		{
-			var obj  = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e    = obj.GetEvent (warning.EventGuid);
-			var page = EditorPageSummary.GetPageType (this.accessor, warning.Field);
+			if (warning.ObjectGuid.IsEmpty)
+			{
+				return AssetsView.GetViewState (Guid.Empty, null, PageType.Unknown, ObjectField.Unknown);
+			}
+			else
+			{
+				var obj  = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
+				var e    = obj.GetEvent (warning.EventGuid);
+				var page = EditorPageSummary.GetPageType (this.accessor, warning.Field);
 
-			return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, page, warning.Field);
+				return AssetsView.GetViewState (warning.ObjectGuid, e.Timestamp, page, warning.Field);
+			}
 		}
 
 		private AbstractViewState GotoCategory(Warning warning)
