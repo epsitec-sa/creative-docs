@@ -258,10 +258,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					return new WarningsView (accessor, commandContext, toolbar, viewType);
 
 				case ViewTypeKind.AssetsSettings:
-					return new UserFieldsSettingsView (accessor, commandContext, toolbar, viewType, BaseType.AssetsUserFields);
+					return new UserFieldsView (accessor, commandContext, toolbar, viewType, BaseType.AssetsUserFields);
 
 				case ViewTypeKind.PersonsSettings:
-					return new UserFieldsSettingsView (accessor, commandContext, toolbar, viewType, BaseType.PersonsUserFields);
+					return new UserFieldsView (accessor, commandContext, toolbar, viewType, BaseType.PersonsUserFields);
 
 				case ViewTypeKind.Entries:
 					return new EntriesView (accessor, commandContext, toolbar, viewType);

@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private AbstractViewState GotoUserFields(Warning warning)
 		{
-			return UserFieldsSettingsView.GetViewState (warning.BaseType);
+			return UserFieldsView.GetViewState (warning.BaseType);
 		}
 
 		private AbstractViewState GotoAccounts(Warning warning)

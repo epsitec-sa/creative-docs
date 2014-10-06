@@ -14,9 +14,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
-	public class UserFieldsSettingsView : AbstractView, System.IDisposable
+	public class UserFieldsView : AbstractView, System.IDisposable
 	{
-		public UserFieldsSettingsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, BaseType baseType)
+		public UserFieldsView(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar, ViewType viewType, BaseType baseType)
 			: base (accessor, commandContext, toolbar, viewType)
 		{
 			this.baseType = baseType;
