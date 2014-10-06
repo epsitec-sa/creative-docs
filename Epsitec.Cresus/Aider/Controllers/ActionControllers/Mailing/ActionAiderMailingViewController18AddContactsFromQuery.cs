@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter un filtre");
+			return Resources.FormattedText ("Ajouter une requête");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -46,9 +46,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Choix du filtre")
+				.Title ("Choisir une requête")
 				.Field<List<string>> ()
-					.Title ("Filtre")
+					.Title ("Requête")
 					.WithStringCollection (queries)
 				.End ()
 			.End ();

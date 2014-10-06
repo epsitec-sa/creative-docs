@@ -2516,8 +2516,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVO313
 				public static readonly global::Epsitec.Common.Support.Druid Category = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 35);
-				//	designer:cap/LVOG03
-				public static readonly global::Epsitec.Common.Support.Druid CreatedBy = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 16);
+				//	designer:cap/LVO443
+				public static readonly global::Epsitec.Common.Support.Druid CreatedBy = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 132);
 				//	designer:cap/LVOQ03
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 26);
 				//	designer:cap/LVOD03

@@ -26,6 +26,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return Resources.FormattedText ("Mettre à jour");
 		}
 
+		public override bool ExecuteInQueue
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override ActionExecutor GetExecutor()
 		{
 			return ActionExecutor.Create (this.Execute);

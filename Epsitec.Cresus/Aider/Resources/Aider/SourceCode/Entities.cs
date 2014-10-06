@@ -8606,22 +8606,22 @@ namespace Epsitec.Aider.Entities
 		}
 		///	<summary>
 		///	The <c>CreatedBy</c> field.
-		///	designer:fld/LVOA03/LVOG03
+		///	designer:fld/LVOA03/LVO443
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOG03]")]
-		public global::Epsitec.Aider.Entities.AiderUserEntity CreatedBy
+		[global::Epsitec.Common.Support.EntityField ("[LVO443]")]
+		public string CreatedBy
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]");
+				return this.GetField<string> ("[LVO443]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.CreatedBy;
-				if (oldValue != value || !this.IsFieldDefined("[LVOG03]"))
+				string oldValue = this.CreatedBy;
+				if (oldValue != value || !this.IsFieldDefined("[LVO443]"))
 				{
 					this.OnCreatedByChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOG03]", oldValue, value);
+					this.SetField<string> ("[LVO443]", oldValue, value);
 					this.OnCreatedByChanged (oldValue, value);
 				}
 			}
@@ -8839,8 +8839,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnCategoryChanged(global::Epsitec.Aider.Entities.AiderMailingCategoryEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingCategoryEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
-		partial void OnCreatedByChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
-		partial void OnCreatedByChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnCreatedByChanging(string oldValue, string newValue);
+		partial void OnCreatedByChanged(string oldValue, string newValue);
 		partial void OnLastUpdateChanging(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnLastUpdateChanged(global::System.DateTime? oldValue, global::System.DateTime? newValue);
 		partial void OnIsReadyChanging(bool oldValue, bool newValue);

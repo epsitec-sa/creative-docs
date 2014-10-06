@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Entities
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
-				/**/						 this.RecipientQueryName != null ? "Filtre appliqué: " + this.RecipientQueryName + "\n" : "Aucun filtre\n",
+				/**/						 this.RecipientQueryName != null ? "Requête: " + this.RecipientQueryName + "\n" : "Aucune requête\n",
 				/**/						 this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
@@ -78,36 +78,7 @@ namespace Epsitec.Aider.Entities
 
 			if(this.IsGroupedByHousehold)
 			{
-				IEnumerable<AiderHouseholdEntity> contactsHouseholdsFromQuery = Enumerable.Empty<AiderHouseholdEntity> ();
-				if (this.RecipientQuery != null)
-				{
-					var created			   = new List<AiderMailingParticipantEntity> ();
-					var request			   = this.GetRecipientQueryRequest (businessContext);
-
-					contactsHouseholdsFromQuery = businessContext.GetByRequest<AiderContactEntity> (request)
-												.Select (c => c.Household);
-				}
-
-				var contactsHouseholds	 = this.RecipientContacts.Select (c => c.Household);
-
-				var groupsHouseholds	 = this.RecipientGroups
-												.SelectMany (g => g.GetAllGroupAndSubGroupParticipations ().Distinct ()
-													.Select (p => p.Contact)
-													.Select (c => c.Household)
-												);
-
-				var extractionsHouseholds = this.RecipientGroupExtractions
-												.SelectMany (t => t.GetAllParticipations (businessContext.DataContext)
-													.Select (p => p.Contact)
-													.Select (c => c.Household)
-												);
-
-				var households			 = this.RecipientHouseholds
-											.Union (extractionsHouseholds)
-											.Union (groupsHouseholds)
-											.Union (contactsHouseholds)
-											.Union (contactsHouseholdsFromQuery)
-											.Distinct ();
+				var households = this.GetParticipantsByHousehold (businessContext.DataContext);
 
 				foreach(var household in households)
 				{
@@ -391,19 +362,12 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsTitleSummary()
 		{
-			return FormattedText.FromSimpleText ("Destinataires (", 
-				/**/							 this.GetRecipients ().Count ().ToString (),
-				/**/							 ")",
-				/**/							 this.RecipientQueryName != null ? " + " + this.RecipientQueryName : "");
+			return FormattedText.FromSimpleText ("Destinataires");
 		}
 
 		public FormattedText GetRecipientsSummary()
 		{
-			var recipients = this.GetRecipients ()
-				.Select (r => r.GetCompactSummary ())
-				.CreateSummarySequence (10, "...");
-
-			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
+			return "Consulter la liste actuelle";
 		}
 
 		public FormattedText GetExclusionsTitleSummary()
@@ -434,31 +398,6 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
 		}
 
-		public IList<AiderContactEntity> GetRecipients(DataContext context = null)
-		{
-			if (this.recipientsCache == null)
-			{
-				if (context == null)
-				{
-					context = DataContextPool.GetDataContext (this);
-				}
-
-				var contacts = new HashSet<AiderContactEntity> ();
-
-				contacts.UnionWith (this.RecipientContacts);
-				contacts.UnionWith (this.RecipientGroups.SelectMany (x => x.GetAllGroupAndSubGroupParticipantContacts ()));
-				contacts.UnionWith (this.RecipientGroupExtractions.SelectMany (x => x.GetAllContacts (context)));
-				contacts.UnionWith (this.RecipientHouseholds.Select (x => x.Contacts.First ()));
-				
-				contacts.ExceptWith (this.Exclusions);
-				contacts.ExceptWith (this.GroupExclusions.SelectMany (x => x.GetAllGroupAndSubGroupParticipantContacts ()));
-
-				this.recipientsCache = contacts.OrderBy (x => x.DisplayName).ToList ();
-			}
-
-			return this.recipientsCache;
-		}
-
 		public IList<AiderContactEntity> GetExcludedRecipients(DataContext context = null)
 		{
 			if (context == null)
@@ -482,7 +421,7 @@ namespace Epsitec.Aider.Entities
 			mailing.Category    = cat;
 			mailing.Description = desc;
 			mailing.IsReady     = isReady;
-			mailing.CreatedBy   = aiderUser;
+			mailing.CreatedBy   = aiderUser.DisplayName;
 			
 			mailing.ParishGroupPathCache = cat.GroupPathCache;
 
@@ -496,6 +435,21 @@ namespace Epsitec.Aider.Entities
 		{
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, mailing);
 			businessContext.DeleteEntity (mailing);
+		}
+
+		public Request<AiderContactEntity> GetRecipientQueryRequest(DataContext dataContext)
+		{
+			var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
+			var queryFilter		   = Filter.Restore (queryFilterXml);
+			var example			   = new AiderContactEntity ();
+			var request			   = new Request<AiderContactEntity> ()
+			{
+				RootEntity = example
+			};
+
+			request.AddCondition (dataContext, example, queryFilter);
+
+			return request;
 		}
 
 		public Request<AiderContactEntity> GetRecipientQueryRequest(BusinessContext businessContext)
@@ -518,8 +472,40 @@ namespace Epsitec.Aider.Entities
 			this.LastUpdate = System.DateTime.UtcNow;
 		}
 
-		//	These properties are only meant as an in memory cache of the members of the household.
-		//	They will never be saved to the database:
-		private IList<AiderContactEntity>		recipientsCache;
+
+
+		private IEnumerable<AiderHouseholdEntity> GetParticipantsByHousehold (DataContext dataContext)
+		{
+			IEnumerable<AiderHouseholdEntity> contactsHouseholdsFromQuery = Enumerable.Empty<AiderHouseholdEntity> ();
+			if (this.RecipientQuery != null)
+			{
+				var created			   = new List<AiderMailingParticipantEntity> ();
+				var request			   = this.GetRecipientQueryRequest (dataContext);
+
+				contactsHouseholdsFromQuery = dataContext.GetByRequest<AiderContactEntity> (request)
+											.Select (c => c.Household);
+			}
+
+			var contactsHouseholds	 = this.RecipientContacts.Select (c => c.Household);
+
+			var groupsHouseholds	 = this.RecipientGroups
+											.SelectMany (g => g.GetAllGroupAndSubGroupParticipations ().Distinct ()
+												.Select (p => p.Contact)
+												.Select (c => c.Household)
+											);
+
+			var extractionsHouseholds = this.RecipientGroupExtractions
+											.SelectMany (t => t.GetAllParticipations (dataContext)
+												.Select (p => p.Contact)
+												.Select (c => c.Household)
+											);
+
+			return this.RecipientHouseholds
+										.Union (extractionsHouseholds)
+										.Union (groupsHouseholds)
+										.Union (contactsHouseholds)
+										.Union (contactsHouseholdsFromQuery)
+										.Distinct ();
+		}
 	}
 }

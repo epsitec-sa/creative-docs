@@ -613,15 +613,11 @@ AiderReferee = [LVADJ]
     <t eid="@AiderMailing" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVO313].[LVAUH]" title="Catégorie" canSort="True" canFilter="True">
         <sort o="Ascending" />
-        <disp m="Visible" />
+        <disp m="Visible" />  
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOB03]" title="Intitulé" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailing:[LVOG03].[AVA9]" title="Créé par" canSort="True" canFilter="True">
-        <sort o="Ascending" />
-        <disp m="Visible" />c
       </col>
     </t>
 

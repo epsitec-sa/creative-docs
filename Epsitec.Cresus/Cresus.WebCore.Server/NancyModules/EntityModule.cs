@@ -351,11 +351,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (businessContext.Bind (entity))
 			using (businessContext.Bind (additionalEntity))
 			{
-				job.Start ();
+				job.Start ("veuillez patienter...");
 				executor.Call (arguments);
 
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IncludeEmpty);
-				job.Finish ();
+				job.Finish ("");
 			}
 		}
 

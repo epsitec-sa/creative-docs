@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Supprimer le filtre");
+			return Resources.FormattedText ("Supprimer la requête");
 		}
 
 		public override ActionExecutor GetExecutor()
