@@ -12,7 +12,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     $scope.availableQueries = [];
     $scope.selectableColumns = [];
 
-    var loadAvailableQueries = function () {
+    var loadAvailableQueries = function() {
       webCoreServices.loadQueries(druid).success(function(data, status,
         headers) {
 
@@ -27,10 +27,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       $scope.database = data.content;
       $scope.filter = {
         group: {
-          operator: {
-            name: 'ET',
-            value: 'and'
-          },
+          operator: 'and',
           rules: []
         }
       };
@@ -100,7 +97,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
         query)).success(function() {
           loadAvailableQueries();
-      });
+        });
     };
 
     $scope.deleteQuery = function(queryName) {
@@ -114,31 +111,19 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       var columnsId = group.columns.split(';');
       var toRemove = [];
       var toAdd = [];
-      //for each displayed columns
-      angular.forEach($scope.columns, function(col) {
-        //if displayed is not in query
-        if(columnsId.indexOf(col.name) === -1) {
-          //tag column index for removal
-          toRemove.push($scope.columns.indexOf(col));
-        }
-      });
-      //remove tagged index from displayed
-      angular.forEach(toRemove, function(index) {
-        $scope.columns.splice(index, 1);
-      });
 
+      //clear lists
+      $scope.columns.splice(0, $scope.columns.length);
+      $scope.selectableColumns.splice(0, $scope.selectableColumns.length);
       //for each database columns
       angular.forEach($scope.database.columns, function(col) {
         //if column is in query
-        if(columnsId.indexOf(col.name) !== -1) {
-            //if column is in selectable
-            if($scope.selectableColumns.indexOf(col) !== -1) {
-              //remove from selectable
-              var index = $scope.selectableColumns.indexOf(col);
-              $scope.selectableColumns.splice(index, 1);
-            }
-            //add column to displayed
-            $scope.columns.push(col);
+        if (columnsId.indexOf(col.name) !== -1) {
+          //add column to displayed
+          $scope.columns.push(col);
+        } else {
+          //add column to available
+          $scope.selectableColumns.push(col);
         }
       });
 

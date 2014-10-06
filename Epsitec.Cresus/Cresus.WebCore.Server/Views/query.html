@@ -16,11 +16,11 @@
         <div class="alert alert-success">
             <strong>Choix des colonnes à afficher</strong>
             <div class="input-group">
-                <select ng-options="t as t.title for t in selectableColumns" ng-model="selectedColumn" class="form-control input-xs"></select>
+                <select ng-options="t as t.title for t in selectableColumns track by t.name" ng-model="selectedColumn" class="form-control input-xs"></select>
             </div>
             <button type="button" class="btn btn-default" ng-click="addSelectedColumn(selectedColumn)"><span class="glyphicon glyphicon-plus-sign"></span> Ajouter</button>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="col in columns">
+                <li class="list-group-item" ng-repeat="col in columns track by col.name">
                     {{col.title}}
                     <button type="button" class="close" ng-click="removeColumn(col)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 </li>

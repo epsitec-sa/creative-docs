@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
 		{
 			var dataset   = Res.Commands.Base.ShowAiderContactFiltered.CommandId;
-			var settings  = AiderUserManager.GetCurrentDataSetSettingsUISettings(dataset);
+			var settings  = AiderUserManager.GetCurrentDataSetUISettings(dataset);
 			
 			var queries = new List<string> ();
 			foreach(var setting in settings)
@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var dataset   = Res.Commands.Base.ShowAiderContactFiltered.CommandId;
 			this.Entity
 				.RecipientQuery = AiderUserManager
-									.GetCurrentDataSetSettingsUISettings (dataset)
+									.GetCurrentDataSetUISettings (dataset)
 									.SelectMany
 									(
 										d => d.DataSetSettings.AvailableQueries

@@ -140,7 +140,7 @@ namespace Epsitec.Aider.Override
 				When.Now);
 		}
 
-		public static IEnumerable<DataSetUISettingsEntity> GetCurrentDataSetSettingsUISettings(string dataSetCommandId)
+		public static IEnumerable<DataSetUISettingsEntity> GetCurrentDataSetUISettings(string dataSetCommandId)
 		{
 			return AiderUserManager.Current
 								   .AuthenticatedUser

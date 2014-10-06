@@ -83,7 +83,7 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           };
 
           scope.removeGroup = function() {
-            return "group" in scope.$parent && scope.$parent.group.rules.splice(
+            return 'group' in scope.$parent && scope.$parent.group.rules.splice(
               scope.$parent.$index, 1);
           };
 
