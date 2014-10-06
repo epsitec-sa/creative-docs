@@ -134,27 +134,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		//?[Command (Res.CommandIds.View.Settings)]
-		//?void CommandToto(CommandDispatcher dispatcher, CommandEventArgs e)
-		//?{
-		//?	var target = e.Source as Widget;
-		//?	var pos = e.CommandMessage.Cursor;  // position absolue dans la fenêtre
-		//?
-		//?	CreateAssetPopup.Show (target, this.accessor, null);
-		//?
-		//?	var cs = this.commandContext.GetCommandState (Res.Commands.View.Settings);
-		//?	//?cs.Enable = false;
-		//?
-		//?	if (cs.ActiveState == ActiveState.Yes)
-		//?	{
-		//?		cs.ActiveState = ActiveState.No;
-		//?	}
-		//?	else
-		//?	{
-		//?		cs.ActiveState = ActiveState.Yes;
-		//?	}
-		//?}
-
 		[Command (Res.CommandIds.View.Assets)]
 		[Command (Res.CommandIds.View.Amortizations)]
 		[Command (Res.CommandIds.View.Entries)]
@@ -235,8 +214,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				icon += this.simulation.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
-			
-			this.buttonSimulation.IconUri = Misc.GetResourceIconUri (icon);
+
+			if (this.buttonSimulation != null)
+			{
+				this.buttonSimulation.IconUri = Misc.GetResourceIconUri (icon);
+			}
 		}
 
 		private void ShowViewPopup(Widget target)

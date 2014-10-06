@@ -13,7 +13,8 @@ namespace Epsitec.Cresus.Assets.Data
 		Categories,
 		Groups,
 		Persons,
-		UserFields,
+		AssetsUserFields,
+		PersonsUserFields,
 		Entries,
 		Accounts,
 	}

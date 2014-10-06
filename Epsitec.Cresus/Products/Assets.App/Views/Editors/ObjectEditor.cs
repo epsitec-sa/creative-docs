@@ -73,7 +73,8 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 					case BaseTypeKind.Persons:
 						return PageType.Person;
 
-					case BaseTypeKind.UserFields:
+					case BaseTypeKind.AssetsUserFields:
+					case BaseTypeKind.PersonsUserFields:
 						return PageType.UserFields;
 
 					case BaseTypeKind.Accounts:
@@ -284,7 +285,8 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 				case BaseTypeKind.Persons:
 					return ObjectEditor.GetPersonAvailablePages (hasEvent, type);
 
-				case BaseTypeKind.UserFields:
+				case BaseTypeKind.AssetsUserFields:
+				case BaseTypeKind.PersonsUserFields:
 					return ObjectEditor.GetUserFieldAvailablePages (hasEvent, type);
 
 				case BaseTypeKind.Accounts:

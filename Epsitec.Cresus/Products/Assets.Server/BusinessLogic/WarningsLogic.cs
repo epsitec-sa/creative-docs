@@ -18,6 +18,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				field <= ObjectField.UserFieldLast)
 			{
 				//	On fouille tous les champs définis comme "obligatoire" par l'utilisateur.
+				switch (baseType.Kind)
+				{
+					case BaseTypeKind.Assets:
+						baseType = BaseType.AssetsUserFields;
+						break;
+
+					case BaseTypeKind.Persons:
+						baseType = BaseType.PersonsUserFields;
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", baseType.ToString ()));
+				}
+
 				return accessor.Mandat.GlobalSettings.GetUserFields (baseType)
 					.Where (x => x.Field == field && x.Required)
 					.Any ();
@@ -63,6 +77,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne la liste de tous les warnings actuels.
 			warnings.Clear ();
 
+			//	Il doit y avoir au moins un champ obligatoire.
+			WarningsLogic.CheckRequiredField (warnings, accessor, BaseType.AssetsUserFields,  Res.Strings.WarningsLogic.RequiredUserFields.Missing.ToString ());
+			WarningsLogic.CheckRequiredField (warnings, accessor, BaseType.PersonsUserFields, Res.Strings.WarningsLogic.RequiredUserFields.Missing.ToString ());
+
 			//	On cherche les champs indéfinis dans les catégories.
 			WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Categories,
 				ObjectField.Name,
@@ -97,18 +115,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				foreach (var e in asset.Events)
 				{
-					//	On cherche si la valeur comptable est indéfinie à l'entrée.
 					if (e.Type == EventType.Input)
 					{
+						//	On cherche si la valeur comptable est indéfinie à l'entrée.
 						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, ObjectField.MainValue);
-					}
 
-					//	On cherche les champs définis par l'utilisateur indéfinis.
-					var requiredFields = accessor.Mandat.GlobalSettings.GetUserFields (BaseType.Assets)
-						.Where (x => x.Required)
-						.Select (x => x.Field)
-						.ToArray ();
-					WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, requiredFields);
+						//	On cherche les champs définis par l'utilisateur restés indéfinis.
+						var requiredFields = accessor.Mandat.GlobalSettings.GetUserFields (BaseType.AssetsUserFields)
+							.Where (x => x.Required)
+							.Select (x => x.Field)
+							.ToArray ();
+						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, requiredFields);
+					}
 
 					//	On cherche les champs pour l'amortissement indéfinis.
 					WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e,
@@ -138,7 +156,40 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			WarningsLogic.CheckRequired (warnings, accessor, BaseType.Persons);
+			//	On cherche les champs indéfinis dans les personnes.
+			WarningsLogic.CheckRequired (warnings, accessor, BaseType.PersonsUserFields);
+
+			//	Vérifie si certaines bases sont vides.
+			if (!accessor.Mandat.GetData (BaseType.Categories).Any ())
+			{
+				var warning = new Warning (BaseType.Categories, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Il n'existe aucune catégorie d'immobilisation");
+				warnings.Add (warning);
+			}
+
+			if (accessor.Mandat.GetData (BaseType.Groups).Count () <= 1)
+			{
+				var warning = new Warning (BaseType.Groups, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Il n'existe aucun groupe");
+				warnings.Add (warning);
+			}
+
+			if (!accessor.Mandat.AccountsDateRanges.Any ())
+			{
+				var warning = new Warning (BaseType.Accounts, Guid.Empty, Guid.Empty, ObjectField.Unknown, "Le plan comptable n'est pas défini");
+				warnings.Add (warning);
+			}
+		}
+
+
+		private static void CheckRequiredField(List<Warning> warnings, DataAccessor accessor, BaseType baseType, string description)
+		{
+			//	Vérifie s'il existe au moins un champ obligatoire.
+			if (!accessor.GlobalSettings.GetUserFields (baseType).Where (x => x.Required).Any ())
+			{
+				var first = accessor.GlobalSettings.GetUserFields (baseType).FirstOrDefault ();
+
+				var warning = new Warning (baseType, first.Guid, Guid.Empty, ObjectField.Unknown, description);
+				warnings.Add (warning);
+			}
 		}
 
 

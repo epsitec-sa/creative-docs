@@ -58,4 +58,5 @@
   <data name="Enum.AccountCategory.Revenu" id="KN1">Revenu</data>
   <data name="Enum.AccountCategory.Depense" id="KO1">Dépense</data>
   <data name="Enum.AccountCategory.Recette" id="KP1">Recette</data>
+  <data name="WarningsLogic.RequiredUserFields.Missing" id="KQ1">Il doit y avoir au moins un champ obligatoire</data>
 </bundle>

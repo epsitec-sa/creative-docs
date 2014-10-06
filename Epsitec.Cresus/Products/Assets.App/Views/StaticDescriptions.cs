@@ -28,6 +28,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseTypeKind.Persons:
 					return ViewTypeKind.Persons;
 
+				case BaseTypeKind.AssetsUserFields:
+					return ViewTypeKind.AssetsSettings;
+
+				case BaseTypeKind.PersonsUserFields:
+					return ViewTypeKind.PersonsSettings;
+
+				case BaseTypeKind.Accounts:
+					return ViewTypeKind.Accounts;
+
 				default:
 					return ViewTypeKind.Unknown;
 			}

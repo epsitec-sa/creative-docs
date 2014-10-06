@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		#region Required user fields logic
 		protected void CreateRequiredUserFields(List<StackedControllerDescription> list, BaseType baseType)
 		{
 			//	Pour les Popup de création (Asset ou Person), on crée tous les contrôleurs
@@ -204,6 +205,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				.Where (x => x.Required)
 				.ToList ();
 		}
+		#endregion
 
 
 		protected bool							HasError

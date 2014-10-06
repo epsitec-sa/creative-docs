@@ -167,13 +167,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static AbstractViewState GetViewState(Guid groupGuid, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir un groupe donné.
-			return new GroupsViewState
+			if (groupGuid.IsEmpty)
 			{
-				ViewType     = ViewType.Groups,
-				PageType     = PageType.Group,  // pour éditer directement
-				Field        = field,
-				SelectedGuid = groupGuid,
-			};
+				return new GroupsViewState
+				{
+					ViewType     = ViewType.Groups,
+					PageType     = PageType.Unknown,  // pas d'édition
+					Field        = ObjectField.Unknown,
+					SelectedGuid = Guid.Empty,
+				};
+			}
+			else
+			{
+				return new GroupsViewState
+				{
+					ViewType     = ViewType.Groups,
+					PageType     = PageType.Group,  // pour éditer directement
+					Field        = field,
+					SelectedGuid = groupGuid,
+				};
+			}
 		}
 
 

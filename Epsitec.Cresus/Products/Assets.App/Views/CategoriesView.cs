@@ -172,13 +172,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static AbstractViewState GetViewState(Guid categoryGuid, ObjectField field)
 		{
 			//	Retourne un ViewState permettant de voir une catégorie donnée.
-			return new CategoriesViewState
+			if (categoryGuid.IsEmpty)
 			{
-				ViewType     = ViewType.Categories,
-				PageType     = PageType.Category,  // pour éditer directement
-				Field        = field,
-				SelectedGuid = categoryGuid,
-			};
+				return new CategoriesViewState
+				{
+					ViewType     = ViewType.Categories,
+					PageType     = PageType.Unknown,  // pas d'édition
+					Field        = ObjectField.Unknown,
+					SelectedGuid = Guid.Empty,
+				};
+			}
+			else
+			{
+				return new CategoriesViewState
+				{
+					ViewType     = ViewType.Categories,
+					PageType     = PageType.Category,  // pour éditer directement
+					Field        = field,
+					SelectedGuid = categoryGuid,
+				};
+			}
 		}
 
 

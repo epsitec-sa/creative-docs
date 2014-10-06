@@ -36,12 +36,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected override void AddAssetsSettings()
 		{
-			this.fieldAssetName = this.AddSettings (BaseType.Assets, "Nom", FieldType.String, true, 180, 380, 1, 1, 0);
+			this.fieldAssetName = this.AddSettings (BaseType.AssetsUserFields, "Nom", FieldType.String, true, 180, 380, 1, 1, 0);
 		}
 
 		protected override void AddPersonsSettings()
 		{
-			this.fieldPersonLastName = this.AddSettings (BaseType.Persons, "Nom", FieldType.String, true, 120, 380, 1, 1, 0);
+			this.fieldPersonLastName = this.AddSettings (BaseType.PersonsUserFields, "Nom", FieldType.String, true, 120, 380, 1, 1, 0);
 		}
 
 		protected override void CreateGroupsSamples()

@@ -24,11 +24,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			switch (this.baseType.Kind)
 			{
-				case BaseTypeKind.Assets:
+				case BaseTypeKind.AssetsUserFields:
 					this.title = AbstractView.GetViewTitle (this.accessor, ViewType.AssetsSettings);
 					break;
 
-				case BaseTypeKind.Persons:
+				case BaseTypeKind.PersonsUserFields:
 					this.title = AbstractView.GetViewTitle (this.accessor, ViewType.PersonsSettings);
 					break;
 

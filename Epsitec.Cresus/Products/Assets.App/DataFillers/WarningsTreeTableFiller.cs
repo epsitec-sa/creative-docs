@@ -72,30 +72,31 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				}
 
 				var warning = this.nodeGetter[firstRow+i];
+
+				Timestamp?       timestamp = null;
+				System.DateTime? date      = null;
+				EventType        eventType = EventType.Unknown;
+
 				var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-				var e = obj.GetEvent (warning.EventGuid);
 
-				Timestamp? timestamp;
-				EventType  eventType;
+				if (obj != null)
+				{
+					var e = obj.GetEvent (warning.EventGuid);
 
-				if (e == null)
-				{
-					timestamp = null;
-					eventType = EventType.Unknown;
-				}
-				else
-				{
-					timestamp = e.Timestamp;
-					eventType = e.Type;
+					if (e != null)
+					{
+						timestamp = e.Timestamp;
+						date = timestamp.Value.Date;
+						eventType = e.Type;
+					}
 				}
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				string icon  = StaticDescriptions.GetViewTypeIcon (StaticDescriptions.GetViewTypeKind (warning.BaseType.Kind));
 				string text  = UniversalLogic.GetObjectSummary (this.accessor, warning.BaseType, obj, timestamp);
-				var    date  = timestamp.Value.Date;
 				var    glyph = TimelineData.TypeToGlyph (eventType);
-				string field = UserFieldsLogic.GetFieldName (this.accessor, warning.BaseType, warning.Field);
+				string field = UserFieldsLogic.GetFieldName (this.accessor, WarningsTreeTableFiller.GetUserFieldsBaseType (warning.BaseType), warning.Field);
 				string desc  = warning.Description;
 
 				var cell1 = new TreeTableCellString (icon,  cellState);
@@ -116,6 +117,23 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			}
 
 			return content;
+		}
+
+		private static BaseType GetUserFieldsBaseType(BaseType baseType)
+		{
+			switch (baseType.Kind)
+			{
+				case BaseTypeKind.Assets:
+				case BaseTypeKind.AssetsUserFields:
+					return BaseType.AssetsUserFields;
+
+				case BaseTypeKind.Persons:
+				case BaseTypeKind.PersonsUserFields:
+					return BaseType.PersonsUserFields;
+
+				default:
+					return baseType;
+			}
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.commandContext, this.baseType);
-			this.objectEditor   = new ObjectEditor (this.accessor, BaseType.UserFields, this.baseType, isTimeless: true);
+			this.objectEditor   = new ObjectEditor (this.accessor, baseType, this.baseType, isTimeless: true);
 		}
 
 		public override void Dispose()
@@ -163,6 +163,34 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static AbstractViewState GetViewState(BaseType baseType)
+		{
+			//	Retourne un ViewState permettant de voir une base dans laquelle il manque
+			//	un champ obligatoire.
+			ViewType viewType;
+
+			switch (baseType.Kind)
+			{
+				case BaseTypeKind.AssetsUserFields:
+					viewType = ViewType.AssetsSettings;
+					break;
+
+				case BaseTypeKind.PersonsUserFields:
+					viewType = ViewType.PersonsSettings;
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", baseType.ToString ()));
+			}
+
+			return new SettingsViewState
+			{
+				ViewType          = viewType,
+				BaseType          = baseType,
+				SelectedGuid      = Guid.Empty,
+			};
+		}
+
 		public override AbstractViewState ViewState
 		{
 			get
@@ -171,11 +199,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				switch (this.baseType.Kind)
 				{
-					case BaseTypeKind.Assets:
+					case BaseTypeKind.AssetsUserFields:
 						viewType = ViewType.AssetsSettings;
 						break;
 
-					case BaseTypeKind.Persons:
+					case BaseTypeKind.PersonsUserFields:
 						viewType = ViewType.PersonsSettings;
 						break;
 

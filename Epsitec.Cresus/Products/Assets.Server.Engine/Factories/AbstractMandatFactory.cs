@@ -31,25 +31,25 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void AddAssetsSettings()
 		{
-			this.fieldAssetName   = this.AddSettings (BaseType.Assets, "Nom",    FieldType.String, true,  200, 380, 1,    1,  0);
-			this.fieldAssetNumber = this.AddSettings (BaseType.Assets, "Numéro", FieldType.String, false,  70,  90, 1, null,  0);
+			this.fieldAssetName   = this.AddSettings (BaseType.AssetsUserFields, "Nom",    FieldType.String, true,  200, 380, 1,    1,  0);
+			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, "Numéro", FieldType.String, false,  70,  90, 1, null,  0);
 		}
 
 		protected virtual void AddPersonsSettings()
 		{
-			this.fieldPersonLastName  = this.AddSettings (BaseType.Persons, "Nom",           FieldType.String, true,  120, 380, 1, 2,     0);
-			this.fieldPersonFirstName = this.AddSettings (BaseType.Persons, "Prénom",        FieldType.String, false, 120, 380, 1, 1,     0);
-			this.fieldPersonTitle     = this.AddSettings (BaseType.Persons, "Titre",         FieldType.String, false,  80, 120, 1, null,  0);
-			this.fieldPersonCompany   = this.AddSettings (BaseType.Persons, "Entreprise",    FieldType.String, false, 120, 380, 1, 3,     0);
-			this.fieldPersonAddress   = this.AddSettings (BaseType.Persons, "Adresse",       FieldType.String, false, 150, 380, 2, null,  0);
-			this.fieldPersonZip       = this.AddSettings (BaseType.Persons, "NPA",           FieldType.String, true,   50,  60, 1, null,  0);
-			this.fieldPersonCity      = this.AddSettings (BaseType.Persons, "Ville",         FieldType.String, true,  120, 380, 1, null,  0);
-			this.fieldPersonCountry   = this.AddSettings (BaseType.Persons, "Pays",          FieldType.String, false, 120, 380, 1, null,  0);
-			this.fieldPersonPhone1    = this.AddSettings (BaseType.Persons, "Tél. prof.",    FieldType.String, false, 100, 120, 1, null, 10);
-			this.fieldPersonPhone2    = this.AddSettings (BaseType.Persons, "Tél. privé",    FieldType.String, false, 100, 120, 1, null,  0);
-			this.fieldPersonPhone3    = this.AddSettings (BaseType.Persons, "Tél. portable", FieldType.String, false, 100, 120, 1, null,  0);
-			this.fieldPersonMail      = this.AddSettings (BaseType.Persons, "E-mail",        FieldType.String, false, 200, 380, 1, null,  0);
-			this.fieldPersonDesc      = this.AddSettings (BaseType.Persons, "Description",   FieldType.String, false, 200, 380, 5, null, 10);
+			this.fieldPersonLastName  = this.AddSettings (BaseType.PersonsUserFields, "Nom",           FieldType.String, true,  120, 380, 1, 2,     0);
+			this.fieldPersonFirstName = this.AddSettings (BaseType.PersonsUserFields, "Prénom",        FieldType.String, false, 120, 380, 1, 1,     0);
+			this.fieldPersonTitle     = this.AddSettings (BaseType.PersonsUserFields, "Titre",         FieldType.String, false,  80, 120, 1, null,  0);
+			this.fieldPersonCompany   = this.AddSettings (BaseType.PersonsUserFields, "Entreprise",    FieldType.String, false, 120, 380, 1, 3,     0);
+			this.fieldPersonAddress   = this.AddSettings (BaseType.PersonsUserFields, "Adresse",       FieldType.String, false, 150, 380, 2, null,  0);
+			this.fieldPersonZip       = this.AddSettings (BaseType.PersonsUserFields, "NPA",           FieldType.String, true,   50,  60, 1, null,  0);
+			this.fieldPersonCity      = this.AddSettings (BaseType.PersonsUserFields, "Ville",         FieldType.String, true,  120, 380, 1, null,  0);
+			this.fieldPersonCountry   = this.AddSettings (BaseType.PersonsUserFields, "Pays",          FieldType.String, false, 120, 380, 1, null,  0);
+			this.fieldPersonPhone1    = this.AddSettings (BaseType.PersonsUserFields, "Tél. prof.",    FieldType.String, false, 100, 120, 1, null, 10);
+			this.fieldPersonPhone2    = this.AddSettings (BaseType.PersonsUserFields, "Tél. privé",    FieldType.String, false, 100, 120, 1, null,  0);
+			this.fieldPersonPhone3    = this.AddSettings (BaseType.PersonsUserFields, "Tél. portable", FieldType.String, false, 100, 120, 1, null,  0);
+			this.fieldPersonMail      = this.AddSettings (BaseType.PersonsUserFields, "E-mail",        FieldType.String, false, 200, 380, 1, null,  0);
+			this.fieldPersonDesc      = this.AddSettings (BaseType.PersonsUserFields, "Description",   FieldType.String, false, 200, 380, 5, null, 10);
 		}
 
 		protected ObjectField AddSettings(BaseType baseType, string name, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)

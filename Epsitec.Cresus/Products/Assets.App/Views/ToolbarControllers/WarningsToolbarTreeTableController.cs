@@ -152,6 +152,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				case BaseTypeKind.Persons:
 					return this.GotoPerson (warning);
 
+				case BaseTypeKind.AssetsUserFields:
+				case BaseTypeKind.PersonsUserFields:
+					return this.GotoUserFields (warning);
+
+				case BaseTypeKind.Accounts:
+					return this.GotoAccounts (warning);
+
 				default:
 					return null;
 			}
@@ -168,26 +175,27 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private AbstractViewState GotoCategory(Warning warning)
 		{
-			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e = obj.GetEvent (warning.EventGuid);
-
 			return CategoriesView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 
 		private AbstractViewState GotoGroup(Warning warning)
 		{
-			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e = obj.GetEvent (warning.EventGuid);
-
 			return GroupsView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 
 		private AbstractViewState GotoPerson(Warning warning)
 		{
-			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e = obj.GetEvent (warning.EventGuid);
-
 			return PersonsView.GetViewState (warning.ObjectGuid, warning.Field);
+		}
+
+		private AbstractViewState GotoUserFields(Warning warning)
+		{
+			return UserFieldsSettingsView.GetViewState (warning.BaseType);
+		}
+
+		private AbstractViewState GotoAccounts(Warning warning)
+		{
+			return AccountsView.GetViewState (this.accessor, null, null);
 		}
 		#endregion
 

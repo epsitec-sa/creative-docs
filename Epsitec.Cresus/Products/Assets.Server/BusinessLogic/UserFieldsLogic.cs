@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetSummary(DataAccessor accessor, Guid guid)
+		public static string GetSummary(DataAccessor accessor, BaseType baseType, Guid guid)
 		{
-			var obj = accessor.GetObject (BaseType.UserFields, guid);
+			var obj = accessor.GetObject (baseType, guid);
 			if (obj == null)
 			{
 				return null;

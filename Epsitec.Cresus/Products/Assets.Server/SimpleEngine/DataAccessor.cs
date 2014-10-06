@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				this.mandat = value;
 
+				this.WarningsDirty = true;
+
 				//	Recalcule tout.
 				foreach (var obj in this.mandat.GetData (BaseType.Assets))
 				{
@@ -81,7 +83,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#region Objects
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
-			if (baseType == BaseType.UserFields)
+			if (baseType == BaseType.AssetsUserFields ||
+				baseType == BaseType.PersonsUserFields)
 			{
 				return this.GlobalSettings.GetTempDataObject (objectGuid);
 			}
@@ -392,10 +395,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public ObjectField GetMainStringField(BaseType baseType)
 		{
-			if (baseType == BaseType.Assets ||
-				baseType == BaseType.Persons)
+			if (baseType == BaseType.Assets)
 			{
-				return this.GlobalSettings.GetMainStringField (baseType);
+				return this.GlobalSettings.GetMainStringField (BaseType.AssetsUserFields);
+			}
+			else if (baseType == BaseType.Persons)
+			{
+				return this.GlobalSettings.GetMainStringField (BaseType.PersonsUserFields);
 			}
 			else
 			{
@@ -422,7 +428,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.Assets).Select (x => x.Field))
+				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.AssetsUserFields).Select (x => x.Field))
 				{
 					yield return field;
 				}
@@ -458,7 +464,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.Assets)
+				foreach (var field in this.GlobalSettings.GetUserFields (BaseType.AssetsUserFields)
 					.Where (x => x.Type == FieldType.ComputedAmount)
 					.Select (x => x.Field))
 				{

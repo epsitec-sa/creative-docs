@@ -35,11 +35,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		{
 			switch (this.BaseType.Kind)
 			{
-				case BaseTypeKind.Assets:
-					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
-
-				case BaseTypeKind.Persons:
-					return UserFieldsLogic.GetSummary (accessor, this.SelectedGuid);
+				case BaseTypeKind.AssetsUserFields:
+				case BaseTypeKind.PersonsUserFields:
+					return UserFieldsLogic.GetSummary (accessor, this.BaseType, this.SelectedGuid);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported BaseType {0}", this.BaseType.ToString ()));

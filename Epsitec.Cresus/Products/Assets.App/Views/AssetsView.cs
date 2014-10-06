@@ -511,7 +511,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-
 		public override AbstractViewState ViewState
 		{
 			get

@@ -73,24 +73,22 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private ComparableData GetComparableData(Warning warning, ObjectField field)
 		{
+			Timestamp?      timestamp = null;
+			System.DateTime date      = System.DateTime.MinValue;
+			EventType       eventType = EventType.Unknown;
+
 			var obj = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);
-			var e = obj.GetEvent (warning.EventGuid);
 
-			Timestamp?      timestamp;
-			System.DateTime date;
-			EventType       eventType;
+			if (obj != null)
+			{
+				var e = obj.GetEvent (warning.EventGuid);
 
-			if (e == null)
-			{
-				timestamp = null;
-				date      = System.DateTime.MinValue;
-				eventType = EventType.Unknown;
-			}
-			else
-			{
-				timestamp = e.Timestamp;
-				date      = timestamp.Value.Date;
-				eventType = e.Type;
+				if (e != null)
+				{
+					timestamp = e.Timestamp;
+					date      = timestamp.Value.Date;
+					eventType = e.Type;
+				}
 			}
 
 			switch (field)

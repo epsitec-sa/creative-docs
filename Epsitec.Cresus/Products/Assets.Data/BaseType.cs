@@ -65,14 +65,15 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static BaseType Unknown    = new BaseType (BaseTypeKind.Unknown);
-		public static BaseType Assets     = new BaseType (BaseTypeKind.Assets);
-		public static BaseType Categories = new BaseType (BaseTypeKind.Categories);
-		public static BaseType Groups     = new BaseType (BaseTypeKind.Groups);
-		public static BaseType Persons    = new BaseType (BaseTypeKind.Persons);
-		public static BaseType UserFields = new BaseType (BaseTypeKind.UserFields);
-		public static BaseType Entries    = new BaseType (BaseTypeKind.Entries);
-		public static BaseType Accounts   = new BaseType (BaseTypeKind.Accounts);
+		public static BaseType Unknown           = new BaseType (BaseTypeKind.Unknown);
+		public static BaseType Assets            = new BaseType (BaseTypeKind.Assets);
+		public static BaseType Categories        = new BaseType (BaseTypeKind.Categories);
+		public static BaseType Groups            = new BaseType (BaseTypeKind.Groups);
+		public static BaseType Persons           = new BaseType (BaseTypeKind.Persons);
+		public static BaseType AssetsUserFields  = new BaseType (BaseTypeKind.AssetsUserFields);
+		public static BaseType PersonsUserFields = new BaseType (BaseTypeKind.PersonsUserFields);
+		public static BaseType Entries           = new BaseType (BaseTypeKind.Entries);
+		public static BaseType Accounts          = new BaseType (BaseTypeKind.Accounts);
 
 		public readonly BaseTypeKind			Kind;
 		public readonly DateRange				AccountsDateRange;

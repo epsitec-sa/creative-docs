@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				list.Add (c2);
 
 				c2.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Main.ToString ()));
-				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.Assets))
+				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.AssetsUserFields))
 				{
 					if (userField.TopMargin >= 5)  // limite arbitraire
 					{

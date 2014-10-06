@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var list = new List<StackedControllerDescription> ();
 
-			this.CreateRequiredUserFields (list, BaseType.Persons);
+			this.CreateRequiredUserFields (list, BaseType.PersonsUserFields);
 			this.userFieldsCount = list.Count;
 
 			list.Add (new StackedControllerDescription  // userFieldsCount + 0
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.SetEnable (this.userFieldsCount+1, this.UseModel);
 
-			this.okButton.Enable = this.GetequiredProperties (BaseType.Persons).Count () == this.userFieldsCount;
+			this.okButton.Enable = this.GetequiredProperties (BaseType.PersonsUserFields).Count () == this.userFieldsCount;
 		}
 
 

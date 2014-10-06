@@ -13,23 +13,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp)
 		{
 			//	Retourne un résumé de n'importe quel objet de n'importe quelle base.
-			switch (baseType.Kind)
+			if (obj != null)
 			{
-				case BaseTypeKind.Assets:
-					return AssetsLogic.GetSummary (accessor, obj.Guid, timestamp);
+				switch (baseType.Kind)
+				{
+					case BaseTypeKind.Assets:
+						return AssetsLogic.GetSummary (accessor, obj.Guid, timestamp);
 
-				case BaseTypeKind.Categories:
-					return CategoriesLogic.GetSummary (accessor, obj.Guid);
+					case BaseTypeKind.Categories:
+						return CategoriesLogic.GetSummary (accessor, obj.Guid);
 
-				case BaseTypeKind.Groups:
-					return GroupsLogic.GetShortName (accessor, obj.Guid);
+					case BaseTypeKind.Groups:
+						return GroupsLogic.GetShortName (accessor, obj.Guid);
 
-				case BaseTypeKind.Persons:
-					return PersonsLogic.GetSummary (accessor, obj.Guid);
-
-				default:
-					return null;
+					case BaseTypeKind.Persons:
+						return PersonsLogic.GetSummary (accessor, obj.Guid);
+				}
 			}
+
+			return null;
 		}
 
 		public static string NiceJoin(params string[] words)

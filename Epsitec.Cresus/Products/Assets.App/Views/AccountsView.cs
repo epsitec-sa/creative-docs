@@ -149,17 +149,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		public static AbstractViewState GetViewState(DataAccessor accessor, System.DateTime date, string account)
+		public static AbstractViewState GetViewState(DataAccessor accessor, System.DateTime? date, string account)
 		{
 			//	Retourne un ViewState permettant de voir un compte donné à une date donnée.
-			var range = accessor.Mandat.GetBestDateRange (date);
-
-			return new AccountsViewState
+			if (date.HasValue)
 			{
-				ViewType        = new ViewType(ViewTypeKind.Accounts, range),
-				SelectedAccount = account,
-				ShowGraphic     = false,
-			};
+				var range = accessor.Mandat.GetBestDateRange (date.Value);
+
+				return new AccountsViewState
+				{
+					ViewType        = new ViewType (ViewTypeKind.Accounts, range),
+					SelectedAccount = account,
+					ShowGraphic     = false,
+				};
+			}
+			else
+			{
+				return new AccountsViewState
+				{
+					ViewType        = ViewType.Accounts,
+					SelectedAccount = null,
+					ShowGraphic     = false,
+				};
+			}
 		}
 
 

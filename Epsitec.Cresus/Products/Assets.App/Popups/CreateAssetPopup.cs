@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = Res.Strings.Popup.CreateAsset.Date.ToString (),
 			});
 
-			this.CreateRequiredUserFields (list, BaseType.Assets);
+			this.CreateRequiredUserFields (list, BaseType.AssetsUserFields);
 			this.userFieldsCount = list.Count - 1;
 
 			list.Add (new StackedControllerDescription  // userFieldsCount+1
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.SetEnable (this.userFieldsCount+3, this.UseCategory);
 
 			this.okButton.Enable = this.ObjectDate.HasValue
-								&& this.GetequiredProperties (BaseType.Assets).Count () == this.userFieldsCount
+								&& this.GetequiredProperties (BaseType.AssetsUserFields).Count () == this.userFieldsCount
 								&& (!this.UseCategory || !this.ObjectCategory.IsEmpty)
 								&& !this.HasError;
 		}
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
 						}
 
-						action (popup.ObjectDate.Value, popup.GetequiredProperties (BaseType.Assets), popup.MainValue, popup.ObjectCategory);
+						action (popup.ObjectDate.Value, popup.GetequiredProperties (BaseType.AssetsUserFields), popup.MainValue, popup.ObjectCategory);
 					}
 				};
 			}

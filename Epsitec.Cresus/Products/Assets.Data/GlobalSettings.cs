@@ -316,10 +316,10 @@ namespace Epsitec.Cresus.Assets.Data
 			//	Retourne la liste des rubriques utilisateur d'une base.
 			switch (baseType.Kind)
 			{
-				case BaseTypeKind.Assets:
+				case BaseTypeKind.AssetsUserFields:
 					return this.assetsFields;
 
-				case BaseTypeKind.Persons:
+				case BaseTypeKind.PersonsUserFields:
 					return this.personsFields;
 
 				default:
@@ -332,8 +332,8 @@ namespace Epsitec.Cresus.Assets.Data
 			//	Retourne les bases contenant des rubriques utilisateur.
 			get
 			{
-				yield return BaseType.Assets;
-				yield return BaseType.Persons;
+				yield return BaseType.AssetsUserFields;
+				yield return BaseType.PersonsUserFields;
 			}
 		}
 
