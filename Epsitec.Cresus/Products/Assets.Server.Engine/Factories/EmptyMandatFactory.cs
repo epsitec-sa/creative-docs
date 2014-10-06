@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddAssetsSettings ();
 			this.AddPersonsSettings ();
 
+			this.CreateGroupsSamples ();
+
 			return this.accessor.Mandat;
 		}
 
@@ -40,6 +42,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected override void AddPersonsSettings()
 		{
 			this.fieldPersonLastName = this.AddSettings (BaseType.Persons, "Nom", FieldType.String, true, 120, 380, 1, 1, 0);
+		}
+
+		protected override void CreateGroupsSamples()
+		{
+			var root = this.AddGroup (null, "Groupes", null);
 		}
 	}
 }
