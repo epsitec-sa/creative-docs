@@ -1,6 +1,6 @@
 ﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
-
+using System.Linq;
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
 
 using Epsitec.Cresus.Core.Controllers;
@@ -71,6 +72,37 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 
 				throw new BusinessRuleException (this.Entity, message);
 			}
+
+			//Stop old usergroup participation
+			if(this.Entity.Parish.IsNotNull () && this.Entity.Contact.IsNotNull())
+			{
+				var currentParish    = this.Entity.Parish;
+				var currentUserGroup = currentParish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+				if (currentUserGroup.IsNotNull ())
+				{
+					var participation = currentUserGroup.FindParticipationsByGroup (this.BusinessContext, 
+																					this.Entity.Contact, 
+																					currentUserGroup);
+					AiderGroupEntity.RemoveParticipations ( this.BusinessContext, 
+															participation);
+				}
+			}
+
+			//Stop old office management participation
+			if(this.Entity.Office.IsNotNull () && this.Entity.Contact.IsNotNull ())
+			{
+				var currentOffice    = this.Entity.Office;
+				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
+				if (currentUserGroup.IsNotNull ())
+				{
+					var participation = currentUserGroup.FindParticipationsByGroup (this.BusinessContext,
+																					this.Entity.Contact,
+																					currentUserGroup);
+					AiderGroupEntity.RemoveParticipations (this.BusinessContext,
+															participation);
+				}
+			}
+			
 
 			this.Entity.Delete (this.BusinessContext);
 		}

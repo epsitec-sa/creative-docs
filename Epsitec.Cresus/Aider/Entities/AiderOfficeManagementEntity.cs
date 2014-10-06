@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Entities
 			if (currentOffice.IsNotNull ())
 			{
 				//Stop old usergroup participation
-				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
 				AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, contact, currentUserGroup));
 
 				//try to remap old sender settings
@@ -106,7 +106,7 @@ namespace Epsitec.Aider.Entities
 			}
 
 			//Create usergroup participation
-			var newUserGroup = office.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
+			var newUserGroup = office.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
 			var participationData = new List<ParticipationData> ();
 			participationData.Add (new ParticipationData (contact));
 			newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);

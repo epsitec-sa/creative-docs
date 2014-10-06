@@ -1,6 +1,6 @@
 ﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
-
+using System.Linq;
 using Epsitec.Aider.Controllers.SpecialFieldControllers;
 using Epsitec.Aider.Entities;
 
@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using System.Collections.Generic;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -30,6 +32,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ()
 				.Field<string> ()
 					.Title ("Email")
+				.End ()
+				.Field<AiderContactEntity> ()
+					.Title ("Contact")
 				.End ()
 				.Field<AiderUserRoleEntity> ()
 					.Title ("Role")
@@ -53,10 +58,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string, string, AiderUserRoleEntity, AiderGroupEntity, bool, string, string, AiderUserEntity> (this.Execute);
+			return FunctionExecutor.Create<string, string, string, AiderContactEntity, AiderUserRoleEntity, AiderGroupEntity, bool, string, string, AiderUserEntity> (this.Execute);
 		}
 
-		private AiderUserEntity Execute(string username, string displayname, string email, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
+		private AiderUserEntity Execute(string username, string displayname, string email, AiderContactEntity contact, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
 		{
 			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
 			{
@@ -70,6 +75,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException (this.Entity, "Le rôle est obligatoire");
 			}
 
+			if (parish.IsNotNull () && contact.IsNotNull ())
+			{
+				//Create usergroup participation
+				var newUserGroup = parish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
+				var participationData = new List<ParticipationData> ();
+				participationData.Add (new ParticipationData (contact));
+				newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, FormattedText.Null);
+			}
+
+
 			var user = this.BusinessContext.CreateAndRegisterEntity<AiderUserEntity> ();
 
 			user.LoginName = username;
@@ -77,7 +92,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			user.Email = email;
 			user.Role = role;
 			user.Parish = parish;
-
+			user.Contact = contact;
 			user.SetAdmininistrator (this.BusinessContext, admin);
 			user.SetPassword (password, confirmation);
 
