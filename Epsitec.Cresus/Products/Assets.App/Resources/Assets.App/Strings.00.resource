@@ -465,4 +465,5 @@
   <data name="SearchController.Options.IgnoreDiacritic" id="KDH">e = é</data>
   <data name="SearchController.Options.Phonetic" id="KEH">Phonétique (expérimental)</data>
   <data name="SearchController.Options.Radios" id="KJH">N'importe où&lt;br/&gt;Au début&lt;br/&gt;A la fin&lt;br/&gt;Texte intégral&lt;br/&gt;Expression régulière</data>
+  <data name="Popup.CreateGroup.Number" id="KKH">Numéro</data>
 </bundle>

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -233,15 +234,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.CreateObject (popup.ObjectName, popup.ObjectParent);
+					this.CreateObject (popup.ObjectParent, popup.Properties);
 				}
 			};
 		}
 
-		private void CreateObject(string name, Guid parent)
+		private void CreateObject(Guid parent, IEnumerable<AbstractDataProperty> properties)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Groups, date, name, parent, addDefaultGroups: false);
+			var guid = this.accessor.CreateObject (BaseType.Groups, date, parent, addDefaultGroups: false, requiredProperties: properties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Groups, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			
@@ -272,7 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Groups.ExpandAll,  expandEnable);
 
 			this.toolbar.SetEnable (Res.Commands.Groups.New,      true);
-			this.toolbar.SetEnable (Res.Commands.Groups.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Groups.Delete,   row > 0);  // groupe racine indestructible
 			this.toolbar.SetEnable (Res.Commands.Groups.Deselect, row != -1);
 
 			this.toolbar.SetEnable (Res.Commands.Groups.Copy,   this.IsCopyEnable);
