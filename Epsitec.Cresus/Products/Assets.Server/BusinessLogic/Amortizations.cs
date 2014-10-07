@@ -81,6 +81,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			this.GeneratesAmortizationsPreview (errors, processRange, objectGuid);
 
+			this.accessor.WarningsDirty = true;
+
 			return errors;
 		}
 
@@ -92,6 +94,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			System.Diagnostics.Debug.Assert (obj != null);
 
 			int count = this.FixEvents (obj, DateRange.Full);
+
+			this.accessor.WarningsDirty = true;
 
 			return errors;
 		}
@@ -105,6 +109,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			int count = this.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
 
+			this.accessor.WarningsDirty = true;
+
 			return errors;
 		}
 
@@ -117,6 +123,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			this.RemoveEvents (obj, EventType.AmortizationPreview, new DateRange (startDate, System.DateTime.MaxValue));
 			this.RemoveEvents (obj, EventType.AmortizationAuto,    new DateRange (startDate, System.DateTime.MaxValue));
+
+			this.accessor.WarningsDirty = true;
 
 			return errors;
 		}

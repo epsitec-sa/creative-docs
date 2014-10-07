@@ -22,10 +22,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 {
 	public class TimelinesArrayController : IDirty, System.IDisposable
 	{
-		public TimelinesArrayController(DataAccessor accessor, CommandContext commandContext)
+		public TimelinesArrayController(DataAccessor accessor, CommandContext commandContext, MainToolbar toolbar)
 		{
 			this.accessor       = accessor;
 			this.commandContext = commandContext;
+			this.mainToolbar    = toolbar;
 
 			this.selectedRow    = -1;
 			this.selectedColumn = -1;
@@ -109,6 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateScroller ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
+			this.UpdateWarningsRedDot ();
 		}
 
 
@@ -1366,6 +1368,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private void UpdateWarningsRedDot()
+		{
+			//	Met à jour le nombre d'avertissements dans la pastille rouge sur le
+			//	bouton de la vue des avertissements.
+			//	ATTENTION: Il faut construire la liste complète des avertissements,
+			//	ce qui peut prendre du temps !
+			//	TODO: Rendre cela asynchrone !?
+			if (this.accessor.WarningsDirty)
+			{
+				var list = new List<Warning> ();
+				WarningsLogic.GetWarnings (list, this.accessor);
+
+				this.mainToolbar.WarningsRedDotCount = list.Count;
+
+				this.accessor.WarningsDirty = false;
+			}
+		}
+
 		private void UpdateToolbar()
 		{
 			//	Mise à jour de la toolbar des objets.
@@ -1379,10 +1399,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool compactEnable = !this.nodeGetter.IsAllCompacted;
 			bool expandEnable  = !this.nodeGetter.IsAllExpanded;
 
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.First, compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Prev,  compactEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Next,  expandEnable);
-			this.timelinesToolbar.SetEnable (Res.Commands.AssetsLeft.Last,  expandEnable);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.CompactAll, compactEnable);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.CompactOne, compactEnable);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.ExpandOne,  expandEnable);
+			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.ExpandAll,  expandEnable);
 
 			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.New,      true);
 			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.Delete,   this.SelectedObject != null);
@@ -1739,6 +1759,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly DataAccessor						accessor;
 		private readonly CommandDispatcher					commandDispatcher;
 		private readonly CommandContext						commandContext;
+		private readonly MainToolbar						mainToolbar;
 		private readonly ObjectsNodeGetter					nodeGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;

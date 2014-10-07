@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.baseType = BaseType.Assets;
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandContext)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandContext, this.mainToolbar)
 			{
 				Title                = this.GetViewTitle (ViewType.Amortizations),
 				HasAmortizationsOper = true,

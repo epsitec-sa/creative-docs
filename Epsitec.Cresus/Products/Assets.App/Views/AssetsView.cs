@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.timelineController = new AssetsToolbarTimelineController  (this.accessor, this.commandContext, this.baseType);
 			this.eventsController   = new EventsToolbarTreeTableController (this.accessor, this.commandContext, this.baseType);
 
-			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandContext)
+			this.timelinesArrayController = new TimelinesArrayController (this.accessor, this.commandContext, this.mainToolbar)
 			{
 				Title = this.GetViewTitle (ViewType.Assets),
 			};

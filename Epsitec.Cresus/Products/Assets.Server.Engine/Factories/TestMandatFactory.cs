@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 				{
 					var e = this.AddAssetEvent (obj, year0.AddDays (400), EventType.Decrease);
-					this.AddAssetAmortizedAmount (e, 1200000.0m);
+					this.AddAssetAmortizedAmount (e, 600000.0m);
 				}
 
 				this.Amortize (range0, obj.Guid);

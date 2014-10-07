@@ -97,12 +97,22 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			get
 			{
-				return this.toolbar.ShowHelpline;
+				if (this.toolbar == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.toolbar.ShowHelpline;
+				}
 			}
 			set
 			{
-				this.toolbar.ShowHelpline = value;
-				this.controllerFrame.Visibility = !this.IsEmpty;
+				if (this.toolbar != null)
+				{
+					this.toolbar.ShowHelpline = value;
+					this.controllerFrame.Visibility = !this.IsEmpty;
+				}
 			}
 		}
 
