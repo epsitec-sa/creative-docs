@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" ng-app="webCoreQueryBuilder">
+<html lang="en" ng-app="webCoreQueryBuilder" xmlns:ng="http://angularjs.org" id="ng-app">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,31 +24,31 @@
                     {{col.title}}
                     <button type="button" class="close" ng-click="removeColumn(col)"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 </li>
-            </ul>        
+            </ul>
         </div>
         <query-builder ng-if="ready" group="filter.group" fields="fields"></query-builder>
         <div class="alert alert-warning">
-            <strong>Afficher les colonnes :</strong><br/>
+            <strong>Afficher les colonnes :</strong><br />
             <span ng-repeat="col in columns"> {{col.title}} </span>
-            <br/><strong>Avec ce filtre :</strong><br/>
+            <br /><strong>Avec ce filtre :</strong><br />
             <span ng-bind-html="humanOutput"></span>
         </div>
         <div class="alert alert-success">
             <strong>Requête existantes: </strong><br />
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="q in availableQueries">
-                    {{q.Name}} 
+                    {{q.Name}}
                     <button ng-click="loadQuery(q.RawQuery)" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-floppy-open"></span> Charger</button>
-                    <button ng-click="deleteQuery(q.Name)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-floppy-remove"></span> Supprimer</button>         
+                    <button ng-click="deleteQuery(q.Name)" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-floppy-remove"></span> Supprimer</button>
                 </li>
             </ul>
-            <br/>
-            <strong>Enregistrer la requête: </strong><br/>
+            <br />
+            <strong>Enregistrer la requête: </strong><br />
             <div class="input-group">
                 <span class="input-group-addon">Nom :</span>
-                <input type="text" class="form-control" ng-model="queryName"/>
+                <input type="text" class="form-control" ng-model="queryName" />
             </div>
-            <br/>
+            <br />
             <button type="button" class="btn btn-default" ng-click="saveQuery(queryName)"><span class="glyphicon glyphicon-plus-sign"></span> Enregistrer</button>
         </div>
         <style>
