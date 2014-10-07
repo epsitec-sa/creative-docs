@@ -498,6 +498,30 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
 					}
 				}
+				//	designer:str/KUKC201
+				public static global::Epsitec.Common.Types.FormattedText GroupUsedDuringCreation
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544396));
+					}
+				}
+				//	designer:str/KUKE201
+				public static global::Epsitec.Common.Types.FormattedText GroupUsedDuringCreationNo
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
+					}
+				}
+				//	designer:str/KUKD201
+				public static global::Epsitec.Common.Types.FormattedText GroupUsedDuringCreationYes
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544397));
+					}
+				}
 				//	designer:str/KUKP001
 				public static global::Epsitec.Common.Types.FormattedText Name
 				{
@@ -1258,6 +1282,30 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544347);
+					}
+				}
+				//	designer:str/KUKC201
+				public static global::Epsitec.Common.Support.Druid GroupUsedDuringCreation
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544396);
+					}
+				}
+				//	designer:str/KUKE201
+				public static global::Epsitec.Common.Support.Druid GroupUsedDuringCreationNo
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
+					}
+				}
+				//	designer:str/KUKD201
+				public static global::Epsitec.Common.Support.Druid GroupUsedDuringCreationYes
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
 					}
 				}
 				//	designer:str/KUKP001

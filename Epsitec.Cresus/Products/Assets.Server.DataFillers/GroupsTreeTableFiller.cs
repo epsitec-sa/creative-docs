@@ -40,9 +40,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,        TreeTableColumnType.Tree,   250, Res.Strings.GroupsTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Number,      TreeTableColumnType.String, 100, Res.Strings.GroupsTreeTableFiller.Number.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, 400, Res.Strings.GroupsTreeTableFiller.Description.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                    TreeTableColumnType.Tree,   250, Res.Strings.GroupsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                  TreeTableColumnType.String, 100, Res.Strings.GroupsTreeTableFiller.Number.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Description,             TreeTableColumnType.String, 400, Res.Strings.GroupsTreeTableFiller.Description.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.GroupUsedDuringCreation, TreeTableColumnType.String,  70, Res.Strings.GroupsTreeTableFiller.GroupUsedDuringCreation.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<3; i++)
+			for (int i=0; i<4; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -72,18 +73,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var number      = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
 				var description = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
+				var creation    = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.GroupUsedDuringCreation);
+
+				var textCreation = (creation == 1)
+					? Res.Strings.GroupsTreeTableFiller.GroupUsedDuringCreationYes.ToString ()
+					: Res.Strings.GroupsTreeTableFiller.GroupUsedDuringCreationNo.ToString ();
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				var cell0 = new TreeTableCellTree   (level, type, name, cellState);
 				var cell1 = new TreeTableCellString (number,            cellState);
 				var cell2 = new TreeTableCellString (description,       cellState);
+				var cell3 = new TreeTableCellString (textCreation,      cellState);
 
 				int columnRank = 0;
 
 				content.Columns[columnRank++].AddRow (cell0);
 				content.Columns[columnRank++].AddRow (cell1);
 				content.Columns[columnRank++].AddRow (cell2);
+				content.Columns[columnRank++].AddRow (cell3);
 			}
 
 			return content;
