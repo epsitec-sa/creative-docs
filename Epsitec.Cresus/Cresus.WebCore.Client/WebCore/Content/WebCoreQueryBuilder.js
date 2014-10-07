@@ -53,17 +53,56 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       $scope.ready = true;
     });
 
+    $scope.resetQueryBuilder = function () {
+      $scope.safeApply(function () {
+        //clear lists
+        $scope.columns.splice(0, $scope.columns.length);
+        $scope.selectableColumns.splice(0, $scope.selectableColumns.length);
+
+        angular.forEach($scope.database.columns, function(column) {
+          //populate displayed/displayable columns
+          if (column.hidden === false) {
+            $scope.columns.push(column);
+          } else {
+            $scope.selectableColumns.push(column);
+          }
+
+          //populate filterable
+          if (column.filter.filterable) {
+            $scope.fields.push({
+              name: column.title,
+              id: column.name,
+              type: column.type.type,
+              enumId: column.type.enumerationName
+            });
+          }
+        });
+
+        var filter = {
+          group: {
+            operator: 'and',
+            rules: []
+          }
+        };
+
+        $scope.filter = filter;
+      });
+    };
 
     $scope.addSelectedColumn = function(column) {
-      $scope.columns.push(column);
-      var index = $scope.selectableColumns.indexOf(column);
-      $scope.selectableColumns.splice(index, 1);
+      if(column.name !== undefined) {
+        $scope.columns.push(column);
+        var index = $scope.selectableColumns.indexOf(column);
+        $scope.selectableColumns.splice(index, 1);
+      }
     };
 
     $scope.removeColumn = function(column) {
-      $scope.selectableColumns.push(column);
-      var index = $scope.columns.indexOf(column);
-      $scope.columns.splice(index, 1);
+      if(column.name !== undefined) {
+        $scope.selectableColumns.push(column);
+        var index = $scope.columns.indexOf(column);
+        $scope.columns.splice(index, 1);
+      }
     };
 
     $scope.testQuery = function() {

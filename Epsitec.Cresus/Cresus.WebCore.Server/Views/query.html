@@ -51,7 +51,8 @@
                 <input type="text" class="form-control" ng-model="queryName" />
             </div>
             <br />
-            <button type="button" class="btn btn-default" ng-click="saveQuery(queryName)"><span class="glyphicon glyphicon-plus-sign"></span> Enregistrer</button>
+            <button type="button" class="btn btn-default btn-success" ng-click="saveQuery(queryName)"><span class="glyphicon glyphicon-plus-sign"></span> Enregistrer</button>
+            <button type="button" class="btn btn-default btn-danger" ng-click="resetQueryBuilder()"><span class="glyphicon glyphicon-minus-sign"></span> Abandonner les modifications</button>
         </div>
         <style>
             .group {
