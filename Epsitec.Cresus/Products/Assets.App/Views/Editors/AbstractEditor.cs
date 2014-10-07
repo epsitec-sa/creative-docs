@@ -13,12 +13,11 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 {
 	public abstract class AbstractEditor
 	{
-		public AbstractEditor(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
+		public AbstractEditor(DataAccessor accessor, BaseType baseType, bool isTimeless)
 		{
-			this.accessor    = accessor;
-			this.baseType    = baseType;
-			this.subBaseType = subBaseType;
-			this.isTimeless  = isTimeless;
+			this.accessor   = accessor;
+			this.baseType   = baseType;
+			this.isTimeless = isTimeless;
 		}
 
 
@@ -89,7 +88,6 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 
 		protected readonly DataAccessor			accessor;
 		protected readonly BaseType				baseType;
-		protected readonly BaseType				subBaseType;
 		protected readonly bool					isTimeless;
 
 		private bool							editionDirty;

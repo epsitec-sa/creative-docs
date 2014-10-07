@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 {
 	public class ObjectEditor : AbstractEditor, IDirty
 	{
-		public ObjectEditor(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
-			: base (accessor, baseType, subBaseType, isTimeless)
+		public ObjectEditor(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 		}
 
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 
 			this.editFrameBox.Children.Clear ();
 
-			this.currentPage = AbstractEditorPage.CreatePage (this.accessor, this.baseType, this.subBaseType, type);
+			this.currentPage = AbstractEditorPage.CreatePage (this.accessor, this.baseType, type);
 			this.currentPage.CreateUI (this.editFrameBox);
 			this.currentPage.SetObject (this.objectGuid, this.timestamp);
 			this.currentPage.SetFocus (focusedField);

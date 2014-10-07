@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Title = this.GetViewTitle (ViewType.Assets),
 			};
 
-			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: false);
+			this.objectEditor = new ObjectEditor (this.accessor, this.baseType, isTimeless: false);
 		}
 
 

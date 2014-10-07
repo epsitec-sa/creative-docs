@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
 	public class EditorPageSummary : AbstractEditorPage
 	{
-		public EditorPageSummary(DataAccessor accessor, BaseType baseType, BaseType subBaseType, bool isTimeless)
-			: base (accessor, baseType, subBaseType, isTimeless)
+		public EditorPageSummary(DataAccessor accessor, BaseType baseType, bool isTimeless)
+			: base (accessor, baseType, isTimeless)
 		{
 			this.summaryController = new ObjectSummaryController (this.accessor, this.baseType);
 
