@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = baseType;
 
 			this.listController = new UserFieldsToolbarTreeTableController (this.accessor, this.commandContext, this.baseType);
-			this.objectEditor   = new ObjectEditor (this.accessor, baseType, this.baseType, isTimeless: true);
+			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, this.baseType, isTimeless: true);
 		}
 
 		public override void Dispose()

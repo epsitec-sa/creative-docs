@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateStringController (parent, ObjectField.Name);
 
 			Dictionary<int, string> dict;
-			if (this.subBaseType == BaseType.Assets)
+			if (this.subBaseType == BaseType.AssetsUserFields)
 			{
 				dict = EnumDictionaries.GetDictFieldTypes ();
 			}

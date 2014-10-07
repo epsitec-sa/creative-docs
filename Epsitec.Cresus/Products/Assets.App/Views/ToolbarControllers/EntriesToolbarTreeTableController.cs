@@ -196,6 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Entries.CompactAll, compactEnable);
 			this.toolbar.SetEnable (Res.Commands.Entries.ExpandAll,  expandEnable);
 
+			this.toolbar.SetEnable (Res.Commands.Entries.Export, !this.IsEmpty);
 		}
 
 

@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.toolbar.SetEnable (Res.Commands.UserFields.Copy,   this.IsCopyEnable);
 			this.toolbar.SetEnable (Res.Commands.UserFields.Paste,  this.accessor.Clipboard.HasUserField (this.baseType));
-			this.toolbar.SetEnable (Res.Commands.UserFields.Export, true);
+			this.toolbar.SetEnable (Res.Commands.UserFields.Export, !this.IsEmpty);
 		}
 	}
 }

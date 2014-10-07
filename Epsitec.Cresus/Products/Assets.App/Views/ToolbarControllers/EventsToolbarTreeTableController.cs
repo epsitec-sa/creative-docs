@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.toolbar.SetEnable (Res.Commands.Events.Copy,   this.IsCopyEnable);
 			this.toolbar.SetEnable (Res.Commands.Events.Paste,  this.accessor.Clipboard.HasEvent);
-			this.toolbar.SetEnable (Res.Commands.Events.Export, true);
+			this.toolbar.SetEnable (Res.Commands.Events.Export, !this.IsEmpty);
 		}
 
 		private void CreateEvent(System.DateTime date, string buttonName)
