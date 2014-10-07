@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					var c = controller as BoolFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field) != 0;
+					c.Value         = this.accessor.EditionAccessor.GetFieldInt (field) == 1;
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
