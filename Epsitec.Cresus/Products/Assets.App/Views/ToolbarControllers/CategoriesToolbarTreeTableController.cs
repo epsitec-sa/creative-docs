@@ -13,6 +13,8 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -197,7 +199,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void CreateObject(string name, Guid model)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Categories, date, name, Guid.Empty, addDefaultGroups: false);
+
+			var p1 = new DataStringProperty  (ObjectField.Name,             name);
+			var p2 = new DataIntProperty     (ObjectField.AmortizationType, (int) AmortizationType.Linear);
+			var p3 = new DataIntProperty     (ObjectField.Periodicity,      (int) Periodicity.Annual);
+			var p4 = new DataIntProperty     (ObjectField.Prorata,          (int) ProrataType.None);
+			var p5 = new DataDecimalProperty (ObjectField.Round,            1.0m);
+			var p6 = new DataDecimalProperty (ObjectField.ResidualValue,    1.0m);
+
+			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, false, p1, p2, p3, p4, p5, p6);
+
 			var obj = this.accessor.GetObject (BaseType.Categories, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
