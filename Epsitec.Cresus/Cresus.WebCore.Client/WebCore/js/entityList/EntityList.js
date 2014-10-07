@@ -585,10 +585,10 @@ function() {
                   }
                 });
               } else {
-                var inital = this.initialColumns;
+                var initial = this.initialColumns;
                 Ext.Array.each(this.columns, function(col) {
                   if (col.hasOwnProperty('dataIndex')) {
-                    if (inital.indexOf(col.dataIndex) !== -1) {
+                    if (initial.indexOf(col.dataIndex) !== -1) {
                       col.show();
                     } else {
                       col.hide();
@@ -597,6 +597,8 @@ function() {
                 });
               }
 
+              //reset sorters
+              this.store.sorters.clear();
               this.store.proxy.setExtraParam("query", this.queryName);
               this.onRefreshHandler();
              }
