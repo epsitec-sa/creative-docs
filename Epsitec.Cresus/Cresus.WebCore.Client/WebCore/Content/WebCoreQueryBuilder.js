@@ -4,8 +4,8 @@ var app = angular.module("webCoreQueryBuilder", [
   "webCore.QueryBuilder"
 ]);
 
-app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
-  function($scope, $location, webCoreServices) {
+app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreServices',
+  function($scope, $timeout, $location, webCoreServices) {
     var druid = $location.path().replace('/', '');
     $scope.fields = [];
     $scope.columns = [];
@@ -15,9 +15,8 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
     var loadAvailableQueries = function() {
       webCoreServices.loadQueries(druid).success(function(data, status,
         headers) {
-
-        data.shift();
-        $scope.availableQueries = data;
+          data.shift();
+          $scope.availableQueries = data;
       });
     };
 
@@ -96,7 +95,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
 
       webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
         query)).success(function() {
-          loadAvailableQueries();
+            loadAvailableQueries();
         });
     };
 
@@ -111,27 +110,39 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       var columnsId = group.columns.split(';');
       var toRemove = [];
       var toAdd = [];
+      $scope.safeApply(function () {
+        //clear lists
+        $scope.columns.splice(0, $scope.columns.length);
+        $scope.selectableColumns.splice(0, $scope.selectableColumns.length);
+        //for each database columns
+        angular.forEach($scope.database.columns, function(col) {
+          //if column is in query
+          if (columnsId.indexOf(col.name) !== -1) {
+            //add column to displayed
+            $scope.columns.push(col);
+          } else {
+            //add column to available
+            $scope.selectableColumns.push(col);
+          }
+        });
 
-      //clear lists
-      $scope.columns.splice(0, $scope.columns.length);
-      $scope.selectableColumns.splice(0, $scope.selectableColumns.length);
-      //for each database columns
-      angular.forEach($scope.database.columns, function(col) {
-        //if column is in query
-        if (columnsId.indexOf(col.name) !== -1) {
-          //add column to displayed
-          $scope.columns.push(col);
-        } else {
-          //add column to available
-          $scope.selectableColumns.push(col);
-        }
+        var filter = {
+          group: group
+        };
+
+        $scope.filter = filter;
       });
+    };
 
-      var filter = {
-        group: group
-      };
-
-      $scope.filter = filter;
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
     };
 
     function htmlEntities(str) {
@@ -143,7 +154,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$location', 'webCoreServices',
       for (var str = "(", i = 0; i < group.rules.length; i++) {
 
         if (i > 0) {
-          str += " <strong>" + group.operator.name + "</strong> ";
+          str += " <strong>" + group.operator + "</strong> ";
         }
         if (group.rules[i].group) {
           str += computedForHuman(group.rules[i].group);

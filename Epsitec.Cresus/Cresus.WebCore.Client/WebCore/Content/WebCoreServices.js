@@ -81,10 +81,10 @@ angular.module('webCore.Services', [])
       };
 
       var loadQueries = function(druid) {
-        ///query/{name}/load
+        //last parameters used to prevent IE cache
         return $http({
           method: 'GET',
-          url: '/proxy/query/' + druid + '/load'
+          url: '/proxy/query/' + druid + '/load' + "?" + (new Date()).getTime()
         });
       };
 

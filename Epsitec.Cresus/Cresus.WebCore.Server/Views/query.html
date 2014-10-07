@@ -27,12 +27,14 @@
             </ul>
         </div>
         <query-builder ng-if="ready" group="filter.group" fields="fields"></query-builder>
+        <!-- display readable query
         <div class="alert alert-warning">
             <strong>Afficher les colonnes :</strong><br />
             <span ng-repeat="col in columns"> {{col.title}} </span>
             <br /><strong>Avec ce filtre :</strong><br />
             <span ng-bind-html="humanOutput"></span>
         </div>
+        -->
         <div class="alert alert-success">
             <strong>Requête existantes: </strong><br />
             <ul class="list-group">
