@@ -44,6 +44,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#endregion
 
 
+		public override bool					IsEmpty
+		{
+			get
+			{
+				return !this.accessor.Mandat.AccountsDateRanges.Any ();
+			}
+		}
+
+
 		protected override void CreateGraphicControllerUI()
 		{
 			this.graphicController = new AccountsTreeGraphicController (this.accessor, this.baseType);

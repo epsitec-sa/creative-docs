@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			
 			this.CreateSeparator (1);
 
+			this.helplineButton =
 			this.CreateButton (Res.Commands.Accounts.Import, 0);
 			this.CreateButton (Res.Commands.Accounts.Export, 0);
 

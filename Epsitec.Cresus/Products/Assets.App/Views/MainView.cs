@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Engine;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -56,10 +57,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateView (this.toolbar.ViewType);
 			};
 
-			this.CreateView (ViewType.Assets);
+			this.CreateFirstView ();
 			this.UpdateToolbar ();
 		}
 
+
+		private void CreateFirstView()
+		{
+			var list = new List<Warning> ();
+			WarningsLogic.GetWarnings (list, this.accessor);
+
+			this.CreateView (list.Count == 0 ? ViewType.Assets : ViewType.Warnings);
+		}
 
 		private void CreateView(ViewType viewType, bool pushViewState = true)
 		{
@@ -186,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			factory.Create (this.accessor, name, startDate, withSamples);
 
 			this.DeleteView ();
-			this.CreateView (ViewType.Assets);
+			this.CreateFirstView ();
 		}
 
 

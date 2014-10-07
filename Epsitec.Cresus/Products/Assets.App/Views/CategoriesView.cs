@@ -161,6 +161,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 			}
 
+			this.listController.HelplineVisibility = this.listController.HelplineDesired;
+
 			this.UpdateToolbars ();
 			this.UpdateEditor ();
 			this.UpdateWarningsRedDot ();

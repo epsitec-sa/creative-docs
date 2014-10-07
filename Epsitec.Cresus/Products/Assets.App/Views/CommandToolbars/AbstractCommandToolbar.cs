@@ -60,6 +60,29 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public bool								ShowHelpline
+		{
+			get
+			{
+				if (this.helplineFrame == null || this.helplineButton == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.helplineFrame.Visibility;
+				}
+			}
+			set
+			{
+				if (this.helplineFrame != null && this.helplineButton != null)
+				{
+					this.helplineFrame.Visibility = value;
+					this.MagicLayoutEngine ();
+				}
+			}
+		}
+
 		public int								RightMargin;
 
 
@@ -73,7 +96,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Cherche le widget ayant la plus grande surface.
 			var targets = commandDispatcher.FindVisuals (e.Command)
-				.Where (x => !x.ActualBounds.IsEmpty)
+				.Where (x => !x.ActualBounds.IsEmpty && x.Name != "NoTarget")
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();
 
@@ -97,6 +120,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredHeight = AbstractCommandToolbar.secondaryToolbarHeight,
 				BackColor       = ColorManager.ToolbarBackgroundColor,
 				Margins         = new Margins (0, this.RightMargin, 0, 0),
+			};
+
+			this.helplineFrame = new FrameBox
+			{
+				Parent          = parent,
+				Dock            = DockStyle.Top,
+				PreferredHeight = AbstractCommandToolbar.helplineTriangleHeight + AbstractCommandToolbar.helplineButtonHeight,
+				BackColor       = ColorManager.ToolbarBackgroundColor,
+				Margins         = new Margins (0, this.RightMargin, 0, 0),
+				Visibility      = false,
 			};
 
 			CommandDispatcher.SetDispatcher (this.toolbar, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
@@ -343,6 +376,11 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 							xLeft += widget.PreferredWidth + widget.Margins.Right;
 						}
+
+						if (widget == this.helplineButton)
+						{
+							this.UpdateHelpline (widget.ActualBounds.Center.X);
+						}
 					}
 
 					break;
@@ -351,6 +389,70 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				{
 					superficiality--;  // on essaie à nouveau avec moins de widgets
 				}
+			}
+		}
+
+		private void UpdateHelpline(double x)
+		{
+			if (this.helplineSurface == null)
+			{
+				var color = ColorManager.HelplineColor;
+
+				this.helplineTriangle = new Foreground
+				{
+					Parent = this.helplineFrame,
+					Dock   = DockStyle.None,
+				};
+
+				this.helplineTriangle.AddSurface (this.TrianglePath, color);
+
+				this.helplineSurface = new ColoredButton
+				{
+					Parent      = this.helplineFrame,
+					Name        = "NoTarget",
+					AutoFocus   = false,
+					Dock        = DockStyle.None,
+					NormalColor = color,
+					HoverColor  = color,
+				};
+			}
+
+			if (this.ShowHelpline)
+			{
+				this.helplineSurface.CommandId = this.helplineButton.CommandId;
+				int width = this.helplineSurface.Text.GetTextWidth () + 12;
+
+				this.helplineTriangle.SetManualBounds (new Rectangle (
+					x-AbstractCommandToolbar.helplineTriangleWidth/2,
+					AbstractCommandToolbar.helplineButtonHeight,
+					AbstractCommandToolbar.helplineTriangleWidth,
+					AbstractCommandToolbar.helplineTriangleHeight));
+
+				this.helplineSurface.SetManualBounds (new Rectangle (
+					x-width/2,
+					0,
+					width,
+					AbstractCommandToolbar.helplineButtonHeight));
+			}
+			else
+			{
+				this.helplineTriangle.SetManualBounds (Rectangle.Empty);
+				this.helplineSurface.SetManualBounds (Rectangle.Empty);
+			}
+		}
+
+		private Path TrianglePath
+		{
+			get
+			{
+				var path = new Path ();
+
+				path.MoveTo (AbstractCommandToolbar.helplineTriangleWidth/2, AbstractCommandToolbar.helplineTriangleHeight);
+				path.LineTo (0, 0);
+				path.LineTo (AbstractCommandToolbar.helplineTriangleWidth, 0);
+				path.Close ();
+
+				return path;
 			}
 		}
 
@@ -406,6 +508,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public const int secondaryToolbarHeight = 24 + 2;
 		public const int separatorWidth         = 11;
 
+		private const int helplineTriangleHeight = 10;
+		private const int helplineTriangleWidth  = 12;
+		private const int helplineButtonHeight   = 20;
+
 		private const string rightDock = "RightDock";
 
 
@@ -414,6 +520,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		protected readonly CommandContext		commandContext;
 
 		protected FrameBox						toolbar;
+		protected FrameBox						helplineFrame;
+		protected ButtonWithRedDot				helplineButton;
+		protected Foreground					helplineTriangle;
+		protected ColoredButton					helplineSurface;
 		protected bool							adjustRequired;
 	}
 }

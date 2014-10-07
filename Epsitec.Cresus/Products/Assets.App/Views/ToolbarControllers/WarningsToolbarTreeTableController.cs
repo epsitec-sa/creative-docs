@@ -55,7 +55,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		public override Guid SelectedGuid
+		public override bool					HelplineDesired
+		{
+			get
+			{
+				return this.VisibleSelectedRow != -1;
+			}
+		}
+
+
+		public override Guid					SelectedGuid
 		{
 			//	Retourne le Guid de l'objet actuellement sélectionné.
 			get

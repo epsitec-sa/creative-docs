@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSeparator (3);
 
+			this.helplineButton =
 			this.CreateButton (Res.Commands.Warnings.Goto, 0);
 
 			this.CreateSearchController (SearchKind.Warnings, 4);

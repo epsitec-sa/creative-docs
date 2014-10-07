@@ -228,6 +228,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public static Color HelplineColor
+		{
+			get
+			{
+				return Color.FromHexa ("ffefa6");  // orange pâle
+			}
+		}
+
 		public static Color PopupBorderColor
 		{
 			get

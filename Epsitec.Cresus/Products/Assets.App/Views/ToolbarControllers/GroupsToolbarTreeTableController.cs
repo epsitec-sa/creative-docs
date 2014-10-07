@@ -60,6 +60,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		public override bool					IsEmpty
+		{
+			get
+			{
+				return this.nodeGetter.Count <= 1;
+			}
+		}
+
 		protected override int					VisibleSelectedRow
 		{
 			get

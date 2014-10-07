@@ -77,11 +77,32 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		public bool								IsEmpty
+		public virtual bool						IsEmpty
 		{
 			get
 			{
 				return this.nodeGetter.Count == 0;
+			}
+		}
+
+		public virtual bool						HelplineDesired
+		{
+			get
+			{
+				return this.IsEmpty;
+			}
+		}
+
+		public bool								HelplineVisibility
+		{
+			get
+			{
+				return this.toolbar.ShowHelpline;
+			}
+			set
+			{
+				this.toolbar.ShowHelpline = value;
+				this.controllerFrame.Visibility = !this.IsEmpty;
 			}
 		}
 
