@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 			var o = other as AssetsParams;
 
-			return !object.ReferenceEquals (other, null)
+			return !object.ReferenceEquals (o, null)
 				&& this.Timestamp == o.Timestamp
 				&& this.RootGuid  == o.RootGuid
 				&& this.Level     == o.Level;

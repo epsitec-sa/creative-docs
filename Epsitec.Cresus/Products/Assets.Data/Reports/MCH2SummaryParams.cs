@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 			var o = other as MCH2SummaryParams;
 
-			return !object.ReferenceEquals (other, null)
+			return !object.ReferenceEquals (o, null)
 				&& this.DateRange  == o.DateRange
 				&& this.RootGuid   == o.RootGuid
 				&& this.Level      == o.Level
