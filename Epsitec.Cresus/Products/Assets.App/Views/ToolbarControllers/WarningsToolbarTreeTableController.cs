@@ -59,7 +59,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			get
 			{
-				return this.VisibleSelectedRow != -1;
+				//	Le bouton d'aide est toujours visible, pour éviter des sauts verticaux
+				//	très gênant lors d'un double-clic dans le TreeTable.
+				return true;
 			}
 		}
 

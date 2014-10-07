@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			get
 			{
-				if (this.helplineFrame == null || this.helplineButton == null)
+				if (this.helplineFrame == null || this.helplineTargetButton == null)
 				{
 					return false;
 				}
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 			set
 			{
-				if (this.helplineFrame != null && this.helplineButton != null)
+				if (this.helplineFrame != null && this.helplineTargetButton != null)
 				{
 					this.helplineFrame.Visibility = value;
 					this.MagicLayoutEngine ();
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 							xLeft += widget.PreferredWidth + widget.Margins.Right;
 						}
 
-						if (widget == this.helplineButton)
+						if (widget == this.helplineTargetButton)
 						{
 							this.UpdateHelpline (widget.ActualBounds.Center.X);
 						}
@@ -394,8 +394,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void UpdateHelpline(double x)
 		{
-			if (this.helplineSurface == null)
+			//	Met à jour la ligne d'aide en dessous de la toolbar.
+			if (this.helplineTextButton == null)
 			{
+				//	Si le bouton d'aide n'existe pas encore, on le crée une fois pour toutes.
 				var color = ColorManager.HelplineColor;
 
 				this.helplineTriangle = new Foreground
@@ -406,43 +408,48 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 				this.helplineTriangle.AddSurface (this.TrianglePath, color);
 
-				this.helplineSurface = new ColoredButton
+				this.helplineTextButton = new ColoredButton
 				{
-					Parent      = this.helplineFrame,
-					Name        = "NoTarget",
-					AutoFocus   = false,
-					Dock        = DockStyle.None,
-					NormalColor = color,
-					HoverColor  = color,
+					Parent               = this.helplineFrame,
+					Name                 = "NoTarget",
+					AutoFocus            = false,
+					Dock                 = DockStyle.None,
+					NormalColor          = color,
+					HoverColor           = color,
+					SameColorWhenDisable = true,
 				};
 			}
 
-			if (this.ShowHelpline)
+			if (this.ShowHelpline)  // ligne d'aide visible ?
 			{
-				this.helplineSurface.CommandId = this.helplineButton.CommandId;
-				int width = this.helplineSurface.Text.GetTextWidth () + 12;
+				this.helplineTextButton.CommandId = this.helplineTargetButton.CommandId;
+				int width = this.helplineTextButton.Text.GetTextWidth () + 14;
 
+				//	Petit triangle au dessus du bouton rectangulaire. Il fait office
+				//	de queue de la bulle.
 				this.helplineTriangle.SetManualBounds (new Rectangle (
 					x-AbstractCommandToolbar.helplineTriangleWidth/2,
 					AbstractCommandToolbar.helplineButtonHeight,
 					AbstractCommandToolbar.helplineTriangleWidth,
 					AbstractCommandToolbar.helplineTriangleHeight));
 
-				this.helplineSurface.SetManualBounds (new Rectangle (
+				//	Bouton rectangulaire au dessous. Il fait office de corps de la bulle.
+				this.helplineTextButton.SetManualBounds (new Rectangle (
 					x-width/2,
 					0,
 					width,
 					AbstractCommandToolbar.helplineButtonHeight));
 			}
-			else
+			else  // ligne d'aide cachée ?
 			{
-				this.helplineTriangle.SetManualBounds (Rectangle.Empty);
-				this.helplineSurface.SetManualBounds (Rectangle.Empty);
+				this.helplineTriangle  .SetManualBounds (Rectangle.Empty);
+				this.helplineTextButton.SetManualBounds (Rectangle.Empty);
 			}
 		}
 
 		private Path TrianglePath
 		{
+			//	Retourne le chemin du triangle de la bulle d'aide, pointe orientée vers le haut.
 			get
 			{
 				var path = new Path ();
@@ -521,9 +528,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		protected FrameBox						toolbar;
 		protected FrameBox						helplineFrame;
-		protected ButtonWithRedDot				helplineButton;
+		protected ButtonWithRedDot				helplineTargetButton;
 		protected Foreground					helplineTriangle;
-		protected ColoredButton					helplineSurface;
+		protected ColoredButton					helplineTextButton;
 		protected bool							adjustRequired;
 	}
 }
