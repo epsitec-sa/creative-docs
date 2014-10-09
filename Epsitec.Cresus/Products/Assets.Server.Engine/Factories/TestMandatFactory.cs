@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsCatsMCH2Samples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Catégories MCH2", "100");
+			var root = this.AddGroup (parent, "Catégories MCH2", "100", true);
 
 			          this.AddGroup (root, "Terrains",                "10");
 			          this.AddGroup (root, "Routes",                  "15");
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			          this.AddGroup (root, "En construction",         "60");
 			          this.AddGroup (root, "Autres immobilisations",  "90");
 
-			this.AddGroup (imm, "Bâtiments",   "10", groupUsedDuringCreation: true);
+			this.AddGroup (imm, "Bâtiments",   "10");
 			this.AddGroup (imm, "Ecoles",      "20");
 			this.AddGroup (imm, "Dépôts",      "30");
 			this.AddGroup (imm, "Décheteries", "40");
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsTypesMCH2Samples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Types MCH2", "200");
+			var root = this.AddGroup (parent, "Types MCH2", "200", true);
 
 			this.AddGroup (root, "Immobilisations corporelles",   "10");
 			this.AddGroup (root, "Immobilisations incorporelles", "20");
@@ -212,9 +212,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsPatsMCH2Samples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Patrimoine MCH2", "300");
+			var root = this.AddGroup (parent, "Patrimoine MCH2", "300", true);
 
-			this.AddGroup (root, "Patrimoine administratif", "10", groupUsedDuringCreation: true);
+			this.AddGroup (root, "Patrimoine administratif", "10");
 			this.AddGroup (root, "Patrimoine financier",     "20");
 		}
 

@@ -40,10 +40,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                    TreeTableColumnType.Tree,   250, Res.Strings.GroupsTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                  TreeTableColumnType.String, 100, Res.Strings.GroupsTreeTableFiller.Number.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Description,             TreeTableColumnType.String, 400, Res.Strings.GroupsTreeTableFiller.Description.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.GroupUsedDuringCreation, TreeTableColumnType.String,  70, Res.Strings.GroupsTreeTableFiller.GroupUsedDuringCreation.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                         TreeTableColumnType.Tree,   250, Res.Strings.GroupsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                       TreeTableColumnType.String, 100, Res.Strings.GroupsTreeTableFiller.Number.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Description,                  TreeTableColumnType.String, 400, Res.Strings.GroupsTreeTableFiller.Description.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.GroupSuggestedDuringCreation, TreeTableColumnType.String,  70, Res.Strings.GroupsTreeTableFiller.GroupSuggestedDuringCreation.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var name        = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var number      = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
 				var description = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Description);
-				var creation    = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.GroupUsedDuringCreation);
+				var creation    = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.GroupSuggestedDuringCreation);
 
 				var textCreation = (creation == 1)
 					? Res.Strings.GroupsTreeTableFiller.GroupUsedDuringCreationYes.ToString ()

@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.CreateObject (popup.GetequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
+					this.CreateObject (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
 				}
 			};
 		}

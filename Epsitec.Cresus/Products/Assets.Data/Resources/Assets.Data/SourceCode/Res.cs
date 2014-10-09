@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Assets.Data
 						}
 					}
 					//	designer:str/HUK8101
-					public static global::Epsitec.Common.Types.FormattedText GroupUsedDuringCreation
+					public static global::Epsitec.Common.Types.FormattedText GroupSuggestedDuringCreation
 					{
 						get
 						{
@@ -788,7 +788,7 @@ namespace Epsitec.Cresus.Assets.Data
 						}
 					}
 					//	designer:str/HUK8101
-					public static global::Epsitec.Common.Support.Druid GroupUsedDuringCreation
+					public static global::Epsitec.Common.Support.Druid GroupSuggestedDuringCreation
 					{
 						get
 						{

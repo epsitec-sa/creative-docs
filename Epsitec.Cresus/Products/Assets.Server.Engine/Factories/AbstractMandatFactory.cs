@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 		}
 
-		protected DataObject AddGroup(DataObject parent, string name, string number, bool groupUsedDuringCreation = false)
+		protected DataObject AddGroup(DataObject parent, string name, string number, bool groupSuggestedDuringCreation = false)
 		{
 			var groups = this.accessor.Mandat.GetData (BaseType.Groups);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddField (e, ObjectField.Name,   name);
 			this.AddField (e, ObjectField.Number, number);
-			this.AddField (e, ObjectField.GroupUsedDuringCreation, groupUsedDuringCreation);
+			this.AddField (e, ObjectField.GroupSuggestedDuringCreation, groupSuggestedDuringCreation);
 
 			return o;
 		}

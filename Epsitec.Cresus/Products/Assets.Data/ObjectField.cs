@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Data
 		ResidualValue,
 
 		//	Définition d'un groupe.
-		GroupUsedDuringCreation,
+		GroupSuggestedDuringCreation,
 
 		Account1,
 		Account2,

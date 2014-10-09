@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public IEnumerable<AbstractDataProperty> GetequiredProperties(BaseType baseType)
+		public IEnumerable<AbstractDataProperty> GetRequiredProperties(BaseType baseType)
 		{
 			//	Pour les Popup de création (Asset ou Person), retourne les propriétés
 			//	correspondant aux valeurs entrées dans champs obligatoires (UserField.Required).

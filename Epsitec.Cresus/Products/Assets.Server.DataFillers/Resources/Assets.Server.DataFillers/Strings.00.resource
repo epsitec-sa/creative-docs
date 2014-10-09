@@ -71,12 +71,14 @@
   <data name="Enum.MCH2Summary.Column.FinalState.Text" id="K42">Etat {0}</data>
   <data name="Enum.MCH2Summary.Column.FinalState.Tooltip" id="K52">Etat final le {0}</data>
   <data name="UserFieldsTreeTableFiller.RequiredYes" id="K62">Oui</data>
-  <data name="UserFieldsTreeTableFiller.RequiredNo" id="K72"> </data>
+  <data name="UserFieldsTreeTableFiller.RequiredNo" id="K72">
+  </data>
   <data name="AccountsTreeTableFiller.Number" id="K82">Numéro</data>
   <data name="AccountsTreeTableFiller.Title" id="K92">Titre du compte</data>
   <data name="AccountsTreeTableFiller.Category" id="KA2">Catégorie</data>
   <data name="AccountsTreeTableFiller.Type" id="KB2">Type</data>
-  <data name="GroupsTreeTableFiller.GroupUsedDuringCreation" id="KC2">Création</data>
+  <data name="GroupsTreeTableFiller.GroupSuggestedDuringCreation" id="KC2">Proposé</data>
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationYes" id="KD2">Oui</data>
-  <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2"> </data>
+  <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2">
+  </data>
 </bundle>

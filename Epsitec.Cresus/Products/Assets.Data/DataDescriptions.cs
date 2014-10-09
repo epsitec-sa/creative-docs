@@ -79,8 +79,8 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.GroupParent:
 					return Res.Strings.Enum.ObjectField.GroupParent.ToString ();
 
-				case ObjectField.GroupUsedDuringCreation:
-					return Res.Strings.Enum.ObjectField.GroupUsedDuringCreation.ToString ();
+				case ObjectField.GroupSuggestedDuringCreation:
+					return Res.Strings.Enum.ObjectField.GroupSuggestedDuringCreation.ToString ();
 
 				case ObjectField.MainValue:
 					return Res.Strings.Enum.ObjectField.MainValue.ToString ();

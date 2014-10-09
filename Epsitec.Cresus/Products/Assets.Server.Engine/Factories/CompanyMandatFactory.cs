@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsCatsSamples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Catégories", "100");
+			var root = this.AddGroup (parent, "Catégories", "100", true);
 
 			var imm = this.AddGroup (root, "Immeubles",              "10");
 			          this.AddGroup (root, "Mobilier",               "20");
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		private void CreateGroupsCentresSamples(DataObject parent)
 		{
-			var root = this.AddGroup (parent, "Centres de frais", "200");
+			var root = this.AddGroup (parent, "Centres de frais", "200", true);
 
 			this.AddGroup (root, "Bureaux",      "10");
 			this.AddGroup (root, "Production",   "20");

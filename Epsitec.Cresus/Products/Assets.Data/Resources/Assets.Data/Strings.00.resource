@@ -40,7 +40,7 @@
   <data name="Enum.ObjectField.UserFieldLineCount" id="K51">Nombre de lignes</data>
   <data name="Enum.ObjectField.UserFieldSummaryOrder" id="K61">Ordre dans résumé</data>
   <data name="Enum.ObjectField.UserFieldTopMargin" id="K71">Marge supérieure</data>
-  <data name="Enum.ObjectField.GroupUsedDuringCreation" id="K81">Groupe à utiliser lors de la création d'un objet d'immobilisation</data>
+  <data name="Enum.ObjectField.GroupSuggestedDuringCreation" id="K81">Groupe proposé lors de la création d'un objet d'immobilisation</data>
   <data name="Enum.ObjectField.UserFieldType" id="K91">Type</data>
   <data name="Enum.EventType.Input" id="KA1">Entrée</data>
   <data name="Enum.EventType.Modification" id="KB1">Modification générale</data>

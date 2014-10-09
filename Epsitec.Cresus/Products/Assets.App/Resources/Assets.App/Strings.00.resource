@@ -465,4 +465,5 @@
   <data name="SearchController.Options.Radios" id="KJH">N'importe où&lt;br/&gt;Au début&lt;br/&gt;A la fin&lt;br/&gt;Texte intégral&lt;br/&gt;Expression régulière</data>
   <data name="Popup.CreateGroup.Number" id="KKH">Numéro</data>
   <data name="WarningView.Perfect" id="KLH">Aucun avertissement.&lt;br/&gt;Crésus Immobilisation ne détecte aucun problème.</data>
+  <data name="Popup.CreateAsset.Groups" id="KMH">Groupes</data>
 </bundle>

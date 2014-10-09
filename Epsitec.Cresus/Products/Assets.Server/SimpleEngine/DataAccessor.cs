@@ -135,11 +135,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.AddMainValue (obj, timestamp, e);
 			}
 
-			//	Ajoute les groupes par défaut.
-			if (baseType == BaseType.Assets && addDefaultGroups)
-			{
-				this.AddDefaultGroups (obj, timestamp, e);
-			}
+			//?//	Ajoute les groupes par défaut.
+			//?if (baseType == BaseType.Assets && addDefaultGroups)
+			//?{
+			//?	this.AddDefaultGroups (obj, timestamp, e);
+			//?}
 
 			this.WarningsDirty = true;
 
@@ -315,23 +315,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
-		private void AddDefaultGroups(DataObject obj, Timestamp timestamp, DataEvent e)
-		{
-			//	Ajoute les groupes par défaut. Ils sont définis par le champ booléen
-			//	ObjectField.GroupUsedDuringCreation des objets "groupes".
-			int index = 0;
-
-			foreach (var group in this.mandat.GetData (BaseType.Groups))
-			{
-				var i = ObjectProperties.GetObjectPropertyInt (group, timestamp, ObjectField.GroupUsedDuringCreation);
-				if (i == 1)
-				{
-					var ratio = new GuidRatio (group.Guid, 1.0m);
-					e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+index, ratio));
-					index++;
-				}
-			}
-		}
+		//?private void AddDefaultGroups(DataObject obj, Timestamp timestamp, DataEvent e)
+		//?{
+		//?	//	Ajoute les groupes par défaut. Ils sont définis par le champ booléen
+		//?	//	ObjectField.GroupUsedDuringCreation des objets "groupes".
+		//?	int index = 0;
+		//?
+		//?	foreach (var group in this.mandat.GetData (BaseType.Groups))
+		//?	{
+		//?		var i = ObjectProperties.GetObjectPropertyInt (group, timestamp, ObjectField.GroupSuggestedDuringCreation);
+		//?		if (i == 1)
+		//?		{
+		//?			var ratio = new GuidRatio (group.Guid, 1.0m);
+		//?			e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+index, ratio));
+		//?			index++;
+		//?		}
+		//?	}
+		//?}
 
 
 		public void RemoveObject(BaseType baseType, Guid objectGuid)

@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.SetEnable (this.userFieldsCount+1, this.UseModel);
 
-			this.okButton.Enable = this.GetequiredProperties (BaseType.PersonsUserFields).Count () == this.userFieldsCount;
+			this.okButton.Enable = this.GetRequiredProperties (BaseType.PersonsUserFields).Count () == this.userFieldsCount;
 		}
 
 
