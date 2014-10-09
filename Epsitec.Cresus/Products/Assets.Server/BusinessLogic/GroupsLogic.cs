@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -68,7 +69,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetFullName(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom complet d'un groupe, du genre:
-			//	"Immobilisations > Bâtiments > Usines > Etrangères"
+			//	"Immobilisations > Bâtiments > Usines > Etrangères (100.40.20.3)"
+			var number = GroupsLogic.GetFullNumber (accessor, guid);
+
 			var list = new List<string> ();
 
 			while (!guid.IsEmpty)
@@ -88,9 +91,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				list.RemoveAt (0);  // supprime le premier nom "Groupes"
 			}
 
-			//-return string.Join (" ˃ ", list);  // 02C3
-			//-return string.Join (" → ", list);  // 2192
-			return string.Join ("  ►  ", list);  // 25BA
+			var text = string.Join ("  ►  ", list);  // unicode 25BA
+
+			if (!string.IsNullOrEmpty (number))
+			{
+				text = string.Concat (text, " (", number, ")");
+			}
+
+			return text;
 		}
 
 		public static string GetFullNumber(DataAccessor accessor, Guid guid)
@@ -125,13 +133,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (string.IsNullOrEmpty (s))
 				{
 					s = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+					s = FormattedText.FromSimpleText (s).ApplyItalic ().ToSimpleText ();
 				}
 
 				list.Insert (0, s);
 				guid = ObjectProperties.GetObjectPropertyGuid (obj, null, ObjectField.GroupParent);
 			}
 
-			if (list.Count > 1)
+			if (list.Any ())
 			{
 				list.RemoveAt (0);  // supprime le premier nom "Groupes"
 			}
