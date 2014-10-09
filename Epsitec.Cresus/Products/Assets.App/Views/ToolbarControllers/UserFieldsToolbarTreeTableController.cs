@@ -177,8 +177,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			var userField = new UserField (Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
-			int index = this.VisibleSelectedRow;
-			if (index == -1)  // pas de sélection ?
+			int index = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
+			if (index == 0)  // pas de sélection ?
 			{
 				index = this.nodeGetter.Count;  // insère à la fin
 			}
