@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -12,6 +11,74 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class GroupsLogic
 	{
+		public static IEnumerable<DataObject> GetSuggestedGroups(DataAccessor accessor)
+		{
+			//	Retourne la liste des groupes qui doivent être proposés lors de la création
+			//	d'un objet.
+			foreach (var group in accessor.Mandat.GetData (BaseType.Groups))
+			{
+				bool suggested = ObjectProperties.GetObjectPropertyInt (group, null, ObjectField.GroupSuggestedDuringCreation) == 1;
+
+				if (suggested)
+				{
+					yield return group;
+				}
+			}
+		}
+
+		public static IEnumerable<Guid> GetChildrensGuids(DataAccessor accessor, Guid groupGuid)
+		{
+			//	Retourne la liste des groupes fils pour peupler un combo, triée par
+			//	ordre alphabétique.
+			return accessor.Mandat.GetData (BaseType.Groups)
+				.Where (x => GroupsLogic.IsChildren (accessor, groupGuid, x.Guid) && GroupsLogic.IsFinal (accessor, x.Guid))
+				.OrderBy (x => GroupsLogic.GetShortName (accessor, x.Guid))
+				.Select (x => x.Guid);
+		}
+
+		private static bool IsChildren(DataAccessor accessor, Guid parentGuid, Guid groupGuid)
+		{
+			//	Indique si un groupe est un descendant d'un parent (fils, petit-fils, etc.).
+			if (groupGuid == parentGuid)
+			{
+				return false;
+			}
+
+			while (true)
+			{
+				var group = accessor.GetObject (BaseType.Groups, groupGuid);
+				groupGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
+
+				if (groupGuid.IsEmpty)
+				{
+					return false;
+				}
+
+				if (groupGuid == parentGuid)
+				{
+					return true;
+				}
+			}
+		}
+
+		private static bool IsFinal(DataAccessor accessor, Guid groupGuid)
+		{
+			//	Indique si un groupe est terminal (donc s'il n'y pas de descendants).
+			//	Seuls ces groupes peuvent être choisis dans les combos.
+			foreach (var group in accessor.Mandat.GetData (BaseType.Groups))
+			{
+				var parentGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
+
+				if (parentGuid == groupGuid)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+	
 		public static string GetDescription(string name, string number)
 		{
 			//	Retourne la description d'un groupe, contenant le nom et le numéro.
@@ -133,7 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (string.IsNullOrEmpty (s))
 				{
 					s = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-					s = FormattedText.FromSimpleText (s).ApplyItalic ().ToSimpleText ();
+					s = string.Concat ("<i>", s, "</i>");
 				}
 
 				list.Insert (0, s);

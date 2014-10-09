@@ -77,35 +77,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			bool first = true;
 			int i = this.userFieldsCount+5;
 
-			foreach (var group in this.accessor.Mandat.GetData (BaseType.Groups))
+			foreach (var group in GroupsLogic.GetSuggestedGroups (this.accessor))
 			{
-				bool suggested = ObjectProperties.GetObjectPropertyInt (group, null, ObjectField.GroupSuggestedDuringCreation) == 1;
-
-				if (suggested)
+				if (first)
 				{
-					if (first)
-					{
-						//	S'il s'agit du premier combo, on le précède d'une ligne de titre.
-						list.Add (new StackedControllerDescription
-						{
-							StackedControllerType = StackedControllerType.Label,
-							Width                 = DateController.controllerWidth,
-							Label                 = "<br/>" + Res.Strings.Popup.CreateAsset.Groups.ToString (),
-						});
-
-						first = false;
-					}
-
+					//	S'il s'agit du premier combo, on le précède d'une ligne de titre.
 					list.Add (new StackedControllerDescription
 					{
-						StackedControllerType = StackedControllerType.Combo,
-						Label                 = this.GetGroupName (group.Guid),
-						MultiLabels           = this.GetMultiLabels (group.Guid),
+						StackedControllerType = StackedControllerType.Label,
 						Width                 = DateController.controllerWidth,
+						Label                 = "<br/>" + Res.Strings.Popup.CreateAsset.Groups.ToString (),
 					});
 
-					this.groupsDict.Add (i++, group.Guid);
+					first = false;
 				}
+
+				list.Add (new StackedControllerDescription
+				{
+					StackedControllerType = StackedControllerType.Combo,
+					Label                 = GroupsLogic.GetShortName (this.accessor, group.Guid),
+					MultiLabels           = this.GetMultiLabels (group.Guid),
+					Width                 = DateController.controllerWidth,
+				});
+
+				this.groupsDict.Add (i++, group.Guid);
 			}
 		}
 
@@ -116,9 +111,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	des fins de lignes.
 			var list = new List<string> ();
 
-			foreach (var guid in this.GetChildrensGuid (groupGuid))
+			foreach (var childrenGuid in GroupsLogic.GetChildrensGuids (this.accessor, groupGuid))
 			{
-				var name = this.GetGroupName (guid);
+				var name = GroupsLogic.GetShortName (this.accessor, childrenGuid);
 				list.Add (name);
 			}
 
@@ -127,6 +122,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void InitializeDefaultGroups()
 		{
+			//	Initialise les combos selon les derniers LocalSettings sauvegardés.
+			//	combos <- LocalSettings
 			foreach (var pair in this.groupsDict)
 			{
 				var rank = pair.Key;
@@ -138,9 +135,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (rank) as ComboStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 
-					var guids = this.GetChildrensGuid (guid).ToList ();
+					var childrenGuids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToList ();
 
-					int index = guids.IndexOf (selectedGuid);
+					int index = childrenGuids.IndexOf (selectedGuid);
 					if (index != -1)
 					{
 						controller.Value = index;
@@ -151,6 +148,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void MemorizeDefaultGroups()
 		{
+			//	Sauvegarde les choix effectués dans les combos dans les LocalSettings.
+			//	combos -> LocalSettings
 			foreach (var pair in this.groupsDict)
 			{
 				var rank = pair.Key;
@@ -161,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (controller.Value.HasValue)
 				{
-					var guids = this.GetChildrensGuid (guid).ToArray ();
+					var guids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToArray ();
 
 					int sel = controller.Value.Value;
 					if (sel >= 0 && sel < guids.Length)
@@ -280,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					if (controller.Value.HasValue)
 					{
-						var guids = this.GetChildrensGuid (guid).ToArray ();
+						var guids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToArray ();
 
 						int sel = controller.Value.Value;
 						if (sel >= 0 && sel < guids.Length)
@@ -294,63 +293,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				return properties;
 			}
-		}
-
-		private IEnumerable<Guid> GetChildrensGuid(Guid groupGuid)
-		{
-			//	Retourne la liste des groupes fils pour peupler un combo, triée par
-			//	ordre alphabétique.
-			return this.accessor.Mandat.GetData (BaseType.Groups)
-				.Where (x => this.IsChildren (groupGuid, x.Guid) && this.IsFinal (x.Guid))
-				.OrderBy (x => this.GetGroupName (x.Guid))
-				.Select (x => x.Guid);
-		}
-
-		private string GetGroupName(Guid groupGuid)
-		{
-			//	Retourne le nom court d'un groupe.
-			return GroupsLogic.GetShortName (this.accessor, groupGuid);
-		}
-
-		private bool IsChildren(Guid parentGuid, Guid groupGuid)
-		{
-			//	Indique si un groupe est un descendant d'un parent (fils, petit-fils, etc.).
-			if (groupGuid == parentGuid)
-			{
-				return false;
-			}
-
-			while (true)
-			{
-				var group = this.accessor.GetObject (BaseType.Groups, groupGuid);
-				groupGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
-
-				if (groupGuid.IsEmpty)
-				{
-					return false;
-				}
-
-				if (groupGuid == parentGuid)
-				{
-					return true;
-				}
-			}
-		}
-
-		private bool IsFinal(Guid groupGuid)
-		{
-			//	Indique si un groupe est terminal (donc s'il n'y pas de descendants).
-			//	Seuls ces groupes peuvent être choisis dans les combos.
-			foreach (var group in this.accessor.Mandat.GetData (BaseType.Groups))
-			{
-				var parentGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
-				if (parentGuid == groupGuid)
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 	
