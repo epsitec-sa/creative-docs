@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected DataObject AddAssetsSamples(System.DateTime date, string name, string number, decimal value, decimal? value1, decimal? value2, string owner1, string owner2, string cat, params string[] groups)
 		{
-			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty, addDefaultGroups: false);
+			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
 			var o = this.accessor.GetObject (BaseType.Assets, guid);
 
 			var e = o.GetEvent (0);

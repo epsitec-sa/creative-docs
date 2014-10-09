@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void CreateObject(Guid parent, IEnumerable<AbstractDataProperty> properties)
 		{
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Groups, date, parent, addDefaultGroups: false, requiredProperties: properties.ToArray ());
+			var guid = this.accessor.CreateObject (BaseType.Groups, date, parent, properties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Groups, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 			

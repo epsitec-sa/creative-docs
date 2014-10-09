@@ -94,19 +94,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent, bool addDefaultGroups)
+		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent)
 		{
 			//	Ajoute le nom de l'objet.
 			var field = this.GetMainStringField (baseType);
 			var p = new DataStringProperty (field, name);
 
-			return this.CreateObject (baseType, date, parent, addDefaultGroups, p);
+			return this.CreateObject (baseType, date, parent, p);
 		}
 
-		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool addDefaultGroups, params AbstractDataProperty[] requiredProperties)
+		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
 		{
-			System.Diagnostics.Debug.Assert (baseType == BaseType.Assets || !addDefaultGroups);
-
 			var obj = new DataObject ();
 			this.mandat.GetData (baseType).Add (obj);
 
@@ -134,12 +132,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				this.AddMainValue (obj, timestamp, e);
 			}
-
-			//?//	Ajoute les groupes par défaut.
-			//?if (baseType == BaseType.Assets && addDefaultGroups)
-			//?{
-			//?	this.AddDefaultGroups (obj, timestamp, e);
-			//?}
 
 			this.WarningsDirty = true;
 
@@ -314,24 +306,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
-
-		//?private void AddDefaultGroups(DataObject obj, Timestamp timestamp, DataEvent e)
-		//?{
-		//?	//	Ajoute les groupes par défaut. Ils sont définis par le champ booléen
-		//?	//	ObjectField.GroupUsedDuringCreation des objets "groupes".
-		//?	int index = 0;
-		//?
-		//?	foreach (var group in this.mandat.GetData (BaseType.Groups))
-		//?	{
-		//?		var i = ObjectProperties.GetObjectPropertyInt (group, timestamp, ObjectField.GroupSuggestedDuringCreation);
-		//?		if (i == 1)
-		//?		{
-		//?			var ratio = new GuidRatio (group.Guid, 1.0m);
-		//?			e.AddProperty (new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+index, ratio));
-		//?			index++;
-		//?		}
-		//?	}
-		//?}
 
 
 		public void RemoveObject(BaseType baseType, Guid objectGuid)

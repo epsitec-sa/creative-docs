@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	On insère l'objet collé.
-			var guid = accessor.CreateObject (baseType, inputDate.Value, name, Guid.Empty, addDefaultGroups: false);
+			var guid = accessor.CreateObject (baseType, inputDate.Value, name, Guid.Empty);
 			var objPaste = accessor.GetObject (baseType, guid);
 			var eventPaste = objPaste.GetEvent (0);
 			eventPaste.SetUndefinedProperties (data.Object.GetEvent (0));

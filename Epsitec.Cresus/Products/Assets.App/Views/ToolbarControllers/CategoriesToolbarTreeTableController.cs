@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var p5 = new DataDecimalProperty (ObjectField.Round,            1.0m);
 			var p6 = new DataDecimalProperty (ObjectField.ResidualValue,    1.0m);
 
-			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, false, p1, p2, p3, p4, p5, p6);
+			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, p1, p2, p3, p4, p5, p6);
 
 			var obj = this.accessor.GetObject (BaseType.Categories, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
