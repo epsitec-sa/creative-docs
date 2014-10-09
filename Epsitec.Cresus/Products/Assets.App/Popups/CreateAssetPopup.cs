@@ -125,8 +125,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return string.Join ("<br/>", list);
 		}
 
+		private void InitializeDefaultGroups()
+		{
+			foreach (var pair in this.groupsDict)
+			{
+				var rank = pair.Key;
+				var guid = pair.Value;
 
-		public System.DateTime?					ObjectDate
+				var selectedGuid = LocalSettings.GetCreateGroup (guid);
+				if (!selectedGuid.IsEmpty)
+				{
+					var controller = this.GetController (rank) as ComboStackedController;
+					System.Diagnostics.Debug.Assert (controller != null);
+
+					var guids = this.GetChildrensGuid (guid).ToList ();
+
+					int index = guids.IndexOf (selectedGuid);
+					if (index != -1)
+					{
+						controller.Value = index;
+					}
+				}
+			}
+		}
+
+
+		private System.DateTime?				ObjectDate
 		{
 			get
 			{
@@ -174,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								ObjectCategory
+		private Guid							ObjectCategory
 		{
 			get
 			{
@@ -241,6 +265,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							var gr = new GuidRatio (guids[sel], null);
 							var property = new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+(i++), gr);
 							properties.Add (property);
+
+							LocalSettings.AddCreateGroup (guid, guids[sel]);
 						}
 					}
 				}
@@ -320,6 +346,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				};
 
 				popup.Create (target, leftOrRight: true);
+				popup.InitializeDefaultGroups ();
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{

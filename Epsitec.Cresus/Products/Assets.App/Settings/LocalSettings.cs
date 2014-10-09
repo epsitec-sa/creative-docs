@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
 			LocalSettings.searchInfos = new Dictionary<SearchKind, SearchInfo> ();
+			LocalSettings.createAssetDefaultGroups = new Dictionary<Guid, Guid> ();
 
 			LocalSettings.Initialize (Timestamp.Now.Date);
 		}
@@ -102,6 +103,25 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
+		public static void AddCreateGroup(Guid parentGroupGuid, Guid selectedGroupGuid)
+		{
+			LocalSettings.createAssetDefaultGroups[parentGroupGuid] = selectedGroupGuid;
+		}
+
+		public static Guid GetCreateGroup(Guid parentGroupGuid)
+		{
+			Guid guid;
+			if (LocalSettings.createAssetDefaultGroups.TryGetValue (parentGroupGuid, out guid))
+			{
+				return guid;
+			}
+			else
+			{
+				return Guid.Empty;
+			}
+		}
+
+
 		public static string Serialize()
 		{
 			return null;  // TODO:
@@ -137,5 +157,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 		private static readonly Dictionary<SearchKind, SearchInfo> searchInfos;
+		private static readonly Dictionary<Guid, Guid> createAssetDefaultGroups;
 	}
 }
