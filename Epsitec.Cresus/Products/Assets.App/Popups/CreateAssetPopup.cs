@@ -149,6 +149,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private void MemorizeDefaultGroups()
+		{
+			foreach (var pair in this.groupsDict)
+			{
+				var rank = pair.Key;
+				var guid = pair.Value;
+
+				var controller = this.GetController (rank) as ComboStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+
+				if (controller.Value.HasValue)
+				{
+					var guids = this.GetChildrensGuid (guid).ToArray ();
+
+					int sel = controller.Value.Value;
+					if (sel >= 0 && sel < guids.Length)
+					{
+						LocalSettings.AddCreateGroup (guid, guids[sel]);
+					}
+				}
+			}
+		}
+
 
 		private System.DateTime?				ObjectDate
 		{
@@ -265,8 +288,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							var gr = new GuidRatio (guids[sel], null);
 							var property = new DataGuidRatioProperty (ObjectField.GroupGuidRatioFirst+(i++), gr);
 							properties.Add (property);
-
-							LocalSettings.AddCreateGroup (guid, guids[sel]);
 						}
 					}
 				}
@@ -357,6 +378,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							LocalSettings.CreateAssetDate = popup.ObjectDate.Value;
 						}
 
+						popup.MemorizeDefaultGroups ();
 						action (popup.ObjectDate.Value, popup.RequiredProperties, popup.MainValue, popup.ObjectCategory);
 					}
 				};
