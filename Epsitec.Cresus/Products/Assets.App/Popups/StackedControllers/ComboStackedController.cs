@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -57,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = this.description.Width,
+				EditWidth  = this.description.Width - 4,
 				TabIndex   = tabIndex,
 			};
 

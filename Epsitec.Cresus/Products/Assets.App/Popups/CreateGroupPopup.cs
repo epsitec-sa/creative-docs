@@ -7,9 +7,11 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -31,14 +33,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = Res.Strings.Popup.CreateGroup.Parent.ToString (),
-				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				Width                 = DateController.controllerWidth,
 				Height                = 260,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = 200,
+				Width                 = DateController.controllerWidth,
 				Height                = 15*1,  // place pour 1 ligne
 			});
 
@@ -54,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.CreateGroup.Name.ToString (),
-				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				Width                 = DateController.controllerWidth,
 				BottomMargin          = 10,
 			});
 

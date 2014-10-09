@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.Export.EndOfLines.ToString (),
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 2
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Combo,
 				Label                 = Res.Strings.Popup.Export.Encoding.ToString (),
 				MultiLabels           = EncodingHelpers.Labels,
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			this.SetDescriptions (list);

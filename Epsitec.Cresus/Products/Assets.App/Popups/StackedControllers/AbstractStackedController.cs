@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			//	Retourne la largeur de la partie droite requise pour le contrôleur.
 			get
 			{
-				return this.description.Width + 4;
+				return this.description.Width;
 			}
 		}
 		

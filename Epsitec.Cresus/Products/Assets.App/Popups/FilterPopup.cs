@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 
-			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter, FilterPopup.popupWidth);
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting);
 
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly SingleGroupsTreeTableFiller	dataFiller;
-		private  bool							hasFilter;
+		private  bool									hasFilter;
 
 		private int										visibleSelectedRow;
 	}

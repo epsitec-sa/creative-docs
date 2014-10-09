@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var userField = userFields[i];
 				bool last = (i == userFields.Count-1);
 				int bottomMargin = last ? 10 : 0;
-				int width = System.Math.Min (userField.LineWidth.HasValue ? userField.LineWidth.GetValueOrDefault () : 1000, DateController.controllerWidth-4);
+				int width = System.Math.Min (userField.LineWidth.HasValue ? userField.LineWidth.GetValueOrDefault () : 1000, DateController.controllerWidth);
 
 				switch (userField.Type)
 				{

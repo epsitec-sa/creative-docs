@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var list = new List<StackedControllerDescription> ();
 
-
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Radio,

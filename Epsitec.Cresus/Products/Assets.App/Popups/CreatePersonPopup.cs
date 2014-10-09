@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -37,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.PersonGuid,
 				Label                 = "",
-				Width                 = 200 + (int) AbstractScroller.DefaultBreadth,
+				Width                 = DateController.controllerWidth,
 				Height                = 250,
 			});
 

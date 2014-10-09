@@ -40,28 +40,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.ExportXml.BodyTag.ToString (),
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.ExportXml.RecordTag.ToString (),
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.ExportXml.Indent.ToString (),
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.Export.EndOfLines.ToString (),
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Combo,
 				Label                 = Res.Strings.Popup.Export.Encoding.ToString (),
 				MultiLabels           = EncodingHelpers.Labels,
-				Width                 = 200,
+				Width                 = 240,
 			});
 
 			this.SetDescriptions (list);

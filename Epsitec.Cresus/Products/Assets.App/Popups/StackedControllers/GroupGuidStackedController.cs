@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 			this.nodeGetter.SetParams (null, SortingInstructions.Default);
 
-			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter, 214);
 		}
 
 

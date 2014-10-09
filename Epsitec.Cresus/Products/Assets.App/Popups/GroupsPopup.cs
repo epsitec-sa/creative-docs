@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (this.baseType == BaseType.Groups)
 			{
-				this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter);
+				this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter, GroupsPopup.popupWidth);
 			}
 			else
 			{
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.baseType == BaseType.Groups)
 				{
-					return 200;  // colonne nom
+					return GroupsPopup.popupWidth;  // colonne nom
 				}
 				else
 				{
@@ -189,7 +189,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int rowHeight        = 18;
+		private const int popupWidth = 200;
+		private const int rowHeight  = 18;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;

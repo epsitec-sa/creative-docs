@@ -12,9 +12,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class SingleGroupsTreeTableFiller : AbstractTreeTableFiller<TreeNode>
 	{
-		public SingleGroupsTreeTableFiller(DataAccessor accessor, INodeGetter<TreeNode> nodeGetter)
+		public SingleGroupsTreeTableFiller(DataAccessor accessor, INodeGetter<TreeNode> nodeGetter, int width)
 			: base (accessor, nodeGetter)
 		{
+			this.width = width;
 		}
 
 
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name, TreeTableColumnType.Tree, 200, Res.Strings.SingleGroupsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name, TreeTableColumnType.Tree, this.width, Res.Strings.SingleGroupsTreeTableFiller.Name.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -74,5 +75,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			return content;
 		}
+
+
+		private readonly int width;
 	}
 }
