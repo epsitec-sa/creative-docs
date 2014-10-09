@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.SetEnable (this.userFieldsCount+3, this.UseCategory);
 
 			this.okButton.Enable = this.ObjectDate.HasValue
-								&& this.GetRequiredProperties (BaseType.AssetsUserFields).Count () == this.userFieldsCount
+								&& this.RequiredProperties.Count == this.userFieldsCount + this.groupsDict.Count
 								&& (!this.UseCategory || !this.ObjectCategory.IsEmpty)
 								&& !this.HasError;
 		}
@@ -259,45 +259,45 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				.Select (x => x.Guid);
 		}
 
-		private string GetGroupName(Guid guid)
+		private string GetGroupName(Guid groupGuid)
 		{
 			//	Retourne le nom court d'un groupe.
-			return GroupsLogic.GetShortName (this.accessor, guid);
+			return GroupsLogic.GetShortName (this.accessor, groupGuid);
 		}
 
-		private bool IsChildren(Guid parentGuid, Guid guid)
+		private bool IsChildren(Guid parentGuid, Guid groupGuid)
 		{
 			//	Indique si un groupe est un descendant d'un parent (fils, petit-fils, etc.).
-			if (guid == parentGuid)
+			if (groupGuid == parentGuid)
 			{
 				return false;
 			}
 
 			while (true)
 			{
-				var group = this.accessor.GetObject (BaseType.Groups, guid);
-				guid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
+				var group = this.accessor.GetObject (BaseType.Groups, groupGuid);
+				groupGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
 
-				if (guid.IsEmpty)
+				if (groupGuid.IsEmpty)
 				{
 					return false;
 				}
 
-				if (guid == parentGuid)
+				if (groupGuid == parentGuid)
 				{
 					return true;
 				}
 			}
 		}
 
-		private bool IsFinal(Guid guid)
+		private bool IsFinal(Guid groupGuid)
 		{
 			//	Indique si un groupe est terminal (donc s'il n'y pas de descendants).
 			//	Seuls ces groupes peuvent être choisis dans les combos.
 			foreach (var group in this.accessor.Mandat.GetData (BaseType.Groups))
 			{
 				var parentGuid = ObjectProperties.GetObjectPropertyGuid (group, null, ObjectField.GroupParent);
-				if (parentGuid == guid)
+				if (parentGuid == groupGuid)
 				{
 					return false;
 				}
