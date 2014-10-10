@@ -153,6 +153,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					//	On cherche les comptes incorrects dans les écritures.
 					WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
+
+					//	On cherche les groupes avec des ratios dont la somme n'est pas 100%.
+					var guid = GroupsGuidRatioLogic.GetPercentErrorGroupGuid (accessor, e);
+					if (!guid.IsEmpty)
+					{
+						var groupName = GroupsLogic.GetShortName (accessor, guid);
+						var message = string.Format (Res.Strings.WarningsLogic.Ratio.Percent.ToString (), groupName);
+						var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.GroupGuidRatioFirst, message);
+						warnings.Add (warning);
+					}
 				}
 			}
 

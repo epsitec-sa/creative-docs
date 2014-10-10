@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -96,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				string icon  = StaticDescriptions.GetViewTypeIcon (StaticDescriptions.GetViewTypeKind (warning.BaseType.Kind));
 				string text  = UniversalLogic.GetObjectSummary (this.accessor, warning.BaseType, obj, timestamp);
 				var    glyph = TimelineData.TypeToGlyph (eventType);
-				string field = UserFieldsLogic.GetFieldName (this.accessor, WarningsTreeTableFiller.GetUserFieldsBaseType (warning.BaseType), warning.Field);
+				string field = this.GetFieldName (warning);
 				string desc  = warning.Description;
 
 				var cell1 = new TreeTableCellString (icon,  cellState);
@@ -117,6 +118,20 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			}
 
 			return content;
+		}
+
+		private string GetFieldName(Warning warning)
+		{
+			if (warning.Field >= ObjectField.GroupGuidRatioFirst &&
+				warning.Field <= ObjectField.GroupGuidRatioLast)
+			{
+				return null;
+			}
+			else
+			{
+				var baseType = WarningsTreeTableFiller.GetUserFieldsBaseType (warning.BaseType);
+				return UserFieldsLogic.GetFieldName (this.accessor, baseType, warning.Field);
+			}
 		}
 
 		private static BaseType GetUserFieldsBaseType(BaseType baseType)

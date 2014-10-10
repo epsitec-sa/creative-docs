@@ -546,6 +546,18 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544333));
 					}
 				}
+				public static class Ratio
+				{
+					//	designer:str/IUKV101
+					public static global::Epsitec.Common.Types.FormattedText Percent
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544383));
+						}
+					}
+				}
+				
 				public static class RequiredUserFields
 				{
 					//	designer:str/IUKQ101
@@ -1164,6 +1176,18 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544333);
 					}
 				}
+				public static class Ratio
+				{
+					//	designer:str/IUKV101
+					public static global::Epsitec.Common.Support.Druid Percent
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544383);
+						}
+					}
+				}
+				
 				public static class RequiredUserFields
 				{
 					//	designer:str/IUKQ101

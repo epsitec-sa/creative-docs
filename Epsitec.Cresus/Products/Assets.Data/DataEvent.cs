@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly EventType				Type;
 
 
+		public IEnumerable<AbstractDataProperty> Properties
+		{
+			get
+			{
+				return this.properties;
+			}
+		}
+
 		public int PropertiesCount
 		{
 			get
