@@ -453,3 +453,12 @@ Lancé le 03.10.2014
 SVN update > r23775
 
 -echupdate -newechfile:S:\eerv\eerv-2014-10-02.xml -oldechfile:S:\eerv\eerv-2014-09-25.xml -output:s:\eerv\ech-diff-2014-10-02.md
+
+
+Lancé le 10.10.2014
+-------------------
+
+SVN update > r23822
+
+-populateusergroups
+-echupdate -newechfile:S:\eerv\eerv-2014-10-09.xml -oldechfile:S:\eerv\eerv-2014-10-02.xml -output:s:\eerv\ech-diff-2014-10-09.md
