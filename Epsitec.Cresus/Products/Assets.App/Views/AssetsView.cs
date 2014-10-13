@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.Editors;
@@ -740,8 +741,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.selectedGuid.IsEmpty || !this.selectedTimestamp.HasValue)
 			{
-				this.isShowEvents = false;
-				this.isEditing    = false;
+				//	Si le popup pour la création d'un événement est présent (CreateEventPopup),
+				//	il ne faut pas fermer la liste des événements, car c'est forcément le popup
+				//	qui est à l'origine de la demande de mise à jour. Comme il s'affiche avec
+				//	un lien sur le bouton de la commande source (Events.New), il ne faut pas
+				//	que le bouton disparaisse !
+				if (!PopupStack.HasPopup)
+				{
+					this.isShowEvents = false;  // ferme la liste des événements
+					this.isEditing    = false;
+				}
 			}
 
 			this.UpdateUI ();
