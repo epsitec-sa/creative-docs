@@ -426,8 +426,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 					else if (this.listController.SelectedGuid      != this.selectedGuid     ||
 							 this.listController.SelectedTimestamp != this.selectedTimestamp)
 					{
-						this.listController.SelectedGuid      = this.selectedGuid;
-						this.listController.SelectedTimestamp = this.selectedTimestamp;
+						//	Si la liste des objets d'immobilisations est groupée selon les
+						//	catégories d'immobilisations (par exemple), le même objet peut
+						//	apparaître plusieurs fois dans la liste (à cause des ratios, 40%
+						//	dans un groupe et 60% dans un autre).
+						//	Lors d'une mise à jour après une recherche, il ne faut pas mettre
+						//	à jour le SelectedGuid s'il n'a pas changé. Si on le fait, on
+						//	sélectionne toujours la première ligne correspondant à l'objet,
+						//	et on ne peut donc jamais atteindre la deuxième !
+
+						if (this.listController.SelectedGuid != this.selectedGuid)
+						{
+							this.listController.SelectedGuid = this.selectedGuid;
+						}
+
+						if (this.listController.SelectedTimestamp != this.selectedTimestamp)
+						{
+							this.listController.SelectedTimestamp = this.selectedTimestamp;
+						}
 
 						//	Si l'objet sélectionné dans la liste de gauche a changé, il
 						//	faudra aussi mettre à jour les contrôleurs qui en dépendent.
