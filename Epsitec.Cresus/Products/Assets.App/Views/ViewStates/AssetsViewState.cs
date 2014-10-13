@@ -22,6 +22,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public bool								ShowGraphic;
 
 
+		public override bool IsUsed(BaseType baseType, Guid guid)
+		{
+			return baseType == BaseType.Assets
+				&& guid == this.SelectedGuid;
+		}
+
+
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as AssetsViewState;

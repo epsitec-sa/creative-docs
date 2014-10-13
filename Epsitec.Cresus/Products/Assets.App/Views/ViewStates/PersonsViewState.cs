@@ -14,6 +14,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public Guid								SelectedGuid;
 
 
+		public override bool IsUsed(BaseType baseType, Guid guid)
+		{
+			return baseType == BaseType.Persons
+				&& guid == this.SelectedGuid;
+		}
+
+
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as PersonsViewState;

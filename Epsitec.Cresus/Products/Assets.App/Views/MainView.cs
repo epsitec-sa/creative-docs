@@ -33,6 +33,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ignoreChanges = new SafeCounter ();
 
 			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			var cleaner = new CleanerAgent (this.accessor, this);
+			this.accessor.CleanerAgents.Add (cleaner);
 		}
 
 		public void CreateUI(Widget parent)
@@ -413,6 +416,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return this.lastViewStates.Count > 1;
 			}
+		}
+
+
+		private class CleanerAgent : AbstractCleanerAgent
+		{
+			public CleanerAgent(DataAccessor accessor, MainView mainView)
+				: base (accessor)
+			{
+				this.mainView = mainView;
+			}
+
+			public override void Clean(BaseType baseType, Guid guid)
+			{
+				this.Clean (baseType, guid, this.mainView.currentViewStates);
+				this.Clean (baseType, guid, this.mainView.lastViewStates);
+
+				if (this.mainView.historyPosition == -1)
+				{
+					this.Clean (baseType, guid, this.mainView.historyViewStates);
+				}
+				else
+				{
+					this.Clean (baseType, guid, this.mainView.historyViewStates);
+
+					this.mainView.historyPosition = System.Math.Max (this.mainView.historyPosition, 0);
+					this.mainView.historyPosition = System.Math.Min (this.mainView.historyPosition, this.mainView.historyViewStates.Count-1);
+				}
+			}
+
+			private void Clean(BaseType baseType, Guid guid, List<AbstractViewState> list)
+			{
+				var toDelete = list.Where (x => x.IsUsed (baseType, guid)).ToArray ();
+
+				foreach (var delete in toDelete)
+				{
+					list.Remove (delete);
+				}
+			}
+
+			private readonly MainView mainView;
 		}
 
 

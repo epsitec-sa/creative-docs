@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			this.clipboard = clipboard;
 			this.editionAccessor = new EditionAccessor (this);
+
+			this.cleanerAgents = new List<AbstractCleanerAgent> ();
 		}
 
 		public DataMandat						Mandat
@@ -72,6 +74,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 		public bool								WarningsDirty;
+
+		public List<AbstractCleanerAgent>		CleanerAgents
+		{
+			get
+			{
+				return this.cleanerAgents;
+			}
+		}
 
 		public INodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
@@ -318,6 +328,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			if (obj != null)
 			{
+				this.cleanerAgents.ForEach (x => x.Clean (baseType, obj.Guid));
+
 				var list = this.mandat.GetData (baseType);
 				list.Remove (obj);
 
@@ -517,6 +529,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private readonly DataClipboard			clipboard;
 		private readonly EditionAccessor		editionAccessor;
+		private readonly List<AbstractCleanerAgent> cleanerAgents;
 
 		private DataMandat						mandat;
 	}
