@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			base.OnPrev ();
 		}
 
-		[Command (Res.CommandIds.Groups.Next)]
+		[Command (Res.CommandIds.Persons.Next)]
 		protected override void OnNext()
 		{
 			base.OnNext ();
