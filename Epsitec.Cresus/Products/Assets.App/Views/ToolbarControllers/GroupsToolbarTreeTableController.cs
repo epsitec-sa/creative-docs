@@ -15,6 +15,7 @@ using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -190,7 +191,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteQuestion.ToString (), delegate
+			var name = GroupsLogic.GetShortName(this.accessor, this.SelectedGuid);
+			var question = string.Format (Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteQuestion.ToString (), name);
+
+			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.RemoveObject (BaseType.Groups, this.SelectedGuid);
 				this.UpdateData ();

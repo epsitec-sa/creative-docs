@@ -254,14 +254,14 @@
   <data name="ToolbarControllers.AssetsTreeTable.Copy" id="KNA">Copier l'objet d'immobilisation</data>
   <data name="ToolbarControllers.AssetsTreeTable.Paste" id="KOA">Coller l'objet d'immobilisation</data>
   <data name="ToolbarControllers.AssetsTreeTable.Export" id="KPA">Exporter les objets d'immobilisations</data>
-  <data name="ToolbarControllers.AssetsTreeTable.DeleteQuestion" id="KQA">Voulez-vous supprimer l'objet sélectionné ?</data>
+  <data name="ToolbarControllers.AssetsTreeTable.DeleteQuestion" id="KQA">Voulez-vous supprimer l'objet "{0}" ?</data>
   <data name="ToolbarControllers.CategoriesTreeTable.New" id="KRA">Nouvelle catégorie d'immobilisation</data>
   <data name="ToolbarControllers.CategoriesTreeTable.Delete" id="KSA">Supprimer la catégorie d'immobilisation</data>
   <data name="ToolbarControllers.CategoriesTreeTable.Deselect" id="KTA">Désélectionner la catégorie d'immobilisation</data>
   <data name="ToolbarControllers.CategoriesTreeTable.Copy" id="KUA">Copier la catégorie d'immobilisation</data>
   <data name="ToolbarControllers.CategoriesTreeTable.Paste" id="KVA">Coller la catégorie d'immobilisation</data>
   <data name="ToolbarControllers.CategoriesTreeTable.Export" id="K0B">Exporter les catégories d'immobilisations</data>
-  <data name="ToolbarControllers.CategoriesTreeTable.DeleteQuestion" id="K1B">Voulez-vous supprimer la catégorie sélectionnée ?</data>
+  <data name="ToolbarControllers.CategoriesTreeTable.DeleteQuestion" id="K1B">Voulez-vous supprimer la catégorie "{0}" ?</data>
   <data name="ToolbarControllers.EntriesTreeTable.Deselect" id="K2B">Désélectionner l'écriture comptable</data>
   <data name="ToolbarControllers.EntriesTreeTable.Export" id="K3B">Exporter les écritures comptables</data>
   <data name="ToolbarControllers.EventsTreeTable.Title" id="K4B">Evénements</data>
@@ -279,14 +279,14 @@
   <data name="ToolbarControllers.GroupsTreeTable.Copy" id="KGB">Copier le groupe</data>
   <data name="ToolbarControllers.GroupsTreeTable.Paste" id="KHB">Coller le groupe</data>
   <data name="ToolbarControllers.GroupsTreeTable.Export" id="KIB">Exporter les groupes</data>
-  <data name="ToolbarControllers.GroupsTreeTable.DeleteQuestion" id="KJB">Voulez-vous supprimer le groupe sélectionné ?</data>
+  <data name="ToolbarControllers.GroupsTreeTable.DeleteQuestion" id="KJB">Voulez-vous supprimer le groupe "{0}" ?</data>
   <data name="ToolbarControllers.PersonsTreeTable.New" id="KKB">Nouveau contact</data>
   <data name="ToolbarControllers.PersonsTreeTable.Delete" id="KLB">Supprimer le contact</data>
   <data name="ToolbarControllers.PersonsTreeTable.Deselect" id="KMB">Désélectionner le contact</data>
   <data name="ToolbarControllers.PersonsTreeTable.Copy" id="KNB">Copier le contact</data>
   <data name="ToolbarControllers.PersonsTreeTable.Paste" id="KOB">Coller le contact</data>
   <data name="ToolbarControllers.PersonsTreeTable.Export" id="KPB">Exporter les contacts</data>
-  <data name="ToolbarControllers.PersonsTreeTable.DeleteQuestion" id="KQB">Voulez-vous supprimer le contact sélectionné ?</data>
+  <data name="ToolbarControllers.PersonsTreeTable.DeleteQuestion" id="KQB">Voulez-vous supprimer le contact "{0}" ?</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.New" id="KRB">Nouveau champ</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.Delete" id="KSB">Supprimer le champ</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.Deselect" id="KTB">Désélectionner le champ</data>
@@ -294,7 +294,7 @@
   <data name="ToolbarControllers.UserFieldsTreeTable.Paste" id="KVB">Coller le champ</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.Export" id="K0C">Exporter les champs</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.NewName" id="K1C">Nouveau</data>
-  <data name="ToolbarControllers.UserFieldsTreeTable.DeleteQuestion" id="K2C">Voulez-vous supprimer le champ sélectionné ?</data>
+  <data name="ToolbarControllers.UserFieldsTreeTable.DeleteQuestion" id="K2C">Voulez-vous supprimer le champ "{0}" ?</data>
   <data name="ToolbarControllers.WarningsTreeTable.Deselect" id="K3C">Désélectionner l'avertissement</data>
   <data name="ToolbarControllers.WarningsTreeTable.Export" id="K4C">Exporter les avertissements</data>
   <data name="ToolbarControllers.WarningsTreeTable.Goto" id="K5C">Aller sur la cause de l'avertissement</data>

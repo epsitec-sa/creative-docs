@@ -139,7 +139,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.CategoriesTreeTable.DeleteQuestion.ToString (), delegate
+			var name = CategoriesLogic.GetSummary (this.accessor, this.SelectedGuid);
+			var question = string.Format (Res.Strings.ToolbarControllers.CategoriesTreeTable.DeleteQuestion.ToString (), name);
+
+			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.RemoveObject (BaseType.Categories, this.SelectedGuid);
 				this.UpdateData ();

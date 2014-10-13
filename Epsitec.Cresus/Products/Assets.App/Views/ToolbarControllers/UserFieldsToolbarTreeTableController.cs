@@ -14,6 +14,7 @@ using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -194,7 +195,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			YesNoPopup.Show (target, Res.Strings.ToolbarControllers.UserFieldsTreeTable.DeleteQuestion.ToString (), delegate
+			var name = UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid);
+			var question = string.Format (Res.Strings.ToolbarControllers.UserFieldsTreeTable.DeleteQuestion.ToString (), name);
+
+			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
 				accessor.WarningsDirty = true;
