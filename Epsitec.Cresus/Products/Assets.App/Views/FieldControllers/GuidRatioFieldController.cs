@@ -199,6 +199,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.Value = new GuidRatio (guid, this.value.Ratio);
 				this.OnValueEdited (this.Field);
+
+				this.textField.Focus ();
 			};
 		}
 

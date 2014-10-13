@@ -176,6 +176,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			//	alphabétique des noms, et cache les autres. Ainsi, il est possible qu'un
 			//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
 			//	sur l'édition en cours.
+			//	On met à jour le TabIndex de la ligne parente, afin d'avoir un ordre de
+			//	parcourt de haut en bas logique avec la touche Tab.
 
 			foreach (var controller in this.controllers)
 			{
@@ -191,10 +193,12 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			//	Montre les bonnes lignes existantes.
 			int y = 0;
+			int tabIndex = 0;
+
 			foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
 			{
 				var label = (y == 0) ? Res.Strings.FieldControllers.GuidRatio.List.ToString () : "";  // légende uniquement pour le premier
-				this.UpdateController (field, y, label);
+				this.UpdateController (field, y, ref tabIndex, label);
 				y += AbstractFieldController.lineHeight + 4;  // en dessous
 			}
 
@@ -202,11 +206,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var ff = this.FreeField;
 			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
 			{
-				this.UpdateController (ff, y, Res.Strings.FieldControllers.GuidRatio.New.ToString ());
+				this.UpdateController (ff, y, ref tabIndex, Res.Strings.FieldControllers.GuidRatio.New.ToString ());
 			}
 		}
 
-		private void UpdateController(ObjectField field, int y, string label)
+		private void UpdateController(ObjectField field, int y, ref int tabIndex, string label)
 		{
 			//	Met à jour un contrôleur. On le rend visible et on met à jour les
 			//	données qu'il représente.
@@ -215,6 +219,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			line.Frame.Visibility = true;
 			line.Frame.Margins = new Margins (0, 0, y, 0);
 			line.Frame.BackColor = (field == this.selectedField) ? ColorManager.WindowBackgroundColor : Color.Empty;
+			line.Frame.TabIndex = ++tabIndex;
 
 			line.Label.Text = label;
 
