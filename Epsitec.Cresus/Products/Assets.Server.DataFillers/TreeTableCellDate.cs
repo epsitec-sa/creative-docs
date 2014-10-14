@@ -8,8 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellDate : AbstractTreeTableCell
 	{
-		public TreeTableCellDate(System.DateTime? value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellDate(System.DateTime? value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Value = value;
 		}

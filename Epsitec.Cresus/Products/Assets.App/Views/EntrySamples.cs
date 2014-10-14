@@ -19,9 +19,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 	/// </summary>
 	public class EntrySamples
 	{
-		public EntrySamples(DataAccessor accessor)
+		public EntrySamples(DataAccessor accessor, System.DateTime? forcedDate)
 		{
-			this.accessor = accessor;
+			this.accessor   = accessor;
+			this.forcedDate = forcedDate;
 
 			this.entries = new Entries (this.accessor);
 		}
@@ -84,7 +85,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				for (int r=0; r<totalRows; r++)
 				{
-					columnItem.AddRow (new TreeTableCellString (this.GetContent (r, c), CellState.None));
+					string text, tooltip;
+					this.GetContent (r, c, out text, out tooltip);
+					columnItem.AddRow (new TreeTableCellString (text, CellState.None, tooltip));
 				}
 
 				this.treeTable.SetColumnCells (c, columnItem);
@@ -92,11 +95,38 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private string GetContent(int row, int column)
+		private void GetContent(int row, int column, out string text, out string tooltip)
 		{
 			//	Retourne le contenu d'une cellule du tableau.
 			var scenario = EntrySamples.GetScenario (row);
-			return this.entries.GetSample (scenario, column);
+			this.entries.GetSample (scenario, column, out text, out tooltip);
+
+			if (column == 0 || column == 1)  // colonne débit ou crédit ?
+			{
+				var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
+				var account = AccountsLogic.GetSummary (this.accessor, baseType, text);
+
+				if (!string.IsNullOrEmpty (account))
+				{
+					tooltip = string.Concat (tooltip, "<br/>", account);
+				}
+			}
+		}
+
+		private System.DateTime EffectiveDate
+		{
+			get
+			{
+				if (this.forcedDate.HasValue)  // y a-t-il une date forcée ?
+				{
+					//	Si oui, elle prend le dessus.
+					return this.forcedDate.Value;
+				}
+				else
+				{
+					return this.accessor.EditionAccessor.EditedTimestamp.Value.Date;
+				}
+			}
 		}
 
 
@@ -131,9 +161,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private const int rowHeight    = 18;
-		private const int accountWidth = 120;
+		private const int accountWidth = 110;
 
 		private readonly DataAccessor			accessor;
+		private readonly System.DateTime?		forcedDate;
 		private readonly Entries				entries;
 
 		private TreeTable						treeTable;

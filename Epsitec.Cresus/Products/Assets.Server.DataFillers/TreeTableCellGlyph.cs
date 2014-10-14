@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellGlyph : AbstractTreeTableCell
 	{
-		public TreeTableCellGlyph(TimelineGlyph? value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellGlyph(TimelineGlyph? value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Value = value;
 		}

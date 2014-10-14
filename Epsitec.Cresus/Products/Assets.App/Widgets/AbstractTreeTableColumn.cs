@@ -482,8 +482,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return this.FullHeaderTooltip;
 			}
-
-			return null;
+			else
+			{
+				return this.GetTooltip (pos);
+			}
 		}
 		#endregion
 
@@ -534,6 +536,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 				return string.Join ("<br/>", list);
 			}
+		}
+
+		private string GetTooltip(Point pos)
+		{
+			if (this.cells != null)
+			{
+				int y = 0;
+
+				foreach (var cell in this.cells)
+				{
+					var rect = this.GetCellsRect (y);
+
+					if (pos.Y >= rect.Bottom && pos.Y < rect.Top)
+					{
+						return cell.Tooltip;
+					}
+
+					y++;
+				}
+			}
+
+			return null;
 		}
 
 

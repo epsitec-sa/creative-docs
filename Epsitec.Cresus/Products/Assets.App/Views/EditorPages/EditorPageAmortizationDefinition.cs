@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateAccountController (parent, ObjectField.Account6);
 			this.CreateAccountController (parent, ObjectField.Account7);
 
-			this.entrySamples = new EntrySamples (this.accessor);
+			this.entrySamples = new EntrySamples (this.accessor, null);
 			this.entrySamples.CreateUI (parent);
 		}
 

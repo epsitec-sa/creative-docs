@@ -11,12 +11,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public abstract class AbstractTreeTableCell
 	{
-		public AbstractTreeTableCell(CellState cellState)
+		public AbstractTreeTableCell(CellState cellState, string tooltip = null)
 		{
 			this.CellState = cellState;
+			this.Tooltip   = tooltip;
 		}
 
 		public readonly CellState				CellState;
+		public readonly string					Tooltip;
 
 
 		public override string ToString()

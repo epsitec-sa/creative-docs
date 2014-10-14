@@ -75,9 +75,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public string GetSample(EntryScenario scenario, int column)
+		public void GetSample(EntryScenario scenario, int column, out string text, out string tooltip)
 		{
-			var aa = new AmortizedAmount (AmortizationType.Unknown, null, null, null, null, null, null, null, null, scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
+			//	Retourne le texte permettant de peupler le contrôleur qui montre les
+			//	exemples d'écritures pour les différents scénarios (EntrySamples).
+			var aa = new AmortizedAmount (AmortizationType.Unknown,
+				null, null, null, null, null, null, null, null,
+				scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
 
 			var a1 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account1);
 			var a2 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account2);
@@ -89,20 +93,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var a8 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account8);
 
 			var ea = new EntryAccounts (a1, a2, a3, a4, a5, a6, a7, a8);
+
+			text    = null;
+			tooltip = null;
 			
 			switch (column)
 			{
 				case 0:
-					return this.GetDebit (aa, null, ea, GetEntryPropertiesType.Base);
+					text = this.GetDebit (aa, null, ea, GetEntryPropertiesType.Sample, out tooltip);
+					break;
 			
 				case 1:
-					return this.GetCredit (aa, null, ea, GetEntryPropertiesType.Base);
+					text = this.GetCredit (aa, null, ea, GetEntryPropertiesType.Sample, out tooltip);
+					break;
 			
 				case 2:
-					return this.GetTitle (aa, null, GetEntryPropertiesType.Base);
-			
-				default:
-					return null;
+					text = this.GetTitle (aa, null, GetEntryPropertiesType.Sample);
+					break;
 			}
 		}
 
@@ -112,6 +119,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			Base,
 			Current,
 			EditedOrBase,
+			Sample,
 		}
 
 		public EntryProperties GetEntryProperties(AmortizedAmount amount, GetEntryPropertiesType type)
@@ -124,11 +132,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			var entryAccounts = this.GetEntryAccounts (amount);
 
+			string tooltip;
+
 			return new EntryProperties
 			{
 				Date   = this.GetDate   (amount, assetEvent,                type),
-				Debit  = this.GetDebit  (amount, assetEvent, entryAccounts, type),
-				Credit = this.GetCredit (amount, assetEvent, entryAccounts, type),
+				Debit  = this.GetDebit  (amount, assetEvent, entryAccounts, type, out tooltip),
+				Credit = this.GetCredit (amount, assetEvent, entryAccounts, type, out tooltip),
 				Stamp  = this.GetStamp  (amount, assetEvent,                type),
 				Title  = this.GetTitle  (amount, assetEvent,                type),
 				Amount = this.GetValue  (amount, assetEvent,                type),
@@ -206,9 +216,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return amount.Date;
 		}
 
-		private string GetDebit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type)
+		private string GetDebit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
 		{
 			//	Retourne le compte à utiliser au débit de l'écriture.
+			tooltip = null;
+
 			if (type == GetEntryPropertiesType.Current)
 			{
 				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedDebit) as DataStringProperty;
@@ -230,19 +242,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account3);
 					return entryAccouts.Account3;  // compte d'immobilisation
 
 				case EntryScenario.Sale:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account2);
 					return entryAccouts.Account2;  // compte contrepartie de vente
 
 				case EntryScenario.AmortizationAuto:
 				case EntryScenario.AmortizationExtra:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account5);
 					return entryAccouts.Account5;  // compte de charge d'amortissement
 
 				case EntryScenario.Increase:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account6);
 					return entryAccouts.Account6;  // compte de revalorisation
 
 				case EntryScenario.Decrease:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account7);
 					return entryAccouts.Account7;  // compte de réévaluation
 
 				default:
@@ -250,9 +267,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetCredit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type)
+		private string GetCredit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
 		{
 			//	Retourne le compte à utiliser au crédit de l'écriture.
+			tooltip = null;
+
 			if (type == GetEntryPropertiesType.Current)
 			{
 				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedCredit) as DataStringProperty;
@@ -274,17 +293,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account1);
 					return entryAccouts.Account1;  // compte contrepartie d'achat
 
 				case EntryScenario.Sale:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account3);
 					return entryAccouts.Account3;  // compte d'immobilisation 
 
 				case EntryScenario.AmortizationAuto:
 				case EntryScenario.AmortizationExtra:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account4);
 					return entryAccouts.Account4;  // compte d'amortissement
 
 				case EntryScenario.Increase:
 				case EntryScenario.Decrease:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.Account4);
 					return entryAccouts.Account4;  // compte d'amortissement
 
 				default:
@@ -337,10 +360,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			var guid = amount.AssetGuid;
-			var timestamp = new Timestamp (amount.Date, 0);
+			string name;
 
-			var name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
+			if (type == GetEntryPropertiesType.Sample)
+			{
+				name = Res.Strings.Entries.Sample.DummyAsset.ToString ();
+			}
+			else
+			{
+				var guid = amount.AssetGuid;
+				var timestamp = new Timestamp (amount.Date, 0);
+
+				name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
+			}
+
 			var title = EnumDictionaries.GetEntryScenarioTitle (amount.EntryScenario);
 
 			if (string.IsNullOrEmpty (title))

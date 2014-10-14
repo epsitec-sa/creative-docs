@@ -8,8 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellDecimal : AbstractTreeTableCell
 	{
-		public TreeTableCellDecimal(decimal? value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellDecimal(decimal? value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Value = value;
 		}

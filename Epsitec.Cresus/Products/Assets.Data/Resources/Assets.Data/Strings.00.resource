@@ -20,11 +20,11 @@
   <data name="Enum.ObjectField.ResidualValue" id="KH">Valeur résiduelle</data>
   <data name="Enum.ObjectField.Account1" id="KI">Contrepartie achat</data>
   <data name="Enum.ObjectField.Account2" id="KJ">Contrepartie vente</data>
-  <data name="Enum.ObjectField.Account3" id="KK">Compte d'immob.</data>
-  <data name="Enum.ObjectField.Account4" id="KL">Compte d'amort.</data>
-  <data name="Enum.ObjectField.Account5" id="KM">Charge d'amort.</data>
-  <data name="Enum.ObjectField.Account6" id="KN">Compte revalorisation</data>
-  <data name="Enum.ObjectField.Account7" id="KO">Compte réévaluation</data>
+  <data name="Enum.ObjectField.Account3" id="KK">Compte d'immobilisation</data>
+  <data name="Enum.ObjectField.Account4" id="KL">Compte d'amortissement</data>
+  <data name="Enum.ObjectField.Account5" id="KM">Charge d'amortissement</data>
+  <data name="Enum.ObjectField.Account6" id="KN">Compte revalorisation (augmentation)</data>
+  <data name="Enum.ObjectField.Account7" id="KO">Compte réévaluation (diminution)</data>
   <data name="Enum.ObjectField.Account8" id="KP">?</data>
   <data name="Enum.ObjectField.AccountCategory" id="KQ">Catégorie</data>
   <data name="Enum.ObjectField.AccountType" id="KR">Type</data>

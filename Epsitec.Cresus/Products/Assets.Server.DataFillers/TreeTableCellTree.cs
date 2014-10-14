@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellTree : AbstractTreeTableCell
 	{
-		public TreeTableCellTree(int level, NodeType type, string value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellTree(int level, NodeType type, string value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Level = level;
 			this.Type  = type;

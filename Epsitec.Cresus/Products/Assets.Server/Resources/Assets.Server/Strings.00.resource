@@ -64,4 +64,5 @@
   <data name="WarningsLogic.Undefined.Accounts" id="KT1">Le plan comptable n'est pas défini</data>
   <data name="WarningsLogic.Undefined.Assets" id="KU1">Il n'existe aucun objet d'immobilisation</data>
   <data name="WarningsLogic.Ratio.Percent" id="KV1">Le total des ratios n'est pas de 100% dans {0}</data>
+  <data name="Entries.Sample.DummyAsset" id="K02">Véhicule XYZ</data>
 </bundle>

@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellAmortizedAmount : AbstractTreeTableCell
 	{
-		public TreeTableCellAmortizedAmount(AmortizedAmount? value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellAmortizedAmount(AmortizedAmount? value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Value = value;
 		}

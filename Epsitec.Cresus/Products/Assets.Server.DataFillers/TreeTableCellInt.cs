@@ -8,8 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class TreeTableCellInt : AbstractTreeTableCell
 	{
-		public TreeTableCellInt(int? value, CellState cellState)
-			: base (cellState)
+		public TreeTableCellInt(int? value, CellState cellState, string tooltip = null)
+			: base (cellState, tooltip)
 		{
 			this.Value = value;
 		}

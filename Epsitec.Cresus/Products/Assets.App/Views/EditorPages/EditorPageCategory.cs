@@ -39,7 +39,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateDecimalController (parent, ObjectField.Round,         DecimalFormat.Amount);
 			this.CreateDecimalController (parent, ObjectField.ResidualValue, DecimalFormat.Amount);
 
-
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
 			//	On permet de choisir un compte dans le dernier plan comptable importé.
@@ -54,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateAccountController (parent, ObjectField.Account6, forcedDate);
 			this.CreateAccountController (parent, ObjectField.Account7, forcedDate);
 
-			this.entrySamples = new EntrySamples (this.accessor);
+			this.entrySamples = new EntrySamples (this.accessor, forcedDate);
 			this.entrySamples.CreateUI (parent);
 		}
 

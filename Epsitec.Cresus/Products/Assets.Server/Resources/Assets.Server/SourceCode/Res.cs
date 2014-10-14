@@ -107,6 +107,21 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class Entries
+			{
+				public static class Sample
+				{
+					//	designer:str/IUK0201
+					public static global::Epsitec.Common.Types.FormattedText DummyAsset
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544384));
+						}
+					}
+				}
+			}
+			
 			public static class Enum
 			{
 				public static class AccountCategory
@@ -733,6 +748,21 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544335);
+					}
+				}
+			}
+			
+			public static class Entries
+			{
+				public static class Sample
+				{
+					//	designer:str/IUK0201
+					public static global::Epsitec.Common.Support.Druid DummyAsset
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544384);
+						}
 					}
 				}
 			}
