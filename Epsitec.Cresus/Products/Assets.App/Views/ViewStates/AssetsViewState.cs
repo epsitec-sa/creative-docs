@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public bool								ShowGraphic;
 
 
-		public override bool IsUsed(BaseType baseType, Guid guid)
+		public override bool IsReferenced(BaseType baseType, Guid guid)
 		{
 			return baseType == BaseType.Assets
 				&& guid == this.SelectedGuid;

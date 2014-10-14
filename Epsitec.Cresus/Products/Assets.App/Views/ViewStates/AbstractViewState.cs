@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		#endregion
 
 
-		public virtual bool IsUsed(BaseType baseType, Guid guid)
+		public virtual bool IsReferenced(BaseType baseType, Guid guid)
 		{
 			return false;
 		}

@@ -419,6 +419,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		/// <summary>
+		/// Cet agent de nettoyage s'occupe d'enlever un objet supprimé qui serait référencé
+		/// par un AbstractViewState. Par exemple, si vous sélectionnez un objet d'immobilisation,
+		/// il apparaît dans le menu des dernières vues utilisées (lastViewStates). Il sera
+		/// également possible d'y revenir avec la commande Navigation.Back. S'il est supprimé,
+		/// il faut impérativement empêcher ces opérations.
+		/// </summary>
 		private class CleanerAgent : AbstractCleanerAgent
 		{
 			public CleanerAgent(DataAccessor accessor, MainView mainView)
@@ -448,7 +455,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			private void Clean(BaseType baseType, Guid guid, List<AbstractViewState> list)
 			{
-				var toDelete = list.Where (x => x.IsUsed (baseType, guid)).ToArray ();
+				var toDelete = list.Where (x => x.IsReferenced (baseType, guid)).ToArray ();
 
 				foreach (var delete in toDelete)
 				{
