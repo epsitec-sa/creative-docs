@@ -75,6 +75,38 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public string GetSample(EntryScenario scenario, int column)
+		{
+			var aa = new AmortizedAmount (AmortizationType.Unknown, null, null, null, null, null, null, null, null, scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
+
+			var a1 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account1);
+			var a2 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account2);
+			var a3 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account3);
+			var a4 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account4);
+			var a5 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account5);
+			var a6 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account6);
+			var a7 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account7);
+			var a8 = this.accessor.EditionAccessor.GetFieldString (ObjectField.Account8);
+
+			var ea = new EntryAccounts (a1, a2, a3, a4, a5, a6, a7, a8);
+			
+			switch (column)
+			{
+				case 0:
+					return this.GetDebit (aa, null, ea, GetEntryPropertiesType.Base);
+			
+				case 1:
+					return this.GetCredit (aa, null, ea, GetEntryPropertiesType.Base);
+			
+				case 2:
+					return this.GetTitle (aa, null, GetEntryPropertiesType.Base);
+			
+				default:
+					return null;
+			}
+		}
+
+
 		public enum GetEntryPropertiesType
 		{
 			Base,

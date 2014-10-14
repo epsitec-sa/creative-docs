@@ -202,6 +202,7 @@
     <Compile Include="Popups\HistoryController.cs" />
     <Compile Include="Views\FieldControllers\BoolFieldController.cs" />
     <Compile Include="Views\ReportChoiceController.cs" />
+    <Compile Include="Views\EntrySamples.cs" />
     <Compile Include="Views\ToolbarControllers\WarningsToolbarTreeTableController.cs" />
     <Compile Include="Views\ViewStates\WarningsViewState.cs" />
     <Compile Include="Views\WarningsView.cs" />

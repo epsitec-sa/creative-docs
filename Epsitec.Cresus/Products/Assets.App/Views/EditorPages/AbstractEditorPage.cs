@@ -191,6 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 
 			this.UpdateColorsExplanation ();
+			this.UpdateEntrySamples ();
 		}
 
 
@@ -231,6 +232,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 
 			this.colorsExplanationController.Update ();
+		}
+
+		private void UpdateEntrySamples()
+		{
+			if (this.entrySamples != null)
+			{
+				this.entrySamples.Update ();
+			}
 		}
 
 
@@ -987,6 +996,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected void OnValueEdited(ObjectField field)
 		{
 			this.UpdateColorsExplanation ();
+			this.UpdateEntrySamples ();
+
 			this.ValueEdited.Raise (this, field);
 		}
 
@@ -1010,6 +1021,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected EventType							eventType;
 		protected int								tabIndex;
 		protected bool								isLocked;
+		protected EntrySamples						entrySamples;
 		private ObjectField							fieldFocus;
 	}
 }

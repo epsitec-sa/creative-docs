@@ -466,4 +466,5 @@
   <data name="Popup.CreateGroup.Number" id="KKH">Numéro</data>
   <data name="WarningView.Perfect" id="KLH">Aucun avertissement.&lt;br/&gt;Crésus Immobilisation ne détecte aucun problème.</data>
   <data name="Popup.CreateAsset.Groups" id="KMH">Groupes</data>
+  <data name="EntrySamples.Title" id="KNH">Exemples d'écritures</data>
 </bundle>

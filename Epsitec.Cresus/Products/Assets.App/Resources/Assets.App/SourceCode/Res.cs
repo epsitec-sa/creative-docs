@@ -2032,6 +2032,18 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class EntrySamples
+			{
+				//	designer:str/JUKNH01
+				public static global::Epsitec.Common.Types.FormattedText Title
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544887));
+					}
+				}
+			}
+			
 			public static class Enum
 			{
 				public static class DateType
@@ -6411,6 +6423,18 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544753);
+					}
+				}
+			}
+			
+			public static class EntrySamples
+			{
+				//	designer:str/JUKNH01
+				public static global::Epsitec.Common.Support.Druid Title
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544887);
 					}
 				}
 			}
