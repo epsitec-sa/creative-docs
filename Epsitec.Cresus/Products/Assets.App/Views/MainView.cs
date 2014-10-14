@@ -440,6 +440,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.Clean (baseType, guid, this.mainView.historyViewStates);
 
+					this.mainView.historyPosition--;
 					this.mainView.historyPosition = System.Math.Max (this.mainView.historyPosition, 0);
 					this.mainView.historyPosition = System.Math.Min (this.mainView.historyPosition, this.mainView.historyViewStates.Count-1);
 				}

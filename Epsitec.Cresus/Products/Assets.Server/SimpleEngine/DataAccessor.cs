@@ -328,7 +328,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			if (obj != null)
 			{
+				//	Appelle tous les agents de nettoyage enregistrés.
 				this.cleanerAgents.ForEach (x => x.Clean (baseType, obj.Guid));
+
+				if (baseType == BaseType.Assets)
+				{
+					//	Supprime tous les événements, ce qui est nécessaire pour
+					//	supprimer proprement toutes les écritures liées.
+					while (obj.EventsCount > 0)
+					{
+						this.RemoveObjectEvent (obj, obj.GetEvent (0));
+					}
+				}
 
 				var list = this.mandat.GetData (baseType);
 				list.Remove (obj);

@@ -16,6 +16,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public ObjectField						SortingField;
 
 
+		public override bool IsUsed(BaseType baseType, Guid guid)
+		{
+			return baseType == BaseType.Entries
+				&& guid == this.SelectedGuid;
+		}
+
+
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
 			var o = other as EntriesViewState;
