@@ -20,18 +20,40 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(SortingInstructions instructions)
+		public void SetParams(SortingInstructions instructions, System.Func<Guid, bool> filter = null)
 		{
 			this.sortingInstructions = instructions;
+			this.filter              = filter;
+
 			this.UpdateData ();
 		}
 
+
+		public int SearchIndex(Guid value)
+		{
+			for (int i=0; i<this.outputNodes.Length; i++)
+			{
+				if (this.outputNodes[i].Guid == value)
+				{
+					return i;
+				}
+			}
+
+			return -1;
+		}
 
 		public int Count
 		{
 			get
 			{
-				return this.inputNodes.Count;
+				if (this.outputNodes == null)
+				{
+					return this.inputNodes.Count;
+				}
+				else
+				{
+					return this.outputNodes.Length;
+				}
 			}
 		}
 
@@ -56,16 +78,32 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.outputNodes = SortingMachine<SortableNode>.Sorts
 			(
 				this.sortingInstructions,
-				this.inputNodes.GetNodes (),
+				this.Nodes,
 				null,
 				x => x.PrimarySortValue,
 				x => x.SecondarySortValue
 			).ToArray ();
 		}
 
+		private IEnumerable<SortableNode> Nodes
+		{
+			get
+			{
+				if (this.filter == null)
+				{
+					return this.inputNodes.GetNodes ();
+				}
+				else
+				{
+					return this.inputNodes.GetNodes ().Where (x => this.filter (x.Guid));
+				}
+			}
+		}
+
 
 		private readonly INodeGetter<SortableNode>	inputNodes;
 		private SortableNode[]						outputNodes;
 		private SortingInstructions					sortingInstructions;
+		private System.Func<Guid, bool>				filter;
 	}
 }

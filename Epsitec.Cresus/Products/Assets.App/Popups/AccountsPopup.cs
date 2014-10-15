@@ -117,15 +117,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void CreateFilterUI(Widget parent)
 		{
 			//	Crée la partie inférieure permettant la saisie d'un filtre.
-			const int margin = 5;
-			const int height = 20;
-
 			var footer = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = margin + height + margin,
+				PreferredHeight = AccountsPopup.filterMargins + AccountsPopup.filterHeight + AccountsPopup.filterMargins,
 				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (margin),
+				Padding         = new Margins (AccountsPopup.filterMargins),
 				BackColor       = ColorManager.WindowBackgroundColor,
 			};
 
@@ -152,7 +149,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent        = footer,
 				AutoFocus     = false,
 				Dock          = DockStyle.Right,
-				PreferredSize = new Size (height, height),
+				PreferredSize = new Size (AccountsPopup.filterHeight, AccountsPopup.filterHeight),
 				Margins       = new Margins (10, 0, 0, 0),
 			};
 
@@ -162,7 +159,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				IconUri       = Misc.GetResourceIconUri ("Field.Delete"),
 				AutoFocus     = false,
 				Dock          = DockStyle.Right,
-				PreferredSize = new Size (height, height),
+				PreferredSize = new Size (AccountsPopup.filterHeight, AccountsPopup.filterHeight),
 				Margins       = new Margins (2, 0, 0, 0),
 				Enable        = false,
 			};
@@ -171,7 +168,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.filterField.TextChanged += delegate
 			{
 				this.UpdateGetter ();
-				//?this.visibleSelectedRow = this.nodeGetter.SearchIndex (this.selectedGuid);
 				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (this.selectedGuid);
 				this.UpdateController ();
 				clearButton.Enable = !string.IsNullOrEmpty (this.filterField.Text);
@@ -215,9 +211,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock             = DockStyle.Left,
 			};
 
-			this.categoriesRevenusButton       = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Revenus.ToString (),       AccountCategory.Revenu);
-			this.categoriesDepensesButton      = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Depenses.ToString (),      AccountCategory.Depense);
-			this.categoriesRecettesButton      = this.CreateCaregoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Recettes.ToString (),      AccountCategory.Recette);
+			this.categoriesRevenusButton       = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Revenus.ToString (),       AccountCategory.Revenu);
+			this.categoriesDepensesButton      = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Depenses.ToString (),      AccountCategory.Depense);
+			this.categoriesRecettesButton      = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Recettes.ToString (),      AccountCategory.Recette);
 
 			this.categoriesFrame1 = new FrameBox
 			{
@@ -237,16 +233,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock             = DockStyle.Left,
 			};
 
-			this.categoriesActifsButton        = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Actifs.ToString (),        AccountCategory.Actif);
-			this.categoriesPassifsButton       = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Passifs.ToString (),       AccountCategory.Passif);
-			this.categoriesChargesButton       = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Charges.ToString (),       AccountCategory.Charge);
-			this.categoriesProduitsButton      = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Produits.ToString (),      AccountCategory.Produit);
-			this.categoriesExploitationsButton = this.CreateCaregoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Exploitations.ToString (), AccountCategory.Exploitation);
+			this.categoriesActifsButton        = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Actifs.ToString (),        AccountCategory.Actif);
+			this.categoriesPassifsButton       = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Passifs.ToString (),       AccountCategory.Passif);
+			this.categoriesChargesButton       = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Charges.ToString (),       AccountCategory.Charge);
+			this.categoriesProduitsButton      = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Produits.ToString (),      AccountCategory.Produit);
+			this.categoriesExploitationsButton = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Exploitations.ToString (), AccountCategory.Exploitation);
 
 			this.UpdateCategories ();
 		}
 
-		private CheckButton CreateCaregoryButton(Widget parent, string text, AccountCategory category)
+		private CheckButton CreateCategoryButton(Widget parent, string text, AccountCategory category)
 		{
 			if ((this.existingCategories & category) == 0)
 			{
@@ -339,7 +335,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			int dy = AbstractPopup.titleHeight
 				   + rows * AccountsPopup.rowHeight
-				   + (int) AbstractScroller.DefaultBreadth;
+				   + (int) AbstractScroller.DefaultBreadth
+				   + AccountsPopup.filterMargins*2
+				   + AccountsPopup.filterHeight;
 
 			return new Size (dx, dy);
 		}
@@ -368,11 +366,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (this.categoriesFrame1.Visibility)
 			{
-				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
+				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
 			}
 			else
 			{
-				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
+				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
 			}
 		}
 
@@ -486,7 +484,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int rowHeight = 18;
+		private const int rowHeight     = 18;
+		private const int filterMargins = 5;
+		private const int filterHeight  = 20;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
