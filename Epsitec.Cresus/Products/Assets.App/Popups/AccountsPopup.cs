@@ -23,12 +23,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	{
 		private AccountsPopup(DataAccessor accessor, BaseType baseType, string title, string selectedAccount, AccountCategory categories)
 		{
-			this.accessor   = accessor;
-			this.baseType   = baseType;
-			this.title      = title;
-			this.categories = categories;
+			this.accessor = accessor;
+			this.baseType = baseType;
+			this.title    = title;
 
 			this.controller = new NavigationTreeTableController();
+
+			var existingCategories = AccountsLogic.GetCategories (this.accessor, this.baseType);
+			this.filterController = new AccountsFilterController (existingCategories);
+			this.filterController.Categories = categories;
 
 			var primaryNodeGetter = this.accessor.GetNodeGetter (this.baseType);
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, baseType, primaryNodeGetter);
@@ -41,8 +44,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateGetter ();
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedAccount);
 			this.UpdateSelectedGuid ();
-
-			this.existingCategories = AccountsLogic.GetActegories (this.accessor, this.baseType);
 
 			//	Connexion des événements.
 			this.controller.ContentChanged += delegate (object sender, bool crop)
@@ -67,6 +68,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var node = this.nodeGetter[this.visibleSelectedRow];
 				return this.GetNumber (node.Guid);
+			}
+		}
+
+		private AccountCategory Categories
+		{
+			get
+			{
+				return this.filterController.Categories;
 			}
 		}
 
@@ -107,169 +116,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			TreeTableFiller<TreeNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
 
-			this.CreateCategoriesUI (this.mainFrameBox);
 			this.CreateFilterUI (this.mainFrameBox);
 
-			this.UpdateMiscButton ();
 			this.UpdateController ();
 		}
 
 		private void CreateFilterUI(Widget parent)
 		{
 			//	Crée la partie inférieure permettant la saisie d'un filtre.
-			var footer = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = AccountsPopup.filterMargins + AccountsPopup.filterHeight + AccountsPopup.filterMargins,
-				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (AccountsPopup.filterMargins),
-				BackColor       = ColorManager.WindowBackgroundColor,
-			};
+			this.filterController.CreateUI (parent);
 
-			var text = Res.Strings.Popup.Accounts.Filter.ToString ();
-
-			new StaticText
-			{
-				Parent           = footer,
-				Text             = text,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-				PreferredWidth   = 10 + text.GetTextWidth (),
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
-			};
-
-			this.filterField = new TextField
-			{
-				Parent           = footer,
-				Dock             = DockStyle.Fill,
-			};
-
-			this.miscButton = new IconButton
-			{
-				Parent        = footer,
-				AutoFocus     = false,
-				Dock          = DockStyle.Right,
-				PreferredSize = new Size (AccountsPopup.filterHeight, AccountsPopup.filterHeight),
-				Margins       = new Margins (10, 0, 0, 0),
-			};
-
-			var clearButton = new IconButton
-			{
-				Parent        = footer,
-				IconUri       = Misc.GetResourceIconUri ("Field.Delete"),
-				AutoFocus     = false,
-				Dock          = DockStyle.Right,
-				PreferredSize = new Size (AccountsPopup.filterHeight, AccountsPopup.filterHeight),
-				Margins       = new Margins (2, 0, 0, 0),
-				Enable        = false,
-			};
-
-			//	Connexions des événements.
-			this.filterField.TextChanged += delegate
+			this.filterController.FilterChanged += delegate
 			{
 				this.UpdateGetter ();
 				this.visibleSelectedRow = this.nodeGetter.SearchBestIndex (this.selectedGuid);
 				this.UpdateController ();
-				clearButton.Enable = !string.IsNullOrEmpty (this.filterField.Text);
 			};
-
-			clearButton.Clicked += delegate
-			{
-				this.filterField.Text = null;
-			};
-
-			miscButton.Clicked += delegate
-			{
-				this.categoriesFrame1.Visibility = !this.categoriesFrame1.Visibility;
-				this.categoriesFrame2.Visibility = !this.categoriesFrame2.Visibility;
-				this.UpdateMiscButton ();
-			};
-
-			this.filterField.Focus ();
-		}
-
-		private void CreateCategoriesUI(Widget parent)
-		{
-			const int margin = 5;
-			const int height = 20;
-
-			this.categoriesFrame2 = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = height + margin,
-				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (margin, margin, 0, margin),
-				BackColor       = ColorManager.WindowBackgroundColor,
-				Visibility      = false,
-			};
-
-			new FrameBox
-			{
-				Parent           = this.categoriesFrame2,
-				PreferredWidth   = 10 + Res.Strings.Popup.Accounts.Filter.ToString ().GetTextWidth (),
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
-			};
-
-			this.categoriesRevenusButton       = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Revenus.ToString (),       AccountCategory.Revenu);
-			this.categoriesDepensesButton      = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Depenses.ToString (),      AccountCategory.Depense);
-			this.categoriesRecettesButton      = this.CreateCategoryButton (this.categoriesFrame2, Res.Strings.Popup.Accounts.Category.Recettes.ToString (),      AccountCategory.Recette);
-
-			this.categoriesFrame1 = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = margin + height,
-				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (margin, margin, margin, 0),
-				BackColor       = ColorManager.WindowBackgroundColor,
-				Visibility      = false,
-			};
-
-			new FrameBox
-			{
-				Parent           = this.categoriesFrame1,
-				PreferredWidth   = 10 + Res.Strings.Popup.Accounts.Filter.ToString ().GetTextWidth (),
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
-			};
-
-			this.categoriesActifsButton        = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Actifs.ToString (),        AccountCategory.Actif);
-			this.categoriesPassifsButton       = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Passifs.ToString (),       AccountCategory.Passif);
-			this.categoriesChargesButton       = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Charges.ToString (),       AccountCategory.Charge);
-			this.categoriesProduitsButton      = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Produits.ToString (),      AccountCategory.Produit);
-			this.categoriesExploitationsButton = this.CreateCategoryButton (this.categoriesFrame1, Res.Strings.Popup.Accounts.Category.Exploitations.ToString (), AccountCategory.Exploitation);
-
-			this.UpdateCategories ();
-		}
-
-		private CheckButton CreateCategoryButton(Widget parent, string text, AccountCategory category)
-		{
-			if ((this.existingCategories & category) == 0)
-			{
-				return null;
-			}
-			else
-			{
-				var button = new CheckButton
-				{
-					Parent         = parent,
-					Text           = text,
-					PreferredWidth = 20 + text.GetTextWidth (),
-					Margins        = new Margins (0, 10, 0, 0),
-					Dock           = DockStyle.Left,
-					AutoToggle     = false,
-				};
-
-				button.Clicked += delegate
-				{
-					this.categories ^= category;
-					this.UpdateCategories ();
-					this.UpdateGetter ();
-					this.UpdateController ();
-				};
-
-				return button;
-			}
 		}
 
 
@@ -336,8 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int dy = AbstractPopup.titleHeight
 				   + rows * AccountsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth
-				   + AccountsPopup.filterMargins*2
-				   + AccountsPopup.filterHeight;
+				   + AbstractFilterController.height;
 
 			return new Size (dx, dy);
 		}
@@ -362,47 +223,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void UpdateMiscButton()
-		{
-			if (this.categoriesFrame1.Visibility)
-			{
-				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
-			}
-			else
-			{
-				this.miscButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
-			}
-		}
-
-		private void UpdateCategories()
-		{
-			this.UpdateCategory (this.categoriesActifsButton,        AccountCategory.Actif);
-			this.UpdateCategory (this.categoriesPassifsButton,       AccountCategory.Passif);
-			this.UpdateCategory (this.categoriesChargesButton,       AccountCategory.Charge);
-			this.UpdateCategory (this.categoriesProduitsButton,      AccountCategory.Produit);
-			this.UpdateCategory (this.categoriesExploitationsButton, AccountCategory.Exploitation);
-			this.UpdateCategory (this.categoriesRevenusButton,       AccountCategory.Revenu);
-			this.UpdateCategory (this.categoriesDepensesButton,      AccountCategory.Depense);
-			this.UpdateCategory (this.categoriesRecettesButton,      AccountCategory.Recette);
-		}
-
-		private void UpdateCategory(CheckButton button, AccountCategory category)
-		{
-			if (button != null)
-			{
-				button.ActiveState = (this.categories & category) == 0 ? ActiveState.No : ActiveState.Yes;
-			}
-		}
-
 		private void UpdateGetter()
 		{
-			if (this.filterField == null || string.IsNullOrEmpty (this.filterField.Text))
+			if (this.filterController == null || string.IsNullOrEmpty (this.filterController.Filter))
 			{
 				this.searchEngine = null;
 			}
 			else
 			{
-				var definition = SearchDefinition.Default.FromPattern (this.filterField.Text);
+				var definition = SearchDefinition.Default.FromPattern (this.filterController.Filter);
 				this.searchEngine = new SearchEngine (definition);
 			}
 
@@ -419,7 +248,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var category = (AccountCategory) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountCategory);
 
-				if ((this.categories & category) == 0)
+				if ((this.filterController.Categories & category) == 0)
 				{
 					return false;  // caché
 				}
@@ -470,14 +299,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			
 			popup.Navigate += delegate (object sender, string account)
 			{
-				action (account, popup.categories);
+				action (account, popup.Categories);
 			};
 
 			popup.Closed += delegate (object sender, ReasonClosure raison)
 			{
 				if (raison == ReasonClosure.AcceptKey)
 				{
-					action (popup.SelectedAccount, popup.categories);
+					action (popup.SelectedAccount, popup.Categories);
 				}
 			};
 		}
@@ -485,8 +314,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int rowHeight     = 18;
-		private const int filterMargins = 5;
-		private const int filterHeight  = 20;
 
 		private readonly DataAccessor					accessor;
 		private readonly BaseType						baseType;
@@ -494,23 +321,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly NavigationTreeTableController	controller;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
-		private readonly AccountCategory				existingCategories;
+		private readonly AccountsFilterController		filterController;
 
-		private AccountCategory							categories;
 		private int										visibleSelectedRow;
 		private Guid									selectedGuid;
-		private TextField								filterField;
-		private IconButton								miscButton;
-		private FrameBox								categoriesFrame1;
-		private FrameBox								categoriesFrame2;
-		private CheckButton								categoriesActifsButton;
-		private CheckButton								categoriesPassifsButton;
-		private CheckButton								categoriesChargesButton;
-		private CheckButton								categoriesProduitsButton;
-		private CheckButton								categoriesExploitationsButton;
-		private CheckButton								categoriesRevenusButton;
-		private CheckButton								categoriesDepensesButton;
-		private CheckButton								categoriesRecettesButton;
 		private SearchEngine							searchEngine;
 	}
 }

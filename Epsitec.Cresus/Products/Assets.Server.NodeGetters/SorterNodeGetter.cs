@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateData ();
 		}
 
-
 		public int SearchIndex(Guid value)
 		{
 			for (int i=0; i<this.outputNodes.Length; i++)
@@ -41,6 +40,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			return -1;
 		}
+
 
 		public int Count
 		{

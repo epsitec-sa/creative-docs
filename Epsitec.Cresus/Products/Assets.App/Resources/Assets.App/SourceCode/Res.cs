@@ -3072,14 +3072,6 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
 						}
 					}
-					//	designer:str/JUKTG01
-					public static global::Epsitec.Common.Types.FormattedText Filter
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544861));
-						}
-					}
 					//	designer:str/JUKI001
 					public static global::Epsitec.Common.Types.FormattedText NoAccounts
 					{
@@ -4044,6 +4036,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544434));
+						}
+					}
+				}
+				
+				public static class FilterController
+				{
+					//	designer:str/JUKTG01
+					public static global::Epsitec.Common.Types.FormattedText Label
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544861));
 						}
 					}
 				}
@@ -7467,14 +7471,6 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
 						}
 					}
-					//	designer:str/JUKTG01
-					public static global::Epsitec.Common.Support.Druid Filter
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544861);
-						}
-					}
 					//	designer:str/JUKI001
 					public static global::Epsitec.Common.Support.Druid NoAccounts
 					{
@@ -8439,6 +8435,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544434);
+						}
+					}
+				}
+				
+				public static class FilterController
+				{
+					//	designer:str/JUKTG01
+					public static global::Epsitec.Common.Support.Druid Label
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544861);
 						}
 					}
 				}

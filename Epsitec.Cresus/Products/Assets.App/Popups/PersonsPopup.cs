@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.accessor = accessor;
 
 			this.controller = new NavigationTreeTableController ();
+			this.filterController = new SimpleFilterController ();
 
 			var primary     = this.accessor.GetNodeGetter (BaseType.Persons);
 			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
@@ -84,57 +85,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private void CreateFilterUI(Widget parent)
 		{
 			//	Crée la partie inférieure permettant la saisie d'un filtre.
-			var footer = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = PersonsPopup.filterMargins + PersonsPopup.filterHeight + PersonsPopup.filterMargins,
-				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (PersonsPopup.filterMargins),
-				BackColor       = ColorManager.WindowBackgroundColor,
-			};
+			this.filterController.CreateUI (parent);
 
-			var text = Res.Strings.Popup.Accounts.Filter.ToString ();
-
-			new StaticText
-			{
-				Parent           = footer,
-				Text             = text,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
-				PreferredWidth   = 10 + text.GetTextWidth (),
-				Margins          = new Margins (0, 10, 0, 0),
-				Dock             = DockStyle.Left,
-			};
-
-			this.filterField = new TextField
-			{
-				Parent           = footer,
-				Dock             = DockStyle.Fill,
-			};
-
-			var clearButton = new IconButton
-			{
-				Parent        = footer,
-				IconUri       = Misc.GetResourceIconUri ("Field.Delete"),
-				AutoFocus     = false,
-				Dock          = DockStyle.Right,
-				PreferredSize = new Size (PersonsPopup.filterHeight, PersonsPopup.filterHeight),
-				Margins       = new Margins (2, 0, 0, 0),
-				Enable        = false,
-			};
-
-			//	Connexions des événements.
-			this.filterField.TextChanged += delegate
+			this.filterController.FilterChanged += delegate
 			{
 				this.UpdateAfterTextChanged ();
-				clearButton.Enable = !string.IsNullOrEmpty (this.filterField.Text);
 			};
-
-			clearButton.Clicked += delegate
-			{
-				this.filterField.Text = null;
-			};
-
-			this.filterField.Focus ();
 		}
 
 
@@ -241,8 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + PersonsPopup.headerHeight
 				   + rows * PersonsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth
-				   + PersonsPopup.filterMargins*2
-				   + PersonsPopup.filterHeight;
+				   + AbstractFilterController.height;
 
 			return new Size (dx, dy);
 		}
@@ -250,13 +205,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateGetter()
 		{
-			if (this.filterField == null || string.IsNullOrEmpty (this.filterField.Text))
+			if (this.filterController == null || string.IsNullOrEmpty (this.filterController.Filter))
 			{
 				this.searchEngine = null;
 			}
 			else
 			{
-				var definition = SearchDefinition.Default.FromPattern (this.filterField.Text);
+				var definition = SearchDefinition.Default.FromPattern (this.filterController.Filter);
 				this.searchEngine = new SearchEngine (definition);
 			}
 
@@ -338,17 +293,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int headerHeight  = 22;
 		private const int rowHeight     = 18;
-		private const int filterMargins = 5;
-		private const int filterHeight  = 20;
 		private const int popupWidth    = 500;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
+		private readonly SimpleFilterController			filterController;
 		private readonly SorterNodeGetter				nodeGetter;
 		private readonly PersonsTreeTableFiller			dataFiller;
 
 		private int										visibleSelectedRow;
-		private TextField								filterField;
 		private SearchEngine							searchEngine;
 	}
 }

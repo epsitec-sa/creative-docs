@@ -447,7 +447,7 @@
   <data name="Popup.Report.CustomTitle" id="KQG">Titre personnalisé</data>
   <data name="Popup.AddFavorite.Title" id="KRG">Ajouter le rapport aux favoris</data>
   <data name="Popup.AddFavorite.Radios" id="KSG">Mettre à jour le favori existant&lt;br/&gt;Créer un nouveau favori</data>
-  <data name="Popup.Accounts.Filter" id="KTG">Chercher</data>
+  <data name="Popup.FilterController.Label" id="KTG">Chercher</data>
   <data name="Popup.Accounts.Category.Passifs" id="KUG">Passifs</data>
   <data name="Popup.Accounts.Category.Actifs" id="KVG">Actifs</data>
   <data name="Popup.Accounts.Category.Charges" id="K0H">Charges</data>
