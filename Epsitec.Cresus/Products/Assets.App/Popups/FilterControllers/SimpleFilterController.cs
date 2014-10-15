@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
+	/// <summary>
+	/// Contrôleur tout simple, avec juste une ligne de recherche.
+	/// </summary>
 	public class SimpleFilterController : AbstractFilterController
 	{
 	}

@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private string SelectedAccount
+		private string							SelectedAccount
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private AccountCategory Categories
+		private AccountCategory					Categories
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override bool IsAcceptEnable
+		protected override bool					IsAcceptEnable
 		{
 			get
 			{
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return new Size (dx, dy);
 		}
 
-		private int PopupWidth
+		private int								PopupWidth
 		{
 			get
 			{
@@ -319,9 +319,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly BaseType						baseType;
 		private readonly string							title;
 		private readonly NavigationTreeTableController	controller;
+		private readonly AccountsFilterController		filterController;
 		private readonly GroupTreeNodeGetter			nodeGetter;
 		private readonly AbstractTreeTableFiller<TreeNode> dataFiller;
-		private readonly AccountsFilterController		filterController;
 
 		private int										visibleSelectedRow;
 		private Guid									selectedGuid;

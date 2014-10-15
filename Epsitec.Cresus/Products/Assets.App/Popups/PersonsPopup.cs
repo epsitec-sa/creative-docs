@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class PersonsPopup : AbstractPopup
 	{
-		public PersonsPopup(DataAccessor accessor, Guid selectedGuid)
+		private PersonsPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateController ();
 		}
 
-		private Guid SelectedGuid
+		private Guid							SelectedGuid
 		{
 			get
 			{
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override bool IsAcceptEnable
+		protected override bool					IsAcceptEnable
 		{
 			get
 			{
