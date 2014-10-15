@@ -320,19 +320,6 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 160));
 			}
 			
-			public static class PersonsPopup
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (PersonsPopup.Next, null);
-				}
-				
-				//	designer:cap/JUK2601
-				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 194));
-				//	designer:cap/JUK3601
-				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 195));
-			}
-			
 			public static class Popup
 			{
 				internal static void _Initialize()
@@ -866,14 +853,6 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Paste = 0x7D300014000071L;
 				//	designer:cap/JUK0501
 				public const long Prev = 0x7D3000140000A0L;
-			}
-			
-			public static class PersonsPopup
-			{
-				//	designer:cap/JUK2601
-				public const long Next = 0x7D3000140000C2L;
-				//	designer:cap/JUK3601
-				public const long Prev = 0x7D3000140000C3L;
 			}
 			
 			public static class Popup
@@ -9878,7 +9857,6 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Main._Initialize ();
 			Commands.Main.Navigate._Initialize ();
 			Commands.Persons._Initialize ();
-			Commands.PersonsPopup._Initialize ();
 			Commands.Popup._Initialize ();
 			Commands.Popup.TreeTable._Initialize ();
 			Commands.Reports._Initialize ();
