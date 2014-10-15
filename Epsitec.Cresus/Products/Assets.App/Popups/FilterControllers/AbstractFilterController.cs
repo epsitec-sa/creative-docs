@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
@@ -16,20 +17,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public abstract class AbstractFilterController
 	{
-		public string							Filter
+		public bool								HasSearcher
 		{
-			//	Retourne le texte de recherche donné par l'utilisateur.
 			get
 			{
-				if (this.filterField == null)
-				{
-					return null;
-				}
-				else
-				{
-					return this.filterField.Text;
-				}
+				this.UpdateSearcher ();
+				return this.searchEngine != null;
 			}
+		}
+
+		public bool IsMatching(string text)
+		{
+			this.UpdateSearcher ();
+			return this.searchEngine.IsMatching (text);
 		}
 
 
@@ -65,6 +65,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock             = DockStyle.Fill,
 			};
 
+			this.filterDirty = true;
+
 			if (hasOptions)
 			{
 				this.optionsButton = new IconButton
@@ -88,11 +90,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Enable        = false,
 			};
 
-			this.UpdateOptions ();
+			this.UpdateOptionsButton ();
 
 			//	Connexions des événements.
 			this.filterField.TextChanged += delegate
 			{
+				this.filterDirty = true;
 				this.OnFilterChanged ();
 				clearButton.Enable = !string.IsNullOrEmpty (this.filterField.Text);
 			};
@@ -119,11 +122,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			return false;
 		}
 
-		protected virtual void UpdateOptions()
-		{
-			//	Met à jour les options.
-		}
-
 		protected virtual bool					OptionsVisibility
 		{
 			get
@@ -136,15 +134,38 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private void UpdateSearcher()
+		{
+			//	Met à jour le moteur de recherche, si le filtre a changé.
+			if (this.filterDirty)
+			{
+				if (string.IsNullOrEmpty (this.filterField.Text))
+				{
+					this.searchEngine = null;
+				}
+				else
+				{
+					var definition = SearchDefinition.Default.FromPattern (this.filterField.Text);
+					this.searchEngine = new SearchEngine (definition);
+				}
+
+				this.filterDirty = false;
+			}
+		}
+
+
 		protected void UpdateOptionsButton()
 		{
-			if (this.OptionsVisibility)
+			if (this.optionsButton != null)
 			{
-				this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
-			}
-			else
-			{
-				this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
+				if (this.OptionsVisibility)
+				{
+					this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
+				}
+				else
+				{
+					this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
+				}
 			}
 		}
 
@@ -164,7 +185,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected const int filterMargins = 5;
 		protected const int filterHeight  = 20;
 
+		private SearchEngine							searchEngine;
 		protected TextField								filterField;
-		protected IconButton							optionsButton;
+		private bool									filterDirty;
+		private IconButton								optionsButton;
 	}
 }

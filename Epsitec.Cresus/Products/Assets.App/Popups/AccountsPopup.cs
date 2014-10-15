@@ -225,16 +225,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateGetter()
 		{
-			if (this.filterController == null || string.IsNullOrEmpty (this.filterController.Filter))
-			{
-				this.searchEngine = null;
-			}
-			else
-			{
-				var definition = SearchDefinition.Default.FromPattern (this.filterController.Filter);
-				this.searchEngine = new SearchEngine (definition);
-			}
-
 			this.nodeGetter.SetParams (null, this.dataFiller.DefaultSorting, this.Filter);
 		}
 
@@ -242,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var account = this.accessor.GetObject (this.baseType, guid);
 
-			var accType  = (AccountType) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountType);
+			var accType = (AccountType) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountType);
 
 			if (accType == AccountType.Normal)
 			{
@@ -253,13 +243,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return false;  // caché
 				}
 
-				if (this.searchEngine != null)
+				if (this.filterController.HasSearcher)
 				{
 					var number = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number, inputValue: true);
 					var name   = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Name);
 
-					if (!this.searchEngine.IsMatching (number) &&
-						!this.searchEngine.IsMatching (name))
+					if (!this.filterController.IsMatching (number) &&
+						!this.filterController.IsMatching (name))
 					{
 						return false;  // caché
 					}
@@ -325,6 +315,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private int										visibleSelectedRow;
 		private Guid									selectedGuid;
-		private SearchEngine							searchEngine;
 	}
 }

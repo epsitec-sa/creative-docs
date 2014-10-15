@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.categoriesFrame2 = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = height + AbstractFilterController.filterMargins,
+				PreferredHeight = AbstractFilterController.filterMargins + AbstractFilterController.filterHeight,
 				Dock            = DockStyle.Bottom,
 				Padding         = new Margins (AbstractFilterController.filterMargins, AbstractFilterController.filterMargins, 0, AbstractFilterController.filterMargins),
 				BackColor       = ColorManager.WindowBackgroundColor,
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.categoriesFrame1 = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = AbstractFilterController.filterMargins + height,
+				PreferredHeight = AbstractFilterController.filterMargins + AbstractFilterController.filterHeight,
 				Dock            = DockStyle.Bottom,
 				Padding         = new Margins (AbstractFilterController.filterMargins, AbstractFilterController.filterMargins, AbstractFilterController.filterMargins, 0),
 				BackColor       = ColorManager.WindowBackgroundColor,
@@ -93,12 +93,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.UpdateCategories ();
 
 			return true;
-		}
-
-		protected override void UpdateOptions()
-		{
-			//	Met à jour la partie optionnelle permettant de choisir les catégories de comptes.
-			this.UpdateOptionsButton ();
 		}
 
 

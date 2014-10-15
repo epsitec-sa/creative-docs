@@ -205,16 +205,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void UpdateGetter()
 		{
-			if (this.filterController == null || string.IsNullOrEmpty (this.filterController.Filter))
-			{
-				this.searchEngine = null;
-			}
-			else
-			{
-				var definition = SearchDefinition.Default.FromPattern (this.filterController.Filter);
-				this.searchEngine = new SearchEngine (definition);
-			}
-
 			this.nodeGetter.SetParams (this.SortingInstructions, this.Filter);
 		}
 
@@ -222,14 +212,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var person = this.accessor.GetObject (BaseType.Persons, guid);
 
-			if (this.searchEngine != null)
+			if (this.filterController.HasSearcher)
 			{
 				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
 				{
 					if (userField.Type == FieldType.String)
 					{
 						var text = ObjectProperties.GetObjectPropertyString (person, null, userField.Field);
-						if (this.searchEngine.IsMatching (text))
+						if (this.filterController.IsMatching (text))
 						{
 							return true;  // visible
 						}
@@ -302,6 +292,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly PersonsTreeTableFiller			dataFiller;
 
 		private int										visibleSelectedRow;
-		private SearchEngine							searchEngine;
 	}
 }
