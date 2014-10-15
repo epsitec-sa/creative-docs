@@ -47,19 +47,6 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172));
 			}
 			
-			public static class AccountsPopup
-			{
-				internal static void _Initialize()
-				{
-					global::System.Object.Equals (AccountsPopup.Next, null);
-				}
-				
-				//	designer:cap/JUKR501
-				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 187));
-				//	designer:cap/JUKQ501
-				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 186));
-			}
-			
 			public static class Assets
 			{
 				internal static void _Initialize()
@@ -357,6 +344,18 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
 				//	designer:cap/JUKT501
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 189));
+				public static class TreeTable
+				{
+					internal static void _Initialize()
+					{
+						global::System.Object.Equals (Popup.TreeTable.Next, null);
+					}
+					
+					//	designer:cap/JUKR501
+					public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 187));
+					//	designer:cap/JUKQ501
+					public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 186));
+				}
 			}
 			
 			public static class Reports
@@ -646,14 +645,6 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Prev = 0x7D3000140000ACL;
 			}
 			
-			public static class AccountsPopup
-			{
-				//	designer:cap/JUKR501
-				public const long Next = 0x7D3000140000BBL;
-				//	designer:cap/JUKQ501
-				public const long Prev = 0x7D3000140000BAL;
-			}
-			
 			public static class Assets
 			{
 				//	designer:cap/JUKR101
@@ -891,6 +882,13 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Accept = 0x7D3000140000BCL;
 				//	designer:cap/JUKT501
 				public const long Cancel = 0x7D3000140000BDL;
+				public static class TreeTable
+				{
+					//	designer:cap/JUKR501
+					public const long Next = 0x7D3000140000BBL;
+					//	designer:cap/JUKQ501
+					public const long Prev = 0x7D3000140000BAL;
+				}
 			}
 			
 			public static class Reports
@@ -9870,7 +9868,6 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Accounts._Initialize ();
-			Commands.AccountsPopup._Initialize ();
 			Commands.Assets._Initialize ();
 			Commands.AssetsLeft._Initialize ();
 			Commands.Categories._Initialize ();
@@ -9883,6 +9880,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Persons._Initialize ();
 			Commands.PersonsPopup._Initialize ();
 			Commands.Popup._Initialize ();
+			Commands.Popup.TreeTable._Initialize ();
 			Commands.Reports._Initialize ();
 			Commands.Reports.Period._Initialize ();
 			Commands.Search._Initialize ();

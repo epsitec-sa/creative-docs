@@ -77,6 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					PreferredSize = new Size (AbstractFilterController.filterHeight, AbstractFilterController.filterHeight),
 					Margins       = new Margins (10, 0, 0, 0),
 				};
+
+				this.UpdateOptionsButton ();
 			}
 
 			var clearButton = new IconButton
@@ -89,8 +91,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Margins       = new Margins (2, 0, 0, 0),
 				Enable        = false,
 			};
-
-			this.UpdateOptionsButton ();
 
 			//	Connexions des événements.
 			this.filterField.TextChanged += delegate
@@ -156,16 +156,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected void UpdateOptionsButton()
 		{
-			if (this.optionsButton != null)
+			if (this.OptionsVisibility)
 			{
-				if (this.OptionsVisibility)
-				{
-					this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
-				}
-				else
-				{
-					this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
-				}
+				this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Down");
+			}
+			else
+			{
+				this.optionsButton.IconUri  = Misc.GetResourceIconUri ("Triangle.Up");
 			}
 		}
 

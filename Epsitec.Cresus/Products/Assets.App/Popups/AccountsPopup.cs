@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		[Command (Res.CommandIds.AccountsPopup.Prev)]
+		[Command (Res.CommandIds.Popup.TreeTable.Prev)]
 		private void DoPrev()
 		{
 			//	Appelé lorsque l'utilisateur presse sur "flèche en haut".
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		[Command (Res.CommandIds.AccountsPopup.Next)]
+		[Command (Res.CommandIds.Popup.TreeTable.Next)]
 		private void DoNext()
 		{
 			//	Appelé lorsque l'utilisateur presse sur "flèche en bas".
