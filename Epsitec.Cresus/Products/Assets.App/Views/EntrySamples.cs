@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			int w12 = EntrySamples.accountWidth;
-			int w3  = AbstractView.editionWidth - w12*2 - 37 - margins*2;
+			int w3  = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth - margins*2 - w12*2;
 			
 			var c1 = new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String, w12, Res.Strings.EntryController.Debit.ToString ());
 			var c2 = new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String, w12, Res.Strings.EntryController.Credit.ToString ());
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					return this.accessor.EditionAccessor.EditedTimestamp.Value.Date;
+					return this.accessor.EditionAccessor.EventDate;
 				}
 			}
 		}
