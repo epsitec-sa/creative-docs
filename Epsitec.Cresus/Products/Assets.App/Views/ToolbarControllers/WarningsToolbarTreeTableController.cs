@@ -181,6 +181,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				return AssetsView.GetViewState (Guid.Empty, null, PageType.Unknown, ObjectField.Unknown);
 			}
+			else if (warning.EventGuid.IsEmpty && warning.Field == ObjectField.Unknown)
+			{
+				return AmortizationsView.GetViewState (warning.ObjectGuid);
+			}
 			else
 			{
 				var obj  = this.accessor.GetObject (warning.BaseType, warning.ObjectGuid);

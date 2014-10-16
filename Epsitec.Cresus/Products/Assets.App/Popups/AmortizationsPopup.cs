@@ -119,10 +119,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Nomme le bouton principal, selon les boutons radio.
 			this.okButton.Text = this.IsAll ? this.ActionAll : this.ActionOne;
 
-			this.okButton.Enable = this.DateFrom.HasValue
-								&& this.DateTo.HasValue
-								&& this.DateFrom < this.DateTo
-								&& !this.HasError;
+			if (this.DateFromAllowed && this.DateToAllowed)
+			{
+				this.okButton.Enable = this.DateFrom.HasValue
+									&& this.DateTo.HasValue
+									&& this.DateFrom < this.DateTo
+									&& !this.HasError;
+			}
+			else if (this.DateFromAllowed)
+			{
+				this.okButton.Enable = this.DateFrom.HasValue
+									&& !this.HasError;
+			}
+			else
+			{
+				this.okButton.Enable = !this.HasError;
+			}
 		}
 	}
 }

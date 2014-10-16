@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return false;  // caché
 				}
 
-				if (this.filterController.HasSearcher)
+				if (this.filterController.HasFilter)
 				{
 					var number = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Number, inputValue: true);
 					var name   = ObjectProperties.GetObjectPropertyString (account, null, ObjectField.Name);

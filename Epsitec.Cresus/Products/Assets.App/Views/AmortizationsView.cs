@@ -192,6 +192,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public static AbstractViewState GetViewState(Guid assetGuid)
+		{
+			//	Retourne un ViewState permettant de voir un objet donné.
+			return new AmortizationsViewState
+			{
+				ViewType          = ViewType.Amortizations,
+				PageType          = PageType.Unknown,
+				SelectedGuid      = assetGuid,
+				SelectedTimestamp = null,
+			};
+		}
+
 		public override AbstractViewState ViewState
 		{
 			get

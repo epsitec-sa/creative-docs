@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var person = this.accessor.GetObject (BaseType.Persons, guid);
 
-			if (this.filterController.HasSearcher)
+			if (this.filterController.HasFilter)
 			{
 				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
 				{

@@ -561,6 +561,18 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544333));
 					}
 				}
+				public static class Amortization
+				{
+					//	designer:str/IUK1201
+					public static global::Epsitec.Common.Types.FormattedText Missing
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544385));
+						}
+					}
+				}
+				
 				public static class Ratio
 				{
 					//	designer:str/IUKV101
@@ -1206,6 +1218,18 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544333);
 					}
 				}
+				public static class Amortization
+				{
+					//	designer:str/IUK1201
+					public static global::Epsitec.Common.Support.Druid Missing
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544385);
+						}
+					}
+				}
+				
 				public static class Ratio
 				{
 					//	designer:str/IUKV101

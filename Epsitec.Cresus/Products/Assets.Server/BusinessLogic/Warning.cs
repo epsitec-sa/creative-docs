@@ -7,6 +7,10 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
+	/// <summary>
+	/// Données d'un avertissement, contenant tout ce qu'il faut pour afficher l'avertissement
+	/// dans la vue ad-hoc, ainsi que les informations permettant la commande 'goto'.
+	/// </summary>
 	public struct Warning
 	{
 		public Warning(BaseType baseType, Guid objectGuid, Guid eventGuid, ObjectField field, string description)

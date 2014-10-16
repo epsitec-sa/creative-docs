@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public abstract class AbstractFilterController
 	{
-		public bool								HasSearcher
+		public bool								HasFilter
 		{
 			get
 			{

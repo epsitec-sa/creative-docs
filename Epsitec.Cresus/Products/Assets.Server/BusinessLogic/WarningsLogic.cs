@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -199,6 +200,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var warning = new Warning (BaseType.Accounts, Guid.Empty, Guid.Empty, ObjectField.Unknown, Res.Strings.WarningsLogic.Undefined.Accounts.ToString ());
 				warnings.Add (warning);
 			}
+
+			//	Vérifie les amortissements.
+			WarningsLogic.CheckAmortizations (warnings, accessor);
 		}
 
 
@@ -443,5 +447,82 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				warnings.Add (warning);
 			}
 		}
+
+
+		#region Amortizations logic
+		private static void CheckAmortizations(List<Warning> warnings, DataAccessor accessor)
+		{
+			//	Vérifie si tous les objets sont amortis. On cherche d'abord la date de
+			//	l'amortissement le plus récent, dans l'ensemble des objets. Ensuite, tous
+			//	les objets qui ne sont pas amortis jusqu'à cette date ont un avertissement,
+			//	sauf s'ils sont sortis (suggestion de Stéphane Schmelzer).
+			var last = WarningsLogic.GetLastAmortization (accessor);
+
+			if (last.HasValue)
+			{
+				var message = string.Format (Res.Strings.WarningsLogic.Amortization.Missing.ToString (), TypeConverters.DateToString (last.Value.Date));
+
+				foreach (var asset in accessor.Mandat.GetData (BaseType.Assets))
+				{
+					if (!AssetCalculator.IsOutOfBoundsEvent (asset, last.Value))
+					{
+						var rate = ObjectProperties.GetObjectPropertyDecimal (asset, last.Value, ObjectField.AmortizationRate);
+
+						if (rate.HasValue && rate.Value > 0)
+						{
+							var t = WarningsLogic.GetLastAmortization (asset);
+
+							if (!t.HasValue || t < last)
+							{
+								var warning = new Warning (BaseType.Assets, asset.Guid, Guid.Empty, ObjectField.Unknown, message);
+								warnings.Add (warning);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private static Timestamp? GetLastAmortization(DataAccessor accessor)
+		{
+			Timestamp? last = null;
+
+			foreach (var asset in accessor.Mandat.GetData (BaseType.Assets))
+			{
+				var t = WarningsLogic.GetLastAmortization (asset);
+
+				if (t.HasValue)
+				{
+					if (last.HasValue)
+					{
+						if (last.Value < t.Value)
+						{
+							last = t;
+						}
+					}
+					else
+					{
+						last = t;
+					}
+				}
+			}
+
+			return last;
+		}
+
+		private static Timestamp? GetLastAmortization(DataObject asset)
+		{
+			foreach (var e in asset.Events.Reverse ())
+			{
+				if (e.Type == EventType.AmortizationAuto ||
+					e.Type == EventType.AmortizationExtra)
+				{
+					return e.Timestamp;
+				}
+			}
+
+			return null;
+		}
+		#endregion
 	}
 }
