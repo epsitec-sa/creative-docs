@@ -94,7 +94,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void PaintCellForeground(Graphics graphics, Rectangle rect, TimelineCellGlyph cell, bool isHover, int index)
 		{
-			PaintEventGlyph.Paint (graphics, rect, cell.Glyph);
+			if (cell.Glyphs != null)
+			{
+				if (cell.Glyphs.Count == 1)
+				{
+					PaintEventGlyph.Paint (graphics, rect, cell.Glyphs[0]);
+				}
+				else if (cell.Glyphs.Count > 1)
+				{
+					if (cell.Glyphs.Count <= 2)
+					{
+						var suppl = rect.Width - rect.Height;
+						var dx = suppl / (cell.Glyphs.Count-1);
+
+						for (int i=0; i<cell.Glyphs.Count; i++)
+						{
+							var r = new Rectangle (rect.Left+dx*i, rect.Bottom, rect.Height, rect.Height);
+							PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
+						}
+					}
+					else
+					{
+						var text = string.Format ("... ({0})", cell.Glyphs.Count);
+						graphics.Color = ColorManager.TextColor;
+						graphics.PaintText (rect, text, Font.DefaultFont, this.FontSize, ContentAlignment.MiddleCenter);
+					}
+				}
+			}
 		}
 
 

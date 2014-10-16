@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(DataArray dataArray, IObjectsNodeGetter nodeGetter, System.Func<DataEvent, bool> filter = null)
+		public void Update(DataArray dataArray, IObjectsNodeGetter nodeGetter, TimelinesMode mode, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			dataArray.Clear (nodeGetter.Count);
+			dataArray.Clear (nodeGetter.Count, mode);
 
 			for (int row=0; row<nodeGetter.Count; row++)
 			{
@@ -42,7 +42,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						if (filter == null || filter (e))
 						{
 							var column = dataArray.GetColumn (e.Timestamp);
-							column[row] = this.EventToCell (obj, e);
+
+							if (mode == TimelinesMode.Multi)
+							{
+								if (column[row].IsEmpty)
+								{
+									column[row] = this.EventToCell (obj, e);
+								}
+								else
+								{
+									//	Effectue un merge.
+									column[row] = new DataCell(column[row], this.EventToCell (obj, e));
+								}
+							}
+							else
+							{
+								column[row] = this.EventToCell (obj, e);
+							}
 						}
 					}
 				}
@@ -76,7 +92,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 						if (column[row].Flags != flags)
 						{
-							column[row] = new DataCell (column[row].Glyph, flags, column[row].Tooltip);
+							column[row] = new DataCell (column[row].Glyphs, flags, column[row].Tooltip);
 						}
 					}
 				}
@@ -85,7 +101,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					for (int c=0; c<dataArray.ColumnsCount; c++)
 					{
 						var column = dataArray.GetColumn (c);
-						column[row] = new DataCell (column[row].Glyph, DataCellFlags.Group, null);
+						column[row] = new DataCell (column[row].Glyphs, DataCellFlags.Group, null);
 					}
 				}
 			}
@@ -149,9 +165,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			public void Clear(int rowsCount)
+			public void Clear(int rowsCount, TimelinesMode mode)
 			{
 				this.rowsCount = rowsCount;
+				this.mode = mode;
 				this.columns.Clear ();
 			}
 
@@ -184,7 +201,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				//	Retourne la colonne à utiliser pour un Timestamp donné.
 				//	Si elle n'existe pas, elle est créée.
-				var column = this.columns.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+				var adjusted = this.Adjust (timestamp);
+				var column = this.columns.Where (x => this.Adjust (x.Timestamp) == adjusted).FirstOrDefault ();
 
 				if (column == null)
 				{
@@ -199,9 +217,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return column;
 			}
 
-			private readonly List<DataColumn> columns;
-			private readonly List<string> rowsLabel;
-			private int rowsCount;
+			private Timestamp Adjust(Timestamp timestamp)
+			{
+				if (this.mode == TimelinesMode.Multi)
+				{
+					var date = new System.DateTime(timestamp.Date.Year, timestamp.Date.Month, 1);
+					timestamp = new Timestamp (date, 0);
+				}
+
+				return timestamp;
+			}
+
+			private readonly List<DataColumn>	columns;
+			private readonly List<string>		rowsLabel;
+			private int							rowsCount;
+			private TimelinesMode				mode;
 		}
 
 		/// <summary>
@@ -245,24 +275,81 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			public DataCell(TimelineGlyph glyph, DataCellFlags flags = DataCellFlags.None, string tooltip = null)
 			{
-				this.Glyph   = glyph;
+				this.Glyphs = new List<TimelineGlyph> ();
+				this.Glyphs.Add (glyph);
+
 				this.Flags   = flags;
 				this.Tooltip = tooltip;
+			}
+
+			public DataCell(IEnumerable<TimelineGlyph> glyphs, DataCellFlags flags = DataCellFlags.None, string tooltip = null)
+			{
+				this.Glyphs = new List<TimelineGlyph> ();
+				this.Glyphs.AddRange (glyphs);
+
+				this.Flags   = flags;
+				this.Tooltip = tooltip;
+			}
+
+			public DataCell(DataCell cell1, DataCell cell2)
+			{
+				this.Glyphs = new List<TimelineGlyph> ();
+
+				if (!cell1.IsEmpty)
+				{
+					this.Glyphs.AddRange (cell1.Glyphs);
+				}
+
+				if (!cell2.IsEmpty)
+				{
+					this.Glyphs.AddRange (cell2.Glyphs);
+				}
+
+				this.Flags = cell1.Flags | cell2.Flags;
+
+				string t1, t2;
+
+				if (cell1.Glyphs.Count == 1)
+				{
+					t1 = DataCell.GetFirstLine (cell1.Tooltip);
+				}
+				else
+				{
+					t1 = cell1.Tooltip;
+				}
+
+				t2 = DataCell.GetFirstLine (cell2.Tooltip);
+
+				this.Tooltip = string.Concat (t1, "<br/>", t2);
 			}
 
 			public bool IsEmpty
 			{
 				get
 				{
-					return this.Glyph == TimelineGlyph.Empty;
+					return this.Glyphs.Count == 1 && this.Glyphs[0] == TimelineGlyph.Empty;
 				}
 			}
 
 			public static DataCell Empty = new DataCell (TimelineGlyph.Empty);
 
-			public readonly TimelineGlyph	Glyph;
-			public readonly DataCellFlags	Flags;
-			public readonly string			Tooltip;
+			private static string GetFirstLine(string text)
+			{
+				if (!string.IsNullOrEmpty (text))
+				{
+					var i = text.IndexOf ("<br/>");
+					if (i != -1)
+					{
+						text = text.Substring (0, i);
+					}
+				}
+
+				return text;
+			}
+
+			public readonly List<TimelineGlyph>	Glyphs;
+			public readonly DataCellFlags		Flags;
+			public readonly string				Tooltip;
 		}
 		#endregion
 

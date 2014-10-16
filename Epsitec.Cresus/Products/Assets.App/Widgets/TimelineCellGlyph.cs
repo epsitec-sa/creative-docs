@@ -11,7 +11,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		public TimelineCellGlyph(TimelineGlyph glyph, DataCellFlags flags, string tooltip, bool isSelected = false, bool isError = false)
 		{
-			this.Glyph      = glyph;
+			this.Glyphs = new List<TimelineGlyph> ();
+			this.Glyphs.Add (glyph);
+
+			this.Flags      = flags;
+			this.Tooltip    = tooltip;
+			this.IsSelected = isSelected;
+			this.IsError    = isError;
+		}
+
+		public TimelineCellGlyph(IEnumerable<TimelineGlyph> glyphs, DataCellFlags flags, string tooltip, bool isSelected = false, bool isError = false)
+		{
+			this.Glyphs = new List<TimelineGlyph> ();
+			this.Glyphs.AddRange (glyphs);
+
 			this.Flags      = flags;
 			this.Tooltip    = tooltip;
 			this.IsSelected = isSelected;
@@ -23,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Glyph == TimelineGlyph.Undefined;
+				return this.Glyphs == null;
 			}
 		}
 
@@ -31,11 +44,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			get
 			{
-				return this.Glyph != TimelineGlyph.Undefined;
+				return this.Glyphs != null;
 			}
 		}
 
-		public readonly TimelineGlyph			Glyph;
+		public readonly List<TimelineGlyph>		Glyphs;
 		public readonly DataCellFlags			Flags;
 		public readonly string					Tooltip;
 		public readonly bool					IsSelected;
@@ -46,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			var buffer = new System.Text.StringBuilder ();
 
-			buffer.Append (this.Glyph);
+			buffer.Append (this.Glyphs[0]);
 
 			if (this.IsSelected)
 			{

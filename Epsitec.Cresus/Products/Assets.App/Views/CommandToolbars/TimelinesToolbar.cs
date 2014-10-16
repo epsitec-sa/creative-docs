@@ -31,8 +31,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateButton (Res.Commands.Timelines.Narrow, 4);
 			this.CreateButton (Res.Commands.Timelines.Wide, 4);
+			this.CreateButton (Res.Commands.Timelines.Compact, 4);
 
-			this.CreateSeparator (4);
+			this.CreateSajex (10, 4);
 			
 			this.CreateButton (Res.Commands.Timelines.First, 2);
 			this.CreateButton (Res.Commands.Timelines.Prev, 1);

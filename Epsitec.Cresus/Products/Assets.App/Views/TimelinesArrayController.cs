@@ -392,6 +392,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.timelinesMode = value;
 
+					this.UpdateDataArray ();
 					this.UpdateScroller ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
@@ -648,22 +649,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Narrow)]
 		private void OnTimelinesNarrow()
 		{
-			var t = this.TimelinesMode;
-			t |=  TimelinesMode.Narrow;
-			t &= ~TimelinesMode.Wide;
-			this.TimelinesMode = t;
-
+			this.TimelinesMode = TimelinesMode.Narrow;
 			this.UpdateToolbar ();
 		}
 
 		[Command (Res.CommandIds.Timelines.Wide)]
 		private void OnTimelinesWide()
 		{
-			var t = this.TimelinesMode;
-			t |=  TimelinesMode.Wide;
-			t &= ~TimelinesMode.Narrow;
-			this.TimelinesMode = t;
+			this.TimelinesMode = TimelinesMode.Wide;
+			this.UpdateToolbar ();
+		}
 
+		[Command (Res.CommandIds.Timelines.Compact)]
+		private void OnTimelinesCompact()
+		{
+			this.TimelinesMode = TimelinesMode.Multi;
 			this.UpdateToolbar ();
 		}
 
@@ -1165,7 +1165,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var cell = this.dataArray.GetCell (row, firstCell+i);
 					bool selected = (row == this.selectedRow && firstCell+i == this.selectedColumn);
 
-					var g = new TimelineCellGlyph (cell.Glyph, cell.Flags, cell.Tooltip, selected);
+					var g = new TimelineCellGlyph (cell.Glyphs, cell.Flags, cell.Tooltip, selected);
 					glyphs.Add (g);
 				}
 
@@ -1188,6 +1188,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (this.timelinesMode == TimelinesMode.Narrow)
 			{
 				this.controller.SetRowDayCells   (line++, dates.ToArray ());
+				this.controller.SetRowMonthCells (line++, dates.ToArray ());
+				this.controller.SetRowYearCells  (line++, dates.ToArray ());
+			}
+			else if (this.timelinesMode == TimelinesMode.Multi)
+			{
 				this.controller.SetRowMonthCells (line++, dates.ToArray ());
 				this.controller.SetRowYearCells  (line++, dates.ToArray ());
 			}
@@ -1222,6 +1227,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.timelinesMode == TimelinesMode.Narrow)
 				{
 					list.Add (new TimelineRowDescription (TimelineRowType.Days,   Res.Strings.TimelinesArrayController.Row.Days.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.TimelinesArrayController.Row.Months.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years,  Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
+				}
+				else if (this.timelinesMode == TimelinesMode.Multi)
+				{
 					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.TimelinesArrayController.Row.Months.ToString ()));
 					list.Add (new TimelineRowDescription (TimelineRowType.Years,  Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
 				}
@@ -1349,6 +1359,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					return 3;  // Years, Months, Days
 				}
+				else if (this.timelinesMode == TimelinesMode.Multi)
+				{
+					return 2;  // Years, Months
+				}
 				else
 				{
 					return 2;  // Years, DaysMonths
@@ -1364,7 +1378,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.Filter);
+			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.timelinesMode, this.Filter);
 		}
 
 
@@ -1409,8 +1423,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.Deselect, this.selectedRow != -1);
 
 			//	Mise à jour de la toolbar des timelines.
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow, (this.timelinesMode & TimelinesMode.Narrow) != 0);
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,   (this.timelinesMode & TimelinesMode.Wide  ) != 0);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow,  this.timelinesMode == TimelinesMode.Narrow);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,    this.timelinesMode == TimelinesMode.Wide);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Compact, this.timelinesMode == TimelinesMode.Multi);
 
 			this.UpdateTimelineCommand (Res.Commands.Timelines.First, this.selectedColumn, this.FirstColumnIndex);
 			this.UpdateTimelineCommand (Res.Commands.Timelines.Prev,  this.selectedColumn, this.PrevColumnIndex);

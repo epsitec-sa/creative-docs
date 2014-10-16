@@ -508,6 +508,7 @@
     <EmbeddedResource Include="Images\Search.Prev.icon" />
     <EmbeddedResource Include="Images\Search.Next.icon" />
     <EmbeddedResource Include="Images\Perfect.icon" />
+    <EmbeddedResource Include="Images\Timeline.Compact.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

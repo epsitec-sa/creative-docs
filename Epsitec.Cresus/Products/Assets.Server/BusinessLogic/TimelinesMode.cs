@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	[System.Flags]
 	public enum TimelinesMode
 	{
-		Narrow	= 0x00000001,
-		Wide	= 0x00000002,
+		Narrow,		// mode étroit, avec 3 lignes d'en-tête (année, mois, jour)
+		Wide,		// mode normal, avec 2 lignes d'en-tête (année, date)
+		Multi,		// mode avec 1 cellule/mois, et donc plusieurs événement par cellule
 	}
 }

@@ -455,7 +455,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie si tous les objets sont amortis. On cherche d'abord la date de
 			//	l'amortissement le plus récent, dans l'ensemble des objets. Ensuite, tous
 			//	les objets qui ne sont pas amortis jusqu'à cette date ont un avertissement,
-			//	sauf s'ils sont sortis (suggestion de Stéphane Schmelzer).
+			//	sauf s'ils sont sortis ou s'il ne doivent pas être amorti (taux nul).
+			//	Suggestion de Stéphane Schmelzer
 			var last = WarningsLogic.GetLastAmortization (accessor);
 
 			if (last.HasValue)
@@ -485,6 +486,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static Timestamp? GetLastAmortization(DataAccessor accessor)
 		{
+			//	Retourne la date de l'armortissement le plus récent, parmi tous les objets.
 			Timestamp? last = null;
 
 			foreach (var asset in accessor.Mandat.GetData (BaseType.Assets))
@@ -512,6 +514,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static Timestamp? GetLastAmortization(DataObject asset)
 		{
+			//	Retourne la date de l'armortissement le plus récent d'un objet.
 			foreach (var e in asset.Events.Reverse ())
 			{
 				if (e.Type == EventType.AmortizationAuto ||
