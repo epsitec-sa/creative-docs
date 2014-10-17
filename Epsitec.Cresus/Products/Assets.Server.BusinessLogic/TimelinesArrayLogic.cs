@@ -125,6 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		#region General static helpers
 		public static System.DateTime Adjust(System.DateTime date, TimelineGroupedMode mode)
 		{
 			//	Ajuste une date au début de la période de regroupement.
@@ -167,6 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return TimelineGroupedMode.None;
 			}
 		}
+		#endregion
 
 
 		private readonly DataAccessor			accessor;

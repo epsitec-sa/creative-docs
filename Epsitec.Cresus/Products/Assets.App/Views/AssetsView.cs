@@ -525,6 +525,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ViewMode          = ViewMode.Single,
 				SelectedGuid      = assetGuid,
 				SelectedTimestamp = timestamp,
+				TimelinesMode     = TimelinesMode.Wide,
 			};
 		}
 
@@ -543,6 +544,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					SelectedGuid        = this.selectedGuid,
 					FilterTreeTableGuid = this.listController.FilterGuid,
 					FilterTimelinesGuid = this.timelinesArrayController.FilterGuid,
+					TimelinesMode       = this.timelinesArrayController.TimelinesMode,
 					ShowGraphic         = this.listController.ShowGraphic,
 				};
 			}
@@ -556,9 +558,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.selectedTimestamp    = viewState.SelectedTimestamp;
 				this.selectedGuid         = viewState.SelectedGuid;
 
-				this.listController.FilterGuid           = viewState.FilterTreeTableGuid;
-				this.timelinesArrayController.FilterGuid = viewState.FilterTimelinesGuid;
-				this.listController.ShowGraphic          = viewState.ShowGraphic;
+				this.listController.FilterGuid              = viewState.FilterTreeTableGuid;
+				this.timelinesArrayController.FilterGuid    = viewState.FilterTimelinesGuid;
+				this.timelinesArrayController.TimelinesMode = viewState.TimelinesMode;
+				this.listController.ShowGraphic             = viewState.ShowGraphic;
 
 				if (viewState.PageType == PageType.Unknown)
 				{

@@ -114,7 +114,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private Timestamp Adjust(Timestamp timestamp)
 		{
-			if (TimelinesArrayLogic.IsGrouped (this.mode) && !groupedExcludeRange.IsInside (timestamp.Date))
+			if (TimelinesArrayLogic.IsGrouped (this.mode) &&
+				!groupedExcludeRange.IsInside (timestamp.Date))
 			{
 				var groupedMode = TimelinesArrayLogic.GetGroupedMode (this.mode);
 				var date = TimelinesArrayLogic.Adjust (timestamp.Date, groupedMode);

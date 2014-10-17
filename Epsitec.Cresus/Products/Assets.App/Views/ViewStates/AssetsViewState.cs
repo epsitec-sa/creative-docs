@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		public Guid								FilterTreeTableGuid;
 		public Guid								FilterTimelinesGuid;
 		public bool								ShowGraphic;
+		public TimelinesMode					TimelinesMode;
 
 
 		public override bool IsReferenced(BaseType baseType, Guid guid)
@@ -42,8 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 				&& this.PageType          == o.PageType
 				&& this.IsShowEvents      == o.IsShowEvents
 				&& this.SelectedTimestamp == o.SelectedTimestamp
-				&& this.SelectedGuid      == o.SelectedGuid
-				&& this.ShowGraphic       == o.ShowGraphic;
+				&& this.SelectedGuid      == o.SelectedGuid;
 		}
 
 

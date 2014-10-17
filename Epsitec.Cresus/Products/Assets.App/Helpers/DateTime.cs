@@ -87,6 +87,27 @@ namespace Epsitec.Cresus.Assets.App.Helpers
 			}
 		}
 
+		public static string ToTrim(this System.DateTime date)
+		{
+			//	Retourne le nom du trimestre.
+			if (date.Month <= 3)
+			{
+				return "Q1";
+			}
+			else if (date.Month <= 6)
+			{
+				return "Q2";
+			}
+			else if (date.Month <= 9)
+			{
+				return "Q3";
+			}
+			else
+			{
+				return "Q4";
+			}
+		}
+
 		public static string ToDayOfWeek(this System.DateTime date)
 		{
 			//	Retourne le jour sous la forme "lu" ou "ma".

@@ -16,6 +16,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// Par exemple "28.03", "29.03", "30.03", "31.03".
 	/// Lorsqu'il s'agit d'une colonne regroupant des données, l'affichage varie,
 	/// pour indiquer le mois, le trimestre, ou rien s'il s'agit d'une année entière.
+	/// Par exemple:
+	/// ByMonth -> "févr."
+	/// ByTrim  -> "Q2" (deuxième trimestre)
+	/// ByYear  -> rien
 	/// </summary>
 	public class TimelineRowDaysMonths : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
@@ -117,9 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						return date.ToMonthYear (-3);  // "févr."
 
 					case TimelineGroupedMode.ByTrim:
-						var f = date.ToMonthYear (-4);
-						var t = date.AddMonths (2).ToMonthYear (-4);
-						return string.Concat (f, "..", t);  // "1..3", "4..6, "7..9" ou "10..12"
+						return date.ToTrim ();  // "Q2"
 
 					case TimelineGroupedMode.ByYear:
 						return null;  // l'année dans la ligne supérieure suffit
