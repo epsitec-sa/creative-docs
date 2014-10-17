@@ -100,25 +100,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					PaintEventGlyph.Paint (graphics, rect, cell.Glyphs[0]);
 				}
-				else if (cell.Glyphs.Count > 1)
+				else if (cell.Glyphs.Count == 2)
 				{
-					if (cell.Glyphs.Count <= 2)
-					{
-						var suppl = rect.Width - rect.Height;
-						var dx = suppl / (cell.Glyphs.Count-1);
+					//	S'il y a 2 événements dans la cellule, on les affiche côte à côte.
+					var suppl = rect.Width - rect.Height;
+					var dx = suppl / (cell.Glyphs.Count-1);
 
-						for (int i=0; i<cell.Glyphs.Count; i++)
-						{
-							var r = new Rectangle (rect.Left+dx*i, rect.Bottom, rect.Height, rect.Height);
-							PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
-						}
-					}
-					else
+					for (int i=0; i<cell.Glyphs.Count; i++)
 					{
-						var text = string.Format ("... ({0})", cell.Glyphs.Count);
-						graphics.Color = ColorManager.TextColor;
-						graphics.PaintText (rect, text, Font.DefaultFont, this.FontSize, ContentAlignment.MiddleCenter);
+						var r = new Rectangle (rect.Left+dx*i, rect.Bottom, rect.Height, rect.Height);
+						PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
 					}
+				}
+				else if (cell.Glyphs.Count > 2)
+				{
+					//	S'il y a plus de 2 événements dans la cellule, on affiche juste le
+					//	nombre d'événements.
+					var text = string.Format ("... ({0})", cell.Glyphs.Count);
+					graphics.Color = ColorManager.TextColor;
+					graphics.PaintText (rect, text, Font.DefaultFont, this.FontSize, ContentAlignment.MiddleCenter);
 				}
 			}
 		}

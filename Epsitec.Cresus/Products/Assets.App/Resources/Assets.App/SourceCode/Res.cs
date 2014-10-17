@@ -448,11 +448,9 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Timelines.Compact, null);
+					global::System.Object.Equals (Timelines.Copy, null);
 				}
 				
-				//	designer:cap/JUK2601
-				public static readonly global::Epsitec.Common.Widgets.Command Compact = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 194));
 				//	designer:cap/JUKO201
 				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 88));
 				//	designer:cap/JUKM201
@@ -461,6 +459,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 87));
 				//	designer:cap/JUKH201
 				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 81));
+				//	designer:cap/JUK2601
+				public static readonly global::Epsitec.Common.Widgets.Command GroupedByMonth = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 194));
 				//	designer:cap/JUKK201
 				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 84));
 				//	designer:cap/JUKF201
@@ -953,8 +953,6 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class Timelines
 			{
-				//	designer:cap/JUK2601
-				public const long Compact = 0x7D3000140000C2L;
 				//	designer:cap/JUKO201
 				public const long Copy = 0x7D300014000058L;
 				//	designer:cap/JUKM201
@@ -963,6 +961,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Deselect = 0x7D300014000057L;
 				//	designer:cap/JUKH201
 				public const long First = 0x7D300014000051L;
+				//	designer:cap/JUK2601
+				public const long GroupedByMonth = 0x7D3000140000C2L;
 				//	designer:cap/JUKK201
 				public const long Last = 0x7D300014000054L;
 				//	designer:cap/JUKF201

@@ -660,8 +660,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
-		[Command (Res.CommandIds.Timelines.Compact)]
-		private void OnTimelinesCompact()
+		[Command (Res.CommandIds.Timelines.GroupedByMonth)]
+		private void OnTimelinesGroupedByMonth()
 		{
 			this.TimelinesMode = TimelinesMode.GroupedByMonth;
 			this.UpdateToolbar ();
@@ -1361,7 +1361,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else if (this.timelinesMode == TimelinesMode.GroupedByMonth)
 				{
-					return 2;  // Years, Months
+					return 2;  // Years, DaysMonths
 				}
 				else
 				{
@@ -1428,9 +1428,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.assetsToolbar.SetEnable (Res.Commands.AssetsLeft.Deselect, this.selectedRow != -1);
 
 			//	Mise à jour de la toolbar des timelines.
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow,  this.timelinesMode == TimelinesMode.Narrow);
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,    this.timelinesMode == TimelinesMode.Wide);
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Compact, this.timelinesMode == TimelinesMode.GroupedByMonth);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow,         this.timelinesMode == TimelinesMode.Narrow);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,           this.timelinesMode == TimelinesMode.Wide);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.GroupedByMonth, this.timelinesMode == TimelinesMode.GroupedByMonth);
 
 			this.UpdateTimelineCommand (Res.Commands.Timelines.First, this.selectedColumn, this.FirstColumnIndex);
 			this.UpdateTimelineCommand (Res.Commands.Timelines.Prev,  this.selectedColumn, this.PrevColumnIndex);
