@@ -7,15 +7,20 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
+	/// <summary>
+	/// Tableau des cellules d'une timeline. Il y a une colonne par Timestamp existant
+	/// et une ligne par objet.
+	/// </summary>
 	public class TimelineArray
 	{
 		public TimelineArray()
 		{
-			this.columns = new List<TimelineColumn> ();
+			this.columns   = new List<TimelineColumn> ();
 			this.rowsLabel = new List<string> ();
 		}
 
-		public List<string> RowsLabel
+
+		public List<string>						RowsLabel
 		{
 			get
 			{
@@ -23,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public int RowsCount
+		public int								RowsCount
 		{
 			get
 			{
@@ -31,12 +36,30 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public int ColumnsCount
+		public int								ColumnsCount
 		{
 			get
 			{
 				return this.columns.Count;
 			}
+		}
+
+		public IEnumerable<TimelineColumn>		Columns
+		{
+			get
+			{
+				return this.columns;
+			}
+		}
+
+
+		public void Clear(int rowsCount, TimelinesMode mode, DateRange groupedExcludeRange)
+		{
+			this.rowsCount           = rowsCount;
+			this.mode                = mode;
+			this.groupedExcludeRange = groupedExcludeRange;
+
+			this.columns.Clear ();
 		}
 
 		public TimelineCell GetCell(int row, int column)
@@ -51,26 +74,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public void Clear(int rowsCount, TimelinesMode mode, DateRange range)
-		{
-			this.rowsCount = rowsCount;
-			this.mode      = mode;
-			this.range     = range;
-
-			this.columns.Clear ();
-		}
-
 		public int FindColumnIndex(Timestamp timestamp)
 		{
 			return this.columns.FindIndex (x => x.Timestamp == timestamp);
-		}
-
-		public IEnumerable<TimelineColumn> Columns
-		{
-			get
-			{
-				return this.columns;
-			}
 		}
 
 		public TimelineColumn GetColumn(int column)
@@ -105,9 +111,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return column;
 		}
 
+
 		private Timestamp Adjust(Timestamp timestamp)
 		{
-			if (this.mode == TimelinesMode.GroupedByMonth && !range.IsInside (timestamp.Date))
+			if (this.mode == TimelinesMode.GroupedByMonth && !groupedExcludeRange.IsInside (timestamp.Date))
 			{
 				var date = new System.DateTime(timestamp.Date.Year, timestamp.Date.Month, 1);
 				timestamp = new Timestamp (date, 0);
@@ -116,10 +123,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return timestamp;
 		}
 
+
 		private readonly List<TimelineColumn>	columns;
-		private readonly List<string>		rowsLabel;
-		private int							rowsCount;
-		private TimelinesMode				mode;
-		private DateRange					range;
+		private readonly List<string>			rowsLabel;
+
+		private int								rowsCount;
+		private TimelinesMode					mode;
+		private DateRange						groupedExcludeRange;
 	}
 }

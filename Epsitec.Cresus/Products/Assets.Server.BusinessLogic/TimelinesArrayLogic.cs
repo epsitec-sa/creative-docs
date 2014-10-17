@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(TimelineArray dataArray, IObjectsNodeGetter nodeGetter, TimelinesMode mode, DateRange range, System.Func<DataEvent, bool> filter = null)
+		public void Update(TimelineArray dataArray, IObjectsNodeGetter nodeGetter, TimelinesMode mode, DateRange groupedExcludeRange, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			dataArray.Clear (nodeGetter.Count, mode, range);
+			dataArray.Clear (nodeGetter.Count, mode, groupedExcludeRange);
 
 			for (int row=0; row<nodeGetter.Count; row++)
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (filter == null || filter (e))
 						{
-							bool grouped = (mode == TimelinesMode.GroupedByMonth && !range.IsInside (e.Timestamp.Date));
+							bool grouped = (mode == TimelinesMode.GroupedByMonth && !groupedExcludeRange.IsInside (e.Timestamp.Date));
 							var column = dataArray.GetColumn (e.Timestamp, grouped);
 
 							if (mode == TimelinesMode.GroupedByMonth)

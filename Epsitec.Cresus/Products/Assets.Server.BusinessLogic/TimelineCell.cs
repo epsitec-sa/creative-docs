@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	/// <summary>
-	/// Une cellule, correspondant à un événement d'un objet.
+	/// Une cellule d'une timeline, correspondant à un ou plusieurs événements.
 	/// </summary>
 	public class TimelineCell
 	{
@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Tooltip = string.Concat (t1, "<br/>", t2);
 		}
 
+
 		public bool IsEmpty
 		{
 			get
@@ -70,6 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return this.Glyphs.Count == 1 && this.Glyphs[0] == TimelineGlyph.Empty;
 			}
 		}
+
 
 		public static TimelineCell Empty = new TimelineCell (TimelineGlyph.Empty);
 
@@ -87,8 +89,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return text;
 		}
 
-		public readonly List<TimelineGlyph>	Glyphs;
-		public readonly DataCellFlags		Flags;
-		public readonly string				Tooltip;
+
+		public readonly List<TimelineGlyph>		Glyphs;
+		public readonly DataCellFlags			Flags;
+		public readonly string					Tooltip;
 	}
 }

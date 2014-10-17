@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Data;
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	/// <summary>
-	/// Une colonne pour un Timestamp donné, avec une ligne par objet.
+	/// Une colonne d'une timeline pour un Timestamp donné, avec une ligne par objet.
 	/// </summary>
 	public class TimelineColumn
 	{
@@ -25,9 +25,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public readonly Timestamp			Timestamp;
-		public readonly bool				Grouped;
-
 		public TimelineCell this[int index]
 		{
 			get
@@ -39,6 +36,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				this.cells[index] = value;
 			}
 		}
+
+
+		public readonly Timestamp				Timestamp;
+		public readonly bool					Grouped;
 
 		private readonly TimelineCell[]			cells;
 	}
