@@ -395,6 +395,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.timelinesMode = value;
 					this.UpdateDataArray ();
 
+					this.selectedColumn = -1;  // pour forcer la mise à jour
 					this.SelectedTimestamp = sel;
 
 					this.UpdateScroller ();

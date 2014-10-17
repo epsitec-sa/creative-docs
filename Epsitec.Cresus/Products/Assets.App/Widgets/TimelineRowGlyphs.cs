@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					for (int i=0; i<cell.Glyphs.Count; i++)
 					{
 						int mx = 0;
-						if (i == 0)  mx = -3;
-						if (i == 2)  mx =  3;
+						if (i == 0)  mx = -3;  // un poil plus à gauche
+						if (i == 2)  mx =  3;  // un poil plus à droite
 						var r = new Rectangle (rect.Left+dx*i+mx, rect.Bottom, rect.Height, rect.Height);
 						PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
 					}
