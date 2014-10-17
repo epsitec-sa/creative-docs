@@ -12,10 +12,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public class TimelineColumn
 	{
-		public TimelineColumn(int rowsCount, Timestamp timestamp, bool grouped)
+		public TimelineColumn(int rowsCount, Timestamp timestamp, TimelineGroupedMode groupedMode)
 		{
-			this.Timestamp = timestamp;
-			this.Grouped   = grouped;
+			this.Timestamp   = timestamp;
+			this.GroupedMode = groupedMode;
 
 			this.cells = new TimelineCell[rowsCount];
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		public readonly Timestamp				Timestamp;
-		public readonly bool					Grouped;
+		public readonly TimelineGroupedMode		GroupedMode;
 
 		private readonly TimelineCell[]			cells;
 	}

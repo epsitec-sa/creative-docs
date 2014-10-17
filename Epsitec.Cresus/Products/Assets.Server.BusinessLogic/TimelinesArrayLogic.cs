@@ -41,10 +41,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (filter == null || filter (e))
 						{
-							bool grouped = (mode == TimelinesMode.GroupedByMonth && !groupedExcludeRange.IsInside (e.Timestamp.Date));
-							var column = dataArray.GetColumn (e.Timestamp, grouped);
+							var groupedMode = TimelineGroupedMode.None;
 
-							if (mode == TimelinesMode.GroupedByMonth)
+							if (TimelinesArrayLogic.IsGrouped (mode) &&
+								!groupedExcludeRange.IsInside (e.Timestamp.Date))
+							{
+								groupedMode = TimelinesArrayLogic.GetGroupedMode (mode);
+							}
+
+							var column = dataArray.GetColumn (e.Timestamp, groupedMode);
+
+							if (TimelinesArrayLogic.IsGrouped (mode))
 							{
 								if (column[row].IsEmpty)
 								{
@@ -114,6 +121,49 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			string tooltip = LogicDescriptions.GetTooltip (this.accessor, obj, e.Timestamp, e.Type, 8);
 
 			return new TimelineCell (glyph, DataCellFlags.None, tooltip);
+		}
+
+
+		public static System.DateTime Adjust(System.DateTime date, TimelineGroupedMode mode)
+		{
+			switch (mode)
+			{
+				case TimelineGroupedMode.ByMonth:
+					return new System.DateTime (date.Year, date.Month, 1);
+
+				case TimelineGroupedMode.ByTrim:
+					int month = (((date.Month-1)/3)*3)+1;  // 1, 4, 7 ou 10
+					return new System.DateTime (date.Year, month, 1);
+
+				case TimelineGroupedMode.ByYear:
+					return new System.DateTime (date.Year, 1, 1);
+
+				default:
+					return date;
+			}
+		}
+
+		public static bool IsGrouped(TimelinesMode mode)
+		{
+			return TimelinesArrayLogic.GetGroupedMode (mode) != TimelineGroupedMode.None;
+		}
+
+		public static TimelineGroupedMode GetGroupedMode(TimelinesMode mode)
+		{
+			switch (mode)
+			{
+				case TimelinesMode.GroupedByMonth:
+					return TimelineGroupedMode.ByMonth;
+
+				case TimelinesMode.GroupedByTrim:
+					return TimelineGroupedMode.ByTrim;
+
+				case TimelinesMode.GroupedByYear:
+					return TimelineGroupedMode.ByYear;
+
+				default:
+					return TimelineGroupedMode.None;
+			}
 		}
 
 

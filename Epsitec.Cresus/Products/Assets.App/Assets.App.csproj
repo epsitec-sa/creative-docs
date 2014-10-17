@@ -508,7 +508,9 @@
     <EmbeddedResource Include="Images\Search.Prev.icon" />
     <EmbeddedResource Include="Images\Search.Next.icon" />
     <EmbeddedResource Include="Images\Perfect.icon" />
-    <EmbeddedResource Include="Images\Timeline.Compact.icon" />
+    <EmbeddedResource Include="Images\Timeline.GroupedByMonth.icon" />
+    <EmbeddedResource Include="Images\Timeline.GroupedByTrim.icon" />
+    <EmbeddedResource Include="Images\Timeline.GroupedByYear.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

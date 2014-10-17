@@ -4,17 +4,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellDate
 	{
-		public TimelineCellDate(System.DateTime date, bool grouped = false, bool isSelected = false, bool isError = false)
+		public TimelineCellDate(System.DateTime date, TimelineGroupedMode groupedMode = TimelineGroupedMode.None, bool isSelected = false, bool isError = false)
 		{
-			this.date       = date;
-			this.Grouped    = grouped;
-			this.IsSelected = isSelected;
-			this.IsError    = isError;
+			this.date        = date;
+			this.GroupedMode = groupedMode;
+			this.IsSelected  = isSelected;
+			this.IsError     = isError;
 		}
 
 		
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		public readonly bool					Grouped;
+		public readonly TimelineGroupedMode		GroupedMode;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 

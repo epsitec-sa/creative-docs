@@ -7,6 +7,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -106,13 +107,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				if (cell.Grouped)
+				var date = TimelinesArrayLogic.Adjust (cell.Date, cell.GroupedMode);
+
+				switch (cell.GroupedMode)
 				{
-					return cell.Date.ToMonthYear (-3);  // "févr."
-				}
-				else
-				{
-					return cell.Date.ToDayMonth ();
+					case TimelineGroupedMode.ByMonth:
+						return date.ToMonthYear (-3);  // "févr."
+
+					case TimelineGroupedMode.ByTrim:
+						var f = date.ToMonthYear (-4);
+						var t = date.AddMonths (2).ToMonthYear (-4);
+						return string.Concat (f, "..", t);  // "1..3", "4..6, "7..9" ou "10..12"
+
+					case TimelineGroupedMode.ByYear:
+						return null;
+
+					default:
+						return cell.Date.ToDayMonth ();
 				}
 			}
 			else

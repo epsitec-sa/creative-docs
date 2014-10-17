@@ -32,6 +32,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.Timelines.Narrow, 4);
 			this.CreateButton (Res.Commands.Timelines.Wide, 4);
 			this.CreateButton (Res.Commands.Timelines.GroupedByMonth, 4);
+			this.CreateButton (Res.Commands.Timelines.GroupedByTrim, 4);
+			this.CreateButton (Res.Commands.Timelines.GroupedByYear, 4);
 
 			this.CreateSajex (10, 4);
 			

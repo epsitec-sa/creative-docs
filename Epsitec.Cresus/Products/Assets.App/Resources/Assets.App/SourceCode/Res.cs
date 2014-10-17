@@ -461,6 +461,10 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 81));
 				//	designer:cap/JUK2601
 				public static readonly global::Epsitec.Common.Widgets.Command GroupedByMonth = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 194));
+				//	designer:cap/JUK3601
+				public static readonly global::Epsitec.Common.Widgets.Command GroupedByTrim = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 195));
+				//	designer:cap/JUK4601
+				public static readonly global::Epsitec.Common.Widgets.Command GroupedByYear = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 196));
 				//	designer:cap/JUKK201
 				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 84));
 				//	designer:cap/JUKF201
@@ -963,6 +967,10 @@ namespace Epsitec.Cresus.Assets.App
 				public const long First = 0x7D300014000051L;
 				//	designer:cap/JUK2601
 				public const long GroupedByMonth = 0x7D3000140000C2L;
+				//	designer:cap/JUK3601
+				public const long GroupedByTrim = 0x7D3000140000C3L;
+				//	designer:cap/JUK4601
+				public const long GroupedByYear = 0x7D3000140000C4L;
 				//	designer:cap/JUKK201
 				public const long Last = 0x7D300014000054L;
 				//	designer:cap/JUKF201

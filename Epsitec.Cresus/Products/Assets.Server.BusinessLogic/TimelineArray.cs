@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public TimelineColumn GetColumn(Timestamp timestamp, bool grouped)
+		public TimelineColumn GetColumn(Timestamp timestamp, TimelineGroupedMode groupedMode)
 		{
 			//	Retourne la colonne à utiliser pour un Timestamp donné.
 			//	Si elle n'existe pas, elle est créée.
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (column == null)
 			{
-				column = new TimelineColumn (this.rowsCount, timestamp, grouped);
+				column = new TimelineColumn (this.rowsCount, timestamp, groupedMode);
 
 				//	Les colonnes sont triées chronologiquement. Il faut donc insérer
 				//	la nouvelle colonne à la bonne place.
@@ -114,13 +114,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private Timestamp Adjust(Timestamp timestamp)
 		{
-			if (this.mode == TimelinesMode.GroupedByMonth && !groupedExcludeRange.IsInside (timestamp.Date))
+			if (TimelinesArrayLogic.IsGrouped (this.mode) && !groupedExcludeRange.IsInside (timestamp.Date))
 			{
-				var date = new System.DateTime(timestamp.Date.Year, timestamp.Date.Month, 1);
-				timestamp = new Timestamp (date, 0);
+				var groupedMode = TimelinesArrayLogic.GetGroupedMode (this.mode);
+				var date = TimelinesArrayLogic.Adjust (timestamp.Date, groupedMode);
+				return new Timestamp (date, 0);
 			}
-
-			return timestamp;
+			else
+			{
+				return timestamp;
+			}
 		}
 
 
