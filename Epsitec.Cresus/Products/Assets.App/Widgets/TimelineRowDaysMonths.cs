@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// <summary>
 	/// Ligne de Timeline affichant les numéros des jours et mois.
 	/// Par exemple "28.03", "29.03", "30.03", "31.03".
+	/// Lorsqu'il s'agit d'une colonne regroupant des données, l'affichage varie,
+	/// pour indiquer le mois, le trimestre, ou rien s'il s'agit d'une année entière.
 	/// </summary>
 	public class TimelineRowDaysMonths : AbstractTimelineRow, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
@@ -120,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						return string.Concat (f, "..", t);  // "1..3", "4..6, "7..9" ou "10..12"
 
 					case TimelineGroupedMode.ByYear:
-						return null;
+						return null;  // l'année dans la ligne supérieure suffit
 
 					default:
 						return cell.Date.ToDayMonth ();

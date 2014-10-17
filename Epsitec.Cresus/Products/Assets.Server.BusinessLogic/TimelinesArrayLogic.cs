@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 								groupedMode = TimelinesArrayLogic.GetGroupedMode (mode);
 							}
 
+							//	Retourne la colonne, qui est créée si nécessaire.
 							var column = dataArray.GetColumn (e.Timestamp, groupedMode);
 
 							if (TimelinesArrayLogic.IsGrouped (mode))
@@ -126,17 +127,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static System.DateTime Adjust(System.DateTime date, TimelineGroupedMode mode)
 		{
+			//	Ajuste une date au début de la période de regroupement.
 			switch (mode)
 			{
 				case TimelineGroupedMode.ByMonth:
-					return new System.DateTime (date.Year, date.Month, 1);
+					return new System.DateTime (date.Year, date.Month, 1);  // le 1er du mois
 
 				case TimelineGroupedMode.ByTrim:
 					int month = (((date.Month-1)/3)*3)+1;  // 1, 4, 7 ou 10
-					return new System.DateTime (date.Year, month, 1);
+					return new System.DateTime (date.Year, month, 1);  // le 1er du trimestre
 
 				case TimelineGroupedMode.ByYear:
-					return new System.DateTime (date.Year, 1, 1);
+					return new System.DateTime (date.Year, 1, 1);  // le 1er janvier de l'année
 
 				default:
 					return date;
