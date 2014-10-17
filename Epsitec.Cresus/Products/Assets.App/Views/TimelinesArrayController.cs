@@ -663,7 +663,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Timelines.Compact)]
 		private void OnTimelinesCompact()
 		{
-			this.TimelinesMode = TimelinesMode.Multi;
+			this.TimelinesMode = TimelinesMode.GroupedByMonth;
 			this.UpdateToolbar ();
 		}
 
@@ -1180,7 +1180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var column = this.dataArray.GetColumn (firstCell+i);
 				if (column != null)
 				{
-					var d = new TimelineCellDate (column.Timestamp.Date);
+					var d = new TimelineCellDate (column.Timestamp.Date, column.Grouped);
 					dates.Add (d);
 				}
 			}
@@ -1191,10 +1191,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.controller.SetRowMonthCells (line++, dates.ToArray ());
 				this.controller.SetRowYearCells  (line++, dates.ToArray ());
 			}
-			else if (this.timelinesMode == TimelinesMode.Multi)
+			else if (this.timelinesMode == TimelinesMode.GroupedByMonth)
 			{
-				this.controller.SetRowMonthCells (line++, dates.ToArray ());
-				this.controller.SetRowYearCells  (line++, dates.ToArray ());
+				this.controller.SetRowDayMonthCells (line++, dates.ToArray ());
+				this.controller.SetRowYearCells     (line++, dates.ToArray ());
 			}
 			else
 			{
@@ -1230,10 +1230,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.TimelinesArrayController.Row.Months.ToString ()));
 					list.Add (new TimelineRowDescription (TimelineRowType.Years,  Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
 				}
-				else if (this.timelinesMode == TimelinesMode.Multi)
+				else if (this.timelinesMode == TimelinesMode.GroupedByMonth)
 				{
-					list.Add (new TimelineRowDescription (TimelineRowType.Months, Res.Strings.TimelinesArrayController.Row.Months.ToString ()));
-					list.Add (new TimelineRowDescription (TimelineRowType.Years,  Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.DaysMonths, Res.Strings.TimelinesArrayController.Row.DaysMonths.ToString ()));
+					list.Add (new TimelineRowDescription (TimelineRowType.Years,      Res.Strings.TimelinesArrayController.Row.Years.ToString ()));
 				}
 				else
 				{
@@ -1359,7 +1359,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					return 3;  // Years, Months, Days
 				}
-				else if (this.timelinesMode == TimelinesMode.Multi)
+				else if (this.timelinesMode == TimelinesMode.GroupedByMonth)
 				{
 					return 2;  // Years, Months
 				}
@@ -1378,7 +1378,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.timelinesMode, this.Filter);
+			var now = Timestamp.Now.Date;
+			var f = new System.DateTime (now.Year,   1, 1);
+			var t = new System.DateTime (now.Year+1, 1, 1);
+			var range = new DateRange (f, t);
+
+			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.timelinesMode, range, this.Filter);
 		}
 
 
@@ -1425,7 +1430,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Mise à jour de la toolbar des timelines.
 			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Narrow,  this.timelinesMode == TimelinesMode.Narrow);
 			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Wide,    this.timelinesMode == TimelinesMode.Wide);
-			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Compact, this.timelinesMode == TimelinesMode.Multi);
+			this.timelinesToolbar.SetActiveState (Res.Commands.Timelines.Compact, this.timelinesMode == TimelinesMode.GroupedByMonth);
 
 			this.UpdateTimelineCommand (Res.Commands.Timelines.First, this.selectedColumn, this.FirstColumnIndex);
 			this.UpdateTimelineCommand (Res.Commands.Timelines.Prev,  this.selectedColumn, this.PrevColumnIndex);

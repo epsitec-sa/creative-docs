@@ -9,9 +9,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public struct TimelineCellDate
 	{
-		public TimelineCellDate(System.DateTime date, bool isSelected = false, bool isError = false)
+		public TimelineCellDate(System.DateTime date, bool grouped = false, bool isSelected = false, bool isError = false)
 		{
 			this.date       = date;
+			this.Grouped    = grouped;
 			this.IsSelected = isSelected;
 			this.IsError    = isError;
 		}
@@ -41,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public readonly bool					Grouped;
 		public readonly bool					IsSelected;
 		public readonly bool					IsError;
 

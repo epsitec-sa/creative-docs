@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Update(DataArray dataArray, IObjectsNodeGetter nodeGetter, TimelinesMode mode, System.Func<DataEvent, bool> filter = null)
+		public void Update(DataArray dataArray, IObjectsNodeGetter nodeGetter, TimelinesMode mode, DateRange range, System.Func<DataEvent, bool> filter = null)
 		{
 			//	Met à jour this.dataArray en fonction de l'ensemble des événements de
 			//	tous les objets. Cela nécessite d'accéder à l'ensemble des données, ce
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			dataArray.Clear (nodeGetter.Count, mode);
+			dataArray.Clear (nodeGetter.Count, mode, range);
 
 			for (int row=0; row<nodeGetter.Count; row++)
 			{
@@ -41,9 +41,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (filter == null || filter (e))
 						{
-							var column = dataArray.GetColumn (e.Timestamp);
+							bool grouped = (mode == TimelinesMode.GroupedByMonth && !range.IsInside (e.Timestamp.Date));
+							var column = dataArray.GetColumn (e.Timestamp, grouped);
 
-							if (mode == TimelinesMode.Multi)
+							if (mode == TimelinesMode.GroupedByMonth)
 							{
 								if (column[row].IsEmpty)
 								{
@@ -165,10 +166,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			public void Clear(int rowsCount, TimelinesMode mode)
+			public void Clear(int rowsCount, TimelinesMode mode, DateRange range)
 			{
 				this.rowsCount = rowsCount;
-				this.mode = mode;
+				this.mode      = mode;
+				this.range     = range;
+
 				this.columns.Clear ();
 			}
 
@@ -197,7 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			public DataColumn GetColumn(Timestamp timestamp)
+			public DataColumn GetColumn(Timestamp timestamp, bool grouped)
 			{
 				//	Retourne la colonne à utiliser pour un Timestamp donné.
 				//	Si elle n'existe pas, elle est créée.
@@ -206,7 +209,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (column == null)
 				{
-					column = new DataColumn (this.rowsCount, timestamp);
+					column = new DataColumn (this.rowsCount, timestamp, grouped);
 
 					//	Les colonnes sont triées chronologiquement. Il faut donc insérer
 					//	la nouvelle colonne à la bonne place.
@@ -219,7 +222,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			private Timestamp Adjust(Timestamp timestamp)
 			{
-				if (this.mode == TimelinesMode.Multi)
+				if (this.mode == TimelinesMode.GroupedByMonth && !range.IsInside (timestamp.Date))
 				{
 					var date = new System.DateTime(timestamp.Date.Year, timestamp.Date.Month, 1);
 					timestamp = new Timestamp (date, 0);
@@ -232,6 +235,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			private readonly List<string>		rowsLabel;
 			private int							rowsCount;
 			private TimelinesMode				mode;
+			private DateRange					range;
 		}
 
 		/// <summary>
@@ -239,9 +243,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		/// </summary>
 		public class DataColumn
 		{
-			public DataColumn(int rowsCount, Timestamp timestamp)
+			public DataColumn(int rowsCount, Timestamp timestamp, bool grouped)
 			{
 				this.Timestamp = timestamp;
+				this.Grouped   = grouped;
 
 				this.cells = new DataCell[rowsCount];
 
@@ -251,7 +256,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			public readonly Timestamp Timestamp;
+			public readonly Timestamp			Timestamp;
+			public readonly bool				Grouped;
 
 			public DataCell this[int index]
 			{
@@ -265,7 +271,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			private readonly DataCell[] cells;
+			private readonly DataCell[]			cells;
 		}
 
 		/// <summary>
@@ -291,34 +297,36 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				this.Tooltip = tooltip;
 			}
 
-			public DataCell(DataCell cell1, DataCell cell2)
+			public DataCell(DataCell merged, DataCell added)
 			{
 				this.Glyphs = new List<TimelineGlyph> ();
 
-				if (!cell1.IsEmpty)
+				if (!merged.IsEmpty)
 				{
-					this.Glyphs.AddRange (cell1.Glyphs);
+					this.Glyphs.AddRange (merged.Glyphs);
 				}
 
-				if (!cell2.IsEmpty)
+				if (!added.IsEmpty)
 				{
-					this.Glyphs.AddRange (cell2.Glyphs);
+					this.Glyphs.AddRange (added.Glyphs);
 				}
 
-				this.Flags = cell1.Flags | cell2.Flags;
+				this.Flags = merged.Flags | added.Flags;
 
+				//	Fusionne les tooltips de façon à ne conserver que la première ligne
+				//	de chacun.
 				string t1, t2;
 
-				if (cell1.Glyphs.Count == 1)
+				if (merged.Glyphs.Count == 1)
 				{
-					t1 = DataCell.GetFirstLine (cell1.Tooltip);
+					t1 = DataCell.GetFirstLine (merged.Tooltip);
 				}
 				else
 				{
-					t1 = cell1.Tooltip;
+					t1 = merged.Tooltip;
 				}
 
-				t2 = DataCell.GetFirstLine (cell2.Tooltip);
+				t2 = DataCell.GetFirstLine (added.Tooltip);
 
 				this.Tooltip = string.Concat (t1, "<br/>", t2);
 			}

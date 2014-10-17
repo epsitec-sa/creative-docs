@@ -8,8 +8,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public enum TimelinesMode
 	{
-		Narrow,		// mode étroit, avec 3 lignes d'en-tête (année, mois, jour)
-		Wide,		// mode normal, avec 2 lignes d'en-tête (année, date)
-		Multi,		// mode avec 1 cellule/mois, et donc plusieurs événement par cellule
+		Narrow,				// mode étroit, avec 3 lignes d'en-tête (année, mois, jour)
+		Wide,				// mode normal, avec 2 lignes d'en-tête (année, date)
+		GroupedByMonth,		// mode avec 1 cellule/mois, et donc plusieurs événement par cellule
 	}
 }

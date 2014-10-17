@@ -106,7 +106,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				return cell.Date.ToDayMonth ();
+				if (cell.Grouped)
+				{
+					return cell.Date.ToMonthYear (-3);  // "févr."
+				}
+				else
+				{
+					return cell.Date.ToDayMonth ();
+				}
 			}
 			else
 			{
