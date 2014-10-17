@@ -45,6 +45,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimelineArray.cs" />
+    <Compile Include="TimelineColumn.cs" />
+    <Compile Include="TimelineCell.cs" />
     <Compile Include="TimelinesArrayLogic.cs" />
   </ItemGroup>
   <ItemGroup>

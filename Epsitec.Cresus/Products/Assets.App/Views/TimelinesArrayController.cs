@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.dataFiller = new SingleObjectsTreeTableFiller (this.accessor, this.nodeGetter);
 
 			this.arrayLogic = new TimelinesArrayLogic (this.accessor);
-			this.dataArray = new TimelinesArrayLogic.DataArray ();
+			this.dataArray = new TimelineArray ();
 
 			this.timelinesMode = TimelinesMode.Wide;
 
@@ -1783,7 +1783,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly ObjectsNodeGetter					nodeGetter;
 		private readonly SingleObjectsTreeTableFiller		dataFiller;
 		private readonly TimelinesArrayLogic				arrayLogic;
-		private readonly TimelinesArrayLogic.DataArray		dataArray;
+		private readonly TimelineArray						dataArray;
 		private readonly Amortizations						amortizations;
 
 		private TopTitle									topTitle;
