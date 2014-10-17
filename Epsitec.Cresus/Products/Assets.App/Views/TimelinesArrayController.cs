@@ -390,9 +390,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.timelinesMode != value)
 				{
-					this.timelinesMode = value;
+					var sel = this.SelectedTimestamp;
 
+					this.timelinesMode = value;
 					this.UpdateDataArray ();
+
+					this.SelectedTimestamp = sel;
+
 					this.UpdateScroller ();
 					this.UpdateController ();
 					this.UpdateToolbar ();
