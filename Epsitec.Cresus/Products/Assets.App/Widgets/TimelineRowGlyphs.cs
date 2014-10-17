@@ -112,7 +112,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
 					}
 				}
-				else if (cell.Glyphs.Count > 2)
+				else if (cell.Glyphs.Count == 3)
+				{
+					//	S'il y a 3 événements dans la cellule, on les affiche côte à côte.
+					var suppl = rect.Width - rect.Height;
+					var dx = suppl / (cell.Glyphs.Count-1);
+
+					for (int i=0; i<cell.Glyphs.Count; i++)
+					{
+						int mx = 0;
+						if (i == 0)  mx = -3;
+						if (i == 2)  mx =  3;
+						var r = new Rectangle (rect.Left+dx*i+mx, rect.Bottom, rect.Height, rect.Height);
+						PaintEventGlyph.Paint (graphics, r, cell.Glyphs[i]);
+					}
+				}
+				else if (cell.Glyphs.Count > 3)
 				{
 					//	S'il y a plus de 2 événements dans la cellule, on affiche juste le
 					//	nombre d'événements.

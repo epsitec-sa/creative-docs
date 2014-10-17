@@ -835,8 +835,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 							&& this.isShowEvents;
 
 					case ViewMode.Multiple:
-						return !this.timelinesArrayController.SelectedGuid.IsEmpty
-							&& this.timelinesArrayController.SelectedTimestamp != null;
+						//?return !this.timelinesArrayController.SelectedGuid.IsEmpty
+						//?	&& this.timelinesArrayController.SelectedTimestamp != null;
+						return this.timelinesArrayController.HasSelectedEvent;
 
 					default:
 						return false;

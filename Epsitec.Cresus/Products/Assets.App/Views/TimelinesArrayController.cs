@@ -1536,10 +1536,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private bool HasSelectedEvent
+		public bool HasSelectedEvent
 		{
 			get
 			{
+#if false
 				var obj = this.SelectedObject;
 				if (obj != null && this.GetFilteredEvents (obj).Any ())
 				{
@@ -1551,6 +1552,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				return false;
+#else
+				var column = this.dataArray.GetColumn (this.selectedColumn);
+				if (column != null)
+				{
+					if (this.selectedRow != -1)
+					{
+						var cell = column[this.selectedRow];
+						return !cell.IsEmpty && cell.Glyphs.Count == 1;
+					}
+				}
+
+				return false;
+#endif
 			}
 		}
 
