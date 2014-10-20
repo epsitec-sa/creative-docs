@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Data
 				throw new System.InvalidOperationException ("Guid does not exist");
 			}
 
-			var obj = new DataObject ();
+			var obj = new DataObject (null);
 			var e = new DataEvent (Timestamp.MaxValue, EventType.Input);
 			obj.AddEvent (e);
 

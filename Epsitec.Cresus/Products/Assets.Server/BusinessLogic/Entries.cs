@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private DataObject CreateDataEntry(AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
 		{
-			var entry = new DataObject ();
+			var entry = new DataObject (this.accessor.UndoManager);
 
 			entryGuid = entry.Guid;
 			entrySeed = 0;

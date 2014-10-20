@@ -9,8 +9,10 @@ namespace Epsitec.Cresus.Assets.Data
 	public class GuidList<T> : IEnumerable<T>
 		where T : class, IGuid
 	{
-		public GuidList()
+		public GuidList(UndoManager undoManager)
 		{
+			this.undoManager = undoManager;
+
 			this.list = new List<T> ();
 			this.dict = new Dictionary<Guid, T> ();
 		}
@@ -50,22 +52,60 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.dict[item.Guid] = item;
 			this.list.Add (item);
+
+			if (this.undoManager != null)
+			{
+				var undoData = new UndoData
+				{
+					Index = this.list.Count-1,
+				};
+				this.undoManager.Push (x => this.RemoveAt (x as UndoData), undoData, "Add");
+			}
 		}
 
 		public void Insert(int index, T item)
 		{
 			this.dict[item.Guid] = item;
 			this.list.Insert (index, item);
+
+			if (this.undoManager != null)
+			{
+				var undoData = new UndoData
+				{
+					Index = index,
+				};
+				this.undoManager.Push (x => this.RemoveAt (x as UndoData), undoData, "Insert");
+			}
 		}
 
 		public void Remove(T item)
 		{
+			if (this.undoManager != null)
+			{
+				var undoData = new UndoData
+				{
+					Index = this.IndexOf (item),
+					Item = item,
+				};
+				this.undoManager.Push (x => this.Insert (x as UndoData), undoData, "Remove");
+			}
+
 			this.dict.Remove (item.Guid);
 			this.list.Remove (item);
 		}
 
 		public void RemoveAt(int index)
 		{
+			if (this.undoManager != null)
+			{
+				var undoData = new UndoData
+				{
+					Index = index,
+					Item = this.list[index],
+				};
+				this.undoManager.Push (x => this.Insert (x as UndoData), undoData, "RemoveAt");
+			}
+
 			this.dict.Remove (this.list[index].Guid);
 			this.list.RemoveAt (index);
 		}
@@ -73,6 +113,24 @@ namespace Epsitec.Cresus.Assets.Data
 		public int IndexOf(T item)
 		{
 			return this.list.IndexOf (item);
+		}
+
+
+		private void Insert(UndoData undoData)
+		{
+			var index = undoData.Index;
+			var item = undoData.Item;
+
+			this.dict[item.Guid] = item;
+			this.list.Insert (index, item);
+		}
+
+		private void RemoveAt(UndoData undoData)
+		{
+			var index = undoData.Index;
+
+			this.dict.Remove (this.list[index].Guid);
+			this.list.RemoveAt (index);
 		}
 
 
@@ -107,6 +165,14 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		private class UndoData
+		{
+			public int Index;
+			public T Item;
+		}
+
+
+		private readonly UndoManager			undoManager;
 		private readonly List<T>				list;
 		private readonly Dictionary<Guid, T>	dict;
 	}

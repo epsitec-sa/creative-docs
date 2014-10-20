@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				try
 				{
-					var accounts = new GuidList<DataObject> ();
+					var accounts = new GuidList<DataObject> (mandat.UndoManager);
 					var range = importEngine.Import (accounts, filename);
 
 					mandat.AddAccounts (range, accounts);

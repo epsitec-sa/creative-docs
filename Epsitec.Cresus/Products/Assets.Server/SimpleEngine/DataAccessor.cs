@@ -83,6 +83,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public UndoManager						UndoManager
+		{
+			get
+			{
+				return this.mandat.UndoManager;
+			}
+		}
+
 		public INodeGetter<GuidNode> GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
@@ -115,7 +123,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
 		{
-			var obj = new DataObject ();
+			var obj = new DataObject (this.UndoManager);
 			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);

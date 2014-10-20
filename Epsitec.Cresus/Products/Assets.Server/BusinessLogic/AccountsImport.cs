@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
 		{
-			var o = new DataObject ();
+			var o = new DataObject (null);
 			this.accounts.Add (o);
 			{
 				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);

@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Retourne le rapport sur la future importation d'un plan comptable.
 			using (var importEngine = new AccountsImport ())
 			{
-				var importedAccounts = new GuidList<DataObject> ();
+				var importedAccounts = new GuidList<DataObject> (this.accessor.UndoManager);
 
 				try
 				{
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			using (var importEngine = new AccountsImport ())
 			{
 				DateRange range;
-				var importedAccounts = new GuidList<DataObject> ();
+				var importedAccounts = new GuidList<DataObject> (this.accessor.UndoManager);
 
 				try
 				{

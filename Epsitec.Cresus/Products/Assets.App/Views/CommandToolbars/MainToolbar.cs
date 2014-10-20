@@ -172,6 +172,17 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.OnChangeView ();
 		}
 
+		[Command (Res.CommandIds.Main.Undo)]
+		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.accessor.UndoManager.Undo ();
+		}
+
+		[Command (Res.CommandIds.Main.Redo)]
+		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+		}
+
 
 		private void UpdateViewTypeCommands()
 		{

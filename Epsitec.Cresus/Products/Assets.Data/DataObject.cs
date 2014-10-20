@@ -9,11 +9,11 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class DataObject : IGuid
 	{
-		public DataObject()
+		public DataObject(UndoManager undoManager)
 		{
 			this.guid = Guid.NewGuid ();
 
-			this.events = new GuidList<DataEvent> ();
+			this.events = new GuidList<DataEvent> (undoManager);
 		}
 
 		#region IGuid Members

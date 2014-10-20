@@ -17,14 +17,15 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Guid = Guid.NewGuid ();
 
 			this.globalSettings = new GlobalSettings ();
+			this.undoManager = new UndoManager ();
 
-			this.assets        = new GuidList<DataObject> ();
-			this.categories    = new GuidList<DataObject> ();
-			this.groups        = new GuidList<DataObject> ();
-			this.persons       = new GuidList<DataObject> ();
-			this.entries       = new GuidList<DataObject> ();
+			this.assets        = new GuidList<DataObject> (this.undoManager);
+			this.categories    = new GuidList<DataObject> (this.undoManager);
+			this.groups        = new GuidList<DataObject> (this.undoManager);
+			this.persons       = new GuidList<DataObject> (this.undoManager);
+			this.entries       = new GuidList<DataObject> (this.undoManager);
 			this.rangeAccounts = new Dictionary<DateRange, GuidList<DataObject>> ();
-			this.reports       = new GuidList<AbstractReportParams> ();
+			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
 		}
 
 		public GlobalSettings					GlobalSettings
@@ -32,6 +33,14 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return this.globalSettings;
+			}
+		}
+
+		public UndoManager						UndoManager
+		{
+			get
+			{
+				return this.undoManager;
 			}
 		}
 
@@ -73,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 				default:
 					// Il vaut mieux retourner une liste vide, plutôt que null.
-					return new GuidList<DataObject> ();
+					return new GuidList<DataObject> (this.undoManager);
 			}
 		}
 
@@ -107,7 +116,7 @@ namespace Epsitec.Cresus.Assets.Data
 			else
 			{
 				// Il vaut mieux retourner une liste vide, plutôt que null.
-				return new GuidList<DataObject> ();
+				return new GuidList<DataObject> (this.undoManager);
 			}
 		}
 
@@ -131,6 +140,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 
 		private readonly GlobalSettings									globalSettings;
+		private readonly UndoManager									undoManager;
 		private readonly GuidList<DataObject>							assets;
 		private readonly GuidList<DataObject>							categories;
 		private readonly GuidList<DataObject>							groups;

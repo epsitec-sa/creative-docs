@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Copie un object d'immobilisation.
 			System.Diagnostics.Debug.Assert (timestamp.HasValue);
 
-			var objCopy = new DataObject ();
+			var objCopy = new DataObject (null);
 			var eventCopy = new DataEvent (timestamp.Value, EventType.Input);
 			objCopy.AddEvent (eventCopy);
 
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = obj.GetEvent (0);
 
 			//	On conserve une copie de l'objet.
-			var objCopy = new DataObject ();
+			var objCopy = new DataObject (null);
 			var eventCopy = new DataEvent (e);  // copie l'événement et toutes ses propriétés
 			objCopy.AddEvent (eventCopy);
 

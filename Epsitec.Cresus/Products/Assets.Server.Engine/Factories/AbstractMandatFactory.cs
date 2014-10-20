@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var persons = this.accessor.Mandat.GetData (BaseType.Persons);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
 
-			var o = new DataObject ();
+			var o = new DataObject (this.accessor.UndoManager);
 			persons.Add (o);
 
 			var e = new DataEvent (start, EventType.Input);
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var groups = this.accessor.Mandat.GetData (BaseType.Groups);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
 
-			var o = new DataObject ();
+			var o = new DataObject (this.accessor.UndoManager);
 			groups.Add (o);
 
 			var e = new DataEvent (start, EventType.Input);
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
 
-			var o = new DataObject ();
+			var o = new DataObject (this.accessor.UndoManager);
 			cats.Add (o);
 
 			var e = new DataEvent (start, EventType.Input);
