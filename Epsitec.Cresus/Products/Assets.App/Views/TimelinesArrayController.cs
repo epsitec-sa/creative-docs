@@ -1278,10 +1278,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void UpdateTreeColumn()
 		{
 			var selectedGuid = this.SelectedGuid;
+			var sel = this.SelectedTimestamp;
 			{
 				this.UpdateData ();
 			}
 			this.SelectedGuid = selectedGuid;
+			this.selectedColumn = -1;  // pour forcer la mise à jour
+			this.SelectedTimestamp = sel;
 		}
 
 
