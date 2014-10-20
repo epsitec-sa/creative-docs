@@ -100,7 +100,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 	
 		public void UpdateData()
 		{
-			var timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+			Timestamp? timestamp;
+
+			if (this.stateAtController == null)
+			{
+				timestamp = null;
+			}
+			else
+			{
+				timestamp = new Timestamp (this.stateAtController.Date.Value, 0);
+			}
+
 			var sortingInstructions = new SortingInstructions (this.accessor.GetMainStringField (BaseType.Assets), SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 
 			this.nodeGetter.SetParams (timestamp, this.rootGuid, Guid.Empty, sortingInstructions);
@@ -1551,19 +1561,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-#if false
-				var obj = this.SelectedObject;
-				if (obj != null && this.GetFilteredEvents (obj).Any ())
-				{
-					var column = this.dataArray.GetColumn (this.selectedColumn);
-					if (column != null)
-					{
-						return this.GetFilteredEvents (obj).Where (x => x.Timestamp == column.Timestamp).Any ();
-					}
-				}
-
-				return false;
-#else
 				var column = this.dataArray.GetColumn (this.selectedColumn);
 				if (column != null)
 				{
@@ -1575,7 +1572,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				return false;
-#endif
 			}
 		}
 

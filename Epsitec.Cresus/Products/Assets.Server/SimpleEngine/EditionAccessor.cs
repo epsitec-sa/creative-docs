@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (objectGuid.IsEmpty || !timestamp.HasValue)
 			{
+				this.CancelObjectEdition ();
 				return;
 			}
 
@@ -60,7 +61,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.timestamp           = timestamp;
 
 			this.obj = this.accessor.GetObject (this.baseType, this.objectGuid);
-			System.Diagnostics.Debug.Assert (this.obj != null);
+
+			if (this.obj == null)
+			{
+				//	Si on essaie de sélectionner un événement sur une ligne de groupement,
+				//	il n'y a rien à éditer. Dans ce cas, le Guid passé correspont à un
+				//	objet dans BaseType.Groups.
+				this.CancelObjectEdition ();
+				return;
+			}
 
 			this.isLocked = AssetCalculator.IsLocked (obj, timestamp.Value);
 

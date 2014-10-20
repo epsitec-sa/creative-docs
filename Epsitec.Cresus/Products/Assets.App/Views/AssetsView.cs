@@ -155,7 +155,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.timelineController.CellDoubleClicked += delegate
 				{
-					this.OnStartEdit ();
+					if (this.IsEditingPossible)
+					{
+						this.OnStartEdit ();
+					}
 				};
 			}
 		}
@@ -309,7 +312,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.timelinesArrayController.CellDoubleClicked += delegate
 				{
-					this.OnStartEdit ();
+					if (this.IsEditingPossible)
+					{
+						this.OnStartEdit ();
+					}
 				};
 			}
 		}
@@ -835,8 +841,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							&& this.isShowEvents;
 
 					case ViewMode.Multiple:
-						//?return !this.timelinesArrayController.SelectedGuid.IsEmpty
-						//?	&& this.timelinesArrayController.SelectedTimestamp != null;
 						return this.timelinesArrayController.HasSelectedEvent;
 
 					default:
