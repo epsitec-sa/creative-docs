@@ -511,6 +511,8 @@
     <EmbeddedResource Include="Images\Timeline.GroupedByMonth.icon" />
     <EmbeddedResource Include="Images\Timeline.GroupedByTrim.icon" />
     <EmbeddedResource Include="Images\Timeline.GroupedByYear.icon" />
+    <EmbeddedResource Include="Images\Main.Redo.icon" />
+    <EmbeddedResource Include="Images\Main.Undo.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -273,8 +273,12 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Locked = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
 				//	designer:cap/JUKI001
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+				//	designer:cap/JUK6601
+				public static readonly global::Epsitec.Common.Widgets.Command Redo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 198));
 				//	designer:cap/JUKO001
 				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
+				//	designer:cap/JUK5601
+				public static readonly global::Epsitec.Common.Widgets.Command Undo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 197));
 				public static class Navigate
 				{
 					internal static void _Initialize()
@@ -824,8 +828,12 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Locked = 0x7D300014000017L;
 				//	designer:cap/JUKI001
 				public const long New = 0x7D300014000012L;
+				//	designer:cap/JUK6601
+				public const long Redo = 0x7D3000140000C6L;
 				//	designer:cap/JUKO001
 				public const long Simulation = 0x7D300014000018L;
+				//	designer:cap/JUK5601
+				public const long Undo = 0x7D3000140000C5L;
 				public static class Navigate
 				{
 					//	designer:cap/JUKJ001
