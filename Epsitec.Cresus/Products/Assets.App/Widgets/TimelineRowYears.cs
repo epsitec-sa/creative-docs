@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -95,7 +96,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (cell.IsValid)
 			{
-				return ColorManager.GetBackgroundColor (false);
+				if (cell.GroupedMode == TimelineGroupedMode.None)
+				{
+					return ColorManager.GetBackgroundColor (false);
+				}
+				else
+				{
+					return ColorManager.GetCheckerboardColor (false);
+				}
 			}
 			else
 			{
