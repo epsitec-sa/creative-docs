@@ -1397,9 +1397,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	qui peut être long. Néanmoins, cela est nécessaire, même si la timeline
 			//	n'affiche qu'un nombre limité de lignes. En effet, il faut allouer toutes
 			//	les colonnes pour lesquelles il existe un événement.
-			var now = Timestamp.Now.Date;
-			var fromDate = new System.DateTime (now.Year,   1, 1);  // date inclue
-			var toDate   = new System.DateTime (now.Year+1, 1, 1);  // date exclue
+			System.DateTime date;
+
+			if (this.stateAtController.Date.HasValue)
+			{
+				date = this.stateAtController.Date.Value;
+			}
+			else
+			{
+				date = Timestamp.Now.Date;
+			}
+
+			var fromDate = new System.DateTime (date.Year,   1, 1);  // date inclue
+			var toDate   = new System.DateTime (date.Year+1, 1, 1);  // date exclue
 			var groupedExcludeRange = new DateRange (fromDate, toDate);
 
 			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.timelinesMode, groupedExcludeRange, this.Filter);
