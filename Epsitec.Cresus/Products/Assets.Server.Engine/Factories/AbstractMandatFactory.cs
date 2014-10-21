@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var o = new DataObject (this.accessor.UndoManager);
 			persons.Add (o);
 
-			var e = new DataEvent (start, EventType.Input);
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
 			this.AddField (e, this.fieldPersonTitle,     title);
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var o = new DataObject (this.accessor.UndoManager);
 			groups.Add (o);
 
-			var e = new DataEvent (start, EventType.Input);
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
 			if (parent != null)
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var o = new DataObject (this.accessor.UndoManager);
 			cats.Add (o);
 
-			var e = new DataEvent (start, EventType.Input);
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
 			this.AddField (e, ObjectField.Name,             name);

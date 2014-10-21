@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			entries.Add (entry);
 
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
-			var e = new DataEvent (start, EventType.Input);
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			entry.AddEvent (e);
 
 			e.AddProperty (new DataGuidProperty (ObjectField.EntryAssetGuid, amount.AssetGuid));

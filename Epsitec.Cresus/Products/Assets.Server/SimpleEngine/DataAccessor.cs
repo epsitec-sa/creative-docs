@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
-			var e = new DataEvent (timestamp, EventType.Input);
+			var e = new DataEvent (this.UndoManager, timestamp, EventType.Input);
 			obj.AddEvent (e);
 
 			//	Ajoute la date de l'opération.
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var position = obj.GetNewPosition (date);
 				var ts = new Timestamp (date, position);
-				var e = new DataEvent (ts, type);
+				var e = new DataEvent (this.UndoManager, ts, type);
 				obj.AddEvent (e);
 
 				this.AddDateOperation (e);

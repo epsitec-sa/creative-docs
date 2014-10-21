@@ -144,6 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			YesNoPopup.Show (target, question, delegate
 			{
+				this.accessor.UndoManager.Start (Res.Commands.Persons.Delete.Description);
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
@@ -191,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
+					this.accessor.UndoManager.Start (Res.Commands.Persons.New.Description);
 					this.CreateObject (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
 				}
 			};

@@ -14,32 +14,35 @@ namespace Epsitec.Cresus.Assets.Data
 	 **/
 	public class DataEvent : IGuid
 	{
-		public DataEvent(Timestamp timestamp, EventType type)
+		public DataEvent(UndoManager undoManager, Timestamp timestamp, EventType type)
 		{
-			this.guid      = Guid.NewGuid ();
-			this.Timestamp = timestamp;
-			this.Type      = type;
+			this.undoManager = undoManager;
+			this.guid        = Guid.NewGuid ();
+			this.Timestamp   = timestamp;
+			this.Type        = type;
 
-			this.properties = new List<AbstractDataProperty> ();
+			this.properties = new UndoableList<AbstractDataProperty> (this.undoManager);
 		}
 
-		public DataEvent(Guid guid, Timestamp timestamp, EventType type)
+		public DataEvent(UndoManager undoManager, Guid guid, Timestamp timestamp, EventType type)
 		{
-			this.guid      = guid;
-			this.Timestamp = timestamp;
-			this.Type      = type;
+			this.undoManager = undoManager;
+			this.guid        = guid;
+			this.Timestamp   = timestamp;
+			this.Type        = type;
 
-			this.properties = new List<AbstractDataProperty> ();
+			this.properties = new UndoableList<AbstractDataProperty> (this.undoManager);
 		}
 
-		public DataEvent(DataEvent model)
+		public DataEvent(UndoManager undoManager, DataEvent model)
 		{
 			//	Copie un événement avec toutes ses propriétés.
-			this.guid      = model.guid;
-			this.Timestamp = model.Timestamp;
-			this.Type      = model.Type;
+			this.undoManager = undoManager;
+			this.guid        = model.guid;
+			this.Timestamp   = model.Timestamp;
+			this.Type        = model.Type;
 
-			this.properties = new List<AbstractDataProperty> ();
+			this.properties = new UndoableList<AbstractDataProperty> (this.undoManager);
 			this.SetProperties (model);
 		}
 
@@ -169,7 +172,8 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		private readonly UndoManager				undoManager;
 		private readonly Guid						guid;
-		private readonly List<AbstractDataProperty>	properties;
+		private readonly UndoableList<AbstractDataProperty>	properties;
 	}
 }

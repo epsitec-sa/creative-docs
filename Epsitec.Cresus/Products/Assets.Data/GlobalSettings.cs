@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			var obj = new DataObject (null);
-			var e = new DataEvent (Timestamp.MaxValue, EventType.Input);
+			var e = new DataEvent (null, Timestamp.MaxValue, EventType.Input);
 			obj.AddEvent (e);
 
 			var p1 = new DataStringProperty (ObjectField.Name, userField.Name);

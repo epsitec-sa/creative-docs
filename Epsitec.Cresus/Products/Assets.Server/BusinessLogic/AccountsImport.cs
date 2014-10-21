@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.accounts.Add (o);
 			{
 				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
-				var e = new DataEvent (start, EventType.Input);
+				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
 				e.AddProperty (new DataStringProperty (ObjectField.Number, number));

@@ -164,6 +164,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ShowLastViewsPopup (target);
 		}
 
+		[Command (Res.CommandIds.Main.Undo)]
+		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.accessor.UndoManager.Undo ();
+			this.view.DeepUpdateUI ();
+			this.UpdateToolbar ();
+		}
+
+		[Command (Res.CommandIds.Main.Redo)]
+		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.accessor.UndoManager.Redo ();
+			this.view.DeepUpdateUI ();
+			this.UpdateToolbar ();
+		}
+
 
 		private void ShowCreateMandatPopup(Widget target)
 		{
@@ -210,6 +226,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandContext.GetCommandState (Res.Commands.Main.Navigate.Menu   ).Enable = this.NavigateMenuEnable;
 			this.commandContext.GetCommandState (Res.Commands.Main.Locked          ).Enable = true;
 			this.commandContext.GetCommandState (Res.Commands.Main.Simulation      ).Enable = true;
+			this.commandContext.GetCommandState (Res.Commands.Main.Undo            ).Enable = this.accessor.UndoManager.IsUndoEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.Redo            ).Enable = this.accessor.UndoManager.IsRedoEnable;
 		}
 
 

@@ -10,36 +10,52 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		public UndoManager()
 		{
-			this.items = new List<UndoItem> ();
+			this.groups = new List<UndoGroup> ();
 			this.Clear ();
 		}
 
 
 		public void Clear()
 		{
-			this.items.Clear ();
+			this.groups.Clear ();
 			this.lastExecuted = -1;
 			this.lastSaved = -1;
 		}
 
-		public void Save()
-		{
-			this.lastSaved = this.lastExecuted;
-		}
-
-		public bool IsModified
+		public bool IsUndoEnable
 		{
 			get
 			{
-				return this.lastSaved != this.lastExecuted;
+				return this.lastExecuted >= 0 && this.groups.Count > 0;
 			}
 		}
+
+		public bool IsRedoEnable
+		{
+			get
+			{
+				return this.lastExecuted+1 < this.groups.Count;
+			}
+		}
+
+		//?public void Save()
+		//?{
+		//?	this.lastSaved = this.lastExecuted;
+		//?}
+		//?
+		//?public bool IsModified
+		//?{
+		//?	get
+		//?	{
+		//?		return this.lastSaved != this.lastExecuted;
+		//?	}
+		//?}
 
 		public int Size
 		{
 			get
 			{
-				return this.items.Count;
+				return this.groups.Count;
 			}
 		}
 
@@ -53,9 +69,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Limit(int numItems)
 		{
-			while (this.items.Count > numItems)
+			while (this.groups.Count > numItems)
 			{
-				this.items.RemoveAt (0);
+				this.groups.RemoveAt (0);
 
 				if (this.lastExecuted >= 0)
 				{
@@ -69,48 +85,52 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public void Push(UndoItem item)
+		public void Start(string description)
 		{
-			if (this.lastExecuted+1 < this.items.Count)
+			if (this.lastExecuted+1 < this.groups.Count)
 			{
-				int numCommandsToRemove = this.items.Count - (this.lastExecuted+1);
+				int numCommandsToRemove = this.groups.Count - (this.lastExecuted+1);
 				for (int i=0; i<numCommandsToRemove; i++)
 				{
-					this.items.RemoveAt (this.lastExecuted+1);
+					this.groups.RemoveAt (this.lastExecuted+1);
 				}
 			}
 
-			this.items.Add (item);
+			var group = new UndoGroup (description);
+			this.groups.Add (group);
 
-			this.lastExecuted = this.items.Count-1;
+			this.lastExecuted = this.groups.Count-1;
+		}
+
+		public void Push(UndoItem item)
+		{
+			if (this.groups.Any ())
+			{
+				var group = this.groups.Last ();
+				group.Push (item);
+			}
 		}
 
 		public void Undo()
 		{
-			if (this.lastExecuted >= 0 && this.items.Count > 0)
+			if (this.IsUndoEnable)
 			{
-				this.Swap ();
+				this.groups[this.lastExecuted].Undo ();
 				this.lastExecuted--;
 			}
 		}
 
 		public void Redo()
 		{
-			if (this.lastExecuted+1 < this.items.Count)
+			if (this.IsRedoEnable)
 			{
 				this.lastExecuted++;
-				this.Swap ();
+				this.groups[this.lastExecuted].Redo ();
 			}
 		}
 
-		private void Swap()
-		{
-			var item = this.items[this.lastExecuted];
-			this.items[this.lastExecuted] = item.undoOperation (item.undoData);
-		}
 
-
-		private readonly List<UndoItem>			items;
+		private readonly List<UndoGroup>		groups;
 		private int								lastExecuted;
 		private int								lastSaved;
 	}

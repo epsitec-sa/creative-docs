@@ -6,15 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public class GuidList<T> : IEnumerable<T>
-		where T : class, IGuid
+	public class UndoableList<T> : IEnumerable<T>
+		where T : class
 	{
-		public GuidList(UndoManager undoManager)
+		public UndoableList(UndoManager undoManager)
 		{
 			this.undoManager = undoManager;
 
 			this.list = new List<T> ();
-			this.dict = new Dictionary<Guid, T> ();
 		}
 
 
@@ -44,9 +43,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Clear()
 		{
-			//?this.dict.Clear ();
-			//?this.list.Clear ();
-
 			//	On n'utilise pas this.list.Clear () pour permettre le undo !
 			while (this.list.Any ())
 			{
@@ -69,7 +65,6 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Ajoute un item à la fin de la liste et retourne l'information permettant
 			//	de faire l'opération inverse.
-			this.dict[item.Guid] = item;
 			this.list.Add (item);
 
 			var undoData = new UndoData
@@ -82,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.URemoveAt (data.Index);
 			},
-			undoData, "GuidList.Add");
+			undoData, "UndoableList.Add");
 		}
 
 
@@ -100,7 +95,6 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Ajoute un item dans la liste et retourne l'information permettant
 			//	de faire l'opération inverse.
-			this.dict[item.Guid] = item;
 			this.list.Insert (index, item);
 
 			var undoData = new UndoData
@@ -113,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.URemoveAt (data.Index);
 			},
-			undoData, "GuidList.Insert");
+			undoData, "UndoableList.Insert");
 		}
 
 
@@ -137,7 +131,6 @@ namespace Epsitec.Cresus.Assets.Data
 				Item  = item,
 			};
 
-			this.dict.Remove (item.Guid);
 			this.list.Remove (item);
 
 			return new UndoItem (delegate (IUndoData d)
@@ -145,7 +138,7 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.UInsert (data.Index, data.Item);
 			},
-			undoData, "GuidList.Remove");
+			undoData, "UndoableList.Remove");
 		}
 
 
@@ -169,7 +162,6 @@ namespace Epsitec.Cresus.Assets.Data
 				Item  = this.list[index],
 			};
 
-			this.dict.Remove (this.list[index].Guid);
 			this.list.RemoveAt (index);
 
 			return new UndoItem (delegate (IUndoData d)
@@ -177,30 +169,20 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.UInsert (data.Index, data.Item);
 			},
-			undoData, "GuidList.RemoveAt");
+			undoData, "UndoableList.RemoveAt");
 		}
 
+
+		public int FindIndex(System.Predicate<T> match)
+		{
+			return this.list.FindIndex (match);
+		}
 
 		public int IndexOf(T item)
 		{
 			return this.list.IndexOf (item);
 		}
 
-
-		public T this[Guid key]
-		{
-			get
-			{
-				if (this.dict.ContainsKey (key))
-				{
-					return this.dict[key];
-				}
-				else
-				{
-					return null;
-				}
-			}
-		}
 
 		public T this[int index]
 		{
@@ -215,6 +197,38 @@ namespace Epsitec.Cresus.Assets.Data
 					return null;
 				}
 			}
+			set
+			{
+				if (index >= 0 && index < this.list.Count)
+				{
+					var undoItem = this.USet (index, value);
+
+					if (this.undoManager != null)
+					{
+						this.undoManager.Push (undoItem);
+					}
+				}
+			}
+		}
+
+		private UndoItem USet(int index, T item)
+		{
+			//	Remplace un item dans la liste et retourne l'information permettant
+			//	de faire l'opération inverse.
+			var undoData = new UndoData
+			{
+				Index = index,
+				Item  = this.list[index],
+			};
+
+			this.list[index] = item;
+
+			return new UndoItem (delegate (IUndoData d)
+			{
+				var data = d as UndoData;
+				return this.USet (data.Index, data.Item);
+			},
+			undoData, "UndoableList.Set");
 		}
 
 
@@ -227,6 +241,5 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly UndoManager			undoManager;
 		private readonly List<T>				list;
-		private readonly Dictionary<Guid, T>	dict;
 	}
 }

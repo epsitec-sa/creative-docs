@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Data
 			//	que déplacer un événement d'entrée après celui de sortie.
 			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
 			//	on ne changera que le timestamp.
-			var newEvent = new DataEvent (e.Guid, timestamp, e.Type);
+			var newEvent = new DataEvent (null, e.Guid, timestamp, e.Type);
 			newEvent.SetProperties (e);
 
 			this.RemoveEvent (e);

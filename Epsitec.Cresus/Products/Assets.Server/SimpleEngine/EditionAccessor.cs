@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				this.dataEvent = new DataEvent (e);  // conserve une copie
+				this.dataEvent = new DataEvent (null, e);  // conserve une copie
 			}
 		}
 
@@ -101,6 +101,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (this.dirty)
 			{
+				this.accessor.UndoManager.Start ("Modification");
+
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);
 

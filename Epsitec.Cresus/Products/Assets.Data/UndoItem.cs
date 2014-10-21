@@ -22,9 +22,11 @@ namespace Epsitec.Cresus.Assets.Data
 		//	La fonction permettant d'annuler est définie ainsi:
 		//	
 		//		public UndoItem UndoOperation(IUndoData data)
+		//		{
+		//		}
 		//	
 		//	Elle retourne toujours l'information permettant de l'annuler
-		//	elle-même.
+		//	elle-même (opération inverse).
 
 		public readonly System.Func<IUndoData, UndoItem>	undoOperation;
 		public readonly IUndoData							undoData;

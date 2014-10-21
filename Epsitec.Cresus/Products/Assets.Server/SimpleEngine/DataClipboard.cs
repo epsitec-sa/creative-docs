@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			System.Diagnostics.Debug.Assert (timestamp.HasValue);
 
 			var objCopy = new DataObject (null);
-			var eventCopy = new DataEvent (timestamp.Value, EventType.Input);
+			var eventCopy = new DataEvent (null, timestamp.Value, EventType.Input);
 			objCopy.AddEvent (eventCopy);
 
 			foreach (var field in accessor.AssetFields)
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			//	On conserve une copie de l'objet.
 			var objCopy = new DataObject (null);
-			var eventCopy = new DataEvent (e);  // copie l'événement et toutes ses propriétés
+			var eventCopy = new DataEvent (null, e);  // copie l'événement et toutes ses propriétés
 			objCopy.AddEvent (eventCopy);
 
 			return objCopy;
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.eventGuidMandat = accessor.Mandat.Guid;
 
 			//	On conserve une copie de l'événement.
-			var eventCopy = new DataEvent (e.Timestamp, e.Type);
+			var eventCopy = new DataEvent (null, e.Timestamp, e.Type);
 			eventCopy.SetProperties (e);
 			
 			this.dataEvent = eventCopy;
