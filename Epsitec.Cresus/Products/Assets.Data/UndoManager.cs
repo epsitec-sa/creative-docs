@@ -69,27 +69,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		//?public void Add(UndoItem item, bool execute)
-		//?{
-		//?	if (this.lastExecuted+1 < this.items.Count)
-		//?	{
-		//?		int numCommandsToRemove = this.items.Count - (this.lastExecuted+1);
-		//?		for (int i=0; i<numCommandsToRemove; i++)
-		//?		{
-		//?			this.items.RemoveAt (this.lastExecuted+1);
-		//?		}
-		//?	}
-		//?
-		//?	if (execute)
-		//?	{
-		//?		item.Do ();
-		//?	}
-		//?
-		//?	this.items.Add (item);
-		//?	this.lastExecuted = this.items.Count-1;
-		//?}
-
-		public void Push(System.Action<object> undoOperation, object undoData, string description)
+		public void Push(UndoItem item)
 		{
 			if (this.lastExecuted+1 < this.items.Count)
 			{
@@ -100,7 +80,6 @@ namespace Epsitec.Cresus.Assets.Data
 				}
 			}
 
-			var item = new UndoItem (undoOperation, undoData, description);
 			this.items.Add (item);
 
 			this.lastExecuted = this.items.Count-1;
@@ -108,14 +87,10 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Undo()
 		{
-			if (this.lastExecuted >= 0)
+			if (this.lastExecuted >= 0 && this.items.Count > 0)
 			{
-				if (this.items.Count > 0)
-				{
-					var item = this.items[this.lastExecuted];
-					item.undoOperation (item.undoData);
-					this.lastExecuted--;
-				}
+				this.Swap ();
+				this.lastExecuted--;
 			}
 		}
 
@@ -123,33 +98,20 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			if (this.lastExecuted+1 < this.items.Count)
 			{
-				var item = this.items[this.lastExecuted+1];
-				item.undoOperation (item.undoData);
 				this.lastExecuted++;
+				this.Swap ();
 			}
 		}
 
-
-		private struct UndoItem
+		private void Swap()
 		{
-			public UndoItem(System.Action<object> undoOperation, object undoData, string description)
-			{
-				this.undoOperation = undoOperation;
-				this.undoData = undoData;
-				this.description = description;
-			}
-
-			//?public System.Action Do;
-			//?public System.Action Undo;
-
-			public readonly System.Action<object> undoOperation;
-			public readonly object undoData;
-			public readonly string description;
+			var item = this.items[this.lastExecuted];
+			this.items[this.lastExecuted] = item.undoOperation (item.undoData);
 		}
 
 
-		private readonly List<UndoItem> items;
-		private int lastExecuted;
-		private int lastSaved;
+		private readonly List<UndoItem>			items;
+		private int								lastExecuted;
+		private int								lastSaved;
 	}
 }

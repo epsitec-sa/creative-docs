@@ -48,89 +48,136 @@ namespace Epsitec.Cresus.Assets.Data
 			this.list.Clear ();
 		}
 
+
 		public void Add(T item)
 		{
+			var undoItem = this.UAdd (item);
+
+			if (this.undoManager != null)
+			{
+				this.undoManager.Push (undoItem);
+			}
+		}
+
+		private UndoItem UAdd(T item)
+		{
+			//	Ajoute un item à la fin de la liste et retourne l'information permettant
+			//	de faire l'opération inverse.
 			this.dict[item.Guid] = item;
 			this.list.Add (item);
 
-			if (this.undoManager != null)
+			var undoData = new UndoData
 			{
-				var undoData = new UndoData
-				{
-					Index = this.list.Count-1,
-				};
-				this.undoManager.Push (x => this.RemoveAt (x as UndoData), undoData, "Add");
-			}
+				Index = this.list.Count-1,
+			};
+
+			return new UndoItem (delegate (IUndoData d)
+			{
+				var data = d as UndoData;
+				return this.URemoveAt (data.Index);
+			},
+			undoData, "Add");
 		}
+
 
 		public void Insert(int index, T item)
 		{
+			var undoItem = this.UInsert (index, item);
+
+			if (this.undoManager != null)
+			{
+				this.undoManager.Push (undoItem);
+			}
+		}
+
+		private UndoItem UInsert(int index, T item)
+		{
+			//	Ajoute un item dans la liste et retourne l'information permettant
+			//	de faire l'opération inverse.
 			this.dict[item.Guid] = item;
 			this.list.Insert (index, item);
 
-			if (this.undoManager != null)
+			var undoData = new UndoData
 			{
-				var undoData = new UndoData
-				{
-					Index = index,
-				};
-				this.undoManager.Push (x => this.RemoveAt (x as UndoData), undoData, "Insert");
-			}
+				Index = index,
+			};
+
+			return new UndoItem (delegate (IUndoData d)
+			{
+				var data = d as UndoData;
+				return this.URemoveAt (data.Index);
+			},
+			undoData, "Insert");
 		}
+
 
 		public void Remove(T item)
 		{
+			var undoItem = this.URemove (item);
+
 			if (this.undoManager != null)
 			{
-				var undoData = new UndoData
-				{
-					Index = this.IndexOf (item),
-					Item = item,
-				};
-				this.undoManager.Push (x => this.Insert (x as UndoData), undoData, "Remove");
+				this.undoManager.Push (undoItem);
 			}
+		}
+
+		private UndoItem URemove(T item)
+		{
+			//	Supprime un item de la liste et retourne l'information permettant
+			//	de faire l'opération inverse.
+			var undoData = new UndoData
+			{
+				Index = this.IndexOf (item),
+				Item = item,
+			};
 
 			this.dict.Remove (item.Guid);
 			this.list.Remove (item);
+
+			return new UndoItem (delegate (IUndoData d)
+			{
+				var data = d as UndoData;
+				return this.UInsert (data.Index, data.Item);
+			},
+			undoData, "Remove");
 		}
+
 
 		public void RemoveAt(int index)
 		{
+			var undoItem = this.URemoveAt (index);
+
 			if (this.undoManager != null)
 			{
-				var undoData = new UndoData
-				{
-					Index = index,
-					Item = this.list[index],
-				};
-				this.undoManager.Push (x => this.Insert (x as UndoData), undoData, "RemoveAt");
+				this.undoManager.Push (undoItem);
 			}
+		}
+
+		private UndoItem URemoveAt(int index)
+		{
+			//	Supprime un item de la liste et retourne l'information permettant
+			//	de faire l'opération inverse.
+			var undoData = new UndoData
+			{
+				Index = index,
+				Item = this.list[index],
+			};
 
 			this.dict.Remove (this.list[index].Guid);
 			this.list.RemoveAt (index);
+
+			return new UndoItem (delegate (IUndoData d)
+			{
+				var data = d as UndoData;
+				return this.UInsert (data.Index, data.Item);
+			},
+			undoData, "RemoveAt");
 		}
+
 
 		public int IndexOf(T item)
 		{
 			return this.list.IndexOf (item);
-		}
-
-
-		private void Insert(UndoData undoData)
-		{
-			var index = undoData.Index;
-			var item = undoData.Item;
-
-			this.dict[item.Guid] = item;
-			this.list.Insert (index, item);
-		}
-
-		private void RemoveAt(UndoData undoData)
-		{
-			var index = undoData.Index;
-
-			this.dict.Remove (this.list[index].Guid);
-			this.list.RemoveAt (index);
 		}
 
 
@@ -165,7 +212,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		private class UndoData
+		private class UndoData : IUndoData
 		{
 			public int Index;
 			public T Item;

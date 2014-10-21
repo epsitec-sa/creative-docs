@@ -181,6 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.Main.Redo)]
 		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.accessor.UndoManager.Redo ();
 		}
 
 
