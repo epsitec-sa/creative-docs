@@ -15,6 +15,12 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void SetViewStateGetter(System.Func<IViewState> getViewState)
+		{
+			this.getViewState = getViewState;
+		}
+
+
 		public void Clear()
 		{
 			this.groups.Clear ();
@@ -85,7 +91,8 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public void Start(string description)
+
+		public void Start()
 		{
 			if (this.lastExecuted+1 < this.groups.Count)
 			{
@@ -96,10 +103,37 @@ namespace Epsitec.Cresus.Assets.Data
 				}
 			}
 
-			var group = new UndoGroup (description);
+			var group = new UndoGroup ();
 			this.groups.Add (group);
 
 			this.lastExecuted = this.groups.Count-1;
+		}
+
+		public void SetDescription(string description)
+		{
+			if (this.groups.Any ())
+			{
+				var group = this.groups.Last ();
+				group.Description = description;
+			}
+		}
+
+		public void SetBeforeViewState()
+		{
+			if (this.groups.Any () && this.getViewState != null)
+			{
+				var group = this.groups.Last ();
+				group.BeforeViewState = this.getViewState ();
+			}
+		}
+
+		public void SetAfterViewState()
+		{
+			if (this.groups.Any () && this.getViewState != null)
+			{
+				var group = this.groups.Last ();
+				group.AfterViewState = this.getViewState ();
+			}
 		}
 
 		public void Push(UndoItem item)
@@ -111,21 +145,34 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public void Undo()
+
+		public IViewState Undo()
 		{
 			if (this.IsUndoEnable)
 			{
-				this.groups[this.lastExecuted].Undo ();
-				this.lastExecuted--;
+				var group = this.groups[this.lastExecuted--];
+
+				group.Undo ();
+				return group.BeforeViewState;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
-		public void Redo()
+		public IViewState Redo()
 		{
 			if (this.IsRedoEnable)
 			{
-				this.lastExecuted++;
-				this.groups[this.lastExecuted].Redo ();
+				var group = this.groups[++this.lastExecuted];
+
+				group.Redo ();
+				return group.AfterViewState;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
@@ -133,5 +180,6 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly List<UndoGroup>		groups;
 		private int								lastExecuted;
 		private int								lastSaved;
+		private System.Func<IViewState>			getViewState;
 	}
 }

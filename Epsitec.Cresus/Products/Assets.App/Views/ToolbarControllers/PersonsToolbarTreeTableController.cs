@@ -144,10 +144,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			YesNoPopup.Show (target, question, delegate
 			{
-				this.accessor.UndoManager.Start (Res.Commands.Persons.Delete.Description);
+				this.accessor.UndoManager.Start ();
+				this.accessor.UndoManager.SetDescription (Res.Commands.Persons.Delete.Description);
+				this.accessor.UndoManager.SetBeforeViewState ();
+
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
+
+				this.accessor.UndoManager.SetAfterViewState ();
 			});
 		}
 
@@ -192,8 +197,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.accessor.UndoManager.Start (Res.Commands.Persons.New.Description);
+					this.accessor.UndoManager.Start ();
+					this.accessor.UndoManager.SetDescription (Res.Commands.Persons.New.Description);
+					this.accessor.UndoManager.SetBeforeViewState ();
+
 					this.CreateObject (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
+
+					this.accessor.UndoManager.SetAfterViewState ();
 				}
 			};
 		}

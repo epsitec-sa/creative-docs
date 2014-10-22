@@ -54,6 +54,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="IViewState.cs" />
     <Compile Include="UndoableList.cs" />
     <Compile Include="IUndoData.cs" />
     <Compile Include="UndoItem.cs" />

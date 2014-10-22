@@ -8,14 +8,50 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class UndoGroup
 	{
-		public UndoGroup(string description)
+		public UndoGroup()
 		{
-			this.description = description;
 			this.items = new List<UndoItem> ();
 		}
 
 
-		public int Size
+		public string							Description
+		{
+			get
+			{
+				return this.description;
+			}
+			set
+			{
+				this.description = value;
+			}
+		}
+
+		public IViewState						BeforeViewState
+		{
+			get
+			{
+				return this.beforeViewState;
+			}
+			set
+			{
+				this.beforeViewState = value;
+			}
+		}
+
+		public IViewState						AfterViewState
+		{
+			get
+			{
+				return this.afterViewState;
+			}
+			set
+			{
+				this.afterViewState = value;
+			}
+		}
+
+
+		public int								Size
 		{
 			get
 			{
@@ -46,14 +82,17 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void Swap(int index)
 		{
-			//	Annule une action et remplace les informations qui ont permis de le
-			//	faire par les informations pour le défaire.
+			//	Annule une action et remplace les informations qui ont permis de la
+			//	faire par les informations pour la défaire.
 			var item = this.items[index];
 			this.items[index] = item.undoOperation (item.undoData);
 		}
 
 
-		private readonly string					description;
 		private readonly List<UndoItem>			items;
+
+		private string							description;
+		private IViewState						beforeViewState;
+		private IViewState						afterViewState;
 	}
 }

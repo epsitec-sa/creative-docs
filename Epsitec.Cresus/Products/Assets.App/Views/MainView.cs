@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var cleaner = new CleanerAgent (this.accessor, this);
 			this.accessor.CleanerAgents.Add (cleaner);
+
+			this.accessor.UndoManager.SetViewStateGetter (delegate
+			{
+				return this.view.ViewState;
+			});
 		}
 
 		public void CreateUI(Widget parent)
@@ -167,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Undo)]
 		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.accessor.UndoManager.Undo ();
+			this.view.ViewState = this.accessor.UndoManager.Undo () as AbstractViewState;
 			this.view.DeepUpdateUI ();
 			this.UpdateToolbar ();
 		}
@@ -175,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Redo)]
 		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.accessor.UndoManager.Redo ();
+			this.view.ViewState = this.accessor.UndoManager.Redo () as AbstractViewState;
 			this.view.DeepUpdateUI ();
 			this.UpdateToolbar ();
 		}

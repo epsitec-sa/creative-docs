@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 {
-	public abstract class AbstractViewState : IGuid
+	public abstract class AbstractViewState : IGuid, IViewState
 	{
 		public AbstractViewState()
 		{
