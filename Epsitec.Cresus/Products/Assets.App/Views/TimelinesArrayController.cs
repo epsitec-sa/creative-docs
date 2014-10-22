@@ -542,8 +542,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void AssetsDeleteSelection()
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.AssetsLeft.Delete.Description);
+
 			this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 			this.UpdateData ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.AssetsLeft.Deselect)]
@@ -647,6 +652,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.AssetsLeft.New.Description);
+
 			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
 
@@ -656,6 +664,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.SelectedTimestamp = AssetCalculator.GetLastTimestamp (asset);
 
 			this.OnStartEditing (EventType.Input, this.SelectedTimestamp.GetValueOrDefault ());
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 		#endregion
 
@@ -953,8 +963,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void TimelineDeleteSelection()
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Delete.Description);
+
 			this.accessor.RemoveObjectEvent (this.SelectedObject, this.SelectedTimestamp);
 			this.UpdateData ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
@@ -1057,6 +1072,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 			if (obj != null)
 			{
+				this.accessor.UndoManager.Start ();
+				this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.New.Description);
+
 				var type = TimelinesArrayController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (obj, date, type);
 
@@ -1071,6 +1089,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.OnStartEditing (e.Type, e.Timestamp);
+
+				this.accessor.UndoManager.SetAfterViewState ();
 			}
 		}
 

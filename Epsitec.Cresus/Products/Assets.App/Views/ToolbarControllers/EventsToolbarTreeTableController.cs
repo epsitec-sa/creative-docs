@@ -199,9 +199,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				YesNoPopup.ShowAssetsDeleteEventQuestion (target, delegate
 				{
+					this.accessor.UndoManager.Start ();
+					this.accessor.UndoManager.SetDescription (Res.Commands.Events.Delete.Description);
+
 					this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
 					this.UpdateData ();
 					this.OnUpdateAfterDelete ();
+
+					this.accessor.UndoManager.SetAfterViewState ();
 				});
 			}
 		}
@@ -303,6 +308,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (this.obj != null)
 			{
+				this.accessor.UndoManager.Start ();
+				this.accessor.UndoManager.SetDescription (Res.Commands.Events.New.Description);
+
 				var type = EventsToolbarTreeTableController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (this.obj, date, type);
 
@@ -312,6 +320,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					this.SelectedRow = this.TimestampToRow (e.Timestamp);
 					this.OnUpdateAfterCreate (e.Guid, type, e.Timestamp);
 				}
+
+				this.accessor.UndoManager.SetAfterViewState ();
 			}
 		}
 

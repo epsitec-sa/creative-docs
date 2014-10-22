@@ -129,8 +129,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Edit);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Locked);
-			this.buttonSimulation =
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Simulation);
+			//-this.buttonSimulation =
+			//-this.CreateButton (DockStyle.Left, Res.Commands.Main.Simulation);
 
 			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Cancel);
 			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Accept);

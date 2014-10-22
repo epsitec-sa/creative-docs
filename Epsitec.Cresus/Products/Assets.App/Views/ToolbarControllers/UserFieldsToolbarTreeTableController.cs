@@ -140,25 +140,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.MoveTop)]
 		protected void OnMoveTop()
 		{
-			this.MoveUserField (this.VisibleSelectedRow, this.FirstRowIndex);
+			this.MoveUserField (this.VisibleSelectedRow, this.FirstRowIndex, Res.Commands.UserFields.MoveTop.Description);
 		}
 
 		[Command (Res.CommandIds.UserFields.MoveUp)]
 		protected void OnMoveUp()
 		{
-			this.MoveUserField (this.VisibleSelectedRow, this.PrevRowIndex);
+			this.MoveUserField (this.VisibleSelectedRow, this.PrevRowIndex, Res.Commands.UserFields.MoveUp.Description);
 		}
 
 		[Command (Res.CommandIds.UserFields.MoveDown)]
 		protected void OnMoveDown()
 		{
-			this.MoveUserField (this.VisibleSelectedRow, this.NextRowIndex);
+			this.MoveUserField (this.VisibleSelectedRow, this.NextRowIndex, Res.Commands.UserFields.MoveDown.Description);
 		}
 
 		[Command (Res.CommandIds.UserFields.MoveBottom)]
 		protected void OnMoveBottom()
 		{
-			this.MoveUserField (this.VisibleSelectedRow, this.LastRowIndex);
+			this.MoveUserField (this.VisibleSelectedRow, this.LastRowIndex, Res.Commands.UserFields.MoveBottom.Description);
 		}
 
 		[Command (Res.CommandIds.UserFields.Deselect)]
@@ -176,6 +176,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				return;
 			}
 
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.UserFields.New.Description);
+
 			var userField = new UserField (Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
 			int index = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
@@ -188,6 +191,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			accessor.WarningsDirty = true;
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.UserFields.Delete)]
@@ -200,10 +205,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			YesNoPopup.Show (target, question, delegate
 			{
+				this.accessor.UndoManager.Start ();
+				this.accessor.UndoManager.SetDescription (Res.Commands.UserFields.Delete.Description);
+
 				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
 				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
+
+				this.accessor.UndoManager.SetAfterViewState ();
 			});
 		}
 
@@ -258,13 +268,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private void MoveUserField(int currentRow, int? newRow)
+		private void MoveUserField(int currentRow, int? newRow, string description)
 		{
 			//	Déplace une rubrique à un nouvel emplacement.
 			if (currentRow == -1 || !newRow.HasValue)
 			{
 				return;
 			}
+
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (description);
 
 			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
 			var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
@@ -280,6 +293,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();
 			this.VisibleSelectedRow = index;
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 

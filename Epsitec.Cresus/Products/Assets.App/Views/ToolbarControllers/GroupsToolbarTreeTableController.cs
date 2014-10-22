@@ -196,9 +196,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			YesNoPopup.Show (target, question, delegate
 			{
+				this.accessor.UndoManager.Start ();
+				this.accessor.UndoManager.SetDescription (Res.Commands.Groups.Delete.Description);
+
 				this.accessor.RemoveObject (BaseType.Groups, this.SelectedGuid);
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
+
+				this.accessor.UndoManager.SetAfterViewState ();
 			});
 		}
 
@@ -253,6 +258,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void CreateObject(Guid parent, IEnumerable<AbstractDataProperty> properties)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Groups.New.Description);
+
 			var date = this.accessor.Mandat.StartDate;
 			var guid = this.accessor.CreateObject (BaseType.Groups, date, parent, properties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Groups, guid);
@@ -262,6 +270,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 	

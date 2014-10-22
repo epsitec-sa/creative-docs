@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var button = new ColoredButton
 				{
 					Parent           = this.mainFrameBox,
-					Text             = "  " + text,
+					Text             = "   " + text,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredHeight  = UndoListPopup.buttonHeight,
 					Dock             = DockStyle.Top,
@@ -113,6 +113,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void Update(int rank)
 		{
+			//	Met à jour depuis le premier bouton (en haut) jusqu'au bouton rank (plus bas).
 			for (int i=0; i<this.buttons.Count; i++)
 			{
 				this.buttons[i].ActiveState = (i <= rank) ? ActiveState.Yes : ActiveState.No;
