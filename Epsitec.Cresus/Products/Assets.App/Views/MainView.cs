@@ -179,6 +179,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
+		[Command (Res.CommandIds.Main.UndoList)]
+		private void OnUndoList(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.UndoList, true, delegate (int count)
+			{
+				for (int i=0; i<count; i++)
+				{
+					var viewState = this.accessor.UndoManager.Undo () as AbstractViewState;
+
+					if (i == count-1)  // dernier ?
+					{
+						this.RestoreUndoViewState (viewState);
+					}
+				}
+
+				this.view.DeepUpdateUI ();
+				this.UpdateToolbar ();
+			});
+		}
+
 		[Command (Res.CommandIds.Main.Redo)]
 		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -189,17 +210,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
-
-		private void RestoreUndoViewState(AbstractViewState viewState)
+		[Command (Res.CommandIds.Main.RedoList)]
+		private void OnRedoList(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (viewState.GetType () == this.view.ViewState.GetType ())
+			var target = this.toolbar.GetTarget (e);
+			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.RedoList, false, delegate (int count)
 			{
-				this.view.ViewState = viewState;
-			}
-			else
-			{
-				this.RestoreViewState (viewState);
-			}
+				for (int i=0; i<count; i++)
+				{
+					var viewState = this.accessor.UndoManager.Redo () as AbstractViewState;
+
+					if (i == count-1)  // dernier ?
+					{
+						this.RestoreUndoViewState (viewState);
+					}
+				}
+
+				this.view.DeepUpdateUI ();
+				this.UpdateToolbar ();
+			});
 		}
 
 
@@ -249,7 +278,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandContext.GetCommandState (Res.Commands.Main.Locked          ).Enable = true;
 			this.commandContext.GetCommandState (Res.Commands.Main.Simulation      ).Enable = true;
 			this.commandContext.GetCommandState (Res.Commands.Main.Undo            ).Enable = this.accessor.UndoManager.IsUndoEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.UndoList        ).Enable = this.accessor.UndoManager.IsUndoEnable;
 			this.commandContext.GetCommandState (Res.Commands.Main.Redo            ).Enable = this.accessor.UndoManager.IsRedoEnable;
+			this.commandContext.GetCommandState (Res.Commands.Main.RedoList        ).Enable = this.accessor.UndoManager.IsRedoEnable;
 		}
 
 
@@ -424,6 +455,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.SortLastViewStates ();
 			};
+		}
+
+		private void RestoreUndoViewState(AbstractViewState viewState)
+		{
+			//	Restaure la vue après un undo/redo.
+			if (viewState.GetType () == this.view.ViewState.GetType ())
+			{
+				//	Si la vue est toujours du même type, il n'est pas nécessaire de
+				//	la recréer.
+				this.view.ViewState = viewState;
+			}
+			else
+			{
+				//	Crée la vue du nouveau type.
+				this.RestoreViewState (viewState);
+			}
 		}
 
 		private void RestoreViewState(AbstractViewState viewState)

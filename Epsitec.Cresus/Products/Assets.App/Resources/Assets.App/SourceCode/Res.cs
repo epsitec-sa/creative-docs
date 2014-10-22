@@ -275,10 +275,14 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
 				//	designer:cap/JUK6601
 				public static readonly global::Epsitec.Common.Widgets.Command Redo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 198));
+				//	designer:cap/JUK8601
+				public static readonly global::Epsitec.Common.Widgets.Command RedoList = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 200));
 				//	designer:cap/JUKO001
 				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/JUK5601
 				public static readonly global::Epsitec.Common.Widgets.Command Undo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 197));
+				//	designer:cap/JUK7601
+				public static readonly global::Epsitec.Common.Widgets.Command UndoList = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 199));
 				public static class Navigate
 				{
 					internal static void _Initialize()
@@ -830,10 +834,14 @@ namespace Epsitec.Cresus.Assets.App
 				public const long New = 0x7D300014000012L;
 				//	designer:cap/JUK6601
 				public const long Redo = 0x7D3000140000C6L;
+				//	designer:cap/JUK8601
+				public const long RedoList = 0x7D3000140000C8L;
 				//	designer:cap/JUKO001
 				public const long Simulation = 0x7D300014000018L;
 				//	designer:cap/JUK5601
 				public const long Undo = 0x7D3000140000C5L;
+				//	designer:cap/JUK7601
+				public const long UndoList = 0x7D3000140000C7L;
 				public static class Navigate
 				{
 					//	designer:cap/JUKJ001
@@ -4578,6 +4586,65 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544858));
+						}
+					}
+				}
+				
+				public static class UndoList
+				{
+					public static class Redo
+					{
+						//	designer:str/JUKSH01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544892));
+							}
+						}
+						//	designer:str/JUKUH01
+						public static global::Epsitec.Common.Types.FormattedText TitleMany
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544894));
+							}
+						}
+						//	designer:str/JUKVH01
+						public static global::Epsitec.Common.Types.FormattedText TitleOne
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544895));
+							}
+						}
+					}
+					
+					public static class Undo
+					{
+						//	designer:str/JUKRH01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544891));
+							}
+						}
+						//	designer:str/JUKQH01
+						public static global::Epsitec.Common.Types.FormattedText TitleMany
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544890));
+							}
+						}
+						//	designer:str/JUKPH01
+						public static global::Epsitec.Common.Types.FormattedText TitleOne
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544889));
+							}
 						}
 					}
 				}
@@ -8977,6 +9044,65 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544858);
+						}
+					}
+				}
+				
+				public static class UndoList
+				{
+					public static class Redo
+					{
+						//	designer:str/JUKSH01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544892);
+							}
+						}
+						//	designer:str/JUKUH01
+						public static global::Epsitec.Common.Support.Druid TitleMany
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544894);
+							}
+						}
+						//	designer:str/JUKVH01
+						public static global::Epsitec.Common.Support.Druid TitleOne
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544895);
+							}
+						}
+					}
+					
+					public static class Undo
+					{
+						//	designer:str/JUKRH01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544891);
+							}
+						}
+						//	designer:str/JUKQH01
+						public static global::Epsitec.Common.Support.Druid TitleMany
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544890);
+							}
+						}
+						//	designer:str/JUKPH01
+						public static global::Epsitec.Common.Support.Druid TitleOne
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544889);
+							}
 						}
 					}
 				}

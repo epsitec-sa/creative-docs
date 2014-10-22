@@ -467,4 +467,10 @@
   <data name="WarningView.Perfect" id="KLH">Aucun avertissement.&lt;br/&gt;Crésus Immobilisation ne détecte aucun problème.</data>
   <data name="Popup.CreateAsset.Groups" id="KMH">Groupes</data>
   <data name="EntrySamples.Title" id="KNH">Exemples d'écritures</data>
+  <data name="Popup.UndoList.Undo.TitleOne" id="KPH">Annuler {0} action</data>
+  <data name="Popup.UndoList.Undo.TitleMany" id="KQH">Annuler {0} actions</data>
+  <data name="Popup.UndoList.Undo.Button" id="KRH">Annuler "{0}"</data>
+  <data name="Popup.UndoList.Redo.Button" id="KSH">Rétablir "{0}"</data>
+  <data name="Popup.UndoList.Redo.TitleMany" id="KUH">Rétablir {0} actions</data>
+  <data name="Popup.UndoList.Redo.TitleOne" id="KVH">Rétablir {0} action</data>
 </bundle>

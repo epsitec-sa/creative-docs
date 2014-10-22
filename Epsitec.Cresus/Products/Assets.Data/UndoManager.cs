@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetViewStateGetter(System.Func<IViewState> getViewState)
 		{
+			//	Spécifie la fonction a exécuter pour obtenir le ViewState.
 			this.getViewState = getViewState;
 		}
 
@@ -25,10 +26,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.groups.Clear ();
 			this.lastExecuted = -1;
-			this.lastSaved = -1;
 		}
 
-		public bool IsUndoEnable
+		public bool								IsUndoEnable
 		{
 			get
 			{
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public bool IsRedoEnable
+		public bool								IsRedoEnable
 		{
 			get
 			{
@@ -44,34 +44,29 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		//?public void Save()
-		//?{
-		//?	this.lastSaved = this.lastExecuted;
-		//?}
-		//?
-		//?public bool IsModified
-		//?{
-		//?	get
-		//?	{
-		//?		return this.lastSaved != this.lastExecuted;
-		//?	}
-		//?}
-
-		public int Size
+		
+		public IEnumerable<string>				UndoList
 		{
 			get
 			{
-				return this.groups.Count;
+				for (int i=this.lastExecuted; i>=0; i--)
+				{
+					yield return this.groups[i].Description;
+				}
 			}
 		}
 
-		public int LastExecuted
+		public IEnumerable<string>				RedoList
 		{
 			get
 			{
-				return this.lastExecuted;
+				for (int i=this.lastExecuted+1; i<this.groups.Count; i++)
+				{
+					yield return this.groups[i].Description;
+				}
 			}
 		}
+
 
 		public void Limit(int numItems)
 		{
@@ -82,11 +77,6 @@ namespace Epsitec.Cresus.Assets.Data
 				if (this.lastExecuted >= 0)
 				{
 					this.lastExecuted--;
-				}
-
-				if (this.lastSaved >= 0)
-				{
-					this.lastSaved--;
 				}
 			}
 		}
@@ -181,7 +171,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly List<UndoGroup>		groups;
 		private int								lastExecuted;
-		private int								lastSaved;
 		private System.Func<IViewState>			getViewState;
 	}
 }

@@ -196,18 +196,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.accessor.UndoManager.Start ();
-					this.accessor.UndoManager.SetDescription (Res.Commands.Persons.New.Description);
-
 					this.CreateObject (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
-
-					this.accessor.UndoManager.SetAfterViewState ();
 				}
 			};
 		}
 
 		private void CreateObject(IEnumerable<AbstractDataProperty> requiredProperties, Guid model)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Persons.New.Description);
+
 			var date = this.accessor.Mandat.StartDate;
 			var guid = this.accessor.CreateObject (BaseType.Persons, date, Guid.Empty, requiredProperties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Persons, guid);
@@ -223,6 +221,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 

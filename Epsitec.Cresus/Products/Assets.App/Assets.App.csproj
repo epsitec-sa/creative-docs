@@ -105,6 +105,7 @@
     <Compile Include="Popups\FilterControllers\AccountsFilterController.cs" />
     <Compile Include="Popups\FilterControllers\SimpleFilterController.cs" />
     <Compile Include="Popups\FilterControllers\AbstractFilterController.cs" />
+    <Compile Include="Popups\UndoListPopup.cs" />
     <Compile Include="Popups\SearchOptionsPopup.cs" />
     <Compile Include="Popups\PageFormatType.cs" />
     <Compile Include="Popups\MenuPopupItem.cs" />
@@ -513,6 +514,8 @@
     <EmbeddedResource Include="Images\Timeline.GroupedByYear.icon" />
     <EmbeddedResource Include="Images\Main.Redo.icon" />
     <EmbeddedResource Include="Images\Main.Undo.icon" />
+    <EmbeddedResource Include="Images\Main.UndoList.icon" />
+    <EmbeddedResource Include="Images\Main.RedoList.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

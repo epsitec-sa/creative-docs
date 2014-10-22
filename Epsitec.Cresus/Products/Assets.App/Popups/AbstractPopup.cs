@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (!string.IsNullOrEmpty (text))
 			{
-				new StaticText
+				this.titleStaticText = new StaticText
 				{
 					Parent           = frame,
 					Text             = text,
@@ -674,6 +674,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private Rectangle						targetReal;
 		private Rectangle						targetRect;
 		protected FrameBox						mainFrameBox;
+		protected StaticText					titleStaticText;
 
 		private double							initialDistance;
 		private bool							isDragging;
