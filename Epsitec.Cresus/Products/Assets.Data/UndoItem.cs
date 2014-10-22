@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Data
 		//		{
 		//		}
 		//	
-		//	Elle retourne toujours l'information permettant de l'annuler
+		//	Elle retourne toujours l'information permettant de s'annuler
 		//	elle-même (opération inverse).
 
 		public readonly System.Func<IUndoData, UndoItem>	undoOperation;

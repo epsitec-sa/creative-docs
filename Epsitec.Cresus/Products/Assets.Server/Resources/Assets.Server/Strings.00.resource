@@ -66,4 +66,11 @@
   <data name="WarningsLogic.Ratio.Percent" id="KV1">Le total des ratios n'est pas de 100% dans {0}</data>
   <data name="Entries.Sample.DummyAsset" id="K02">Véhicule XYZ</data>
   <data name="WarningsLogic.Amortization.Missing" id="K12">L'objet n'est pas amorti jusqu'au {0}</data>
+  <data name="EditionAccessor.Undo.Modify.Asset" id="K22">Modification d'un objet d'immobilisation</data>
+  <data name="EditionAccessor.Undo.Modify.Category" id="K32">Modification d'une catégorie d'immobilisation</data>
+  <data name="EditionAccessor.Undo.Modify.Groups" id="K42">Modification d'un groupe</data>
+  <data name="EditionAccessor.Undo.Modify.Person" id="K52">Modification d'un contact</data>
+  <data name="EditionAccessor.Undo.Modify.PersonUserField" id="K62">Modification d'un champ d'un contact</data>
+  <data name="EditionAccessor.Undo.Modify.Generic" id="K72">Modification</data>
+  <data name="EditionAccessor.Undo.Modify.AssetUserField" id="K82">Modification d'un champ d'un objet d'immobilisation</data>
 </bundle>

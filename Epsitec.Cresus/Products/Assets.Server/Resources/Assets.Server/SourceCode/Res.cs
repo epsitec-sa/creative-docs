@@ -107,6 +107,72 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class EditionAccessor
+			{
+				public static class Undo
+				{
+					public static class Modify
+					{
+						//	designer:str/IUK2201
+						public static global::Epsitec.Common.Types.FormattedText Asset
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386));
+							}
+						}
+						//	designer:str/IUK8201
+						public static global::Epsitec.Common.Types.FormattedText AssetUserField
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544392));
+							}
+						}
+						//	designer:str/IUK3201
+						public static global::Epsitec.Common.Types.FormattedText Category
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544387));
+							}
+						}
+						//	designer:str/IUK7201
+						public static global::Epsitec.Common.Types.FormattedText Generic
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391));
+							}
+						}
+						//	designer:str/IUK4201
+						public static global::Epsitec.Common.Types.FormattedText Groups
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
+							}
+						}
+						//	designer:str/IUK5201
+						public static global::Epsitec.Common.Types.FormattedText Person
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
+							}
+						}
+						//	designer:str/IUK6201
+						public static global::Epsitec.Common.Types.FormattedText PersonUserField
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544390));
+							}
+						}
+					}
+				}
+			}
+			
 			public static class Entries
 			{
 				public static class Sample
@@ -760,6 +826,72 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544335);
+					}
+				}
+			}
+			
+			public static class EditionAccessor
+			{
+				public static class Undo
+				{
+					public static class Modify
+					{
+						//	designer:str/IUK2201
+						public static global::Epsitec.Common.Support.Druid Asset
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544386);
+							}
+						}
+						//	designer:str/IUK8201
+						public static global::Epsitec.Common.Support.Druid AssetUserField
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544392);
+							}
+						}
+						//	designer:str/IUK3201
+						public static global::Epsitec.Common.Support.Druid Category
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544387);
+							}
+						}
+						//	designer:str/IUK7201
+						public static global::Epsitec.Common.Support.Druid Generic
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544391);
+							}
+						}
+						//	designer:str/IUK4201
+						public static global::Epsitec.Common.Support.Druid Groups
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544388);
+							}
+						}
+						//	designer:str/IUK5201
+						public static global::Epsitec.Common.Support.Druid Person
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
+							}
+						}
+						//	designer:str/IUK6201
+						public static global::Epsitec.Common.Support.Druid PersonUserField
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544390);
+							}
+						}
 					}
 				}
 			}

@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (this.dirty)
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription ("Modification");
+				this.accessor.UndoManager.SetDescription (EditionAccessor.GetUndoModifyDescription (this.baseType));
 
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);
@@ -552,6 +552,35 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				return null;
+			}
+		}
+
+
+		private static string GetUndoModifyDescription(BaseType baseType)
+		{
+			switch (baseType.Kind)
+			{
+				case BaseTypeKind.Assets:
+					return Res.Strings.EditionAccessor.Undo.Modify.Asset.ToString ();
+
+				case BaseTypeKind.Categories:
+					return Res.Strings.EditionAccessor.Undo.Modify.Category.ToString ();
+
+				case BaseTypeKind.Groups:
+					return Res.Strings.EditionAccessor.Undo.Modify.Groups.ToString ();
+
+				case BaseTypeKind.Persons:
+					return Res.Strings.EditionAccessor.Undo.Modify.Person.ToString ();
+
+				case BaseTypeKind.AssetsUserFields:
+					return Res.Strings.EditionAccessor.Undo.Modify.AssetUserField.ToString ();
+
+				case BaseTypeKind.PersonsUserFields:
+					return Res.Strings.EditionAccessor.Undo.Modify.PersonUserField.ToString ();
+
+				default:
+					return Res.Strings.EditionAccessor.Undo.Modify.Generic.ToString ();
+
 			}
 		}
 

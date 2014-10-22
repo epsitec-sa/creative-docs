@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth   = 200;
+		private const int popupWidth   = 300;
 		private const int buttonHeight = 18;
 		private const int maxUndo      = 20;
 
