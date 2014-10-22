@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public bool								IsUndoEnable
 		{
+			//	Indique s'il y a au moins une action à annuler.
 			get
 			{
 				return this.lastExecuted >= 0 && this.groups.Count > 0;
@@ -38,6 +39,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public bool								IsRedoEnable
 		{
+			//	Indique s'il y a au moins une action à rétablir.
 			get
 			{
 				return this.lastExecuted+1 < this.groups.Count;
@@ -47,6 +49,8 @@ namespace Epsitec.Cresus.Assets.Data
 		
 		public IEnumerable<string>				UndoList
 		{
+			//	Retourne les descriptions des actions qu'il est possible d'annuler,
+			//	de la plus récente à la plus ancienne.
 			get
 			{
 				for (int i=this.lastExecuted; i>=0; i--)
@@ -58,6 +62,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IEnumerable<string>				RedoList
 		{
+			//	Retourne les descriptions des actions qu'il est possible de rétablir,
+			//	de la plus ancienne à la plus récente.
 			get
 			{
 				for (int i=this.lastExecuted+1; i<this.groups.Count; i++)
@@ -84,6 +90,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Start()
 		{
+			//	Marque le début d'une action annulable. On démarre un nouveau groupe.
 			if (this.lastExecuted+1 < this.groups.Count)
 			{
 				int numCommandsToRemove = this.groups.Count - (this.lastExecuted+1);
@@ -103,6 +110,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetDescription(string description)
 		{
+			//	Spécifie la description de l'action annulable.
 			if (this.groups.Any ())
 			{
 				var group = this.groups.Last ();
@@ -112,6 +120,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SetBeforeViewState()
 		{
+			//	Spécifie le ViewState initial, avant les modifications.
 			if (this.groups.Any () && this.getViewState != null)
 			{
 				var group = this.groups.Last ();
@@ -121,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SetAfterViewState()
 		{
+			//	Spécifie le ViewState final, après les modifications.
 			if (this.groups.Any () && this.getViewState != null)
 			{
 				var group = this.groups.Last ();
@@ -130,6 +140,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Push(UndoItem item)
 		{
+			//	Ajoute une action annulable au groupe en cours.
 			if (this.groups.Any ())
 			{
 				var group = this.groups.Last ();
@@ -140,6 +151,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IViewState Undo()
 		{
+			//	Annule la dernière action et retourne le ViewState initial.
 			if (this.IsUndoEnable)
 			{
 				var group = this.groups[this.lastExecuted--];
@@ -155,6 +167,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IViewState Redo()
 		{
+			//	Refait la dernière action et retourne le ViewState final.
 			if (this.IsRedoEnable)
 			{
 				var group = this.groups[++this.lastExecuted];

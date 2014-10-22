@@ -19,8 +19,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private UndoListPopup(DataAccessor accessor, IEnumerable<string> undoList, bool undo)
 		{
 			this.accessor = accessor;
-			this.undoList = undoList.ToArray ();
 			this.undo     = undo;
+
+			this.undoList = new List<string> ();
+
+			int index = 0;
+			foreach (var description in undoList)
+			{
+				this.undoList.Add (description);
+				index++;
+
+				if (index >= UndoListPopup.maxUndo)
+				{
+					break;
+				}
+			}
 
 			this.buttons = new List<ColoredButton> ();
 		}
@@ -105,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.buttons[i].ActiveState = (i <= rank) ? ActiveState.Yes : ActiveState.No;
 			}
 
-			if (rank == -1)
+			if (rank == -1)  // aucune action choisie ?
 			{
 				if (this.undo)
 				{
@@ -116,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.titleStaticText.Text = Res.Commands.Main.RedoList.Description;
 				}
 			}
-			else if (rank == 0)  // undo/redo une action ?
+			else if (rank == 0)  // undo/redo d'une action ?
 			{
 				if (this.undo)
 				{
@@ -127,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.titleStaticText.Text = string.Format (Res.Strings.Popup.UndoList.Redo.TitleOne.ToString (), rank+1);
 				}
 			}
-			else  // undo/redo plusieurs actions ?
+			else  // undo/redo de plusieurs actions ?
 			{
 				if (this.undo)
 				{
@@ -147,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + UndoListPopup.buttonHeight * this.undoList.Length;
+				   + UndoListPopup.buttonHeight * this.undoList.Count;
 
 			return new Size (dx, dy);
 		}
@@ -181,11 +194,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth = 200;
+		private const int popupWidth   = 200;
 		private const int buttonHeight = 18;
+		private const int maxUndo      = 20;
 
 		private readonly DataAccessor					accessor;
-		private readonly string[]						undoList;
+		private readonly List<string>					undoList;
 		private readonly bool							undo;
 		private readonly List<ColoredButton>			buttons;
 	}
