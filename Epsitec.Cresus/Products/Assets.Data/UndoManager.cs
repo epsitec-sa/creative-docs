@@ -107,6 +107,8 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups.Add (group);
 
 			this.lastExecuted = this.groups.Count-1;
+
+			this.SetBeforeViewState ();
 		}
 
 		public void SetDescription(string description)
@@ -118,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public void SetBeforeViewState()
+		private void SetBeforeViewState()
 		{
 			if (this.groups.Any () && this.getViewState != null)
 			{

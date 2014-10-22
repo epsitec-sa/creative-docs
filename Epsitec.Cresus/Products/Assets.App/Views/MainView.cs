@@ -172,7 +172,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Undo)]
 		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.view.ViewState = this.accessor.UndoManager.Undo () as AbstractViewState;
+			var viewState = this.accessor.UndoManager.Undo () as AbstractViewState;
+			this.RestoreUndoViewState (viewState);
+
 			this.view.DeepUpdateUI ();
 			this.UpdateToolbar ();
 		}
@@ -180,9 +182,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Redo)]
 		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.view.ViewState = this.accessor.UndoManager.Redo () as AbstractViewState;
+			var viewState = this.accessor.UndoManager.Redo () as AbstractViewState;
+			this.RestoreUndoViewState (viewState);
+
 			this.view.DeepUpdateUI ();
 			this.UpdateToolbar ();
+		}
+
+
+		private void RestoreUndoViewState(AbstractViewState viewState)
+		{
+			if (viewState.GetType () == this.view.ViewState.GetType ())
+			{
+				this.view.ViewState = viewState;
+			}
+			else
+			{
+				this.RestoreViewState (viewState);
+			}
 		}
 
 

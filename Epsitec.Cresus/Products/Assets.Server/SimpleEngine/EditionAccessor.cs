@@ -103,7 +103,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				this.accessor.UndoManager.Start ();
 				this.accessor.UndoManager.SetDescription ("Modification");
-				this.accessor.UndoManager.SetBeforeViewState ();
 
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);

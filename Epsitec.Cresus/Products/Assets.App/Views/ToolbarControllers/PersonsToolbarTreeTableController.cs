@@ -146,7 +146,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				this.accessor.UndoManager.Start ();
 				this.accessor.UndoManager.SetDescription (Res.Commands.Persons.Delete.Description);
-				this.accessor.UndoManager.SetBeforeViewState ();
 
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();
@@ -199,7 +198,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				{
 					this.accessor.UndoManager.Start ();
 					this.accessor.UndoManager.SetDescription (Res.Commands.Persons.New.Description);
-					this.accessor.UndoManager.SetBeforeViewState ();
 
 					this.CreateObject (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
 
