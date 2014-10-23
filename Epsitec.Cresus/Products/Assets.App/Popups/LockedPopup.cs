@@ -103,12 +103,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			get
 			{
 				var dd = Res.Strings.Popup.Locked.Radios.IsDelete.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries);
-				var d = this.IsDelete ? dd[1] : dd[0];
+				var d = this.IsDelete ? dd[1] : dd[0];  // "Déverrouiller" ou "Verrouiller"
 
 				var date = string.Concat(Res.Strings.Popup.Locked.Date.ToString (), " ", TypeConverters.DateToString (this.Date.GetValueOrDefault ()));
 
 				var aa = Res.Strings.Popup.Locked.Radios.IsAll.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries);
-				var a = this.IsAll ? aa[1] : aa[0];
+				var a = this.IsAll ? aa[1] : aa[0];  // "Tous les objets" ou "L'objet sélectionné"
 
 				return UniversalLogic.NiceJoin (d, date, a);
 			}

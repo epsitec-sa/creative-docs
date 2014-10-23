@@ -834,6 +834,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (ev != null)
 					{
 						//	Supprime l'amortissement ordinaire.
+						this.accessor.UndoManager.Start ();
+						this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.ToExtra.Description);
+
 						asset.RemoveEvent (ev);
 
 						//	Crée un amortissement extraordinaire.
@@ -843,6 +846,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 						this.UpdateData ();
 						this.OnStopEditing ();
+
+						this.accessor.UndoManager.SetAfterViewState ();
 					}
 				}
 			}
@@ -1010,6 +1015,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void DoAmortisationsPreview(DateRange processRange, bool allObjects)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Preview.Description);
+
 			if (allObjects)
 			{
 				this.amortizations.Preview (processRange);
@@ -1021,10 +1029,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateData ();
 			this.OnStopEditing ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private void DoAmortisationsFix(DateRange processRange, bool allObjects)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Fix.Description);
+
 			if (allObjects)
 			{
 				this.amortizations.Fix ();
@@ -1036,10 +1049,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateData ();
 			this.OnStopEditing ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private void DoAmortisationsUnpreview(DateRange processRange, bool allObjects)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Unpreview.Description);
+
 			if (allObjects)
 			{
 				this.amortizations.Unpreview ();
@@ -1051,10 +1069,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateData ();
 			this.OnStopEditing ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private void DoAmortisationsDelete(DateRange processRange, bool allObjects)
 		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Delete.Description);
+
 			if (allObjects)
 			{
 				this.amortizations.Delete (processRange.IncludeFrom);
@@ -1066,6 +1089,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.UpdateData ();
 			this.OnStopEditing ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 		#endregion
 
