@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 					}
 
-					AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate);
+					AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate, popup.Description);
 					this.DeepUpdateUI ();
 				}
 			};

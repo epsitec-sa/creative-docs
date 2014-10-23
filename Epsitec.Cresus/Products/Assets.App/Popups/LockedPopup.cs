@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -90,6 +92,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var controller = this.GetController (1) as DateStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
+			}
+		}
+
+
+		public string							Description
+		{
+			//	Retourne la description de l'opération effectuée.
+			//	Par exemple "Verrouiller - Jusqu'au 31.03.2015 - Tous les objets"
+			get
+			{
+				var dd = Res.Strings.Popup.Locked.Radios.IsDelete.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries);
+				var d = this.IsDelete ? dd[1] : dd[0];
+
+				var date = string.Concat(Res.Strings.Popup.Locked.Date.ToString (), " ", TypeConverters.DateToString (this.Date.GetValueOrDefault ()));
+
+				var aa = Res.Strings.Popup.Locked.Radios.IsAll.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries);
+				var a = this.IsAll ? aa[1] : aa[0];
+
+				return UniversalLogic.NiceJoin (d, date, a);
 			}
 		}
 

@@ -241,9 +241,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return true;
 		}
 
-		public static void Locked(DataAccessor accessor, Guid guid, bool isDelete, System.DateTime createDate)
+		public static void Locked(DataAccessor accessor, Guid guid, bool isDelete, System.DateTime createDate, string description)
 		{
 			//	Effectue une action initiée par LockedPopup.
+			accessor.UndoManager.Start ();
+			accessor.UndoManager.SetDescription (description);
+
 			DataObject obj = null;
 			if (!guid.IsEmpty)
 			{
@@ -284,6 +287,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					AssetCalculator.CreateLockedEvent (accessor, obj, createDate);
 				}
 			}
+
+			accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private static void CreateLockedEvent(DataAccessor accessor, DataObject obj, System.DateTime date)
