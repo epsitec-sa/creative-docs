@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -135,6 +136,8 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				var group = this.groups.Last ();
 				group.AfterViewState = this.getViewState ();
+
+				this.OnChanged ();
 			}
 		}
 
@@ -157,6 +160,8 @@ namespace Epsitec.Cresus.Assets.Data
 				var group = this.groups[this.lastExecuted--];
 
 				group.Undo ();
+				this.OnChanged ();
+
 				return group.BeforeViewState;
 			}
 			else
@@ -173,6 +178,8 @@ namespace Epsitec.Cresus.Assets.Data
 				var group = this.groups[++this.lastExecuted];
 
 				group.Redo ();
+				this.OnChanged ();
+
 				return group.AfterViewState;
 			}
 			else
@@ -180,6 +187,16 @@ namespace Epsitec.Cresus.Assets.Data
 				return null;
 			}
 		}
+
+
+		#region Events handler
+		private void OnChanged()
+		{
+			this.Changed.Raise (this);
+		}
+
+		public event EventHandler Changed;
+		#endregion
 
 
 		private readonly List<UndoGroup>		groups;
