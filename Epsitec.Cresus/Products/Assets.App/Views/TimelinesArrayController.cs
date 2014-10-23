@@ -543,7 +543,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void AssetsDeleteSelection()
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.AssetsLeft.Delete.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.AssetsLeft.Delete.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+			this.accessor.UndoManager.SetDescription (desc);
 
 			this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 			this.UpdateData ();
@@ -653,7 +654,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.AssetsLeft.New.Description);
 
 			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
@@ -665,6 +665,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.OnStartEditing (EventType.Input, this.SelectedTimestamp.GetValueOrDefault ());
 
+			var desc = UndoManager.GetDescription (Res.Commands.AssetsLeft.New.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 		#endregion
@@ -964,7 +966,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void TimelineDeleteSelection()
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Delete.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.Timelines.Delete.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+			this.accessor.UndoManager.SetDescription (desc);
 
 			this.accessor.RemoveObjectEvent (this.SelectedObject, this.SelectedTimestamp);
 			this.UpdateData ();
@@ -1073,7 +1076,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (obj != null)
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.New.Description);
 
 				var type = TimelinesArrayController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (obj, date, type);
@@ -1090,6 +1092,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.OnStartEditing (e.Type, e.Timestamp);
 
+				var desc = UndoManager.GetDescription (Res.Commands.Timelines.New.Description, AssetsLogic.GetSummary (this.accessor, obj.Guid, e.Timestamp));
+				this.accessor.UndoManager.SetDescription (desc);
 				this.accessor.UndoManager.SetAfterViewState ();
 			}
 		}

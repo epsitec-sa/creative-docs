@@ -10,29 +10,43 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class UniversalLogic
 	{
-		public static string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp)
+		public static string GetObjectSummary(DataAccessor accessor, BaseType baseType, DataObject obj, Timestamp? timestamp = null)
 		{
 			//	Retourne un résumé de n'importe quel objet de n'importe quelle base.
-			if (obj != null)
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return UniversalLogic.GetObjectSummary (accessor, baseType, obj.Guid, timestamp);
+			}
+		}
+
+		public static string GetObjectSummary(DataAccessor accessor, BaseType baseType, Guid guid, Timestamp? timestamp = null)
+		{
+			//	Retourne un résumé de n'importe quel objet de n'importe quelle base.
+			if (!guid.IsEmpty)
 			{
 				switch (baseType.Kind)
 				{
 					case BaseTypeKind.Assets:
-						return AssetsLogic.GetSummary (accessor, obj.Guid, timestamp);
+						return AssetsLogic.GetSummary (accessor, guid, timestamp);
 
 					case BaseTypeKind.Categories:
-						return CategoriesLogic.GetSummary (accessor, obj.Guid);
+						return CategoriesLogic.GetSummary (accessor, guid);
 
 					case BaseTypeKind.Groups:
-						return GroupsLogic.GetShortName (accessor, obj.Guid);
+						return GroupsLogic.GetShortName (accessor, guid);
 
 					case BaseTypeKind.Persons:
-						return PersonsLogic.GetSummary (accessor, obj.Guid);
+						return PersonsLogic.GetSummary (accessor, guid);
 				}
 			}
 
 			return null;
 		}
+
 
 		public static string NiceJoin(params string[] words)
 		{

@@ -210,7 +210,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				YesNoPopup.ShowAssetsDeleteEventQuestion (target, delegate
 				{
 					this.accessor.UndoManager.Start ();
-					this.accessor.UndoManager.SetDescription (Res.Commands.Timeline.Delete.Description);
+					var desc = UndoManager.GetDescription (Res.Commands.Timeline.Delete.Description, AssetsLogic.GetSummary (this.accessor, this.obj.Guid, this.SelectedTimestamp));
+					this.accessor.UndoManager.SetDescription (desc);
 
 					this.accessor.RemoveObjectEvent (this.obj, this.SelectedTimestamp);
 					this.UpdateData ();
@@ -452,7 +453,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			if (!guid.IsEmpty)
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (Res.Commands.Timeline.New.Description);
 
 				var type = AssetsToolbarTimelineController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (this.obj, date, type);
@@ -465,6 +465,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					this.OnDeepUpdate ();
 				}
 
+				var desc = UndoManager.GetDescription (Res.Commands.Timeline.New.Description, AssetsLogic.GetSummary (this.accessor, this.obj.Guid, e.Timestamp));
+				this.accessor.UndoManager.SetDescription (desc);
 				this.accessor.UndoManager.SetAfterViewState ();
 			}
 		}

@@ -145,7 +145,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (Res.Commands.Persons.Delete.Description);
+				var desc = UndoManager.GetDescription (Res.Commands.Persons.Delete.Description, PersonsLogic.GetSummary (this.accessor, this.SelectedGuid));
+				this.accessor.UndoManager.SetDescription (desc);
 
 				this.accessor.RemoveObject (BaseType.Persons, this.SelectedGuid);
 				this.UpdateData ();
@@ -204,7 +205,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void CreateObject(IEnumerable<AbstractDataProperty> requiredProperties, Guid model)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Persons.New.Description);
 
 			var date = this.accessor.Mandat.StartDate;
 			var guid = this.accessor.CreateObject (BaseType.Persons, date, Guid.Empty, requiredProperties.ToArray ());
@@ -222,6 +222,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
 
+			var desc = UndoManager.GetDescription (Res.Commands.Persons.New.Description, PersonsLogic.GetSummary (this.accessor, obj.Guid));
+			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 

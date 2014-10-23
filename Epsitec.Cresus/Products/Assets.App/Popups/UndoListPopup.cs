@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int index = 0;
 			foreach (var description in undoList)
 			{
-				this.undoList.Add (description);
+				this.undoList.Add (this.GetDescription (description));
 				index++;
 
 				if (index >= UndoListPopup.maxUndo)
@@ -62,21 +62,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			foreach (var description in this.undoList)
 			{
-				string text;
-
-				if (this.undo)
-				{
-					text = string.Format (Res.Strings.Popup.UndoList.Undo.Button.ToString (), description);
-				}
-				else
-				{
-					text = string.Format (Res.Strings.Popup.UndoList.Redo.Button.ToString (), description);
-				}
-
 				var button = new ColoredButton
 				{
 					Parent           = this.mainFrameBox,
-					Text             = "   " + text,
+					Text             = "   " + description,
 					ContentAlignment = ContentAlignment.MiddleLeft,
 					PreferredHeight  = UndoListPopup.buttonHeight,
 					Dock             = DockStyle.Top,
@@ -157,13 +146,38 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private Size GetSize()
 		{
-			int dx = UndoListPopup.popupWidth
-				   + (int) AbstractScroller.DefaultBreadth;
+			int dx = this.RequiredWidth;
 
 			int dy = AbstractPopup.titleHeight
 				   + UndoListPopup.buttonHeight * this.undoList.Count;
 
 			return new Size (dx, dy);
+		}
+
+		private int RequiredWidth
+		{
+			get
+			{
+				int width = this.undoList.Max (x => x.GetTextWidth()) + 25;
+
+				width = System.Math.Max (width, 200);  // pas trop étroit...
+				width = System.Math.Min (width, 500);  // ...ni trop large
+
+				return width;
+			}
+		}
+
+
+		private string GetDescription(string description)
+		{
+			if (this.undo)  // undo ?
+			{
+				return string.Format (Res.Strings.Popup.UndoList.Undo.Button.ToString (), description);
+			}
+			else  // redo ?
+			{
+				return string.Format (Res.Strings.Popup.UndoList.Redo.Button.ToString (), description);
+			}
 		}
 
 
@@ -195,7 +209,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth   = 300;
 		private const int buttonHeight = 18;
 		private const int maxUndo      = 20;
 

@@ -189,6 +189,21 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public static string GetDescription(string op, string objectSummary)
+		{
+			//	Retourne la description d'une action undo/redo, par exemple
+			//	"Supprimer le contact - Jean Dupond"
+			if (string.IsNullOrEmpty (objectSummary))
+			{
+				return op;
+			}
+			else
+			{
+				return string.Concat (op, " — ", objectSummary);
+			}
+		}
+
+
 		#region Events handler
 		private void OnChanged()
 		{

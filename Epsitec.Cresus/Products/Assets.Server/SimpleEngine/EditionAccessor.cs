@@ -102,10 +102,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (this.dirty)
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (EditionAccessor.GetUndoModifyDescription (this.baseType));
 
 				var e = this.obj.GetEvent (this.timestamp.Value);
 				e.SetProperties (this.dataEvent);
+
+				var desc = UndoManager.GetDescription (EditionAccessor.GetUndoModifyDescription (this.baseType), UniversalLogic.GetObjectSummary (this.accessor, this.baseType, this.obj, this.timestamp));
+				this.accessor.UndoManager.SetDescription (desc);
 
 				if (this.baseType == BaseType.Assets)
 				{

@@ -306,7 +306,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (Res.Commands.Assets.Delete.Description);
+				var desc = UndoManager.GetDescription (Res.Commands.Assets.Delete.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+				this.accessor.UndoManager.SetDescription (desc);
 
 				this.accessor.RemoveObject (BaseType.Assets, this.SelectedGuid);
 				this.UpdateData ();
@@ -384,7 +385,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Assets.New.Description);
 
 			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
@@ -396,6 +396,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			
 			this.OnUpdateAfterCreate (guid, EventType.Input, this.selectedTimestamp.GetValueOrDefault ());
 
+			var desc = UndoManager.GetDescription (Res.Commands.Assets.New.Description, AssetsLogic.GetSummary (this.accessor, guid, this.SelectedTimestamp));
+			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 

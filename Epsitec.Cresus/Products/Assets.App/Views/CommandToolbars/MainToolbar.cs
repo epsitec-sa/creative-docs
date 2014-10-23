@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Event);
 			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Multiple);
 
-			this.CreateSajex (20);
+			this.CreateSajex (10);
 
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Undo);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.UndoList, widthScale: 0.5);

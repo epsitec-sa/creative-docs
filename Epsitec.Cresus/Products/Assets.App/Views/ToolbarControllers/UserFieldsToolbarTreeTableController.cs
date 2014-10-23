@@ -177,7 +177,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.UserFields.New.Description);
 
 			var userField = new UserField (Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
@@ -192,6 +191,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 
+			var desc = UndoManager.GetDescription (Res.Commands.UserFields.New.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, userField.Guid));
+			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
@@ -206,7 +207,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.UndoManager.Start ();
-				this.accessor.UndoManager.SetDescription (Res.Commands.UserFields.Delete.Description);
+				var desc = UndoManager.GetDescription (Res.Commands.UserFields.Delete.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
+				this.accessor.UndoManager.SetDescription (desc);
 
 				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
 				accessor.WarningsDirty = true;
@@ -277,7 +279,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (description);
 
 			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
 			var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
@@ -294,6 +295,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateData ();
 			this.VisibleSelectedRow = index;
 
+			var desc = UndoManager.GetDescription (description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
+			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
