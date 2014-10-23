@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				int width = this.undoList.Max (x => x.GetTextWidth()) + 25;
 
 				width = System.Math.Max (width, 200);  // pas trop étroit...
-				width = System.Math.Min (width, 500);  // ...ni trop large
+				width = System.Math.Min (width, 600);  // ...ni trop large
 
 				return width;
 			}

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -100,6 +102,32 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var controller = this.GetController (1) as DateStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
+			}
+		}
+
+
+		public string							Description
+		{
+			//	Retourne la description de l'opération effectuée.
+			//	Par exemple "Depuis 31.03.2015 - Pour tous les objets"
+			get
+			{
+				string dateFrom = null;
+				if (this.DateFromAllowed)
+				{
+					dateFrom = string.Concat (Res.Strings.Popup.Amortizations.FromDate.ToString (), " ", TypeConverters.DateToString (this.DateFrom));
+				}
+
+				string dateTo = null;
+				if (this.DateToAllowed)
+				{
+					dateTo = string.Concat (Res.Strings.Popup.Amortizations.ToDate.ToString (), " ", TypeConverters.DateToString (this.DateFrom));
+				}
+
+				var aa = Res.Strings.Popup.Amortizations.Object.ToString ().Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries);
+				var a = this.IsAll ? aa[1] : aa[0];  // "Pour tous les objets" ou "Pour l'objet sélectionné"
+
+				return UniversalLogic.NiceJoin (dateFrom, dateTo, a);
 			}
 		}
 

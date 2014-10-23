@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string NiceJoin(params string[] words)
 		{
-			return string.Join (" — ", words);
+			return string.Join (" — ", words.Where (x => !string.IsNullOrEmpty (x)));
 		}
 	}
 }

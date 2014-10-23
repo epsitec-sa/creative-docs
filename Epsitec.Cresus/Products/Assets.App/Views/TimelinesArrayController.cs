@@ -980,7 +980,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
-		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool> action)
+		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool, string> action)
 		{
 			var popup = new AmortizationsPopup (this.accessor)
 			{
@@ -1008,15 +1008,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 					LocalSettings.AmortizationDateFrom = popup.DateFrom.Value;
 					LocalSettings.AmortizationDateTo   = popup.DateTo.Value;
 
-					action (range, popup.IsAll);
+					action (range, popup.IsAll, popup.Description);
 				}
 			};
 		}
 
-		private void DoAmortisationsPreview(DateRange processRange, bool allObjects)
+		private void DoAmortisationsPreview(DateRange processRange, bool allObjects, string description)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Preview.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.Timelines.Amortizations.Preview.Description, description);
+			this.accessor.UndoManager.SetDescription (desc);
 
 			if (allObjects)
 			{
@@ -1033,10 +1034,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
-		private void DoAmortisationsFix(DateRange processRange, bool allObjects)
+		private void DoAmortisationsFix(DateRange processRange, bool allObjects, string description)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Fix.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.Timelines.Amortizations.Fix.Description, description);
+			this.accessor.UndoManager.SetDescription (desc);
 
 			if (allObjects)
 			{
@@ -1053,10 +1055,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
-		private void DoAmortisationsUnpreview(DateRange processRange, bool allObjects)
+		private void DoAmortisationsUnpreview(DateRange processRange, bool allObjects, string description)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Unpreview.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.Timelines.Amortizations.Unpreview.Description, description);
+			this.accessor.UndoManager.SetDescription (desc);
 
 			if (allObjects)
 			{
@@ -1073,10 +1076,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
-		private void DoAmortisationsDelete(DateRange processRange, bool allObjects)
+		private void DoAmortisationsDelete(DateRange processRange, bool allObjects, string description)
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription (Res.Commands.Timelines.Amortizations.Delete.Description);
+			var desc = UndoManager.GetDescription (Res.Commands.Timelines.Amortizations.Delete.Description, description);
+			this.accessor.UndoManager.SetDescription (desc);
 
 			if (allObjects)
 			{
