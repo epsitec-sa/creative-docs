@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 			this.Guid = Guid.NewGuid ();
 
-			this.globalSettings = new GlobalSettings ();
 			this.undoManager = new UndoManager ();
+			this.globalSettings = new GlobalSettings (this.undoManager);
 
 			this.assets        = new GuidList<DataObject> (this.undoManager);
 			this.categories    = new GuidList<DataObject> (this.undoManager);

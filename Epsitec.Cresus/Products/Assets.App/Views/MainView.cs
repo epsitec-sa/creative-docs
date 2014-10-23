@@ -287,10 +287,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateToolbarUndoRedo()
 		{
-			this.commandContext.GetCommandState (Res.Commands.Main.Undo            ).Enable = this.accessor.UndoManager.IsUndoEnable;
-			this.commandContext.GetCommandState (Res.Commands.Main.UndoList        ).Enable = this.accessor.UndoManager.IsUndoEnable;
-			this.commandContext.GetCommandState (Res.Commands.Main.Redo            ).Enable = this.accessor.UndoManager.IsRedoEnable;
-			this.commandContext.GetCommandState (Res.Commands.Main.RedoList        ).Enable = this.accessor.UndoManager.IsRedoEnable;
+			var undo = this.accessor.UndoManager.IsUndoEnable;
+			var redo = this.accessor.UndoManager.IsRedoEnable;
+
+			this.commandContext.GetCommandState (Res.Commands.Main.Undo    ).Enable = undo;
+			this.commandContext.GetCommandState (Res.Commands.Main.UndoList).Enable = undo;
+			this.commandContext.GetCommandState (Res.Commands.Main.Redo    ).Enable = redo;
+			this.commandContext.GetCommandState (Res.Commands.Main.RedoList).Enable = redo;
+
+			// TODO: Il serait bien pratique de modifier les tooltips des commandes Undo/Redo,
+			// pour afficher la description des actions correspondantes !
 		}
 
 

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public struct UserField
+	public class UserField : IGuid
 	{
 		public UserField(Guid guid, string name, ObjectField field, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Data
 				lineCount = null;
 			}
 
-			this.Guid         = guid;
+			this.guid         = guid;
 			this.Name         = name;
 			this.Field        = field;
 			this.Type         = type;
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Data
 				lineCount = null;
 			}
 
-			this.Guid         = Guid.NewGuid ();
+			this.guid         = Guid.NewGuid ();
 			this.Name         = name;
 			this.Field        = field;
 			this.Type         = type;
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public UserField(UserField model)
 		{
-			this.Guid         = model.Guid;
+			this.guid         = model.Guid;
 			this.Name         = model.Name;
 			this.Field        = model.Field;
 			this.Type         = model.Type;
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public UserField(UserField model, ObjectField field, string name)
 		{
-			this.Guid         = Guid.NewGuid ();
+			this.guid         = Guid.NewGuid ();
 			this.Name         = name;
 			this.Field        = field;
 			this.Type         = model.Type;
@@ -75,6 +75,17 @@ namespace Epsitec.Cresus.Assets.Data
 			this.SummaryOrder = model.SummaryOrder;
 			this.TopMargin    = model.TopMargin;
 		}
+
+
+		#region IGuid Members
+		public Guid Guid
+		{
+			get
+			{
+				return this.guid;
+			}
+		}
+		#endregion
 
 
 		public bool IsEmpty
@@ -91,7 +102,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, false, 0, null, null, null, 0);
 
 
-		public readonly Guid					Guid;
+		private readonly Guid					guid;
+
 		public readonly string					Name;
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;

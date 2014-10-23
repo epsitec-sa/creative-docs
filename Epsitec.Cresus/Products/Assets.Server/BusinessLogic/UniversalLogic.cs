@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string NiceJoin(params string[] words)
 		{
+			//	Appond plusieurs textes en les séparant par de jolis tirets longs.
 			return string.Join (" — ", words.Where (x => !string.IsNullOrEmpty (x)));
 		}
 	}

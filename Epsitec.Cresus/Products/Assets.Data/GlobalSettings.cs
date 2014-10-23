@@ -9,13 +9,14 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class GlobalSettings
 	{
-		public GlobalSettings()
+		public GlobalSettings(UndoManager undoManager)
 		{
-			this.assetsFields  = new List<UserField> ();
-			this.personsFields = new List<UserField> ();
+			this.undoManager = undoManager;
+
+			this.assetsFields  = new GuidList<UserField> (this.undoManager);
+			this.personsFields = new GuidList<UserField> (this.undoManager);
 
 			this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
-			this.guidDict        = new Dictionary<Guid, UserField> ();
 
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}
@@ -186,7 +187,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Retourne l'index d'une rubrique utilisateur.
 			var list = this.GetUserFieldsList (baseType);
-			int index = list.FindIndex (x => x.Guid == guid);
+			var userField = list[guid];
+			System.Diagnostics.Debug.Assert (userField != null);
+			int index = list.IndexOf (userField);
 			System.Diagnostics.Debug.Assert (index != -1);
 			return index;
 		}
@@ -194,15 +197,16 @@ namespace Epsitec.Cresus.Assets.Data
 		public BaseType GetBaseType(Guid guid)
 		{
 			//	Retourne la base d'une rubrique utilisateur.
-			foreach (var baseType in GlobalSettings.BaseTypes)
+			var userField = this.assetsFields[guid];
+			if (userField != null)
 			{
-				var list = this.GetUserFieldsList (baseType);
-				var index = list.FindIndex (x => x.Guid == guid);
+				return BaseType.AssetsUserFields;
+			}
 
-				if (index != -1)
-				{
-					return baseType;
-				}
+			userField = this.personsFields[guid];
+			if (userField != null)
+			{
+				return BaseType.PersonsUserFields;
 			}
 
 			throw new System.InvalidOperationException ("Unknown Guid");
@@ -211,18 +215,18 @@ namespace Epsitec.Cresus.Assets.Data
 		public BaseType RemoveUserField(Guid guid)
 		{
 			//	Supprime une rubrique utilisateur.
-			foreach (var baseType in GlobalSettings.BaseTypes)
+			var userField = this.assetsFields[guid];
+			if (userField != null)
 			{
-				var list = this.GetUserFieldsList (baseType);
-				var index = list.FindIndex (x => x.Guid == guid);
+				this.assetsFields.Remove (userField);
+				return BaseType.AssetsUserFields;
+			}
 
-				if (index != -1)
-				{
-					list.RemoveAt (index);
-					this.Update ();
-
-					return baseType;
-				}
+			userField = this.personsFields[guid];
+			if (userField != null)
+			{
+				this.personsFields.Remove (userField);
+				return BaseType.PersonsUserFields;
 			}
 
 			throw new System.InvalidOperationException ("Unknown Guid");
@@ -257,9 +261,14 @@ namespace Epsitec.Cresus.Assets.Data
 		public UserField GetUserField(Guid guid)
 		{
 			//	Retourne une rubrique utilisateur.
-			UserField userField;
+			var userField = this.assetsFields[guid];
+			if (userField != null)
+			{
+				return userField;
+			}
 
-			if (this.guidDict.TryGetValue (guid, out userField))
+			userField = this.personsFields[guid];
+			if (userField != null)
 			{
 				return userField;
 			}
@@ -295,23 +304,20 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Met à jour les dictionnaires après une modification d'une rubrique utilisateur.
 			this.objectFieldDict.Clear ();
-			this.guidDict.Clear ();
 
 			foreach (var field in this.assetsFields)
 			{
 				this.objectFieldDict.Add (field.Field, field);
-				this.guidDict.Add (field.Guid, field);
 			}
 
 			foreach (var field in this.personsFields)
 			{
 				this.objectFieldDict.Add (field.Field, field);
-				this.guidDict.Add (field.Guid, field);
 			}
 		}
 
 
-		private List<UserField> GetUserFieldsList(BaseType baseType)
+		private GuidList<UserField> GetUserFieldsList(BaseType baseType)
 		{
 			//	Retourne la liste des rubriques utilisateur d'une base.
 			switch (baseType.Kind)
@@ -338,9 +344,9 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		private readonly List<UserField>					assetsFields;
-		private readonly List<UserField>					personsFields;
+		private readonly UndoManager						undoManager;
+		private readonly GuidList<UserField>				assetsFields;
+		private readonly GuidList<UserField>				personsFields;
 		private readonly Dictionary<ObjectField, UserField>	objectFieldDict;
-		private readonly Dictionary<Guid, UserField>		guidDict;
 	}
 }
