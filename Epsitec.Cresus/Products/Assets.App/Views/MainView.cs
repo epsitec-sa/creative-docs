@@ -295,8 +295,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.commandContext.GetCommandState (Res.Commands.Main.Redo    ).Enable = redo;
 			this.commandContext.GetCommandState (Res.Commands.Main.RedoList).Enable = redo;
 
-			// TODO: Il serait bien pratique de modifier les tooltips des commandes Undo/Redo,
-			// pour afficher la description des actions correspondantes !
+			var undoButton = this.toolbar.GetTarget (Res.Commands.Main.Undo);
+			var redoButton = this.toolbar.GetTarget (Res.Commands.Main.Redo);
+
+			if (undo)
+			{
+				ToolTip.Default.SetToolTip (undoButton, this.accessor.UndoManager.CurrentUndoDescription);
+			}
+			else
+			{
+				ToolTip.Default.ClearToolTip (undoButton);
+			}
+
+			if (redo)
+			{
+				ToolTip.Default.SetToolTip (redoButton, this.accessor.UndoManager.CurrentRedoDescription);
+			}
+			else
+			{
+				ToolTip.Default.ClearToolTip (redoButton);
+			}
 		}
 
 

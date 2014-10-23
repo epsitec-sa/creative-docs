@@ -55,4 +55,6 @@
   <data name="Reports.MCH2Summary.DefaultTitle" id="KK1">Tableau des immobilisations MCH2</data>
   <data name="Reports.Assets.DefaultTitle" id="KL1">Liste des objets d'immobilisations</data>
   <data name="Reports.Persons.DefaultTitle" id="KM1">Liste des contacts</data>
+  <data name="UndoManager.Redo.Description" id="KN1">Rétablir "{0}"</data>
+  <data name="UndoManager.Undo.Description" id="KO1">Annuler "{0}"</data>
 </bundle>

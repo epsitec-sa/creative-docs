@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			int index = 0;
 			foreach (var description in undoList)
 			{
-				this.undoList.Add (this.GetDescription (description));
+				this.undoList.Add (description);
 				index++;
 
 				if (index >= UndoListPopup.maxUndo)
@@ -164,19 +164,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				width = System.Math.Min (width, 600);  // ...ni trop large
 
 				return width;
-			}
-		}
-
-
-		private string GetDescription(string description)
-		{
-			if (this.undo)  // undo ?
-			{
-				return string.Format (Res.Strings.Popup.UndoList.Undo.Button.ToString (), description);
-			}
-			else  // redo ?
-			{
-				return string.Format (Res.Strings.Popup.UndoList.Redo.Button.ToString (), description);
 			}
 		}
 

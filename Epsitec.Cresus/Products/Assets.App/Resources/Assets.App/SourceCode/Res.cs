@@ -4594,14 +4594,6 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					public static class Redo
 					{
-						//	designer:str/JUKSH01
-						public static global::Epsitec.Common.Types.FormattedText Button
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544892));
-							}
-						}
 						//	designer:str/JUKUH01
 						public static global::Epsitec.Common.Types.FormattedText TitleMany
 						{
@@ -4622,14 +4614,6 @@ namespace Epsitec.Cresus.Assets.App
 					
 					public static class Undo
 					{
-						//	designer:str/JUKRH01
-						public static global::Epsitec.Common.Types.FormattedText Button
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544891));
-							}
-						}
 						//	designer:str/JUKQH01
 						public static global::Epsitec.Common.Types.FormattedText TitleMany
 						{
@@ -9052,14 +9036,6 @@ namespace Epsitec.Cresus.Assets.App
 				{
 					public static class Redo
 					{
-						//	designer:str/JUKSH01
-						public static global::Epsitec.Common.Support.Druid Button
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544892);
-							}
-						}
 						//	designer:str/JUKUH01
 						public static global::Epsitec.Common.Support.Druid TitleMany
 						{
@@ -9080,14 +9056,6 @@ namespace Epsitec.Cresus.Assets.App
 					
 					public static class Undo
 					{
-						//	designer:str/JUKRH01
-						public static global::Epsitec.Common.Support.Druid Button
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544891);
-							}
-						}
 						//	designer:str/JUKQH01
 						public static global::Epsitec.Common.Support.Druid TitleMany
 						{

@@ -47,6 +47,37 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+
+		public string							CurrentUndoDescription
+		{
+			get
+			{
+				if (this.IsUndoEnable)
+				{
+					return this.GetDescription (this.lastExecuted, undo: true);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+		public string							CurrentRedoDescription
+		{
+			get
+			{
+				if (this.IsRedoEnable)
+				{
+					return this.GetDescription (this.lastExecuted+1, undo: false);
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		
 		public IEnumerable<string>				UndoList
 		{
@@ -56,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				for (int i=this.lastExecuted; i>=0; i--)
 				{
-					yield return this.groups[i].Description;
+					yield return this.GetDescription (i, undo: true);
 				}
 			}
 		}
@@ -69,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				for (int i=this.lastExecuted+1; i<this.groups.Count; i++)
 				{
-					yield return this.groups[i].Description;
+					yield return this.GetDescription (i, undo: false);
 				}
 			}
 		}
@@ -188,6 +219,20 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+
+		private string GetDescription(int index, bool undo)
+		{
+			var description = this.groups[index].Description;
+
+			if (undo)  // undo ?
+			{
+				return string.Format (Res.Strings.UndoManager.Undo.Description.ToString (), description);
+			}
+			else  // redo ?
+			{
+				return string.Format (Res.Strings.UndoManager.Redo.Description.ToString (), description);
+			}
+		}
 
 		public static string GetDescription(string op, string objectSummary)
 		{

@@ -88,14 +88,24 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		public Widget GetTarget(CommandEventArgs e)
 		{
+			return this.GetTarget (e.Command);
+		}
+
+		public Widget GetTarget(Command command)
+		{
 			//	Cherche le widget ayant la plus grande surface.
-			return AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			return AbstractCommandToolbar.GetTarget (this.commandDispatcher, command);
 		}
 
 		public static Widget GetTarget(CommandDispatcher commandDispatcher, CommandEventArgs e)
 		{
+			return AbstractCommandToolbar.GetTarget (commandDispatcher, e.Command);
+		}
+
+		public static Widget GetTarget(CommandDispatcher commandDispatcher, Command command)
+		{
 			//	Cherche le widget ayant la plus grande surface.
-			var targets = commandDispatcher.FindVisuals (e.Command)
+			var targets = commandDispatcher.FindVisuals (command)
 				.Where (x => !x.ActualBounds.IsEmpty && x.Name != "NoTarget")
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
 				.ToArray ();

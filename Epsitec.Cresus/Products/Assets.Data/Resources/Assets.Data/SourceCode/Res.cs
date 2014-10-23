@@ -489,6 +489,33 @@ namespace Epsitec.Cresus.Assets.Data
 				}
 			}
 			
+			public static class UndoManager
+			{
+				public static class Redo
+				{
+					//	designer:str/HUKN101
+					public static global::Epsitec.Common.Types.FormattedText Description
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544375));
+						}
+					}
+				}
+				
+				public static class Undo
+				{
+					//	designer:str/HUKO101
+					public static global::Epsitec.Common.Types.FormattedText Description
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544376));
+						}
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
@@ -996,6 +1023,33 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544374);
+						}
+					}
+				}
+			}
+			
+			public static class UndoManager
+			{
+				public static class Redo
+				{
+					//	designer:str/HUKN101
+					public static global::Epsitec.Common.Support.Druid Description
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544375);
+						}
+					}
+				}
+				
+				public static class Undo
+				{
+					//	designer:str/HUKO101
+					public static global::Epsitec.Common.Support.Druid Description
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544376);
 						}
 					}
 				}
