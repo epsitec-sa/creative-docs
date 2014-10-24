@@ -926,6 +926,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				},
 				action: delegate (System.DateTime date)
 				{
+					this.accessor.UndoManager.Start ();
+
 					var ev = this.accessor.Clipboard.PasteEvent (this.accessor, obj, date);
 
 					if (ev == null)
@@ -941,6 +943,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 						this.SetSelection (this.selectedRow, this.dataArray.FindColumnIndex (ev.Timestamp));
 						//?this.OnStartEditing (e.Type, e.Timestamp);
 					}
+
+					var desc = UndoManager.GetDescription (Res.Commands.Timelines.Paste.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+					this.accessor.UndoManager.SetDescription (desc);
+					this.accessor.UndoManager.SetAfterViewState ();
 				});
 			}
 			else

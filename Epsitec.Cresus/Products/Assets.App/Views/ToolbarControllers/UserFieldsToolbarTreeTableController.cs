@@ -231,6 +231,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.Paste)]
 		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.accessor.UndoManager.Start ();
+
 			int index = this.VisibleSelectedRow;
 			if (index == -1)  // pas de sélection ?
 			{
@@ -249,6 +251,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.UpdateData ();
 				this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
 			}
+
+			var desc = UndoManager.GetDescription (Res.Commands.UserFields.Paste.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.UserFields.Export)]

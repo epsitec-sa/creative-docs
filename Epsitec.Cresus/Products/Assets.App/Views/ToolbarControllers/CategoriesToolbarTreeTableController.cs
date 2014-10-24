@@ -165,7 +165,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Categories.Paste)]
 		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.accessor.UndoManager.Start ();
+
 			base.OnPaste (dispatcher, e);
+
+			var desc = UndoManager.GetDescription (Res.Commands.Categories.Paste.Description, CategoriesLogic.GetSummary (this.accessor, this.SelectedGuid));
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.Categories.Export)]

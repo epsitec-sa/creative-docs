@@ -246,6 +246,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				},
 				action: delegate (System.DateTime date)
 				{
+					this.accessor.UndoManager.Start ();
+
 					var ev = this.accessor.Clipboard.PasteEvent (this.accessor, this.obj, date);
 
 					if (ev == null)
@@ -258,6 +260,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 						this.SelectedTimestamp = ev.Timestamp;
 						this.OnUpdateAfterCreate (ev.Guid, ev.Type, ev.Timestamp);
 					}
+
+					var desc = UndoManager.GetDescription (Res.Commands.Events.Paste.Description, AssetsLogic.GetSummary (this.accessor, this.obj.Guid, ev.Timestamp));
+					this.accessor.UndoManager.SetDescription (desc);
+					this.accessor.UndoManager.SetAfterViewState ();
 				});
 			}
 			else

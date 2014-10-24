@@ -341,6 +341,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			AssetPastePopup.Show (target, this.accessor, summary, delegate (System.DateTime inputDate)
 			{
+				this.accessor.UndoManager.Start ();
+
 				var obj = this.accessor.Clipboard.PasteObject (this.accessor, this.baseType, inputDate);
 				if (obj == null)
 				{
@@ -352,6 +354,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					this.SelectedGuid = obj.Guid;
 					this.OnUpdateAfterCreate (obj.Guid, EventType.Input, new Timestamp (inputDate, 0));
 				}
+
+				var desc = UndoManager.GetDescription (Res.Commands.Assets.Paste.Description, AssetsLogic.GetSummary (this.accessor, this.SelectedGuid, this.SelectedTimestamp));
+				this.accessor.UndoManager.SetDescription (desc);
+				this.accessor.UndoManager.SetAfterViewState ();
 			});
 		}
 
