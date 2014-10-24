@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return editedProperties.IsValid;
 		}
 
-		public AmortizedAmount CreateEntry(AmortizedAmount amount)
+		private AmortizedAmount CreateEntry(AmortizedAmount amount)
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
 			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public AmortizedAmount RemoveEntry(AmortizedAmount amount)
+		private AmortizedAmount RemoveEntry(AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
 			var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);

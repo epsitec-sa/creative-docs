@@ -18,6 +18,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var asset = accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (asset != null);
 
+			//	Importe la catégorie d'immobilisation dans l'événement d'entrée, si nécessaire.
+			if (!cat.IsEmpty)
+			{
+				CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);
+			}
+
 			//	Crée la valeur comptable d'entrée, si nécessaire.
 			if (value.HasValue)
 			{
@@ -26,13 +32,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var aa = p.Value;
 
 				aa = AmortizedAmount.SetInitialAmount (aa, value.Value);
+				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
 				Amortizations.SetAmortizedAmount (e, aa);
-			}
-
-			//	Importe la catégorie d'immobilisation dans l'événement d'entrée, si nécessaire.
-			if (!cat.IsEmpty)
-			{
-				CategoriesLogic.ImportCategoryToAsset (accessor, asset, null, cat);
 			}
 
 			return asset;
