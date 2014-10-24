@@ -38,16 +38,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public Color							HoverColor
+		{
+			get
+			{
+				return this.hoverColor;
+			}
+			set
+			{
+				if (this.hoverColor != value)
+				{
+					this.hoverColor = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (!this.BackColor.IsEmpty && this.Enable)
+			if (!this.HoverColor.IsEmpty && this.Enable)
 			{
 				//	Affiche le fond coloré lorsque le bouton est lié à un autre
 				//	avec MainToolbar.AttachHover().
 				var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				graphics.RenderSolid (this.HoverColor);
 			}
 
 			base.PaintBackgroundImplementation (graphics, clipRect);
@@ -118,5 +134,6 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private readonly Font					font;
 		private int								redDotCount;
+		private Color							hoverColor;
 	}
 }

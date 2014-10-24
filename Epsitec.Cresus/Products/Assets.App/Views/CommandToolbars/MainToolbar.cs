@@ -145,28 +145,28 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
-		private static void AttachHover(AbstractButton a, AbstractButton b)
+		private static void AttachHover(ButtonWithRedDot a, ButtonWithRedDot b)
 		{
 			//	Lie le hover de deux boutons, afin que le survol de l'un produise le
 			//	même effet sur l'autre.
 			a.Entered += delegate
 			{
-				b.BackColor = ColorManager.HoverColor;
+				b.HoverColor = ColorManager.HoverColor;
 			};
 
 			a.Exited += delegate
 			{
-				b.BackColor = Color.Empty;
+				b.HoverColor = Color.Empty;
 			};
 
 			b.Entered += delegate
 			{
-				a.BackColor = ColorManager.HoverColor;
+				a.HoverColor = ColorManager.HoverColor;
 			};
 
 			b.Exited += delegate
 			{
-				a.BackColor = Color.Empty;
+				a.HoverColor = Color.Empty;
 			};
 		}
 
