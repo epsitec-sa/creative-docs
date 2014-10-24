@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.groups.Clear ();
 			this.lastExecuted = -1;
+
+			this.OnChanged ();
 		}
 
 		public bool								IsUndoEnable
@@ -79,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 		
-		public IEnumerable<string>				UndoList
+		public IEnumerable<string>				UndoHistory
 		{
 			//	Retourne les descriptions des actions qu'il est possible d'annuler,
 			//	de la plus récente à la plus ancienne.
@@ -92,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public IEnumerable<string>				RedoList
+		public IEnumerable<string>				RedoHistory
 		{
 			//	Retourne les descriptions des actions qu'il est possible de rétablir,
 			//	de la plus ancienne à la plus récente.
@@ -222,6 +224,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private string GetDescription(int index, bool undo)
 		{
+			//	Retourne la description d'une aection undo/redo complète, par exemple
+			//	Rétablir "Supprimer le contact - Jean Dupond" 
 			var description = this.groups[index].Description;
 
 			if (undo)  // undo ?

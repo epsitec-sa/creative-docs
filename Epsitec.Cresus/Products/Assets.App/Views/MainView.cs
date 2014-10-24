@@ -36,16 +36,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			var cleaner = new CleanerAgent (this.accessor, this);
 			this.accessor.CleanerAgents.Add (cleaner);
-
-			this.accessor.UndoManager.SetViewStateGetter (delegate
-			{
-				return this.view.ViewState;
-			});
-
-			this.accessor.UndoManager.Changed += delegate
-			{
-				this.UpdateToolbarUndoRedo ();
-			};
 		}
 
 		public void CreateUI(Widget parent)
@@ -72,7 +62,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateFirstView ();
 			this.UpdateToolbar ();
-			this.UpdateToolbarUndoRedo ();
 		}
 
 
@@ -82,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			WarningsLogic.GetWarnings (list, this.accessor);
 
 			this.CreateView (list.Count == 0 ? ViewType.Assets : ViewType.Warnings);
+			this.InitializeUndo ();
 		}
 
 		private void CreateView(ViewType viewType, bool pushViewState = true)
@@ -189,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnUndoList(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.UndoList, true, delegate (int count)
+			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.UndoHistory, true, delegate (int count)
 			{
 				for (int i=0; i<count; i++)
 				{
@@ -220,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnRedoList(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.RedoList, false, delegate (int count)
+			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.RedoHistory, false, delegate (int count)
 			{
 				for (int i=0; i<count; i++)
 				{
@@ -272,6 +262,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.DeleteView ();
 			this.CreateFirstView ();
+		}
+
+		private void InitializeUndo()
+		{
+			this.accessor.UndoManager.SetViewStateGetter (delegate
+			{
+				return this.view.ViewState;
+			});
+
+			this.accessor.UndoManager.Changed += delegate
+			{
+				this.UpdateToolbarUndoRedo ();
+			};
+
+			this.UpdateToolbarUndoRedo ();
 		}
 
 
