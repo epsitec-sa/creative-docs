@@ -96,6 +96,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void Import(string filename)
 		{
 			//	Lit le fichier .crp et ajoute-le à la liste des plans comptables dans le mandat.
+			this.accessor.UndoManager.Start ();
+
 			using (var importEngine = new AccountsImport ())
 			{
 				DateRange range;
@@ -120,6 +122,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				//	N'affiche rien lors d'une importation effectuée avec succès.
 			}
+
+			var desc = UndoManager.GetDescription (Res.Commands.Accounts.Import.Description, null);
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		private void ShowMessagePopup(string message)

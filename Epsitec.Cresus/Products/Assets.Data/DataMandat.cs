@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups        = new GuidList<DataObject> (this.undoManager);
 			this.persons       = new GuidList<DataObject> (this.undoManager);
 			this.entries       = new GuidList<DataObject> (this.undoManager);
-			this.rangeAccounts = new Dictionary<DateRange, GuidList<DataObject>> ();
+			this.rangeAccounts = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
 			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
 		}
 
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidList<DataObject>							groups;
 		private readonly GuidList<DataObject>							persons;
 		private readonly GuidList<DataObject>							entries;
-		private readonly Dictionary<DateRange, GuidList<DataObject>>	rangeAccounts;
+		private readonly UndoableDictionary<DateRange, GuidList<DataObject>> rangeAccounts;
 		private readonly GuidList<AbstractReportParams>					reports;
 	}
 }

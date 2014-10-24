@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public int Count
+		public int								Count
 		{
 			get
 			{
