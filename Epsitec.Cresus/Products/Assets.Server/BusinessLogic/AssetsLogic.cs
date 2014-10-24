@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var aa = p.Value;
 
 				aa = AmortizedAmount.SetInitialAmount (aa, value.Value);
-				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
+				aa = Entries.CreateEntry (accessor, aa);  // génère les écritures
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 

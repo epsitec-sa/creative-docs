@@ -39,9 +39,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			if (!this.BackColor.IsEmpty && this.Enable)
+			{
+				var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
+			}
+
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			if (this.redDotCount > 0)

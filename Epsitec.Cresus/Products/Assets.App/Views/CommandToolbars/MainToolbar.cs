@@ -10,6 +10,7 @@ using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -120,10 +121,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSajex (10);
 
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Undo);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.UndoList, widthScale: 0.5);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Redo);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.RedoList, widthScale: 0.5);
+			var b1 = this.CreateButton (DockStyle.Left, Res.Commands.Main.Undo);
+			var b2 = this.CreateButton (DockStyle.Left, Res.Commands.Main.UndoList, widthScale: 0.5);
+			var b3 = this.CreateButton (DockStyle.Left, Res.Commands.Main.Redo);
+			var b4 = this.CreateButton (DockStyle.Left, Res.Commands.Main.RedoList, widthScale: 0.5);
+
+			MainToolbar.AttachHover (b1, b2);
+			MainToolbar.AttachHover (b3, b4);
 
 			this.CreateSajex (10);
 
@@ -138,6 +142,32 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
+		}
+
+
+		private static void AttachHover(AbstractButton a, AbstractButton b)
+		{
+			//	Lie le hover de deux boutons, afin que le survol de l'un produise le
+			//	même effet sur l'autre.
+			a.Entered += delegate
+			{
+				b.BackColor = ColorManager.HoverColor;
+			};
+
+			a.Exited += delegate
+			{
+				b.BackColor = Color.Empty;
+			};
+
+			b.Entered += delegate
+			{
+				a.BackColor = ColorManager.HoverColor;
+			};
+
+			b.Exited += delegate
+			{
+				a.BackColor = Color.Empty;
+			};
 		}
 
 
