@@ -273,6 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.accessor.UndoManager.Changed += delegate
 			{
+				this.accessor.WarningsDirty = true;
 				this.UpdateToolbarUndoRedo ();
 			};
 
