@@ -175,8 +175,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
-		[Command (Res.CommandIds.Main.UndoList)]
-		private void OnUndoList(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command (Res.CommandIds.Main.UndoHistory)]
+		private void OnUndoHistory(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
 			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.UndoHistory, true, delegate (int count)
@@ -206,8 +206,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateToolbar ();
 		}
 
-		[Command (Res.CommandIds.Main.RedoList)]
-		private void OnRedoList(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command (Res.CommandIds.Main.RedoHistory)]
+		private void OnRedoHistory(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
 			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.RedoHistory, false, delegate (int count)
@@ -295,10 +295,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var undo = this.accessor.UndoManager.IsUndoEnable;
 			var redo = this.accessor.UndoManager.IsRedoEnable;
 
-			this.commandContext.GetCommandState (Res.Commands.Main.Undo    ).Enable = undo;
-			this.commandContext.GetCommandState (Res.Commands.Main.UndoList).Enable = undo;
-			this.commandContext.GetCommandState (Res.Commands.Main.Redo    ).Enable = redo;
-			this.commandContext.GetCommandState (Res.Commands.Main.RedoList).Enable = redo;
+			this.commandContext.GetCommandState (Res.Commands.Main.Undo       ).Enable = undo;
+			this.commandContext.GetCommandState (Res.Commands.Main.UndoHistory).Enable = undo;
+			this.commandContext.GetCommandState (Res.Commands.Main.Redo       ).Enable = redo;
+			this.commandContext.GetCommandState (Res.Commands.Main.RedoHistory).Enable = redo;
 
 			var undoButton = this.toolbar.GetTarget (Res.Commands.Main.Undo);
 			var redoButton = this.toolbar.GetTarget (Res.Commands.Main.Redo);

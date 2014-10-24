@@ -112,11 +112,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (this.undo)
 				{
-					this.titleStaticText.Text = Res.Commands.Main.UndoList.Description;
+					this.titleStaticText.Text = Res.Commands.Main.UndoHistory.Description;
 				}
 				else
 				{
-					this.titleStaticText.Text = Res.Commands.Main.RedoList.Description;
+					this.titleStaticText.Text = Res.Commands.Main.RedoHistory.Description;
 				}
 			}
 			else if (rank == 0)  // undo/redo d'une action ?

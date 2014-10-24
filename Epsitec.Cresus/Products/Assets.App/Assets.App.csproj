@@ -514,8 +514,8 @@
     <EmbeddedResource Include="Images\Timeline.GroupedByYear.icon" />
     <EmbeddedResource Include="Images\Main.Redo.icon" />
     <EmbeddedResource Include="Images\Main.Undo.icon" />
-    <EmbeddedResource Include="Images\Main.UndoList.icon" />
-    <EmbeddedResource Include="Images\Main.RedoList.icon" />
+    <EmbeddedResource Include="Images\Main.UndoHistory.icon" />
+    <EmbeddedResource Include="Images\Main.RedoHistory.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -276,13 +276,13 @@ namespace Epsitec.Cresus.Assets.App
 				//	designer:cap/JUK6601
 				public static readonly global::Epsitec.Common.Widgets.Command Redo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 198));
 				//	designer:cap/JUK8601
-				public static readonly global::Epsitec.Common.Widgets.Command RedoList = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 200));
+				public static readonly global::Epsitec.Common.Widgets.Command RedoHistory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 200));
 				//	designer:cap/JUKO001
 				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/JUK5601
 				public static readonly global::Epsitec.Common.Widgets.Command Undo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 197));
 				//	designer:cap/JUK7601
-				public static readonly global::Epsitec.Common.Widgets.Command UndoList = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 199));
+				public static readonly global::Epsitec.Common.Widgets.Command UndoHistory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 199));
 				public static class Navigate
 				{
 					internal static void _Initialize()
@@ -835,13 +835,13 @@ namespace Epsitec.Cresus.Assets.App
 				//	designer:cap/JUK6601
 				public const long Redo = 0x7D3000140000C6L;
 				//	designer:cap/JUK8601
-				public const long RedoList = 0x7D3000140000C8L;
+				public const long RedoHistory = 0x7D3000140000C8L;
 				//	designer:cap/JUKO001
 				public const long Simulation = 0x7D300014000018L;
 				//	designer:cap/JUK5601
 				public const long Undo = 0x7D3000140000C5L;
 				//	designer:cap/JUK7601
-				public const long UndoList = 0x7D3000140000C7L;
+				public const long UndoHistory = 0x7D3000140000C7L;
 				public static class Navigate
 				{
 					//	designer:cap/JUKJ001

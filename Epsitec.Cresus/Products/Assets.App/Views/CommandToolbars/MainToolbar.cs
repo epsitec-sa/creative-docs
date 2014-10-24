@@ -122,9 +122,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateSajex (10);
 
 			var b1 = this.CreateButton (DockStyle.Left, Res.Commands.Main.Undo);
-			var b2 = this.CreateButton (DockStyle.Left, Res.Commands.Main.UndoList, widthScale: 0.5);
+			var b2 = this.CreateButton (DockStyle.Left, Res.Commands.Main.UndoHistory, widthScale: 0.5);
 			var b3 = this.CreateButton (DockStyle.Left, Res.Commands.Main.Redo);
-			var b4 = this.CreateButton (DockStyle.Left, Res.Commands.Main.RedoList, widthScale: 0.5);
+			var b4 = this.CreateButton (DockStyle.Left, Res.Commands.Main.RedoHistory, widthScale: 0.5);
 
 			MainToolbar.AttachHover (b1, b2);
 			MainToolbar.AttachHover (b3, b4);

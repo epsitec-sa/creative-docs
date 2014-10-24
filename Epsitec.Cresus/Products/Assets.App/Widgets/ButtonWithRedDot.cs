@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			if (!this.BackColor.IsEmpty && this.Enable)
 			{
+				//	Affiche le fond coloré lorsque le bouton est lié à un autre
+				//	avec MainToolbar.AttachHover().
 				var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.BackColor);
