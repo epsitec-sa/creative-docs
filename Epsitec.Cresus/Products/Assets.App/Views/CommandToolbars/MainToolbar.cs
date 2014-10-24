@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			//	même effet sur l'autre.
 			a.Entered += delegate
 			{
-				b.HoverColor = ColorManager.HoverColor;
+				b.HoverColor = Color.FromAlphaColor (0.7, ColorManager.HoverColor);
 			};
 
 			a.Exited += delegate
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			b.Entered += delegate
 			{
-				a.HoverColor = ColorManager.HoverColor;
+				a.HoverColor = Color.FromAlphaColor (0.7, ColorManager.HoverColor);
 			};
 
 			b.Exited += delegate
