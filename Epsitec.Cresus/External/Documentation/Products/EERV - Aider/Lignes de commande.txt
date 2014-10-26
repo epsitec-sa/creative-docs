@@ -476,3 +476,11 @@ Mise à jour MAT[CH]sort et MAT[CH]street
 -exportsubscriptions -output:export-2014-10-30.txt -error:error-2014-10-30.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-10-30.txt -publicationdate:2014-10-30 -response:tamedia-2014-10-30.log
 
+
+
+Lancé le 26.10.2014
+-------------------
+
+SVN update > r23886
+
+-echupdate -newechfile:S:\eerv\eerv-2014-10-23.xml -oldechfile:S:\eerv\eerv-2014-10-16.xml -output:s:\eerv\ech-diff-2014-10-23.md
