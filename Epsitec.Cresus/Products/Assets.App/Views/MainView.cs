@@ -501,7 +501,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Restaure la vue après un undo/redo.
 			if (viewState.GetType () == this.view.ViewState.GetType () &&
-				!(viewState is AccountsViewState))
+				!(viewState is AccountsViewState))  // voir (*)
 			{
 				//	Si la vue est toujours du même type, il n'est pas nécessaire de
 				//	la recréer.
@@ -512,6 +512,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				//	Crée la vue du nouveau type.
 				this.RestoreViewState (viewState);
 			}
+
+			// (*)	Comme la vue du plan comptable dépend de la période comptable,
+			//		il est nécessaire de recréer cette vue à chaque fois !
 		}
 
 		private void RestoreViewState(AbstractViewState viewState)

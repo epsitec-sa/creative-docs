@@ -86,7 +86,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 				var e    = this.DataObject.GetEvent (node.Guid);
-				System.Diagnostics.Debug.Assert (e != null);
+
+				if (e == null)
+				{
+					//	Il peut arriver qu'on effectue ce code suite à un redimensionnement
+					//	de la fenêtre, alors que les données ne sont pas à jour. Si un événement
+					//	a été supprimé, il aura une valeur nulle et il faut stopper la boucle
+					//	sans asset et sans signaler un quelconque problème !
+					break;
+				}
 
 				var timestamp = e.Timestamp;
 				var eventType = e.Type;
