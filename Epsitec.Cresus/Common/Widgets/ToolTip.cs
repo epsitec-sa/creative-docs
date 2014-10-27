@@ -454,7 +454,10 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.ShowToolTip ();
-				this.RestartTimer (ToolTip.GetTooltipAutoCloseDelay (this.widget));
+				if (this.widget != null)
+				{
+					this.RestartTimer (ToolTip.GetTooltipAutoCloseDelay (this.widget));
+				}
 			}
 		}
 		
