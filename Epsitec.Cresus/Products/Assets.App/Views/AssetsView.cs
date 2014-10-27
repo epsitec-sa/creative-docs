@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent  = topBox,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
+				Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),  // place pour StateAtController
 			};
 
 			this.listController.CreateUI (this.listFrameBox);

@@ -168,6 +168,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Undo)]
 		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.accessor.EditionAccessor.CancelObjectEdition ();
+
 			var viewState = this.accessor.UndoManager.Undo () as AbstractViewState;
 			this.RestoreUndoViewState (viewState);
 

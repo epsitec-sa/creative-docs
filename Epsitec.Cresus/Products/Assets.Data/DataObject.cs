@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		public DataObject(UndoManager undoManager)
 		{
+			this.undoManager = undoManager;
 			this.guid = Guid.NewGuid ();
 
 			this.events = new GuidList<DataEvent> (undoManager);
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Data
 			//	que déplacer un événement d'entrée après celui de sortie.
 			//	La modification du timestamp nécessite de créer une copie de l'événement, dont
 			//	on ne changera que le timestamp.
-			var newEvent = new DataEvent (null, e.Guid, timestamp, e.Type);
+			var newEvent = new DataEvent (this.undoManager, e.Guid, timestamp, e.Type);
 			newEvent.SetProperties (e);
 
 			this.RemoveEvent (e);
@@ -237,6 +238,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
 		private readonly GuidList<DataEvent>	events;
 	}
