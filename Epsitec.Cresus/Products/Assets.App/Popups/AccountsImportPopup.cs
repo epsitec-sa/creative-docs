@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public AccountsImportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Importation d'un plan comptable Crésus";
+			this.title = Res.Strings.Popup.Accounts.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
