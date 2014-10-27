@@ -72,6 +72,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.CreateTreeTableControllerUI (this.treeTableFrame);
 			this.CreateGraphicControllerUI (this.graphicFrame);
+
+			this.UpdateGraphicMode ();
 		}
 
 		private void CreateTreeTableControllerUI(Widget parent)

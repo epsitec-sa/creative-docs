@@ -187,8 +187,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.eventsFrameBox = new FrameBox
 			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
+				Parent  = topBox,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),
 			};
 
 			this.listController.CreateUI (this.listFrameBox);
@@ -365,9 +366,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void DataChanged()
 		{
-			this.listController.DirtyData = true;
-			this.timelineController.DirtyData = true;
-			this.eventsController.DirtyData = true;
+			this.listController          .DirtyData = true;
+			this.timelineController      .DirtyData = true;
+			this.eventsController        .DirtyData = true;
 			this.timelinesArrayController.DirtyData = true;
 		}
 
