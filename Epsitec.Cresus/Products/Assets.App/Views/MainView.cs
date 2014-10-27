@@ -500,7 +500,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void RestoreUndoViewState(AbstractViewState viewState)
 		{
 			//	Restaure la vue après un undo/redo.
-			if (viewState.GetType () == this.view.ViewState.GetType ())
+			if (viewState.GetType () == this.view.ViewState.GetType () &&
+				!(viewState is AccountsViewState))
 			{
 				//	Si la vue est toujours du même type, il n'est pas nécessaire de
 				//	la recréer.

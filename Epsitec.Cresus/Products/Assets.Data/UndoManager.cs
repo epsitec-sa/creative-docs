@@ -224,8 +224,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private string GetDescription(int index, bool undo)
 		{
-			//	Retourne la description d'une aection undo/redo complète, par exemple
-			//	Rétablir "Supprimer le contact - Jean Dupond" 
+			//	Retourne la description d'une action undo/redo complète, par exemple
+			//	"Rétablir « Supprimer le contact - Jean Dupond »"
 			var description = this.groups[index].Description;
 
 			if (undo)  // undo ?
