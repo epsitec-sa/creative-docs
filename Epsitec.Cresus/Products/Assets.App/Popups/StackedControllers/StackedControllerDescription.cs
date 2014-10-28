@@ -90,11 +90,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				case StackedControllerType.PersonGuid:
 					return new PersonGuidStackedController (accessor, description);
 
-				case StackedControllerType.ExportFilename:
-					return new ExportFilenameStackedController (accessor, description);
-
-				case StackedControllerType.ImportAccountsFilename:
-					return new ImportAccountsFilenameStackedController (accessor, description);
+				case StackedControllerType.Filename:
+					return new FilenameStackedController (accessor, description);
 
 				case StackedControllerType.Margins:
 					return new MarginsStackedController (accessor, description);

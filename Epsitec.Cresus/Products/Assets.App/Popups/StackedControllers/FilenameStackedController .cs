@@ -6,21 +6,24 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Dialogs;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 {
-	public class ExportFilenameStackedController : AbstractStackedController
+	public class FilenameStackedController  : AbstractStackedController
 	{
-		public ExportFilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
+		public FilenameStackedController(DataAccessor accessor, StackedControllerDescription description)
 			: base (accessor, description)
 		{
 		}
 
+
+		public string							DialogTitle;
+		public string							DialogExtensions;
+		public string							DialogFormatName;
+		public bool								Save;
 
 		public string							Value
 		{
@@ -42,14 +45,12 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			}
 		}
 
-		public ExportFormat						Format;
-
 
 		public override int						RequiredHeight
 		{
 			get
 			{
-				return ExportFilenameStackedController.height;
+				return FilenameStackedController.height;
 			}
 		}
 
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			{
 				Value      = this.Value,
 				LabelWidth = 0,
-				EditWidth  = this.description.Width - ExportFilenameStackedController.browseWidth - 4,
+				EditWidth  = this.description.Width - FilenameStackedController.browseWidth - 4,
 				TabIndex   = tabIndex,
 			};
 
@@ -96,13 +97,13 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 		{
 			var button = new ColoredButton
 			{
-				Parent           = parent,
-				Text             = "Parcourir...",
-				Dock             = DockStyle.Right,
-				TabIndex         = tabIndex,
-				PreferredWidth   = ExportFilenameStackedController.browseWidth - 2,
-				PreferredHeight  = AbstractFieldController.lineHeight,
-				Margins          = new Margins (2, 0, 0, 0),
+				Parent          = parent,
+				Text            = Res.Strings.FilenameStackedController.Browse.ToString (),
+				Dock            = DockStyle.Right,
+				TabIndex        = tabIndex,
+				PreferredWidth  = FilenameStackedController.browseWidth - 2,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Margins         = new Margins (2, 0, 0, 0),
 			};
 
 			button.Clicked += delegate
@@ -113,18 +114,27 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private void ShowFilenameDialog()
 		{
-			//	Affiche le dialogue permettant de choisir un fichier à exporter.
-			const string title      = "Nom du fichier à exporter";
+			//	Affiche le dialogue permettant de choisir le fichier.
 			string initialDirectory = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetDirectoryName (this.Value);
 			string filename         = string.IsNullOrEmpty (this.Value) ? null : System.IO.Path.GetFileName (this.Value);
-			string ext              = ExportInstructionsHelpers.GetFormatExt  (this.Format);
-			string formatName       = ExportInstructionsHelpers.GetFormatName (this.Format);
 
-			var f = FileSaveDialog.ShowDialog (this.parent.Window, title, initialDirectory, filename, ext, formatName);
-
-			if (!string.IsNullOrEmpty (f))
+			if (this.Save)
 			{
-				this.SetValue (f);
+				var f = FileSaveDialog.ShowDialog (this.parent.Window, this.DialogTitle, initialDirectory, filename, this.DialogExtensions, this.DialogFormatName);
+
+				if (!string.IsNullOrEmpty (f))
+				{
+					this.SetValue (f);
+				}
+			}
+			else
+			{
+				var f = FileOpenDialog.ShowDialog (this.parent.Window, this.DialogTitle, initialDirectory, filename, this.DialogExtensions, this.DialogFormatName);
+
+				if (!string.IsNullOrEmpty (f))
+				{
+					this.SetValue (f);
+				}
 			}
 		}
 

@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public string							MandatFilename;
 		public CopyNameStrategy					CopyNameStrategy;
 
 

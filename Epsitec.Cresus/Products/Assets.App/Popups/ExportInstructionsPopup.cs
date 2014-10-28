@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 1
 			{
-				StackedControllerType = StackedControllerType.ExportFilename,
+				StackedControllerType = StackedControllerType.Filename,
 				Label                 = Res.Strings.Popup.ExportInstructions.Filename.ToString (),
 				Width                 = 300,
 			});
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (1) as ExportFilenameStackedController;
+					var controller = this.GetController (1) as FilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					filename = controller.Value;
 				}
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 
 				{
-					var controller = this.GetController (1) as ExportFilenameStackedController;
+					var controller = this.GetController (1) as FilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value.Filename;
 				}
@@ -82,9 +82,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
-			var controller = this.GetController (1) as ExportFilenameStackedController;
+			var controller = this.GetController (1) as FilenameStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
-			controller.Format = this.ExportInstructions.Format;
+
+			controller.DialogTitle      = Res.Strings.Popup.Export.DialogTitle.ToString ();
+			controller.DialogExtensions = ExportInstructionsHelpers.GetFormatExt (this.ExportInstructions.Format);
+			controller.DialogFormatName = ExportInstructionsHelpers.GetFormatName (this.ExportInstructions.Format);
+			controller.Save             = true;
+
 			controller.Value = ExportInstructionsHelpers.ForceExt (controller.Value, ExportInstructionsHelpers.GetFormatExt (this.ExportInstructions.Format));
 			controller.Update ();
 

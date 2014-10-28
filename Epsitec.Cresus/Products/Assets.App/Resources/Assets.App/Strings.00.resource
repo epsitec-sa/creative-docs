@@ -423,4 +423,15 @@
   <data name="Popup.UndoList.Redo.TitleMany" id="KUH">Rétablir {0} actions</data>
   <data name="Popup.UndoList.Redo.TitleOne" id="KVH">Rétablir {0} action</data>
   <data name="Popup.Accounts.Title" id="K0I">Importation d'un plan comptable Crésus (fichier .cre)</data>
+  <data name="Popup.OpenMandat.Title" id="K1I">Ouverture d'un mandat</data>
+  <data name="Popup.SaveMandat.Title" id="K2I">Enregistrement du mandat</data>
+  <data name="Popup.Button.Save" id="K3I">Enregistrer</data>
+  <data name="FilenameStackedController.Browse" id="K4I">Parcourir...</data>
+  <data name="Popup.OpenMandat.DialogTitle" id="K5I">Mandat à ouvrir</data>
+  <data name="Popup.OpenMandat.DialogFormatName" id="K6I">Mandat Crésus Immobilisations</data>
+  <data name="Popup.SaveMandat.DialogTitle" id="K7I">Mandat à enregistrer</data>
+  <data name="Popup.SaveMandat.DialogFormatName" id="K8I">Mandat Crésus Immobilisations</data>
+  <data name="Popup.Export.DialogTitle" id="K9I">Nom du fichier à exporter</data>
+  <data name="Popup.AccountsImport.DialogTitle" id="KAI">Plan comptable Crésus à importer</data>
+  <data name="Popup.AccountsImport.DialogFormatName" id="KBI">Plan comptable Crésus</data>
 </bundle>

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
-				StackedControllerType = StackedControllerType.ImportAccountsFilename,
+				StackedControllerType = StackedControllerType.Filename,
 				Label                 = Res.Strings.Popup.AccountsImport.File.ToString (),
 				Width                 = 300,
 				BottomMargin          = 10,
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				string				filename;
 
 				{
-					var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
+					var controller = this.GetController (0) as FilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					filename = controller.Value;
 				}
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			set
 			{
 				{
-					var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
+					var controller = this.GetController (0) as FilenameStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 					controller.Value = value;
 				}
@@ -75,8 +75,20 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			//	Met à jour le nom du fichier.
 			{
-				var controller = this.GetController (0) as ImportAccountsFilenameStackedController;
+				var controller = this.GetController (0) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
+
+				//	On permet de choisir les fichiers .cre et .crp :
+				//	  .cre -> fichier visible contenant la comptabilité
+				//	  .crp -> fichier caché contenant le plan comptable
+				//	Habituellement, l'utilisateur choisit le fichier .cre qui représente sa
+				//	comptabilité. Mais c'est le fichier .crp qui sera lu par Assets.
+
+				controller.DialogTitle      = Res.Strings.Popup.AccountsImport.DialogTitle.ToString ();
+				controller.DialogExtensions = ".cre|.crp";
+				controller.DialogFormatName = Res.Strings.Popup.AccountsImport.DialogFormatName.ToString ();
+				controller.Save             = false;
+
 				controller.Value = this.Filename;
 				controller.Update ();
 			}

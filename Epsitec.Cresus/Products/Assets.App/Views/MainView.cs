@@ -146,6 +146,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ShowCreateMandatPopup (target);
 		}
 
+		[Command (Res.CommandIds.Main.Open)]
+		private void OnOpen(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.ShowOpenMandatPopup (target);
+		}
+
+		[Command (Res.CommandIds.Main.Save)]
+		private void OnSave(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.ShowSaveMandatPopup (target);
+		}
+
 		[Command (Res.CommandIds.Main.Navigate.Back)]
 		private void OnNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -168,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Undo)]
 		private void OnUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.accessor.EditionAccessor.CancelObjectEdition ();
+			this.PrepareForUndo ();
 
 			var viewState = this.accessor.UndoManager.Undo () as AbstractViewState;
 			this.RestoreUndoViewState (viewState);
@@ -183,6 +197,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.toolbar.GetTarget (e);
 			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.UndoHistory, true, delegate (int count)
 			{
+				this.PrepareForUndo ();
+
 				for (int i=0; i<count; i++)
 				{
 					var viewState = this.accessor.UndoManager.Undo () as AbstractViewState;
@@ -201,6 +217,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		[Command (Res.CommandIds.Main.Redo)]
 		private void OnRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.PrepareForUndo ();
+
 			var viewState = this.accessor.UndoManager.Redo () as AbstractViewState;
 			this.RestoreUndoViewState (viewState);
 
@@ -214,6 +232,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			var target = this.toolbar.GetTarget (e);
 			UndoListPopup.Show (target, this.accessor, this.accessor.UndoManager.RedoHistory, false, delegate (int count)
 			{
+				this.PrepareForUndo ();
+
 				for (int i=0; i<count; i++)
 				{
 					var viewState = this.accessor.UndoManager.Redo () as AbstractViewState;
@@ -227,6 +247,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.view.DeepUpdateUI ();
 				this.UpdateToolbar ();
 			});
+		}
+
+		private void PrepareForUndo()
+		{
+			this.accessor.EditionAccessor.SaveObjectEdition ();
+			this.accessor.EditionAccessor.CancelObjectEdition ();
 		}
 
 
@@ -251,6 +277,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void ShowOpenMandatPopup(Widget target)
+		{
+			OpenMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
+			{
+				this.accessor.GlobalSettings.MandatFilename = filename;
+			});
+		}
+
+		private void ShowSaveMandatPopup(Widget target)
+		{
+			SaveMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
+			{
+				this.accessor.GlobalSettings.MandatFilename = filename;
+			});
+		}
+
 		private void CreateMandat(string factoryName, string name, System.DateTime startDate, bool withSamples)
 		{
 			this.currentViewStates.Clear ();
@@ -265,6 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.DeleteView ();
 			this.CreateFirstView ();
 		}
+
 
 		private void InitializeUndo()
 		{

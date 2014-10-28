@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		protected override Window CreateWindow(Size size)
 		{
-			var window = base.CreateWindow (new Size (1000, 700));
+			var window = base.CreateWindow (new Size (1100, 700));
 
 //-			window.MakeTitlelessResizableWindow ();
 
