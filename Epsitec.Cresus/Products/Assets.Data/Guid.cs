@@ -13,6 +13,23 @@ namespace Epsitec.Cresus.Assets.Data
 			this.guid = guid;
 		}
 
+		public Guid(System.Xml.XmlReader reader)
+		{
+			this.guid = System.Guid.Empty;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Text)
+				{
+					this.guid = System.Guid.Parse (reader.Value);
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 
 		public bool IsEmpty
 		{
@@ -105,6 +122,12 @@ namespace Epsitec.Cresus.Assets.Data
 		public static Guid Parse(string text)
 		{
 			return new Guid (System.Guid.Parse (text));
+		}
+
+
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteElementString ("Guid", this.guid.ToString ());
 		}
 
 

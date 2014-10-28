@@ -20,10 +20,17 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			this.Value = model.Value;
 		}
 
+		public DataGuidRatioProperty(System.Xml.XmlReader reader)
+			: base (reader)
+		{
+			this.Value = new GuidRatio (reader);
+		}
+
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Property.GuidRatio");
+			base.Serialize (writer);
 			this.Value.Serialize (writer);
 			writer.WriteEndElement ();
 		}

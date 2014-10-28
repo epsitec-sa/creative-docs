@@ -28,6 +28,23 @@ namespace Epsitec.Cresus.Assets.Data
 			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
 		}
 
+		public DataMandat(System.Xml.XmlReader reader)
+		{
+			this.undoManager = new UndoManager ();
+			this.globalSettings = new GlobalSettings (this.undoManager);
+
+			this.assets        = new GuidList<DataObject> (this.undoManager);
+			this.categories    = new GuidList<DataObject> (this.undoManager);
+			this.groups        = new GuidList<DataObject> (this.undoManager);
+			this.persons       = new GuidList<DataObject> (this.undoManager);
+			this.entries       = new GuidList<DataObject> (this.undoManager);
+			this.rangeAccounts = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
+			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
+
+			this.Deserialize (reader);
+		}
+
+
 		public GlobalSettings					GlobalSettings
 		{
 			get
@@ -53,9 +70,11 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public readonly string					Name;
-		public readonly System.DateTime			StartDate;
-		public readonly Guid					Guid;
+		public string							Name;		// (*)
+		public System.DateTime					StartDate;	// (*)
+		public Guid								Guid;		// (*)
+
+		// (*)	Ne peut pas être readonly à cause de la désérialisation, dommage !
 
 
 		public GuidList<DataObject> GetData(BaseType type)
@@ -84,26 +103,6 @@ namespace Epsitec.Cresus.Assets.Data
 					// Il vaut mieux retourner une liste vide, plutôt que null.
 					return new GuidList<DataObject> (this.undoManager);
 			}
-		}
-
-
-		public void Serialize(System.Xml.XmlWriter writer)
-		{
-			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Objects");
-
-			this.Serialize (writer, "Assets",     this.assets);
-			this.Serialize (writer, "Categories", this.categories);
-			this.Serialize (writer, "Groups",     this.groups);
-			this.Serialize (writer, "Persons",    this.persons);
-			this.Serialize (writer, "Entries",    this.entries);
-
-			writer.WriteEndElement ();
-			writer.WriteEndDocument ();
-		}
-
-		public void Deserialize(System.Xml.XmlReader reader)
-		{
 		}
 
 
@@ -159,6 +158,43 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
+		#region Serialize
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartDocument ();
+			writer.WriteStartElement ("Mandat");
+
+			this.SerializeDefinitions (writer);
+			this.SerializeObjects (writer);
+
+			writer.WriteEndElement ();
+			writer.WriteEndDocument ();
+		}
+
+		private void SerializeDefinitions(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Definitions");
+
+			this.Guid.Serialize (writer);
+			writer.WriteElementString ("Name", this.Name);
+			writer.WriteElementString ("StartDate", this.StartDate.ToString (System.Globalization.CultureInfo.InvariantCulture));
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeObjects(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Objects");
+
+			this.Serialize (writer, "Assets",     this.assets);
+			this.Serialize (writer, "Categories", this.categories);
+			this.Serialize (writer, "Groups",     this.groups);
+			this.Serialize (writer, "Persons",    this.persons);
+			this.Serialize (writer, "Entries",    this.entries);
+
+			writer.WriteEndElement ();
+		}
+
 		private void Serialize(System.Xml.XmlWriter writer, string name, GuidList<DataObject> objects)
 		{
 			writer.WriteStartElement (name);
@@ -170,6 +206,130 @@ namespace Epsitec.Cresus.Assets.Data
 
 			writer.WriteEndElement ();
 		}
+		#endregion
+
+
+		#region Deserialize
+		private void Deserialize(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Mandat":
+							this.DeserializeMandat (reader);
+							break;
+					}
+				}
+			}
+		}
+
+		private void DeserializeMandat(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Definitions":
+							this.DeserializeDefinitions (reader);
+							break;
+
+						case "Objects":
+							this.DeserializeObjects (reader);
+							break;
+					}
+				}
+			}
+		}
+
+		private void DeserializeDefinitions(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Guid":
+							this.Guid = new Guid (reader);
+							break;
+
+						case "Name":
+							this.Name = reader.ReadElementContentAsString ();
+							break;
+
+						case "StartDate":
+							var s = reader.ReadElementContentAsString ();
+							this.StartDate = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeObjects(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Assets":
+							this.DeserializeObjects (reader, this.assets);
+							break;
+
+						case "Categories":
+							this.DeserializeObjects (reader, this.categories);
+							break;
+
+						case "Groups":
+							this.DeserializeObjects (reader, this.groups);
+							break;
+
+						case "Persons":
+							this.DeserializeObjects (reader, this.persons);
+							break;
+
+						case "Entries":
+							this.DeserializeObjects (reader, this.entries);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeObjects(System.Xml.XmlReader reader, GuidList<DataObject> objects)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Object")
+					{
+						var obj = new DataObject (this.undoManager, reader);
+						objects.Add (obj);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}		
+		}
+		#endregion
 
 
 		private readonly GlobalSettings									globalSettings;

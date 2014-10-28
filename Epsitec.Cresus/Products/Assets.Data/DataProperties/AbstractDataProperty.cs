@@ -19,6 +19,25 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			this.State = model.State;
 		}
 
+		public AbstractDataProperty(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "ObjectField")
+					{
+						var s = reader.ReadElementContentAsString ();
+						this.Field = (ObjectField) System.Enum.Parse (typeof (ObjectField), s);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 
 		public static AbstractDataProperty Copy(AbstractDataProperty model)
 		{
@@ -63,6 +82,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public virtual void Serialize(System.Xml.XmlWriter writer)
 		{
+			writer.WriteElementString ("ObjectField", this.Field.ToString ());
 		}
 
 

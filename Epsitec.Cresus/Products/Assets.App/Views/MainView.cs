@@ -323,13 +323,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			try
 			{
 				var reader = System.Xml.XmlReader.Create (filename);
-				this.accessor.Mandat.Deserialize (reader);
+				this.accessor.Mandat = new DataMandat (reader);
 				reader.Close ();
 			}
 			catch (System.Exception ex)
 			{
 				return ex.Message;
 			}
+
+			this.DeleteView ();
+			this.CreateFirstView ();
 
 			return null;  // ok
 		}

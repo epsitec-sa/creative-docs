@@ -20,11 +20,18 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			this.Value = model.Value;
 		}
 
+		public DataGuidProperty(System.Xml.XmlReader reader)
+			: base (reader)
+		{
+			this.Value = new Guid (reader);
+		}
+
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Property.Guid");
-			writer.WriteElementString ("Value", this.Value.ToString ());
+			base.Serialize (writer);
+			this.Value.Serialize (writer);
 			writer.WriteEndElement ();
 		}
 

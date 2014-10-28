@@ -14,6 +14,29 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Ratio = ratio;
 		}
 
+		public GuidRatio(System.Xml.XmlReader reader)
+		{
+			this.Guid = new Guid (reader);
+			this.Ratio = null;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Ratio")
+					{
+						var s = reader.ReadElementContentAsString ();
+						this.Ratio = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		public bool IsEmpty
 		{
 			get
@@ -64,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("GuidRatio");
-			writer.WriteElementString ("Guid", this.Guid.ToString ());
+			this.Guid.Serialize (writer);
 
 			if (this.Ratio.HasValue)
 			{

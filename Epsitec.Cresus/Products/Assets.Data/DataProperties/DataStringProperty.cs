@@ -20,10 +20,30 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			this.Value = model.Value;
 		}
 
+		public DataStringProperty(System.Xml.XmlReader reader)
+			: base (reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Value")
+					{
+						this.Value = reader.ReadElementContentAsString ();
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Property.String");
+			base.Serialize (writer);
 			writer.WriteElementString ("Value", this.Value);
 			writer.WriteEndElement ();
 		}

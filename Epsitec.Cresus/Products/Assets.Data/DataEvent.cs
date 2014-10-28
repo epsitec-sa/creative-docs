@@ -46,6 +46,65 @@ namespace Epsitec.Cresus.Assets.Data
 			this.SetProperties (model);
 		}
 
+		public DataEvent(UndoManager undoManager, System.Xml.XmlReader reader)
+		{
+			this.undoManager = undoManager;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Guid")
+					{
+						this.guid = new Guid (reader);
+					}
+					else if (reader.Name.StartsWith ("Property."))
+					{
+						var name = reader.Name.Substring (9);  // nom après "Property."
+						switch (name)
+						{
+							case "String":
+								this.properties.Add (new DataStringProperty (reader));
+								break;
+
+							case "Int":
+								this.properties.Add (new DataIntProperty (reader));
+								break;
+
+							case "GuidRatio":
+								this.properties.Add (new DataGuidRatioProperty (reader));
+								break;
+
+							case "Guid":
+								this.properties.Add (new DataGuidProperty (reader));
+								break;
+
+							case "Decimal":
+								this.properties.Add (new DataDecimalProperty (reader));
+								break;
+
+							case "Date":
+								this.properties.Add (new DataDateProperty (reader));
+								break;
+
+							case "ComputedAmount":
+								this.properties.Add (new DataComputedAmountProperty (reader));
+								break;
+
+							case "AmortizedAmount":
+								this.properties.Add (new DataAmortizedAmountProperty (reader));
+								break;
+						}
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		#region IGuid Members
 		public Guid								Guid
 		{
@@ -55,6 +114,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 		#endregion
+
 
 		public readonly Timestamp				Timestamp;
 		public readonly EventType				Type;
@@ -174,9 +234,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Event");
+			writer.WriteStartElement ("Events");
 
-			writer.WriteElementString ("Guid", this.guid.ToString ());
+			this.guid.Serialize (writer);
 
 			foreach (var property in this.properties)
 			{

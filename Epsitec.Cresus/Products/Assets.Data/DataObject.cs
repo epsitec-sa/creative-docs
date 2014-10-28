@@ -17,6 +17,32 @@ namespace Epsitec.Cresus.Assets.Data
 			this.events = new GuidList<DataEvent> (undoManager);
 		}
 
+		public DataObject(UndoManager undoManager, System.Xml.XmlReader reader)
+		{
+			this.undoManager = undoManager;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Guid":
+							this.guid = new Guid (reader);
+							break;
+
+						case "Events":
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		#region IGuid Members
 		public Guid								Guid
 		{
@@ -242,7 +268,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Object");
 
-			writer.WriteElementString ("Guid", this.guid.ToString ());
+			this.guid.Serialize (writer);
 
 			foreach (var e in this.events)
 			{
