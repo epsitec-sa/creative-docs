@@ -238,6 +238,21 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Object");
+
+			writer.WriteElementString ("Guid", this.guid.ToString ());
+
+			foreach (var e in this.events)
+			{
+				e.Serialize (writer);
+			}
+
+			writer.WriteEndElement ();
+		}
+
+
 		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
 		private readonly GuidList<DataEvent>	events;

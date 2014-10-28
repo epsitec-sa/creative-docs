@@ -61,6 +61,11 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		}
 
 
+		public virtual void Serialize(System.Xml.XmlWriter writer)
+		{
+		}
+
+
 		public readonly ObjectField Field;
 		public PropertyState State;  // TODO: beurk !
 	}

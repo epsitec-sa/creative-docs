@@ -61,6 +61,20 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("GuidRatio");
+			writer.WriteElementString ("Guid", this.Guid.ToString ());
+
+			if (this.Ratio.HasValue)
+			{
+				writer.WriteElementString ("Ratio", this.Ratio.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			writer.WriteEndElement ();
+		}
+
+
 		public static GuidRatio Empty = new GuidRatio (Guid.Empty, null);
 
 		public readonly Guid					Guid;

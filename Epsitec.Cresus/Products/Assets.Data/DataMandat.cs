@@ -87,6 +87,26 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartDocument ();
+			writer.WriteStartElement ("Objects");
+
+			this.Serialize (writer, "Assets",     this.assets);
+			this.Serialize (writer, "Categories", this.categories);
+			this.Serialize (writer, "Groups",     this.groups);
+			this.Serialize (writer, "Persons",    this.persons);
+			this.Serialize (writer, "Entries",    this.entries);
+
+			writer.WriteEndElement ();
+			writer.WriteEndDocument ();
+		}
+
+		public void Deserialize(System.Xml.XmlReader reader)
+		{
+		}
+
+
 		#region Accounts
 		public IEnumerable<DateRange>			AccountsDateRanges
 		{
@@ -137,6 +157,19 @@ namespace Epsitec.Cresus.Assets.Data
 				.FirstOrDefault ();
 		}
 		#endregion
+
+
+		private void Serialize(System.Xml.XmlWriter writer, string name, GuidList<DataObject> objects)
+		{
+			writer.WriteStartElement (name);
+
+			foreach (var obj in objects)
+			{
+				obj.Serialize (writer);
+			}
+
+			writer.WriteEndElement ();
+		}
 
 
 		private readonly GlobalSettings									globalSettings;

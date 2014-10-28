@@ -20,6 +20,15 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			this.Value = model.Value;
 		}
 
+
+		public override void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Property.Decimal");
+			writer.WriteElementString ("Value", this.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteEndElement ();
+		}
+
+
 		public readonly decimal Value;
 	}
 }

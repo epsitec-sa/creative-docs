@@ -293,6 +293,34 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("ComputedAmount");
+
+			if (this.InitialAmount.HasValue)
+			{
+				writer.WriteElementString ("InitialAmount", this.InitialAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.ArgumentAmount.HasValue)
+			{
+				writer.WriteElementString ("ArgumentAmount", this.ArgumentAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.FinalAmount.HasValue)
+			{
+				writer.WriteElementString ("FinalAmount", this.FinalAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			writer.WriteElementString ("Computed",        this.Computed.ToString        (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("Subtract",        this.Subtract.ToString        (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("Rate",            this.Rate.ToString            (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("ArgumentDefined", this.ArgumentDefined.ToString (System.Globalization.CultureInfo.InvariantCulture));
+
+			writer.WriteEndElement ();
+		}
+
+
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				ArgumentAmount;
 		public readonly decimal?				FinalAmount;

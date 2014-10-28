@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public string							MandatFilename;
+		public string							MandatFilename = "C:\\Users\\Daniel\\Documents\\toto.assets";
 		public CopyNameStrategy					CopyNameStrategy;
 
 

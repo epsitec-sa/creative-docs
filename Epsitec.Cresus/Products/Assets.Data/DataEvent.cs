@@ -172,6 +172,21 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Event");
+
+			writer.WriteElementString ("Guid", this.guid.ToString ());
+
+			foreach (var property in this.properties)
+			{
+				property.Serialize (writer);
+			}
+
+			writer.WriteEndElement ();
+		}
+
+
 		private readonly UndoManager				undoManager;
 		private readonly Guid						guid;
 		private readonly UndoableList<AbstractDataProperty>	properties;

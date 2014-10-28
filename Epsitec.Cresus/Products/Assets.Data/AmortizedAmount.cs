@@ -671,6 +671,63 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("AmortizedAmount");
+
+			writer.WriteElementString ("AmortizationType", this.AmortizationType.ToString ());
+
+			if (this.PreviousAmount.HasValue)
+			{
+				writer.WriteElementString ("PreviousAmount", this.PreviousAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.InitialAmount.HasValue)
+			{
+				writer.WriteElementString ("InitialAmount", this.InitialAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.BaseAmount.HasValue)
+			{
+				writer.WriteElementString ("BaseAmount", this.BaseAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.EffectiveRate.HasValue)
+			{
+				writer.WriteElementString ("EffectiveRate", this.EffectiveRate.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.ProrataNumerator.HasValue)
+			{
+				writer.WriteElementString ("ProrataNumerator", this.ProrataNumerator.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.ProrataDenominator.HasValue)
+			{
+				writer.WriteElementString ("ProrataDenominator", this.ProrataDenominator.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.RoundAmount.HasValue)
+			{
+				writer.WriteElementString ("RoundAmount", this.RoundAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			if (this.ResidualAmount.HasValue)
+			{
+				writer.WriteElementString ("ResidualAmount", this.ResidualAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			writer.WriteElementString ("EntryScenario", this.EntryScenario.ToString ());
+			writer.WriteElementString ("Date", this.Date.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("AssetGuid", this.AssetGuid.ToString ());
+			writer.WriteElementString ("EventGuid", this.EventGuid.ToString ());
+			writer.WriteElementString ("EntryGuid", this.EntryGuid.ToString ());
+			writer.WriteElementString ("EntrySeed", this.EntrySeed.ToString (System.Globalization.CultureInfo.InvariantCulture));
+
+			writer.WriteEndElement ();
+		}
+
+
 		private static decimal Round(decimal value, decimal round)
 		{
 			//	Retourne un montant arrondi.

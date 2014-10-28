@@ -282,6 +282,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			OpenMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
 			{
 				this.accessor.GlobalSettings.MandatFilename = filename;
+				var err = this.OpenMandat (filename);
+				if (!string.IsNullOrEmpty (err))
+				{
+					MessagePopup.ShowError (target, err);
+				}
 			});
 		}
 
@@ -290,6 +295,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			SaveMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
 			{
 				this.accessor.GlobalSettings.MandatFilename = filename;
+				var err = this.SaveMandat (filename);
+				if (!string.IsNullOrEmpty (err))
+				{
+					MessagePopup.ShowError (target, err);
+				}
 			});
 		}
 
@@ -306,6 +316,46 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.DeleteView ();
 			this.CreateFirstView ();
+		}
+
+		private string OpenMandat(string filename)
+		{
+			try
+			{
+				var reader = System.Xml.XmlReader.Create (filename);
+				this.accessor.Mandat.Deserialize (reader);
+				reader.Close ();
+			}
+			catch (System.Exception ex)
+			{
+				return ex.Message;
+			}
+
+			return null;  // ok
+		}
+
+		private string SaveMandat(string filename)
+		{
+			try
+			{
+				var settings = new System.Xml.XmlWriterSettings
+				{
+					Indent = true,
+				};
+
+				var writer = System.Xml.XmlWriter.Create (filename, settings);
+
+				this.accessor.Mandat.Serialize (writer);
+
+				writer.Flush ();
+				writer.Close ();
+			}
+			catch (System.Exception ex)
+			{
+				return ex.Message;
+			}
+
+			return null;  // ok
 		}
 
 
