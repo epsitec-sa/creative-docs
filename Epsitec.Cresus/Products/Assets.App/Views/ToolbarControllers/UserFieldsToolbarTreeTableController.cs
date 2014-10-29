@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.nodeGetter)
+			this.dataFiller = new UserFieldsTreeTableFiller (this.accessor, this.baseType, this.nodeGetter)
 			{
 				Title = this.title,
 			};
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				var desc = UndoManager.GetDescription (Res.Commands.UserFields.Delete.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
 				this.accessor.UndoManager.SetDescription (desc);
 
-				this.accessor.UserFieldsCache.RemoveUserField (this.SelectedGuid);
+				this.accessor.UserFieldsCache.RemoveUserField (this.baseType, this.SelectedGuid);
 				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
 			//	Supprime la rubrique à l'endroit actuel.
-			this.accessor.UserFieldsCache.RemoveUserField (node.Guid);
+			this.accessor.UserFieldsCache.RemoveUserField (this.baseType, node.Guid);
 
 			//	Insère la rubrique au nouvel endroit.
 			int index = newRow.Value;

@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				return PageType.Groups;
 			}
 
+#if false  //??
 			var userField = accessor.UserFieldsCache.GetUserField (field);
 			if (!userField.IsEmpty)
 			{
@@ -105,6 +106,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					return PageType.Person;
 				}
 			}
+#endif
 
 			switch (field)
 			{

@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public AssetsTreeTableFiller(DataAccessor accessor, INodeGetter<SortableCumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
+			this.userFields = AssetsLogic.GetUserFields (this.accessor).ToArray ();
 		}
 
 
@@ -22,9 +23,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				if (this.UserFields.Any ())
+				if (this.userFields.Any ())
 				{
-					var field = this.UserFields.First ().Field;
+					var field = this.userFields.First ().Field;
 					return new SortingInstructions (field, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 				}
 				else
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var columns = new List<TreeTableColumnDescription> ();
 
 				int columnRank = 0;
-				foreach (var userField in this.UserFields)
+				foreach (var userField in this.userFields)
 				{
 					TreeTableColumnType type;
 
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			foreach (var userField in this.UserFields)
+			foreach (var userField in this.userFields)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -98,7 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
 
 				int columnRank = 0;
-				foreach (var userField in this.UserFields)
+				foreach (var userField in this.userFields)
 				{
 					AbstractTreeTableCell cell;
 
@@ -171,14 +172,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private IEnumerable<UserField> UserFields
-		{
-			get
-			{
-				return AssetsLogic.GetUserFields (this.accessor);
-			}
-		}
-
 		private ObjectsNodeGetter NodeGetter
 		{
 			get
@@ -186,5 +179,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
+
+
+		private readonly UserField[] userFields;
 	}
 }

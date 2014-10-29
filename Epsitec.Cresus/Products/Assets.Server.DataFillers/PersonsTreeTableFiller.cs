@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public PersonsTreeTableFiller(DataAccessor accessor, INodeGetter<SortableNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
+			this.userFields = this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).ToArray ();
 		}
 
 
@@ -21,9 +22,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				if (this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).Any ())
+				if (this.userFields.Any ())
 				{
-					var field = this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).First ().Field;
+					var field = this.userFields.First ().Field;
 					return new SortingInstructions (field, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 				}
 				else
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
+				foreach (var userField in this.userFields)
 				{
 					var type = AbstractTreeTableCell.GetColumnType (userField.Type);
 					columns.Add (new TreeTableColumnDescription (userField.Field, type, userField.ColumnWidth, userField.Name));
@@ -61,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			foreach (var userField in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
+			foreach (var userField in userFields)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				int columnRank = 0;
-				foreach (var userField in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
+				foreach (var userField in userFields)
 				{
 					bool inputValue = (columnRank == 0);
 					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, inputValue, cellState);
@@ -91,5 +92,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			return content;
 		}
+
+
+		private readonly UserField[] userFields;
 	}
 }

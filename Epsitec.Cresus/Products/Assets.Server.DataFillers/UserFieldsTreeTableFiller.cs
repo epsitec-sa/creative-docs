@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
 	public class UserFieldsTreeTableFiller : AbstractTreeTableFiller<GuidNode>
 	{
-		public UserFieldsTreeTableFiller(DataAccessor accessor, INodeGetter<GuidNode> nodeGetter)
+		public UserFieldsTreeTableFiller(DataAccessor accessor, BaseType baseType, INodeGetter<GuidNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
+			this.baseType = baseType;
 		}
 
 
@@ -68,28 +69,32 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					break;
 				}
 
-				var node  = this.nodeGetter[firstRow+i];
-				var userField = this.accessor.UserFieldsCache.GetUserField (node.Guid);
+				var node = this.nodeGetter[firstRow+i];
+				var guid = node.Guid;
+				var obj  = this.accessor.GetObject (this.baseType, guid);
 
-				var text0 = userField.Name;
-				var text1 = EnumDictionaries.GetFieldTypeName (userField.Type);
-				var text2 = userField.Required ? Res.Strings.UserFieldsTreeTableFiller.RequiredYes.ToString () : Res.Strings.UserFieldsTreeTableFiller.RequiredNo.ToString ();
-				var text3 = userField.ColumnWidth;
-				var text4 = userField.LineWidth;
-				var text5 = userField.LineCount;
-				var text6 = userField.TopMargin;
-				var text7 = userField.SummaryOrder;
+				var c0 = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+				var c1 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldType);
+				var c2 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldRequired);
+				var c3 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldColumnWidth);
+				var c4 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldLineWidth);
+				var c5 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldLineCount);
+				var c6 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldTopMargin);
+				var c7 = ObjectProperties.GetObjectPropertyInt    (obj, null, ObjectField.UserFieldSummaryOrder);
+
+				var t1 = EnumDictionaries.GetFieldTypeName ((FieldType) c1);
+				var t2 = (c2 == 1) ? Res.Strings.UserFieldsTreeTableFiller.RequiredYes.ToString () : Res.Strings.UserFieldsTreeTableFiller.RequiredNo.ToString ();
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell0 = new TreeTableCellString (text0, cellState);
-				var cell1 = new TreeTableCellString (text1, cellState);
-				var cell2 = new TreeTableCellString (text2, cellState);
-				var cell3 = new TreeTableCellInt    (text3, cellState);
-				var cell4 = new TreeTableCellInt    (text4, cellState);
-				var cell5 = new TreeTableCellInt    (text5, cellState);
-				var cell6 = new TreeTableCellInt    (text6, cellState);
-				var cell7 = new TreeTableCellInt    (text7, cellState);
+				var cell0 = new TreeTableCellString (c0, cellState);
+				var cell1 = new TreeTableCellString (t1, cellState);
+				var cell2 = new TreeTableCellString (t2, cellState);
+				var cell3 = new TreeTableCellInt    (c3, cellState);
+				var cell4 = new TreeTableCellInt    (c4, cellState);
+				var cell5 = new TreeTableCellInt    (c5, cellState);
+				var cell6 = new TreeTableCellInt    (c6, cellState);
+				var cell7 = new TreeTableCellInt    (c7, cellState);
 
 				int columnRank = 0;
 
@@ -105,5 +110,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			return content;
 		}
+
+
+		private readonly BaseType baseType;
 	}
 }
