@@ -120,12 +120,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 				}
 
-				if (this.baseType == BaseType.AssetsUserFields ||
-					this.baseType == BaseType.PersonsUserFields)
-				{
-					this.accessor.GlobalSettings.SetTempDataObject (this.obj);
-				}
-				else
+				//??if (this.baseType == BaseType.AssetsUserFields ||
+				//??	this.baseType == BaseType.PersonsUserFields)
+				//??{
+				//??	this.accessor.GlobalSettings.SetTempDataObject (this.obj);
+				//??}
+				//??else
 				{
 					if (this.computedAmountDirty)
 					{

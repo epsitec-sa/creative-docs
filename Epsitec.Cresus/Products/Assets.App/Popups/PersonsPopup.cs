@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (this.filterController.HasFilter)
 			{
-				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
+				foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
 				{
 					if (userField.Type == FieldType.String)
 					{

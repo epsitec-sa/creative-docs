@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				if (this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields).Any ())
+				if (this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).Any ())
 				{
-					var field = this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields).First ().Field;
+					var field = this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).First ().Field;
 					return new SortingInstructions (field, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 				}
 				else
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
+				foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
 				{
 					var type = AbstractTreeTableCell.GetColumnType (userField.Type);
 					columns.Add (new TreeTableColumnDescription (userField.Field, type, userField.ColumnWidth, userField.Name));
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
+			foreach (var userField in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				int columnRank = 0;
-				foreach (var userField in accessor.GlobalSettings.GetUserFields (BaseType.PersonsUserFields))
+				foreach (var userField in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
 				{
 					bool inputValue = (columnRank == 0);
 					var cell = AbstractTreeTableCell.CreateTreeTableCell (this.accessor, obj, this.Timestamp, userField, inputValue, cellState);

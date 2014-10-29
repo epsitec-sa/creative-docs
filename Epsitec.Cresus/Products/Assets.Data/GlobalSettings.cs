@@ -13,10 +13,10 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
-			this.assetsFields  = new GuidList<UserField> (this.undoManager);
-			this.personsFields = new GuidList<UserField> (this.undoManager);
-
-			this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
+			//??this.assetsFields  = new GuidList<UserField> (this.undoManager);
+			//??this.personsFields = new GuidList<UserField> (this.undoManager);
+			//??
+			//??this.objectFieldDict = new Dictionary<ObjectField, UserField> ();
 
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}
@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public CopyNameStrategy					CopyNameStrategy;
 
 
+#if false
 		public DataObject GetTempDataObject(Guid guid)
 		{
 			//	Retourne un objet temporaire, pour permettre d'accèder à une rubrique
@@ -149,8 +150,9 @@ namespace Epsitec.Cresus.Assets.Data
 			var userField = new UserField (guid, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
 			this.InsertUserField (baseType, index, userField);
 		}
+#endif
 
-
+#if false
 		public ObjectField GetMainStringField(BaseType baseType)
 		{
 			return this.GetUserFields (baseType)
@@ -343,11 +345,12 @@ namespace Epsitec.Cresus.Assets.Data
 				yield return BaseType.PersonsUserFields;
 			}
 		}
+#endif
 
 
 		private readonly UndoManager						undoManager;
-		private readonly GuidList<UserField>				assetsFields;
-		private readonly GuidList<UserField>				personsFields;
-		private readonly Dictionary<ObjectField, UserField>	objectFieldDict;
+		//??private readonly GuidList<UserField>				assetsFields;
+		//??private readonly GuidList<UserField>				personsFields;
+		//??private readonly Dictionary<ObjectField, UserField>	objectFieldDict;
 	}
 }

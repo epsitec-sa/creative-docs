@@ -76,10 +76,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				return PageType.Groups;
 			}
 
-			var userField = accessor.GlobalSettings.GetUserField (field);
+			var userField = accessor.UserFieldsCache.GetUserField (field);
 			if (!userField.IsEmpty)
 			{
-				var baseType = accessor.GlobalSettings.GetBaseType (userField.Guid);
+				var baseType = accessor.UserFieldsCache.GetBaseType (userField.Guid);
 
 				if (baseType == BaseType.Assets)
 				{
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				list.Add (c2);
 
 				c2.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Main.ToString ()));
-				foreach (var userField in this.accessor.GlobalSettings.GetUserFields (BaseType.AssetsUserFields))
+				foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields))
 				{
 					if (userField.TopMargin >= 5)  // limite arbitraire
 					{

@@ -44,13 +44,18 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Clear()
 		{
-			//?this.dict.Clear ();
-			//?this.list.Clear ();
-
-			//	On n'utilise pas this.list.Clear () pour permettre le undo !
-			while (this.list.Any ())
+			if (this.undoManager == null)
 			{
-				this.RemoveAt (0);
+				this.dict.Clear ();
+				this.list.Clear ();
+			}
+			else
+			{
+				//	On n'utilise pas this.list.Clear () pour permettre le undo !
+				while (this.list.Any ())
+				{
+					this.RemoveAt (0);
+				}
 			}
 		}
 

@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.New)]
 		protected void OnNew()
 		{
-			var newField = this.accessor.GlobalSettings.GetNewUserField();
+			var newField = this.accessor.UserFieldsCache.GetNewUserField ();
 			if (newField == ObjectField.Unknown)
 			{
 				return;
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				index = this.nodeGetter.Count;  // insère à la fin
 			}
 
-			this.accessor.GlobalSettings.InsertUserField (this.baseType, index, userField);
+			this.accessor.UserFieldsCache.InsertUserField (this.baseType, index, userField);
 			accessor.WarningsDirty = true;
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				var desc = UndoManager.GetDescription (Res.Commands.UserFields.Delete.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
 				this.accessor.UndoManager.SetDescription (desc);
 
-				this.accessor.GlobalSettings.RemoveUserField (this.SelectedGuid);
+				this.accessor.UserFieldsCache.RemoveUserField (this.SelectedGuid);
 				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.Copy)]
 		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var userField = this.accessor.GlobalSettings.GetUserField (this.SelectedGuid);
+			var userField = this.accessor.UserFieldsCache.GetUserField (this.SelectedGuid);
 			this.accessor.Clipboard.CopyUserField (this.accessor, this.baseType, userField);
 
 			this.UpdateToolbar ();
@@ -287,15 +287,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.accessor.UndoManager.Start ();
 
 			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
-			var userField = this.accessor.GlobalSettings.GetUserField (node.Guid);
+			var userField = this.accessor.UserFieldsCache.GetUserField (node.Guid);
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
 			//	Supprime la rubrique à l'endroit actuel.
-			this.accessor.GlobalSettings.RemoveUserField (node.Guid);
+			this.accessor.UserFieldsCache.RemoveUserField (node.Guid);
 
 			//	Insère la rubrique au nouvel endroit.
 			int index = newRow.Value;
-			this.accessor.GlobalSettings.InsertUserField (this.baseType, index, userField);
+			this.accessor.UserFieldsCache.InsertUserField (this.baseType, index, userField);
 
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();

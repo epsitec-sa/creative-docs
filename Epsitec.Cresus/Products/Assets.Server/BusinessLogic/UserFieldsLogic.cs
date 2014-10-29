@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (field >= ObjectField.UserFieldFirst &&
 				field <= ObjectField.UserFieldLast)
 			{
-				return accessor.Mandat.GlobalSettings.GetUserFields (baseType)
+				return accessor.UserFieldsCache.GetUserFields (baseType)
 					.Where (x => x.Field == field)
 					.Select (x => x.Name)
 					.FirstOrDefault ();

@@ -18,13 +18,15 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
-			this.assets        = new GuidList<DataObject> (this.undoManager);
-			this.categories    = new GuidList<DataObject> (this.undoManager);
-			this.groups        = new GuidList<DataObject> (this.undoManager);
-			this.persons       = new GuidList<DataObject> (this.undoManager);
-			this.entries       = new GuidList<DataObject> (this.undoManager);
-			this.rangeAccounts = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
-			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields  = new GuidList<DataObject> (this.undoManager);
+			this.personsUserFields = new GuidList<DataObject> (this.undoManager);
+			this.assets            = new GuidList<DataObject> (this.undoManager);
+			this.categories        = new GuidList<DataObject> (this.undoManager);
+			this.groups            = new GuidList<DataObject> (this.undoManager);
+			this.persons           = new GuidList<DataObject> (this.undoManager);
+			this.entries           = new GuidList<DataObject> (this.undoManager);
+			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
+			this.reports           = new GuidList<AbstractReportParams> (this.undoManager);
 		}
 
 		public DataMandat(System.Xml.XmlReader reader)
@@ -32,13 +34,15 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
-			this.assets        = new GuidList<DataObject> (this.undoManager);
-			this.categories    = new GuidList<DataObject> (this.undoManager);
-			this.groups        = new GuidList<DataObject> (this.undoManager);
-			this.persons       = new GuidList<DataObject> (this.undoManager);
-			this.entries       = new GuidList<DataObject> (this.undoManager);
-			this.rangeAccounts = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
-			this.reports       = new GuidList<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields  = new GuidList<DataObject> (this.undoManager);
+			this.personsUserFields = new GuidList<DataObject> (this.undoManager);
+			this.assets            = new GuidList<DataObject> (this.undoManager);
+			this.categories        = new GuidList<DataObject> (this.undoManager);
+			this.groups            = new GuidList<DataObject> (this.undoManager);
+			this.persons           = new GuidList<DataObject> (this.undoManager);
+			this.entries           = new GuidList<DataObject> (this.undoManager);
+			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
+			this.reports           = new GuidList<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
 		}
@@ -97,6 +101,12 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			switch (type.Kind)
 			{
+				case BaseTypeKind.AssetsUserFields:
+					return this.assetsUserFields;
+
+				case BaseTypeKind.PersonsUserFields:
+					return this.personsUserFields;
+
 				case BaseTypeKind.Assets:
 					return this.assets;
 
@@ -198,15 +208,17 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteEndElement ();
 		}
 
-		private void SerializeObjects(System.Xml.XmlWriter writer)
+		public void SerializeObjects(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Objects");
 
-			this.Serialize (writer, "Assets",     this.assets);
-			this.Serialize (writer, "Categories", this.categories);
-			this.Serialize (writer, "Groups",     this.groups);
-			this.Serialize (writer, "Persons",    this.persons);
-			this.Serialize (writer, "Entries",    this.entries);
+			this.Serialize (writer, "AssetsUserFields",  this.assetsUserFields);
+			this.Serialize (writer, "PersonsUserFields", this.personsUserFields);
+			this.Serialize (writer, "Categories",        this.categories);
+			this.Serialize (writer, "Groups",            this.groups);
+			this.Serialize (writer, "Persons",           this.persons);
+			this.Serialize (writer, "Assets",            this.assets);
+			this.Serialize (writer, "Entries",           this.entries);
 
 			writer.WriteEndElement ();
 		}
@@ -307,6 +319,14 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "AssetsUserFields":
+							this.DeserializeObjects (reader, this.assetsUserFields);
+							break;
+
+						case "PersonsUserFields":
+							this.DeserializeObjects (reader, this.personsUserFields);
+							break;
+
 						case "Assets":
 							this.DeserializeObjects (reader, this.assets);
 							break;
@@ -358,6 +378,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly GlobalSettings									globalSettings;
 		private readonly UndoManager									undoManager;
+		private readonly GuidList<DataObject>							assetsUserFields;
+		private readonly GuidList<DataObject>							personsUserFields;
 		private readonly GuidList<DataObject>							assets;
 		private readonly GuidList<DataObject>							categories;
 		private readonly GuidList<DataObject>							groups;

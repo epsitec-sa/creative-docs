@@ -320,6 +320,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string OpenMandat(string filename)
 		{
+			this.currentViewStates.Clear ();
+			this.historyViewStates.Clear ();
+			this.lastViewStates.Clear ();
+			this.historyPosition = -1;
+
 			try
 			{
 				var reader = System.Xml.XmlReader.Create (filename);

@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", baseType.ToString ()));
 				}
 
-				return accessor.Mandat.GlobalSettings.GetUserFields (baseType)
+				return accessor.UserFieldsCache.GetUserFields (baseType)
 					.Where (x => x.Field == field && x.Required)
 					.Any ();
 			}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, ObjectField.MainValue);
 
 						//	On cherche les champs définis par l'utilisateur restés indéfinis.
-						var requiredFields = accessor.Mandat.GlobalSettings.GetUserFields (BaseType.AssetsUserFields)
+						var requiredFields = accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields)
 							.Where (x => x.Required)
 							.Select (x => x.Field)
 							.ToArray ();
@@ -209,11 +209,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static void CheckRequiredField(List<Warning> warnings, DataAccessor accessor, BaseType baseType, string description)
 		{
 			//	Vérifie s'il existe au moins un champ obligatoire.
-			if (!accessor.GlobalSettings.GetUserFields (baseType).Where (x => x.Required).Any ())
+			if (!accessor.UserFieldsCache.GetUserFields (baseType).Where (x => x.Required).Any ())
 			{
-				var first = accessor.GlobalSettings.GetUserFields (baseType).FirstOrDefault ();
+				var first = accessor.UserFieldsCache.GetUserFields (baseType).FirstOrDefault ();
+				Guid guid;
 
-				var warning = new Warning (baseType, first.Guid, Guid.Empty, ObjectField.Unknown, description);
+				if (first == null)
+				{
+					guid = Guid.Empty;
+				}
+				else
+				{
+					guid = first.Guid;
+				}
+
+				var warning = new Warning (baseType, guid, Guid.Empty, ObjectField.Unknown, description);
 				warnings.Add (warning);
 			}
 		}
@@ -372,7 +382,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void CheckRequired(List<Warning> warnings, DataAccessor accessor, BaseType baseType)
 		{
-			var requiredFields = accessor.Mandat.GlobalSettings.GetUserFields (baseType)
+			var requiredFields = accessor.UserFieldsCache.GetUserFields (baseType)
 				.Where (x => x.Required)
 				.Select (x => x.Field)
 				.ToArray ();
