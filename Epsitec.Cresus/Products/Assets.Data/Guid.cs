@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Text)
 				{
-					this.guid = System.Guid.Parse (reader.Value);
+					var g = Guid.Parse (reader.Value);
+					this.guid = g.guid;
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
 				{
@@ -127,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteElementString ("Guid", this.guid.ToString ());
+			writer.WriteElementString ("Guid", this.ToString ());
 		}
 
 

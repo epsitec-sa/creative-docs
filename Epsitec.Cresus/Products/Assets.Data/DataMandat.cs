@@ -11,12 +11,11 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		public DataMandat(string name, System.DateTime startDate)
 		{
-			this.Name      = name;
-			this.StartDate = startDate;
+			this.guid      = Guid.NewGuid ();
+			this.name      = name;
+			this.startDate = startDate;
 
-			this.Guid = Guid.NewGuid ();
-
-			this.undoManager = new UndoManager ();
+			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
 			this.assets        = new GuidList<DataObject> (this.undoManager);
@@ -30,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataMandat(System.Xml.XmlReader reader)
 		{
-			this.undoManager = new UndoManager ();
+			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
 			this.assets        = new GuidList<DataObject> (this.undoManager);
@@ -44,6 +43,30 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Deserialize (reader);
 		}
 
+
+		public Guid								Guid
+		{
+			get
+			{
+				return this.guid;
+			}
+		}
+
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
+		public System.DateTime					StartDate
+		{
+			get
+			{
+				return this.startDate;
+			}
+		}
 
 		public GlobalSettings					GlobalSettings
 		{
@@ -68,13 +91,6 @@ namespace Epsitec.Cresus.Assets.Data
 				return this.reports;
 			}
 		}
-
-
-		public string							Name;		// (*)
-		public System.DateTime					StartDate;	// (*)
-		public Guid								Guid;		// (*)
-
-		// (*)	Ne peut pas être readonly à cause de la désérialisation, dommage !
 
 
 		public GuidList<DataObject> GetData(BaseType type)
@@ -223,6 +239,10 @@ namespace Epsitec.Cresus.Assets.Data
 							break;
 					}
 				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
 			}
 		}
 
@@ -243,6 +263,10 @@ namespace Epsitec.Cresus.Assets.Data
 							break;
 					}
 				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
 			}
 		}
 
@@ -255,16 +279,16 @@ namespace Epsitec.Cresus.Assets.Data
 					switch (reader.Name)
 					{
 						case "Guid":
-							this.Guid = new Guid (reader);
+							this.guid = new Guid (reader);
 							break;
 
 						case "Name":
-							this.Name = reader.ReadElementContentAsString ();
+							this.name = reader.ReadElementContentAsString ();
 							break;
 
 						case "StartDate":
 							var s = reader.ReadElementContentAsString ();
-							this.StartDate = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.startDate = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 					}
 				}
@@ -341,5 +365,9 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidList<DataObject>							entries;
 		private readonly UndoableDictionary<DateRange, GuidList<DataObject>> rangeAccounts;
 		private readonly GuidList<AbstractReportParams>					reports;
+
+		private Guid													guid;
+		private string													name;
+		private System.DateTime											startDate;
 	}
 }

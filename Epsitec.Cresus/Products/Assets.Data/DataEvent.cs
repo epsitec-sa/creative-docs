@@ -50,51 +50,30 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
+			this.properties = new UndoableList<AbstractDataProperty> (this.undoManager);
+
 			while (reader.Read ())
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Guid")
+					switch (reader.Name)
 					{
-						this.guid = new Guid (reader);
-					}
-					else if (reader.Name.StartsWith ("Property."))
-					{
-						var name = reader.Name.Substring (9);  // nom après "Property."
-						switch (name)
-						{
-							case "String":
-								this.properties.Add (new DataStringProperty (reader));
-								break;
+						case "Guid":
+							this.guid = new Guid (reader);
+							break;
 
-							case "Int":
-								this.properties.Add (new DataIntProperty (reader));
-								break;
+						case "Type":
+							var s = reader.ReadElementContentAsString ();
+							this.Type = (EventType) System.Enum.Parse (typeof (EventType), s);
+							break;
 
-							case "GuidRatio":
-								this.properties.Add (new DataGuidRatioProperty (reader));
-								break;
+						case "Timestamp":
+							this.Timestamp = new Timestamp (reader);
+							break;
 
-							case "Guid":
-								this.properties.Add (new DataGuidProperty (reader));
-								break;
-
-							case "Decimal":
-								this.properties.Add (new DataDecimalProperty (reader));
-								break;
-
-							case "Date":
-								this.properties.Add (new DataDateProperty (reader));
-								break;
-
-							case "ComputedAmount":
-								this.properties.Add (new DataComputedAmountProperty (reader));
-								break;
-
-							case "AmortizedAmount":
-								this.properties.Add (new DataAmortizedAmountProperty (reader));
-								break;
-						}
+						case "Properties":
+							this.DeserializeProperties (reader);
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -232,11 +211,22 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Events");
+			writer.WriteStartElement ("Event");
 
 			this.guid.Serialize (writer);
+			writer.WriteElementString ("Type", this.Type.ToString ());
+			this.Timestamp.Serialize (writer);
+			this.SerializeProperties (writer);
+
+			writer.WriteEndElement ();
+		}
+
+		public void SerializeProperties(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Properties");
 
 			foreach (var property in this.properties)
 			{
@@ -245,6 +235,59 @@ namespace Epsitec.Cresus.Assets.Data
 
 			writer.WriteEndElement ();
 		}
+
+		private void DeserializeProperties(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name.StartsWith ("Property."))
+					{
+						var name = reader.Name.Substring (9);  // nom après "Property."
+						switch (name)
+						{
+							case "String":
+								this.properties.Add (new DataStringProperty (reader));
+								break;
+
+							case "Int":
+								this.properties.Add (new DataIntProperty (reader));
+								break;
+
+							case "GuidRatio":
+								this.properties.Add (new DataGuidRatioProperty (reader));
+								break;
+
+							case "Guid":
+								this.properties.Add (new DataGuidProperty (reader));
+								break;
+
+							case "Decimal":
+								this.properties.Add (new DataDecimalProperty (reader));
+								break;
+
+							case "Date":
+								this.properties.Add (new DataDateProperty (reader));
+								break;
+
+							case "ComputedAmount":
+								this.properties.Add (new DataComputedAmountProperty (reader));
+								break;
+
+							case "AmortizedAmount":
+								this.properties.Add (new DataAmortizedAmountProperty (reader));
+								break;
+						}
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+		#endregion
 
 
 		private readonly UndoManager				undoManager;

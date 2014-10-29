@@ -14,6 +14,27 @@ namespace Epsitec.Cresus.Assets.Data
 			this.position = position;
 		}
 
+		public Timestamp(System.Xml.XmlReader reader)
+		{
+			this.date     = System.DateTime.MinValue;
+			this.position = 0;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Text)
+				{
+					var t = Timestamp.Parse (reader.Value);
+					this.date     = t.date;
+					this.position = t.position;
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		public System.DateTime Date
 		{
 			get
@@ -143,6 +164,13 @@ namespace Epsitec.Cresus.Assets.Data
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}-{1:00}-{2:00}-{3}", this.date.Year, this.date.Month, this.date.Day, this.position);
 		}
 
+
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteElementString ("Timestamp", this.ToString ());
+		}
+
+
 		public static Timestamp Parse(string text)
 		{
 			var args = text.Split ('-');
@@ -159,6 +187,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 			return new Timestamp (new System.DateTime (year, month, day), pos);
 		}
+
 
 		private readonly System.DateTime		date;
 		private readonly int					position;

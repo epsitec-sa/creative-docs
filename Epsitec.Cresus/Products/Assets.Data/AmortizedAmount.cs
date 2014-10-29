@@ -44,6 +44,116 @@ namespace Epsitec.Cresus.Assets.Data
 			this.EntrySeed          = entrySeed;
 		}
 
+		public AmortizedAmount(System.Xml.XmlReader reader)
+		{
+			this.AmortizationType   = AmortizationType.Unknown;
+			this.PreviousAmount     = null;
+			this.InitialAmount      = null;
+			this.BaseAmount         = null;
+			this.EffectiveRate      = null;
+			this.ProrataNumerator   = null;
+			this.ProrataDenominator = null;
+			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
+			this.EntryScenario      = EntryScenario.None;
+			this.Date               = System.DateTime.MinValue;
+			this.AssetGuid          = Guid.Empty;
+			this.EventGuid          = Guid.Empty;
+			this.EntryGuid          = Guid.Empty;
+			this.EntrySeed          = 0;
+
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "AmortizationType":
+							s = reader.ReadElementContentAsString ();
+							this.AmortizationType = (AmortizationType) System.Enum.Parse (typeof (AmortizationType), s);
+							break;
+
+						case "PreviousAmount":
+							s = reader.ReadElementContentAsString ();
+							this.PreviousAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "InitialAmount":
+							s = reader.ReadElementContentAsString ();
+							this.InitialAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "BaseAmount":
+							s = reader.ReadElementContentAsString ();
+							this.BaseAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "EffectiveRate":
+							s = reader.ReadElementContentAsString ();
+							this.EffectiveRate = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ProrataNumerator":
+							s = reader.ReadElementContentAsString ();
+							this.ProrataNumerator = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ProrataDenominator":
+							s = reader.ReadElementContentAsString ();
+							this.ProrataDenominator = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "RoundAmount":
+							s = reader.ReadElementContentAsString ();
+							this.RoundAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ResidualAmount":
+							s = reader.ReadElementContentAsString ();
+							this.ResidualAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "EntryScenario":
+							s = reader.ReadElementContentAsString ();
+							this.EntryScenario = (EntryScenario) System.Enum.Parse (typeof (EntryScenario), s);
+							break;
+
+						case "Date":
+							s = reader.ReadElementContentAsString ();
+							this.Date = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "AssetGuid":
+							s = reader.ReadElementContentAsString ();
+							this.AssetGuid = Guid.Parse (s);
+							break;
+
+						case "EventGuid":
+							s = reader.ReadElementContentAsString ();
+							this.EventGuid = Guid.Parse (s);
+							break;
+
+						case "EntryGuid":
+							s = reader.ReadElementContentAsString ();
+							this.EntryGuid = Guid.Parse (s);
+							break;
+
+						case "EntrySeed":
+							s = reader.ReadElementContentAsString ();
+							this.EntrySeed = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		public readonly AmortizationType		AmortizationType;
 		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;

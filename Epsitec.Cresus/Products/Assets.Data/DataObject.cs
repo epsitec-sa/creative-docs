@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
+			this.events = new GuidList<DataEvent> (undoManager);
+
 			while (reader.Read ())
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
@@ -32,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Data
 							break;
 
 						case "Events":
+							this.DeserializeEvents (reader);
 							break;
 					}
 				}
@@ -264,11 +267,20 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Object");
 
 			this.guid.Serialize (writer);
+			this.SerializeEvents (writer);
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeEvents(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Events");
 
 			foreach (var e in this.events)
 			{
@@ -277,6 +289,26 @@ namespace Epsitec.Cresus.Assets.Data
 
 			writer.WriteEndElement ();
 		}
+
+		private void DeserializeEvents(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Event")
+					{
+						var e = new DataEvent (this.undoManager, reader);
+						this.events.Add (e);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+		#endregion
 
 
 		private readonly UndoManager			undoManager;

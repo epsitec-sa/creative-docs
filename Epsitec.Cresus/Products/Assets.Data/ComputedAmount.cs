@@ -141,6 +141,67 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ArgumentDefined = false;
 		}
 
+		public ComputedAmount(System.Xml.XmlReader reader)
+		{
+			this.InitialAmount   = null;
+			this.ArgumentAmount  = null;
+			this.FinalAmount     = null;
+			this.Computed        = false;
+			this.Subtract        = true;
+			this.Rate            = true;
+			this.ArgumentDefined = false;
+
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "InitialAmount":
+							s = reader.ReadElementContentAsString ();
+							this.InitialAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ArgumentAmount":
+							s = reader.ReadElementContentAsString ();
+							this.ArgumentAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "FinalAmount":
+							s = reader.ReadElementContentAsString ();
+							this.FinalAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "Computed":
+							s = reader.ReadElementContentAsString ();
+							this.Computed = bool.Parse (s);
+							break;
+
+						case "Subtract":
+							s = reader.ReadElementContentAsString ();
+							this.Subtract = bool.Parse (s);
+							break;
+
+						case "Rate":
+							s = reader.ReadElementContentAsString ();
+							this.Rate = bool.Parse (s);
+							break;
+
+						case "ArgumentDefined":
+							s = reader.ReadElementContentAsString ();
+							this.ArgumentDefined = bool.Parse (s);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 
 		public decimal? ComputeFinal(decimal? argument)
 		{

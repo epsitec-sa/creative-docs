@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Value")
+					if (reader.Name == "AmortizedAmount")
 					{
-						//?this.Value = reader.ReadElementContentAsString ();
+						this.Value = new AmortizedAmount (reader);
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

@@ -23,7 +23,20 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		public DataGuidRatioProperty(System.Xml.XmlReader reader)
 			: base (reader)
 		{
-			this.Value = new GuidRatio (reader);
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "GuidRatio")
+					{
+						this.Value = new GuidRatio (reader);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 
 

@@ -23,7 +23,20 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		public DataGuidProperty(System.Xml.XmlReader reader)
 			: base (reader)
 		{
-			this.Value = new Guid (reader);
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Guid")
+					{
+						this.Value = new Guid (reader);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 
 
