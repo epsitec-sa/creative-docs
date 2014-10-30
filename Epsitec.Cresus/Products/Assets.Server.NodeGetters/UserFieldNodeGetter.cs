@@ -14,20 +14,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-
-			this.nodes = new List<GuidNode> ();
 		}
 
 
 		public void SetParams()
 		{
-			this.nodes.Clear ();
-
-			foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (this.baseType))
-			{
-				var node = new GuidNode (userField.Guid);
-				this.nodes.Add (node);
-			}
 		}
 
 
@@ -35,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.nodes.Count;
+				return this.accessor.Mandat.GetData (this.baseType).Count;
 			}
 		}
 
@@ -43,13 +34,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.nodes.Count)
+				var obj = this.accessor.Mandat.GetData (this.baseType)[index];
+
+				if (obj == null)
 				{
-					return this.nodes[index];
+					return GuidNode.Empty;
 				}
 				else
 				{
-					return GuidNode.Empty;
+					return new GuidNode (obj.Guid);
 				}
 			}
 		}
@@ -57,6 +50,5 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private readonly DataAccessor			accessor;
 		private readonly BaseType				baseType;
-		private readonly List<GuidNode>			nodes;
 	}
 }
