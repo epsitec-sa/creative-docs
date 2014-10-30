@@ -51,6 +51,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7J]", typeof (Epsitec.Aider.Entities.AiderEmployeeJobEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVADJ]", typeof (Epsitec.Aider.Entities.AiderRefereeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7L]", typeof (Epsitec.Aider.Entities.AiderPlaParishGroupEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVO543]", typeof (Epsitec.Aider.Entities.AiderMailingQueryEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -8830,6 +8831,18 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Queries</c> field.
+		///	designer:fld/LVOA03/LVO843
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO843]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderMailingQueryEntity> Queries
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderMailingQueryEntity> ("[LVO843]");
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -10837,6 +10850,113 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPlaParishGroupEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderMailingQuery Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderMailingQuery</c> entity.
+	///	designer:cap/LVO543
+	///	</summary>
+	public partial class AiderMailingQueryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/LVO543/LVO643
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO643]")]
+		public string Name
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO643]");
+			}
+			set
+			{
+				string oldValue = this.Name;
+				if (oldValue != value || !this.IsFieldDefined("[LVO643]"))
+				{
+					this.OnNameChanging (oldValue, value);
+					this.SetField<string> ("[LVO643]", oldValue, value);
+					this.OnNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Query</c> field.
+		///	designer:fld/LVO543/LVO743
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO743]")]
+		public global::System.Byte[] Query
+		{
+			get
+			{
+				return this.GetField<global::System.Byte[]> ("[LVO743]");
+			}
+			set
+			{
+				global::System.Byte[] oldValue = this.Query;
+				if (oldValue != value || !this.IsFieldDefined("[LVO743]"))
+				{
+					this.OnQueryChanging (oldValue, value);
+					this.SetField<global::System.Byte[]> ("[LVO743]", oldValue, value);
+					this.OnQueryChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CommandId</c> field.
+		///	designer:fld/LVO543/LVO943
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO943]")]
+		public string CommandId
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO943]");
+			}
+			set
+			{
+				string oldValue = this.CommandId;
+				if (oldValue != value || !this.IsFieldDefined("[LVO943]"))
+				{
+					this.OnCommandIdChanging (oldValue, value);
+					this.SetField<string> ("[LVO943]", oldValue, value);
+					this.OnCommandIdChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNameChanging(string oldValue, string newValue);
+		partial void OnNameChanged(string oldValue, string newValue);
+		partial void OnQueryChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnQueryChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
+		partial void OnCommandIdChanging(string oldValue, string newValue);
+		partial void OnCommandIdChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingQueryEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderMailingQueryEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 133);	// [LVO543]
+		public static readonly string EntityStructuredTypeKey = "[LVO543]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingQueryEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

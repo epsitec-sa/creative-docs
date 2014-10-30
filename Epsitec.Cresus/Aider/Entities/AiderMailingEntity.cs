@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
 
@@ -49,12 +49,12 @@ namespace Epsitec.Aider.Entities
 			int groupCount           = this.RecipientGroups.Count;
 			int groupExtractionCount = this.RecipientGroupExtractions.Count;
 			int householdCount       = this.RecipientHouseholds.Count;
-
+			int queriesCount         = this.Queries.Count;
 			return TextFormatter.FormatText (contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
-				/**/						 this.RecipientQueryName != null ? "Requête: " + this.RecipientQueryName + "\n" : "Aucune requête\n",
+				/**/						 queriesCount, queriesCount > 1 ? "requêtes" : "requête", "\n",
 				/**/						 this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
@@ -96,10 +96,10 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				if (this.RecipientQuery != null)
+				foreach (var query in this.Queries)
 				{
 					var created			   = new List<AiderMailingParticipantEntity> ();
-					var request			   = this.GetRecipientQueryRequest (businessContext);
+					var request			   = this.GetContactRequestFromQuery (businessContext.DataContext, query);
 
 					var contactsFromQuery = businessContext.GetByRequest<AiderContactEntity> (request);
 					foreach (var contact in contactsFromQuery)
@@ -193,6 +193,27 @@ namespace Epsitec.Aider.Entities
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+		public void AddQuery (BusinessContext businessContext, AiderMailingQueryEntity queryToAdd)
+		{
+			if (!this.Queries.Contains (queryToAdd))
+			{
+				this.UpdateLastUpdateDate ();
+				this.Queries.Add (queryToAdd);
+				this.UpdateMailingParticipants (businessContext);
+			}
+		}
+
+		public void RemoveQuery(BusinessContext businessContext, AiderMailingQueryEntity queryToRemove)
+		{
+			if (this.Queries.Contains (queryToRemove))
+			{
+				this.UpdateLastUpdateDate ();
+				this.UpdateLastUpdateDate ();
+				this.Queries.Remove (queryToRemove);
+				this.UpdateMailingParticipants (businessContext);
+			}
 		}
 
 		public void AddHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToAdd)
@@ -437,34 +458,40 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (mailing);
 		}
 
-		public Request<AiderContactEntity> GetRecipientQueryRequest(DataContext dataContext)
+		public Request GetContactRequestFromQuery(DataContext dataContext, AiderMailingQueryEntity query)
 		{
-			var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
+			var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (query.Query);
 			var queryFilter		   = Filter.Restore (queryFilterXml);
-			var example			   = new AiderContactEntity ();
-			var request			   = new Request<AiderContactEntity> ()
+			var request = new Request ();
+
+			if(query.CommandId == Res.Commands.Base.ShowAiderContactFiltered.CommandId)
 			{
-				RootEntity = example
-			};
-
-			request.AddCondition (dataContext, example, queryFilter);
-
-			return request;
-		}
-
-		public Request<AiderContactEntity> GetRecipientQueryRequest(BusinessContext businessContext)
-		{
-			var queryFilterXml     = DataSetUISettingsEntity.ByteArrayToXml (this.RecipientQuery);
-			var queryFilter		   = Filter.Restore (queryFilterXml);
-			var example			   = new AiderContactEntity ();
-			var request			   = new Request<AiderContactEntity> ()
+				var example			   = new AiderContactEntity ();
+				request.RootEntity = example;
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
+			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJob.CommandId)
 			{
-				RootEntity = example
-			};
+				var contact             = new AiderContactEntity ();
 
-			request.AddCondition (businessContext.DataContext, example, queryFilter);
-			
-			return request;
+				var employee            = new AiderEmployeeEntity ()
+				{
+					PersonContact = contact
+				};
+				var example			    = new AiderEmployeeJobEntity ()
+				{
+					Employee = employee
+				};
+				
+				request.RootEntity      = example;
+				request.RequestedEntity = contact;
+
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
+
+			throw new NotImplementedException ("CommandId for this query is not implemented");
 		}
 
 		private void UpdateLastUpdateDate()
@@ -477,10 +504,10 @@ namespace Epsitec.Aider.Entities
 		private IEnumerable<AiderHouseholdEntity> GetParticipantsByHousehold (DataContext dataContext)
 		{
 			IEnumerable<AiderHouseholdEntity> contactsHouseholdsFromQuery = Enumerable.Empty<AiderHouseholdEntity> ();
-			if (this.RecipientQuery != null)
+			foreach (var query in this.Queries)
 			{
 				var created			   = new List<AiderMailingParticipantEntity> ();
-				var request			   = this.GetRecipientQueryRequest (dataContext);
+				var request			   = this.GetContactRequestFromQuery (dataContext, query);
 
 				contactsHouseholdsFromQuery = dataContext.GetByRequest<AiderContactEntity> (request)
 											.Select (c => c.Household);

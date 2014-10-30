@@ -84,6 +84,20 @@ namespace Epsitec.Aider.Data.Groups
 			}
 		}
 
+		public static void InitRegionalUserGroups(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var exampleRegionalGroupDef = AiderGroupEntity.FindGroups (businessContext, "R001.").First ().GroupDef;
+
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleRegionalGroupDef, "Utilisateurs AIDER", GroupClassification.Users, true);
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleRegionalGroupDef, "Suppléant AIDER", GroupClassification.ActingUser, false);
+				AiderUsersGroups.CreateUserGroupsIfNeeded (businessContext, exampleRegionalGroupDef, "Responsable AIDER", GroupClassification.ResponsibleUser, true);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
 		public static void CreateForGroup(BusinessContext businessContext, AiderGroupEntity group)
 		{
 			var usersDef		= AiderUsersGroups.CreateUserGroupDef (businessContext, group.GroupDef, "Utilisateurs AIDER", GroupClassification.Users, true);

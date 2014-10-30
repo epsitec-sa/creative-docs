@@ -22,11 +22,19 @@ using Epsitec.Cresus.Core.Library;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (18)]
-	public sealed class ActionAiderMailingViewController18AddContactsFromQuery : ActionViewController<AiderMailingEntity>
+	public sealed class ActionAiderMailingViewController18AddContactQuery : ActionViewController<AiderMailingEntity>
 	{
+		public override bool ExecuteInQueue
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Ajouter une requête");
+			return Resources.FormattedText ("Contacts");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -36,8 +44,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
 		{
-			var dataset   = Res.Commands.Base.ShowAiderContactFiltered.CommandId;
-			var settings  = AiderUserManager.GetCurrentDataSetUISettings(dataset);
+			var contactDataset      = Res.Commands.Base.ShowAiderContactFiltered.CommandId;
+
+			var settings  = AiderUserManager.GetCurrentDataSetUISettings (contactDataset);
 			
 			var queries = new List<string> ();
 			foreach(var setting in settings)
@@ -46,7 +55,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Choisir une requête")
+				.Title ("Ajouter une requête sur les contacts")
 				.Field<List<string>> ()
 					.Title ("Requête")
 					.WithStringCollection (queries)
@@ -57,24 +66,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(string queryName)
 		{
 			var dataset   = Res.Commands.Base.ShowAiderContactFiltered.CommandId;
-			this.Entity
-				.RecipientQuery = AiderUserManager
-									.GetCurrentDataSetUISettings (dataset)
-									.SelectMany
-									(
-										d => d.DataSetSettings.AvailableQueries
-									).Where
-									(
-										q => q.Name == queryName
-									).Select 
-									(
-										q => DataSetUISettingsEntity.XmlToByteArray (q.Save("q"))
-									)
-									.FirstOrDefault();
-
-			this.Entity.RecipientQueryName = queryName;
-			this.Entity.UpdateMailingParticipants (this.BusinessContext);
-
+			var query     = AiderMailingQueryEntity.Create (this.BusinessContext, queryName, dataset);
+			this.Entity.AddQuery (this.BusinessContext, query);
 		}
 	}
 }

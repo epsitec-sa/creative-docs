@@ -111,9 +111,8 @@ namespace Epsitec.Aider.Entities
 			participationData.Add (new ParticipationData (contact));
 			newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
 
-			//Join parish
+			//Join office
 			user.Office = office;
-			user.Parish = office.ParishGroup;
 		}
 
 		public static void LeaveOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)

@@ -22,11 +22,19 @@ using Epsitec.Cresus.Core.Library;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (19)]
-	public sealed class ActionAiderMailingViewController19RemoveCurrentQuery : ActionViewController<AiderMailingEntity>
+	public sealed class ActionAiderMailingViewController19RemoveContactQuery : TemplateActionViewController<AiderMailingEntity, AiderMailingQueryEntity>
 	{
+		public override bool ExecuteInQueue
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Supprimer la requête");
+			return Resources.FormattedText ("Enlever cette requête");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,12 +42,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			return ActionExecutor.Create (this.Execute);
 		}
 
-
 		private void Execute()
 		{
-			this.Entity.RecipientQuery = null;
-			this.Entity.RecipientQueryName = null;
-			this.Entity.UpdateMailingParticipants (this.BusinessContext);
+			this.Entity.RemoveQuery (this.BusinessContext, this.AdditionalEntity);
 		}
+
 	}
 }

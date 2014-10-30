@@ -51,8 +51,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
 				.EnableActionButton<ActionAiderMailingViewController3UpdateRecipients> ()
-								.EnableActionButton<ActionAiderMailingViewController18AddContactsFromQuery> ().IfTrue (this.Entity.RecipientQuery == null)
-				.EnableActionButton<ActionAiderMailingViewController19RemoveCurrentQuery> ().IfTrue (this.Entity.RecipientQuery != null)
 				.EnableActionButton<ActionAiderMailingViewController17ToggleHouseholdGrouping> ();
 
 			

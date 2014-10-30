@@ -108,12 +108,14 @@
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController11AddPlaGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController12AddGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController19RemoveContactsFromQuery.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController18AddContactsFromQuery.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController20AddJobQuery.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController19RemoveContactQuery.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController18AddContactQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController17ToggleHouseholdGrouping.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController2RemoveSettings.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController14DefineEmployee.cs" />
@@ -234,6 +236,7 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController2WithoutContact.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController1ReadOnly.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
@@ -328,6 +331,7 @@
     <Compile Include="Entities\AiderEmployeeJobEntity.cs" />
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
+    <Compile Include="Entities\AiderMailingQueryEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
     <Compile Include="Entities\AiderPlaParishGroupEntity.cs" />

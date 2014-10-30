@@ -484,6 +484,7 @@ namespace Epsitec.Aider
 				OfficeManagementEntities.CreateIfNeeded (coreData);
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroups.InitParishUserGroups (coreData);
+				AiderUsersGroups.InitRegionalUserGroups (coreData);
 			});
 		}
 

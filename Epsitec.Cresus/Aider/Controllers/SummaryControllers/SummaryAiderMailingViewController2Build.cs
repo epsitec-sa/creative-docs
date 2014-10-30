@@ -43,6 +43,22 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Text (x => x.GetCompactSummary ())
 					.End ();
 
+			wall.AddBrick (p => p.Queries)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.EnableActionMenu<ActionAiderMailingViewController18AddContactQuery> ()
+					.EnableActionButton<ActionAiderMailingViewController18AddContactQuery> ()
+					.EnableActionMenu<ActionAiderMailingViewController20AddJobQuery> ()
+					.EnableActionButton<ActionAiderMailingViewController20AddJobQuery> ()
+					.EnableActionMenu<ActionAiderMailingViewController19RemoveContactQuery> ()
+					.EnableActionButton<ActionAiderMailingViewController19RemoveContactQuery> ()
+					.Template ()
+						.Title ("Requêtes")
+						.Text (x => x.GetCompactSummary ())
+					.End ();
+
 			wall.AddBrick (p => p.RecipientGroups)
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.Attribute (BrickMode.AutoGroup)

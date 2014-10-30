@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderEmployeeEntity> wall)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-
+			bool canEditEmploye = user.CanEditEmployee () || user.CanEditReferee ();
 			wall.AddBrick (x => x.PersonContact)
 				.Attribute (BrickMode.DefaultToSummarySubView);
 
@@ -40,8 +40,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (user.CanEditReferee ())
-				.EnableActionMenu<ActionAiderEmployeeViewController02AddReferee> ().IfTrue (user.CanEditReferee ())
-				.EnableActionMenu<ActionAiderEmployeeViewController04RemoveReferee> ().IfTrue (user.CanEditReferee ())
+				.EnableActionMenu<ActionAiderEmployeeViewController02AddReferee> ().IfTrue (canEditEmploye)
+				.EnableActionMenu<ActionAiderEmployeeViewController04RemoveReferee> ().IfTrue (canEditEmploye)
 				.Template ()
 				.End ();
 		}

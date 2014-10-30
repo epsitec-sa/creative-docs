@@ -45,6 +45,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderPersonViewController14DefineEmployee> ().IfTrue (showEmployeeAction)
 				.EnableActionMenu<ActionAiderPersonViewController15DeleteEmployee> ().IfTrue (canRemoveEmployee)
 				.EnableActionMenu<ActionAiderPersonViewController16RemoveJob> ().IfTrue (canRemoveEmployee)
+				.EnableActionMenu<ActionAiderPersonViewController17AddReferee> ().IfTrue (canEditEmployee)
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.GetCompactSummary ()))
