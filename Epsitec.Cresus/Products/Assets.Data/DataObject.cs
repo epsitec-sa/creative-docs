@@ -17,6 +17,14 @@ namespace Epsitec.Cresus.Assets.Data
 			this.events = new GuidList<DataEvent> (undoManager);
 		}
 
+		public DataObject(UndoManager undoManager, Guid guid)
+		{
+			this.undoManager = undoManager;
+			this.guid = guid;
+
+			this.events = new GuidList<DataEvent> (undoManager);
+		}
+
 		public DataObject(UndoManager undoManager, System.Xml.XmlReader reader)
 		{
 			this.undoManager = undoManager;

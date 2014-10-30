@@ -8,6 +8,12 @@ using Epsitec.Cresus.Assets.Data.DataProperties;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
+	/// <summary>
+	/// Donne accès aux rubriques de l'utilisateur définies pour les objets d'immobilisation
+	/// (Assets) et pour les contacts (Persons) sous la forme de UserField. Comme ces
+	/// rubriques sont stockées dans des bases standards (BaseType.AssetsUserFields et
+	/// BaseType.PersonsUserFields), il est bien plus aisé de les voir ainsi.
+	/// </summary>
 	public class UserFieldsCache
 	{
 		public UserFieldsCache(DataAccessor accessor)
@@ -93,14 +99,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private IEnumerable<UserField> GetUserFields()
 		{
-			foreach (var userField in this.GetUserFields (BaseType.AssetsUserFields))
+			//	Retourne la liste de toutes les rubriques utilisateur (des 2 bases).
+			foreach (var obj in this.accessor.Mandat.GetData (BaseType.AssetsUserFields))
 			{
-				yield return userField;
+				yield return this.GetUserField (obj);
 			}
 
-			foreach (var userField in this.GetUserFields (BaseType.PersonsUserFields))
+			foreach (var obj in this.accessor.Mandat.GetData (BaseType.PersonsUserFields))
 			{
-				yield return userField;
+				yield return this.GetUserField (obj);
 			}
 		}
 
@@ -153,8 +160,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private DataObject GetDataObject(UserField userField)
 		{
-			var obj = new DataObject (null);
-			var e = new DataEvent (null, Timestamp.MaxValue, EventType.Input);
+			//	Retourne l'objet à partir du UserField, sans changer son Guid.
+			var obj = new DataObject (this.accessor.UndoManager, userField.Guid);
+			var e = new DataEvent (this.accessor.UndoManager, Timestamp.MaxValue, EventType.Input);
 			obj.AddEvent (e);
 
 			var p1 = new DataStringProperty (ObjectField.Name, userField.Name);
@@ -198,6 +206,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private UserField GetUserField(DataObject obj)
 		{
+			//	Retourne le UserField à partir d'un objet, sans changer son Guid.
 			var e = obj.GetEvent (0);
 			System.Diagnostics.Debug.Assert (e != null);
 
