@@ -21,6 +21,16 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public PersonsParams(System.Xml.XmlReader reader)
 			: base (reader)
 		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 
 

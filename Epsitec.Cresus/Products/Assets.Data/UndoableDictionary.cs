@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		#region IEnumerable<T> Members
+		#region IEnumerable<KeyValuePair<TKey, TValue>> Members
 		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
 		{
 			return this.dict.GetEnumerator ();
