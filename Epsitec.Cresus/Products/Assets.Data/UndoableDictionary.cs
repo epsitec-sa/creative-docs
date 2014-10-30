@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public class UndoableDictionary<TKey, TValue>
+	public class UndoableDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
 		where TValue : class
 	{
 		public UndoableDictionary(UndoManager undoManager)
@@ -26,6 +26,21 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		#region IEnumerable<T> Members
+		public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+		{
+			return this.dict.GetEnumerator ();
+		}
+		#endregion
+
+		#region IEnumerable Members
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.dict.GetEnumerator ();
+		}
+		#endregion
+
+	
 		public void Clear()
 		{
 			//	On n'utilise pas this.dict.Clear () pour permettre le undo !
