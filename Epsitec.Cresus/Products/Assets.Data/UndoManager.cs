@@ -152,6 +152,16 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public void ReplaceBeforeViewState(IViewState viewState)
+		{
+			//	Remplace le ViewState initial, avant les modifications.
+			if (this.groups.Any ())
+			{
+				var group = this.groups.Last ();
+				group.BeforeViewState = viewState;
+			}
+		}
+
 		private void SetBeforeViewState()
 		{
 			//	Spécifie le ViewState initial, avant les modifications.

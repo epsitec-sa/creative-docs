@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -98,6 +99,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Cherche s'il existe déjà des paramètres avec le même nom.
 			//	Si oui, on les supprime, pour les rajouter juste après, ce qui
 			//	équivaut à une mise à jour.
+			this.accessor.UndoManager.Start ();
+
+			if (this.initialViewState != null)
+			{
+				//	Le ViewState obtenu au moment du Start n'est pas le bon, puisqu'on l'a
+				//	déjà changé. Il faut le remplacer par le ViewState initial, tel qu'il
+				//	était avant qu'on montre ce rapport.
+				this.accessor.UndoManager.ReplaceBeforeViewState (this.initialViewState);
+			}
+
 			var existingParams = ReportParamsHelper.Search (this.accessor, this.report.ReportParams.CustomTitle);
 			if (existingParams != null)
 			{
@@ -131,15 +142,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				this.AddFavorite (null);
 			}
+
+			var title = ReportParamsHelper.GetTitle (this.accessor, this.report.ReportParams, ReportTitleType.Specific);
+			var desc = UndoManager.GetDescription (Res.Commands.Reports.AddFavorite.Description, title);
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.Reports.RemoveFavorite)]
 		private void OnRemoveFavorite(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.accessor.UndoManager.Start ();
+			var title = ReportParamsHelper.GetTitle (this.accessor, this.report.ReportParams, ReportTitleType.Specific);
+			var desc = UndoManager.GetDescription (Res.Commands.Reports.RemoveFavorite.Description, title);
+			this.accessor.UndoManager.SetDescription (desc);
+
 			this.accessor.Mandat.Reports.Remove (this.report.ReportParams);
 
 			this.reportChoiceController.Update ();
 			this.UpdateToolbars ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		[Command (Res.CommandIds.Reports.CompactAll)]
@@ -212,6 +235,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateReport(AbstractReportParams reportParams)
 		{
+			this.initialViewState = this.ViewState;
+
 			if (this.report != null)
 			{
 				this.DeleteTreeTable ();
@@ -237,6 +262,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.mainFrame  .Visibility = (this.report != null);
 			this.choiceFrame.Visibility = (this.report == null);
 
+			this.reportChoiceController.Update ();
 			this.reportChoiceController.ClearSelection ();
 
 			this.UpdateToolbars ();
@@ -414,5 +440,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox							mainFrame;
 		private NavigationTreeTableController		treeTableController;
 		private AbstractReport						report;
+		private AbstractViewState					initialViewState;
 	}
 }
