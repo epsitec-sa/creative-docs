@@ -435,4 +435,5 @@
   <data name="Popup.AccountsImport.DialogTitle" id="KAI">Plan comptable Crésus à importer</data>
   <data name="Popup.AccountsImport.DialogFormatName" id="KBI">Plan comptable Crésus</data>
   <data name="ToolbarControllers.PersonsTreeTable.DeleteError" id="KCI">Il y a {0} objets d'immobilisations qui référencent ce contact. Par conséquent, il ne peut pas être supprimé.</data>
+  <data name="ToolbarControllers.GroupsTreeTable.DeleteError" id="KDI">Il y a {0} objets d'immobilisations qui référencent ce groupe. Par conséquent, il ne peut pas être supprimé.</data>
 </bundle>

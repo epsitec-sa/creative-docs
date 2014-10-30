@@ -9,7 +9,7 @@ using Epsitec.Cresus.Assets.Data.DataProperties;
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
-	/// Donne accès aux rubriques de l'utilisateur définies pour les objets d'immobilisation
+	/// Donne accès aux rubriques de l'utilisateur définies pour les objets d'immobilisations
 	/// (Assets) et pour les contacts (Persons) sous la forme de UserFields. Comme ces
 	/// rubriques sont stockées dans des bases standards (BaseType.AssetsUserFields et
 	/// BaseType.PersonsUserFields), il est bien plus aisé de les voir ainsi.

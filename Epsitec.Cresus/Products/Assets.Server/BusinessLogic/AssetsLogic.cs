@@ -46,6 +46,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static IEnumerable<Guid> GetReferencedGroups(DataAccessor accessor, Guid groupGuid)
+		{
+			//	Vérifie quels sont les objets d'immobilisations qui référencent un
+			//	groupe donné. Retourne les Guid des objets concernés, ou aucun
+			//	si le groupe n'est pas référencée.
+			foreach (var obj in accessor.Mandat.GetData (BaseType.Assets))
+			{
+				int count = 0;
+
+				foreach (var e in obj.Events)
+				{
+					foreach (var property in e.Properties.Where (x => x.Field >= ObjectField.GroupGuidRatioFirst && x.Field <= ObjectField.GroupGuidRatioLast))
+					{
+						var p = property as DataGuidRatioProperty;
+						if (p.Value.Guid == groupGuid)
+						{
+							count++;
+						}
+					}
+				}
+
+				if (count > 0)
+				{
+					yield return obj.Guid;
+				}
+			}
+		}
+
 
 		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{

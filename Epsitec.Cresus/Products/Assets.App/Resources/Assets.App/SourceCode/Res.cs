@@ -5155,6 +5155,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class GroupsTreeTable
 				{
+					//	designer:str/JUKDI01
+					public static global::Epsitec.Common.Types.FormattedText DeleteError
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544909));
+						}
+					}
 					//	designer:str/JUKJB01
 					public static global::Epsitec.Common.Types.FormattedText DeleteQuestion
 					{
@@ -9309,6 +9317,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class GroupsTreeTable
 				{
+					//	designer:str/JUKDI01
+					public static global::Epsitec.Common.Support.Druid DeleteError
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544909);
+						}
+					}
 					//	designer:str/JUKJB01
 					public static global::Epsitec.Common.Support.Druid DeleteQuestion
 					{

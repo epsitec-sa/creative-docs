@@ -191,7 +191,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			var name = GroupsLogic.GetShortName(this.accessor, this.SelectedGuid);
+			var assetsCount = AssetsLogic.GetReferencedGroups (this.accessor, this.SelectedGuid).Count ();
+			if (assetsCount > 0)
+			{
+				string message = string.Format (Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteError.ToString (), assetsCount);
+				MessagePopup.ShowError (target, message);
+				return;
+			}
+
+			var name = GroupsLogic.GetShortName (this.accessor, this.SelectedGuid);
 			var question = string.Format (Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteQuestion.ToString (), name);
 
 			YesNoPopup.Show (target, question, delegate
