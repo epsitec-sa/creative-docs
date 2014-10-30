@@ -139,6 +139,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
+			var assetsCount = AssetsLogic.GetReferencedPersons (this.accessor, this.SelectedGuid).Count ();
+			if (assetsCount > 0)
+			{
+				string message = string.Format (Res.Strings.ToolbarControllers.PersonsTreeTable.DeleteError.ToString (), assetsCount);
+				MessagePopup.ShowError (target, message);
+				return;
+			}
+
 			var name = PersonsLogic.GetSummary (this.accessor, this.SelectedGuid);
 			var question = string.Format (Res.Strings.ToolbarControllers.PersonsTreeTable.DeleteQuestion.ToString (), name);
 

@@ -11,6 +11,42 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
+		public static IEnumerable<Guid> GetReferencedPersons(DataAccessor accessor, Guid personGuid)
+		{
+			//	Vérifie quels sont les objets d'immobilisations qui référencent une
+			//	personne donnée. Retourne les Guid des objets concernés, ou aucun
+			//	si la personne n'est pas référencée.
+			var fields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
+				.Where (x => x.Type == FieldType.GuidPerson)
+				.Select (x => x.Field);
+
+			if (fields.Any ())
+			{
+				foreach (var obj in accessor.Mandat.GetData (BaseType.Assets))
+				{
+					int count = 0;
+
+					foreach (var e in obj.Events)
+					{
+						foreach (var property in e.Properties.Where (x => fields.Contains (x.Field)))
+						{
+							var p = property as DataGuidProperty;
+							if (p.Value == personGuid)
+							{
+								count++;
+							}
+						}
+					}
+
+					if (count > 0)
+					{
+						yield return obj.Guid;
+					}
+				}
+			}
+		}
+
+
 		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.

@@ -434,4 +434,5 @@
   <data name="Popup.Export.DialogTitle" id="K9I">Nom du fichier à exporter</data>
   <data name="Popup.AccountsImport.DialogTitle" id="KAI">Plan comptable Crésus à importer</data>
   <data name="Popup.AccountsImport.DialogFormatName" id="KBI">Plan comptable Crésus</data>
+  <data name="ToolbarControllers.PersonsTreeTable.DeleteError" id="KCI">Il y a {0} objets d'immobilisations qui référencent ce contact. Par conséquent, il ne peut pas être supprimé.</data>
 </bundle>
