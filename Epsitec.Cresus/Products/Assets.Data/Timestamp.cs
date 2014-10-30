@@ -165,9 +165,9 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public void Serialize(System.Xml.XmlWriter writer)
+		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			writer.WriteElementString ("Timestamp", this.ToString ());
+			writer.WriteElementString (name, this.ToString ());
 		}
 
 

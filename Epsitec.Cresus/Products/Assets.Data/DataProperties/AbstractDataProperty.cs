@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 					{
 						var s = reader.ReadElementContentAsString ();
 						this.Field = (ObjectField) System.Enum.Parse (typeof (ObjectField), s);
-						break;
+
+						break;  // fin de la lecture de la classe abstraite -> on passe à la classe dérivée
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

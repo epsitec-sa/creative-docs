@@ -8,8 +8,18 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class PersonsParams : AbstractReportParams
 	{
+		public PersonsParams()
+			: base ()
+		{
+		}
+
 		public PersonsParams(string customTitle)
 			: base (customTitle)
+		{
+		}
+
+		public PersonsParams(System.Xml.XmlReader reader)
+			: base (reader)
 		{
 		}
 
@@ -28,6 +38,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			{
 				return false;
 			}
+		}
+
+
+		public override void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Report.Persons");
+			base.Serialize (writer);
+			writer.WriteEndElement ();
 		}
 	}
 }

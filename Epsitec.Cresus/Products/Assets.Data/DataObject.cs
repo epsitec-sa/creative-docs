@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Object");
 
-			this.guid.Serialize (writer);
+			this.guid.Serialize (writer, "Guid");
 			this.SerializeEvents (writer);
 
 			writer.WriteEndElement ();

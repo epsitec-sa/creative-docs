@@ -8,10 +8,41 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public abstract class AbstractReportParams : IGuid, System.IEquatable<AbstractReportParams>
 	{
+		public AbstractReportParams()
+		{
+			this.customTitle = null;
+			this.guid        = Guid.NewGuid ();
+		}
+
 		public AbstractReportParams(string customTitle)
 		{
 			this.customTitle = customTitle;
 			this.guid        = Guid.NewGuid ();
+		}
+
+		public AbstractReportParams(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Guid")
+					{
+						var s = reader.ReadElementContentAsString ();
+						this.guid = Guid.Parse (s);
+					}
+					else if (reader.Name == "CustomTitle")
+					{
+						this.customTitle = reader.ReadElementContentAsString ();
+
+						break;  // fin de la lecture de la classe abstraite -> on passe à la classe dérivée
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 
 
@@ -87,6 +118,13 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public virtual AbstractReportParams ChangeCustomTitle(string customTitle)
 		{
 			return null;
+		}
+
+
+		public virtual void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteElementString ("Guid",        this.guid.ToString ());
+			writer.WriteElementString ("CustomTitle", this.customTitle);
 		}
 
 

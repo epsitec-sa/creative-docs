@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial au &lt;DATE&gt;", initialTimestamp, Guid.Empty, null));
 			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat final", finalTimestamp, Guid.Empty, null));
 
-			this.accessor.Mandat.Reports.Add (new PersonsParams (null));
+			this.accessor.Mandat.Reports.Add (new PersonsParams ());
 		}
 	}
 }

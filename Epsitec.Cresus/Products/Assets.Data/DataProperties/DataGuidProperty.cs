@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		{
 			writer.WriteStartElement ("Property.Guid");
 			base.Serialize (writer);
-			this.Value.Serialize (writer);
+			this.Value.Serialize (writer, "Guid");
 			writer.WriteEndElement ();
 		}
 

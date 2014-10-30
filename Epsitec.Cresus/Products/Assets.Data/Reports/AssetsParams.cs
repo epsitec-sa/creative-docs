@@ -16,6 +16,39 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			this.Level     = level;
 		}
 
+		public AssetsParams(System.Xml.XmlReader reader)
+			: base (reader)
+		{
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Timestamp":
+							this.Timestamp = new Timestamp (reader);
+							break;
+
+						case "RootGuid":
+							s = reader.ReadElementContentAsString ();
+							this.RootGuid = Guid.Parse (s);
+							break;
+
+						case "Level":
+							s = reader.ReadElementContentAsString ();
+							this.Level = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 
 		public override string					Title
 		{
@@ -61,6 +94,23 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public override AbstractReportParams ChangeCustomTitle(string customTitle)
 		{
 			return new AssetsParams (customTitle, this.Timestamp, this.RootGuid, this.Level);
+		}
+
+
+		public override void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Report.Assets");
+			base.Serialize (writer);
+
+			this.Timestamp.Serialize (writer, "Timestamp");
+			writer.WriteElementString ("RootGuid", this.RootGuid.ToString ());
+
+			if (this.Level.HasValue)
+			{
+				writer.WriteElementString ("Level", this.Level.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+
+			writer.WriteEndElement ();
 		}
 
 

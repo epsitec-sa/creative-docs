@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Definitions");
 
-			this.Guid.Serialize (writer);
+			this.Guid.Serialize (writer, "Guid");
 			writer.WriteElementString ("Name", this.Name);
 			writer.WriteElementString ("StartDate", this.StartDate.ToString (System.Globalization.CultureInfo.InvariantCulture));
 
@@ -212,24 +212,37 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Objects");
 
-			this.Serialize (writer, "AssetsUserFields",  this.assetsUserFields);
-			this.Serialize (writer, "PersonsUserFields", this.personsUserFields);
-			this.Serialize (writer, "Categories",        this.categories);
-			this.Serialize (writer, "Groups",            this.groups);
-			this.Serialize (writer, "Persons",           this.persons);
-			this.Serialize (writer, "Assets",            this.assets);
-			this.Serialize (writer, "Entries",           this.entries);
+			this.SerializeObjects (writer, "AssetsUserFields",  this.assetsUserFields);
+			this.SerializeObjects (writer, "PersonsUserFields", this.personsUserFields);
+			this.SerializeObjects (writer, "Categories",        this.categories);
+			this.SerializeObjects (writer, "Groups",            this.groups);
+			this.SerializeObjects (writer, "Persons",           this.persons);
+			this.SerializeObjects (writer, "Assets",            this.assets);
+			this.SerializeObjects (writer, "Entries",           this.entries);
+			this.SerializeReports (writer);
 
 			writer.WriteEndElement ();
 		}
 
-		private void Serialize(System.Xml.XmlWriter writer, string name, GuidList<DataObject> objects)
+		private void SerializeObjects(System.Xml.XmlWriter writer, string name, GuidList<DataObject> objects)
 		{
 			writer.WriteStartElement (name);
 
 			foreach (var obj in objects)
 			{
 				obj.Serialize (writer);
+			}
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeReports(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Reports");
+
+			foreach (var report in this.reports)
+			{
+				report.Serialize (writer);
 			}
 
 			writer.WriteEndElement ();
@@ -346,6 +359,10 @@ namespace Epsitec.Cresus.Assets.Data
 						case "Entries":
 							this.DeserializeObjects (reader, this.entries);
 							break;
+
+						case "Reports":
+							this.DeserializeReports (reader);
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -372,6 +389,38 @@ namespace Epsitec.Cresus.Assets.Data
 					break;
 				}
 			}		
+		}
+
+		private void DeserializeReports(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name.StartsWith ("Report."))
+					{
+						var name = reader.Name.Substring (7);  // nom après "Report."
+						switch (name)
+						{
+							case "MCH2Summary":
+								this.reports.Add (new MCH2SummaryParams (reader));
+								break;
+
+							case "Assets":
+								this.reports.Add (new AssetsParams (reader));
+								break;
+
+							case "Persons":
+								this.reports.Add (new PersonsParams (reader));
+								break;
+						}
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 		#endregion
 

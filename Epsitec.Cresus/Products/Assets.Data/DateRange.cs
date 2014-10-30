@@ -16,6 +16,38 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ExcludeTo   = excludeTo;
 		}
 
+		public DateRange(System.Xml.XmlReader reader)
+		{
+			this.IncludeFrom = System.DateTime.MinValue;
+			this.ExcludeTo   = System.DateTime.MaxValue;
+
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "IncludeFrom":
+							s = reader.ReadElementContentAsString ();
+							this.IncludeFrom = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ExcludeTo":
+							s = reader.ReadElementContentAsString ();
+							this.ExcludeTo = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+
 		public bool IsEmpty
 		{
 			get
@@ -154,6 +186,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public readonly System.DateTime			IncludeFrom;
 		public readonly System.DateTime			ExcludeTo;
+
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+			writer.WriteElementString ("IncludeFrom", this.IncludeFrom.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("ExcludeTo",   this.ExcludeTo  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteEndElement ();
+		}
 
 
 		static DateRange()

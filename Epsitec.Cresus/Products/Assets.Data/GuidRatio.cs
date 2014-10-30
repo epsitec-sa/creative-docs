@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("GuidRatio");
-			this.Guid.Serialize (writer);
+			this.Guid.Serialize (writer, "Guid");
 
 			if (this.Ratio.HasValue)
 			{

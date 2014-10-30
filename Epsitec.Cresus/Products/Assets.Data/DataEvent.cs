@@ -216,9 +216,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Event");
 
-			this.guid.Serialize (writer);
+			this.guid.Serialize (writer, "Guid");
 			writer.WriteElementString ("Type", this.Type.ToString ());
-			this.Timestamp.Serialize (writer);
+			this.Timestamp.Serialize (writer, "Timestamp");
 			this.SerializeProperties (writer);
 
 			writer.WriteEndElement ();

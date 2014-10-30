@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty));
 			this.accessor.Mandat.Reports.Add (new AssetsParams (null, timestamp, Guid.Empty, null));
-			this.accessor.Mandat.Reports.Add (new PersonsParams (null));
+			this.accessor.Mandat.Reports.Add (new PersonsParams ());
 		}
 
 
