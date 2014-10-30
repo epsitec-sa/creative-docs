@@ -10,13 +10,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	/// <summary>
 	/// Donne accès aux rubriques de l'utilisateur définies pour les objets d'immobilisation
-	/// (Assets) et pour les contacts (Persons) sous la forme de UserField. Comme ces
+	/// (Assets) et pour les contacts (Persons) sous la forme de UserFields. Comme ces
 	/// rubriques sont stockées dans des bases standards (BaseType.AssetsUserFields et
 	/// BaseType.PersonsUserFields), il est bien plus aisé de les voir ainsi.
 	/// </summary>
-	public class UserFieldsCache
+	public class UserFieldsAccessor
 	{
-		public UserFieldsCache(DataAccessor accessor)
+		public UserFieldsAccessor(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 		}
@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public ObjectField GetMainStringField(BaseType baseType)
 		{
+			//	On considère comme rubrique "principale" la première rubrique textuelle.
 			return this.GetUserFields (baseType)
 				.Where (x => x.Type == FieldType.String)
 				.Select (x => x.Field)
@@ -256,6 +257,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private readonly DataAccessor						accessor;
+		private readonly DataAccessor			accessor;
 	}
 }

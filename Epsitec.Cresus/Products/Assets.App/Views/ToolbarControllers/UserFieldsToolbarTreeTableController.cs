@@ -87,8 +87,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
-			(this.nodeGetter as UserFieldNodeGetter).SetParams ();
-
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -170,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.New)]
 		protected void OnNew()
 		{
-			var newField = this.accessor.UserFieldsCache.GetNewUserField ();
+			var newField = this.accessor.UserFieldsAccessor.GetNewUserField ();
 			if (newField == ObjectField.Unknown)
 			{
 				return;
@@ -186,7 +184,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				index = this.nodeGetter.Count;  // insère à la fin
 			}
 
-			this.accessor.UserFieldsCache.InsertUserField (this.baseType, index, userField);
+			this.accessor.UserFieldsAccessor.InsertUserField (this.baseType, index, userField);
 			accessor.WarningsDirty = true;
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
@@ -210,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				var desc = UndoManager.GetDescription (Res.Commands.UserFields.Delete.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
 				this.accessor.UndoManager.SetDescription (desc);
 
-				this.accessor.UserFieldsCache.RemoveUserField (this.baseType, this.SelectedGuid);
+				this.accessor.UserFieldsAccessor.RemoveUserField (this.baseType, this.SelectedGuid);
 				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
@@ -222,7 +220,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.UserFields.Copy)]
 		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var userField = this.accessor.UserFieldsCache.GetUserField (this.SelectedGuid);
+			var userField = this.accessor.UserFieldsAccessor.GetUserField (this.SelectedGuid);
 			this.accessor.Clipboard.CopyUserField (this.accessor, this.baseType, userField);
 
 			this.UpdateToolbar ();
@@ -287,15 +285,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.accessor.UndoManager.Start ();
 
 			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
-			var userField = this.accessor.UserFieldsCache.GetUserField (node.Guid);
+			var userField = this.accessor.UserFieldsAccessor.GetUserField (node.Guid);
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
 			//	Supprime la rubrique à l'endroit actuel.
-			this.accessor.UserFieldsCache.RemoveUserField (this.baseType, node.Guid);
+			this.accessor.UserFieldsAccessor.RemoveUserField (this.baseType, node.Guid);
 
 			//	Insère la rubrique au nouvel endroit.
 			int index = newRow.Value;
-			this.accessor.UserFieldsCache.InsertUserField (this.baseType, index, userField);
+			this.accessor.UserFieldsAccessor.InsertUserField (this.baseType, index, userField);
 
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();

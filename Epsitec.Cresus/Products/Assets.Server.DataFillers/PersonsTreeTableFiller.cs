@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public PersonsTreeTableFiller(DataAccessor accessor, INodeGetter<SortableNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
-			this.userFields = this.accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields).ToArray ();
+			this.userFields = this.accessor.UserFieldsAccessor.GetUserFields (BaseType.PersonsUserFields).ToArray ();
 		}
 
 

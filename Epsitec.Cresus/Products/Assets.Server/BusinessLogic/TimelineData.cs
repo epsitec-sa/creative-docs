@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				yield return DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue);
 
-				foreach (var field in this.accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields)
+				foreach (var field in this.accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 					.Where (x => x.Type == FieldType.ComputedAmount))
 				{
 					yield return field.Name;
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			list.Add (this.GetMainValue (obj, timestamp));
 
-			foreach (var field in this.accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields)
+			foreach (var field in this.accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 				.Where (x => x.Type == FieldType.ComputedAmount)
 				.Select (x => x.Field))
 			{

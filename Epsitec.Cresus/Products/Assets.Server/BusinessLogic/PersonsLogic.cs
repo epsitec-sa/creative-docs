@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	On prend les champs de type texte ayant un SummaryOrder.
 				var list = new List<string> ();
 
-				foreach (var field in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields)
+				foreach (var field in accessor.UserFieldsAccessor.GetUserFields (BaseType.PersonsUserFields)
 					.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
 					.OrderBy (x => x.SummaryOrder)
 					.Select (x => x.Field))
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var lines = new List<string> ();
 
-				foreach (var field in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields)
+				foreach (var field in accessor.UserFieldsAccessor.GetUserFields (BaseType.PersonsUserFields)
 					.Select (x => x.Field))
 				{
 					var text = ObjectProperties.GetObjectPropertyString (obj, null, field);

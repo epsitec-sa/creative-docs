@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			parent = this.CreateScrollable (parent, hasColorsExplanation: false);
 
-			foreach (var userField in accessor.UserFieldsCache.GetUserFields (BaseType.PersonsUserFields))
+			foreach (var userField in accessor.UserFieldsAccessor.GetUserFields (BaseType.PersonsUserFields))
 			{
 				this.CreateController (parent, userField);
 			}

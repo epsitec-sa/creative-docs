@@ -76,38 +76,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				return PageType.Groups;
 			}
 
-#if false  //??
-			var userField = accessor.UserFieldsCache.GetUserField (field);
-			if (!userField.IsEmpty)
-			{
-				var baseType = accessor.UserFieldsCache.GetBaseType (userField.Guid);
-
-				if (baseType == BaseType.Assets)
-				{
-					if (userField.Type == FieldType.ComputedAmount)
-					{
-						return PageType.Asset;
-					}
-					else if (userField.Type == FieldType.GuidPerson)
-					{
-						return PageType.Asset;
-					}
-					else if (userField.Type == FieldType.Account)
-					{
-						return PageType.AmortizationDefinition;
-					}
-					else
-					{
-						return PageType.Asset;
-					}
-				}
-				else if (baseType == BaseType.Persons)
-				{
-					return PageType.Person;
-				}
-			}
-#endif
-
 			switch (field)
 			{
 				case ObjectField.OneShotNumber:
@@ -194,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				list.Add (c2);
 
 				c2.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Main.ToString ()));
-				foreach (var userField in this.accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields))
+				foreach (var userField in this.accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields))
 				{
 					if (userField.TopMargin >= 5)  // limite arbitraire
 					{

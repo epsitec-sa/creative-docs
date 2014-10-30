@@ -285,10 +285,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	On insère le UserField Collé.
-			var field = accessor.UserFieldsCache.GetNewUserField ();
+			var field = accessor.UserFieldsAccessor.GetNewUserField ();
 			var name = DataClipboard.GetCopyName (data.UserField.Name, accessor.GlobalSettings.CopyNameStrategy);
 			var userField = new UserField (data.UserField, field, name);
-			accessor.UserFieldsCache.InsertUserField (baseType, index, userField);
+			accessor.UserFieldsAccessor.InsertUserField (baseType, index, userField);
 			accessor.WarningsDirty = true;
 
 			return userField;

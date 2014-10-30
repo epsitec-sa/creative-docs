@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", baseType.ToString ()));
 				}
 
-				return accessor.UserFieldsCache.GetUserFields (baseType)
+				return accessor.UserFieldsAccessor.GetUserFields (baseType)
 					.Where (x => x.Field == field && x.Required)
 					.Any ();
 			}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, ObjectField.MainValue);
 
 						//	On cherche les champs définis par l'utilisateur restés indéfinis.
-						var requiredFields = accessor.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields)
+						var requiredFields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 							.Where (x => x.Required)
 							.Select (x => x.Field)
 							.ToArray ();
@@ -209,9 +209,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static void CheckRequiredField(List<Warning> warnings, DataAccessor accessor, BaseType baseType, string description)
 		{
 			//	Vérifie s'il existe au moins un champ obligatoire.
-			if (!accessor.UserFieldsCache.GetUserFields (baseType).Where (x => x.Required).Any ())
+			if (!accessor.UserFieldsAccessor.GetUserFields (baseType).Where (x => x.Required).Any ())
 			{
-				var first = accessor.UserFieldsCache.GetUserFields (baseType).FirstOrDefault ();
+				var first = accessor.UserFieldsAccessor.GetUserFields (baseType).FirstOrDefault ();
 				Guid guid;
 
 				if (first == null)
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void CheckRequired(List<Warning> warnings, DataAccessor accessor, BaseType baseType)
 		{
-			var requiredFields = accessor.UserFieldsCache.GetUserFields (baseType)
+			var requiredFields = accessor.UserFieldsAccessor.GetUserFields (baseType)
 				.Where (x => x.Required)
 				.Select (x => x.Field)
 				.ToArray ();

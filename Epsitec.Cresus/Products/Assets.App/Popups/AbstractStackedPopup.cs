@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private List<UserField> GetRequiredUserFields(BaseType baseType)
 		{
-			return this.accessor.UserFieldsCache.GetUserFields (baseType)
+			return this.accessor.UserFieldsAccessor.GetUserFields (baseType)
 				.Where (x => x.Required)
 				.ToList ();
 		}

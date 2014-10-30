@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			this.clipboard = clipboard;
 
-			this.userFieldsCache = new UserFieldsCache (this);
-			this.editionAccessor = new EditionAccessor (this);
+			this.userFieldsAccessor = new UserFieldsAccessor (this);
+			this.editionAccessor    = new EditionAccessor (this);
 
 			this.cleanerAgents = new List<AbstractCleanerAgent> ();
 		}
@@ -51,11 +51,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public UserFieldsCache					UserFieldsCache
+		public UserFieldsAccessor				UserFieldsAccessor
 		{
 			get
 			{
-				return this.userFieldsCache;
+				return this.userFieldsAccessor;
 			}
 		}
 
@@ -111,15 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#region Objects
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
-			//??if (baseType == BaseType.AssetsUserFields ||
-			//??	baseType == BaseType.PersonsUserFields)
-			//??{
-			//??	return this.GlobalSettings.GetTempDataObject (objectGuid);
-			//??}
-			//??else
-			//??{
-				return this.mandat.GetData (baseType)[objectGuid];
-			//??}
+			return this.mandat.GetData (baseType)[objectGuid];
 		}
 
 		public Guid CreateObject(BaseType baseType, System.DateTime date, string name, Guid parent)
@@ -412,11 +404,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			if (baseType == BaseType.Assets)
 			{
-				return this.userFieldsCache.GetMainStringField (BaseType.AssetsUserFields);
+				return this.userFieldsAccessor.GetMainStringField (BaseType.AssetsUserFields);
 			}
 			else if (baseType == BaseType.Persons)
 			{
-				return this.userFieldsCache.GetMainStringField (BaseType.PersonsUserFields);
+				return this.userFieldsAccessor.GetMainStringField (BaseType.PersonsUserFields);
 			}
 			else
 			{
@@ -443,7 +435,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var field in this.userFieldsCache.GetUserFields (BaseType.AssetsUserFields).Select (x => x.Field))
+				foreach (var field in this.userFieldsAccessor.GetUserFields (BaseType.AssetsUserFields).Select (x => x.Field))
 				{
 					yield return field;
 				}
@@ -479,7 +471,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				yield return ObjectField.MainValue;
 
-				foreach (var field in this.UserFieldsCache.GetUserFields (BaseType.AssetsUserFields)
+				foreach (var field in this.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 					.Where (x => x.Type == FieldType.ComputedAmount)
 					.Select (x => x.Field))
 				{
@@ -494,7 +486,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.UserFieldFirst &&
 				objectField <= ObjectField.UserFieldLast)
 			{
-				return this.UserFieldsCache.GetUserFieldName (objectField);
+				return this.UserFieldsAccessor.GetUserFieldName (objectField);
 			}
 
 			return DataDescriptions.GetObjectFieldDescription (objectField);
@@ -505,7 +497,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.UserFieldFirst &&
 				objectField <= ObjectField.UserFieldLast)
 			{
-				return this.UserFieldsCache.GetUserFieldType (objectField);
+				return this.UserFieldsAccessor.GetUserFieldType (objectField);
 			}
 
 			if (objectField >= ObjectField.GroupGuidRatioFirst &&
@@ -557,7 +549,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		private readonly DataClipboard			clipboard;
-		private readonly UserFieldsCache		userFieldsCache;
+		private readonly UserFieldsAccessor		userFieldsAccessor;
 		private readonly EditionAccessor		editionAccessor;
 		private readonly List<AbstractCleanerAgent> cleanerAgents;
 

@@ -17,11 +17,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams()
-		{
-		}
-
-
 		public int Count
 		{
 			get

@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public DataObject(UndoManager undoManager)
 		{
 			this.undoManager = undoManager;
-			this.guid = Guid.NewGuid ();
+			this.guid        = Guid.NewGuid ();
 
 			this.events = new GuidList<DataEvent> (undoManager);
 		}
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public DataObject(UndoManager undoManager, Guid guid)
 		{
 			this.undoManager = undoManager;
-			this.guid = guid;
+			this.guid        = guid;
 
 			this.events = new GuidList<DataEvent> (undoManager);
 		}

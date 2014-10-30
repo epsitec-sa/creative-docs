@@ -54,34 +54,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected ObjectField AddSettings(BaseType baseType, string name, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
-			var field = this.accessor.UserFieldsCache.GetNewUserField ();
-			this.accessor.UserFieldsCache.AddUserField (baseType, new UserField (name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
+			var field = this.accessor.UserFieldsAccessor.GetNewUserField ();
+			this.accessor.UserFieldsAccessor.AddUserField (baseType, new UserField (name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
 			return field;
-
-			//??var obj = this.accessor.Mandat.GetData (baseType);
-			//??var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
-			//??
-			//??var o = new DataObject (this.accessor.UndoManager);
-			//??obj.Add (o);
-			//??
-			//??var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
-			//??o.AddEvent (e);
-			//??
-			//??var field = this.accessor.UserFieldsCache.GetNewUserField ();
-			//??
-			//??this.AddField (e, ObjectField.Name,                  name);
-			//??this.AddField (e, ObjectField.UserFieldType,         (int) type);
-			//??this.AddField (e, ObjectField.UserFieldColumnWidth,  columnWidth);
-			//??this.AddField (e, ObjectField.UserFieldLineWidth,    lineWidth);
-			//??this.AddField (e, ObjectField.UserFieldLineCount,    lineCount);
-			//??this.AddField (e, ObjectField.UserFieldSummaryOrder, summaryOrder);
-			//??this.AddField (e, ObjectField.UserFieldTopMargin,    topMargin);
-			//??this.AddField (e, ObjectField.UserFieldField,        (int) field);
-			//??this.AddField (e, ObjectField.UserFieldRequired,     required ? 1 : 0);
-			//??
-			//??this.accessor.UserFieldsCache.Update ();
-			//??
-			//??return field;
 		}
 
 
