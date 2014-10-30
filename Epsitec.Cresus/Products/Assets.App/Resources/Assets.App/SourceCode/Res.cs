@@ -5163,6 +5163,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544909));
 						}
 					}
+					//	designer:str/JUKEI01
+					public static global::Epsitec.Common.Types.FormattedText DeleteErrorChildrens
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544910));
+						}
+					}
 					//	designer:str/JUKJB01
 					public static global::Epsitec.Common.Types.FormattedText DeleteQuestion
 					{
@@ -9323,6 +9331,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544909);
+						}
+					}
+					//	designer:str/JUKEI01
+					public static global::Epsitec.Common.Support.Druid DeleteErrorChildrens
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544910);
 						}
 					}
 					//	designer:str/JUKJB01

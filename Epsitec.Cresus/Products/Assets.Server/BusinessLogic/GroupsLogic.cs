@@ -26,6 +26,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static IEnumerable<Guid> GetAllChildrensGuid(DataAccessor accessor, Guid groupGuid)
+		{
+			//	Retourne la liste de tous les groupes fils, non triée.
+			return accessor.Mandat.GetData (BaseType.Groups)
+				.Where (x => GroupsLogic.IsChildren (accessor, groupGuid, x.Guid))
+				.Select (x => x.Guid);
+		}
+
 		public static IEnumerable<Guid> GetChildrensGuids(DataAccessor accessor, Guid groupGuid)
 		{
 			//	Retourne la liste des groupes fils pour peupler un combo, triée par

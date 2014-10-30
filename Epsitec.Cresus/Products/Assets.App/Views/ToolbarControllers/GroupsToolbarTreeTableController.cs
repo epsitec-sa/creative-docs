@@ -191,6 +191,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
+			var groupCount = GroupsLogic.GetAllChildrensGuid (accessor, this.SelectedGuid).Count ();
+			if (groupCount > 0)
+			{
+				string message = string.Format (Res.Strings.ToolbarControllers.GroupsTreeTable.DeleteErrorChildrens.ToString (), groupCount);
+				MessagePopup.ShowError (target, message);
+				return;
+			}
+
 			var assetsCount = AssetsLogic.GetReferencedGroups (this.accessor, this.SelectedGuid).Count ();
 			if (assetsCount > 0)
 			{
