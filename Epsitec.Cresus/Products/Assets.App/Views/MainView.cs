@@ -330,10 +330,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			try
 			{
 				//?var info = DataIO.OpenInfoXml (filename);
-
-				DataIO.Decompress (filename);
 				DataIO.OpenMandat (this.accessor, filename);
-				DataIO.DeleteXml(filename);
 			}
 			catch (System.Exception ex)
 			{
@@ -350,14 +347,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
-				DataIO.SaveInfo (filename, this.accessor.Mandat.MandatInfo);
-				DataIO.SaveMandat (this.accessor, filename);
-				DataIO.Compress (filename);
-
-				if ((mode & SaveMandatMode.KeepXml) == 0)
-				{
-					DataIO.DeleteXml (filename);
-				}
+				DataIO.SaveMandat (this.accessor, filename, mode);
 			}
 			catch (System.Exception ex)
 			{

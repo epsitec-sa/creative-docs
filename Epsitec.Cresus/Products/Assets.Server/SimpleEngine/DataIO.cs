@@ -205,13 +205,40 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static void OpenMandat(DataAccessor accessor, string filename)
 		{
+			if (DataIO.ExistingXml (filename))
+			{
+				DataIO.OpenXml (accessor, filename);
+			}
+			else
+			{
+				DataIO.Decompress (filename);
+				DataIO.OpenXml (accessor, filename);
+				DataIO.DeleteXml (filename);
+			}
+		}
+
+		private static void OpenXml(DataAccessor accessor, string filename)
+		{
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var reader = System.Xml.XmlReader.Create (xmlFilename);
 			accessor.Mandat = new DataMandat (reader);
 			reader.Close ();
 		}
 
-		public static void SaveMandat(DataAccessor accessor, string filename)
+
+		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
+		{
+			DataIO.SaveInfo (filename, accessor.Mandat.MandatInfo);
+			DataIO.SaveXml (accessor, filename);
+			DataIO.Compress (filename);
+
+			if ((mode & SaveMandatMode.KeepXml) == 0)
+			{
+				DataIO.DeleteXml (filename);
+			}
+		}
+
+		private static void SaveXml(DataAccessor accessor, string filename)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
@@ -227,7 +254,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static void Compress(string filename)
+		private static void Compress(string filename)
 		{
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var zipFilename = DataIO.GetZipFilename (filename);
@@ -236,7 +263,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			Compression.GZipCompressFile (xmlFilename, zipFilename);
 		}
 
-		public static void Decompress(string filename)
+		private static void Decompress(string filename)
 		{
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var zipFilename = DataIO.GetZipFilename (filename);
@@ -246,7 +273,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static void DeleteXml(string filename)
+		private static bool ExistingXml(string filename)
+		{
+			var xmlFilename = DataIO.GetXmlFilename (filename);
+			return System.IO.File.Exists (xmlFilename);
+		}
+
+		private static void DeleteXml(string filename)
 		{
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			System.IO.File.Delete (xmlFilename);
