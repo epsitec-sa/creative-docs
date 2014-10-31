@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -327,9 +328,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
-				var reader = System.Xml.XmlReader.Create (filename);
+				var xmlFilename = filename + ".xml";
+
+				System.IO.File.Delete (xmlFilename);
+				Compression.GZipDecompressFile (filename, xmlFilename);
+
+				var reader = System.Xml.XmlReader.Create (xmlFilename);
 				this.accessor.Mandat = new DataMandat (reader);
 				reader.Close ();
+
+				System.IO.File.Delete (xmlFilename);
 			}
 			catch (System.Exception ex)
 			{
@@ -346,17 +354,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
+				var xmlFilename = filename + ".xml";
+
 				var settings = new System.Xml.XmlWriterSettings
 				{
 					Indent = true,
 				};
 
-				var writer = System.Xml.XmlWriter.Create (filename, settings);
+				var writer = System.Xml.XmlWriter.Create (xmlFilename, settings);
 
 				this.accessor.Mandat.Serialize (writer);
 
 				writer.Flush ();
 				writer.Close ();
+
+				System.IO.File.Delete (filename);
+				Compression.GZipCompressFile (xmlFilename, filename);
+
+				System.IO.File.Delete (xmlFilename);
 			}
 			catch (System.Exception ex)
 			{
