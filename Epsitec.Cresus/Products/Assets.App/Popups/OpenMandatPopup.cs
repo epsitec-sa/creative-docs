@@ -29,6 +29,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 10,
 			});
 
+			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = 300,
+				Height                = 15*6,  // place pour 6 lignes des statistiques
+			});
+
 			this.SetDescriptions (list);
 
 			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Open.ToString ();
@@ -77,7 +84,40 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Update ();
 			}
 
+			//	Met à jour le rapport.
+			{
+				var controller = this.GetController (1) as LabelStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.SetLabel (this.Statistics);
+			}
+
 			this.okButton.Enable = !string.IsNullOrEmpty (this.Filename);
+		}
+
+
+		private string Statistics
+		{
+			get
+			{
+				if (!string.IsNullOrEmpty (this.Filename))
+				{
+					try
+					{
+						var info = DataIO.OpenInfoXml (this.Filename + ".info");
+
+						if (!info.IsEmpty && !info.Statistics.IsEmpty)
+						{
+							return info.Statistics.Summary;
+						}
+					}
+					catch (System.Exception ex)
+					{
+						return ex.Message;
+					}
+				}
+
+				return null;
+			}
 		}
 
 

@@ -27,6 +27,15 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public string Summary
+		{
+			get
+			{
+				return string.Format ("{0} objets d'immobilisations<br/>{1} catégories d'immobilisations<br/>{2} groupes<br/>{3} contacts<br/>{4} rapports<br/>{5} plans comptables",
+					this.AssetsCount, this.CategoriesCount, this.GroupsCount, this.PersonsCount, this.ReportsCount, this.AccountsCount);
+			}
+		}
+
 		public static MandatStatistics Empty = new MandatStatistics (-1, -1, -1, -1, -1, -1, -1);
 
 		public readonly int						AssetsCount;
