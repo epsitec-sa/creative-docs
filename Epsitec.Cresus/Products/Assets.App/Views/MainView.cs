@@ -329,14 +329,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
-				var xmlFilename  = filename + ".xml";
-				var infoFilename = filename + ".info";
+				//?var info = DataIO.OpenInfoXml (filename);
 
-				var info = DataIO.OpenInfoXml (infoFilename);
-
-				DataIO.Decompress (filename, xmlFilename);
-				DataIO.OpenMainXml (this.accessor, xmlFilename);
-				DataIO.Delete (xmlFilename);
+				DataIO.Decompress (filename);
+				DataIO.OpenMandat (this.accessor, filename);
+				DataIO.DeleteXml(filename);
 			}
 			catch (System.Exception ex)
 			{
@@ -353,16 +350,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
-				var xmlFilename  = filename + ".xml";
-				var infoFilename = filename + ".info";
-
-				DataIO.SaveInfoXml (infoFilename, this.accessor.Mandat.MandatInfo);
-				DataIO.SaveMainXml (this.accessor, xmlFilename);
-				DataIO.Compress (xmlFilename, filename);
+				DataIO.SaveInfo (filename, this.accessor.Mandat.MandatInfo);
+				DataIO.SaveMandat (this.accessor, filename);
+				DataIO.Compress (filename);
 
 				if ((mode & SaveMandatMode.KeepXml) == 0)
 				{
-					DataIO.Delete (xmlFilename);
+					DataIO.DeleteXml (filename);
 				}
 			}
 			catch (System.Exception ex)

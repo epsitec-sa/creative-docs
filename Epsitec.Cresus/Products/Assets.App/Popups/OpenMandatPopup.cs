@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Label,
 				Width                 = 300,
-				Height                = 15*6,  // place pour 6 lignes des statistiques
+				Height                = 15*MandatStatistics.LinesCount,  // place pour les lignes des statistiques
 			});
 
 			this.SetDescriptions (list);
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					try
 					{
-						var info = DataIO.OpenInfoXml (this.Filename + ".info");
+						var info = DataIO.OpenInfo (this.Filename);
 
 						if (!info.IsEmpty && !info.Statistics.IsEmpty)
 						{

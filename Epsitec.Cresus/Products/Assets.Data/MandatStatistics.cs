@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static MandatStatistics Empty = new MandatStatistics (-1, -1, -1, -1, -1, -1, -1);
 
+		public const int LinesCount = 6;
+
 		public readonly int						AssetsCount;
 		public readonly int						EventsCount;
 		public readonly int						CategoriesCount;

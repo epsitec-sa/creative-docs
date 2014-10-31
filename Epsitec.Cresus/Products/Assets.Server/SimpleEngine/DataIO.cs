@@ -10,10 +10,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DataIO
 	{
-		public static MandatInfo OpenInfoXml(string infoFilename)
+		public static MandatInfo OpenInfo(string filename)
 		{
 			var info = MandatInfo.Empty;
 
+			var infoFilename = DataIO.GetInfoFilename (filename);
 			var reader = System.Xml.XmlReader.Create (infoFilename);
 
 			while (reader.Read ())
@@ -23,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					switch (reader.Name)
 					{
 						case "Info":
-							info = DataIO.OpenInfoXml (reader);
+							info = DataIO.OpenInfo (reader);
 							break;
 					}
 				}
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return info;
 		}
 
-		private static MandatInfo OpenInfoXml(System.Xml.XmlReader reader)
+		private static MandatInfo OpenInfo(System.Xml.XmlReader reader)
 		{
 			int	majRev     = 0;
 			int	minRev     = 0;
@@ -81,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							break;
 
 						case "Statistics":
-							statistics = DataIO.OpenStatisticsXml (reader);
+							statistics = DataIO.OpenStatistics (reader);
 							break;
 					}
 				}
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return new MandatInfo (majRev, minRev, buildRev, idProducer, mandatGuid, statistics);
 		}
 
-		private static MandatStatistics OpenStatisticsXml(System.Xml.XmlReader reader)
+		private static MandatStatistics OpenStatistics(System.Xml.XmlReader reader)
 		{
 			int assetsCount     = 0;
 			int eventsCount     = 0;
@@ -158,13 +159,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static void SaveInfoXml(string infoFilename, MandatInfo info)
+		public static void SaveInfo(string filename, MandatInfo info)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
 				Indent = true,
 			};
 
+			var infoFilename = DataIO.GetInfoFilename (filename);
 			var writer = System.Xml.XmlWriter.Create (infoFilename, settings);
 
 			writer.WriteStartDocument ();
@@ -176,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteElementString ("IdProducer", info.IdProducer.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString ("MandatGuid", info.MandatGuid.ToString ());
 
-			DataIO.SaveStatisticsXml (writer, info.Statistics);
+			DataIO.SaveStatistics (writer, info.Statistics);
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
@@ -185,7 +187,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.Close ();
 		}
 
-		private static void SaveStatisticsXml(System.Xml.XmlWriter writer, MandatStatistics statistics)
+		private static void SaveStatistics(System.Xml.XmlWriter writer, MandatStatistics statistics)
 		{
 			writer.WriteStartElement ("Statistics");
 
@@ -201,20 +203,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static void OpenMainXml(DataAccessor accessor, string xmlFilename)
+		public static void OpenMandat(DataAccessor accessor, string filename)
 		{
+			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var reader = System.Xml.XmlReader.Create (xmlFilename);
 			accessor.Mandat = new DataMandat (reader);
 			reader.Close ();
 		}
 
-		public static void SaveMainXml(DataAccessor accessor, string xmlFilename)
+		public static void SaveMandat(DataAccessor accessor, string filename)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
 				Indent = true,
 			};
 
+			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var writer = System.Xml.XmlWriter.Create (xmlFilename, settings);
 			accessor.Mandat.Serialize (writer);
 
@@ -223,22 +227,49 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public static void Compress(string xmlFilename, string zipFilename)
+		public static void Compress(string filename)
 		{
+			var xmlFilename = DataIO.GetXmlFilename (filename);
+			var zipFilename = DataIO.GetZipFilename (filename);
+
 			System.IO.File.Delete (zipFilename);
 			Compression.GZipCompressFile (xmlFilename, zipFilename);
 		}
 
-		public static void Decompress(string zipFilename, string xmlFilename)
+		public static void Decompress(string filename)
 		{
+			var xmlFilename = DataIO.GetXmlFilename (filename);
+			var zipFilename = DataIO.GetZipFilename (filename);
+
 			System.IO.File.Delete (xmlFilename);
 			Compression.GZipDecompressFile (zipFilename, xmlFilename);
 		}
 
 
-		public static void Delete(string filename)
+		public static void DeleteXml(string filename)
 		{
-			System.IO.File.Delete (filename);
+			var xmlFilename = DataIO.GetXmlFilename (filename);
+			System.IO.File.Delete (xmlFilename);
+		}
+
+
+		private static string GetInfoFilename(string filename)
+		{
+			//	Retourne le nom du fichier court, le seul visible.
+			//	C'est en fait le même que celui qui a été choisi par l'utilisateur.
+			return filename;
+		}
+
+		private static string GetZipFilename(string filename)
+		{
+			//	Retourne le nom du fichier comprimé caché, contenant les données.
+			return filename + ".gz";
+		}
+
+		private static string GetXmlFilename(string filename)
+		{
+			//	Retourne le nom du fichier xml temporaire, habituellement détruit après-coup.
+			return filename + ".xml";
 		}
 	}
 }
