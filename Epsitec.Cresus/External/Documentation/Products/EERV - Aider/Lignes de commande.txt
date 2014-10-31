@@ -484,3 +484,11 @@ Lancé le 26.10.2014
 SVN update > r23886
 
 -echupdate -newechfile:S:\eerv\eerv-2014-10-23.xml -oldechfile:S:\eerv\eerv-2014-10-16.xml -output:s:\eerv\ech-diff-2014-10-23.md
+
+
+Lancé le 31.10.2014
+-------------------
+
+SVN update > r23910
+
+-echupdate -newechfile:S:\eerv\eerv-2014-10-30.xml -oldechfile:S:\eerv\eerv-2014-10-23.xml -output:s:\eerv\ech-diff-2014-10-30.md
