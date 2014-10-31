@@ -293,10 +293,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowSaveMandatPopup(Widget target)
 		{
-			SaveMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
+			SaveMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, this.accessor.GlobalSettings.SaveMandatMode, delegate (string filename, SaveMandatMode mode)
 			{
 				this.accessor.GlobalSettings.MandatFilename = filename;
-				var err = this.SaveMandat (filename);
+				this.accessor.GlobalSettings.SaveMandatMode = mode;
+
+				var err = this.SaveMandat (filename, mode);
 				if (!string.IsNullOrEmpty (err))
 				{
 					MessagePopup.ShowError (target, err);
@@ -350,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return null;  // ok
 		}
 
-		private string SaveMandat(string filename)
+		private string SaveMandat(string filename, SaveMandatMode mode)
 		{
 			try
 			{
@@ -371,7 +373,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				System.IO.File.Delete (filename);
 				Compression.GZipCompressFile (xmlFilename, filename);
 
-				System.IO.File.Delete (xmlFilename);
+				if ((mode & SaveMandatMode.KeepXml) == 0)
+				{
+					System.IO.File.Delete (xmlFilename);
+				}
 			}
 			catch (System.Exception ex)
 			{

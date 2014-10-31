@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -27,6 +28,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = Res.Strings.Popup.AccountsImport.File.ToString (),
 				Width                 = 300,
 				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.SaveMandat.Mode.SaveUI.ToString (),
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.SaveMandat.Mode.SaveUndoRedo.ToString (),
+			});
+
+			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.SaveMandat.Mode.KeepXml.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -60,6 +79,74 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private SaveMandatMode					Mode
+		{
+			get
+			{
+				var mode = SaveMandatMode.None;
+
+				if (this.SaveUI      )  mode |= SaveMandatMode.SaveUI;
+				if (this.SaveUndoRedo)  mode |= SaveMandatMode.SaveUndoRedo;
+				if (this.KeepXml     )  mode |= SaveMandatMode.KeepXml;
+
+				return mode;
+			}
+			set
+			{
+				this.SaveUI       = (value & SaveMandatMode.SaveUI      ) != 0;
+				this.SaveUndoRedo = (value & SaveMandatMode.SaveUndoRedo) != 0;
+				this.KeepXml      = (value & SaveMandatMode.KeepXml     ) != 0;
+			}
+		}
+
+		private bool							SaveUI
+		{
+			get
+			{
+				var controller = this.GetController (1) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (1) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private bool							SaveUndoRedo
+		{
+			get
+			{
+				var controller = this.GetController (2) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (2) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private bool							KeepXml
+		{
+			get
+			{
+				var controller = this.GetController (3) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (3) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
@@ -82,11 +169,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Static Helpers
-		public static void Show(DataAccessor accessor, Widget target, string filename, System.Action<string> action)
+		public static void Show(DataAccessor accessor, Widget target, string filename, SaveMandatMode mode, System.Action<string, SaveMandatMode> action)
 		{
 			var popup = new SaveMandatPopup (accessor)
 			{
 				Filename = filename,
+				Mode     = mode,
 			};
 
 			popup.Create (target, leftOrRight: false);
@@ -95,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (name == "ok")
 				{
-					action (popup.Filename);
+					action (popup.Filename, popup.Mode);
 				}
 			};
 		}

@@ -12,11 +12,14 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
+			this.MandatFilename = "C:\\Users\\Daniel\\Documents\\toto.assets";
+			this.SaveMandatMode = SaveMandatMode.SaveUI | SaveMandatMode.KeepXml;
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}
 
 
-		public string							MandatFilename = "C:\\Users\\Daniel\\Documents\\toto.assets";
+		public string							MandatFilename;
+		public SaveMandatMode					SaveMandatMode;
 		public CopyNameStrategy					CopyNameStrategy;
 
 

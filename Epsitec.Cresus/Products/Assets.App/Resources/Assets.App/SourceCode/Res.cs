@@ -4704,6 +4704,33 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544898));
 						}
 					}
+					public static class Mode
+					{
+						//	designer:str/JUKHI01
+						public static global::Epsitec.Common.Types.FormattedText KeepXml
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544913));
+							}
+						}
+						//	designer:str/JUKFI01
+						public static global::Epsitec.Common.Types.FormattedText SaveUI
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544911));
+							}
+						}
+						//	designer:str/JUKGI01
+						public static global::Epsitec.Common.Types.FormattedText SaveUndoRedo
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544912));
+							}
+						}
+					}
 				}
 				
 				public static class UndoList
@@ -8872,6 +8899,33 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544898);
+						}
+					}
+					public static class Mode
+					{
+						//	designer:str/JUKHI01
+						public static global::Epsitec.Common.Support.Druid KeepXml
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544913);
+							}
+						}
+						//	designer:str/JUKFI01
+						public static global::Epsitec.Common.Support.Druid SaveUI
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544911);
+							}
+						}
+						//	designer:str/JUKGI01
+						public static global::Epsitec.Common.Support.Druid SaveUndoRedo
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544912);
+							}
 						}
 					}
 				}
