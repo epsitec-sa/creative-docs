@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	{
 		public static MandatInfo OpenInfo(string filename)
 		{
+			//	Lit le petit fichier xml d'informations.
 			var info = MandatInfo.Empty;
 
 			var infoFilename = DataIO.GetInfoFilename (filename);
@@ -161,6 +162,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static void SaveInfo(string filename, MandatInfo info)
 		{
+			//	Ecrit le petit fichier xml d'informations.
 			var settings = new System.Xml.XmlWriterSettings
 			{
 				Indent = true,
@@ -205,15 +207,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static void OpenMandat(DataAccessor accessor, string filename)
 		{
+			//	Lit le mandat, soit à partir du long fichier xml s'il existe, sinon à
+			//	partir du fichier compressé.
 			if (DataIO.ExistingXml (filename))
 			{
-				DataIO.OpenXml (accessor, filename);
+				DataIO.OpenXml (accessor, filename);  // lit directement le fichier xml
 			}
 			else
 			{
-				DataIO.Decompress (filename);
-				DataIO.OpenXml (accessor, filename);
-				DataIO.DeleteXml (filename);
+				DataIO.Decompress (filename);         // décompresse le fichier .gz
+				DataIO.OpenXml (accessor, filename);  // puis lit le fichier xml
+				DataIO.DeleteXml (filename);          // pour finalement le supprimer
 			}
 		}
 
@@ -228,9 +232,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
 		{
+			//	Enregistre le mandat dans un fichier compressé. Selon le mode, on conserve
+			//	ou non le long fichier xml.
 			DataIO.SaveInfo (filename, accessor.Mandat.MandatInfo);
 			DataIO.SaveXml (accessor, filename);
 			DataIO.Compress (filename);
+			DataIO.CacheZip (filename);
 
 			if ((mode & SaveMandatMode.KeepXml) == 0)
 			{
@@ -256,6 +263,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void Compress(string filename)
 		{
+			//	Compresse le fichier xml -> gz.
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var zipFilename = DataIO.GetZipFilename (filename);
 
@@ -265,6 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void Decompress(string filename)
 		{
+			//	Décompresse le fichier gz -> xml.
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			var zipFilename = DataIO.GetZipFilename (filename);
 
@@ -275,14 +284,27 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static bool ExistingXml(string filename)
 		{
+			//	Retourne true si le fichier xml existe.
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			return System.IO.File.Exists (xmlFilename);
 		}
 
 		private static void DeleteXml(string filename)
 		{
+			//	Supprime le fichier xml.
 			var xmlFilename = DataIO.GetXmlFilename (filename);
 			System.IO.File.Delete (xmlFilename);
+		}
+
+
+		private static void CacheZip(string filename)
+		{
+			//	Cache le fichier comprimé.
+			var zipFilename = DataIO.GetZipFilename (filename);
+
+			var attributes = System.IO.File.GetAttributes (zipFilename);
+			attributes |= System.IO.FileAttributes.Hidden;
+			System.IO.File.SetAttributes (zipFilename, attributes);
 		}
 
 

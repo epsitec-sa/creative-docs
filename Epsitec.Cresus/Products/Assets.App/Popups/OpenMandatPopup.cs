@@ -98,9 +98,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private string Statistics
 		{
+			//	Retourne les statistiques sur le fichier à ouvrir, obtenues en lisant
+			//	uniquement le petit fichier xml d'informations.
 			get
 			{
-				if (!string.IsNullOrEmpty (this.Filename))
+				if (!string.IsNullOrEmpty (this.Filename))  // a-t-on donné un nom de fichier ?
 				{
 					try
 					{
@@ -113,11 +115,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					}
 					catch (System.Exception ex)
 					{
-						return ex.Message;
+						return ex.Message;  // retourne l'erreur comme statistique
 					}
 				}
 
-				return null;
+				return null;  // pas de statistiques à afficher
 			}
 		}
 
