@@ -329,7 +329,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
-				var xmlFilename = filename + ".xml";
+				var xmlFilename  = filename + ".xml";
+				var infoFilename = filename + ".info";
+
+				var info = DataIO.OpenInfoXml (infoFilename);
 
 				DataIO.Decompress (filename, xmlFilename);
 				DataIO.OpenMainXml (this.accessor, xmlFilename);
@@ -350,8 +353,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
-				var xmlFilename = filename + ".xml";
+				var xmlFilename  = filename + ".xml";
+				var infoFilename = filename + ".info";
 
+				DataIO.SaveInfoXml (infoFilename, this.accessor.Mandat.MandatInfo);
 				DataIO.SaveMainXml (this.accessor, xmlFilename);
 				DataIO.Compress (xmlFilename, filename);
 

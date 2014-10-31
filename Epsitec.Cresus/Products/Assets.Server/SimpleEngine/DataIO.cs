@@ -10,21 +10,212 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DataIO
 	{
-		public static void OpenMainXml(DataAccessor accessor, string filename)
+		public static MandatInfo OpenInfoXml(string infoFilename)
 		{
-			var reader = System.Xml.XmlReader.Create (filename);
-			accessor.Mandat = new DataMandat (reader);
+			var info = MandatInfo.Empty;
+
+			var reader = System.Xml.XmlReader.Create (infoFilename);
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Info":
+							info = DataIO.OpenInfoXml (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+
 			reader.Close ();
+
+			return info;
 		}
 
-		public static void SaveMainXml(DataAccessor accessor, string filename)
+		private static MandatInfo OpenInfoXml(System.Xml.XmlReader reader)
+		{
+			int	majRev     = 0;
+			int	minRev     = 0;
+			int	buildRev   = 0;
+			int	idProducer = 0;
+			var mandatGuid = Guid.Empty;
+			var statistics = MandatStatistics.Empty;
+
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "MajRev":
+							s = reader.ReadElementContentAsString ();
+							majRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "MinRev":
+							s = reader.ReadElementContentAsString ();
+							minRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "BuildRev":
+							s = reader.ReadElementContentAsString ();
+							buildRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "IdProducer":
+							s = reader.ReadElementContentAsString ();
+							idProducer = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "MandatGuid":
+							s = reader.ReadElementContentAsString ();
+							mandatGuid = Guid.Parse (s);
+							break;
+
+						case "Statistics":
+							statistics = DataIO.OpenStatisticsXml (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+
+			return new MandatInfo (majRev, minRev, buildRev, idProducer, mandatGuid, statistics);
+		}
+
+		private static MandatStatistics OpenStatisticsXml(System.Xml.XmlReader reader)
+		{
+			int assetsCount     = 0;
+			int eventsCount     = 0;
+			int categoriesCount = 0;
+			int groupsCount     = 0;
+			int personsCount    = 0;
+			int reportsCount    = 0;
+			int accountsCount   = 0;
+
+			while (reader.Read ())
+			{
+				string s;
+
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "AssetsCount":
+							s = reader.ReadElementContentAsString ();
+							assetsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "EventsCount":
+							s = reader.ReadElementContentAsString ();
+							eventsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "CategoriesCount":
+							s = reader.ReadElementContentAsString ();
+							categoriesCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "GroupsCount":
+							s = reader.ReadElementContentAsString ();
+							groupsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "PersonsCount":
+							s = reader.ReadElementContentAsString ();
+							personsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "ReportsCount":
+							s = reader.ReadElementContentAsString ();
+							reportsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+
+						case "AccountsCount":
+							s = reader.ReadElementContentAsString ();
+							accountsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+
+			return new MandatStatistics (assetsCount, eventsCount, categoriesCount, groupsCount, personsCount, reportsCount, accountsCount);
+		}
+
+
+		public static void SaveInfoXml(string infoFilename, MandatInfo info)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
 				Indent = true,
 			};
 
-			var writer = System.Xml.XmlWriter.Create (filename, settings);
+			var writer = System.Xml.XmlWriter.Create (infoFilename, settings);
+
+			writer.WriteStartDocument ();
+			writer.WriteStartElement ("Info");
+
+			writer.WriteElementString ("MajRev",     info.MajRev    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("MinRev",     info.MinRev    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("BuildRev",   info.BuildRev  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("IdProducer", info.IdProducer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("MandatGuid", info.MandatGuid.ToString ());
+
+			DataIO.SaveStatisticsXml (writer, info.Statistics);
+
+			writer.WriteEndElement ();
+			writer.WriteEndDocument ();
+
+			writer.Flush ();
+			writer.Close ();
+		}
+
+		private static void SaveStatisticsXml(System.Xml.XmlWriter writer, MandatStatistics statistics)
+		{
+			writer.WriteStartElement ("Statistics");
+
+			writer.WriteElementString ("AssetsCount",     statistics.AssetsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("EventsCount",     statistics.EventsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("CategoriesCount", statistics.CategoriesCount.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("GroupsCount",     statistics.GroupsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("PersonsCount",    statistics.PersonsCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("ReportsCount",    statistics.ReportsCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("AccountsCount",   statistics.AccountsCount  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+
+			writer.WriteEndElement ();
+		}
+
+
+		public static void OpenMainXml(DataAccessor accessor, string xmlFilename)
+		{
+			var reader = System.Xml.XmlReader.Create (xmlFilename);
+			accessor.Mandat = new DataMandat (reader);
+			reader.Close ();
+		}
+
+		public static void SaveMainXml(DataAccessor accessor, string xmlFilename)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (xmlFilename, settings);
 			accessor.Mandat.Serialize (writer);
 
 			writer.Flush ();

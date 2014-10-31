@@ -54,6 +54,8 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="MandatStatistics.cs" />
+    <Compile Include="MandatInfo.cs" />
     <Compile Include="IViewState.cs" />
     <Compile Include="SaveMandatMode.cs" />
     <Compile Include="UndoableDictionary.cs" />

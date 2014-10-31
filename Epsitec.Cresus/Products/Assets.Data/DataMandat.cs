@@ -96,6 +96,15 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public MandatInfo						MandatInfo
+		{
+			get
+			{
+				var statistics = new MandatStatistics (this.assets.Count, 0, this.categories.Count, this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
+				return new MandatInfo (1, 0, 1234, 10, this.guid, statistics);
+			}
+		}
+
 
 		public GuidList<DataObject> GetData(BaseType type)
 		{
