@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	des fins de lignes.
 			var list = new List<string> ();
 
-			foreach (var childrenGuid in GroupsLogic.GetChildrensGuids (this.accessor, groupGuid))
+			foreach (var childrenGuid in GroupsLogic.GetSortedChildrensGuids (this.accessor, groupGuid))
 			{
 				var name = GroupsLogic.GetShortName (this.accessor, childrenGuid);
 				list.Add (name);
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					var controller = this.GetController (rank) as ComboStackedController;
 					System.Diagnostics.Debug.Assert (controller != null);
 
-					var childrenGuids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToList ();
+					var childrenGuids = GroupsLogic.GetSortedChildrensGuids (this.accessor, guid).ToList ();
 
 					int index = childrenGuids.IndexOf (selectedGuid);
 					if (index != -1)
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (controller.Value.HasValue)
 				{
-					var guids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToArray ();
+					var guids = GroupsLogic.GetSortedChildrensGuids (this.accessor, guid).ToArray ();
 
 					int sel = controller.Value.Value;
 					if (sel >= 0 && sel < guids.Length)
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 					if (controller.Value.HasValue)
 					{
-						var guids = GroupsLogic.GetChildrensGuids (this.accessor, guid).ToArray ();
+						var guids = GroupsLogic.GetSortedChildrensGuids (this.accessor, guid).ToArray ();
 
 						int sel = controller.Value.Value;
 						if (sel >= 0 && sel < guids.Length)

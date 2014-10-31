@@ -94,6 +94,7 @@
     <Compile Include="BusinessLogic\AccountType.cs" />
     <Compile Include="Resources\Assets.Server\SourceCode\Res.cs" />
     <Compile Include="SimpleEngine\AbstractCleanerAgent.cs" />
+    <Compile Include="SimpleEngine\DataIO.cs" />
     <Compile Include="SimpleEngine\UserFieldsAccessor.cs" />
     <Compile Include="SimpleEngine\DataClipboard.cs" />
     <Compile Include="BusinessLogic\AccountsImport.cs" />

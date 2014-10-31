@@ -29,15 +29,57 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static IEnumerable<Guid> GetAllChildrensGuid(DataAccessor accessor, Guid groupGuid)
 		{
 			//	Retourne la liste de tous les groupes fils, non triée.
+			//	Par exemple, avec:
+			//	
+			//		Catégorie MCH2
+			//		  Routes
+			//		  Immeubles
+			//		    Bâtiments
+			//		    Ecoles
+			//		  Véhicules
+			//		    Camions
+			//		    Voitures
+			//
+			//	Les fils de "Catégorie MCH2" retournent:
+			//
+			//		Routes
+			//		Immeubles
+			//		Bâtiments
+			//		Ecoles
+			//		Véhicules
+			//		Camions
+			//		Voitures
+
 			return accessor.Mandat.GetData (BaseType.Groups)
 				.Where (x => GroupsLogic.IsChildren (accessor, groupGuid, x.Guid))
 				.Select (x => x.Guid);
 		}
 
-		public static IEnumerable<Guid> GetChildrensGuids(DataAccessor accessor, Guid groupGuid)
+		public static IEnumerable<Guid> GetSortedChildrensGuids(DataAccessor accessor, Guid groupGuid)
 		{
 			//	Retourne la liste des groupes fils pour peupler un combo, triée par
 			//	ordre alphabétique.
+			//	Par exemple, avec:
+			//	
+			//		Catégorie MCH2
+			//		  Routes
+			//		  Immeubles
+			//		    Bâtiments
+			//		    Ecoles
+			//		  Véhicules
+			//		    Camions
+			//		    Voitures
+			//
+			//	Les fils de "Catégorie MCH2" retournent:
+			//
+			//		Routes
+			//		Bâtiments
+			//		Ecoles
+			//		Camions
+			//		Voitures
+			//	
+			//	Immeubles et Véhicules ne sont pas retournés, car ils ont eux-mêmes des fils.
+
 			return accessor.Mandat.GetData (BaseType.Groups)
 				.Where (x => GroupsLogic.IsChildren (accessor, groupGuid, x.Guid) && GroupsLogic.IsFinal (accessor, x.Guid))
 				.OrderBy (x => GroupsLogic.GetShortName (accessor, x.Guid))
