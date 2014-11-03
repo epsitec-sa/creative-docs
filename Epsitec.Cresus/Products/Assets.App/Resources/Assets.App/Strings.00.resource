@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <bundle name="Strings" type="String" culture="fr">
-  <data name="Popup.NewMandat.Title" id="K">Création d'un nouveau mandat</data>
+  <data name="Popup.NewMandat.Title" id="K">Création d'un nouveau fichier</data>
   <data name="Popup.NewMandat.Sample" id="K1">Avec des exemples</data>
-  <data name="Popup.NewMandat.Name" id="K2">Nom du mandat</data>
+  <data name="Popup.NewMandat.Name" id="K2">Nom</data>
   <data name="Popup.NewMandat.Date" id="K3">Date de début</data>
   <data name="Popup.Button.Create" id="K4">Créer</data>
   <data name="Popup.Button.Ok" id="K5">D'accord</data>
@@ -359,7 +359,7 @@
   <data name="Enum.PageFormatType.A5" id="KJF">A5</data>
   <data name="Enum.PageFormatType.Letter" id="KKF">Letter</data>
   <data name="Enum.PageFormatType.Legal" id="KLF">Legal</data>
-  <data name="Enum.DateType.BeginMandat" id="KMF">Début du mandat</data>
+  <data name="Enum.DateType.BeginMandat" id="KMF">Début du fichier</data>
   <data name="Enum.DateType.BeginPreviousYear" id="KNF">Début de l'année précédente</data>
   <data name="Enum.DateType.EndPreviousYear" id="KOF">Fin de l'année précédente</data>
   <data name="Enum.DateType.BeginCurrentYear" id="KPF">Début de l'année courante</data>
@@ -423,14 +423,14 @@
   <data name="Popup.UndoList.Redo.TitleMany" id="KUH">Rétablir {0} actions</data>
   <data name="Popup.UndoList.Redo.TitleOne" id="KVH">Rétablir {0} action</data>
   <data name="Popup.Accounts.Title" id="K0I">Importation d'un plan comptable Crésus (fichier .cre)</data>
-  <data name="Popup.OpenMandat.Title" id="K1I">Ouverture d'un mandat</data>
-  <data name="Popup.SaveMandat.Title" id="K2I">Enregistrement du mandat</data>
+  <data name="Popup.OpenMandat.Title" id="K1I">Ouverture d'un fichier</data>
+  <data name="Popup.SaveMandat.Title" id="K2I">Enregistrement du fichier</data>
   <data name="Popup.Button.Save" id="K3I">Enregistrer</data>
   <data name="FilenameStackedController.Browse" id="K4I">Parcourir...</data>
-  <data name="Popup.OpenMandat.DialogTitle" id="K5I">Mandat à ouvrir</data>
-  <data name="Popup.OpenMandat.DialogFormatName" id="K6I">Mandat Crésus Immobilisations</data>
-  <data name="Popup.SaveMandat.DialogTitle" id="K7I">Mandat à enregistrer</data>
-  <data name="Popup.SaveMandat.DialogFormatName" id="K8I">Mandat Crésus Immobilisations</data>
+  <data name="Popup.OpenMandat.DialogTitle" id="K5I">Ouvrir</data>
+  <data name="Popup.OpenMandat.DialogFormatName" id="K6I">Crésus Immobilisations</data>
+  <data name="Popup.SaveMandat.DialogTitle" id="K7I">Enregistrer</data>
+  <data name="Popup.SaveMandat.DialogFormatName" id="K8I">Crésus Immobilisations</data>
   <data name="Popup.Export.DialogTitle" id="K9I">Nom du fichier à exporter</data>
   <data name="Popup.AccountsImport.DialogTitle" id="KAI">Plan comptable Crésus à importer</data>
   <data name="Popup.AccountsImport.DialogFormatName" id="KBI">Plan comptable Crésus</data>
