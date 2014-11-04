@@ -491,6 +491,43 @@ namespace Epsitec.Aider.Entities
 				return request;
 			}
 
+			if (query.CommandId == Res.Commands.Base.ShowAiderEmployee.CommandId)
+			{
+				var contact             = new AiderContactEntity ();
+
+				var example            = new AiderEmployeeEntity ()
+				{
+					PersonContact = contact
+				};
+
+				request.RootEntity      = example;
+				request.RequestedEntity = contact;
+
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
+
+			if (query.CommandId == Res.Commands.Base.ShowAiderReferee.CommandId)
+			{
+				var contact             = new AiderContactEntity ();
+
+				var employee            = new AiderEmployeeEntity ()
+				{
+					PersonContact = contact
+				};
+
+				var example            = new AiderRefereeEntity ()
+				{
+					Employee = employee
+				};
+
+				request.RootEntity      = example;
+				request.RequestedEntity = contact;
+
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
+
 			throw new NotImplementedException ("CommandId for this query is not implemented");
 		}
 
