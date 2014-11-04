@@ -439,5 +439,5 @@
   <data name="ToolbarControllers.GroupsTreeTable.DeleteErrorChildrens" id="KEI">Ce groupe contient {0} sous-groupes. Par conséquent, il ne peut pas être supprimé.</data>
   <data name="Popup.SaveMandat.Mode.SaveUI" id="KFI">Enregistrer les réglages de l'interface</data>
   <data name="Popup.SaveMandat.Mode.SaveUndoRedo" id="KGI">Enregistrer les informations pour annuler/rétablir</data>
-  <data name="Popup.SaveMandat.Mode.KeepXml" id="KHI">Conserver le fichier xml non comprimé</data>
+  <data name="Popup.SaveMandat.Mode.KeepXml" id="KHI">Conserver les fichiers xml non comprimés</data>
 </bundle>

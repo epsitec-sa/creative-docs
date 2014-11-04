@@ -12,6 +12,6 @@ namespace Epsitec.Cresus.Assets.Data
 		None         = 0x0000,
 		SaveUI       = 0x0001,
 		SaveUndoRedo = 0x0002,
-		KeepXml      = 0x0004,
+		KeepUnzip    = 0x0004,  // pour faciliter le debug
 	}
 }

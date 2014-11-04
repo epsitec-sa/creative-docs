@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				if (this.SaveUI      )  mode |= SaveMandatMode.SaveUI;
 				if (this.SaveUndoRedo)  mode |= SaveMandatMode.SaveUndoRedo;
-				if (this.KeepXml     )  mode |= SaveMandatMode.KeepXml;
+				if (this.KeepXml     )  mode |= SaveMandatMode.KeepUnzip;
 
 				return mode;
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				this.SaveUI       = (value & SaveMandatMode.SaveUI      ) != 0;
 				this.SaveUndoRedo = (value & SaveMandatMode.SaveUndoRedo) != 0;
-				this.KeepXml      = (value & SaveMandatMode.KeepXml     ) != 0;
+				this.KeepXml      = (value & SaveMandatMode.KeepUnzip     ) != 0;
 			}
 		}
 
