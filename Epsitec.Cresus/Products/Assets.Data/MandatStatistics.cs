@@ -8,22 +8,22 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public struct MandatStatistics
 	{
-		public MandatStatistics(int assetsCount, int eventsCount, int categoriesCount, int groupsCount, int personsCount, int reportsCount, int accountsCount)
+		public MandatStatistics(int assetCount, int eventCount, int categoryCount, int groupCount, int personCount, int reportCount, int accountCount)
 		{
-			this.AssetsCount	 = assetsCount;
-			this.EventsCount	 = eventsCount;
-			this.CategoriesCount = categoriesCount;
-			this.GroupsCount	 = groupsCount;
-			this.PersonsCount	 = personsCount;
-			this.ReportsCount	 = reportsCount;
-			this.AccountsCount	 = accountsCount;
+			this.AssetCount	   = assetCount;
+			this.EventCount	   = eventCount;
+			this.CategoryCount = categoryCount;
+			this.GroupCount	   = groupCount;
+			this.PersonCount   = personCount;
+			this.ReportCount   = reportCount;
+			this.AccountCount  = accountCount;
 		}
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return this.AssetsCount == -1;
+				return this.AssetCount == -1;
 			}
 		}
 
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return string.Format ("{0} objets d'immobilisations<br/>{1} catégories d'immobilisations<br/>{2} groupes<br/>{3} contacts<br/>{4} rapports<br/>{5} plans comptables",
-					this.AssetsCount, this.CategoriesCount, this.GroupsCount, this.PersonsCount, this.ReportsCount, this.AccountsCount);
+					this.AssetCount, this.CategoryCount, this.GroupCount, this.PersonCount, this.ReportCount, this.AccountCount);
 			}
 		}
 
@@ -40,12 +40,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public const int LinesCount = 6;
 
-		public readonly int						AssetsCount;
-		public readonly int						EventsCount;
-		public readonly int						CategoriesCount;
-		public readonly int						GroupsCount;
-		public readonly int						PersonsCount;
-		public readonly int						ReportsCount;
-		public readonly int						AccountsCount;
+		public readonly int						AssetCount;
+		public readonly int						EventCount;
+		public readonly int						CategoryCount;
+		public readonly int						GroupCount;
+		public readonly int						PersonCount;
+		public readonly int						ReportCount;
+		public readonly int						AccountCount;
 	}
 }

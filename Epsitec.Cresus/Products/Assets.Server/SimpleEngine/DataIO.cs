@@ -98,13 +98,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static MandatStatistics OpenStatistics(System.Xml.XmlReader reader)
 		{
-			int assetsCount     = 0;
-			int eventsCount     = 0;
-			int categoriesCount = 0;
-			int groupsCount     = 0;
-			int personsCount    = 0;
-			int reportsCount    = 0;
-			int accountsCount   = 0;
+			int assetCount    = 0;
+			int eventCount    = 0;
+			int categoryCount = 0;
+			int groupCount    = 0;
+			int personCount   = 0;
+			int reportCount   = 0;
+			int accountCount  = 0;
 
 			while (reader.Read ())
 			{
@@ -114,39 +114,39 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					switch (reader.Name)
 					{
-						case "AssetsCount":
+						case "AssetCount":
 							s = reader.ReadElementContentAsString ();
-							assetsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							assetCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "EventsCount":
+						case "EventCount":
 							s = reader.ReadElementContentAsString ();
-							eventsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							eventCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "CategoriesCount":
+						case "CategoryCount":
 							s = reader.ReadElementContentAsString ();
-							categoriesCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							categoryCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "GroupsCount":
+						case "GroupCount":
 							s = reader.ReadElementContentAsString ();
-							groupsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							groupCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "PersonsCount":
+						case "PersonCount":
 							s = reader.ReadElementContentAsString ();
-							personsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							personCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "ReportsCount":
+						case "ReportCount":
 							s = reader.ReadElementContentAsString ();
-							reportsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							reportCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 
-						case "AccountsCount":
+						case "AccountCount":
 							s = reader.ReadElementContentAsString ();
-							accountsCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							accountCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
 							break;
 					}
 				}
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			return new MandatStatistics (assetsCount, eventsCount, categoriesCount, groupsCount, personsCount, reportsCount, accountsCount);
+			return new MandatStatistics (assetCount, eventCount, categoryCount, groupCount, personCount, reportCount, accountCount);
 		}
 
 
@@ -193,13 +193,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			writer.WriteStartElement ("Statistics");
 
-			writer.WriteElementString ("AssetsCount",     statistics.AssetsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("EventsCount",     statistics.EventsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("CategoriesCount", statistics.CategoriesCount.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("GroupsCount",     statistics.GroupsCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("PersonsCount",    statistics.PersonsCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("ReportsCount",    statistics.ReportsCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("AccountsCount",   statistics.AccountsCount  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("AssetCount",    statistics.AssetCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("EventCount",    statistics.EventCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("CategoryCount", statistics.CategoryCount.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("GroupCount",    statistics.GroupCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("PersonCount",   statistics.PersonCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("ReportCount",   statistics.ReportCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("AccountCount",  statistics.AccountCount  .ToString (System.Globalization.CultureInfo.InvariantCulture));
 
 			writer.WriteEndElement ();
 		}
