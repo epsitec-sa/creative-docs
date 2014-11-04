@@ -40,12 +40,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public const int LinesCount = 6;
 
-		public readonly int						AssetCount;
-		public readonly int						EventCount;
-		public readonly int						CategoryCount;
-		public readonly int						GroupCount;
-		public readonly int						PersonCount;
-		public readonly int						ReportCount;
-		public readonly int						AccountCount;
+		public readonly int							AssetCount;
+		public readonly int							EventCount;
+		public readonly int							CategoryCount;
+		public readonly int							GroupCount;
+		public readonly int							PersonCount;
+		public readonly int							ReportCount;
+		public readonly int							AccountCount;
 	}
 }

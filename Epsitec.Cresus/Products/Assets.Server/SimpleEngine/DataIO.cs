@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					switch (reader.Name)
 					{
-						case "Info":
+						case "FileDescription":
 							info = DataIO.OpenInfo (reader);
 							break;
 					}
@@ -42,47 +42,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static MandatInfo OpenInfo(System.Xml.XmlReader reader)
 		{
-			int	majRev     = 0;
-			int	minRev     = 0;
-			int	buildRev   = 0;
-			int	idProducer = 0;
-			var mandatGuid = Guid.Empty;
-			var statistics = MandatStatistics.Empty;
+			string softwareId       = null;
+			string softwareVersion  = null;
+			string softwareLanguage = null;
+			string fileName         = null;
+			var    fileGuid         = Guid.Empty;
+			string fileVersion      = null;
+			var    statistics       = MandatStatistics.Empty;
 
 			while (reader.Read ())
 			{
-				string s;
-
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					switch (reader.Name)
 					{
-						case "MajRev":
-							s = reader.ReadElementContentAsString ();
-							majRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+						case "Software":
+							softwareId       = reader["id"];
+							softwareVersion  = reader["ver"];
+							softwareLanguage = reader["lang"];
 							break;
 
-						case "MinRev":
-							s = reader.ReadElementContentAsString ();
-							minRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+						case "File":
+							fileName    = reader["name"];
+							fileGuid    = Guid.Parse (reader["id"]);
+							fileVersion = reader["ver"];
 							break;
 
-						case "BuildRev":
-							s = reader.ReadElementContentAsString ();
-							buildRev = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "IdProducer":
-							s = reader.ReadElementContentAsString ();
-							idProducer = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "MandatGuid":
-							s = reader.ReadElementContentAsString ();
-							mandatGuid = Guid.Parse (s);
-							break;
-
-						case "Statistics":
+						case "About":
 							statistics = DataIO.OpenStatistics (reader);
 							break;
 					}
@@ -93,7 +79,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			return new MandatInfo (majRev, minRev, buildRev, idProducer, mandatGuid, statistics);
+			return new MandatInfo (softwareId, softwareVersion, softwareLanguage, fileName, fileGuid, fileVersion, statistics);
 		}
 
 		private static MandatStatistics OpenStatistics(System.Xml.XmlReader reader)
@@ -108,46 +94,42 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			while (reader.Read ())
 			{
-				string s;
-
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					switch (reader.Name)
+					if (reader.Name == "Data")
 					{
-						case "AssetCount":
-							s = reader.ReadElementContentAsString ();
-							assetCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+						int i = int.Parse (reader["value"], System.Globalization.CultureInfo.InvariantCulture);
 
-						case "EventCount":
-							s = reader.ReadElementContentAsString ();
-							eventCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+						switch (reader["name"])
+						{
+							case "AssetCount":
+								assetCount = i;
+								break;
 
-						case "CategoryCount":
-							s = reader.ReadElementContentAsString ();
-							categoryCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+							case "EventCount":
+								eventCount = i;
+								break;
 
-						case "GroupCount":
-							s = reader.ReadElementContentAsString ();
-							groupCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+							case "CategoryCount":
+								categoryCount = i;
+								break;
 
-						case "PersonCount":
-							s = reader.ReadElementContentAsString ();
-							personCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+							case "GroupCount":
+								groupCount = i;
+								break;
 
-						case "ReportCount":
-							s = reader.ReadElementContentAsString ();
-							reportCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+							case "PersonCount":
+								personCount = i;
+								break;
 
-						case "AccountCount":
-							s = reader.ReadElementContentAsString ();
-							accountCount = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
+							case "ReportCount":
+								reportCount = i;
+								break;
+
+							case "AccountCount":
+								accountCount = i;
+								break;
+						}
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -172,13 +154,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var writer = System.Xml.XmlWriter.Create (infoFilename, settings);
 
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Info");
+			writer.WriteStartElement ("FileDescription");
 
-			writer.WriteElementString ("MajRev",     info.MajRev    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("MinRev",     info.MinRev    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("BuildRev",   info.BuildRev  .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("IdProducer", info.IdProducer.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("MandatGuid", info.MandatGuid.ToString ());
+			writer.WriteStartElement    ("Software");
+			writer.WriteAttributeString ("id",   info.SoftwareId);
+			writer.WriteAttributeString ("ver",  info.SoftwareVersion);
+			writer.WriteAttributeString ("lang", info.SoftwareLanguage);
+			writer.WriteEndElement      ();
+
+			writer.WriteStartElement    ("File");
+			writer.WriteAttributeString ("name", info.FileName);
+			writer.WriteAttributeString ("id",   info.FileGuid.ToString ());
+			writer.WriteAttributeString ("ver",  info.FileVersion);
+			writer.WriteEndElement      ();
 
 			DataIO.SaveStatistics (writer, info.Statistics);
 
@@ -191,17 +179,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void SaveStatistics(System.Xml.XmlWriter writer, MandatStatistics statistics)
 		{
-			writer.WriteStartElement ("Statistics");
+			writer.WriteStartElement ("About");
 
-			writer.WriteElementString ("AssetCount",    statistics.AssetCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("EventCount",    statistics.EventCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("CategoryCount", statistics.CategoryCount.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("GroupCount",    statistics.GroupCount    .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("PersonCount",   statistics.PersonCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("ReportCount",   statistics.ReportCount   .ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("AccountCount",  statistics.AccountCount  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			DataIO.SaveStatistics (writer, "AssetCount",    statistics.AssetCount   );
+			DataIO.SaveStatistics (writer, "EventCount",    statistics.EventCount   );
+			DataIO.SaveStatistics (writer, "CategoryCount", statistics.CategoryCount);
+			DataIO.SaveStatistics (writer, "GroupCount",    statistics.GroupCount   );
+			DataIO.SaveStatistics (writer, "PersonCount",   statistics.PersonCount  );
+			DataIO.SaveStatistics (writer, "ReportCount",   statistics.ReportCount  );
+			DataIO.SaveStatistics (writer, "AccountCount",  statistics.AccountCount );
 
 			writer.WriteEndElement ();
+		}
+
+		private static void SaveStatistics(System.Xml.XmlWriter writer, string name, int count)
+		{
+			writer.WriteStartElement    ("Data");
+			writer.WriteAttributeString ("name",  name);
+			writer.WriteAttributeString ("value", count.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteEndElement      ();
 		}
 
 
