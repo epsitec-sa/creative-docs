@@ -53,18 +53,6 @@ namespace Epsitec.Aider.Override
 			{
 				return this.GetAiderMailingAdditionalFilter ((AiderMailingEntity) example);
 			}
-			else if (entityType == typeof (AiderEmployeeEntity))
-			{
-				return this.GetAiderEmployeeEntityFilter ((AiderEmployeeEntity) example);
-			}
-			else if (entityType == typeof (AiderRefereeEntity))
-			{
-				return this.GetAiderRefereeEntityFilter ((AiderRefereeEntity) example);
-			}
-			else if (entityType == typeof (AiderEmployeeJobEntity))
-			{
-				return this.GetAiderEmployeeJobEntityFilter ((AiderEmployeeJobEntity) example);
-			}
 
 			return null;
 		}
