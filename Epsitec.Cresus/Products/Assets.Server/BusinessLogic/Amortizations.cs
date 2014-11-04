@@ -32,14 +32,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return errors;
 		}
 
-		public List<Error> Fix()
+		public List<Error> Fix(System.DateTime endDate)
 		{
 			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.GetNodes ())
 			{
-				errors.AddRange (this.Fix (node.Guid));
+				errors.AddRange (this.Fix (endDate, node.Guid));
 			}
 
 			return errors;
@@ -86,14 +86,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return errors;
 		}
 
-		public List<Error> Fix(Guid objectGuid)
+		public List<Error> Fix(System.DateTime endDate, Guid objectGuid)
 		{
 			var errors = new List<Error> ();
 
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = this.FixEvents (obj, DateRange.Full);
+			int count = this.FixEvents (obj, new DateRange (System.DateTime.MinValue, endDate));
 
 			this.accessor.WarningsDirty = true;
 

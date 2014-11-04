@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		private void Amortize(DateRange range, Guid objectGuid)
 		{
 			this.amortizations.Create (range, objectGuid);
-			this.amortizations.Fix (objectGuid);
+			this.amortizations.Fix (System.DateTime.MaxValue, objectGuid);
 		}
 
 

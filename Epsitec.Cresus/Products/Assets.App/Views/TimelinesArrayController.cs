@@ -814,7 +814,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.timelinesToolbar.GetTarget (e);
 
-			this.ShowAmortizationsPopup (target, false, false,
+			this.ShowAmortizationsPopup (target, false, true,
 				Res.Strings.Popup.Amortizations.Fix.Title.ToString (),
 				Res.Strings.Popup.Amortizations.Fix.One.ToString (),
 				Res.Strings.Popup.Amortizations.Fix.All.ToString (),
@@ -1048,11 +1048,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (allObjects)
 			{
-				this.amortizations.Fix ();
+				this.amortizations.Fix (processRange.ExcludeTo);
 			}
 			else
 			{
-				this.amortizations.Fix (this.SelectedGuid);
+				this.amortizations.Fix (processRange.ExcludeTo, this.SelectedGuid);
 			}
 
 			this.UpdateData ();
