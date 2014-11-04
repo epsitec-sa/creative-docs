@@ -68,6 +68,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							fileVersion = reader["ver"];
 							break;
 
+						case "Templates":
+							break;
+
+						case "FileSources":
+							break;
+
 						case "About":
 							statistics = DataIO.OpenStatistics (reader);
 							break;
@@ -170,6 +176,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteAttributeString ("name", info.FileName);
 			writer.WriteAttributeString ("id",   info.FileGuid.ToString ());
 			writer.WriteAttributeString ("ver",  info.FileVersion);
+			writer.WriteEndElement      ();
+
+			writer.WriteStartElement    ("Templates");
+			writer.WriteEndElement      ();
+
+			writer.WriteStartElement    ("FileSources");
 			writer.WriteEndElement      ();
 
 			DataIO.SaveStatistics (writer, info.Statistics);
