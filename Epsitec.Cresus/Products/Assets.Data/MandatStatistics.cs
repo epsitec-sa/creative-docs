@@ -31,14 +31,14 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			get
 			{
-				return string.Format ("{0} objets d'immobilisations<br/>{1} catégories d'immobilisations<br/>{2} groupes<br/>{3} contacts<br/>{4} rapports<br/>{5} plans comptables",
-					this.AssetCount, this.CategoryCount, this.GroupCount, this.PersonCount, this.ReportCount, this.AccountCount);
+				return string.Format (Res.Strings.Mandat.Statistics.Summary.ToString (),
+					this.AssetCount, this.EventCount, this.CategoryCount, this.GroupCount, this.PersonCount, this.ReportCount, this.AccountCount);
 			}
 		}
 
 		public static MandatStatistics Empty = new MandatStatistics (-1, -1, -1, -1, -1, -1, -1);
 
-		public const int LinesCount = 6;
+		public const int LinesCount = 7;
 
 		public readonly int							AssetCount;
 		public readonly int							EventCount;

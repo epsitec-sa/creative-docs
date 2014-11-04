@@ -438,6 +438,21 @@ namespace Epsitec.Cresus.Assets.Data
 				}
 			}
 			
+			public static class Mandat
+			{
+				public static class Statistics
+				{
+					//	designer:str/HUKP101
+					public static global::Epsitec.Common.Types.FormattedText Summary
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544377));
+						}
+					}
+				}
+			}
+			
 			public static class ObjectField
 			{
 				//	designer:str/HUK0001
@@ -972,6 +987,21 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544361);
+						}
+					}
+				}
+			}
+			
+			public static class Mandat
+			{
+				public static class Statistics
+				{
+					//	designer:str/HUKP101
+					public static global::Epsitec.Common.Support.Druid Summary
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544377);
 						}
 					}
 				}

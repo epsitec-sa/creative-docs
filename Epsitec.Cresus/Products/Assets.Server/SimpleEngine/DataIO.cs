@@ -96,7 +96,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Data")
+					if (reader.Name == "Summary")
+					{
+						string summary = reader["text"];
+					}
+					else if (reader.Name == "Data")
 					{
 						int i = int.Parse (reader["value"], System.Globalization.CultureInfo.InvariantCulture);
 
@@ -180,6 +184,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static void SaveStatistics(System.Xml.XmlWriter writer, MandatStatistics statistics)
 		{
 			writer.WriteStartElement ("About");
+
+			writer.WriteStartElement ("Summary");
+			writer.WriteAttributeString ("text", statistics.Summary);
+			writer.WriteEndElement ();
 
 			DataIO.SaveStatistics (writer, "AssetCount",    statistics.AssetCount   );
 			DataIO.SaveStatistics (writer, "EventCount",    statistics.EventCount   );
