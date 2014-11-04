@@ -387,5 +387,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			return filename + ".data.xml";
 		}
+
+
+		public const string Extension = ".crassets";
 	}
 }

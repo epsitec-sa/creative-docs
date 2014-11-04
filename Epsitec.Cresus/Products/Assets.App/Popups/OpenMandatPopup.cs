@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Value = this.Filename;
 
 				controller.DialogTitle      = Res.Strings.Popup.OpenMandat.DialogTitle.ToString ();
-				controller.DialogExtensions = ".assets";
+				controller.DialogExtensions = DataIO.Extension;
 				controller.DialogFormatName = Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ();
 				controller.Save             = false;
 
