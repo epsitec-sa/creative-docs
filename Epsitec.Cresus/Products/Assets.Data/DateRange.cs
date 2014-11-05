@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Assets.Data
 					{
 						case "IncludeFrom":
 							s = reader.ReadElementContentAsString ();
-							this.IncludeFrom = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.IncludeFrom = s.ParseDateIO ();
 							break;
 
 						case "ExcludeTo":
 							s = reader.ReadElementContentAsString ();
-							this.ExcludeTo = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.ExcludeTo = s.ParseDateIO ();
 							break;
 					}
 				}
@@ -191,8 +191,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
-			writer.WriteElementString ("IncludeFrom", this.IncludeFrom.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("ExcludeTo",   this.ExcludeTo  .ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("IncludeFrom", this.IncludeFrom.ToStringIO ());
+			writer.WriteElementString ("ExcludeTo",   this.ExcludeTo  .ToStringIO ());
 			writer.WriteEndElement ();
 		}
 

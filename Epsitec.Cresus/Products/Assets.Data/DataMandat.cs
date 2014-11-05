@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Reports;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -221,7 +222,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 			this.Guid.Serialize (writer, "Guid");
 			writer.WriteElementString ("Name", this.Name);
-			writer.WriteElementString ("StartDate", this.StartDate.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("StartDate", this.StartDate.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}
@@ -352,7 +353,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 						case "StartDate":
 							var s = reader.ReadElementContentAsString ();
-							this.startDate = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.startDate = s.ParseDateIO ();
 							break;
 					}
 				}

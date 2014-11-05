@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -122,7 +123,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 						case "Date":
 							s = reader.ReadElementContentAsString ();
-							this.Date = System.DateTime.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.Date = s.ParseDateIO ();
 							break;
 
 						case "AssetGuid":
@@ -828,7 +829,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			writer.WriteElementString ("EntryScenario", this.EntryScenario.ToString ());
-			writer.WriteElementString ("Date", this.Date.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("Date", this.Date.ToStringIO ());
 			writer.WriteElementString ("AssetGuid", this.AssetGuid.ToString ());
 			writer.WriteElementString ("EventGuid", this.EventGuid.ToString ());
 			writer.WriteElementString ("EntryGuid", this.EntryGuid.ToString ());
