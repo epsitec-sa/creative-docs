@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 					if (reader.Name == "Value")
 					{
 						var s = reader.ReadElementContentAsString ();
-						this.Value = s.ParseDateIO ();
+						this.Value = s.ParseDate ();
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

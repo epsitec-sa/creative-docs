@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 						case "Type":
 							var s = reader.ReadElementContentAsString ();
-							this.Type = (EventType) System.Enum.Parse (typeof (EventType), s);
+							this.Type = (EventType) IOHelpers.ParseType (s, typeof (EventType));
 							break;
 
 						case "Timestamp":
@@ -217,7 +218,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement ("Event");
 
 			this.guid.Serialize (writer, "Guid");
-			writer.WriteElementString ("Type", this.Type.ToString ());
+			writer.WriteElementString ("Type", this.Type.ToStringIO ());
 			this.Timestamp.Serialize (writer, "Timestamp");
 			this.SerializeProperties (writer);
 

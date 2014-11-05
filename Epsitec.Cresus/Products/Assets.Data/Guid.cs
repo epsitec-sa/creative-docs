@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -21,7 +22,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Text)
 				{
-					var g = Guid.Parse (reader.Value);
+					var g = reader.Value.ParseGuid ();
 					this.guid = g.guid;
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			writer.WriteElementString (name, this.ToString ());
+			writer.WriteElementString (name, this.ToStringIO ());
 		}
 
 

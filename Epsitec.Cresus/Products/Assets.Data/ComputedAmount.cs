@@ -144,13 +144,13 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public ComputedAmount(System.Xml.XmlReader reader)
 		{
-			this.InitialAmount   = DataIO.ReadDecimalAttribute (reader, "InitialAmount");
-			this.ArgumentAmount  = DataIO.ReadDecimalAttribute (reader, "ArgumentAmount");
-			this.FinalAmount     = DataIO.ReadDecimalAttribute (reader, "FinalAmount");
-			this.Computed        = bool.Parse (reader["Computed"]);
-			this.Subtract        = bool.Parse (reader["Subtract"]);
-			this.Rate            = bool.Parse (reader["Rate"]);
-			this.ArgumentDefined = bool.Parse (reader["ArgumentDefined"]);
+			this.InitialAmount   = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
+			this.ArgumentAmount  = IOHelpers.ReadDecimalAttribute (reader, "ArgumentAmount");
+			this.FinalAmount     = IOHelpers.ReadDecimalAttribute (reader, "FinalAmount");
+			this.Computed        = IOHelpers.ReadBoolAttribute    (reader, "Computed");
+			this.Subtract        = IOHelpers.ReadBoolAttribute    (reader, "Subtract");
+			this.Rate            = IOHelpers.ReadBoolAttribute    (reader, "Rate");
+			this.ArgumentDefined = IOHelpers.ReadBoolAttribute    (reader, "ArgumentDefined");
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -311,25 +311,13 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			if (this.InitialAmount.HasValue)
-			{
-				DataIO.WriteDecimalAttribute (writer, "InitialAmount", this.InitialAmount);
-			}
-
-			if (this.ArgumentAmount.HasValue)
-			{
-				DataIO.WriteDecimalAttribute (writer, "ArgumentAmount", this.ArgumentAmount);
-			}
-
-			if (this.FinalAmount.HasValue)
-			{
-				DataIO.WriteDecimalAttribute (writer, "FinalAmount", this.FinalAmount);
-			}
-
-			writer.WriteAttributeString ("Computed",        this.Computed.ToString        (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteAttributeString ("Subtract",        this.Subtract.ToString        (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteAttributeString ("Rate",            this.Rate.ToString            (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteAttributeString ("ArgumentDefined", this.ArgumentDefined.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",   this.InitialAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "ArgumentAmount",  this.ArgumentAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "FinalAmount",     this.FinalAmount);
+			IOHelpers.WriteBoolAttribute    (writer, "Computed",        this.Computed);
+			IOHelpers.WriteBoolAttribute    (writer, "Subtract",        this.Subtract);
+			IOHelpers.WriteBoolAttribute    (writer, "Rate",            this.Rate);
+			IOHelpers.WriteBoolAttribute    (writer, "ArgumentDefined", this.ArgumentDefined);
 
 			writer.WriteEndElement ();
 		}

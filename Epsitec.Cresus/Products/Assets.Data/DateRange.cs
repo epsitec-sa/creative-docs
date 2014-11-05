@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DateRange(System.Xml.XmlReader reader)
 		{
-			this.IncludeFrom = reader["IncludeFrom"].ParseDateIO ();
-			this.ExcludeTo   = reader["ExcludeTo"  ].ParseDateIO ();
+			this.IncludeFrom = IOHelpers.ReadDateAttribute (reader, "IncludeFrom").GetValueOrDefault ();
+			this.ExcludeTo   = IOHelpers.ReadDateAttribute (reader, "ExcludeTo"  ).GetValueOrDefault ();
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -168,8 +168,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
-			writer.WriteAttributeString ("IncludeFrom", this.IncludeFrom.ToStringIO ());
-			writer.WriteAttributeString ("ExcludeTo",   this.ExcludeTo  .ToStringIO ());
+			IOHelpers.WriteDateAttribute (writer, "IncludeFrom", this.IncludeFrom);
+			IOHelpers.WriteDateAttribute (writer, "ExcludeTo",   this.ExcludeTo);
 			writer.WriteEndElement ();
 		}
 

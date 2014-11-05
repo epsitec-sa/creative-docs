@@ -47,21 +47,21 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
-			this.AmortizationType   = (AmortizationType) System.Enum.Parse (typeof (AmortizationType), reader["AmortizationType"]);
-			this.PreviousAmount     = DataIO.ReadDecimalAttribute (reader, "PreviousAmount");
-			this.InitialAmount      = DataIO.ReadDecimalAttribute (reader, "InitialAmount");
-			this.BaseAmount         = DataIO.ReadDecimalAttribute (reader, "BaseAmount");
-			this.EffectiveRate      = DataIO.ReadDecimalAttribute (reader, "EffectiveRate");
-			this.ProrataNumerator   = DataIO.ReadDecimalAttribute (reader, "ProrataNumerator");
-			this.ProrataDenominator = DataIO.ReadDecimalAttribute (reader, "ProrataDenominator");
-			this.RoundAmount        = DataIO.ReadDecimalAttribute (reader, "RoundAmount");
-			this.ResidualAmount     = DataIO.ReadDecimalAttribute (reader, "ResidualAmount");
-			this.EntryScenario      = (EntryScenario) System.Enum.Parse (typeof (EntryScenario), reader["EntryScenario"]);
-			this.Date               = reader["Date"].ParseDateIO ();
-			this.AssetGuid          = Guid.Parse (reader["AssetGuid"]);
-			this.EventGuid          = Guid.Parse (reader["EventGuid"]);
-			this.EntryGuid          = Guid.Parse (reader["EntryGuid"]);
-			this.EntrySeed          = int.Parse (reader["EntrySeed"], System.Globalization.CultureInfo.InvariantCulture);
+			this.AmortizationType   = (AmortizationType) IOHelpers.ReadTypeAttribute (reader, "AmortizationType", typeof (AmortizationType));
+			this.PreviousAmount     = IOHelpers.ReadDecimalAttribute (reader, "PreviousAmount");
+			this.InitialAmount      = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
+			this.BaseAmount         = IOHelpers.ReadDecimalAttribute (reader, "BaseAmount");
+			this.EffectiveRate      = IOHelpers.ReadDecimalAttribute (reader, "EffectiveRate");
+			this.ProrataNumerator   = IOHelpers.ReadDecimalAttribute (reader, "ProrataNumerator");
+			this.ProrataDenominator = IOHelpers.ReadDecimalAttribute (reader, "ProrataDenominator");
+			this.RoundAmount        = IOHelpers.ReadDecimalAttribute (reader, "RoundAmount");
+			this.ResidualAmount     = IOHelpers.ReadDecimalAttribute (reader, "ResidualAmount");
+			this.EntryScenario      = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
+			this.Date               = IOHelpers.ReadDateAttribute (reader, "Date").GetValueOrDefault ();
+			this.AssetGuid          = IOHelpers.ReadGuidAttribute (reader, "AssetGuid");
+			this.EventGuid          = IOHelpers.ReadGuidAttribute (reader, "EventGuid");
+			this.EntryGuid          = IOHelpers.ReadGuidAttribute (reader, "EntryGuid");
+			this.EntrySeed          = IOHelpers.ReadIntAttribute (reader, "EntrySeed").GetValueOrDefault ();
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -698,23 +698,24 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			writer.WriteAttributeString ("AmortizationType", this.AmortizationType.ToString ());
+			IOHelpers.WriteTypeAttribute (writer, "AmortizationType", this.AmortizationType);
 
-			DataIO.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
-			DataIO.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);
-			DataIO.WriteDecimalAttribute (writer, "BaseAmount",         this.BaseAmount);
-			DataIO.WriteDecimalAttribute (writer, "EffectiveRate",      this.EffectiveRate);
-			DataIO.WriteDecimalAttribute (writer, "ProrataNumerator",   this.ProrataNumerator);
-			DataIO.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);
-			DataIO.WriteDecimalAttribute (writer, "RoundAmount",        this.RoundAmount);
-			DataIO.WriteDecimalAttribute (writer, "ResidualAmount",     this.ResidualAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "BaseAmount",         this.BaseAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "EffectiveRate",      this.EffectiveRate);
+			IOHelpers.WriteDecimalAttribute (writer, "ProrataNumerator",   this.ProrataNumerator);
+			IOHelpers.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);
+			IOHelpers.WriteDecimalAttribute (writer, "RoundAmount",        this.RoundAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "ResidualAmount",     this.ResidualAmount);
 
-			writer.WriteAttributeString ("EntryScenario", this.EntryScenario.ToString ());
-			writer.WriteAttributeString ("Date", this.Date.ToStringIO ());
-			writer.WriteAttributeString ("AssetGuid", this.AssetGuid.ToString ());
-			writer.WriteAttributeString ("EventGuid", this.EventGuid.ToString ());
-			writer.WriteAttributeString ("EntryGuid", this.EntryGuid.ToString ());
-			writer.WriteAttributeString ("EntrySeed", this.EntrySeed.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			IOHelpers.WriteTypeAttribute (writer, "EntryScenario", this.EntryScenario);
+
+			IOHelpers.WriteDateAttribute (writer, "Date", this.Date);
+			IOHelpers.WriteGuidAttribute (writer, "AssetGuid", this.AssetGuid);
+			IOHelpers.WriteGuidAttribute (writer, "EventGuid", this.EventGuid);
+			IOHelpers.WriteGuidAttribute (writer, "EntryGuid", this.EntryGuid);
+			IOHelpers.WriteIntAttribute  (writer, "EntrySeed", this.EntrySeed);
 
 			writer.WriteEndElement ();
 		}

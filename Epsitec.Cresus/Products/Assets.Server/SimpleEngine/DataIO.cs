@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.IO;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -177,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 						case "File":
 							fileName    = reader["name"];
-							fileGuid    = Guid.Parse (reader["id"]);
+							fileGuid    = reader["id"].ParseGuid ();
 							fileVersion = reader["ver"];
 							break;
 
@@ -221,7 +222,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					}
 					else if (reader.Name == "Data")
 					{
-						int i = int.Parse (reader["value"], System.Globalization.CultureInfo.InvariantCulture);
+						int i = IOHelpers.ParseInt (reader["value"]);
 
 						switch (reader["name"])
 						{
@@ -297,15 +298,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteStartElement ("FileDescription");
 
 			writer.WriteStartElement    ("Software");
-			writer.WriteAttributeString ("id", info.SoftwareId);
-			writer.WriteAttributeString ("ver", info.SoftwareVersion);
+			writer.WriteAttributeString ("id",   info.SoftwareId);
+			writer.WriteAttributeString ("ver",  info.SoftwareVersion);
 			writer.WriteAttributeString ("lang", info.SoftwareLanguage);
 			writer.WriteEndElement      ();
 
 			writer.WriteStartElement    ("File");
 			writer.WriteAttributeString ("name", info.FileName);
-			writer.WriteAttributeString ("id", info.FileGuid.ToString ());
-			writer.WriteAttributeString ("ver", info.FileVersion);
+			writer.WriteAttributeString ("id",   info.FileGuid.ToStringIO ());
+			writer.WriteAttributeString ("ver",  info.FileVersion);
 			writer.WriteEndElement      ();
 
 			writer.WriteStartElement    ("Templates");
@@ -346,7 +347,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			writer.WriteStartElement ("Data");
 			writer.WriteAttributeString ("name", name);
-			writer.WriteAttributeString ("value", count.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("value", count.ToStringIO ());
 			writer.WriteEndElement ();
 		}
 		#endregion

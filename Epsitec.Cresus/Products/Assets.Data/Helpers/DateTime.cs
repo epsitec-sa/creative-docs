@@ -14,16 +14,16 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		}
 
 
-		public static string ToStringIO(this System.DateTime date)
-		{
-			//?return date.ToString ("yyyy-MM-ddTHH:mm:ss");
-			return date.ToString ("yyyy-MM-dd");
-		}
-
-		public static System.DateTime ParseDateIO(this string s)
-		{
-			//?return System.DateTime.ParseExact (s, "yyyy-MM-ddTHH:mm:ss", null);
-			return System.DateTime.ParseExact (s, "yyyy-MM-dd", null);
-		}
+		//?public static string ToStringIO(this System.DateTime date)
+		//?{
+		//?	//?return date.ToString ("yyyy-MM-ddTHH:mm:ss");
+		//?	return date.ToString ("yyyy-MM-dd");
+		//?}
+		//?
+		//?public static System.DateTime ParseDateIO(this string s)
+		//?{
+		//?	//?return System.DateTime.ParseExact (s, "yyyy-MM-ddTHH:mm:ss", null);
+		//?	return System.DateTime.ParseExact (s, "yyyy-MM-dd", null);
+		//?}
 	}
 }

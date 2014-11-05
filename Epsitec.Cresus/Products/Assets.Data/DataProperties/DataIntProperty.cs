@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -30,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 					if (reader.Name == "Value")
 					{
 						var s = reader.ReadElementContentAsString ();
-						this.Value = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+						this.Value = s.ParseInt ();
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		{
 			writer.WriteStartElement ("Property.Int");
 			base.Serialize (writer);
-			writer.WriteElementString ("Value", this.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString ("Value", this.Value.ToStringIO ());
 			writer.WriteEndElement ();
 		}
 

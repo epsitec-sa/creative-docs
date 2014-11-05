@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
@@ -34,17 +35,17 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 						case "RootGuid":
 							s = reader.ReadElementContentAsString ();
-							this.RootGuid = Guid.Parse (s);
+							this.RootGuid = s.ParseGuid ();
 							break;
 
 						case "Level":
 							s = reader.ReadElementContentAsString ();
-							this.Level = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+							this.Level = s.ParseInt ();
 							break;
 
 						case "FilterGuid":
 							s = reader.ReadElementContentAsString ();
-							this.FilterGuid = Guid.Parse (s);
+							this.FilterGuid = s.ParseGuid ();
 							break;
 					}
 				}
@@ -110,14 +111,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			base.Serialize (writer);
 
 			this.DateRange.Serialize (writer, "DateRange");
-			writer.WriteElementString ("RootGuid", this.RootGuid.ToString ());
+			writer.WriteElementString ("RootGuid", this.RootGuid.ToStringIO ());
 
 			if (this.Level.HasValue)
 			{
-				writer.WriteElementString ("Level", this.Level.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				writer.WriteElementString ("Level", this.Level.Value.ToStringIO ());
 			}
 
-			writer.WriteElementString ("FilterGuid", this.FilterGuid.ToString ());
+			writer.WriteElementString ("FilterGuid", this.FilterGuid.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}

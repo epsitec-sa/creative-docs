@@ -238,9 +238,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Definitions");
 
-			this.Guid.Serialize (writer, "Guid");
-			writer.WriteElementString ("Name", this.Name);
-			writer.WriteElementString ("StartDate", this.StartDate.ToStringIO ());
+			IOHelpers.WriteGuidAttribute  (writer, "Guid", this.Guid);
+			IOHelpers.WriteStringAttribute(writer, "Name", this.Name);
+			IOHelpers.WriteDateAttribute  (writer, "StartDate", this.StartDate);
 
 			writer.WriteEndElement ();
 		}
@@ -334,31 +334,11 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void DeserializeDefinitions(System.Xml.XmlReader reader)
 		{
-			while (reader.Read ())
-			{
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
-				{
-					switch (reader.Name)
-					{
-						case "Guid":
-							this.guid = new Guid (reader);
-							break;
+			this.guid      = IOHelpers.ReadGuidAttribute   (reader, "Guid");
+			this.name      = IOHelpers.ReadStringAttribute (reader, "Name");
+			this.startDate = IOHelpers.ReadDateAttribute   (reader, "StartDate").GetValueOrDefault ();
 
-						case "Name":
-							this.name = reader.ReadElementContentAsString ();
-							break;
-
-						case "StartDate":
-							var s = reader.ReadElementContentAsString ();
-							this.startDate = s.ParseDateIO ();
-							break;
-					}
-				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}
+			reader.Read ();  // on avance sur le noeud suivant
 		}
 
 		public void DeserializeAccounts(System.Xml.XmlReader reader)

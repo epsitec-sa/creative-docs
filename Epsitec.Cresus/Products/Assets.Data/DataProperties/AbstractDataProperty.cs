@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 					if (reader.Name == "ObjectField")
 					{
 						var s = reader.ReadElementContentAsString ();
-						this.Field = (ObjectField) System.Enum.Parse (typeof (ObjectField), s);
+						this.Field = (ObjectField) IOHelpers.ParseType (s, typeof (ObjectField));
 
 						break;  // fin de la lecture de la classe abstraite -> on passe à la classe dérivée
 					}
@@ -84,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public virtual void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteElementString ("ObjectField", this.Field.ToString ());
+			writer.WriteElementString ("ObjectField", this.Field.ToStringIO ());
 		}
 
 
