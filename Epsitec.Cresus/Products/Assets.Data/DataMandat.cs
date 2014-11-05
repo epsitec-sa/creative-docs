@@ -209,8 +209,26 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement ("Mandat");
 
 			this.SerializeDefinitions (writer);
-			this.SerializeAccounts (writer);
 			this.SerializeObjects (writer);
+
+			writer.WriteEndElement ();
+			writer.WriteEndDocument ();
+		}
+
+		public void SerializeAccounts(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartDocument ();
+			writer.WriteStartElement ("Accounts");
+
+			foreach (var pair in this.rangeAccounts)
+			{
+				writer.WriteStartElement ("Period");
+
+				pair.Key.Serialize (writer, "DateRange");
+				this.SerializeObjects (writer, "List", pair.Value);
+
+				writer.WriteEndElement ();
+			}
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
@@ -223,23 +241,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Guid.Serialize (writer, "Guid");
 			writer.WriteElementString ("Name", this.Name);
 			writer.WriteElementString ("StartDate", this.StartDate.ToStringIO ());
-
-			writer.WriteEndElement ();
-		}
-
-		private void SerializeAccounts(System.Xml.XmlWriter writer)
-		{
-			writer.WriteStartElement ("Accounts");
-
-			foreach (var pair in this.rangeAccounts)
-			{
-				writer.WriteStartElement ("Period");
-
-				pair.Key.Serialize (writer, "DateRange");
-				this.SerializeObjects (writer, "List", pair.Value);
-
-				writer.WriteEndElement ();
-			}
 
 			writer.WriteEndElement ();
 		}
@@ -319,10 +320,6 @@ namespace Epsitec.Cresus.Assets.Data
 							this.DeserializeDefinitions (reader);
 							break;
 
-						case "Accounts":
-							this.DeserializeAccounts (reader);
-							break;
-
 						case "Objects":
 							this.DeserializeObjects (reader);
 							break;
@@ -364,7 +361,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private void DeserializeAccounts(System.Xml.XmlReader reader)
+		public void DeserializeAccounts(System.Xml.XmlReader reader)
 		{
 			while (reader.Read ())
 			{

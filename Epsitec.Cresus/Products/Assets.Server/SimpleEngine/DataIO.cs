@@ -50,6 +50,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				DataIO.OpenData (stream, accessor);
 			}
+
+			if (DataIO.ExistingAccounts (filename))
+			{
+				DataIO.OpenAccounts (filename, accessor);  // lit directement le fichier xml
+			}
+			else
+			{
+				var zip = new ZipFile ();
+				zip.LoadFile (filename);
+
+				var data = zip["accounts.xml"].Data;
+				var stream = new System.IO.MemoryStream (data);
+
+				DataIO.OpenAccounts (stream, accessor);
+			}
 		}
 
 		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
@@ -82,13 +97,26 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				zip.AddEntry ("data.xml", data);
 			}
 
+			//	On s'occupe de la partie accounts.
+			{
+				var stream = new System.IO.MemoryStream ();
+				DataIO.SaveAccounts (stream, accessor);
+
+				var data = new byte[stream.Length];
+				stream.Position = 0;
+				stream.Read (data, 0, (int) stream.Length);
+
+				zip.AddEntry ("accounts.xml", data);
+			}
+
 			System.IO.File.Delete (filename);
 			zip.SaveFile (filename);
 
 			if ((mode & SaveMandatMode.KeepUnzip) != 0)
 			{
-				DataIO.SaveInfo (filename, accessor.Mandat.MandatInfo);
-				DataIO.SaveData (filename, accessor);
+				DataIO.SaveInfo     (filename, accessor.Mandat.MandatInfo);
+				DataIO.SaveData     (filename, accessor);
+				DataIO.SaveAccounts (filename, accessor);
 			}
 		}
 
@@ -368,6 +396,54 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
+		#region Open accounts
+		private static void OpenAccounts(string filename, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (DataIO.GetAccountsFilename (filename));
+			accessor.Mandat.DeserializeAccounts (reader);
+			reader.Close ();
+		}
+
+		private static void OpenAccounts(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (stream);
+			accessor.Mandat.DeserializeAccounts (reader);
+			reader.Close ();
+		}
+		#endregion
+
+
+		#region Save accounts
+		private static void SaveAccounts(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (stream, settings);
+			accessor.Mandat.SerializeAccounts (writer);
+
+			writer.Flush ();
+			writer.Close ();
+		}
+
+		private static void SaveAccounts(string filename, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (DataIO.GetAccountsFilename (filename), settings);
+			accessor.Mandat.SerializeAccounts (writer);
+
+			writer.Flush ();
+			writer.Close ();
+		}
+		#endregion
+
+
 		private static bool ExistingInfo(string filename)
 		{
 			return System.IO.File.Exists (DataIO.GetInfoFilename (filename));
@@ -378,6 +454,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return System.IO.File.Exists (DataIO.GetDataFilename (filename));
 		}
 
+		private static bool ExistingAccounts(string filename)
+		{
+			return System.IO.File.Exists (DataIO.GetAccountsFilename (filename));
+		}
+
+
 		private static string GetInfoFilename(string filename)
 		{
 			return filename + ".description.xml";
@@ -386,6 +468,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static string GetDataFilename(string filename)
 		{
 			return filename + ".data.xml";
+		}
+
+		private static string GetAccountsFilename(string filename)
+		{
+			return filename + ".accounts.xml";
 		}
 
 

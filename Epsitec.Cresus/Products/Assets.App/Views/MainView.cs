@@ -329,7 +329,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
-				//?var info = DataIO.OpenInfoXml (filename);
 				DataIO.OpenMandat (this.accessor, filename);
 			}
 			catch (System.Exception ex)
