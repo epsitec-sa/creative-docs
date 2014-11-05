@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		{
 			writer.WriteStartElement ("Property.ComputedAmount");
 			base.Serialize (writer);
-			this.Value.Serialize (writer);
+			this.Value.Serialize (writer, "ComputedAmount");
 			writer.WriteEndElement ();
 		}
 

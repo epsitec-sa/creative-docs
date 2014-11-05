@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -143,63 +144,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public ComputedAmount(System.Xml.XmlReader reader)
 		{
-			this.InitialAmount   = null;
-			this.ArgumentAmount  = null;
-			this.FinalAmount     = null;
-			this.Computed        = false;
-			this.Subtract        = true;
-			this.Rate            = true;
-			this.ArgumentDefined = false;
+			this.InitialAmount   = DataIO.ReadDecimalAttribute (reader, "InitialAmount");
+			this.ArgumentAmount  = DataIO.ReadDecimalAttribute (reader, "ArgumentAmount");
+			this.FinalAmount     = DataIO.ReadDecimalAttribute (reader, "FinalAmount");
+			this.Computed        = bool.Parse (reader["Computed"]);
+			this.Subtract        = bool.Parse (reader["Subtract"]);
+			this.Rate            = bool.Parse (reader["Rate"]);
+			this.ArgumentDefined = bool.Parse (reader["ArgumentDefined"]);
 
-			while (reader.Read ())
-			{
-				string s;
-
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
-				{
-					switch (reader.Name)
-					{
-						case "InitialAmount":
-							s = reader.ReadElementContentAsString ();
-							this.InitialAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "ArgumentAmount":
-							s = reader.ReadElementContentAsString ();
-							this.ArgumentAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "FinalAmount":
-							s = reader.ReadElementContentAsString ();
-							this.FinalAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "Computed":
-							s = reader.ReadElementContentAsString ();
-							this.Computed = bool.Parse (s);
-							break;
-
-						case "Subtract":
-							s = reader.ReadElementContentAsString ();
-							this.Subtract = bool.Parse (s);
-							break;
-
-						case "Rate":
-							s = reader.ReadElementContentAsString ();
-							this.Rate = bool.Parse (s);
-							break;
-
-						case "ArgumentDefined":
-							s = reader.ReadElementContentAsString ();
-							this.ArgumentDefined = bool.Parse (s);
-							break;
-					}
-				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}
+			reader.Read ();  // on avance plus loin
 		}
 
 
@@ -354,29 +307,29 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public void Serialize(System.Xml.XmlWriter writer)
+		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			writer.WriteStartElement ("ComputedAmount");
+			writer.WriteStartElement (name);
 
 			if (this.InitialAmount.HasValue)
 			{
-				writer.WriteElementString ("InitialAmount", this.InitialAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				DataIO.WriteDecimalAttribute (writer, "InitialAmount", this.InitialAmount);
 			}
 
 			if (this.ArgumentAmount.HasValue)
 			{
-				writer.WriteElementString ("ArgumentAmount", this.ArgumentAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				DataIO.WriteDecimalAttribute (writer, "ArgumentAmount", this.ArgumentAmount);
 			}
 
 			if (this.FinalAmount.HasValue)
 			{
-				writer.WriteElementString ("FinalAmount", this.FinalAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				DataIO.WriteDecimalAttribute (writer, "FinalAmount", this.FinalAmount);
 			}
 
-			writer.WriteElementString ("Computed",        this.Computed.ToString        (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("Subtract",        this.Subtract.ToString        (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("Rate",            this.Rate.ToString            (System.Globalization.CultureInfo.InvariantCulture));
-			writer.WriteElementString ("ArgumentDefined", this.ArgumentDefined.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("Computed",        this.Computed.ToString        (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("Subtract",        this.Subtract.ToString        (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("Rate",            this.Rate.ToString            (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("ArgumentDefined", this.ArgumentDefined.ToString (System.Globalization.CultureInfo.InvariantCulture));
 
 			writer.WriteEndElement ();
 		}

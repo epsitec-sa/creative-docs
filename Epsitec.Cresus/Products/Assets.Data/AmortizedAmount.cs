@@ -47,111 +47,23 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
-			this.AmortizationType   = AmortizationType.Unknown;
-			this.PreviousAmount     = null;
-			this.InitialAmount      = null;
-			this.BaseAmount         = null;
-			this.EffectiveRate      = null;
-			this.ProrataNumerator   = null;
-			this.ProrataDenominator = null;
-			this.RoundAmount        = null;
-			this.ResidualAmount     = null;
-			this.EntryScenario      = EntryScenario.None;
-			this.Date               = System.DateTime.MinValue;
-			this.AssetGuid          = Guid.Empty;
-			this.EventGuid          = Guid.Empty;
-			this.EntryGuid          = Guid.Empty;
-			this.EntrySeed          = 0;
+			this.AmortizationType   = (AmortizationType) System.Enum.Parse (typeof (AmortizationType), reader["AmortizationType"]);
+			this.PreviousAmount     = DataIO.ReadDecimalAttribute (reader, "PreviousAmount");
+			this.InitialAmount      = DataIO.ReadDecimalAttribute (reader, "InitialAmount");
+			this.BaseAmount         = DataIO.ReadDecimalAttribute (reader, "BaseAmount");
+			this.EffectiveRate      = DataIO.ReadDecimalAttribute (reader, "EffectiveRate");
+			this.ProrataNumerator   = DataIO.ReadDecimalAttribute (reader, "ProrataNumerator");
+			this.ProrataDenominator = DataIO.ReadDecimalAttribute (reader, "ProrataDenominator");
+			this.RoundAmount        = DataIO.ReadDecimalAttribute (reader, "RoundAmount");
+			this.ResidualAmount     = DataIO.ReadDecimalAttribute (reader, "ResidualAmount");
+			this.EntryScenario      = (EntryScenario) System.Enum.Parse (typeof (EntryScenario), reader["EntryScenario"]);
+			this.Date               = reader["Date"].ParseDateIO ();
+			this.AssetGuid          = Guid.Parse (reader["AssetGuid"]);
+			this.EventGuid          = Guid.Parse (reader["EventGuid"]);
+			this.EntryGuid          = Guid.Parse (reader["EntryGuid"]);
+			this.EntrySeed          = int.Parse (reader["EntrySeed"], System.Globalization.CultureInfo.InvariantCulture);
 
-			while (reader.Read ())
-			{
-				string s;
-
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
-				{
-					switch (reader.Name)
-					{
-						case "AmortizationType":
-							s = reader.ReadElementContentAsString ();
-							this.AmortizationType = (AmortizationType) System.Enum.Parse (typeof (AmortizationType), s);
-							break;
-
-						case "PreviousAmount":
-							s = reader.ReadElementContentAsString ();
-							this.PreviousAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "InitialAmount":
-							s = reader.ReadElementContentAsString ();
-							this.InitialAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "BaseAmount":
-							s = reader.ReadElementContentAsString ();
-							this.BaseAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "EffectiveRate":
-							s = reader.ReadElementContentAsString ();
-							this.EffectiveRate = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "ProrataNumerator":
-							s = reader.ReadElementContentAsString ();
-							this.ProrataNumerator = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "ProrataDenominator":
-							s = reader.ReadElementContentAsString ();
-							this.ProrataDenominator = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "RoundAmount":
-							s = reader.ReadElementContentAsString ();
-							this.RoundAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "ResidualAmount":
-							s = reader.ReadElementContentAsString ();
-							this.ResidualAmount = decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-
-						case "EntryScenario":
-							s = reader.ReadElementContentAsString ();
-							this.EntryScenario = (EntryScenario) System.Enum.Parse (typeof (EntryScenario), s);
-							break;
-
-						case "Date":
-							s = reader.ReadElementContentAsString ();
-							this.Date = s.ParseDateIO ();
-							break;
-
-						case "AssetGuid":
-							s = reader.ReadElementContentAsString ();
-							this.AssetGuid = Guid.Parse (s);
-							break;
-
-						case "EventGuid":
-							s = reader.ReadElementContentAsString ();
-							this.EventGuid = Guid.Parse (s);
-							break;
-
-						case "EntryGuid":
-							s = reader.ReadElementContentAsString ();
-							this.EntryGuid = Guid.Parse (s);
-							break;
-
-						case "EntrySeed":
-							s = reader.ReadElementContentAsString ();
-							this.EntrySeed = int.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
-							break;
-					}
-				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}
+			reader.Read ();  // on avance plus loin
 		}
 
 
@@ -782,58 +694,27 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
-		public void Serialize(System.Xml.XmlWriter writer)
+		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			writer.WriteStartElement ("AmortizedAmount");
+			writer.WriteStartElement (name);
 
-			writer.WriteElementString ("AmortizationType", this.AmortizationType.ToString ());
+			writer.WriteAttributeString ("AmortizationType", this.AmortizationType.ToString ());
 
-			if (this.PreviousAmount.HasValue)
-			{
-				writer.WriteElementString ("PreviousAmount", this.PreviousAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
+			DataIO.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
+			DataIO.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);
+			DataIO.WriteDecimalAttribute (writer, "BaseAmount",         this.BaseAmount);
+			DataIO.WriteDecimalAttribute (writer, "EffectiveRate",      this.EffectiveRate);
+			DataIO.WriteDecimalAttribute (writer, "ProrataNumerator",   this.ProrataNumerator);
+			DataIO.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);
+			DataIO.WriteDecimalAttribute (writer, "RoundAmount",        this.RoundAmount);
+			DataIO.WriteDecimalAttribute (writer, "ResidualAmount",     this.ResidualAmount);
 
-			if (this.InitialAmount.HasValue)
-			{
-				writer.WriteElementString ("InitialAmount", this.InitialAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.BaseAmount.HasValue)
-			{
-				writer.WriteElementString ("BaseAmount", this.BaseAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.EffectiveRate.HasValue)
-			{
-				writer.WriteElementString ("EffectiveRate", this.EffectiveRate.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.ProrataNumerator.HasValue)
-			{
-				writer.WriteElementString ("ProrataNumerator", this.ProrataNumerator.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.ProrataDenominator.HasValue)
-			{
-				writer.WriteElementString ("ProrataDenominator", this.ProrataDenominator.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.RoundAmount.HasValue)
-			{
-				writer.WriteElementString ("RoundAmount", this.RoundAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			if (this.ResidualAmount.HasValue)
-			{
-				writer.WriteElementString ("ResidualAmount", this.ResidualAmount.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			}
-
-			writer.WriteElementString ("EntryScenario", this.EntryScenario.ToString ());
-			writer.WriteElementString ("Date", this.Date.ToStringIO ());
-			writer.WriteElementString ("AssetGuid", this.AssetGuid.ToString ());
-			writer.WriteElementString ("EventGuid", this.EventGuid.ToString ());
-			writer.WriteElementString ("EntryGuid", this.EntryGuid.ToString ());
-			writer.WriteElementString ("EntrySeed", this.EntrySeed.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteAttributeString ("EntryScenario", this.EntryScenario.ToString ());
+			writer.WriteAttributeString ("Date", this.Date.ToStringIO ());
+			writer.WriteAttributeString ("AssetGuid", this.AssetGuid.ToString ());
+			writer.WriteAttributeString ("EventGuid", this.EventGuid.ToString ());
+			writer.WriteAttributeString ("EntryGuid", this.EntryGuid.ToString ());
+			writer.WriteAttributeString ("EntrySeed", this.EntrySeed.ToString (System.Globalization.CultureInfo.InvariantCulture));
 
 			writer.WriteEndElement ();
 		}

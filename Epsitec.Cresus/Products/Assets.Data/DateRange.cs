@@ -18,33 +18,10 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DateRange(System.Xml.XmlReader reader)
 		{
-			this.IncludeFrom = System.DateTime.MinValue;
-			this.ExcludeTo   = System.DateTime.MaxValue;
+			this.IncludeFrom = reader["IncludeFrom"].ParseDateIO ();
+			this.ExcludeTo   = reader["ExcludeTo"  ].ParseDateIO ();
 
-			while (reader.Read ())
-			{
-				string s;
-
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
-				{
-					switch (reader.Name)
-					{
-						case "IncludeFrom":
-							s = reader.ReadElementContentAsString ();
-							this.IncludeFrom = s.ParseDateIO ();
-							break;
-
-						case "ExcludeTo":
-							s = reader.ReadElementContentAsString ();
-							this.ExcludeTo = s.ParseDateIO ();
-							break;
-					}
-				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}
+			reader.Read ();  // on avance plus loin
 		}
 
 
@@ -191,8 +168,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
-			writer.WriteElementString ("IncludeFrom", this.IncludeFrom.ToStringIO ());
-			writer.WriteElementString ("ExcludeTo",   this.ExcludeTo  .ToStringIO ());
+			writer.WriteAttributeString ("IncludeFrom", this.IncludeFrom.ToStringIO ());
+			writer.WriteAttributeString ("ExcludeTo",   this.ExcludeTo  .ToStringIO ());
 			writer.WriteEndElement ();
 		}
 

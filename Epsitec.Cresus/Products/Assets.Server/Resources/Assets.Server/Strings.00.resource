@@ -64,7 +64,7 @@
   <data name="WarningsLogic.Undefined.Accounts" id="KT1">Le plan comptable n'est pas défini</data>
   <data name="WarningsLogic.Undefined.Assets" id="KU1">Il n'existe aucun objet d'immobilisation</data>
   <data name="WarningsLogic.Ratio.Percent" id="KV1">Le total des ratios n'est pas de 100% dans {0}</data>
-  <data name="Entries.Sample.DummyAsset" id="K02">Véhicule XYZ</data>
+  <data name="Entries.Sample.DummyAsset" id="K02">XYZ</data>
   <data name="WarningsLogic.Amortization.Missing" id="K12">L'objet n'est pas amorti jusqu'au {0}</data>
   <data name="EditionAccessor.Undo.Modify.Asset" id="K22">Modification d'un objet d'immobilisation</data>
   <data name="EditionAccessor.Undo.Modify.Category" id="K32">Modification d'une catégorie d'immobilisation</data>
