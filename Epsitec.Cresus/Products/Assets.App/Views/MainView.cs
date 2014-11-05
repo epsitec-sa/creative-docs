@@ -331,7 +331,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				DataIO.OpenMandat (this.accessor, filename, delegate (System.Xml.XmlReader reader)
 				{
-					//	Effectur la désérialisation des LocalSettings.
+					//	Effectue la désérialisation des LocalSettings.
 					LocalSettings.Deserialize (reader);
 				});
 			}
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				DataIO.SaveMandat (this.accessor, filename, mode, delegate (System.Xml.XmlWriter writer)
 				{
-					//	Effectur la sérialisation des LocalSettings.
+					//	Effectue la sérialisation des LocalSettings.
 					LocalSettings.Serialize (writer);
 				});
 			}

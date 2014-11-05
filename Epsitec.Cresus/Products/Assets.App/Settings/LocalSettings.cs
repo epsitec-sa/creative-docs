@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Export;
@@ -129,29 +130,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			writer.WriteStartElement ("LocalSettings");
 
 			LocalSettings.SerializeColumnsState (writer);
+			LocalSettings.SerializeSearchInfo (writer);
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
-		}
-
-		public static void Deserialize(System.Xml.XmlReader reader)
-		{
-			while (reader.Read ())
-			{
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
-				{
-					switch (reader.Name)
-					{
-						case "LocalSettings":
-							LocalSettings.DeserializeColumnsState (reader);
-							break;
-					}
-				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}
 		}
 
 		private static void SerializeColumnsState(System.Xml.XmlWriter writer)
@@ -166,6 +148,45 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			writer.WriteEndElement ();
 		}
 
+		private static void SerializeSearchInfo(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("SearchInfo");
+
+			foreach (var pair in LocalSettings.searchInfos)
+			{
+				pair.Value.Serialize (writer, pair.Key.ToStringIO ());
+			}
+
+			writer.WriteEndElement ();
+		}
+		#endregion
+
+
+		#region Deserialization
+		public static void Deserialize(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "LocalSettings":
+							LocalSettings.DeserializeColumnsState (reader);
+							break;
+
+						case "SearchInfo":
+							LocalSettings.DeserializeSearchInfo (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
 		private static void DeserializeColumnsState(System.Xml.XmlReader reader)
 		{
 			LocalSettings.columnsStates.Clear ();
@@ -176,6 +197,25 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				{
 					var c = new ColumnsState (reader);
 					LocalSettings.columnsStates.Add (reader.Name, c);
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private static void DeserializeSearchInfo(System.Xml.XmlReader reader)
+		{
+			LocalSettings.searchInfos.Clear ();
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					var c = new SearchInfo (reader);
+					var k = (SearchKind) IOHelpers.ParseType (reader.Name, typeof (SearchKind));
+					LocalSettings.searchInfos.Add (k, c);
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
 				{

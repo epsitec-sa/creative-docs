@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -17,6 +18,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Pattern = pattern;
 			this.Options = options;
 		}
+
+		public SearchDefinition(System.Xml.XmlReader reader)
+		{
+			this.Pattern = IOHelpers.ReadStringAttribute (reader, "Pattern");
+			this.Options = (SearchOptions) IOHelpers.ReadTypeAttribute (reader, "Options", typeof (SearchOptions));
+
+			reader.Read ();
+		}
+
 
 		public bool IsActive
 		{
@@ -35,6 +45,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public SearchDefinition FromOptions(SearchOptions options)
 		{
 			return new SearchDefinition (this.Pattern, options);
+		}
+
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteStringAttribute (writer, "Pattern", this.Pattern);
+			IOHelpers.WriteTypeAttribute   (writer, "Options", this.Options);
+
+			writer.WriteEndElement ();
 		}
 
 
