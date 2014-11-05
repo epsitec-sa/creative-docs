@@ -214,8 +214,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			var root = this.AddGroup (parent, "Patrimoine MCH2", "300", true);
 
-			this.AddGroup (root, "Patrimoine administratif", "10");
-			this.AddGroup (root, "Patrimoine financier",     "20");
+			this.AddGroup (root, "En construction",          "10");
+			this.AddGroup (root, "Patrimoine administratif", "20");
+			this.AddGroup (root, "Patrimoine financier",     "30");
 		}
 
 
