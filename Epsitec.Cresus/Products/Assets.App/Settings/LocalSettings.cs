@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			LocalSettings.SerializeColumnsState (writer);
 			LocalSettings.SerializeSearchInfo (writer);
+			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
@@ -159,6 +160,25 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			writer.WriteEndElement ();
 		}
+
+		private static void SerializeCreateAssetDefaultGroups(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("CreateAssetDefaultGroups");
+
+			int i = 0;
+			foreach (var pair in LocalSettings.createAssetDefaultGroups)
+			{
+				var n = "Goup" + (i++).ToStringIO ();
+				writer.WriteStartElement (n);
+
+				IOHelpers.WriteStringAttribute (writer, "Parent",    pair.Key  .ToStringIO ());
+				IOHelpers.WriteStringAttribute (writer, "Selection", pair.Value.ToStringIO ());
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
+		}
 		#endregion
 
 
@@ -177,6 +197,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 						case "SearchInfo":
 							LocalSettings.DeserializeSearchInfo (reader);
+							break;
+
+						case "CreateAssetDefaultGroups":
+							LocalSettings.DeserializeCreateAssetDefaultGroups  (reader);
 							break;
 					}
 				}
@@ -216,6 +240,25 @@ namespace Epsitec.Cresus.Assets.App.Settings
 					var c = new SearchInfo (reader);
 					var k = (SearchKind) IOHelpers.ParseType (reader.Name, typeof (SearchKind));
 					LocalSettings.searchInfos.Add (k, c);
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private static void DeserializeCreateAssetDefaultGroups(System.Xml.XmlReader reader)
+		{
+			LocalSettings.searchInfos.Clear ();
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					var k = IOHelpers.ParseGuid (reader["Parent"]);
+					var v = IOHelpers.ParseGuid (reader["Selection"]);
+					LocalSettings.createAssetDefaultGroups.Add (k, v);
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
 				{
