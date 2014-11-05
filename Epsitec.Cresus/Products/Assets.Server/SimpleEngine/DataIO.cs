@@ -34,8 +34,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static void OpenMandat(DataAccessor accessor, string filename)
 		{
-			//	Lit le mandat, soit à partir du long fichier xx.data.xml s'il existe, sinon à
-			//	partir du fichier compressé.
+			//	Lit le mandat, soit à partir des fichiers xx.data.xml et xx.accounts.xml
+			//	s'ils existent, sinon à partir du fichier compressé.
+
+			//	On s'occupe de la partie data.
 			if (DataIO.ExistingData (filename))
 			{
 				DataIO.OpenData (filename, accessor);  // lit directement le fichier xml
@@ -51,6 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DataIO.OpenData (stream, accessor);
 			}
 
+			//	On s'occupe de la partie accounts (plans comptables).
 			if (DataIO.ExistingAccounts (filename))
 			{
 				DataIO.OpenAccounts (filename, accessor);  // lit directement le fichier xml
@@ -70,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
 		{
 			//	Enregistre le mandat dans un fichier compressé. Selon le mode, on crée
-			//	en plus les fichiers xx.description.xml et xx.data.xml.
+			//	en plus les fichiers xx.description.xml, xx.data.xml et xx.accounts.xml.
 			var zip = new ZipFile ();
 
 			//	On s'occupe de la partie description.
@@ -97,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				zip.AddEntry ("data.xml", data);
 			}
 
-			//	On s'occupe de la partie accounts.
+			//	On s'occupe de la partie accounts (plans comptables).
 			{
 				var stream = new System.IO.MemoryStream ();
 				DataIO.SaveAccounts (stream, accessor);
@@ -112,8 +115,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			System.IO.File.Delete (filename);
 			zip.SaveFile (filename);
 
-			if ((mode & SaveMandatMode.KeepUnzip) != 0)
+			if ((mode & SaveMandatMode.KeepUnzip) != 0)  // pour le debug ?
 			{
+				//	On enregistre en plus tous les fichiers séparément.
 				DataIO.SaveInfo     (filename, accessor.Mandat.MandatInfo);
 				DataIO.SaveData     (filename, accessor);
 				DataIO.SaveAccounts (filename, accessor);
@@ -292,23 +296,23 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("FileDescription");
 
-			writer.WriteStartElement ("Software");
+			writer.WriteStartElement    ("Software");
 			writer.WriteAttributeString ("id", info.SoftwareId);
 			writer.WriteAttributeString ("ver", info.SoftwareVersion);
 			writer.WriteAttributeString ("lang", info.SoftwareLanguage);
-			writer.WriteEndElement ();
+			writer.WriteEndElement      ();
 
-			writer.WriteStartElement ("File");
+			writer.WriteStartElement    ("File");
 			writer.WriteAttributeString ("name", info.FileName);
 			writer.WriteAttributeString ("id", info.FileGuid.ToString ());
 			writer.WriteAttributeString ("ver", info.FileVersion);
-			writer.WriteEndElement ();
+			writer.WriteEndElement      ();
 
-			writer.WriteStartElement ("Templates");
-			writer.WriteEndElement ();
+			writer.WriteStartElement    ("Templates");
+			writer.WriteEndElement      ();
 
-			writer.WriteStartElement ("FileSources");
-			writer.WriteEndElement ();
+			writer.WriteStartElement    ("FileSources");
+			writer.WriteEndElement      ();
 
 			DataIO.SaveStatistics (writer, info.Statistics);
 
@@ -327,13 +331,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteAttributeString ("text", statistics.Summary);
 			writer.WriteEndElement ();
 
-			DataIO.SaveStatistics (writer, "AssetCount", statistics.AssetCount);
-			DataIO.SaveStatistics (writer, "EventCount", statistics.EventCount);
+			DataIO.SaveStatistics (writer, "AssetCount",    statistics.AssetCount);
+			DataIO.SaveStatistics (writer, "EventCount",    statistics.EventCount);
 			DataIO.SaveStatistics (writer, "CategoryCount", statistics.CategoryCount);
-			DataIO.SaveStatistics (writer, "GroupCount", statistics.GroupCount);
-			DataIO.SaveStatistics (writer, "PersonCount", statistics.PersonCount);
-			DataIO.SaveStatistics (writer, "ReportCount", statistics.ReportCount);
-			DataIO.SaveStatistics (writer, "AccountCount", statistics.AccountCount);
+			DataIO.SaveStatistics (writer, "GroupCount",    statistics.GroupCount);
+			DataIO.SaveStatistics (writer, "PersonCount",   statistics.PersonCount);
+			DataIO.SaveStatistics (writer, "ReportCount",   statistics.ReportCount);
+			DataIO.SaveStatistics (writer, "AccountCount",  statistics.AccountCount);
 
 			writer.WriteEndElement ();
 		}
