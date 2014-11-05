@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -20,6 +21,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			this.Hide          = hide;
 		}
 
+		public ColumnState(System.Xml.XmlReader reader)
+		{
+			this.Field         = (ObjectField) IOHelpers.ReadTypeAttribute (reader, "Field", typeof (ObjectField));
+			this.OriginalWidth = IOHelpers.ReadIntAttribute (reader, "OriginalWidth").GetValueOrDefault ();
+			this.Hide          = IOHelpers.ReadBoolAttribute (reader, "Hide");
+
+			reader.Read ();
+		}
+
+
 		public int								FinalWidth
 		{
 			get
@@ -35,6 +46,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return this.Field == ObjectField.Unknown;
 			}
 		}
+
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteTypeAttribute (writer, "Field",         this.Field);
+			IOHelpers.WriteIntAttribute  (writer, "OriginalWidth", this.OriginalWidth);
+			IOHelpers.WriteBoolAttribute (writer, "Hide",          this.Hide);
+
+			writer.WriteEndElement ();
+		}
+
 
 		public static ColumnState Empty = new ColumnState (ObjectField.Unknown, 0, false);
 

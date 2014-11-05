@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -21,6 +22,52 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			this.Sorted          = sorted;
 			this.DockToLeftCount = dockToLeftCount;
 		}
+
+		public ColumnsState(System.Xml.XmlReader reader)
+		{
+			var mapper  = new List<int> ();
+			var columns = new List<ColumnState> ();
+			var sorted  = new List<SortedColumn> ();
+			this.DockToLeftCount = 0;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "Mappers")
+					{
+						var mappers = reader.ReadElementContentAsString ().Split (';');
+						foreach (var m in mappers)
+						{
+							mapper.Add (m.ParseInt ());
+						}
+					}
+					else if (reader.Name.StartsWith ("Column"))
+					{
+						var c = new ColumnState (reader);
+						columns.Add (c);
+					}
+					else if (reader.Name.StartsWith ("Sorted"))
+					{
+						var s = new SortedColumn (reader);
+						sorted.Add (s);
+					}
+					else if (reader.Name == "DockToLeftCount")
+					{
+						this.DockToLeftCount = reader.ReadElementContentAsString ().ParseInt ();
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+
+			this.Mapper  = mapper .ToArray ();
+			this.Columns = columns.ToArray ();
+			this.Sorted  = sorted .ToArray ();
+		}
+
 
 		public bool IsEmpty
 		{
@@ -51,6 +98,31 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public int MappedToAbsolute(int mappedRank)
 		{
 			return this.Mapper[mappedRank];
+		}
+
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			var mappers = string.Join (";", this.Mapper.Select (x => x.ToStringIO ()));
+			writer.WriteElementString ("Mappers", mappers);
+
+			for (int i=0; i<this.Columns.Length; i++)
+			{
+				string n = "Column" + i.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				this.Columns[i].Serialize (writer, n);
+			}
+
+			for (int i=0; i<this.Sorted.Length; i++)
+			{
+				string n = "Sorted" + i.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				this.Sorted[i].Serialize (writer, n);
+			}
+
+			writer.WriteElementString ("DockToLeftCount", this.DockToLeftCount.ToStringIO ());
+
+			writer.WriteEndElement ();
 		}
 
 

@@ -11,6 +11,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DataIO
 	{
+		public static System.Action<System.Xml.XmlReader> LocalSettingsOpenAction;
+		public static System.Action<System.Xml.XmlWriter> LocalSettingsSaveAction;
+
 		public static MandatInfo OpenInfo(string filename)
 		{
 			//	Lit le petit fichier d'informations, soit à partir du fichier xx.description.xml
@@ -69,6 +72,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				DataIO.OpenAccounts (stream, accessor);
 			}
+
+			//	On s'occupe de la partie local settings.
+			if (DataIO.ExistingLocalSettings (filename))
+			{
+				DataIO.OpenLocalSettings (filename, accessor);  // lit directement le fichier xml
+			}
+			else
+			{
+				var zip = new ZipFile ();
+				zip.LoadFile (filename);
+
+				var data = zip["localsettings.xml"].Data;
+				var stream = new System.IO.MemoryStream (data);
+
+				DataIO.OpenLocalSettings (stream, accessor);
+			}
 		}
 
 		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
@@ -113,15 +132,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				zip.AddEntry ("accounts.xml", data);
 			}
 
+			//	On s'occupe de la partie local settings.
+			{
+				var stream = new System.IO.MemoryStream ();
+				DataIO.SaveLocalSettings (stream, accessor);
+
+				var data = new byte[stream.Length];
+				stream.Position = 0;
+				stream.Read (data, 0, (int) stream.Length);
+
+				zip.AddEntry ("localsettings.xml", data);
+			}
+
 			System.IO.File.Delete (filename);
 			zip.SaveFile (filename);
 
 			if ((mode & SaveMandatMode.KeepUnzip) != 0)  // pour le debug ?
 			{
 				//	On enregistre en plus tous les fichiers séparément.
-				DataIO.SaveInfo     (filename, accessor.Mandat.MandatInfo);
-				DataIO.SaveData     (filename, accessor);
-				DataIO.SaveAccounts (filename, accessor);
+				DataIO.SaveInfo          (filename, accessor.Mandat.MandatInfo);
+				DataIO.SaveData          (filename, accessor);
+				DataIO.SaveAccounts      (filename, accessor);
+				DataIO.SaveLocalSettings (filename, accessor);
 			}
 		}
 
@@ -401,6 +433,72 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
+		#region Open local settings
+		private static void OpenLocalSettings(string filename, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (DataIO.GetLocalSettingsFilename (filename));
+
+			if (DataIO.LocalSettingsOpenAction != null)
+			{
+				DataIO.LocalSettingsOpenAction (reader);
+			}
+
+			reader.Close ();
+		}
+
+		private static void OpenLocalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (stream);
+
+			if (DataIO.LocalSettingsOpenAction != null)
+			{
+				DataIO.LocalSettingsOpenAction (reader);
+			}
+
+			reader.Close ();
+		}
+		#endregion
+
+
+		#region Save local settings
+		private static void SaveLocalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (stream, settings);
+
+			if (DataIO.LocalSettingsSaveAction != null)
+			{
+				DataIO.LocalSettingsSaveAction (writer);
+			}
+
+			writer.Flush ();
+			writer.Close ();
+		}
+
+		private static void SaveLocalSettings(string filename, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (DataIO.GetLocalSettingsFilename (filename), settings);
+
+			if (DataIO.LocalSettingsSaveAction != null)
+			{
+				DataIO.LocalSettingsSaveAction (writer);
+			}
+
+			writer.Flush ();
+			writer.Close ();
+		}
+		#endregion
+
+
 		#region Open accounts
 		private static void OpenAccounts(string filename, DataAccessor accessor)
 		{
@@ -464,6 +562,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return System.IO.File.Exists (DataIO.GetAccountsFilename (filename));
 		}
 
+		private static bool ExistingLocalSettings(string filename)
+		{
+			return System.IO.File.Exists (DataIO.GetLocalSettingsFilename (filename));
+		}
+
 
 		private static string GetInfoFilename(string filename)
 		{
@@ -478,6 +581,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static string GetAccountsFilename(string filename)
 		{
 			return filename + ".accounts.xml";
+		}
+
+		private static string GetLocalSettingsFilename(string filename)
+		{
+			return filename + ".localsettings.xml";
 		}
 
 

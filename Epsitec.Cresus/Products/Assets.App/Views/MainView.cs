@@ -329,6 +329,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
+				DataIO.LocalSettingsOpenAction = delegate (System.Xml.XmlReader reader)
+				{
+					LocalSettings.Deserialize (reader);
+				};
+
 				DataIO.OpenMandat (this.accessor, filename);
 			}
 			catch (System.Exception ex)
@@ -346,6 +351,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
+				DataIO.LocalSettingsSaveAction = delegate (System.Xml.XmlWriter writer)
+				{
+					LocalSettings.Serialize (writer);
+				};
+
 				DataIO.SaveMandat (this.accessor, filename, mode);
 			}
 			catch (System.Exception ex)

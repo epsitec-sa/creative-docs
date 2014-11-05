@@ -71,9 +71,9 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public void Serialize(System.Xml.XmlWriter writer)
+		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			writer.WriteStartElement ("GuidRatio");
+			writer.WriteStartElement (name);
 
 			IOHelpers.WriteGuidAttribute    (writer, "Guid",  this.Guid);
 			IOHelpers.WriteDecimalAttribute (writer, "Ratio", this.Ratio);

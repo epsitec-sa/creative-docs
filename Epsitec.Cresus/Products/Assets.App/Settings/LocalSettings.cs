@@ -122,15 +122,68 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
-		public static string Serialize()
+		#region Serialize
+		public static void Serialize(System.Xml.XmlWriter writer)
 		{
-			return null;  // TODO:
+			writer.WriteStartDocument ();
+			writer.WriteStartElement ("LocalSettings");
+
+			LocalSettings.SerializeColumnsState (writer);
+
+			writer.WriteEndElement ();
+			writer.WriteEndDocument ();
 		}
 
-		public static void Deserialize(string data)
+		public static void Deserialize(System.Xml.XmlReader reader)
 		{
-			// TODO:
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "LocalSettings":
+							LocalSettings.DeserializeColumnsState (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
+
+		private static void SerializeColumnsState(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("ColumnsState");
+
+			foreach (var pair in LocalSettings.columnsStates)
+			{
+				pair.Value.Serialize (writer, pair.Key);
+			}
+
+			writer.WriteEndElement ();
+		}
+
+		private static void DeserializeColumnsState(System.Xml.XmlReader reader)
+		{
+			LocalSettings.columnsStates.Clear ();
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					var c = new ColumnsState (reader);
+					LocalSettings.columnsStates.Add (reader.Name, c);
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+		#endregion
 
 
 		public static System.DateTime				CreateMandatDate;

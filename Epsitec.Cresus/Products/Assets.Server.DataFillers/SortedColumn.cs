@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -13,6 +14,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			this.Type  = type;
 		}
 
+		public SortedColumn(System.Xml.XmlReader reader)
+		{
+			this.Field = (ObjectField) IOHelpers.ReadTypeAttribute (reader, "Field", typeof (ObjectField));
+			this.Type  = (SortedType)  IOHelpers.ReadTypeAttribute (reader, "Type",  typeof (SortedType));
+
+			reader.Read ();
+		}
+
+
 		public bool								IsEmpty
 		{
 			get
@@ -21,6 +31,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					&& this.Type  == SortedType.None;
 			}
 		}
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteTypeAttribute (writer, "Field", this.Field);
+			IOHelpers.WriteTypeAttribute (writer, "Type",  this.Type);
+
+			writer.WriteEndElement ();
+		}
+
 
 		public static SortedColumn Empty = new SortedColumn (ObjectField.Unknown, SortedType.None);
 
