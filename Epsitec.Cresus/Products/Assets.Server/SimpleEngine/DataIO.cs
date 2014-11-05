@@ -11,9 +11,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public static class DataIO
 	{
-		public static System.Action<System.Xml.XmlReader> LocalSettingsOpenAction;
-		public static System.Action<System.Xml.XmlWriter> LocalSettingsSaveAction;
-
 		public static MandatInfo OpenInfo(string filename)
 		{
 			//	Lit le petit fichier d'informations, soit à partir du fichier xx.description.xml
@@ -36,7 +33,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
-		public static void OpenMandat(DataAccessor accessor, string filename)
+		public static void OpenMandat(DataAccessor accessor, string filename,
+			System.Action<System.Xml.XmlReader> localSettingsOpenAction)
 		{
 			//	Lit le mandat, soit à partir des fichiers xx.data.xml et xx.accounts.xml
 			//	s'ils existent, sinon à partir du fichier compressé.
@@ -76,7 +74,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	On s'occupe de la partie local settings.
 			if (DataIO.ExistingLocalSettings (filename))
 			{
-				DataIO.OpenLocalSettings (filename, accessor);  // lit directement le fichier xml
+				DataIO.OpenLocalSettings (filename, localSettingsOpenAction);  // lit directement le fichier xml
 			}
 			else
 			{
@@ -86,11 +84,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var data = zip["localsettings.xml"].Data;
 				var stream = new System.IO.MemoryStream (data);
 
-				DataIO.OpenLocalSettings (stream, accessor);
+				DataIO.OpenLocalSettings (stream, localSettingsOpenAction);
 			}
 		}
 
-		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode)
+		public static void SaveMandat(DataAccessor accessor, string filename, SaveMandatMode mode,
+			System.Action<System.Xml.XmlWriter> localSettingsSaveAction)
 		{
 			//	Enregistre le mandat dans un fichier compressé. Selon le mode, on crée
 			//	en plus les fichiers xx.description.xml, xx.data.xml et xx.accounts.xml.
@@ -135,7 +134,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	On s'occupe de la partie local settings.
 			{
 				var stream = new System.IO.MemoryStream ();
-				DataIO.SaveLocalSettings (stream, accessor);
+				DataIO.SaveLocalSettings (stream, localSettingsSaveAction);
 
 				var data = new byte[stream.Length];
 				stream.Position = 0;
@@ -153,7 +152,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DataIO.SaveInfo          (filename, accessor.Mandat.MandatInfo);
 				DataIO.SaveData          (filename, accessor);
 				DataIO.SaveAccounts      (filename, accessor);
-				DataIO.SaveLocalSettings (filename, accessor);
+				DataIO.SaveLocalSettings (filename, localSettingsSaveAction);
 			}
 		}
 
@@ -434,25 +433,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Open local settings
-		private static void OpenLocalSettings(string filename, DataAccessor accessor)
+		private static void OpenLocalSettings(string filename, System.Action<System.Xml.XmlReader> localSettingsOpenAction)
 		{
 			var reader = System.Xml.XmlReader.Create (DataIO.GetLocalSettingsFilename (filename));
 
-			if (DataIO.LocalSettingsOpenAction != null)
+			if (localSettingsOpenAction != null)
 			{
-				DataIO.LocalSettingsOpenAction (reader);
+				localSettingsOpenAction (reader);
 			}
 
 			reader.Close ();
 		}
 
-		private static void OpenLocalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		private static void OpenLocalSettings(System.IO.MemoryStream stream, System.Action<System.Xml.XmlReader> localSettingsOpenAction)
 		{
 			var reader = System.Xml.XmlReader.Create (stream);
 
-			if (DataIO.LocalSettingsOpenAction != null)
+			if (localSettingsOpenAction != null)
 			{
-				DataIO.LocalSettingsOpenAction (reader);
+				localSettingsOpenAction (reader);
 			}
 
 			reader.Close ();
@@ -461,7 +460,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 
 		#region Save local settings
-		private static void SaveLocalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		private static void SaveLocalSettings(System.IO.MemoryStream stream, System.Action<System.Xml.XmlWriter> localSettingsSaveAction)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
@@ -470,16 +469,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var writer = System.Xml.XmlWriter.Create (stream, settings);
 
-			if (DataIO.LocalSettingsSaveAction != null)
+			if (localSettingsSaveAction != null)
 			{
-				DataIO.LocalSettingsSaveAction (writer);
+				localSettingsSaveAction (writer);
 			}
 
 			writer.Flush ();
 			writer.Close ();
 		}
 
-		private static void SaveLocalSettings(string filename, DataAccessor accessor)
+		private static void SaveLocalSettings(string filename, System.Action<System.Xml.XmlWriter> localSettingsSaveAction)
 		{
 			var settings = new System.Xml.XmlWriterSettings
 			{
@@ -488,9 +487,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var writer = System.Xml.XmlWriter.Create (DataIO.GetLocalSettingsFilename (filename), settings);
 
-			if (DataIO.LocalSettingsSaveAction != null)
+			if (localSettingsSaveAction != null)
 			{
-				DataIO.LocalSettingsSaveAction (writer);
+				localSettingsSaveAction (writer);
 			}
 
 			writer.Flush ();

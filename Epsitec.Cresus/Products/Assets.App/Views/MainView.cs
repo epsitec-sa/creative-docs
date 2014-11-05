@@ -329,12 +329,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			try
 			{
-				DataIO.LocalSettingsOpenAction = delegate (System.Xml.XmlReader reader)
+				DataIO.OpenMandat (this.accessor, filename, delegate (System.Xml.XmlReader reader)
 				{
+					//	Effectur la désérialisation des LocalSettings.
 					LocalSettings.Deserialize (reader);
-				};
-
-				DataIO.OpenMandat (this.accessor, filename);
+				});
 			}
 			catch (System.Exception ex)
 			{
@@ -351,12 +350,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			try
 			{
-				DataIO.LocalSettingsSaveAction = delegate (System.Xml.XmlWriter writer)
+				DataIO.SaveMandat (this.accessor, filename, mode, delegate (System.Xml.XmlWriter writer)
 				{
+					//	Effectur la sérialisation des LocalSettings.
 					LocalSettings.Serialize (writer);
-				};
-
-				DataIO.SaveMandat (this.accessor, filename, mode);
+				});
 			}
 			catch (System.Exception ex)
 			{
