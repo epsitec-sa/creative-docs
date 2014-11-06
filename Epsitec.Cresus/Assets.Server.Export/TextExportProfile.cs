@@ -27,13 +27,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public TextExportProfile(System.Xml.XmlReader reader)
 		{
-			this.ColumnSeparator = IOHelpers.ReadStringAttribute (reader, "ColumnSeparator");
-			this.ColumnBracket   = IOHelpers.ReadStringAttribute (reader, "ColumnBracket");
-			this.Escape          = IOHelpers.ReadStringAttribute (reader, "Escape");
-			this.EndOfLine       = IOHelpers.ReadStringAttribute (reader, "EndOfLine");
-			this.HasHeader       = IOHelpers.ReadBoolAttribute   (reader, "HasHeader");
-			this.Inverted        = IOHelpers.ReadBoolAttribute   (reader, "Inverted");
-			this.Encoding        = (Encoding) IOHelpers.ReadTypeAttribute (reader, "Encoding", typeof (Encoding));
+			this.ColumnSeparator = IOHelpers.ReadStringAttribute   (reader, "ColumnSeparator");
+			this.ColumnBracket   = IOHelpers.ReadStringAttribute   (reader, "ColumnBracket");
+			this.Escape          = IOHelpers.ReadStringAttribute   (reader, "Escape");
+			this.EndOfLine       = IOHelpers.ReadStringAttribute   (reader, "EndOfLine");
+			this.HasHeader       = IOHelpers.ReadBoolAttribute     (reader, "HasHeader");
+			this.Inverted        = IOHelpers.ReadBoolAttribute     (reader, "Inverted");
+			this.Encoding        = IOHelpers.ReadEncodingAttribute (reader, "Encoding");
 
 			reader.Read ();
 		}
@@ -79,13 +79,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute (writer, "ColumnSeparator", this.ColumnSeparator);
-			IOHelpers.WriteStringAttribute (writer, "ColumnBracket",   this.ColumnBracket);
-			IOHelpers.WriteStringAttribute (writer, "Escape",          this.Escape);
-			IOHelpers.WriteStringAttribute (writer, "EndOfLine",       this.EndOfLine);
-			IOHelpers.WriteBoolAttribute   (writer, "HasHeader",       this.HasHeader);
-			IOHelpers.WriteBoolAttribute   (writer, "Inverted",        this.Inverted);
-			IOHelpers.WriteTypeAttribute   (writer, "Encoding",        this.Encoding);
+			IOHelpers.WriteStringAttribute   (writer, "ColumnSeparator", this.ColumnSeparator);
+			IOHelpers.WriteStringAttribute   (writer, "ColumnBracket",   this.ColumnBracket);
+			IOHelpers.WriteStringAttribute   (writer, "Escape",          this.Escape);
+			IOHelpers.WriteStringAttribute   (writer, "EndOfLine",       this.EndOfLine);
+			IOHelpers.WriteBoolAttribute     (writer, "HasHeader",       this.HasHeader);
+			IOHelpers.WriteBoolAttribute     (writer, "Inverted",        this.Inverted);
+			IOHelpers.WriteEncodingAttribute (writer, "Encoding",        this.Encoding);
 
 			writer.WriteEndElement ();
 		}

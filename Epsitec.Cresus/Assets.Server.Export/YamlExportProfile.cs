@@ -24,10 +24,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public YamlExportProfile(System.Xml.XmlReader reader)
 		{
-			this.Indent    = IOHelpers.ReadStringAttribute (reader, "Indent");
-			this.EndOfLine = IOHelpers.ReadStringAttribute (reader, "EndOfLine");
-			this.CamelCase = IOHelpers.ReadBoolAttribute   (reader, "CamelCase");
-			this.Encoding  = (Encoding) IOHelpers.ReadTypeAttribute (reader, "Encoding", typeof (Encoding));
+			this.Indent    = IOHelpers.ReadStringAttribute   (reader, "Indent");
+			this.EndOfLine = IOHelpers.ReadStringAttribute   (reader, "EndOfLine");
+			this.CamelCase = IOHelpers.ReadBoolAttribute     (reader, "CamelCase");
+			this.Encoding  = IOHelpers.ReadEncodingAttribute (reader, "Encoding");
 
 			reader.Read ();
 		}
@@ -58,10 +58,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute (writer, "Indent",    this.Indent);
-			IOHelpers.WriteStringAttribute (writer, "EndOfLine", this.EndOfLine);
-			IOHelpers.WriteBoolAttribute   (writer, "CamelCase", this.CamelCase);
-			IOHelpers.WriteTypeAttribute   (writer, "Encoding",  this.Encoding);
+			IOHelpers.WriteStringAttribute   (writer, "Indent",    this.Indent);
+			IOHelpers.WriteStringAttribute   (writer, "EndOfLine", this.EndOfLine);
+			IOHelpers.WriteBoolAttribute     (writer, "CamelCase", this.CamelCase);
+			IOHelpers.WriteEncodingAttribute (writer, "Encoding",  this.Encoding);
 
 			writer.WriteEndElement ();
 		}

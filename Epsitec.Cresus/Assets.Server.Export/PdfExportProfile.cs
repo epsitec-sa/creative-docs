@@ -40,7 +40,31 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					if (reader.Name == "Style")
 					{
 						this.Style = new PdfStyle (reader);
-						break;
+					}
+					else if (reader.Name == "Params")
+					{
+						this.PageSize.Width        = (double) IOHelpers.ReadDecimalAttribute (reader, "PageSize.Width");
+						this.PageSize.Height       = (double) IOHelpers.ReadDecimalAttribute (reader, "PageSize.Height");
+
+						this.PageMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Left");
+						this.PageMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Right");
+						this.PageMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Top");
+						this.PageMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Bottom");
+
+						this.CellMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Left");
+						this.CellMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Right");
+						this.CellMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Top");
+						this.CellMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Bottom");
+
+						this.Font                  = (ExportFont) IOHelpers.ReadTypeAttribute (reader, "Font", typeof (ExportFont));
+						this.FontSize              = (double) IOHelpers.ReadDecimalAttribute (reader, "FontSize");
+						this.AutomaticColumnWidths = IOHelpers.ReadBoolAttribute   (reader, "AutomaticColumnWidths");
+						this.Header                = IOHelpers.ReadStringAttribute (reader, "Header");
+						this.Footer                = IOHelpers.ReadStringAttribute (reader, "Footer");
+						this.Indent                = IOHelpers.ReadStringAttribute (reader, "Indent");
+						this.Watermark             = IOHelpers.ReadStringAttribute (reader, "Watermark");
+
+						reader.Read ();
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -48,29 +72,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					break;
 				}
 			}
-
-			this.PageSize.Width        = (double) IOHelpers.ReadDecimalAttribute (reader, "PageSize.Width");
-			this.PageSize.Height       = (double) IOHelpers.ReadDecimalAttribute (reader, "PageSize.Height");
-
-			this.PageMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Left");
-			this.PageMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Right");
-			this.PageMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Top");
-			this.PageMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, "PageMargins.Bottom");
-
-			this.CellMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Left");
-			this.CellMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Right");
-			this.CellMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Top");
-			this.CellMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, "CellMargins.Bottom");
-
-			this.Font                  = (ExportFont) IOHelpers.ReadTypeAttribute (reader, "Font", typeof (ExportFont));
-			this.FontSize              = (double) IOHelpers.ReadDecimalAttribute (reader, "FontSize");
-			this.AutomaticColumnWidths = IOHelpers.ReadBoolAttribute (reader, "AutomaticColumnWidths");
-			this.Header                = IOHelpers.ReadStringAttribute (reader, "Header");
-			this.Footer                = IOHelpers.ReadStringAttribute (reader, "Footer");
-			this.Indent                = IOHelpers.ReadStringAttribute (reader, "Indent");
-			this.Watermark             = IOHelpers.ReadStringAttribute (reader, "Watermark");
-
-			reader.Read ();
 		}
 
 	
@@ -121,6 +122,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			this.Style.Serialize (writer, "Style");
 
+			writer.WriteStartElement ("Params");
 			IOHelpers.WriteDecimalAttribute (writer, "PageSize.Width",        (decimal) this.PageSize.Width);
 			IOHelpers.WriteDecimalAttribute (writer, "PageSize.Height",       (decimal) this.PageSize.Height);
 
@@ -141,6 +143,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			IOHelpers.WriteStringAttribute  (writer, "Footer",                this.Footer);
 			IOHelpers.WriteStringAttribute  (writer, "Indent",                this.Indent);
 			IOHelpers.WriteStringAttribute  (writer, "Watermark",             this.Watermark);
+			writer.WriteEndElement ();
 
 			writer.WriteEndElement ();
 		}

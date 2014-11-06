@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public JsonExportProfile(System.Xml.XmlReader reader)
 		{
-			this.EndOfLine = IOHelpers.ReadStringAttribute (reader, "EndOfLine");
-			this.CamelCase = IOHelpers.ReadBoolAttribute   (reader, "CamelCase");
-			this.Compact   = IOHelpers.ReadBoolAttribute   (reader, "Compact");
-			this.Encoding  = (Encoding) IOHelpers.ReadTypeAttribute (reader, "Encoding", typeof (Encoding));
+			this.EndOfLine = IOHelpers.ReadStringAttribute   (reader, "EndOfLine");
+			this.CamelCase = IOHelpers.ReadBoolAttribute     (reader, "CamelCase");
+			this.Compact   = IOHelpers.ReadBoolAttribute     (reader, "Compact");
+			this.Encoding  = IOHelpers.ReadEncodingAttribute (reader, "Encoding");
 
 			reader.Read ();
 		}
@@ -47,10 +47,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute (writer, "EndOfLine", this.EndOfLine);
-			IOHelpers.WriteBoolAttribute   (writer, "CamelCase", this.CamelCase);
-			IOHelpers.WriteBoolAttribute   (writer, "Compact",   this.Compact);
-			IOHelpers.WriteTypeAttribute   (writer, "Encoding",  this.Encoding);
+			IOHelpers.WriteStringAttribute   (writer, "EndOfLine", this.EndOfLine);
+			IOHelpers.WriteBoolAttribute     (writer, "CamelCase", this.CamelCase);
+			IOHelpers.WriteBoolAttribute     (writer, "Compact",   this.Compact);
+			IOHelpers.WriteEncodingAttribute (writer, "Encoding",  this.Encoding);
 
 			writer.WriteEndElement ();
 		}

@@ -133,51 +133,85 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.SerializeSearchInfo (writer);
 			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
 
+			writer.WriteElementString ("CreateMandatDate",     LocalSettings.CreateMandatDate.ToStringIO ());
+			writer.WriteElementString ("CreateAssetDate",      LocalSettings.CreateAssetDate.ToStringIO ());
+			writer.WriteElementString ("AmortizationDateFrom", LocalSettings.AmortizationDateFrom.ToStringIO ());
+			writer.WriteElementString ("AmortizationDateTo",   LocalSettings.AmortizationDateTo.ToStringIO ());
+			writer.WriteElementString ("LockedDate",           LocalSettings.LockedDate.ToStringIO ());
+			writer.WriteElementString ("DefaultMandatDate",    LocalSettings.DefaultMandatDate.ToStringIO ());
+			writer.WriteElementString ("DefaultFreeDate",      LocalSettings.DefaultFreeDate.ToStringIO ());
+
+			LocalSettings.ExportInstructions.Serialize (writer, "ExportInstructions");
+			LocalSettings.ExportTxtProfile  .Serialize (writer, "ExportTxtProfile");
+			LocalSettings.ExportCsvProfile  .Serialize (writer, "ExportCsvProfile");
+			LocalSettings.ExportXmlProfile  .Serialize (writer, "ExportXmlProfile");
+			LocalSettings.ExportYamlProfile .Serialize (writer, "ExportYamlProfile");
+			LocalSettings.ExportJsonProfile .Serialize (writer, "ExportJsonProfile");
+			LocalSettings.ExportPdfProfile  .Serialize (writer, "ExportPdfProfile");
+
+			writer.WriteElementString ("AccountsImportFilename", LocalSettings.AccountsImportFilename);
+
+			writer.WriteElementString ("SplitterAssetsEventPos",    LocalSettings.SplitterAssetsEventPos.ToStringIO ());
+			writer.WriteElementString ("SplitterAssetsMultiplePos", LocalSettings.SplitterAssetsMultiplePos.ToStringIO ());
+
+			writer.WriteElementString ("AccountCategories", LocalSettings.AccountCategories.ToStringIO ());
+
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
 		}
 
 		private static void SerializeColumnsState(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("ColumnsState");
+			var columnsStates = LocalSettings.columnsStates.Where (x => !x.Value.IsEmpty).ToArray ();
 
-			foreach (var pair in LocalSettings.columnsStates)
+			if (columnsStates.Any ())
 			{
-				pair.Value.Serialize (writer, pair.Key);
-			}
+				writer.WriteStartElement ("ColumnsState");
 
-			writer.WriteEndElement ();
+				foreach (var pair in columnsStates)
+				{
+					pair.Value.Serialize (writer, pair.Key);
+				}
+
+				writer.WriteEndElement ();
+			}
 		}
 
 		private static void SerializeSearchInfo(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("SearchInfo");
-
-			foreach (var pair in LocalSettings.searchInfos)
+			if (LocalSettings.searchInfos.Any ())
 			{
-				pair.Value.Serialize (writer, pair.Key.ToStringIO ());
-			}
+				writer.WriteStartElement ("SearchInfo");
 
-			writer.WriteEndElement ();
+				foreach (var pair in LocalSettings.searchInfos)
+				{
+					pair.Value.Serialize (writer, pair.Key.ToStringIO ());
+				}
+
+				writer.WriteEndElement ();
+			}
 		}
 
 		private static void SerializeCreateAssetDefaultGroups(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("CreateAssetDefaultGroups");
-
-			int i = 0;
-			foreach (var pair in LocalSettings.createAssetDefaultGroups)
+			if (LocalSettings.createAssetDefaultGroups.Any ())
 			{
-				var n = "Goup" + (i++).ToStringIO ();
-				writer.WriteStartElement (n);
+				writer.WriteStartElement ("CreateAssetDefaultGroups");
 
-				IOHelpers.WriteStringAttribute (writer, "Parent",    pair.Key  .ToStringIO ());
-				IOHelpers.WriteStringAttribute (writer, "Selection", pair.Value.ToStringIO ());
+				int i = 0;
+				foreach (var pair in LocalSettings.createAssetDefaultGroups)
+				{
+					var n = "Goup" + (i++).ToStringIO ();
+					writer.WriteStartElement (n);
+
+					IOHelpers.WriteStringAttribute (writer, "Parent", pair.Key.ToStringIO ());
+					IOHelpers.WriteStringAttribute (writer, "Selection", pair.Value.ToStringIO ());
+
+					writer.WriteEndElement ();
+				}
 
 				writer.WriteEndElement ();
 			}
-
-			writer.WriteEndElement ();
 		}
 		#endregion
 
@@ -189,9 +223,27 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
+					if (reader.Name == "LocalSettings")
+					{
+						LocalSettings.DeserializeLocalSettings (reader);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private static void DeserializeLocalSettings(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
 					switch (reader.Name)
 					{
-						case "LocalSettings":
+						case "ColumnsState":
 							LocalSettings.DeserializeColumnsState (reader);
 							break;
 
@@ -200,7 +252,79 @@ namespace Epsitec.Cresus.Assets.App.Settings
 							break;
 
 						case "CreateAssetDefaultGroups":
-							LocalSettings.DeserializeCreateAssetDefaultGroups  (reader);
+							LocalSettings.DeserializeCreateAssetDefaultGroups (reader);
+							break;
+
+						case "CreateMandatDate":
+							LocalSettings.CreateMandatDate = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "CreateAssetDate":
+							LocalSettings.CreateAssetDate = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "AmortizationDateFrom":
+							LocalSettings.AmortizationDateFrom = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "AmortizationDateTo":
+							LocalSettings.AmortizationDateTo = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "LockedDate":
+							LocalSettings.LockedDate = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "DefaultMandatDate":
+							LocalSettings.DefaultMandatDate = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "DefaultFreeDate":
+							LocalSettings.DefaultFreeDate = reader.ReadElementContentAsString ().ParseDate ();
+							break;
+
+						case "ExportInstructions":
+							LocalSettings.ExportInstructions = new ExportInstructions (reader);
+							break;
+
+						case "ExportTxtProfile":
+							LocalSettings.ExportTxtProfile = new TextExportProfile (reader);
+							break;
+
+						case "ExportCsvProfile":
+							LocalSettings.ExportCsvProfile = new TextExportProfile (reader);
+							break;
+
+						case "ExportXmlProfile":
+							LocalSettings.ExportXmlProfile = new XmlExportProfile (reader);
+							break;
+
+						case "ExportYamlProfile":
+							LocalSettings.ExportYamlProfile = new YamlExportProfile (reader);
+							break;
+
+						case "ExportJsonProfile":
+							LocalSettings.ExportJsonProfile = new JsonExportProfile (reader);
+							break;
+
+						case "ExportPdfProfile":
+							LocalSettings.ExportPdfProfile = new PdfExportProfile (reader);
+							break;
+
+						case "AccountsImportFilename":
+							LocalSettings.AccountsImportFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case "SplitterAssetsEventPos":
+							LocalSettings.SplitterAssetsEventPos = reader.ReadElementContentAsString ().ParseInt ();
+							break;
+
+						case "SplitterAssetsMultiplePos":
+							LocalSettings.SplitterAssetsMultiplePos = reader.ReadElementContentAsString ().ParseInt ();
+							break;
+
+						case "AccountCategories":
+							LocalSettings.AccountCategories = (AccountCategory) reader.ReadElementContentAsString ().ParseType (typeof (AccountCategory));
 							break;
 					}
 				}

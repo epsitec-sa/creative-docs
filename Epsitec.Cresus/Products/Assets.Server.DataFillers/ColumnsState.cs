@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					if (reader.Name == "Mappers")
 					{
-						var mappers = reader.ReadElementContentAsString ().Split (';');
+						var mappers = reader.ReadElementContentAsString ().Split (new string[] { ";" }, System.StringSplitOptions.RemoveEmptyEntries);
 						foreach (var m in mappers)
 						{
 							mapper.Add (m.ParseInt ());
