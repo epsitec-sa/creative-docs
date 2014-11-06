@@ -28,6 +28,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		public static void Initialize(System.DateTime defaultDate)
 		{
+			LocalSettings.columnsStates.Clear ();
+			LocalSettings.searchInfos.Clear ();
+			LocalSettings.createAssetDefaultGroups.Clear ();
+
 			var defaultTimestamp = new Timestamp (defaultDate, 0);
 
 			LocalSettings.CreateMandatDate     = new System.DateTime (defaultTimestamp.Date.Year, 1, 1);

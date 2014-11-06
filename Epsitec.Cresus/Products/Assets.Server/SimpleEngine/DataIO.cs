@@ -650,7 +650,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string LocalSettingsZipPath
 		{
-			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier compressé.
+			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier compressé,
+			//	pour les LocalSettings.
 			//	Par exemple "localsettings.MacPro-2014-DR_Daniel.xml".
 			get
 			{

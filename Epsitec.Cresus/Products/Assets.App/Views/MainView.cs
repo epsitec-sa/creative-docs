@@ -312,6 +312,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.lastViewStates.Clear ();
 			this.historyPosition = -1;
 
+			LocalSettings.Initialize (Timestamp.Now.Date);
+
 			var factory = MandatFactory.Factories.Where (x => x.Name == factoryName).FirstOrDefault ();
 			System.Diagnostics.Debug.Assert (factory != null);
 			factory.Create (this.accessor, name, startDate, withSamples);
@@ -326,6 +328,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.historyViewStates.Clear ();
 			this.lastViewStates.Clear ();
 			this.historyPosition = -1;
+
+			LocalSettings.Initialize (Timestamp.Now.Date);
 
 			try
 			{
