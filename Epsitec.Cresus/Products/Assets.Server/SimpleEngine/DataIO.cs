@@ -9,6 +9,9 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
+	/// <summary>
+	/// Cette classe centralise la gestion de la persistance des données.
+	/// </summary>
 	public static class DataIO
 	{
 		public static MandatInfo OpenInfo(string filename)
@@ -97,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var zip = new ZipFile ();
 				zip.LoadFile (filename);
 
-				var data = zip["localsettings.xml"].Data;
+				var data = zip[DataIO.LocalSettingsZipPath].Data;  // "localsettings.user.xml"
 				var stream = new System.IO.MemoryStream (data);
 
 				DataIO.OpenLocalSettings (stream, localSettingsOpenAction);
@@ -169,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				stream.Position = 0;
 				stream.Read (data, 0, (int) stream.Length);
 
-				zip.AddEntry ("localsettings.xml", data);
+				zip.AddEntry (DataIO.LocalSettingsZipPath, data);  // "localsettings.user.xml"
 			}
 
 			System.IO.File.Delete (filename);
@@ -191,7 +194,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			else
 			{
 				//	Supprime les fichiers de debug, s'ils existent. C'est plus prudent,
-				//	car c'est eux qui sont lus en priorité.
+				//	car ce sont eux qui sont lus en priorité.
 				System.IO.File.Delete (DataIO.GetInfoFilename           (filename));
 				System.IO.File.Delete (DataIO.GetDataFilename           (filename));
 				System.IO.File.Delete (DataIO.GetGlobalSettingsFilename (filename));
@@ -645,6 +648,36 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
+		private static string LocalSettingsZipPath
+		{
+			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier zip compressé.
+			//	Par exemple "localsettings.MacPro-2014-DR_Daniel.xml".
+			get
+			{
+				var user = DataIO.MapToValidFilename (DataIO.CurrentUser);
+				return string.Format ("localsettings.{0}.xml", user);
+			}
+		}
+
+		private static string MapToValidFilename(string filename)
+		{
+			foreach (char c in System.IO.Path.GetInvalidFileNameChars ())
+			{
+				filename = filename.Replace (c, '_');
+			}
+
+			return filename;
+		}
+
+		private static string CurrentUser
+		{
+			get
+			{
+				return System.Security.Principal.WindowsIdentity.GetCurrent ().Name;
+			}
+		}
+
+
 		private static bool ExistingInfo(string filename)
 		{
 			return System.IO.File.Exists (DataIO.GetInfoFilename (filename));
@@ -693,7 +726,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string GetLocalSettingsFilename(string filename)
 		{
-			return filename + ".localsettings.xml";
+			return string.Concat (filename, ".", DataIO.LocalSettingsZipPath);
 		}
 	}
 }
