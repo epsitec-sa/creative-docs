@@ -97,6 +97,12 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderMailingParticipantEntity Create(BusinessContext context, AiderMailingEntity mailing, AiderHouseholdEntity household)
 		{
+			if (!household.Contacts.Any ())
+			{
+				AiderHouseholdEntity.DeleteEmptyHouseholds (context, household);
+				return null;
+			}
+
 			var participant = context.CreateAndRegisterEntity<AiderMailingParticipantEntity> ();
 
 			participant.Mailing  = mailing;
