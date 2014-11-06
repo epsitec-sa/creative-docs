@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("GlobalSettings");
 
+			writer.WriteElementString ("DocumentVersion",  DataMandat.DocumentVersion);
 			writer.WriteElementString ("Language",         this.Language);
 			writer.WriteElementString ("MandatFilename",   this.MandatFilename);
 			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
@@ -64,6 +65,10 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "DocumentVersion":
+							var version = reader.ReadElementContentAsString ();
+							break;
+
 						case "Language":
 							this.Language = reader.ReadElementContentAsString ();
 							break;

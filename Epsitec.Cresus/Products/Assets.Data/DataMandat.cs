@@ -97,6 +97,8 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+
+		#region Mandat informations
 		public MandatInfo						MandatInfo
 		{
 			get
@@ -109,7 +111,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private string SoftwareKey
+		private string							SoftwareKey
 		{
 			//	Retourne le numéro d'identification du logiciel (parfois appelé clé).
 			get
@@ -118,7 +120,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private string SoftwareLanguage
+		private string							SoftwareLanguage
 		{
 			//	Retourne la langue du logiciel.
 			get
@@ -127,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private string SoftwareVersion
+		private string							SoftwareVersion
 		{
 			//	Retourne le numéro de version (celle du projet Assets.Data).
 			get
@@ -136,15 +138,16 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private const string DocumentVersion = "1.0";
+		public const string						DocumentVersion = "1.0";
 
-		private int EventCount
+		private int								EventCount
 		{
 			get
 			{
 				return this.assets.Select (x => x.EventsCount).Sum ();
 			}
 		}
+		#endregion
 
 
 		public GuidList<DataObject> GetData(BaseType type)
@@ -240,6 +243,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("Mandat");
 
+			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
 			this.SerializeDefinitions (writer);
 			this.SerializeObjects (writer);
 
@@ -251,6 +255,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("Accounts");
+
+			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
 
 			foreach (var pair in this.rangeAccounts)
 			{
@@ -348,6 +354,10 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "DocumentVersion":
+							var version = reader.ReadElementContentAsString ();
+							break;
+
 						case "Definitions":
 							this.DeserializeDefinitions (reader);
 							break;
@@ -381,6 +391,10 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "DocumentVersion":
+							var version = reader.ReadElementContentAsString ();
+							break;
+
 						case "Period":
 							this.DeserializeAccountsPeriod (reader);
 							break;

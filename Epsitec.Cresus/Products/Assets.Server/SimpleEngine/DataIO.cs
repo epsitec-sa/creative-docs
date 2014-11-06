@@ -216,6 +216,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static MandatInfo OpenInfoDescription(System.Xml.XmlReader reader)
 		{
+			string version          = null;
 			string softwareId       = null;
 			string softwareVersion  = null;
 			string softwareLanguage = null;
@@ -230,6 +231,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					switch (reader.Name)
 					{
+						case "DocumentVersion":
+							version = reader.ReadElementContentAsString ();
+							break;
+
 						case "Software":
 							softwareId       = reader["id"];
 							softwareVersion  = reader["ver"];
@@ -356,6 +361,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("FileDescription");
+
+			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
 
 			writer.WriteStartElement    ("Software");
 			writer.WriteAttributeString ("id",   info.SoftwareId);

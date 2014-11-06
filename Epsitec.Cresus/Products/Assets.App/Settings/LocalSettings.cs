@@ -129,6 +129,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("LocalSettings");
 
+			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+
 			LocalSettings.SerializeColumnsState (writer);
 			LocalSettings.SerializeSearchInfo (writer);
 			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
@@ -243,6 +245,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				{
 					switch (reader.Name)
 					{
+						case "DocumentVersion":
+							var version = reader.ReadElementContentAsString ();
+							break;
+
 						case "ColumnsState":
 							LocalSettings.DeserializeColumnsState (reader);
 							break;
