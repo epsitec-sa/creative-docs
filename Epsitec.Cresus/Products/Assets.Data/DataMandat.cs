@@ -102,7 +102,16 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				var statistics = new MandatStatistics (this.assets.Count, this.EventCount, this.categories.Count, this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
-				return new MandatInfo ("02600-300001-3876-123456", "0.0.123.0", "fr", this.name, this.guid, "0.0", statistics);  // version 1.0.1234
+				return new MandatInfo ("02600-300001-3876-123456", DataMandat.Version, "fr", this.name, this.guid, "0.0", statistics);  // version 1.0.1234
+			}
+		}
+
+		private static string Version
+		{
+			//	Retourne le numéro de version (celle du projet Assets.Data).
+			get
+			{
+				return typeof (DataMandat).Assembly.FullName.Split (',')[1].Split ('=')[1];
 			}
 		}
 
