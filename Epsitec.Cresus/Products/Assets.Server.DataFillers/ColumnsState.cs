@@ -34,27 +34,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Mappers")
+					switch (reader.Name)
 					{
-						var mappers = reader.ReadElementContentAsString ().Split (new string[] { ";" }, System.StringSplitOptions.RemoveEmptyEntries);
-						foreach (var m in mappers)
-						{
-							mapper.Add (m.ParseInt ());
-						}
-					}
-					else if (reader.Name.StartsWith ("Column"))
-					{
-						var c = new ColumnState (reader);
-						columns.Add (c);
-					}
-					else if (reader.Name.StartsWith ("Sorted"))
-					{
-						var s = new SortedColumn (reader);
-						sorted.Add (s);
-					}
-					else if (reader.Name == "DockToLeftCount")
-					{
-						this.DockToLeftCount = reader.ReadElementContentAsString ().ParseInt ();
+						case "Mappers":
+							var mappers = reader.ReadElementContentAsString ().Split (new string[] { ";" }, System.StringSplitOptions.RemoveEmptyEntries);
+							foreach (var m in mappers)
+							{
+								mapper.Add (m.ParseInt ());
+							}
+							break;
+
+						case "Column":
+							var c = new ColumnState (reader);
+							columns.Add (c);
+							break;
+
+						case "Sorted":
+							var s = new SortedColumn (reader);
+							sorted.Add (s);
+							break;
+
+						case "DockToLeftCount":
+							this.DockToLeftCount = reader.ReadElementContentAsString ().ParseInt ();
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -110,14 +112,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			for (int i=0; i<this.Columns.Length; i++)
 			{
-				string n = "Column" + i.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				this.Columns[i].Serialize (writer, n);
+				this.Columns[i].Serialize (writer, "Column");
 			}
 
 			for (int i=0; i<this.Sorted.Length; i++)
 			{
-				string n = "Sorted" + i.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				this.Sorted[i].Serialize (writer, n);
+				this.Sorted[i].Serialize (writer, "Sorted");
 			}
 
 			writer.WriteElementString ("DockToLeftCount", this.DockToLeftCount.ToStringIO ());
