@@ -101,12 +101,33 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			get
 			{
-				var statistics = new MandatStatistics (this.assets.Count, this.EventCount, this.categories.Count, this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
-				return new MandatInfo ("02600-300001-3876-123456", DataMandat.Version, "fr", this.name, this.guid, "0.0", statistics);  // version 1.0.1234
+				var statistics = new MandatStatistics (this.assets.Count, this.EventCount, this.categories.Count,
+					this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
+
+				return new MandatInfo (this.SoftwareKey, this.SoftwareVersion, this.SoftwareLanguage,
+					this.name, this.guid, DataMandat.DocumentVersion, statistics);
 			}
 		}
 
-		private static string Version
+		private string SoftwareKey
+		{
+			//	Retourne le numéro d'identification du logiciel (parfois appelé clé).
+			get
+			{
+				return "02600-300001-3876-123456";  // TODO: obtenir le vrai !
+			}
+		}
+
+		private string SoftwareLanguage
+		{
+			//	Retourne la langue du logiciel.
+			get
+			{
+				return this.globalSettings.Language;
+			}
+		}
+
+		private string SoftwareVersion
 		{
 			//	Retourne le numéro de version (celle du projet Assets.Data).
 			get
@@ -114,6 +135,8 @@ namespace Epsitec.Cresus.Assets.Data
 				return typeof (DataMandat).Assembly.FullName.Split (',')[1].Split ('=')[1];
 			}
 		}
+
+		private const string DocumentVersion = "1.0";
 
 		private int EventCount
 		{

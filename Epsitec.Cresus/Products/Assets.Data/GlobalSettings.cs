@@ -14,6 +14,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
+			this.Language = "fr";
+
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
 			var filename = System.IO.Path.Combine (item.FullPath, "default" + IOHelpers.Extension);
 			this.MandatFilename = filename;
@@ -28,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("GlobalSettings");
 
+			writer.WriteElementString ("Language",         this.Language);
 			writer.WriteElementString ("MandatFilename",   this.MandatFilename);
 			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
 			writer.WriteElementString ("CopyNameStrategy", this.CopyNameStrategy.ToStringIO ());
@@ -61,6 +64,10 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "Language":
+							this.Language = reader.ReadElementContentAsString ();
+							break;
+
 						case "MandatFilename":
 							this.MandatFilename = reader.ReadElementContentAsString ();
 							break;
@@ -83,6 +90,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
+		public string							Language;
 		public string							MandatFilename;
 		public SaveMandatMode					SaveMandatMode;
 		public CopyNameStrategy					CopyNameStrategy;
