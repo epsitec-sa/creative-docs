@@ -8,5 +8,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 {
 	public abstract class AbstractExportProfile
 	{
+		public abstract void Serialize(System.Xml.XmlWriter writer, string name);
 	}
 }

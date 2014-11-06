@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -17,6 +18,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.BorderThickness = borderThickness;
 		}
 
+		public PdfStyle(System.Xml.XmlReader reader)
+		{
+			this.LabelColor      = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, "LabelColor",  typeof (ExportColor));
+			this.EvenColor       = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, "EvenColor",   typeof (ExportColor));
+			this.OddColor        = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, "OddColor",    typeof (ExportColor));
+			this.BorderColor     = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, "BorderColor", typeof (ExportColor));
+			this.BorderThickness = (double)      IOHelpers.ReadDecimalAttribute (reader, "BorderThickness");
+
+			reader.Read ();
+		}
+	
 
 		public static bool operator==(PdfStyle s1, PdfStyle s2)
 		{
@@ -85,6 +97,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				default:
 					return new PdfStyle (ExportColor.Grey, ExportColor.Transparent, ExportColor.Transparent, ExportColor.Black, 0.1);
 			}
+		}
+
+
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteTypeAttribute    (writer, "LabelColor",  this.LabelColor);
+			IOHelpers.WriteTypeAttribute    (writer, "EvenColor",   this.EvenColor);
+			IOHelpers.WriteTypeAttribute    (writer, "OddColor",    this.OddColor);
+			IOHelpers.WriteTypeAttribute    (writer, "BorderColor", this.BorderColor);
+			IOHelpers.WriteDecimalAttribute (writer, "BorderThickness", (decimal) this.BorderThickness);
+
+			writer.WriteEndElement ();
 		}
 
 

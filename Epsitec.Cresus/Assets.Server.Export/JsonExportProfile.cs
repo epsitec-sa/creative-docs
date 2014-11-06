@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -20,6 +21,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding  = encoding;
 		}
 
+		public JsonExportProfile(System.Xml.XmlReader reader)
+		{
+			this.EndOfLine = IOHelpers.ReadStringAttribute (reader, "EndOfLine");
+			this.CamelCase = IOHelpers.ReadBoolAttribute   (reader, "CamelCase");
+			this.Compact   = IOHelpers.ReadBoolAttribute   (reader, "Compact");
+			this.Encoding  = (Encoding) IOHelpers.ReadTypeAttribute (reader, "Encoding", typeof (Encoding));
+
+			reader.Read ();
+		}
+
+	
 		public static JsonExportProfile Default = new JsonExportProfile (TagConverters.Eol, true, Encoding.UTF8);
 
 		public string							FinalEndOfLine
@@ -29,6 +41,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				return TagConverters.GetFinalText (this.EndOfLine);
 			}
 		}
+
+
+		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteStringAttribute (writer, "EndOfLine", this.EndOfLine);
+			IOHelpers.WriteBoolAttribute   (writer, "CamelCase", this.CamelCase);
+			IOHelpers.WriteBoolAttribute   (writer, "Compact",   this.Compact);
+			IOHelpers.WriteTypeAttribute   (writer, "Encoding",  this.Encoding);
+
+			writer.WriteEndElement ();
+		}
+
 
 		public readonly string					EndOfLine;
 		public readonly bool					CamelCase;

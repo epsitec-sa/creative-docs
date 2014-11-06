@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -24,6 +25,20 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding        = encoding;
 		}
 
+		public TextExportProfile(System.Xml.XmlReader reader)
+		{
+			this.ColumnSeparator = IOHelpers.ReadStringAttribute (reader, "ColumnSeparator");
+			this.ColumnBracket   = IOHelpers.ReadStringAttribute (reader, "ColumnBracket");
+			this.Escape          = IOHelpers.ReadStringAttribute (reader, "Escape");
+			this.EndOfLine       = IOHelpers.ReadStringAttribute (reader, "EndOfLine");
+			this.HasHeader       = IOHelpers.ReadBoolAttribute   (reader, "HasHeader");
+			this.Inverted        = IOHelpers.ReadBoolAttribute   (reader, "Inverted");
+			this.Encoding        = (Encoding) IOHelpers.ReadTypeAttribute (reader, "Encoding", typeof (Encoding));
+
+			reader.Read ();
+		}
+
+	
 		public static TextExportProfile CsvProfile = new TextExportProfile (";", "\"", "\"", TagConverters.Eol, true, false, Encoding.UTF8);
 		public static TextExportProfile TxtProfile = new TextExportProfile (TagConverters.Compile ("<TAB>"), null, "\\", TagConverters.Eol, true, false, Encoding.UTF8);
 
@@ -58,6 +73,23 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				return TagConverters.GetFinalText (this.EndOfLine);
 			}
 		}
+
+
+		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteStringAttribute (writer, "ColumnSeparator", this.ColumnSeparator);
+			IOHelpers.WriteStringAttribute (writer, "ColumnBracket",   this.ColumnBracket);
+			IOHelpers.WriteStringAttribute (writer, "Escape",          this.Escape);
+			IOHelpers.WriteStringAttribute (writer, "EndOfLine",       this.EndOfLine);
+			IOHelpers.WriteBoolAttribute   (writer, "HasHeader",       this.HasHeader);
+			IOHelpers.WriteBoolAttribute   (writer, "Inverted",        this.Inverted);
+			IOHelpers.WriteTypeAttribute   (writer, "Encoding",        this.Encoding);
+
+			writer.WriteEndElement ();
+		}
+
 
 		public readonly string					ColumnSeparator;
 		public readonly string					ColumnBracket;
