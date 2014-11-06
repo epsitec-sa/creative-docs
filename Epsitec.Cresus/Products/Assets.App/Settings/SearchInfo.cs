@@ -60,9 +60,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			this.Definition.Serialize (writer, "Definition");
 
-			for (int i=0; i<this.LastPatterns.Count; i++)
+			foreach (var pattern in this.LastPatterns)
 			{
-				writer.WriteElementString ("LastPattern", this.LastPatterns[i]);
+				writer.WriteElementString ("LastPattern", pattern);
 			}
 
 			writer.WriteEndElement ();

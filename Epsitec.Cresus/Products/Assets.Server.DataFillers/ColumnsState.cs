@@ -110,14 +110,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			var mappers = string.Join (";", this.Mapper.Select (x => x.ToStringIO ()));
 			writer.WriteElementString ("Mappers", mappers);
 
-			for (int i=0; i<this.Columns.Length; i++)
+			foreach (var column in this.Columns)
 			{
-				this.Columns[i].Serialize (writer, "Column");
+				column.Serialize (writer, "Column");
 			}
 
-			for (int i=0; i<this.Sorted.Length; i++)
+			foreach (var sorted in this.Sorted)
 			{
-				this.Sorted[i].Serialize (writer, "Sorted");
+				sorted.Serialize (writer, "Sorted");
 			}
 
 			writer.WriteElementString ("DockToLeftCount", this.DockToLeftCount.ToStringIO ());
