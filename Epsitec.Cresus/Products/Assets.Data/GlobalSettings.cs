@@ -23,6 +23,66 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		#region Serialize
+		public void Serialize(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("GlobalSettings");
+
+			writer.WriteElementString ("MandatFilename",   this.MandatFilename);
+			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
+			writer.WriteElementString ("CopyNameStrategy", this.CopyNameStrategy.ToStringIO ());
+
+			writer.WriteEndElement ();
+		}
+
+		public void Deserialize(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					if (reader.Name == "GlobalSettings")
+					{
+						this.DeserializeGlobalSettings (reader);
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeGlobalSettings(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "MandatFilename":
+							this.MandatFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case "SaveMandatMode":
+							this.SaveMandatMode = (SaveMandatMode) reader.ReadElementContentAsString ().ParseType (typeof (SaveMandatMode));
+							break;
+
+						case "CopyNameStrategy":
+							this.CopyNameStrategy = (CopyNameStrategy) reader.ReadElementContentAsString ().ParseType (typeof (CopyNameStrategy));
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+		#endregion
+
+
 		public string							MandatFilename;
 		public SaveMandatMode					SaveMandatMode;
 		public CopyNameStrategy					CopyNameStrategy;

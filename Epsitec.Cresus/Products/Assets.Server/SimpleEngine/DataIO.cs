@@ -55,6 +55,22 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DataIO.OpenData (stream, accessor);
 			}
 
+			//	On s'occupe de la partie global settings.
+			if (DataIO.ExistingGlobalSettings (filename))
+			{
+				DataIO.OpenGlobalSettings (filename, accessor);  // lit directement le fichier xml
+			}
+			else
+			{
+				var zip = new ZipFile ();
+				zip.LoadFile (filename);
+
+				var data = zip["globalsettings.xml"].Data;
+				var stream = new System.IO.MemoryStream (data);
+
+				DataIO.OpenGlobalSettings (stream, accessor);
+			}
+
 			//	On s'occupe de la partie accounts (plans comptables).
 			if (DataIO.ExistingAccounts (filename))
 			{
@@ -119,6 +135,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				zip.AddEntry ("data.xml", data);
 			}
 
+			//	On s'occupe de la partie global settings.
+			{
+				var stream = new System.IO.MemoryStream ();
+				DataIO.SaveGlobalSettings (stream, accessor);
+
+				var data = new byte[stream.Length];
+				stream.Position = 0;
+				stream.Read (data, 0, (int) stream.Length);
+
+				zip.AddEntry ("globalsettings.xml", data);
+			}
+
 			//	On s'occupe de la partie accounts (plans comptables).
 			{
 				var stream = new System.IO.MemoryStream ();
@@ -149,10 +177,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if ((mode & SaveMandatMode.KeepUnzip) != 0)  // pour le debug ?
 			{
 				//	On enregistre en plus tous les fichiers séparément.
-				DataIO.SaveInfo          (filename, accessor.Mandat.MandatInfo);
-				DataIO.SaveData          (filename, accessor);
-				DataIO.SaveAccounts      (filename, accessor);
-				DataIO.SaveLocalSettings (filename, localSettingsSaveAction);
+				DataIO.SaveInfo           (filename, accessor.Mandat.MandatInfo);
+				DataIO.SaveData           (filename, accessor);
+				DataIO.SaveGlobalSettings (filename, accessor);
+				DataIO.SaveAccounts       (filename, accessor);
+				DataIO.SaveLocalSettings  (filename, localSettingsSaveAction);
 			}
 		}
 
@@ -432,6 +461,54 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		#endregion
 
 
+		#region Open global settings
+		private static void OpenGlobalSettings(string filename, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (DataIO.GetGlobalSettingsFilename (filename));
+			accessor.GlobalSettings.Deserialize (reader);
+			reader.Close ();
+		}
+
+		private static void OpenGlobalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var reader = System.Xml.XmlReader.Create (stream);
+			accessor.GlobalSettings.Deserialize (reader);
+			reader.Close ();
+		}
+		#endregion
+
+
+		#region Save global settings
+		private static void SaveGlobalSettings(System.IO.MemoryStream stream, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (stream, settings);
+			accessor.GlobalSettings.Serialize (writer);
+
+			writer.Flush ();
+			writer.Close ();
+		}
+
+		private static void SaveGlobalSettings(string filename, DataAccessor accessor)
+		{
+			var settings = new System.Xml.XmlWriterSettings
+			{
+				Indent = true,
+			};
+
+			var writer = System.Xml.XmlWriter.Create (DataIO.GetGlobalSettingsFilename (filename), settings);
+			accessor.GlobalSettings.Serialize (writer);
+
+			writer.Flush ();
+			writer.Close ();
+		}
+		#endregion
+
+
 		#region Open local settings
 		private static void OpenLocalSettings(string filename, System.Action<System.Xml.XmlReader> localSettingsOpenAction)
 		{
@@ -561,6 +638,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return System.IO.File.Exists (DataIO.GetAccountsFilename (filename));
 		}
 
+		private static bool ExistingGlobalSettings(string filename)
+		{
+			return System.IO.File.Exists (DataIO.GetGlobalSettingsFilename (filename));
+		}
+
 		private static bool ExistingLocalSettings(string filename)
 		{
 			return System.IO.File.Exists (DataIO.GetLocalSettingsFilename (filename));
@@ -580,6 +662,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static string GetAccountsFilename(string filename)
 		{
 			return filename + ".accounts.xml";
+		}
+
+		private static string GetGlobalSettingsFilename(string filename)
+		{
+			return filename + ".globalsettings.xml";
 		}
 
 		private static string GetLocalSettingsFilename(string filename)
