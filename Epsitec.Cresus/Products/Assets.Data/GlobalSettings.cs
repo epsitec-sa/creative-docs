@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -12,7 +14,10 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
-			this.MandatFilename = "C:\\Users\\Daniel\\Documents\\toto.crassets";  // TODO: évidemment provisoire !
+			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+			var filename = System.IO.Path.Combine (item.FullPath, "default" + IOHelpers.Extension);
+			this.MandatFilename = filename;
+
 			this.SaveMandatMode = SaveMandatMode.SaveUI | SaveMandatMode.KeepUnzip;
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}

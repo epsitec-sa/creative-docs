@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -157,7 +158,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Value = this.Filename;
 
 				controller.DialogTitle      = Res.Strings.Popup.SaveMandat.DialogTitle.ToString ();
-				controller.DialogExtensions = DataIO.Extension;
+				controller.DialogExtensions = IOHelpers.Extension;
 				controller.DialogFormatName = Res.Strings.Popup.SaveMandat.DialogFormatName.ToString ();
 				controller.Save             = true;
 

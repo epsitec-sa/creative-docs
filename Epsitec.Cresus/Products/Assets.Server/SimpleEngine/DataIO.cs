@@ -586,8 +586,5 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			return filename + ".localsettings.xml";
 		}
-
-
-		public const string Extension = ".crassets";
 	}
 }

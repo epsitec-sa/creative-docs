@@ -104,10 +104,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteTypeAttribute    (writer, "LabelColor",  this.LabelColor);
-			IOHelpers.WriteTypeAttribute    (writer, "EvenColor",   this.EvenColor);
-			IOHelpers.WriteTypeAttribute    (writer, "OddColor",    this.OddColor);
-			IOHelpers.WriteTypeAttribute    (writer, "BorderColor", this.BorderColor);
+			IOHelpers.WriteTypeAttribute    (writer, "LabelColor",      this.LabelColor);
+			IOHelpers.WriteTypeAttribute    (writer, "EvenColor",       this.EvenColor);
+			IOHelpers.WriteTypeAttribute    (writer, "OddColor",        this.OddColor);
+			IOHelpers.WriteTypeAttribute    (writer, "BorderColor",     this.BorderColor);
 			IOHelpers.WriteDecimalAttribute (writer, "BorderThickness", (decimal) this.BorderThickness);
 
 			writer.WriteEndElement ();

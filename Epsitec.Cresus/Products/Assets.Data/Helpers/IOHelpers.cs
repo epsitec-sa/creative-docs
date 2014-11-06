@@ -296,5 +296,8 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			writer.WriteAttributeString (name, value);
 		}
 		#endregion
+
+
+		public const string Extension = ".crassets";
 	}
 }
