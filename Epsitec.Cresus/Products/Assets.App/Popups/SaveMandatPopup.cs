@@ -40,12 +40,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = Res.Strings.Popup.SaveMandat.Mode.SaveUndoRedo.ToString (),
-			});
-
-			list.Add (new StackedControllerDescription  // 3
-			{
-				StackedControllerType = StackedControllerType.Bool,
 				Label                 = Res.Strings.Popup.SaveMandat.Mode.KeepXml.ToString (),
 			});
 
@@ -86,17 +80,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var mode = SaveMandatMode.None;
 
-				if (this.SaveUI      )  mode |= SaveMandatMode.SaveUI;
-				if (this.SaveUndoRedo)  mode |= SaveMandatMode.SaveUndoRedo;
-				if (this.KeepXml     )  mode |= SaveMandatMode.KeepUnzip;
+				if (this.SaveUI )  mode |= SaveMandatMode.SaveUI;
+				if (this.KeepXml)  mode |= SaveMandatMode.KeepUnzip;
 
 				return mode;
 			}
 			set
 			{
-				this.SaveUI       = (value & SaveMandatMode.SaveUI      ) != 0;
-				this.SaveUndoRedo = (value & SaveMandatMode.SaveUndoRedo) != 0;
-				this.KeepXml      = (value & SaveMandatMode.KeepUnzip     ) != 0;
+				this.SaveUI  = (value & SaveMandatMode.SaveUI   ) != 0;
+				this.KeepXml = (value & SaveMandatMode.KeepUnzip) != 0;
 			}
 		}
 
@@ -116,33 +108,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool							SaveUndoRedo
-		{
-			get
-			{
-				var controller = this.GetController (2) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value;
-			}
-			set
-			{
-				var controller = this.GetController (2) as BoolStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value;
-			}
-		}
-
 		private bool							KeepXml
 		{
 			get
 			{
-				var controller = this.GetController (3) as BoolStackedController;
+				var controller = this.GetController (2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (3) as BoolStackedController;
+				var controller = this.GetController (2) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}

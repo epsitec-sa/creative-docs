@@ -14,7 +14,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 {
 	/// <summary>
 	/// C'est ici que sont concentrés tous les réglages liés à l'utilisateur et à la UI.
-	/// Il faudra être capable de (dé)sérialiser tout ça !
 	/// </summary>
 	public static class LocalSettings
 	{

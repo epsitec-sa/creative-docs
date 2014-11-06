@@ -8,6 +8,10 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Data
 {
+	/// <summary>
+	/// C'est ici que sont concentrés tous les réglages globaux de l'application,
+	/// non liés à l'utilisateur ni à la UI.
+	/// </summary>
 	public class GlobalSettings
 	{
 		public GlobalSettings(UndoManager undoManager)
@@ -20,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Data
 			var filename = System.IO.Path.Combine (item.FullPath, "default" + IOHelpers.Extension);
 			this.MandatFilename = filename;
 
-			this.SaveMandatMode = SaveMandatMode.SaveUI | SaveMandatMode.KeepUnzip;
+			this.SaveMandatMode = SaveMandatMode.SaveUI;
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
 		}
 

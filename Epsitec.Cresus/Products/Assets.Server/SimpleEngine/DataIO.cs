@@ -160,6 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	On s'occupe de la partie local settings.
+			if ((mode & SaveMandatMode.SaveUI) != 0)
 			{
 				var stream = new System.IO.MemoryStream ();
 				DataIO.SaveLocalSettings (stream, localSettingsSaveAction);
@@ -181,7 +182,21 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				DataIO.SaveData           (filename, accessor);
 				DataIO.SaveGlobalSettings (filename, accessor);
 				DataIO.SaveAccounts       (filename, accessor);
-				DataIO.SaveLocalSettings  (filename, localSettingsSaveAction);
+
+				if ((mode & SaveMandatMode.SaveUI) != 0)
+				{
+					DataIO.SaveLocalSettings (filename, localSettingsSaveAction);
+				}
+			}
+			else
+			{
+				//	Supprime les fichiers de debug, s'ils existent. C'est plus prudent,
+				//	car c'est eux qui sont lus en priorité.
+				System.IO.File.Delete (DataIO.GetInfoFilename           (filename));
+				System.IO.File.Delete (DataIO.GetDataFilename           (filename));
+				System.IO.File.Delete (DataIO.GetGlobalSettingsFilename (filename));
+				System.IO.File.Delete (DataIO.GetAccountsFilename       (filename));
+				System.IO.File.Delete (DataIO.GetLocalSettingsFilename  (filename));
 			}
 		}
 
