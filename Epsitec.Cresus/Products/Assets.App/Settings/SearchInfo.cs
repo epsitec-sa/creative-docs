@@ -25,14 +25,16 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Definition")
+					switch (reader.Name)
 					{
-						this.Definition = new SearchDefinition (reader);
-					}
-					else if (reader.Name.StartsWith ("LastPattern"))
-					{
-						var s = reader.ReadElementContentAsString ();
-						this.LastPatterns.Add (s);
+						case "Definition":
+							this.Definition = new SearchDefinition (reader);
+							break;
+
+						case "LastPattern":
+							var s = reader.ReadElementContentAsString ();
+							this.LastPatterns.Add (s);
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -60,8 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			for (int i=0; i<this.LastPatterns.Count; i++)
 			{
-				var n = "LastPattern" + i.ToStringIO ();
-				writer.WriteElementString (n, this.LastPatterns[i]);
+				writer.WriteElementString ("LastPattern", this.LastPatterns[i]);
 			}
 
 			writer.WriteEndElement ();
