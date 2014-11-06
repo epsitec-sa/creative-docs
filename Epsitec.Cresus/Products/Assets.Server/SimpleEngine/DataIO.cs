@@ -672,7 +672,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			return filename;
 		}
 
-		private static string CurrentUser
+		public static string CurrentUser
 		{
 			//	Retourne le nom de l'utilisateur courant.
 			//	"MacPro-2014-DR\Daniel" sur ma machine.

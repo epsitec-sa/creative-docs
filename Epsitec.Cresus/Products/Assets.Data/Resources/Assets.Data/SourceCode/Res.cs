@@ -347,6 +347,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544321));
 						}
 					}
+					//	designer:str/HUKQ101
+					public static global::Epsitec.Common.Types.FormattedText OneShotUser
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544378));
+						}
+					}
 					//	designer:str/HUKE001
 					public static global::Epsitec.Common.Types.FormattedText Periodicity
 					{
@@ -899,6 +907,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+						}
+					}
+					//	designer:str/HUKQ101
+					public static global::Epsitec.Common.Support.Druid OneShotUser
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544378);
 						}
 					}
 					//	designer:str/HUKE001

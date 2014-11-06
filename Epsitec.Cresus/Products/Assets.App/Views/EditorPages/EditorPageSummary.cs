@@ -79,6 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			switch (field)
 			{
 				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotUser:
 				case ObjectField.OneShotDateEvent:
 				case ObjectField.OneShotDateOperation:
 				case ObjectField.OneShotComment:
@@ -141,10 +142,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				c1.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Event.ToString ()));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotNumber));
+				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotUser));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateEvent));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDateOperation));
 				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotComment));
-				c1.Add (new ObjectSummaryControllerTile (ObjectField.OneShotDocuments));
 				c1.Add (ObjectSummaryControllerTile.Empty);
 
 				var groups = GroupsGuidRatioLogic.GetSortedFields (this.accessor);

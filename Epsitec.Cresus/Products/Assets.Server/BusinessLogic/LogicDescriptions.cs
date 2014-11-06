@@ -181,6 +181,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static IEnumerable<ObjectField> GetObjectFields(DataAccessor accessor)
 		{
 			yield return ObjectField.OneShotNumber;
+			yield return ObjectField.OneShotUser;
 			yield return ObjectField.OneShotDateOperation;
 			yield return ObjectField.OneShotComment;
 			yield return ObjectField.OneShotDocuments;

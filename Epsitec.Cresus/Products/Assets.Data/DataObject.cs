@@ -263,6 +263,7 @@ namespace Epsitec.Cresus.Assets.Data
 			switch (objectField)
 			{
 				case ObjectField.OneShotNumber:
+				case ObjectField.OneShotUser:
 				case ObjectField.OneShotDateEvent:
 				case ObjectField.OneShotDateOperation:
 				case ObjectField.OneShotComment:

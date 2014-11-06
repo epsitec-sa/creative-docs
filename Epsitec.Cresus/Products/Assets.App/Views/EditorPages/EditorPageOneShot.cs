@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 
 			this.CreateStringController (parent, ObjectField.OneShotNumber,    editWidth: 90);
+			this.CreateStringController (parent, ObjectField.OneShotUser);
 			this.CreateDateController   (parent, ObjectField.OneShotDateEvent, DateRangeCategory.Mandat);
 			this.CreateDateController   (parent, ObjectField.OneShotDateOperation);
 			this.CreateStringController (parent, ObjectField.OneShotComment,   lineCount: 5);
-			this.CreateStringController (parent, ObjectField.OneShotDocuments, lineCount: 5);
 		}
 	}
 }

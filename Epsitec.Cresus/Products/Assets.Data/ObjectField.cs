@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Unknown,
 
 		OneShotNumber,
+		OneShotUser,
 		OneShotDateEvent,
 		OneShotDateOperation,
 		OneShotComment,

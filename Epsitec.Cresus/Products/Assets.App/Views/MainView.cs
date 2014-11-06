@@ -329,6 +329,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.lastViewStates.Clear ();
 			this.historyPosition = -1;
 
+			//	Nécessire si DataIO.OpenMandat ne lit pas les LocalSettings !
 			LocalSettings.Initialize (Timestamp.Now.Date);
 
 			try

@@ -105,6 +105,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.OneShotNumber:
 					return Res.Strings.Enum.ObjectField.OneShotNumber.ToString ();
 
+				case ObjectField.OneShotUser:
+					return Res.Strings.Enum.ObjectField.OneShotUser.ToString ();
+
 				case ObjectField.Periodicity:
 					return Res.Strings.Enum.ObjectField.Periodicity.ToString ();
 

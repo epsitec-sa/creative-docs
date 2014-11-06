@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			var e = o.GetEvent (0);
 
-			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.eventNumber++).ToString ()));
+			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (++this.eventNumber).ToString ()));
 
 			this.AddField (e, this.fieldAssetNumber, number);
 			this.AddAssetAmortizedAmount (e, value);
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected DataEvent AddAssetEvent(DataObject o, System.DateTime date, EventType type)
 		{
 			var e = this.accessor.CreateAssetEvent (o, date, type);
-			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (this.eventNumber++).ToString ()));
+			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (++this.eventNumber).ToString ()));
 			return e;
 		}
 

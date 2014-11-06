@@ -58,4 +58,5 @@
   <data name="UndoManager.Redo.Description" id="KN1">Rétablir « {0} »</data>
   <data name="UndoManager.Undo.Description" id="KO1">Annuler « {0} »</data>
   <data name="Mandat.Statistics.Summary" id="KP1">{0} objets d'immobilisations&lt;br/&gt;{1} événements&lt;br/&gt;{2} catégories d'immobilisations&lt;br/&gt;{3} groupes&lt;br/&gt;{4} contacts&lt;br/&gt;{5} rapports&lt;br/&gt;{6} plans comptables</data>
+  <data name="Enum.ObjectField.OneShotUser" id="KQ1">Utilisateur</data>
 </bundle>

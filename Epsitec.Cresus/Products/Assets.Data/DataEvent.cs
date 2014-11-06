@@ -186,16 +186,18 @@ namespace Epsitec.Cresus.Assets.Data
 			switch (field)
 			{
 				case ObjectField.OneShotDateEvent:
-					var p = this.properties.Where (x => x.Field == field).FirstOrDefault ();
-					if (p == null)
 					{
-						//	Si la propriété n'existe pas, elle est créé à la volée.
-						return new DataDateProperty (field, this.Timestamp.Date);
-					}
-					else
-					{
-						//	Si la propriété existe, on la retourne comme n'importe quelle autre propriété.
-						return p;
+						var p = this.properties.Where (x => x.Field == field).FirstOrDefault ();
+						if (p == null)
+						{
+							//	Si la propriété n'existe pas, elle est créé à la volée.
+							return new DataDateProperty (field, this.Timestamp.Date);
+						}
+						else
+						{
+							//	Si la propriété existe, on la retourne comme n'importe quelle autre propriété.
+							return p;
+						}
 					}
 
 				case ObjectField.EventDate:

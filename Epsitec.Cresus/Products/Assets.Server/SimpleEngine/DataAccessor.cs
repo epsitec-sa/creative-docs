@@ -258,9 +258,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private void AddDateOperation(DataEvent e)
 		{
-			//	Ajoute la date du jour comme date valeur.
-			var p = new DataDateProperty (ObjectField.OneShotDateOperation, Timestamp.Now.Date);
-			e.AddProperty (p);
+			//	Ajoute la date du jour comme date valeur, ainsi que l'utilisateur courant.
+			var dp = new DataDateProperty (ObjectField.OneShotDateOperation, Timestamp.Now.Date);
+			e.AddProperty (dp);
+
+			var up = new DataStringProperty (ObjectField.OneShotUser, DataIO.CurrentUser);
+			e.AddProperty (up);
 		}
 
 		private void AddMainValue(DataObject obj, Timestamp timestamp, DataEvent e)
