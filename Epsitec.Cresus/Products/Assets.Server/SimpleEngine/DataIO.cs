@@ -650,7 +650,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string LocalSettingsZipPath
 		{
-			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier zip compressé.
+			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier compressé.
 			//	Par exemple "localsettings.MacPro-2014-DR_Daniel.xml".
 			get
 			{
@@ -661,6 +661,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string MapToValidFilename(string filename)
 		{
+			//	Remplace les caractères invalides d'un nom de fichier par des soulignés.
+			//	Retourne un nom toujours valide.
 			foreach (char c in System.IO.Path.GetInvalidFileNameChars ())
 			{
 				filename = filename.Replace (c, '_');
@@ -671,9 +673,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static string CurrentUser
 		{
+			//	Retourne le nom de l'utilisateur courant.
+			//	"MacPro-2014-DR\Daniel" sur ma machine.
 			get
 			{
-				return System.Security.Principal.WindowsIdentity.GetCurrent ().Name;
+				try
+				{
+					return System.Security.Principal.WindowsIdentity.GetCurrent ().Name;
+				}
+				catch
+				{
+					return "anonymous";  // garde-fou
+				}
 			}
 		}
 
