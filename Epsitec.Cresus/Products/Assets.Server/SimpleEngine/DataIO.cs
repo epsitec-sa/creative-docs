@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var zip = new ZipFile ();
 				zip.LoadFile (filename);
 
-				var data = zip[DataIO.LocalSettingsZipPath].Data;  // "localsettings.user.xml"
+				var data = zip[DataIO.LocalSettingsZipPath].Data;  // "localsettings.Daniel.xml"
 				var stream = new System.IO.MemoryStream (data);
 
 				DataIO.OpenLocalSettings (stream, localSettingsOpenAction);
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				stream.Position = 0;
 				stream.Read (data, 0, (int) stream.Length);
 
-				zip.AddEntry (DataIO.LocalSettingsZipPath, data);  // "localsettings.user.xml"
+				zip.AddEntry (DataIO.LocalSettingsZipPath, data);  // "localsettings.Daniel.xml"
 			}
 
 			System.IO.File.Delete (filename);
@@ -652,7 +652,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			//	Retourne le nom du fichier à utiliser à l'intérieur du fichier compressé,
 			//	pour les LocalSettings.
-			//	Par exemple "localsettings.MacPro-2014-DR_Daniel.xml".
+			//	Par exemple "localsettings.Daniel.xml".
 			get
 			{
 				var user = DataIO.MapToValidFilename (DataIO.CurrentUser);
@@ -674,13 +674,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public static string CurrentUser
 		{
-			//	Retourne le nom de l'utilisateur courant.
-			//	"MacPro-2014-DR\Daniel" sur ma machine.
+			//	Retourne le nom de l'utilisateur courant (par exemple "Daniel").
 			get
 			{
 				try
 				{
-					return System.Security.Principal.WindowsIdentity.GetCurrent ().Name;
+					return System.Environment.UserName;
 				}
 				catch
 				{
