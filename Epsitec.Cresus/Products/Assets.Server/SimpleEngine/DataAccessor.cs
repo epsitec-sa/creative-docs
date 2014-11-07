@@ -11,9 +11,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	public partial class DataAccessor
 	{
-		public DataAccessor(DataClipboard clipboard)
+		public DataAccessor(ComputerSettings computerSettings, DataClipboard clipboard)
 		{
-			this.clipboard = clipboard;
+			this.computerSettings = computerSettings;
+			this.clipboard        = clipboard;
 
 			this.userFieldsAccessor = new UserFieldsAccessor (this);
 			this.editionAccessor    = new EditionAccessor (this);
@@ -56,6 +57,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			get
 			{
 				return this.userFieldsAccessor;
+			}
+		}
+
+		public ComputerSettings					ComputerSettings
+		{
+			get
+			{
+				return this.computerSettings;
 			}
 		}
 
@@ -551,6 +560,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		private readonly ComputerSettings		computerSettings;
 		private readonly DataClipboard			clipboard;
 		private readonly UserFieldsAccessor		userFieldsAccessor;
 		private readonly EditionAccessor		editionAccessor;

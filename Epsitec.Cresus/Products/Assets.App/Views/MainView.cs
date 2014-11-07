@@ -249,6 +249,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			});
 		}
 
+
 		private void PrepareForUndo()
 		{
 			this.accessor.EditionAccessor.SaveObjectEdition ();
@@ -273,16 +274,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					LocalSettings.CreateMandatDate = popup.MandatStartDate;
 					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);
+					this.accessor.ComputerSettings.MandatFilename = null;
 				}
 			};
 		}
 
 		private void ShowOpenMandatPopup(Widget target)
 		{
-			OpenMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, delegate (string filename)
+			OpenMandatPopup.Show (this.accessor, target,
+				this.accessor.ComputerSettings.MandatDirectory,
+				this.accessor.ComputerSettings.MandatFilename,
+				delegate (string path)
 			{
-				this.accessor.GlobalSettings.MandatFilename = filename;
-				var err = this.OpenMandat (filename);
+				this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName(path);
+				this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
+
+				var err = this.OpenMandat (path);
 				if (!string.IsNullOrEmpty (err))
 				{
 					MessagePopup.ShowError (target, err);
@@ -292,12 +299,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowSaveMandatPopup(Widget target)
 		{
-			SaveMandatPopup.Show (this.accessor, target, this.accessor.GlobalSettings.MandatFilename, this.accessor.GlobalSettings.SaveMandatMode, delegate (string filename, SaveMandatMode mode)
+			SaveMandatPopup.Show (this.accessor, target,
+				this.accessor.ComputerSettings.MandatDirectory,
+				this.accessor.ComputerSettings.MandatFilename,
+				this.accessor.GlobalSettings.SaveMandatMode,
+				delegate (string path, SaveMandatMode mode)
 			{
-				this.accessor.GlobalSettings.MandatFilename = filename;
+				this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName (path);
+				this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
 				this.accessor.GlobalSettings.SaveMandatMode = mode;
 
-				var err = this.SaveMandat (filename, mode);
+				var err = this.SaveMandat (path, mode);
 				if (!string.IsNullOrEmpty (err))
 				{
 					MessagePopup.ShowError (target, err);
@@ -329,20 +341,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.lastViewStates.Clear ();
 			this.historyPosition = -1;
 
-			//	Nécessire si DataIO.OpenMandat ne lit pas les LocalSettings !
-			LocalSettings.Initialize (Timestamp.Now.Date);
+			var err = AssetsApplication.OpenMandat (this.accessor, filename);
 
-			try
+			if (!string.IsNullOrEmpty (err))  // erreur ?
 			{
-				DataIO.OpenMandat (this.accessor, filename, delegate (System.Xml.XmlReader reader)
-				{
-					//	Effectue la désérialisation des LocalSettings.
-					LocalSettings.Deserialize (reader);
-				});
-			}
-			catch (System.Exception ex)
-			{
-				return ex.Message;
+				return err;
 			}
 
 			this.DeleteView ();
@@ -353,20 +356,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private string SaveMandat(string filename, SaveMandatMode mode)
 		{
-			try
-			{
-				DataIO.SaveMandat (this.accessor, filename, mode, delegate (System.Xml.XmlWriter writer)
-				{
-					//	Effectue la sérialisation des LocalSettings.
-					LocalSettings.Serialize (writer);
-				});
-			}
-			catch (System.Exception ex)
-			{
-				return ex.Message;
-			}
-
-			return null;  // ok
+			return AssetsApplication.SaveMandat (this.accessor, filename, mode);
 		}
 
 

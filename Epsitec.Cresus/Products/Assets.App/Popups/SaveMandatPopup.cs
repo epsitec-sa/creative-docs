@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private string							Filename
+		private string							Path
 		{
 			get
 			{
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (0) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = this.Filename;
+				controller.Value = this.Path;
 
 				controller.DialogTitle      = Res.Strings.Popup.SaveMandat.DialogTitle.ToString ();
 				controller.DialogExtensions = IOHelpers.Extension;
@@ -141,17 +141,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.Update ();
 			}
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.Filename);
+			this.okButton.Enable = !string.IsNullOrEmpty (this.Path);
 		}
 
 
 		#region Static Helpers
-		public static void Show(DataAccessor accessor, Widget target, string filename, SaveMandatMode mode, System.Action<string, SaveMandatMode> action)
+		public static void Show(DataAccessor accessor, Widget target, string directory, string filename, SaveMandatMode mode, System.Action<string, SaveMandatMode> action)
 		{
+			if (string.IsNullOrEmpty (filename))
+			{
+				filename = "default" + IOHelpers.Extension;
+			}
+
 			var popup = new SaveMandatPopup (accessor)
 			{
-				Filename = filename,
-				Mode     = mode,
+				Path = System.IO.Path.Combine (directory, filename),
+				Mode = mode,
 			};
 
 			popup.Create (target, leftOrRight: false);
@@ -160,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (name == "ok")
 				{
-					action (popup.Filename, popup.Mode);
+					action (popup.Path, popup.Mode);
 				}
 			};
 		}

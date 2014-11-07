@@ -10,11 +10,12 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class DataMandat
 	{
-		public DataMandat(string name, System.DateTime startDate)
+		public DataMandat(ComputerSettings computerSettings, string name, System.DateTime startDate)
 		{
-			this.guid      = Guid.NewGuid ();
-			this.name      = name;
-			this.startDate = startDate;
+			this.guid             = Guid.NewGuid ();
+			this.computerSettings = computerSettings;
+			this.name             = name;
+			this.startDate        = startDate;
 
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
@@ -30,10 +31,11 @@ namespace Epsitec.Cresus.Assets.Data
 			this.reports           = new GuidList<AbstractReportParams> (this.undoManager);
 		}
 
-		public DataMandat(System.Xml.XmlReader reader)
+		public DataMandat(ComputerSettings computerSettings, System.Xml.XmlReader reader)
 		{
-			this.undoManager    = new UndoManager ();
-			this.globalSettings = new GlobalSettings (this.undoManager);
+			this.computerSettings = computerSettings;
+			this.undoManager      = new UndoManager ();
+			this.globalSettings   = new GlobalSettings (this.undoManager);
 
 			this.assetsUserFields  = new GuidList<DataObject> (this.undoManager);
 			this.personsUserFields = new GuidList<DataObject> (this.undoManager);
@@ -107,7 +109,7 @@ namespace Epsitec.Cresus.Assets.Data
 					this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
 
 				return new MandatInfo (this.SoftwareKey, this.SoftwareVersion, this.SoftwareLanguage,
-					this.name, this.guid, DataMandat.DocumentVersion, statistics);
+					this.name, this.guid, DataMandat.DocumentVersion, this.DocummentLanguage, statistics);
 			}
 		}
 
@@ -125,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Data
 			//	Retourne la langue du logiciel.
 			get
 			{
-				return this.globalSettings.Language;
+				return this.computerSettings.SoftwareLanguage;
 			}
 		}
 
@@ -135,6 +137,15 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return typeof (DataMandat).Assembly.FullName.Split (',')[1].Split ('=')[1];
+			}
+		}
+
+		private string							DocummentLanguage
+		{
+			//	Retourne la langue du logiciel.
+			get
+			{
+				return this.globalSettings.MandatLanguage;
 			}
 		}
 
@@ -540,6 +551,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
+		private readonly ComputerSettings								computerSettings;
 		private readonly GlobalSettings									globalSettings;
 		private readonly UndoManager									undoManager;
 		private readonly GuidList<DataObject>							assetsUserFields;

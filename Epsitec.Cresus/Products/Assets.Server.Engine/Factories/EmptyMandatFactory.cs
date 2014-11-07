@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			this.withSamples = withSamples;
 
-			this.accessor.Mandat = new DataMandat (name, startDate);
+			this.accessor.Mandat = new DataMandat (this.accessor.ComputerSettings, name, startDate);
 
 			this.AddAssetsSettings ();
 			this.AddPersonsSettings ();

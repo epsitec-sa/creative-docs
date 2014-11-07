@@ -241,6 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			string fileName         = null;
 			var    fileGuid         = Guid.Empty;
 			string fileVersion      = null;
+			string fileLanguage     = null;
 			var    statistics       = MandatStatistics.Empty;
 
 			while (reader.Read ())
@@ -260,9 +261,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 							break;
 
 						case "File":
-							fileName    = reader["name"];
-							fileGuid    = reader["id"].ParseGuid ();
-							fileVersion = reader["ver"];
+							fileName     = reader["name"];
+							fileGuid     = reader["id"].ParseGuid ();
+							fileVersion  = reader["ver"];
+							fileLanguage = reader["lang"];
 							break;
 
 						case "Templates":
@@ -282,7 +284,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 			}
 
-			return new MandatInfo (softwareId, softwareVersion, softwareLanguage, fileName, fileGuid, fileVersion, statistics);
+			return new MandatInfo (softwareId, softwareVersion, softwareLanguage, fileName, fileGuid, fileVersion, fileLanguage, statistics);
 		}
 
 		private static MandatStatistics OpenStatistics(System.Xml.XmlReader reader)
@@ -392,7 +394,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			writer.WriteAttributeString ("name", info.FileName);
 			writer.WriteAttributeString ("id",   info.FileGuid.ToStringIO ());
 			writer.WriteAttributeString ("ver",  info.FileVersion);
-			writer.WriteEndElement      ();
+			writer.WriteAttributeString ("lang", info.FileLanguage);
+			writer.WriteEndElement ();
 
 			writer.WriteStartElement    ("Templates");
 			writer.WriteEndElement      ();
@@ -442,14 +445,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static void OpenData(string filename, DataAccessor accessor)
 		{
 			var reader = System.Xml.XmlReader.Create (DataIO.GetDataFilename (filename));
-			accessor.Mandat = new DataMandat (reader);
+			accessor.Mandat = new DataMandat (accessor.ComputerSettings, reader);
 			reader.Close ();
 		}
 
 		private static void OpenData(System.IO.MemoryStream stream, DataAccessor accessor)
 		{
 			var reader = System.Xml.XmlReader.Create (stream);
-			accessor.Mandat = new DataMandat (reader);
+			accessor.Mandat = new DataMandat (accessor.ComputerSettings, reader);
 			reader.Close ();
 		}
 		#endregion

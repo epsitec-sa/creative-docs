@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private string							Filename
+		private string							Path
 		{
 			get
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (0) as FilenameStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = this.Filename;
+				controller.Value = this.Path;
 
 				controller.DialogTitle      = Res.Strings.Popup.OpenMandat.DialogTitle.ToString ();
 				controller.DialogExtensions = IOHelpers.Extension;
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				controller.SetLabel (this.Statistics);
 			}
 
-			this.okButton.Enable = !string.IsNullOrEmpty (this.Filename);
+			this.okButton.Enable = !string.IsNullOrEmpty (this.Path);
 		}
 
 
@@ -103,11 +103,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	uniquement le petit fichier xml d'informations.
 			get
 			{
-				if (!string.IsNullOrEmpty (this.Filename))  // a-t-on donné un nom de fichier ?
+				if (!string.IsNullOrEmpty (this.Path))  // a-t-on donné un nom de fichier ?
 				{
 					try
 					{
-						var info = DataIO.OpenInfo (this.Filename);
+						var info = DataIO.OpenInfo (this.Path);
 
 						if (!info.IsEmpty && !info.Statistics.IsEmpty)
 						{
@@ -126,11 +126,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Static Helpers
-		public static void Show(DataAccessor accessor, Widget target, string filename, System.Action<string> action)
+		public static void Show(DataAccessor accessor, Widget target, string directory, string filename, System.Action<string> action)
 		{
+			if (string.IsNullOrEmpty (filename))
+			{
+				filename = "default" + IOHelpers.Extension;
+			}
+
 			var popup = new OpenMandatPopup (accessor)
 			{
-				Filename = filename,
+				Path = System.IO.Path.Combine (directory, filename),
 			};
 
 			popup.Create (target, leftOrRight: false);
@@ -139,7 +144,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (name == "ok")
 				{
-					action (popup.Filename);
+					action (popup.Path);
 				}
 			};
 		}

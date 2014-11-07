@@ -9,8 +9,8 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 namespace Epsitec.Cresus.Assets.Data
 {
 	/// <summary>
-	/// C'est ici que sont concentrés tous les réglages globaux de l'application,
-	/// non liés à l'utilisateur ni à la UI.
+	/// C'est ici que sont concentrés tous les réglages globaux de l'application liés
+	/// au mandat, mais non liés à l'utilisateur ni à la UI.
 	/// </summary>
 	public class GlobalSettings
 	{
@@ -18,11 +18,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.undoManager = undoManager;
 
-			this.Language = "fr";
-
-			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
-			var filename = System.IO.Path.Combine (item.FullPath, "default" + IOHelpers.Extension);
-			this.MandatFilename = filename;
+			this.MandatLanguage = "fr";
 
 			this.SaveMandatMode = SaveMandatMode.SaveUI;
 			this.CopyNameStrategy = CopyNameStrategy.NameBracketCopy;
@@ -35,8 +31,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement ("GlobalSettings");
 
 			writer.WriteElementString ("DocumentVersion",  DataMandat.DocumentVersion);
-			writer.WriteElementString ("Language",         this.Language);
-			writer.WriteElementString ("MandatFilename",   this.MandatFilename);
+			writer.WriteElementString ("MandatLanguage",   this.MandatLanguage);
 			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
 			writer.WriteElementString ("CopyNameStrategy", this.CopyNameStrategy.ToStringIO ());
 
@@ -73,12 +68,8 @@ namespace Epsitec.Cresus.Assets.Data
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "Language":
-							this.Language = reader.ReadElementContentAsString ();
-							break;
-
-						case "MandatFilename":
-							this.MandatFilename = reader.ReadElementContentAsString ();
+						case "MandatLanguage":
+							this.MandatLanguage = reader.ReadElementContentAsString ();
 							break;
 
 						case "SaveMandatMode":
@@ -99,8 +90,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
-		public string							Language;
-		public string							MandatFilename;
+		public string							MandatLanguage;
 		public SaveMandatMode					SaveMandatMode;
 		public CopyNameStrategy					CopyNameStrategy;
 

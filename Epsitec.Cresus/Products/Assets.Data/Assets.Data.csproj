@@ -54,6 +54,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ComputerSettings.cs" />
     <Compile Include="Helpers\IOHelpers.cs" />
     <Compile Include="MandatStatistics.cs" />
     <Compile Include="MandatInfo.cs" />

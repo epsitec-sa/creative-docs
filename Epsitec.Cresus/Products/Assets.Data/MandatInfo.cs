@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Data
 	public struct MandatInfo
 	{
 		public MandatInfo(string softwareId, string softwareVersion, string softwareLanguage,
-			string fileName, Guid fileGuid, string fileVersion, MandatStatistics statistics)
+			string fileName, Guid fileGuid, string fileVersion, string fileLanguage, MandatStatistics statistics)
 		{
 			this.SoftwareId       = softwareId;
 			this.SoftwareVersion  = softwareVersion;
@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.FileName	      = fileName;
 			this.FileGuid	      = fileGuid;
 			this.FileVersion	  = fileVersion;
+			this.FileLanguage     = fileLanguage;
 			this.Statistics	      = statistics;
 		}
 
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public static MandatInfo Empty = new MandatInfo (null, null, null, null, Guid.Empty, null, MandatStatistics.Empty);
+		public static MandatInfo Empty = new MandatInfo (null, null, null, null, Guid.Empty, null, null, MandatStatistics.Empty);
 
 		public readonly string					SoftwareId;
 		public readonly string					SoftwareVersion;
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly string					FileName;
 		public readonly Guid					FileGuid;
 		public readonly string					FileVersion;
+		public readonly string					FileLanguage;
 
 		public readonly MandatStatistics		Statistics;
 	}

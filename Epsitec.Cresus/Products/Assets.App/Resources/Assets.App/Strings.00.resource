@@ -440,4 +440,8 @@
   <data name="Popup.SaveMandat.Mode.SaveUI" id="KFI">Enregistrer les réglages de l'interface</data>
   <data name="Popup.SaveMandat.Mode.SaveUndoRedo" id="KGI">Enregistrer les informations pour annuler/rétablir</data>
   <data name="Popup.SaveMandat.Mode.KeepXml" id="KHI">Conserver les fichiers xml non comprimés</data>
+  <data name="Popup.Quit.Title" id="KII">Crésus Immobilisations</data>
+  <data name="Popup.Quit.Question" id="KJI">Voulez-vous quitter le logiciel ?</data>
+  <data name="Popup.Quit.Radios" id="KKI">Enregistrer avant de quitter&lt;br/&gt;Quitter sans enregistrer</data>
+  <data name="Popup.Quit.MainButton" id="KLI">Quitter</data>
 </bundle>

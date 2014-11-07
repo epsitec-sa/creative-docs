@@ -4638,6 +4638,42 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Quit
+				{
+					//	designer:str/JUKLI01
+					public static global::Epsitec.Common.Types.FormattedText MainButton
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544917));
+						}
+					}
+					//	designer:str/JUKJI01
+					public static global::Epsitec.Common.Types.FormattedText Question
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544915));
+						}
+					}
+					//	designer:str/JUKKI01
+					public static global::Epsitec.Common.Types.FormattedText Radios
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544916));
+						}
+					}
+					//	designer:str/JUKII01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544914));
+						}
+					}
+				}
+				
 				public static class RateCalculator
 				{
 					//	designer:str/JUKB501
@@ -8831,6 +8867,42 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544488);
+						}
+					}
+				}
+				
+				public static class Quit
+				{
+					//	designer:str/JUKLI01
+					public static global::Epsitec.Common.Support.Druid MainButton
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544917);
+						}
+					}
+					//	designer:str/JUKJI01
+					public static global::Epsitec.Common.Support.Druid Question
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544915);
+						}
+					}
+					//	designer:str/JUKKI01
+					public static global::Epsitec.Common.Support.Druid Radios
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544916);
+						}
+					}
+					//	designer:str/JUKII01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544914);
 						}
 					}
 				}

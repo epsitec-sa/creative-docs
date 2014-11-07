@@ -13,7 +13,8 @@ using Epsitec.Cresus.Assets.Server.Export;
 namespace Epsitec.Cresus.Assets.App.Settings
 {
 	/// <summary>
-	/// C'est ici que sont concentrés tous les réglages liés à l'utilisateur et à la UI.
+	/// C'est ici que sont concentrés tous les réglages liés au mandat, à l'utilisateur
+	/// et à la UI.
 	/// </summary>
 	public static class LocalSettings
 	{
