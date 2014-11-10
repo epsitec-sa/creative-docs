@@ -506,6 +506,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				//	Intérieur blanc avec la queue.
 				var rect = this.dialogRect;
+				rect.Inflate (0.5);
+
 				graphics.AddFilledPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
 				graphics.RenderSolid (Color.FromAlphaColor (alpha, this.backColor));
 
@@ -519,14 +521,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	Petit filet sombre.
 				if (alpha == 1.0)
 				{
-					rect.Inflate (0.5);
 					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 				}
 				else
 				{
 					//	Dessine la queue.
-					rect.Inflate (0.5);
 					graphics.AddPath (BalloonPath.GetPath (rect, this.targetRect, this.QueueThickness, onlyQueue: true, onlyRect: false, onlyBase: false));
 					graphics.RenderSolid (Color.FromAlphaColor (alpha, ColorManager.PopupBorderColor));
 
