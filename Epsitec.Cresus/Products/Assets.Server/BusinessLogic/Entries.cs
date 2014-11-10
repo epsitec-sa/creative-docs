@@ -85,18 +85,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			var ea = new EntryAccounts ();
 
-			ea[ObjectField.AccountPurchaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseDebit);
-			ea[ObjectField.AccountPurchaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseCredit);
-			ea[ObjectField.AccountSaleDebit]               = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleDebit);
-			ea[ObjectField.AccountSaleCredit]              = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleCredit);
-			ea[ObjectField.AccountAmortizationAutoDebit]   = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoDebit);
-			ea[ObjectField.AccountAmortizationAutoCredit]  = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoCredit);
-			ea[ObjectField.AccountAmortizationExtraDebit]  = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraDebit);
-			ea[ObjectField.AccountAmortizationExtraCredit] = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraCredit);
-			ea[ObjectField.AccountIncreaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseDebit);
-			ea[ObjectField.AccountIncreaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseCredit);
-			ea[ObjectField.AccountDecreaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseDebit);
-			ea[ObjectField.AccountDecreaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseCredit);
+			foreach (var field in DataAccessor.AccountFields)
+			{
+				ea[field] = this.accessor.EditionAccessor.GetFieldString (field);
+			}
 
 			text    = null;
 			tooltip = null;
@@ -163,18 +155,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var timestamp = new Timestamp (amount.Date, 0);
 
-					ea[ObjectField.AccountPurchaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseDebit);
-					ea[ObjectField.AccountPurchaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseCredit);
-					ea[ObjectField.AccountSaleDebit]               = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleDebit);
-					ea[ObjectField.AccountSaleCredit]              = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleCredit);
-					ea[ObjectField.AccountAmortizationAutoDebit]   = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoDebit);
-					ea[ObjectField.AccountAmortizationAutoCredit]  = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoCredit);
-					ea[ObjectField.AccountAmortizationExtraDebit]  = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraDebit);
-					ea[ObjectField.AccountAmortizationExtraCredit] = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraCredit);
-					ea[ObjectField.AccountIncreaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseDebit);
-					ea[ObjectField.AccountIncreaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseCredit);
-					ea[ObjectField.AccountDecreaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseDebit);
-					ea[ObjectField.AccountDecreaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseCredit);
+					foreach (var field in DataAccessor.AccountFields)
+					{
+						ea[field] = ObjectProperties.GetObjectPropertyString (obj, timestamp, field);
+					}
 				}
 			}
 

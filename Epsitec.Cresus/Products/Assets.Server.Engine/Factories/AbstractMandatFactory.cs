@@ -177,18 +177,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
 				var rest   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
-				var c01    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountPurchaseDebit);
-				var c02    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountPurchaseCredit);
-				var c03    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountSaleDebit);
-				var c04    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountSaleCredit);
-				var c05    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationAutoDebit);
-				var c06    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationAutoCredit);
-				var c07    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationExtraDebit);
-				var c08    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationExtraCredit);
-				var c09    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountIncreaseDebit);
-				var c10    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountIncreaseCredit);
-				var c11    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountDecreaseDebit);
-				var c12    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountDecreaseCredit);
 
 				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,     catNane));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, taux.GetValueOrDefault ()));
@@ -197,18 +185,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,          prorat.GetValueOrDefault ()));
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round,            round.GetValueOrDefault ()));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,    rest.GetValueOrDefault ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountPurchaseDebit,           c01));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountPurchaseCredit,          c02));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountSaleDebit,               c03));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountSaleCredit,              c04));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationAutoDebit,   c05));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationAutoCredit,  c06));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationExtraDebit,  c07));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationExtraCredit, c08));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountIncreaseDebit,           c09));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountIncreaseCredit,          c10));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountDecreaseDebit,           c11));
-				e.AddProperty (new DataStringProperty  (ObjectField.AccountDecreaseCredit,          c12));
+
+				foreach (var field in DataAccessor.AccountFields)
+				{
+					var c = ObjectProperties.GetObjectPropertyString  (cat, null, field);
+					e.AddProperty (new DataStringProperty (field, c));
+				}
 			}
 		}
 

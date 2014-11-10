@@ -33,18 +33,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,                        ObjectField.Prorata);
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                          ObjectField.Round);
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,                  ObjectField.ResidualValue);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountPurchaseDebit,           ObjectField.AccountPurchaseDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountPurchaseCredit,          ObjectField.AccountPurchaseCredit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountSaleDebit,               ObjectField.AccountSaleDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountSaleCredit,              ObjectField.AccountSaleCredit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationAutoDebit,   ObjectField.AccountAmortizationAutoDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationAutoCredit,  ObjectField.AccountAmortizationAutoCredit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationExtraDebit,  ObjectField.AccountAmortizationExtraDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationExtraCredit, ObjectField.AccountAmortizationExtraCredit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountIncreaseDebit,           ObjectField.AccountIncreaseDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountIncreaseCredit,          ObjectField.AccountIncreaseCredit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountDecreaseDebit,           ObjectField.AccountDecreaseDebit);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountDecreaseCredit,          ObjectField.AccountDecreaseCredit);
+
+			foreach (var field in DataAccessor.AccountFields)
+			{
+				CategoriesLogic.ImportField (accessor, asset, e, catObj, field, field);
+			}
 		}
 
 		private static void ImportField(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
@@ -143,18 +136,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static bool HasAccounts(DataObject cat)
 		{
-			return CategoriesLogic.HasAccounts (cat, ObjectField.AccountPurchaseDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountPurchaseCredit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountSaleDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountSaleCredit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationAutoDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationAutoCredit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationExtraDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationExtraCredit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountIncreaseDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountIncreaseCredit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountDecreaseDebit)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountDecreaseCredit);
+			return DataAccessor.AccountFields.Where (x => CategoriesLogic.HasAccounts (cat, x)).Any ();
 		}
 
 		private static bool HasAccounts(DataObject cat, ObjectField field)
@@ -177,18 +159,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var e = cat.GetEvent (0);
 
-			e.RemoveProperty (ObjectField.AccountPurchaseDebit);
-			e.RemoveProperty (ObjectField.AccountPurchaseCredit);
-			e.RemoveProperty (ObjectField.AccountSaleDebit);
-			e.RemoveProperty (ObjectField.AccountSaleCredit);
-			e.RemoveProperty (ObjectField.AccountAmortizationAutoDebit);
-			e.RemoveProperty (ObjectField.AccountAmortizationAutoCredit);
-			e.RemoveProperty (ObjectField.AccountAmortizationExtraDebit);
-			e.RemoveProperty (ObjectField.AccountAmortizationExtraCredit);
-			e.RemoveProperty (ObjectField.AccountIncreaseDebit);
-			e.RemoveProperty (ObjectField.AccountIncreaseCredit);
-			e.RemoveProperty (ObjectField.AccountDecreaseDebit);
-			e.RemoveProperty (ObjectField.AccountDecreaseCredit);
+			foreach (var field in DataAccessor.AccountFields)
+			{
+				e.RemoveProperty (field);
+			}
 		}
 
 

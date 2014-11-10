@@ -40,18 +40,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
-			this.CreateAccountController (parent, ObjectField.AccountPurchaseDebit);
-			this.CreateAccountController (parent, ObjectField.AccountPurchaseCredit);
-			this.CreateAccountController (parent, ObjectField.AccountSaleDebit);
-			this.CreateAccountController (parent, ObjectField.AccountSaleCredit);
-			this.CreateAccountController (parent, ObjectField.AccountAmortizationAutoDebit);
-			this.CreateAccountController (parent, ObjectField.AccountAmortizationAutoCredit);
-			this.CreateAccountController (parent, ObjectField.AccountAmortizationExtraDebit);
-			this.CreateAccountController (parent, ObjectField.AccountAmortizationExtraCredit);
-			this.CreateAccountController (parent, ObjectField.AccountIncreaseDebit);
-			this.CreateAccountController (parent, ObjectField.AccountIncreaseCredit);
-			this.CreateAccountController (parent, ObjectField.AccountDecreaseDebit);
-			this.CreateAccountController (parent, ObjectField.AccountDecreaseCredit);
+			foreach (var field in DataAccessor.AccountFields)
+			{
+				this.CreateAccountController (parent, field);
+			}
 
 			this.entrySamples = new EntrySamples (this.accessor, null);
 			this.entrySamples.CreateUI (parent);

@@ -465,18 +465,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.Round;
 				yield return ObjectField.ResidualValue;
 
-				yield return ObjectField.AccountPurchaseDebit;
-				yield return ObjectField.AccountPurchaseCredit;
-				yield return ObjectField.AccountSaleDebit;
-				yield return ObjectField.AccountSaleCredit;
-				yield return ObjectField.AccountAmortizationAutoDebit;
-				yield return ObjectField.AccountAmortizationAutoCredit;
-				yield return ObjectField.AccountAmortizationExtraDebit;
-				yield return ObjectField.AccountAmortizationExtraCredit;
-				yield return ObjectField.AccountIncreaseDebit;
-				yield return ObjectField.AccountIncreaseCredit;
-				yield return ObjectField.AccountDecreaseDebit;
-				yield return ObjectField.AccountDecreaseCredit;
+				foreach (var field in DataAccessor.AccountFields)
+				{
+					yield return field;
+				}
 			}
 		}
 
@@ -496,6 +488,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static IEnumerable<ObjectField> AccountFields
+		{
+			get
+			{
+				yield return ObjectField.AccountPurchaseDebit;
+				yield return ObjectField.AccountPurchaseCredit;
+				yield return ObjectField.AccountSaleDebit;
+				yield return ObjectField.AccountSaleCredit;
+				yield return ObjectField.AccountAmortizationAutoDebit;
+				yield return ObjectField.AccountAmortizationAutoCredit;
+				yield return ObjectField.AccountAmortizationExtraDebit;
+				yield return ObjectField.AccountAmortizationExtraCredit;
+				yield return ObjectField.AccountIncreaseDebit;
+				yield return ObjectField.AccountIncreaseCredit;
+				yield return ObjectField.AccountDecreaseDebit;
+				yield return ObjectField.AccountDecreaseCredit;
+			}
+		}
 
 		public string GetFieldName(ObjectField objectField)
 		{
@@ -522,6 +532,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return FieldType.GuidRatio;
 			}
 
+			if (DataAccessor.AccountFields.Where (x => x == objectField).Any ())
+			{
+				return FieldType.Account;
+			}
+
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
@@ -546,18 +561,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
-				case ObjectField.AccountPurchaseDebit:
-				case ObjectField.AccountPurchaseCredit:
-				case ObjectField.AccountSaleDebit:
-				case ObjectField.AccountSaleCredit:
-				case ObjectField.AccountAmortizationAutoDebit:
-				case ObjectField.AccountAmortizationAutoCredit:
-				case ObjectField.AccountAmortizationExtraDebit:
-				case ObjectField.AccountAmortizationExtraCredit:
-				case ObjectField.AccountIncreaseDebit:
-				case ObjectField.AccountIncreaseCredit:
-				case ObjectField.AccountDecreaseDebit:
-				case ObjectField.AccountDecreaseCredit:
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.Account;
