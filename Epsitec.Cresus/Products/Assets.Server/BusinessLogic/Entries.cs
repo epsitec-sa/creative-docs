@@ -83,20 +83,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				null, null, null, null, null, null, null, null,
 				scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
 
-			var a01 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseDebit);
-			var a02 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseCredit);
-			var a03 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleDebit);
-			var a04 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleCredit);
-			var a05 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoDebit);
-			var a06 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoCredit);
-			var a07 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraDebit);
-			var a08 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraCredit);
-			var a09 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseDebit);
-			var a10 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseCredit);
-			var a11 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseDebit);
-			var a12 = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseCredit);
+			var ea = new EntryAccounts ();
 
-			var ea = new EntryAccounts (a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11, a12);
+			ea[ObjectField.AccountPurchaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseDebit);
+			ea[ObjectField.AccountPurchaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountPurchaseCredit);
+			ea[ObjectField.AccountSaleDebit]               = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleDebit);
+			ea[ObjectField.AccountSaleCredit]              = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountSaleCredit);
+			ea[ObjectField.AccountAmortizationAutoDebit]   = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoDebit);
+			ea[ObjectField.AccountAmortizationAutoCredit]  = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationAutoCredit);
+			ea[ObjectField.AccountAmortizationExtraDebit]  = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraDebit);
+			ea[ObjectField.AccountAmortizationExtraCredit] = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountAmortizationExtraCredit);
+			ea[ObjectField.AccountIncreaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseDebit);
+			ea[ObjectField.AccountIncreaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountIncreaseCredit);
+			ea[ObjectField.AccountDecreaseDebit]           = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseDebit);
+			ea[ObjectField.AccountDecreaseCredit]          = this.accessor.EditionAccessor.GetFieldString (ObjectField.AccountDecreaseCredit);
 
 			text    = null;
 			tooltip = null;
@@ -154,6 +154,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Retourne la liste des comptes à utiliser pour passer une écriture liée
 			//	à l'événement contenant ce montant.
+			var ea = new EntryAccounts ();
+
 			if (this.accessor != null)
 			{
 				var obj = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
@@ -161,25 +163,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var timestamp = new Timestamp (amount.Date, 0);
 
-					return new EntryAccounts
-					(
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseCredit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleCredit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoCredit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraCredit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseCredit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseDebit),
-						ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseCredit)
-					);
+					ea[ObjectField.AccountPurchaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseDebit);
+					ea[ObjectField.AccountPurchaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountPurchaseCredit);
+					ea[ObjectField.AccountSaleDebit]               = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleDebit);
+					ea[ObjectField.AccountSaleCredit]              = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountSaleCredit);
+					ea[ObjectField.AccountAmortizationAutoDebit]   = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoDebit);
+					ea[ObjectField.AccountAmortizationAutoCredit]  = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationAutoCredit);
+					ea[ObjectField.AccountAmortizationExtraDebit]  = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraDebit);
+					ea[ObjectField.AccountAmortizationExtraCredit] = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountAmortizationExtraCredit);
+					ea[ObjectField.AccountIncreaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseDebit);
+					ea[ObjectField.AccountIncreaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountIncreaseCredit);
+					ea[ObjectField.AccountDecreaseDebit]           = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseDebit);
+					ea[ObjectField.AccountDecreaseCredit]          = ObjectProperties.GetObjectPropertyString (obj, timestamp, ObjectField.AccountDecreaseCredit);
 				}
 			}
 
-			return EntryAccounts.Empty;
+			return ea;
 		}
 
 
@@ -251,27 +250,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				case EntryScenario.Purchase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPurchaseDebit);
-					return entryAccouts.AccountPurchaseDebit;
+					return entryAccouts[ObjectField.AccountPurchaseDebit];
 
 				case EntryScenario.Sale:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountSaleDebit);
-					return entryAccouts.AccountSaleDebit;
+					return entryAccouts[ObjectField.AccountSaleDebit];
 
 				case EntryScenario.AmortizationAuto:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAmortizationAutoDebit);
-					return entryAccouts.AccountAmortizationAutoDebit;
+					return entryAccouts[ObjectField.AccountAmortizationAutoDebit];
 
 				case EntryScenario.AmortizationExtra:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAmortizationExtraDebit);
-					return entryAccouts.AccountAmortizationExtraDebit;
+					return entryAccouts[ObjectField.AccountAmortizationExtraDebit];
 
 				case EntryScenario.Increase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountIncreaseDebit);
-					return entryAccouts.AccountIncreaseDebit;
+					return entryAccouts[ObjectField.AccountIncreaseDebit];
 
 				case EntryScenario.Decrease:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountDecreaseDebit);
-					return entryAccouts.AccountDecreaseDebit;
+					return entryAccouts[ObjectField.AccountDecreaseDebit];
 
 				default:
 					return null;
@@ -305,27 +304,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				case EntryScenario.Purchase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPurchaseCredit);
-					return entryAccouts.AccountPurchaseCredit;
+					return entryAccouts[ObjectField.AccountPurchaseCredit];
 
 				case EntryScenario.Sale:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountSaleCredit);
-					return entryAccouts.AccountSaleCredit;
+					return entryAccouts[ObjectField.AccountSaleCredit];
 
 				case EntryScenario.AmortizationAuto:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAmortizationAutoCredit);
-					return entryAccouts.AccountAmortizationAutoCredit;
+					return entryAccouts[ObjectField.AccountAmortizationAutoCredit];
 
 				case EntryScenario.AmortizationExtra:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAmortizationExtraCredit);
-					return entryAccouts.AccountAmortizationExtraCredit;
+					return entryAccouts[ObjectField.AccountAmortizationExtraCredit];
 
 				case EntryScenario.Increase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountIncreaseCredit);
-					return entryAccouts.AccountIncreaseCredit;
+					return entryAccouts[ObjectField.AccountIncreaseCredit];
 
 				case EntryScenario.Decrease:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountDecreaseCredit);
-					return entryAccouts.AccountDecreaseCredit;
+					return entryAccouts[ObjectField.AccountDecreaseCredit];
 
 				default:
 					return null;

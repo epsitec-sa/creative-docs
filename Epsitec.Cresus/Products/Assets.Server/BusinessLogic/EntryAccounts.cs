@@ -3,31 +3,36 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public struct EntryAccounts
+	public class EntryAccounts
 	{
-		public EntryAccounts(
-			string accountPurchaseDebit, string accountPurchaseCredit,
-			string accountSaleDebit, string accountSaleCredit,
-			string accountAmortizationAutoDebit, string accountAmortizationAutoCredit,
-			string accountAmortizationExtraDebit, string accountAmortizationExtraCredit,
-			string accountIncreaseDebit, string accountIncreaseCredit,
-			string accountDecreaseDebit, string accountDecreaseCredit)
+		public EntryAccounts()
 		{
-			this.AccountPurchaseDebit           = accountPurchaseDebit;
-			this.AccountPurchaseCredit          = accountPurchaseCredit;
-			this.AccountSaleDebit               = accountSaleDebit;
-			this.AccountSaleCredit              = accountSaleCredit;
-			this.AccountAmortizationAutoDebit   = accountAmortizationAutoDebit;
-			this.AccountAmortizationAutoCredit  = accountAmortizationAutoCredit;
-			this.AccountAmortizationExtraDebit  = accountAmortizationExtraDebit;
-			this.AccountAmortizationExtraCredit = accountAmortizationExtraCredit;
-			this.AccountIncreaseDebit           = accountIncreaseDebit;
-			this.AccountIncreaseCredit          = accountIncreaseCredit;
-			this.AccountDecreaseDebit           = accountDecreaseDebit;
-			this.AccountDecreaseCredit          = accountDecreaseCredit;
+			this.accounts = new Dictionary<ObjectField, string> ();
+		}
+
+
+		public string this[ObjectField field]
+		{
+			get
+			{
+				string s;
+				if (this.accounts.TryGetValue (field, out s))
+				{
+					return s;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				this.accounts[field] = value;
+			}
 		}
 
 
@@ -35,35 +40,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.AccountPurchaseDebit)
-					&& string.IsNullOrEmpty (this.AccountPurchaseCredit)
-					&& string.IsNullOrEmpty (this.AccountSaleDebit)
-					&& string.IsNullOrEmpty (this.AccountSaleCredit)
-					&& string.IsNullOrEmpty (this.AccountAmortizationAutoDebit)
-					&& string.IsNullOrEmpty (this.AccountAmortizationAutoCredit)
-					&& string.IsNullOrEmpty (this.AccountAmortizationExtraDebit)
-					&& string.IsNullOrEmpty (this.AccountAmortizationExtraCredit)
-					&& string.IsNullOrEmpty (this.AccountIncreaseDebit)
-					&& string.IsNullOrEmpty (this.AccountIncreaseCredit)
-					&& string.IsNullOrEmpty (this.AccountDecreaseDebit)
-					&& string.IsNullOrEmpty (this.AccountDecreaseCredit);
+				return !this.accounts.Any ();
 			}
 		}
 
 
-		public static EntryAccounts Empty = new EntryAccounts (null, null, null, null, null, null, null, null, null, null, null, null);
-
-		public readonly string					AccountPurchaseDebit;
-		public readonly string					AccountPurchaseCredit;
-		public readonly string					AccountSaleDebit;
-		public readonly string					AccountSaleCredit;
-		public readonly string					AccountAmortizationAutoDebit;
-		public readonly string					AccountAmortizationAutoCredit;
-		public readonly string					AccountAmortizationExtraDebit;
-		public readonly string					AccountAmortizationExtraCredit;
-		public readonly string					AccountIncreaseDebit;
-		public readonly string					AccountIncreaseCredit;
-		public readonly string					AccountDecreaseDebit;
-		public readonly string					AccountDecreaseCredit;
+		private readonly Dictionary<ObjectField, string> accounts;
 	}
 }

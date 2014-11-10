@@ -110,18 +110,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell17 = new TreeTableCellDecimal (round,  cellState);
 				var cell18 = new TreeTableCellDecimal (resid,  cellState);
 
-				var cell201 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseDebit), cellState);
-				var cell202 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseCredit), cellState);
-				var cell203 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleDebit), cellState);
-				var cell204 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleCredit), cellState);
-				var cell205 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoDebit), cellState);
-				var cell206 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoCredit), cellState);
-				var cell207 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationExtraDebit), cellState);
+				var cell201 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseDebit),           cellState);
+				var cell202 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseCredit),          cellState);
+				var cell203 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleDebit),               cellState);
+				var cell204 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleCredit),              cellState);
+				var cell205 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoDebit),   cellState);
+				var cell206 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoCredit),  cellState);
+				var cell207 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationExtraDebit),  cellState);
 				var cell208 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationExtraCredit), cellState);
-				var cell209 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseDebit), cellState);
-				var cell210 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseCredit), cellState);
-				var cell211 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseDebit), cellState);
-				var cell212 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseCredit), cellState);
+				var cell209 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseDebit),           cellState);
+				var cell210 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseCredit),          cellState);
+				var cell211 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseDebit),           cellState);
+				var cell212 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseCredit),          cellState);
 
 				int columnRank = 0;
 
