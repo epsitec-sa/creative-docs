@@ -120,12 +120,6 @@ namespace Epsitec.Cresus.Assets.App
 			window.MakeActive ();
 
 			window.PreventAutoClose = true;
-
-			//?window.WindowCloseClicked += delegate
-			//?{
-			//?	this.accessor.ComputerSettings.WindowPlacement = this.Window.WindowPlacement;
-			//?	this.accessor.ComputerSettings.Serialize ();
-			//?};
 		}
 
 
@@ -153,6 +147,8 @@ namespace Epsitec.Cresus.Assets.App
 				Name      = "PopupParentFrame",
 			};
 
+			//	Crée le bouton invisible qui vise à peu près le bouton de fermeture tout
+			//	à droite dans la barre de titre Windows.
 			this.pseudoCloseButton = new Button
 			{
 				Parent        = window.Root,

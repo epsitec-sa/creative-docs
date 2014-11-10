@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 					if (reader.Name == "ObjectField")
 					{
 						var s = reader.ReadElementContentAsString ();
-						this.Field = (ObjectField) IOHelpers.ParseType (s, typeof (ObjectField));
+						this.Field = IOHelpers.ParseObjectField  (s);
 
 						break;  // fin de la lecture de la classe abstraite -> on passe à la classe dérivée
 					}

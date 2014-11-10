@@ -73,6 +73,104 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		#endregion
 
 
+		#region ObjectField
+		public static ObjectField ReadObjectFieldAttribute(System.Xml.XmlReader reader, string name)
+		{
+			var s = reader[name];
+
+			if (string.IsNullOrEmpty (s))
+			{
+				return ObjectField.Unknown;
+			}
+			else
+			{
+				return IOHelpers.ParseObjectField (s);
+			}
+		}
+
+		public static void WriteObjectFieldAttribute(System.Xml.XmlWriter writer, string name, ObjectField value)
+		{
+			writer.WriteAttributeString (name, value.ToStringIO ());
+		}
+
+
+		public static string ToStringIO(this ObjectField value)
+		{
+			if (value >= ObjectField.GroupGuidRatioFirst &&
+				value <= ObjectField.GroupGuidRatioLast)
+			{
+				return "GroupGuidRatio+" + (value-ObjectField.GroupGuidRatioFirst).ToStringIO ();
+			}
+			else if (value >= ObjectField.UserFieldFirst &&
+					 value <= ObjectField.UserFieldLast)
+			{
+				return "UserField+" + (value-ObjectField.UserFieldFirst).ToStringIO ();
+			}
+			else if (value >= ObjectField.MCH2Report)
+			{
+				return "MCH2Report+" + (value-ObjectField.MCH2Report).ToStringIO ();
+			}
+			else
+			{
+				return value.ToString ();
+			}
+		}
+
+		public static ObjectField ParseObjectField(this string s)
+		{
+			if (s.StartsWith ("GroupGuidRatio+"))
+			{
+				return ObjectField.GroupGuidRatioFirst + s.Substring (15).ParseInt ();
+			}
+			else if (s.StartsWith ("UserField+"))
+			{
+				return ObjectField.UserFieldFirst + s.Substring (10).ParseInt ();
+			}
+			else if (s.StartsWith ("MCH2Report+"))
+			{
+				return ObjectField.MCH2Report + s.Substring (11).ParseInt ();
+			}
+			else
+			{
+				return (ObjectField) System.Enum.Parse (typeof (ObjectField), s);
+			}
+		}
+		#endregion
+
+
+		#region Type
+		public static object ReadTypeAttribute(System.Xml.XmlReader reader, string name, System.Type enumType)
+		{
+			var s = reader[name];
+
+			if (string.IsNullOrEmpty (s))
+			{
+				return null;
+			}
+			else
+			{
+				return IOHelpers.ParseType (s, enumType);
+			}
+		}
+
+		public static void WriteTypeAttribute(System.Xml.XmlWriter writer, string name, object value)
+		{
+			writer.WriteAttributeString (name, value.ToStringIO ());
+		}
+
+
+		public static string ToStringIO(this object value)
+		{
+			return value.ToString ();
+		}
+
+		public static object ParseType(this string s, System.Type enumType)
+		{
+			return System.Enum.Parse (enumType, s);
+		}
+		#endregion
+
+
 		#region Guid
 		public static Guid ReadGuidAttribute(System.Xml.XmlReader reader, string name)
 		{
@@ -248,39 +346,6 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		public static bool ParseBool(this string s)
 		{
 			return bool.Parse (s);
-		}
-		#endregion
-
-
-		#region Type
-		public static object ReadTypeAttribute(System.Xml.XmlReader reader, string name, System.Type enumType)
-		{
-			var s = reader[name];
-
-			if (string.IsNullOrEmpty (s))
-			{
-				return null;
-			}
-			else
-			{
-				return IOHelpers.ParseType (s, enumType);
-			}
-		}
-
-		public static void WriteTypeAttribute(System.Xml.XmlWriter writer, string name, object value)
-		{
-			writer.WriteAttributeString (name, value.ToStringIO ());
-		}
-
-
-		public static string ToStringIO(this object value)
-		{
-			return value.ToString ();
-		}
-
-		public static object ParseType(this string s, System.Type enumType)
-		{
-			return System.Enum.Parse (enumType, s);
 		}
 		#endregion
 

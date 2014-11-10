@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public ColumnState(System.Xml.XmlReader reader)
 		{
-			this.Field         = (ObjectField) IOHelpers.ReadTypeAttribute (reader, "Field", typeof (ObjectField));
-			this.OriginalWidth = IOHelpers.ReadIntAttribute (reader, "OriginalWidth").GetValueOrDefault ();
-			this.Hide          = IOHelpers.ReadBoolAttribute (reader, "Hide");
+			this.Field         = IOHelpers.ReadObjectFieldAttribute (reader, "Field");
+			this.OriginalWidth = IOHelpers.ReadIntAttribute         (reader, "OriginalWidth").GetValueOrDefault ();
+			this.Hide          = IOHelpers.ReadBoolAttribute        (reader, "Hide");
 
 			reader.Read ();
 		}
@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteTypeAttribute (writer, "Field",         this.Field);
-			IOHelpers.WriteIntAttribute  (writer, "OriginalWidth", this.OriginalWidth);
-			IOHelpers.WriteBoolAttribute (writer, "Hide",          this.Hide);
+			IOHelpers.WriteObjectFieldAttribute (writer, "Field",         this.Field);
+			IOHelpers.WriteIntAttribute         (writer, "OriginalWidth", this.OriginalWidth);
+			IOHelpers.WriteBoolAttribute        (writer, "Hide",          this.Hide);
 
 			writer.WriteEndElement ();
 		}
