@@ -842,6 +842,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 						//	Crée un amortissement extraordinaire.
 						var newEvent = new DataEvent (this.accessor.UndoManager, ev.Guid, ev.Timestamp, EventType.AmortizationExtra);
 						newEvent.SetProperties (ev);
+						Entries.ChangeEntryScenario (newEvent, EntryScenario.AmortizationExtra);
 						asset.AddEvent (newEvent);
 
 						this.UpdateData ();

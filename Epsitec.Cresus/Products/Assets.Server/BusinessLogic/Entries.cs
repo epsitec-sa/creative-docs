@@ -521,6 +521,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return entries.RemoveEntry (aa);
 			}
 		}
+
+		public static void ChangeEntryScenario(DataEvent e, EntryScenario scenario)
+		{
+			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+			var aa = AmortizedAmount.SetEntryScenario (p.Value, scenario);
+			Amortizations.SetAmortizedAmount (e, aa);
+		}
 		#endregion
 
 
