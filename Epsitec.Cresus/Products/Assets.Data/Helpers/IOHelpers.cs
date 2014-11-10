@@ -9,6 +9,10 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 	public static class IOHelpers
 	{
 		#region Encoding
+		//	Comme le type natif Windows System.Text.Encoding n'est pas une simple énumération
+		//	mais une classe, il faut le sérialiser en passant par une énumération interne
+		//	(IOEncoding). Seuls les encodages utilisés dans Assets sont gérés-
+
 		public static System.Text.Encoding ReadEncodingAttribute(System.Xml.XmlReader reader, string name)
 		{
 			var e = (IOEncoding) IOHelpers.ReadTypeAttribute (reader, name, typeof (IOEncoding));
@@ -74,6 +78,11 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region ObjectField
+		//	Afin d'être robuste, le type ObjectField doit être sérialisé spécialement.
+		//	Si rien n'était fait, le type ObjectField.UserFieldFirst+10 (par exemple)
+		//	serait sérialisé sous la forme "20010". Avec la méthode employée, il est
+		//	sérailisé avec "UserField+10".
+
 		public static ObjectField ReadObjectFieldAttribute(System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
