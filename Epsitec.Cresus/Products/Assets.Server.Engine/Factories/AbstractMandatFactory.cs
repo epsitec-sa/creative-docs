@@ -177,14 +177,18 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
 				var rest   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
-				var c1     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account1);
-				var c2     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account2);
-				var c3     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account3);
-				var c4     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account4);
-				var c5     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account5);
-				var c6     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account6);
-				var c7     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account7);
-				var c8     = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.Account8);
+				var c01    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountPurchaseDebit);
+				var c02    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountPurchaseCredit);
+				var c03    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountSaleDebit);
+				var c04    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountSaleCredit);
+				var c05    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationAutoDebit);
+				var c06    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationAutoCredit);
+				var c07    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationExtraDebit);
+				var c08    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountAmortizationExtraCredit);
+				var c09    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountIncreaseDebit);
+				var c10    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountIncreaseCredit);
+				var c11    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountDecreaseDebit);
+				var c12    = ObjectProperties.GetObjectPropertyString  (cat, null, ObjectField.AccountDecreaseCredit);
 
 				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,     catNane));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, taux.GetValueOrDefault ()));
@@ -193,14 +197,18 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,          prorat.GetValueOrDefault ()));
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round,            round.GetValueOrDefault ()));
 				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,    rest.GetValueOrDefault ()));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account1,         c1));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account2,         c2));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account3,         c3));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account4,         c4));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account5,         c5));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account6,         c6));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account7,         c7));
-				e.AddProperty (new DataStringProperty  (ObjectField.Account8,         c8));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountPurchaseDebit,           c01));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountPurchaseCredit,          c02));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountSaleDebit,               c03));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountSaleCredit,              c04));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationAutoDebit,   c05));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationAutoCredit,  c06));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationExtraDebit,  c07));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountAmortizationExtraCredit, c08));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountIncreaseDebit,           c09));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountIncreaseCredit,          c10));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountDecreaseDebit,           c11));
+				e.AddProperty (new DataStringProperty  (ObjectField.AccountDecreaseCredit,          c12));
 			}
 		}
 
@@ -270,8 +278,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected void AddCat(string name, string desc, string number, decimal rate,
 			AmortizationType type, Periodicity periodicity, ProrataType prorata,
 			decimal round, decimal residual,
-			string account1 = null, string account2 = null, string account3 = null, string account4 = null,
-			string account5 = null, string account6 = null, string account7 = null, string account8 = null)
+			string accountPurchaseDebit = null, string accountPurchaseCredit = null,
+			string accountSaleDebit = null, string accountSaleCredit = null,
+			string accountAmortizationAutoDebit = null, string accountAmortizationAutoCredit = null,
+			string accountAmortizationExtraDebit = null, string accountAmortizationExtraCredit = null,
+			string accountIncreaseDebit = null, string accountIncreaseCredit = null,
+			string accountDecreaseDebit = null, string accountDecreaseCredit = null)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -282,23 +294,27 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
-			this.AddField (e, ObjectField.Name,             name);
-			this.AddField (e, ObjectField.Description,      desc);
-			this.AddField (e, ObjectField.Number,           number);
-			this.AddField (e, ObjectField.AmortizationRate, rate);
-			this.AddField (e, ObjectField.AmortizationType, (int) type);
-			this.AddField (e, ObjectField.Periodicity,      (int) periodicity);
-			this.AddField (e, ObjectField.Prorata,          (int) prorata);
-			this.AddField (e, ObjectField.Round,            round);
-			this.AddField (e, ObjectField.ResidualValue,    residual);
-			this.AddField (e, ObjectField.Account1,	        account1);
-			this.AddField (e, ObjectField.Account2,	        account2);
-			this.AddField (e, ObjectField.Account3,	        account3);
-			this.AddField (e, ObjectField.Account4,	        account4);
-			this.AddField (e, ObjectField.Account5,	        account5);
-			this.AddField (e, ObjectField.Account6,	        account6);
-			this.AddField (e, ObjectField.Account7,	        account7);
-			this.AddField (e, ObjectField.Account8,	        account8);
+			this.AddField (e, ObjectField.Name,                           name);
+			this.AddField (e, ObjectField.Description,                    desc);
+			this.AddField (e, ObjectField.Number,                         number);
+			this.AddField (e, ObjectField.AmortizationRate,               rate);
+			this.AddField (e, ObjectField.AmortizationType,               (int) type);
+			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
+			this.AddField (e, ObjectField.Prorata,                        (int) prorata);
+			this.AddField (e, ObjectField.Round,                          round);
+			this.AddField (e, ObjectField.ResidualValue,                  residual);
+			this.AddField (e, ObjectField.AccountPurchaseDebit,	          accountPurchaseDebit);
+			this.AddField (e, ObjectField.AccountPurchaseCredit,	      accountPurchaseCredit);
+			this.AddField (e, ObjectField.AccountSaleDebit,	              accountSaleDebit);
+			this.AddField (e, ObjectField.AccountSaleCredit,	          accountSaleCredit);
+			this.AddField (e, ObjectField.AccountAmortizationAutoDebit,	  accountAmortizationAutoDebit);
+			this.AddField (e, ObjectField.AccountAmortizationAutoCredit,  accountAmortizationAutoCredit);
+			this.AddField (e, ObjectField.AccountAmortizationExtraDebit,  accountAmortizationExtraDebit);
+			this.AddField (e, ObjectField.AccountAmortizationExtraCredit, accountAmortizationExtraCredit);
+			this.AddField (e, ObjectField.AccountIncreaseDebit,	          accountIncreaseDebit);
+			this.AddField (e, ObjectField.AccountIncreaseCredit,	      accountIncreaseCredit);
+			this.AddField (e, ObjectField.AccountDecreaseDebit,	          accountDecreaseDebit);
+			this.AddField (e, ObjectField.AccountDecreaseCredit,	      accountDecreaseCredit);
 		}
 
 

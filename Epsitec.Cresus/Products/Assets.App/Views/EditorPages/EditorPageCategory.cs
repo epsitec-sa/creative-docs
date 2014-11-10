@@ -45,13 +45,18 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//	A voir à l'usage s'il faut faire mieux ?
 			var forcedDate = this.accessor.Mandat.AccountsDateRanges.LastOrDefault ().IncludeFrom;
 
-			this.CreateAccountController (parent, ObjectField.Account1, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account2, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account3, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account4, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account5, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account6, forcedDate);
-			this.CreateAccountController (parent, ObjectField.Account7, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountPurchaseDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountPurchaseCredit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountSaleDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountSaleCredit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountAmortizationAutoDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountAmortizationAutoCredit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountAmortizationExtraDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountAmortizationExtraCredit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountIncreaseDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountIncreaseCredit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountDecreaseDebit, forcedDate);
+			this.CreateAccountController (parent, ObjectField.AccountDecreaseCredit, forcedDate);
 
 			this.entrySamples = new EntrySamples (this.accessor, forcedDate);
 			this.entrySamples.CreateUI (parent);

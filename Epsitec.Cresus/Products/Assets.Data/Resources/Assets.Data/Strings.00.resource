@@ -18,14 +18,14 @@
   <data name="Enum.ObjectField.Prorata" id="KF">Prorata</data>
   <data name="Enum.ObjectField.Round" id="KG">Arrondi</data>
   <data name="Enum.ObjectField.ResidualValue" id="KH">Valeur résiduelle</data>
-  <data name="Enum.ObjectField.Account1" id="KI">Contrepartie achat</data>
-  <data name="Enum.ObjectField.Account2" id="KJ">Contrepartie vente</data>
-  <data name="Enum.ObjectField.Account3" id="KK">Compte d'immobilisation</data>
-  <data name="Enum.ObjectField.Account4" id="KL">Compte d'amortissement</data>
-  <data name="Enum.ObjectField.Account5" id="KM">Charge d'amortissement</data>
-  <data name="Enum.ObjectField.Account6" id="KN">Compte revalorisation (augmentation)</data>
-  <data name="Enum.ObjectField.Account7" id="KO">Compte réévaluation (diminution)</data>
-  <data name="Enum.ObjectField.Account8" id="KP">?</data>
+  <data name="Enum.ObjectField.AccountPurchaseCredit" id="KI">Crédit achat</data>
+  <data name="Enum.ObjectField.AccountPurchaseDebit" id="KJ">Débit achat</data>
+  <data name="Enum.ObjectField.AccountSaleDebit" id="KK">Débit vente</data>
+  <data name="Enum.ObjectField.AccountSaleCredit" id="KL">Crédit vente&lt;br/&gt;</data>
+  <data name="Enum.ObjectField.AccountAmortizationAutoDebit" id="KM">Débit amort. ord.</data>
+  <data name="Enum.ObjectField.AccountAmortizationAutoCredit" id="KN">Crédit amort. ord.</data>
+  <data name="Enum.ObjectField.AccountAmortizationExtraDebit" id="KO">Débit amort. extra.</data>
+  <data name="Enum.ObjectField.AccountAmortizationExtraCredit" id="KP">Crédit amort. extra.</data>
   <data name="Enum.ObjectField.AccountCategory" id="KQ">Catégorie</data>
   <data name="Enum.ObjectField.AccountType" id="KR">Type</data>
   <data name="Enum.ObjectField.EntryDate" id="KS">Date</data>
@@ -59,4 +59,8 @@
   <data name="UndoManager.Undo.Description" id="KO1">Annuler « {0} »</data>
   <data name="Mandat.Statistics.Summary" id="KP1">{0} objets d'immobilisations&lt;br/&gt;{1} événements&lt;br/&gt;{2} catégories d'immobilisations&lt;br/&gt;{3} groupes&lt;br/&gt;{4} contacts&lt;br/&gt;{5} rapports&lt;br/&gt;{6} plans comptables</data>
   <data name="Enum.ObjectField.OneShotUser" id="KQ1">Utilisateur</data>
+  <data name="Enum.ObjectField.AccountIncreaseDebit" id="KR1">Débit reval.</data>
+  <data name="Enum.ObjectField.AccountIncreaseCredit" id="KS1">Crédit reval.</data>
+  <data name="Enum.ObjectField.AccountDecreaseDebit" id="KT1">Débit rééval.</data>
+  <data name="Enum.ObjectField.AccountDecreaseCredit" id="KU1">Crédit rééval.</data>
 </bundle>

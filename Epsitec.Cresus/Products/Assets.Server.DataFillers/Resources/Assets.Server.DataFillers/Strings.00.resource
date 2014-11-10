@@ -9,12 +9,12 @@
   <data name="CategoriesTreeTableFiller.Prorata" id="K6">Prorata</data>
   <data name="CategoriesTreeTableFiller.Round" id="K7">Arrondi</data>
   <data name="CategoriesTreeTableFiller.ResidualValue" id="K8">Valeur résiduelle</data>
-  <data name="CategoriesTreeTableFiller.Account1" id="K9">Contrepartie achat</data>
-  <data name="CategoriesTreeTableFiller.Account2" id="KA">Contrepartie vente</data>
-  <data name="CategoriesTreeTableFiller.Account3" id="KB">Compte d'immob.</data>
-  <data name="CategoriesTreeTableFiller.Account4" id="KC">Compte d'amort.</data>
-  <data name="CategoriesTreeTableFiller.Account5" id="KD">Charge d'amort.</data>
-  <data name="CategoriesTreeTableFiller.Account6" id="KE">Compte revalorisation</data>
+  <data name="CategoriesTreeTableFiller.AccountPurchaseCredit" id="K9">Crédit achat</data>
+  <data name="CategoriesTreeTableFiller.AccountPurchaseDebit" id="KA">Débit achat</data>
+  <data name="CategoriesTreeTableFiller.AccountSaleDebit" id="KB">Débit vente</data>
+  <data name="CategoriesTreeTableFiller.AccountSaleCredit" id="KC">Crédit vente</data>
+  <data name="CategoriesTreeTableFiller.AccountAmortizationAutoDebit" id="KD">Débit amort. ord.</data>
+  <data name="CategoriesTreeTableFiller.AccountAmortizationAutoCredit" id="KE">Crédit amort. ord.</data>
   <data name="EntriesTreeTableFiller.Date" id="KF">Date</data>
   <data name="EntriesTreeTableFiller.Debit" id="KG">Débit</data>
   <data name="EntriesTreeTableFiller.Credit" id="KH">Crédit</data>
@@ -49,7 +49,7 @@
   <data name="UserFieldsTreeTableFiller.LineCount" id="KE1">Nb lignes</data>
   <data name="UserFieldsTreeTableFiller.TopMargin" id="KF1">Marge sup.</data>
   <data name="UserFieldsTreeTableFiller.SummaryOrder" id="KG1">Ds résumé</data>
-  <data name="CategoriesTreeTableFiller.Account7" id="KH1">Compte réévaluation</data>
+  <data name="CategoriesTreeTableFiller.AccountAmortizationExtraDebit" id="KH1">Débit amort. extra.</data>
   <data name="Enum.MCH2Summary.Column.Name.Text" id="KI1">Catégorie</data>
   <data name="Enum.MCH2Summary.Column.Name.Tooltip" id="KJ1">Catégorie d'immobilisation</data>
   <data name="Enum.MCH2Summary.Column.InitialState.Text" id="KK1">Etat {0}</data>
@@ -81,4 +81,9 @@
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationYes" id="KD2">Oui</data>
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2">
   </data>
+  <data name="CategoriesTreeTableFiller.AccountAmortizationExtraCredit" id="KF2">Crédit amort. extra.</data>
+  <data name="CategoriesTreeTableFiller.AccountIncreaseDebit" id="KG2">Débit reval.</data>
+  <data name="CategoriesTreeTableFiller.AccountIncreaseCredit" id="KH2">Crédit reval.</data>
+  <data name="CategoriesTreeTableFiller.AccountDecreaseDebit" id="KI2">Débit rééval.</data>
+  <data name="CategoriesTreeTableFiller.AccountDecreaseCredit" id="KJ2">Crédit rééval.</data>
 </bundle>

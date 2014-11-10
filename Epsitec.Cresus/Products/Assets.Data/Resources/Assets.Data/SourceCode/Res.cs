@@ -107,68 +107,36 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
-					//	designer:str/HUKI001
-					public static global::Epsitec.Common.Types.FormattedText Account1
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544338));
-						}
-					}
-					//	designer:str/HUKJ001
-					public static global::Epsitec.Common.Types.FormattedText Account2
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
-						}
-					}
-					//	designer:str/HUKK001
-					public static global::Epsitec.Common.Types.FormattedText Account3
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544340));
-						}
-					}
-					//	designer:str/HUKL001
-					public static global::Epsitec.Common.Types.FormattedText Account4
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544341));
-						}
-					}
-					//	designer:str/HUKM001
-					public static global::Epsitec.Common.Types.FormattedText Account5
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544342));
-						}
-					}
 					//	designer:str/HUKN001
-					public static global::Epsitec.Common.Types.FormattedText Account6
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationAutoCredit
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343));
 						}
 					}
-					//	designer:str/HUKO001
-					public static global::Epsitec.Common.Types.FormattedText Account7
+					//	designer:str/HUKM001
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationAutoDebit
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544344));
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544342));
 						}
 					}
 					//	designer:str/HUKP001
-					public static global::Epsitec.Common.Types.FormattedText Account8
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationExtraCredit
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544345));
+						}
+					}
+					//	designer:str/HUKO001
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationExtraDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544344));
 						}
 					}
 					//	designer:str/HUKQ001
@@ -177,6 +145,70 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346));
+						}
+					}
+					//	designer:str/HUKU101
+					public static global::Epsitec.Common.Types.FormattedText AccountDecreaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544382));
+						}
+					}
+					//	designer:str/HUKT101
+					public static global::Epsitec.Common.Types.FormattedText AccountDecreaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
+						}
+					}
+					//	designer:str/HUKS101
+					public static global::Epsitec.Common.Types.FormattedText AccountIncreaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
+						}
+					}
+					//	designer:str/HUKR101
+					public static global::Epsitec.Common.Types.FormattedText AccountIncreaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
+						}
+					}
+					//	designer:str/HUKI001
+					public static global::Epsitec.Common.Types.FormattedText AccountPurchaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544338));
+						}
+					}
+					//	designer:str/HUKJ001
+					public static global::Epsitec.Common.Types.FormattedText AccountPurchaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544339));
+						}
+					}
+					//	designer:str/HUKL001
+					public static global::Epsitec.Common.Types.FormattedText AccountSaleCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544341));
+						}
+					}
+					//	designer:str/HUKK001
+					public static global::Epsitec.Common.Types.FormattedText AccountSaleDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544340));
 						}
 					}
 					//	designer:str/HUKR001
@@ -669,68 +701,36 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
-					//	designer:str/HUKI001
-					public static global::Epsitec.Common.Support.Druid Account1
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544338);
-						}
-					}
-					//	designer:str/HUKJ001
-					public static global::Epsitec.Common.Support.Druid Account2
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
-						}
-					}
-					//	designer:str/HUKK001
-					public static global::Epsitec.Common.Support.Druid Account3
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544340);
-						}
-					}
-					//	designer:str/HUKL001
-					public static global::Epsitec.Common.Support.Druid Account4
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544341);
-						}
-					}
-					//	designer:str/HUKM001
-					public static global::Epsitec.Common.Support.Druid Account5
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544342);
-						}
-					}
 					//	designer:str/HUKN001
-					public static global::Epsitec.Common.Support.Druid Account6
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationAutoCredit
 					{
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544343);
 						}
 					}
-					//	designer:str/HUKO001
-					public static global::Epsitec.Common.Support.Druid Account7
+					//	designer:str/HUKM001
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationAutoDebit
 					{
 						get
 						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544344);
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544342);
 						}
 					}
 					//	designer:str/HUKP001
-					public static global::Epsitec.Common.Support.Druid Account8
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationExtraCredit
 					{
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544345);
+						}
+					}
+					//	designer:str/HUKO001
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationExtraDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544344);
 						}
 					}
 					//	designer:str/HUKQ001
@@ -739,6 +739,70 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544346);
+						}
+					}
+					//	designer:str/HUKU101
+					public static global::Epsitec.Common.Support.Druid AccountDecreaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544382);
+						}
+					}
+					//	designer:str/HUKT101
+					public static global::Epsitec.Common.Support.Druid AccountDecreaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
+						}
+					}
+					//	designer:str/HUKS101
+					public static global::Epsitec.Common.Support.Druid AccountIncreaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
+						}
+					}
+					//	designer:str/HUKR101
+					public static global::Epsitec.Common.Support.Druid AccountIncreaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+						}
+					}
+					//	designer:str/HUKI001
+					public static global::Epsitec.Common.Support.Druid AccountPurchaseCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544338);
+						}
+					}
+					//	designer:str/HUKJ001
+					public static global::Epsitec.Common.Support.Druid AccountPurchaseDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544339);
+						}
+					}
+					//	designer:str/HUKL001
+					public static global::Epsitec.Common.Support.Druid AccountSaleCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544341);
+						}
+					}
+					//	designer:str/HUKK001
+					public static global::Epsitec.Common.Support.Druid AccountSaleDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544340);
 						}
 					}
 					//	designer:str/HUKR001

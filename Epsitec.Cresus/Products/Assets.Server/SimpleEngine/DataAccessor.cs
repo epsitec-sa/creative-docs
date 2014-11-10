@@ -465,14 +465,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.Round;
 				yield return ObjectField.ResidualValue;
 
-				yield return ObjectField.Account1;
-				yield return ObjectField.Account2;
-				yield return ObjectField.Account3;
-				yield return ObjectField.Account4;
-				yield return ObjectField.Account5;
-				yield return ObjectField.Account6;
-				yield return ObjectField.Account7;
-				yield return ObjectField.Account8;
+				yield return ObjectField.AccountPurchaseDebit;
+				yield return ObjectField.AccountPurchaseCredit;
+				yield return ObjectField.AccountSaleDebit;
+				yield return ObjectField.AccountSaleCredit;
+				yield return ObjectField.AccountAmortizationAutoDebit;
+				yield return ObjectField.AccountAmortizationAutoCredit;
+				yield return ObjectField.AccountAmortizationExtraDebit;
+				yield return ObjectField.AccountAmortizationExtraCredit;
+				yield return ObjectField.AccountIncreaseDebit;
+				yield return ObjectField.AccountIncreaseCredit;
+				yield return ObjectField.AccountDecreaseDebit;
+				yield return ObjectField.AccountDecreaseCredit;
 			}
 		}
 
@@ -542,14 +546,18 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.GroupParent:
 					return FieldType.GuidGroup;
 
-				case ObjectField.Account1:
-				case ObjectField.Account2:
-				case ObjectField.Account3:
-				case ObjectField.Account4:
-				case ObjectField.Account5:
-				case ObjectField.Account6:
-				case ObjectField.Account7:
-				case ObjectField.Account8:
+				case ObjectField.AccountPurchaseDebit:
+				case ObjectField.AccountPurchaseCredit:
+				case ObjectField.AccountSaleDebit:
+				case ObjectField.AccountSaleCredit:
+				case ObjectField.AccountAmortizationAutoDebit:
+				case ObjectField.AccountAmortizationAutoCredit:
+				case ObjectField.AccountAmortizationExtraDebit:
+				case ObjectField.AccountAmortizationExtraCredit:
+				case ObjectField.AccountIncreaseDebit:
+				case ObjectField.AccountIncreaseCredit:
+				case ObjectField.AccountDecreaseDebit:
+				case ObjectField.AccountDecreaseCredit:
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.Account;

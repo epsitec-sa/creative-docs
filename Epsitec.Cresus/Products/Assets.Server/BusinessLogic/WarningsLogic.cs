@@ -97,13 +97,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				//	On cherche les comptes indéfinis.
 				bool skip = false;
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account1, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account2, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account3, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account4, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account5, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account6, ref skip);
-				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.Account7, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountPurchaseDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountPurchaseCredit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountSaleDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountSaleCredit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountAmortizationAutoDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountAmortizationAutoCredit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountAmortizationExtraDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountAmortizationExtraCredit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountIncreaseDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountIncreaseCredit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountDecreaseDebit, ref skip);
+				WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, ObjectField.AccountDecreaseCredit, ref skip);
 			}
 
 			//	On cherche les champs indéfinis dans les groupes.
@@ -143,13 +148,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (WarningsLogic.IsDefinableAccount (e.Type))
 					{
 						bool skip = false;
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account1, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account2, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account3, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account4, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account5, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account6, ref skip);
-						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.Account7, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountPurchaseDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountPurchaseCredit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountSaleDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountSaleCredit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountAmortizationAutoDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountAmortizationAutoCredit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountAmortizationExtraDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountAmortizationExtraCredit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountIncreaseDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountIncreaseCredit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountDecreaseDebit, ref skip);
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, ObjectField.AccountDecreaseCredit, ref skip);
 					}
 
 					//	On cherche les comptes incorrects dans les écritures.

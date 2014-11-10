@@ -204,14 +204,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			yield return ObjectField.Round;
 			yield return ObjectField.ResidualValue;
 
-			yield return ObjectField.Account1;
-			yield return ObjectField.Account2;
-			yield return ObjectField.Account3;
-			yield return ObjectField.Account4;
-			yield return ObjectField.Account5;
-			yield return ObjectField.Account6;
-			yield return ObjectField.Account7;
-			yield return ObjectField.Account8;
+			yield return ObjectField.AccountPurchaseDebit;
+			yield return ObjectField.AccountPurchaseCredit;
+			yield return ObjectField.AccountSaleDebit;
+			yield return ObjectField.AccountSaleCredit;
+			yield return ObjectField.AccountAmortizationAutoDebit;
+			yield return ObjectField.AccountAmortizationAutoCredit;
+			yield return ObjectField.AccountAmortizationExtraDebit;
+			yield return ObjectField.AccountAmortizationExtraCredit;
+			yield return ObjectField.AccountIncreaseDebit;
+			yield return ObjectField.AccountIncreaseCredit;
+			yield return ObjectField.AccountDecreaseDebit;
+			yield return ObjectField.AccountDecreaseCredit;
 		}
 	}
 }

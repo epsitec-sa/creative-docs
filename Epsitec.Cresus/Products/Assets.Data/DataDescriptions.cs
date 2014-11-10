@@ -18,29 +18,41 @@ namespace Epsitec.Cresus.Assets.Data
 
 			switch (field)
 			{
-				case ObjectField.Account1:
-					return Res.Strings.Enum.ObjectField.Account1.ToString ();
+				case ObjectField.AccountPurchaseDebit:
+					return Res.Strings.Enum.ObjectField.AccountPurchaseDebit.ToString ();
 
-				case ObjectField.Account2:
-					return Res.Strings.Enum.ObjectField.Account2.ToString ();
+				case ObjectField.AccountPurchaseCredit:
+					return Res.Strings.Enum.ObjectField.AccountPurchaseCredit.ToString ();
 
-				case ObjectField.Account3:
-					return Res.Strings.Enum.ObjectField.Account3.ToString ();
+				case ObjectField.AccountSaleDebit:
+					return Res.Strings.Enum.ObjectField.AccountSaleDebit.ToString ();
 
-				case ObjectField.Account4:
-					return Res.Strings.Enum.ObjectField.Account4.ToString ();
+				case ObjectField.AccountSaleCredit:
+					return Res.Strings.Enum.ObjectField.AccountSaleCredit.ToString ();
 
-				case ObjectField.Account5:
-					return Res.Strings.Enum.ObjectField.Account5.ToString ();
+				case ObjectField.AccountAmortizationAutoDebit:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoDebit.ToString ();
 
-				case ObjectField.Account6:
-					return Res.Strings.Enum.ObjectField.Account6.ToString ();
+				case ObjectField.AccountAmortizationAutoCredit:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoCredit.ToString ();
 
-				case ObjectField.Account7:
-					return Res.Strings.Enum.ObjectField.Account7.ToString ();
+				case ObjectField.AccountAmortizationExtraDebit:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraDebit.ToString ();
 
-				case ObjectField.Account8:
-					return Res.Strings.Enum.ObjectField.Account8.ToString ();
+				case ObjectField.AccountAmortizationExtraCredit:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraCredit.ToString ();
+
+				case ObjectField.AccountIncreaseDebit:
+					return Res.Strings.Enum.ObjectField.AccountIncreaseDebit.ToString ();
+
+				case ObjectField.AccountIncreaseCredit:
+					return Res.Strings.Enum.ObjectField.AccountIncreaseCredit.ToString ();
+
+				case ObjectField.AccountDecreaseDebit:
+					return Res.Strings.Enum.ObjectField.AccountDecreaseDebit.ToString ();
+
+				case ObjectField.AccountDecreaseCredit:
+					return Res.Strings.Enum.ObjectField.AccountDecreaseCredit.ToString ();
 
 				case ObjectField.AccountCategory:
 					return Res.Strings.Enum.ObjectField.AccountCategory.ToString ();

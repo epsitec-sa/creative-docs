@@ -96,14 +96,18 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				case ObjectField.Prorata:
 				case ObjectField.Round:
 				case ObjectField.ResidualValue:
-				case ObjectField.Account1:
-				case ObjectField.Account2:
-				case ObjectField.Account3:
-				case ObjectField.Account4:
-				case ObjectField.Account5:
-				case ObjectField.Account6:
-				case ObjectField.Account7:
-				case ObjectField.Account8:
+				case ObjectField.AccountPurchaseDebit:
+				case ObjectField.AccountPurchaseCredit:
+				case ObjectField.AccountSaleDebit:
+				case ObjectField.AccountSaleCredit:
+				case ObjectField.AccountAmortizationAutoDebit:
+				case ObjectField.AccountAmortizationAutoCredit:
+				case ObjectField.AccountAmortizationExtraDebit:
+				case ObjectField.AccountAmortizationExtraCredit:
+				case ObjectField.AccountIncreaseDebit:
+				case ObjectField.AccountIncreaseCredit:
+				case ObjectField.AccountDecreaseDebit:
+				case ObjectField.AccountDecreaseCredit:
 					return PageType.AmortizationDefinition;
 
 				default:
@@ -190,13 +194,18 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Prorata));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Round));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.ResidualValue));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account1));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account2));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account3));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account4));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account5));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account6));
-				c3.Add (new ObjectSummaryControllerTile (ObjectField.Account7));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountPurchaseDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountPurchaseCredit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountSaleDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountSaleCredit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountAmortizationAutoDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountAmortizationAutoCredit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountAmortizationExtraDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountAmortizationExtraCredit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountIncreaseDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountIncreaseCredit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountDecreaseDebit));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AccountDecreaseCredit));
 
 				return list;
 			}

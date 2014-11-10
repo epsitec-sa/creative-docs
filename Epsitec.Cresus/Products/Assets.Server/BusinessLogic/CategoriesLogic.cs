@@ -26,21 +26,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var catObj = accessor.GetObject (BaseType.Categories, catGuid);
 
 			//	Copie les champs nécessaires.
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,             ObjectField.CategoryName);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate, ObjectField.AmortizationRate);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationType, ObjectField.AmortizationType);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,      ObjectField.Periodicity);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,          ObjectField.Prorata);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,            ObjectField.Round);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,    ObjectField.ResidualValue);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account1,         ObjectField.Account1);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account2,         ObjectField.Account2);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account3,         ObjectField.Account3);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account4,         ObjectField.Account4);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account5,         ObjectField.Account5);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account6,         ObjectField.Account6);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account7,         ObjectField.Account7);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Account8,         ObjectField.Account8);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,                           ObjectField.CategoryName);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate,               ObjectField.AmortizationRate);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationType,               ObjectField.AmortizationType);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,                    ObjectField.Periodicity);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,                        ObjectField.Prorata);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                          ObjectField.Round);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,                  ObjectField.ResidualValue);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountPurchaseDebit,           ObjectField.AccountPurchaseDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountPurchaseCredit,          ObjectField.AccountPurchaseCredit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountSaleDebit,               ObjectField.AccountSaleDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountSaleCredit,              ObjectField.AccountSaleCredit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationAutoDebit,   ObjectField.AccountAmortizationAutoDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationAutoCredit,  ObjectField.AccountAmortizationAutoCredit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationExtraDebit,  ObjectField.AccountAmortizationExtraDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountAmortizationExtraCredit, ObjectField.AccountAmortizationExtraCredit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountIncreaseDebit,           ObjectField.AccountIncreaseDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountIncreaseCredit,          ObjectField.AccountIncreaseCredit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountDecreaseDebit,           ObjectField.AccountDecreaseDebit);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AccountDecreaseCredit,          ObjectField.AccountDecreaseCredit);
 		}
 
 		private static void ImportField(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
@@ -139,14 +143,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static bool HasAccounts(DataObject cat)
 		{
-			return CategoriesLogic.HasAccounts (cat, ObjectField.Account1)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account2)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account3)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account4)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account5)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account6)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account7)
-				|| CategoriesLogic.HasAccounts (cat, ObjectField.Account8);
+			return CategoriesLogic.HasAccounts (cat, ObjectField.AccountPurchaseDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountPurchaseCredit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountSaleDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountSaleCredit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationAutoDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationAutoCredit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationExtraDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountAmortizationExtraCredit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountIncreaseDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountIncreaseCredit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountDecreaseDebit)
+				|| CategoriesLogic.HasAccounts (cat, ObjectField.AccountDecreaseCredit);
 		}
 
 		private static bool HasAccounts(DataObject cat, ObjectField field)
@@ -169,14 +177,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var e = cat.GetEvent (0);
 
-			e.RemoveProperty (ObjectField.Account1);
-			e.RemoveProperty (ObjectField.Account2);
-			e.RemoveProperty (ObjectField.Account3);
-			e.RemoveProperty (ObjectField.Account4);
-			e.RemoveProperty (ObjectField.Account5);
-			e.RemoveProperty (ObjectField.Account6);
-			e.RemoveProperty (ObjectField.Account7);
-			e.RemoveProperty (ObjectField.Account8);
+			e.RemoveProperty (ObjectField.AccountPurchaseDebit);
+			e.RemoveProperty (ObjectField.AccountPurchaseCredit);
+			e.RemoveProperty (ObjectField.AccountSaleDebit);
+			e.RemoveProperty (ObjectField.AccountSaleCredit);
+			e.RemoveProperty (ObjectField.AccountAmortizationAutoDebit);
+			e.RemoveProperty (ObjectField.AccountAmortizationAutoCredit);
+			e.RemoveProperty (ObjectField.AccountAmortizationExtraDebit);
+			e.RemoveProperty (ObjectField.AccountAmortizationExtraCredit);
+			e.RemoveProperty (ObjectField.AccountIncreaseDebit);
+			e.RemoveProperty (ObjectField.AccountIncreaseCredit);
+			e.RemoveProperty (ObjectField.AccountDecreaseDebit);
+			e.RemoveProperty (ObjectField.AccountDecreaseCredit);
 		}
 
 

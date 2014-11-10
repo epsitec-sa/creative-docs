@@ -8,16 +8,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct EntryAccounts
 	{
-		public EntryAccounts(string account1, string account2, string account3, string account4, string account5, string account6, string account7, string account8)
+		public EntryAccounts(
+			string accountPurchaseDebit, string accountPurchaseCredit,
+			string accountSaleDebit, string accountSaleCredit,
+			string accountAmortizationAutoDebit, string accountAmortizationAutoCredit,
+			string accountAmortizationExtraDebit, string accountAmortizationExtraCredit,
+			string accountIncreaseDebit, string accountIncreaseCredit,
+			string accountDecreaseDebit, string accountDecreaseCredit)
 		{
-			this.Account1 = account1;
-			this.Account2 = account2;
-			this.Account3 = account3;
-			this.Account4 = account4;
-			this.Account5 = account5;
-			this.Account6 = account6;
-			this.Account7 = account7;
-			this.Account8 = account8;
+			this.AccountPurchaseDebit           = accountPurchaseDebit;
+			this.AccountPurchaseCredit          = accountPurchaseCredit;
+			this.AccountSaleDebit               = accountSaleDebit;
+			this.AccountSaleCredit              = accountSaleCredit;
+			this.AccountAmortizationAutoDebit   = accountAmortizationAutoDebit;
+			this.AccountAmortizationAutoCredit  = accountAmortizationAutoCredit;
+			this.AccountAmortizationExtraDebit  = accountAmortizationExtraDebit;
+			this.AccountAmortizationExtraCredit = accountAmortizationExtraCredit;
+			this.AccountIncreaseDebit           = accountIncreaseDebit;
+			this.AccountIncreaseCredit          = accountIncreaseCredit;
+			this.AccountDecreaseDebit           = accountDecreaseDebit;
+			this.AccountDecreaseCredit          = accountDecreaseCredit;
 		}
 
 
@@ -25,27 +35,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return string.IsNullOrEmpty (this.Account1)
-					&& string.IsNullOrEmpty (this.Account2)
-					&& string.IsNullOrEmpty (this.Account3)
-					&& string.IsNullOrEmpty (this.Account4)
-					&& string.IsNullOrEmpty (this.Account5)
-					&& string.IsNullOrEmpty (this.Account6)
-					&& string.IsNullOrEmpty (this.Account7)
-					&& string.IsNullOrEmpty (this.Account8);
+				return string.IsNullOrEmpty (this.AccountPurchaseDebit)
+					&& string.IsNullOrEmpty (this.AccountPurchaseCredit)
+					&& string.IsNullOrEmpty (this.AccountSaleDebit)
+					&& string.IsNullOrEmpty (this.AccountSaleCredit)
+					&& string.IsNullOrEmpty (this.AccountAmortizationAutoDebit)
+					&& string.IsNullOrEmpty (this.AccountAmortizationAutoCredit)
+					&& string.IsNullOrEmpty (this.AccountAmortizationExtraDebit)
+					&& string.IsNullOrEmpty (this.AccountAmortizationExtraCredit)
+					&& string.IsNullOrEmpty (this.AccountIncreaseDebit)
+					&& string.IsNullOrEmpty (this.AccountIncreaseCredit)
+					&& string.IsNullOrEmpty (this.AccountDecreaseDebit)
+					&& string.IsNullOrEmpty (this.AccountDecreaseCredit);
 			}
 		}
 
 
-		public static EntryAccounts Empty = new EntryAccounts (null, null, null, null, null, null, null, null);
+		public static EntryAccounts Empty = new EntryAccounts (null, null, null, null, null, null, null, null, null, null, null, null);
 
-		public readonly string					Account1;
-		public readonly string					Account2;
-		public readonly string					Account3;
-		public readonly string					Account4;
-		public readonly string					Account5;
-		public readonly string					Account6;
-		public readonly string					Account7;
-		public readonly string					Account8;
+		public readonly string					AccountPurchaseDebit;
+		public readonly string					AccountPurchaseCredit;
+		public readonly string					AccountSaleDebit;
+		public readonly string					AccountSaleCredit;
+		public readonly string					AccountAmortizationAutoDebit;
+		public readonly string					AccountAmortizationAutoCredit;
+		public readonly string					AccountAmortizationExtraDebit;
+		public readonly string					AccountAmortizationExtraCredit;
+		public readonly string					AccountIncreaseDebit;
+		public readonly string					AccountIncreaseCredit;
+		public readonly string					AccountDecreaseDebit;
+		public readonly string					AccountDecreaseCredit;
 	}
 }

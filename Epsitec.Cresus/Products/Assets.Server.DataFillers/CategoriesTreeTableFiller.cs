@@ -49,13 +49,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.Round,            TreeTableColumnType.Amount, 100, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,    TreeTableColumnType.Amount, 120, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account1,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account1.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account2,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account2.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account3,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account3.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account4,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account4.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account5,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account5.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account6,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account6.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Account7,         TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.Account7.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountPurchaseDebit,           TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountPurchaseDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountPurchaseCredit,          TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountPurchaseCredit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountSaleDebit,               TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountSaleDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountSaleCredit,              TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountSaleCredit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountAmortizationAutoDebit,   TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountAmortizationAutoDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountAmortizationAutoCredit,  TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountAmortizationAutoCredit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountAmortizationExtraDebit,  TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountAmortizationExtraDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountAmortizationExtraCredit, TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountAmortizationExtraCredit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountIncreaseDebit,           TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountIncreaseDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountIncreaseCredit,          TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountIncreaseCredit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountDecreaseDebit,           TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountDecreaseDebit.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AccountDecreaseCredit,          TreeTableColumnType.String, 150, Res.Strings.CategoriesTreeTableFiller.AccountDecreaseCredit.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -65,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<8+7; i++)
+			for (int i=0; i<8+12; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -105,13 +110,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell17 = new TreeTableCellDecimal (round,  cellState);
 				var cell18 = new TreeTableCellDecimal (resid,  cellState);
 
-				var cell21 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account1), cellState);
-				var cell22 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account2), cellState);
-				var cell23 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account3), cellState);
-				var cell24 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account4), cellState);
-				var cell25 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account5), cellState);
-				var cell26 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account6), cellState);
-				var cell27 = new TreeTableCellString (this.GetAccount (obj, ObjectField.Account7), cellState);
+				var cell201 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseDebit), cellState);
+				var cell202 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountPurchaseCredit), cellState);
+				var cell203 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleDebit), cellState);
+				var cell204 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountSaleCredit), cellState);
+				var cell205 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoDebit), cellState);
+				var cell206 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationAutoCredit), cellState);
+				var cell207 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationExtraDebit), cellState);
+				var cell208 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountAmortizationExtraCredit), cellState);
+				var cell209 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseDebit), cellState);
+				var cell210 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountIncreaseCredit), cellState);
+				var cell211 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseDebit), cellState);
+				var cell212 = new TreeTableCellString (this.GetAccount (obj, ObjectField.AccountDecreaseCredit), cellState);
 
 				int columnRank = 0;
 
@@ -124,13 +134,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell17);
 				content.Columns[columnRank++].AddRow (cell18);
 
-				content.Columns[columnRank++].AddRow (cell21);
-				content.Columns[columnRank++].AddRow (cell22);
-				content.Columns[columnRank++].AddRow (cell23);
-				content.Columns[columnRank++].AddRow (cell24);
-				content.Columns[columnRank++].AddRow (cell25);
-				content.Columns[columnRank++].AddRow (cell26);
-				content.Columns[columnRank++].AddRow (cell27);
+				content.Columns[columnRank++].AddRow (cell201);
+				content.Columns[columnRank++].AddRow (cell202);
+				content.Columns[columnRank++].AddRow (cell203);
+				content.Columns[columnRank++].AddRow (cell204);
+				content.Columns[columnRank++].AddRow (cell205);
+				content.Columns[columnRank++].AddRow (cell206);
+				content.Columns[columnRank++].AddRow (cell207);
+				content.Columns[columnRank++].AddRow (cell208);
+				content.Columns[columnRank++].AddRow (cell209);
+				content.Columns[columnRank++].AddRow (cell210);
+				content.Columns[columnRank++].AddRow (cell211);
+				content.Columns[columnRank++].AddRow (cell212);
 			}
 
 			return content;
