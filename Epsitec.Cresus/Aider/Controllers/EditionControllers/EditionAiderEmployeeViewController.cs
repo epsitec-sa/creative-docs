@@ -20,6 +20,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+					.Field (x => x.PersonContact)
 					.Field (x => x.EmployeeType)
 					.Field (x => x.EmployeeActivity)
 					.Field (x => x.Description)
