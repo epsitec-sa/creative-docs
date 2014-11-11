@@ -75,4 +75,9 @@
   <data name="EditionAccessor.Undo.Modify.AssetUserField" id="K82">Modification d'un champ d'un objet d'immobilisation</data>
   <data name="Enum.EntryScenario.Adjust" id="K92">Correction</data>
   <data name="Enum.EntryScenario.Title.Adjust" id="KA2">Correction {0}</data>
+  <data name="Enum.AmortizationMethod.Rate.Name" id="KB2">Amortissement selon le taux</data>
+  <data name="Enum.AmortizationMethod.YearCount.Name" id="KC2">Amortissement selon le nombre d'années</data>
+  <data name="Enum.AmortizationMethod.Rate.Summary" id="KD2">Taux</data>
+  <data name="Enum.AmortizationMethod.YearCount.Summary" id="KE2">Années</data>
+  <data name="CategoriesLogic.YearCount.Summary" id="KF2">{0} ans</data>
 </bundle>

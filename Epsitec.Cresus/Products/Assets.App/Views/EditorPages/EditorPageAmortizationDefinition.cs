@@ -31,8 +31,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateImportButton (parent);
 
 			this.CreateStringController  (parent, ObjectField.CategoryName);
+			this.CreateEnumController    (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods, editWidth: 250);
 			this.CreateDecimalController (parent, ObjectField.AmortizationRate, DecimalFormat.Rate);
 			this.CreateEnumController    (parent, ObjectField.AmortizationType, EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+			this.CreateIntController     (parent, ObjectField.AmortizationYearCount);
 			this.CreateEnumController    (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.CreateEnumController    (parent, ObjectField.Prorata, EnumDictionaries.DictProrataTypes, editWidth: 90);
 			this.CreateDecimalController (parent, ObjectField.Round, DecimalFormat.Amount);

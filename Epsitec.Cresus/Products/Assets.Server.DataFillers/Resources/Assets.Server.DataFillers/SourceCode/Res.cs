@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class CategoriesTreeTableFiller
 			{
+				//	designer:str/KUKI201
+				public static global::Epsitec.Common.Types.FormattedText AmortizationMethod
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544402));
+					}
+				}
 				//	designer:str/KUK3001
 				public static global::Epsitec.Common.Types.FormattedText AmortizationRate
 				{
@@ -71,6 +79,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544324));
+					}
+				}
+				//	designer:str/KUKJ201
+				public static global::Epsitec.Common.Types.FormattedText AmortizationYearCount
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544403));
 					}
 				}
 				//	designer:str/KUK1001
@@ -581,6 +597,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class SingleCategoriesTreeTableFiller
 			{
+				//	designer:str/KUKK201
+				public static global::Epsitec.Common.Types.FormattedText AmortizationMethod
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544404));
+					}
+				}
 				//	designer:str/KUK4101
 				public static global::Epsitec.Common.Types.FormattedText AmortizationRate
 				{
@@ -595,6 +619,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544357));
+					}
+				}
+				//	designer:str/KUKL201
+				public static global::Epsitec.Common.Types.FormattedText AmortizationYearCount
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544405));
 					}
 				}
 				//	designer:str/KUK3101
@@ -815,6 +847,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class CategoriesTreeTableFiller
 			{
+				//	designer:str/KUKI201
+				public static global::Epsitec.Common.Support.Druid AmortizationMethod
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544402);
+					}
+				}
 				//	designer:str/KUK3001
 				public static global::Epsitec.Common.Support.Druid AmortizationRate
 				{
@@ -829,6 +869,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544324);
+					}
+				}
+				//	designer:str/KUKJ201
+				public static global::Epsitec.Common.Support.Druid AmortizationYearCount
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544403);
 					}
 				}
 				//	designer:str/KUK1001
@@ -1339,6 +1387,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class SingleCategoriesTreeTableFiller
 			{
+				//	designer:str/KUKK201
+				public static global::Epsitec.Common.Support.Druid AmortizationMethod
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544404);
+					}
+				}
 				//	designer:str/KUK4101
 				public static global::Epsitec.Common.Support.Druid AmortizationRate
 				{
@@ -1353,6 +1409,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544357);
+					}
+				}
+				//	designer:str/KUKL201
+				public static global::Epsitec.Common.Support.Druid AmortizationYearCount
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544405);
 					}
 				}
 				//	designer:str/KUK3101

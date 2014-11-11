@@ -66,8 +66,14 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountType:
 					return Res.Strings.Enum.ObjectField.AccountType.ToString ();
 
+				case ObjectField.AmortizationMethod:
+					return Res.Strings.Enum.ObjectField.AmortizationMethod.ToString ();
+
 				case ObjectField.AmortizationRate:
 					return Res.Strings.Enum.ObjectField.AmortizationRate.ToString ();
+
+				case ObjectField.AmortizationYearCount:
+					return Res.Strings.Enum.ObjectField.AmortizationYearCount.ToString ();
 
 				case ObjectField.AmortizationType:
 					return Res.Strings.Enum.ObjectField.AmortizationType.ToString ();

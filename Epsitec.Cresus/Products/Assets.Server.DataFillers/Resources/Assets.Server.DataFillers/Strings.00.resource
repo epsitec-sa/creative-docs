@@ -77,4 +77,8 @@
   <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
   <data name="Enum.MCH2Summary.Column.Adjust.Tooltip" id="KG2">Valeurs après corrections</data>
   <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
+  <data name="CategoriesTreeTableFiller.AmortizationMethod" id="KI2">Méthode</data>
+  <data name="CategoriesTreeTableFiller.AmortizationYearCount" id="KJ2">Années</data>
+  <data name="SingleCategoriesTreeTableFiller.AmortizationMethod" id="KK2">Méthode</data>
+  <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
 </bundle>

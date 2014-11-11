@@ -171,20 +171,24 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			if (cat != null)
 			{
+				var method = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationMethod);
 				var taux   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
+				var years  = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationYearCount);
 				var type   = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
 				var rest   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
 
-				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,     catNane));
-				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate, taux.GetValueOrDefault ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType, type.GetValueOrDefault (1)));
-				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,      period.GetValueOrDefault (12)));
-				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,          prorat.GetValueOrDefault ()));
-				e.AddProperty (new DataDecimalProperty (ObjectField.Round,            round.GetValueOrDefault ()));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,    rest.GetValueOrDefault ()));
+				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,          catNane));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationMethod,    method.GetValueOrDefault (0)));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate,      taux.GetValueOrDefault ()));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationYearCount, years.GetValueOrDefault (1)));
+				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType,      type.GetValueOrDefault (1)));
+				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,           period.GetValueOrDefault (12)));
+				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,               prorat.GetValueOrDefault ()));
+				e.AddProperty (new DataDecimalProperty (ObjectField.Round,                 round.GetValueOrDefault ()));
+				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,         rest.GetValueOrDefault ()));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -280,7 +284,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Name,                           name);
 			this.AddField (e, ObjectField.Description,                    desc);
 			this.AddField (e, ObjectField.Number,                         number);
+			this.AddField (e, ObjectField.AmortizationMethod,             (int) AmortizationMethod.Rate);
 			this.AddField (e, ObjectField.AmortizationRate,               rate);
+			this.AddField (e, ObjectField.AmortizationYearCount,          10);
 			this.AddField (e, ObjectField.AmortizationType,               (int) type);
 			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
 			this.AddField (e, ObjectField.Prorata,                        (int) prorata);

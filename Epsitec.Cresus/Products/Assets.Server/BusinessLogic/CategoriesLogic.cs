@@ -26,13 +26,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var catObj = accessor.GetObject (BaseType.Categories, catGuid);
 
 			//	Copie les champs nécessaires.
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,                           ObjectField.CategoryName);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate,               ObjectField.AmortizationRate);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationType,               ObjectField.AmortizationType);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,                    ObjectField.Periodicity);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,                        ObjectField.Prorata);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                          ObjectField.Round);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,                  ObjectField.ResidualValue);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,                  ObjectField.CategoryName);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationMethod,    ObjectField.AmortizationMethod);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate,      ObjectField.AmortizationRate);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationYearCount, ObjectField.AmortizationYearCount);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationType,      ObjectField.AmortizationType);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,           ObjectField.Periodicity);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,               ObjectField.Prorata);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                 ObjectField.Round);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,         ObjectField.ResidualValue);
 
 			foreach (var field in DataAccessor.AccountFields)
 			{
@@ -184,6 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Retourne le nom complet d'une catégorie, du genre:
 			//	"Véhicules 12.5% Linéaire Annuel"
+			//	"Bâtiments 10 ans Linéaire Annuel"
 			var obj = accessor.GetObject (BaseType.Categories, guid);
 			if (obj == null)
 			{
@@ -191,15 +194,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			var name   = ObjectProperties.GetObjectPropertyString  (obj, null, ObjectField.Name);
+			var method = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationMethod);
 			var taux   = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationRate);
+			var years  = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationYearCount);
 			var type   = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
 			var period = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
 
+			var stringMethod = EnumDictionaries.GetAmortizationMethodSummary (method);
 			var stringTaux   = TypeConverters.RateToString (taux);
+			var stringYears  = TypeConverters.IntToString (years);
 			var stringType   = EnumDictionaries.GetAmortizationTypeName (type);
 			var stringPeriod = EnumDictionaries.GetPeriodicityName (period);
 
-			return string.Format ("{0} {1} {2} {3}", name, stringTaux, stringType, stringPeriod);
+			if (method == (int) AmortizationMethod.YearCount)
+			{
+				stringYears = string.Format (Res.Strings.CategoriesLogic.YearCount.Summary.ToString (), stringYears);
+				return string.Format ("{0} {1} {2} {3}", name, stringYears, stringType, stringPeriod);
+			}
+			else
+			{
+				return string.Format ("{0} {1} {2} {3}", name, stringTaux, stringType, stringPeriod);
+			}
 		}
 	}
 }

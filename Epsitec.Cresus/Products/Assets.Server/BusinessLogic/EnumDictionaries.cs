@@ -20,6 +20,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		public static string GetAmortizationMethodName(int? method)
+		{
+			if (method.HasValue)
+			{
+				return EnumDictionaries.GetAmortizationMethodName ((AmortizationMethod) method.Value);
+			}
+
+			return null;
+		}
+
+		public static string GetAmortizationMethodSummary(int? method)
+		{
+			if (method.HasValue)
+			{
+				return EnumDictionaries.GetAmortizationMethodSummary ((AmortizationMethod) method.Value);
+			}
+
+			return null;
+		}
+
 		public static string GetAmortizationTypeName(int? type)
 		{
 			if (type.HasValue)
@@ -176,6 +196,36 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static string GetAmortizationMethodName(AmortizationMethod method)
+		{
+			switch (method)
+			{
+				case AmortizationMethod.Rate:
+					return Res.Strings.Enum.AmortizationMethod.Rate.Name.ToString ();
+
+				case AmortizationMethod.YearCount:
+					return Res.Strings.Enum.AmortizationMethod.YearCount.Name.ToString ();
+
+				default:
+					return null;
+			}
+		}
+
+		public static string GetAmortizationMethodSummary(AmortizationMethod method)
+		{
+			switch (method)
+			{
+				case AmortizationMethod.Rate:
+					return Res.Strings.Enum.AmortizationMethod.Rate.Summary.ToString ();
+
+				case AmortizationMethod.YearCount:
+					return Res.Strings.Enum.AmortizationMethod.YearCount.Summary.ToString ();
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
 			switch (type)
@@ -271,6 +321,32 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return Periodicity.Semestrial;
 				yield return Periodicity.Trimestrial;
 				yield return Periodicity.Mensual;
+			}
+		}
+
+
+		public static Dictionary<int, string> DictAmortizationMethods
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				foreach (var method in EnumDictionaries.EnumAmortizationMethods)
+				{
+					var text = EnumDictionaries.GetAmortizationMethodName (method);
+					dict.Add ((int) method, text);
+				}
+
+				return dict;
+			}
+		}
+
+		private static IEnumerable<AmortizationMethod> EnumAmortizationMethods
+		{
+			get
+			{
+				yield return AmortizationMethod.Rate;
+				yield return AmortizationMethod.YearCount;
 			}
 		}
 

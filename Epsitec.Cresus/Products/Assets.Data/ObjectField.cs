@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		//	Définitions d'une catégorie.
 		CategoryName,
+		AmortizationMethod,
+		AmortizationYearCount,
 		AmortizationRate,
 		AmortizationType,
 		Periodicity,

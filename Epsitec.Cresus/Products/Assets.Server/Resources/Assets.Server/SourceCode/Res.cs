@@ -71,6 +71,21 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class CategoriesLogic
+			{
+				public static class YearCount
+				{
+					//	designer:str/IUKF201
+					public static global::Epsitec.Common.Types.FormattedText Summary
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544399));
+						}
+					}
+				}
+			}
+			
 			public static class DataClipboard
 			{
 				//	designer:str/IUKE001
@@ -282,6 +297,49 @@ namespace Epsitec.Cresus.Assets.Server
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544361));
+						}
+					}
+				}
+				
+				public static class AmortizationMethod
+				{
+					public static class Rate
+					{
+						//	designer:str/IUKB201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544395));
+							}
+						}
+						//	designer:str/IUKD201
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544397));
+							}
+						}
+					}
+					
+					public static class YearCount
+					{
+						//	designer:str/IUKC201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544396));
+							}
+						}
+						//	designer:str/IUKE201
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
+							}
 						}
 					}
 				}
@@ -810,6 +868,21 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class CategoriesLogic
+			{
+				public static class YearCount
+				{
+					//	designer:str/IUKF201
+					public static global::Epsitec.Common.Support.Druid Summary
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544399);
+						}
+					}
+				}
+			}
+			
 			public static class DataClipboard
 			{
 				//	designer:str/IUKE001
@@ -1021,6 +1094,49 @@ namespace Epsitec.Cresus.Assets.Server
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544361);
+						}
+					}
+				}
+				
+				public static class AmortizationMethod
+				{
+					public static class Rate
+					{
+						//	designer:str/IUKB201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544395);
+							}
+						}
+						//	designer:str/IUKD201
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
+							}
+						}
+					}
+					
+					public static class YearCount
+					{
+						//	designer:str/IUKC201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544396);
+							}
+						}
+						//	designer:str/IUKE201
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
+							}
 						}
 					}
 				}

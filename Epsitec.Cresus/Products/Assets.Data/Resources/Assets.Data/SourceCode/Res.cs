@@ -235,6 +235,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
 						}
 					}
+					//	designer:str/HUK1201
+					public static global::Epsitec.Common.Types.FormattedText AmortizationMethod
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544385));
+						}
+					}
 					//	designer:str/HUKC001
 					public static global::Epsitec.Common.Types.FormattedText AmortizationRate
 					{
@@ -249,6 +257,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544333));
+						}
+					}
+					//	designer:str/HUK2201
+					public static global::Epsitec.Common.Types.FormattedText AmortizationYearCount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386));
 						}
 					}
 					//	designer:str/HUKB001
@@ -845,6 +861,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544347);
 						}
 					}
+					//	designer:str/HUK1201
+					public static global::Epsitec.Common.Support.Druid AmortizationMethod
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544385);
+						}
+					}
 					//	designer:str/HUKC001
 					public static global::Epsitec.Common.Support.Druid AmortizationRate
 					{
@@ -859,6 +883,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544333);
+						}
+					}
+					//	designer:str/HUK2201
+					public static global::Epsitec.Common.Support.Druid AmortizationYearCount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544386);
 						}
 					}
 					//	designer:str/HUKB001

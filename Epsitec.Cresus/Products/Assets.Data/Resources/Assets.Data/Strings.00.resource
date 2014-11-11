@@ -65,4 +65,6 @@
   <data name="Enum.ObjectField.AccountDecreaseCredit" id="KU1">Crédit rééval.</data>
   <data name="Enum.ObjectField.AccountAdjustCredit" id="KV1">Crédit correction</data>
   <data name="Enum.ObjectField.AccountAdjustDebit" id="K02">Débit correction</data>
+  <data name="Enum.ObjectField.AmortizationMethod" id="K12">Méthode</data>
+  <data name="Enum.ObjectField.AmortizationYearCount" id="K22">Nombre d'années</data>
 </bundle>

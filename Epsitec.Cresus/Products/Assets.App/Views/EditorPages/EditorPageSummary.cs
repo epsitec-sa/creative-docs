@@ -95,7 +95,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					return PageType.AmortizationValue;
 
 				case ObjectField.CategoryName:
+				case ObjectField.AmortizationMethod:
 				case ObjectField.AmortizationRate:
+				case ObjectField.AmortizationYearCount:
 				case ObjectField.AmortizationType:
 				case ObjectField.Periodicity:
 				case ObjectField.Prorata:
@@ -181,7 +183,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				c3.Add (new ObjectSummaryControllerTile (Res.Strings.EditorPages.Summary.Amortizations.ToString ()));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.CategoryName));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationMethod));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationRate));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationYearCount));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.AmortizationType));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Periodicity));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Prorata));

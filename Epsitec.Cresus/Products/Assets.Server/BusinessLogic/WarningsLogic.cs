@@ -41,7 +41,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				//	Liste des champs obligatoires d'une catégorie d'immobilisation.
 				return field == ObjectField.Name
+					|| field == ObjectField.AmortizationMethod
 					|| field == ObjectField.AmortizationRate
+					|| field == ObjectField.AmortizationYearCount
 					|| field == ObjectField.AmortizationType
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
@@ -53,7 +55,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	Liste des champs obligatoires d'un objet d'immobilisation.
 				return field == ObjectField.MainValue
 					|| field == ObjectField.CategoryName
+					|| field == ObjectField.AmortizationMethod
 					|| field == ObjectField.AmortizationRate
+					|| field == ObjectField.AmortizationYearCount
 					|| field == ObjectField.AmortizationType
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
@@ -85,7 +89,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	On cherche les champs indéfinis dans les catégories.
 			WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Categories,
 				ObjectField.Name,
+				ObjectField.AmortizationMethod,
 				ObjectField.AmortizationRate,
+				ObjectField.AmortizationYearCount,
 				ObjectField.AmortizationType,
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
@@ -129,7 +135,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	On cherche les champs pour l'amortissement indéfinis.
 					WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e,
 						ObjectField.CategoryName,
+						ObjectField.AmortizationMethod,
 						ObjectField.AmortizationRate,
+						ObjectField.AmortizationYearCount,
 						ObjectField.AmortizationType,
 						ObjectField.Periodicity,
 						ObjectField.Prorata,
