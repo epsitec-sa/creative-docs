@@ -59,7 +59,7 @@
   <data name="Event.Modification.ShortName" id="KQ1">Modification générale</data>
   <data name="Event.Decrease.ShortName" id="KR1">Diminution</data>
   <data name="Event.Increase.ShortName" id="KS1">Augmentation</data>
-  <data name="Event.MainValue.ShortName" id="KT1">Ajustement de la valeur comptable</data>
+  <data name="Event.Adjust.ShortName" id="KT1">Correction de valeur</data>
   <data name="Event.AmortizationExtra.ShortName" id="KU1">Amortissement extraordinaire</data>
   <data name="Event.Locked.ShortName" id="KV1">Verrou</data>
   <data name="Event.Output.ShortName" id="K02">Sortie</data>
@@ -67,7 +67,7 @@
   <data name="Event.Modification.Help" id="K22">Modification de diverses informations,&lt;br/&gt;sauf de la valeur comptable</data>
   <data name="Event.Decrease.Help" id="K32">Diminution de la valeur comptable (réévaluation)</data>
   <data name="Event.Increase.Help" id="K42">Augmentation de la valeur comptable (revalorisation)</data>
-  <data name="Event.MainValue.Help" id="K52">Ajustement extraordinaire de la valeur comptable</data>
+  <data name="Event.Adjust.Help" id="K52">Correction de la valeur comptable</data>
   <data name="Event.AmortizationExtra.Help" id="K62">Amortissement de la valeur comptable</data>
   <data name="Event.Locked.Help" id="K72">Verrouille tous les événements antérieurs</data>
   <data name="Event.Output.Help" id="K82">Sortie de l'inventaire, vente, vol, destruction, etc.</data>

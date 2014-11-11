@@ -256,6 +256,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountDecreaseDebit);
 					return entryAccouts[ObjectField.AccountDecreaseDebit];
 
+				case EntryScenario.Adjust:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAdjustDebit);
+					return entryAccouts[ObjectField.AccountAdjustDebit];
+
 				default:
 					return null;
 			}
@@ -309,6 +313,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Decrease:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountDecreaseCredit);
 					return entryAccouts[ObjectField.AccountDecreaseCredit];
+
+				case EntryScenario.Adjust:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountAdjustCredit);
+					return entryAccouts[ObjectField.AccountAdjustCredit];
 
 				default:
 					return null;
@@ -426,6 +434,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case EntryScenario.Increase:
 				case EntryScenario.Decrease:
+				case EntryScenario.Adjust:
 					return amount.FinalAmortizedAmount.GetValueOrDefault ();
 
 				default:

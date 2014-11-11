@@ -74,4 +74,6 @@
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationYes" id="KD2">Oui</data>
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2">
   </data>
+  <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
+  <data name="Enum.MCH2Summary.Column.Adjust.Tooltip" id="KG2">Valeurs après corrections</data>
 </bundle>

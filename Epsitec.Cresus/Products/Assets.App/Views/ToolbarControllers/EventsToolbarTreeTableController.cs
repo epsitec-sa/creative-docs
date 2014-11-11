@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			if (target != null)
 			{
-				CreateEventPopup.Show (target, this.accessor, this.baseType, this.obj, timestamp.Value,
+				CreateEventPopup.Show (target, this.accessor, this.obj, timestamp.Value,
 				timestampChanged: delegate (Timestamp? t)
 				{
 					this.SelectedTimestamp = t;

@@ -187,8 +187,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				yield return EventType.Modification;
 				yield return EventType.Increase;
 				yield return EventType.Decrease;
-				//?yield return EventType.MainValue;
-				//?yield return EventType.AmortizationExtra;
+				yield return EventType.Adjust;
+				yield return EventType.AmortizationExtra;
 				yield return EventType.Locked;
 				yield return EventType.Output;
 			}
@@ -225,10 +225,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						Res.Strings.Event.Increase.Help.ToString (),
 						enable);
 
-				case EventType.MainValue:
+				case EventType.Adjust:
 					return new ButtonDescription (type,
-						Res.Strings.Event.MainValue.ShortName.ToString (),
-						Res.Strings.Event.MainValue.Help.ToString (),
+						Res.Strings.Event.Adjust.ShortName.ToString (),
+						Res.Strings.Event.Adjust.Help.ToString (),
 						enable);
 
 				case EventType.AmortizationExtra:
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		#region Helpers
 		public static void Show(Widget target, DataAccessor accessor,
-			BaseType baseType, DataObject obj, Timestamp timestamp,
+			DataObject obj, Timestamp timestamp,
 			System.Action<Timestamp?> timestampChanged,
 			System.Action<System.DateTime, string> action)
 		{

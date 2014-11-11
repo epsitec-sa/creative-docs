@@ -23,6 +23,14 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				public static class EventType
 				{
+					//	designer:str/HUKE101
+					public static global::Epsitec.Common.Types.FormattedText Adjust
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544366));
+						}
+					}
 					//	designer:str/HUKF101
 					public static global::Epsitec.Common.Types.FormattedText AmortizationAuto
 					{
@@ -79,14 +87,6 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544370));
 						}
 					}
-					//	designer:str/HUKE101
-					public static global::Epsitec.Common.Types.FormattedText MainValue
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544366));
-						}
-					}
 					//	designer:str/HUKB101
 					public static global::Epsitec.Common.Types.FormattedText Modification
 					{
@@ -107,6 +107,22 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
+					//	designer:str/HUKV101
+					public static global::Epsitec.Common.Types.FormattedText AccountAdjustCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544383));
+						}
+					}
+					//	designer:str/HUK0201
+					public static global::Epsitec.Common.Types.FormattedText AccountAdjustDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544384));
+						}
+					}
 					//	designer:str/HUKN001
 					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationAutoCredit
 					{
@@ -617,6 +633,14 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				public static class EventType
 				{
+					//	designer:str/HUKE101
+					public static global::Epsitec.Common.Support.Druid Adjust
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544366);
+						}
+					}
 					//	designer:str/HUKF101
 					public static global::Epsitec.Common.Support.Druid AmortizationAuto
 					{
@@ -673,14 +697,6 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544370);
 						}
 					}
-					//	designer:str/HUKE101
-					public static global::Epsitec.Common.Support.Druid MainValue
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544366);
-						}
-					}
 					//	designer:str/HUKB101
 					public static global::Epsitec.Common.Support.Druid Modification
 					{
@@ -701,6 +717,22 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
+					//	designer:str/HUKV101
+					public static global::Epsitec.Common.Support.Druid AccountAdjustCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544383);
+						}
+					}
+					//	designer:str/HUK0201
+					public static global::Epsitec.Common.Support.Druid AccountAdjustDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544384);
+						}
+					}
 					//	designer:str/HUKN001
 					public static global::Epsitec.Common.Support.Druid AccountAmortizationAutoCredit
 					{

@@ -762,7 +762,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var target = this.timelinesToolbar.GetTarget (e);
 				var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 
-				CreateEventPopup.Show (target, this.accessor, BaseType.Assets, obj, timestamp.Value,
+				CreateEventPopup.Show (target, this.accessor, obj, timestamp.Value,
 				timestampChanged: delegate (Timestamp? t)
 				{
 					this.SelectedTimestamp = t;

@@ -265,7 +265,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			string accountAmortizationAutoDebit = null, string accountAmortizationAutoCredit = null,
 			string accountAmortizationExtraDebit = null, string accountAmortizationExtraCredit = null,
 			string accountIncreaseDebit = null, string accountIncreaseCredit = null,
-			string accountDecreaseDebit = null, string accountDecreaseCredit = null)
+			string accountDecreaseDebit = null, string accountDecreaseCredit = null,
+			string accountAdjustDebit = null, string accountAdjustCredit = null)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -296,7 +297,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.AccountIncreaseDebit,	          accountIncreaseDebit);
 			this.AddField (e, ObjectField.AccountIncreaseCredit,	      accountIncreaseCredit);
 			this.AddField (e, ObjectField.AccountDecreaseDebit,	          accountDecreaseDebit);
-			this.AddField (e, ObjectField.AccountDecreaseCredit,	      accountDecreaseCredit);
+			this.AddField (e, ObjectField.AccountDecreaseCredit,          accountDecreaseCredit);
+			this.AddField (e, ObjectField.AccountAdjustDebit,             accountAdjustDebit);
+			this.AddField (e, ObjectField.AccountAdjustCredit,            accountAdjustCredit);
 		}
 
 

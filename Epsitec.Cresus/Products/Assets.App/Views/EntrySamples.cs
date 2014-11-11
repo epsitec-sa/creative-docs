@@ -155,6 +155,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return EntryScenario.AmortizationExtra;
 				yield return EntryScenario.Increase;
 				yield return EntryScenario.Decrease;
+				yield return EntryScenario.Adjust;
 				yield return EntryScenario.Sale;
 			}
 		}

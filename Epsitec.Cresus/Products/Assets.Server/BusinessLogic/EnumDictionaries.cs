@@ -201,6 +201,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Decrease:
 					return Res.Strings.Enum.EntryScenario.Decrease.ToString ();
 
+				case EntryScenario.Adjust:
+					return Res.Strings.Enum.EntryScenario.Adjust.ToString ();
+
 				default:
 					return null;
 			}
@@ -227,6 +230,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case EntryScenario.Decrease:
 					return Res.Strings.Enum.EntryScenario.Title.Decrease.ToString ();
+
+				case EntryScenario.Adjust:
+					return Res.Strings.Enum.EntryScenario.Title.Adjust.ToString ();
 
 				default:
 					return null;

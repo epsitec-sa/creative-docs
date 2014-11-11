@@ -16,5 +16,6 @@ namespace Epsitec.Cresus.Assets.Data
 		AmortizationExtra,
 		Increase,
 		Decrease,
+		Adjust,
 	}
 }

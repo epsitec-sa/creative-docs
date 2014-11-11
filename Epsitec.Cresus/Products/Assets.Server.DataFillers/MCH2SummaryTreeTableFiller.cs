@@ -207,6 +207,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						this.DateRange,
 						EventType.Increase);
 
+				case Column.Adjust:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DateRange,
+						EventType.Adjust);
+
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaFiltered,
@@ -285,6 +291,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Increases:
 					return Res.Strings.Enum.MCH2Summary.Column.Increases.Text.ToString ();
 
+				case Column.Adjust:
+					return Res.Strings.Enum.MCH2Summary.Column.Adjust.Text.ToString ();
+
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
 
@@ -323,6 +332,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Increases:
 					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
+
+				case Column.Adjust:
+					return Res.Strings.Enum.MCH2Summary.Column.Adjust.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -414,6 +426,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 //?				yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
 				yield return Column.Decreases;
 				yield return Column.Increases;
+				yield return Column.Adjust;
 				yield return Column.Outputs;
 				yield return Column.AmortizationsAuto;
 				yield return Column.AmortizationsExtra;
@@ -438,6 +451,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			Reorganizations,
 			Decreases,
 			Increases,
+			Adjust,
 			Outputs,
 			AmortizationsAuto,
 			AmortizationsExtra,

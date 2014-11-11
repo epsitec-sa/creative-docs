@@ -47,6 +47,8 @@ namespace Epsitec.Cresus.Assets.Data
 		AccountIncreaseCredit,
 		AccountDecreaseDebit,
 		AccountDecreaseCredit,
+		AccountAdjustDebit,
+		AccountAdjustCredit,
 
 		AssetEntryForcedDate,
 		AssetEntryForcedDebit,

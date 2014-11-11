@@ -46,7 +46,7 @@
   <data name="Enum.EventType.Modification" id="KB1">Modification générale</data>
   <data name="Enum.EventType.Increase" id="KC1">Augmentation</data>
   <data name="Enum.EventType.Decrease" id="KD1">Diminution</data>
-  <data name="Enum.EventType.MainValue" id="KE1">Modification valeur</data>
+  <data name="Enum.EventType.Adjust" id="KE1">Correction de valeur</data>
   <data name="Enum.EventType.AmortizationAuto" id="KF1">Amort. ordinaire</data>
   <data name="Enum.EventType.AmortizationPreview" id="KG1">Préamortissement</data>
   <data name="Enum.EventType.AmortizationExtra" id="KH1">Amort. extra.</data>
@@ -63,4 +63,6 @@
   <data name="Enum.ObjectField.AccountIncreaseCredit" id="KS1">Crédit reval.</data>
   <data name="Enum.ObjectField.AccountDecreaseDebit" id="KT1">Débit rééval.</data>
   <data name="Enum.ObjectField.AccountDecreaseCredit" id="KU1">Crédit rééval.</data>
+  <data name="Enum.ObjectField.AccountAdjustCredit" id="KV1">Crédit correction</data>
+  <data name="Enum.ObjectField.AccountAdjustDebit" id="K02">Débit correction</data>
 </bundle>

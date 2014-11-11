@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					break;
 
 				case EventType.Increase:
-				case EventType.MainValue:
+				case EventType.Adjust:
 					amortizationType = AmortizationType.Unknown;  // montant fixe
 					entryScenario    = EntryScenario.Increase;
 					break;
@@ -334,6 +334,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Il est bien pratique de mettre tout de suite une valeur comptable nulle
 				//	lors de la création d'un événement de sortie.
 				aa = AmortizedAmount.SetInitialAmount (aa, 0.0m);
+			}
+			else if (e.Type == EventType.Adjust)
+			{
+				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
+				//	la création d'un événement de correction.
+				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
+				if (currentAmount.HasValue && currentAmount.Value.FinalAmortizedAmount.HasValue)
+				{
+					aa = AmortizedAmount.SetInitialAmount (aa, currentAmount.Value.FinalAmortizedAmount);
+				}
 			}
 
 			Amortizations.SetAmortizedAmount (e, aa);
@@ -504,6 +514,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.AccountIncreaseCredit;
 				yield return ObjectField.AccountDecreaseDebit;
 				yield return ObjectField.AccountDecreaseCredit;
+				yield return ObjectField.AccountAdjustDebit;
+				yield return ObjectField.AccountAdjustCredit;
 			}
 		}
 

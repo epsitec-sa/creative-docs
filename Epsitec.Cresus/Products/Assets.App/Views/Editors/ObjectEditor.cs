@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 						case EventType.AmortizationExtra:
 						case EventType.Decrease:
 						case EventType.Increase:
-						case EventType.MainValue:
+						case EventType.Adjust:
 							yield return PageType.AmortizationValue;
 							break;
 

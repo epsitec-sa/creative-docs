@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Modification,			// modification de diverses informations (sauf valeur comptable)
 		Increase,				// augmentation de la valeur comptable (revalorisation)
 		Decrease,				// diminution de la valeur comptable (réévaluation)
-		MainValue,				// modification de la valeur comptable (obsolète ?)
+		Adjust,					// correction de la valeur comptable
 		AmortizationAuto,		// amortissement ordinaire
 		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire

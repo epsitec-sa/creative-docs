@@ -2679,6 +2679,26 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class Event
 			{
+				public static class Adjust
+				{
+					//	designer:str/JUK5201
+					public static global::Epsitec.Common.Types.FormattedText Help
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
+						}
+					}
+					//	designer:str/JUKT101
+					public static global::Epsitec.Common.Types.FormattedText ShortName
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
+						}
+					}
+				}
+				
 				public static class AmortizationExtra
 				{
 					//	designer:str/JUK6201
@@ -2775,26 +2795,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544383));
-						}
-					}
-				}
-				
-				public static class MainValue
-				{
-					//	designer:str/JUK5201
-					public static global::Epsitec.Common.Types.FormattedText Help
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
-						}
-					}
-					//	designer:str/JUKT101
-					public static global::Epsitec.Common.Types.FormattedText ShortName
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
 						}
 					}
 				}
@@ -6912,6 +6912,26 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class Event
 			{
+				public static class Adjust
+				{
+					//	designer:str/JUK5201
+					public static global::Epsitec.Common.Support.Druid Help
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
+						}
+					}
+					//	designer:str/JUKT101
+					public static global::Epsitec.Common.Support.Druid ShortName
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
+						}
+					}
+				}
+				
 				public static class AmortizationExtra
 				{
 					//	designer:str/JUK6201
@@ -7008,26 +7028,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544383);
-						}
-					}
-				}
-				
-				public static class MainValue
-				{
-					//	designer:str/JUK5201
-					public static global::Epsitec.Common.Support.Druid Help
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
-						}
-					}
-					//	designer:str/JUKT101
-					public static global::Epsitec.Common.Support.Druid ShortName
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
 						}
 					}
 				}

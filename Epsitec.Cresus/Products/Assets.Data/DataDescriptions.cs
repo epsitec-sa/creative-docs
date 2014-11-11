@@ -54,6 +54,12 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountDecreaseCredit:
 					return Res.Strings.Enum.ObjectField.AccountDecreaseCredit.ToString ();
 
+				case ObjectField.AccountAdjustDebit:
+					return Res.Strings.Enum.ObjectField.AccountAdjustDebit.ToString ();
+
+				case ObjectField.AccountAdjustCredit:
+					return Res.Strings.Enum.ObjectField.AccountAdjustCredit.ToString ();
+
 				case ObjectField.AccountCategory:
 					return Res.Strings.Enum.ObjectField.AccountCategory.ToString ();
 
@@ -174,8 +180,8 @@ namespace Epsitec.Cresus.Assets.Data
 				case EventType.Decrease:
 					return Res.Strings.Enum.EventType.Decrease.ToString ();
 
-				case EventType.MainValue:
-					return Res.Strings.Enum.EventType.MainValue.ToString ();
+				case EventType.Adjust:
+					return Res.Strings.Enum.EventType.Adjust.ToString ();
 
 				case EventType.AmortizationAuto:
 					return Res.Strings.Enum.EventType.AmortizationAuto.ToString ();

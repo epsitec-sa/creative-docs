@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Decrease:
 					return TimelineGlyph.FilledDown;
 
-				case EventType.MainValue:
+				case EventType.Adjust:
 					return TimelineGlyph.FilledStar;
 
 				case EventType.AmortizationAuto:

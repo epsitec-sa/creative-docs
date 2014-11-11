@@ -73,4 +73,6 @@
   <data name="EditionAccessor.Undo.Modify.PersonUserField" id="K62">Modification d'un champ d'un contact</data>
   <data name="EditionAccessor.Undo.Modify.Generic" id="K72">Modification</data>
   <data name="EditionAccessor.Undo.Modify.AssetUserField" id="K82">Modification d'un champ d'un objet d'immobilisation</data>
+  <data name="Enum.EntryScenario.Adjust" id="K92">Correction</data>
+  <data name="Enum.EntryScenario.Title.Adjust" id="KA2">Correction {0}</data>
 </bundle>
