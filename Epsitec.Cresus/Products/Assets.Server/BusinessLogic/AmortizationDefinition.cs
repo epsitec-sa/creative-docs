@@ -10,10 +10,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(decimal rate, AmortizationType type, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
+		public AmortizationDefinition(int rank, AmortizationMethod method, decimal rate, AmortizationType type, int yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
+			this.Rank        = rank;
+			this.Method      = method;
 			this.Rate        = rate;
 			this.Type        = type;
+			this.YearCount   = yearCount;
 			this.Periodicity = periodicity;
 			this.ProrataType = prorataType;
 			this.Round       = round;
@@ -32,8 +35,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate        == 0.0m
+				return this.Method      == AmortizationMethod.Unknown
+					&& this.Rate        == 0.0m
 					&& this.Type        == AmortizationType.Unknown
+					&& this.YearCount   == 0
 					&& this.Periodicity == 0
 					&& this.ProrataType == 0
 					&& this.Round       == 0.0m
@@ -124,24 +129,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public string GetFullName()
-		{
-			var stringTaux     = TypeConverters.RateToString (this.Rate);
-			var stringType     = EnumDictionaries.GetAmortizationTypeName (this.Type);
-			var stringPeriod   = EnumDictionaries.GetPeriodicityName (this.Periodicity);
-			var stringRound    = TypeConverters.AmountToString (this.Round);
-			var stringResidual = TypeConverters.AmountToString (this.Residual);
-			var stringProrata  = EnumDictionaries.GetProrataTypeName (this.ProrataType);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (0, AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0, 0.0m, 0.0m, 0.0m);
 
-			return string.Format (Res.Strings.AmortizationDefinition.Summary.ToString (),
-				stringTaux, stringType, stringPeriod, stringRound, stringResidual, stringProrata);
-		}
-
-
-		public static AmortizationDefinition Empty = new AmortizationDefinition (0.0m, AmortizationType.Unknown, 0, 0.0m, 0.0m, 0.0m);
-
+		public readonly int						Rank;
+		public readonly AmortizationMethod		Method;
 		public readonly decimal					Rate;
 		public readonly AmortizationType		Type;
+		public readonly int						YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly ProrataType				ProrataType;
 		public readonly decimal					Round;

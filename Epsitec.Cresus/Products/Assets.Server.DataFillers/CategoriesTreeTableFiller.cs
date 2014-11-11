@@ -43,13 +43,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 180, Res.Strings.CategoriesTreeTableFiller.Name.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                TreeTableColumnType.String,  50, Res.Strings.CategoriesTreeTableFiller.Number.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod,    TreeTableColumnType.String,  70, Res.Strings.CategoriesTreeTableFiller.AmortizationMethod.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,    60, Res.Strings.CategoriesTreeTableFiller.AmortizationRate.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,    50, Res.Strings.CategoriesTreeTableFiller.AmortizationRate.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,  80, Res.Strings.CategoriesTreeTableFiller.AmortizationType.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Int,     70, Res.Strings.CategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Int,     60, Res.Strings.CategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,           TreeTableColumnType.String, 100, Res.Strings.CategoriesTreeTableFiller.Periodicity.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,               TreeTableColumnType.String, 100, Res.Strings.CategoriesTreeTableFiller.Prorata.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Round,                 TreeTableColumnType.Amount, 100, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,         TreeTableColumnType.Amount, 120, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Round,                 TreeTableColumnType.Amount,  70, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,         TreeTableColumnType.Amount, 100, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{

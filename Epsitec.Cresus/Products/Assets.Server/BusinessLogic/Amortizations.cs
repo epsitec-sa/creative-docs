@@ -257,20 +257,31 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
+			var method   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationMethod);
 			var taux     = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
 			var type     = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
+			var years    = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationYearCount);
 			var period   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
 
-			if (taux.HasValue && type.HasValue && period.HasValue)
+			if (method.HasValue && taux.HasValue && type.HasValue && years.HasValue && period.HasValue)
 			{
+				var m = (AmortizationMethod) method;
 				var t = (AmortizationType) type;
 				var p = (Periodicity) period;
 				var r = (ProrataType) prorata;
 
-				return new AmortizationDefinition (taux.GetValueOrDefault (0.0m), t, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
+				//	Calcule le rang de l'amortissement, égal au nombre d'amortissements antérieurs.
+				var rank = obj.Events
+					.Where (x => x.Timestamp < timestamp && (
+						x.Type == EventType.AmortizationPreview ||
+						x.Type == EventType.AmortizationAuto ||
+						x.Type == EventType.AmortizationExtra))
+					.Count ();
+
+				return new AmortizationDefinition (rank, m, taux.GetValueOrDefault (0.0m), t, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
