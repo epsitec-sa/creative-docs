@@ -68,7 +68,7 @@
   <data name="Event.Decrease.Help" id="K32">Diminution de la valeur comptable (réévaluation)</data>
   <data name="Event.Increase.Help" id="K42">Augmentation de la valeur comptable (revalorisation)</data>
   <data name="Event.Adjust.Help" id="K52">Correction de la valeur comptable</data>
-  <data name="Event.AmortizationExtra.Help" id="K62">Amortissement de la valeur comptable</data>
+  <data name="Event.AmortizationExtra.Help" id="K62">Amortissement extraordinaire de la valeur comptable</data>
   <data name="Event.Locked.Help" id="K72">Verrouille tous les événements antérieurs</data>
   <data name="Event.Output.Help" id="K82">Sortie de l'inventaire, vente, vol, destruction, etc.</data>
   <data name="Popup.CreateGroup.Title" id="K92">Création d'un nouveau groupe</data>

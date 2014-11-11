@@ -297,7 +297,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					break;
 
 				case EventType.Increase:
-				case EventType.Adjust:
 					amortizationType = AmortizationType.Unknown;  // montant fixe
 					entryScenario    = EntryScenario.Increase;
 					break;
@@ -305,6 +304,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case EventType.Decrease:
 					amortizationType = AmortizationType.Unknown;  // montant fixe
 					entryScenario    = EntryScenario.Decrease;
+					break;
+
+				case EventType.Adjust:
+					amortizationType = AmortizationType.Unknown;  // montant fixe
+					entryScenario    = EntryScenario.Adjust;
 					break;
 
 				case EventType.AmortizationAuto:

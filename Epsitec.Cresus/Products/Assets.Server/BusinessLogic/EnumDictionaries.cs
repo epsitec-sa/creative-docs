@@ -432,6 +432,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return EntryScenario.AmortizationExtra;
 				yield return EntryScenario.Increase;
 				yield return EntryScenario.Decrease;
+				yield return EntryScenario.Adjust;
 			}
 		}
 	}
