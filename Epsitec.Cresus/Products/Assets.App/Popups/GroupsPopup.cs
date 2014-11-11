@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth = 200;
+		private const int popupWidth = 300;
 		private const int rowHeight  = 18;
 
 		private readonly DataAccessor					accessor;

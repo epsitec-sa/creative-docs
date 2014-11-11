@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
 			this.nodeGetter.SetParams (null, SortingInstructions.Default);
 
-			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter, 214);
+			int width = DateController.controllerWidth - (int) AbstractScroller.DefaultBreadth - 4;
+			this.dataFiller = new SingleGroupsTreeTableFiller (this.accessor, this.nodeGetter, width);
 		}
 
 

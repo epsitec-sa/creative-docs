@@ -41,7 +41,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name, TreeTableColumnType.Tree, this.width, Res.Strings.SingleGroupsTreeTableFiller.Name.ToString ()));
+				int w0 = this.width*3/4;
+				int w1 = this.width*1/2;
+
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,   TreeTableColumnType.Tree,   w0, Res.Strings.SingleGroupsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number, TreeTableColumnType.String, w1, Res.Strings.SingleGroupsTreeTableFiller.Number.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -51,7 +55,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			content.Columns.Add (new TreeTableColumnItem ());
+			for (int i=0; i<2; i++)
+			{
+				content.Columns.Add (new TreeTableColumnItem ());
+			}
 
 			for (int i=0; i<count; i++)
 			{
@@ -65,12 +72,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type  = node.Type;
 				var obj   = this.accessor.GetObject (node.BaseType, node.Guid);
 
-				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var number = GroupsLogic.GetFullNumber (this.accessor, node.Guid);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
-				var cell = new TreeTableCellTree (level, type, name, cellState);
+				var cell0 = new TreeTableCellTree (level, type, name, cellState);
+				var cell1 = new TreeTableCellString (number, cellState);
 
-				content.Columns[0].AddRow (cell);
+				int columnRank = 0;
+
+				content.Columns[columnRank++].AddRow (cell0);
+				content.Columns[columnRank++].AddRow (cell1);
 			}
 
 			return content;

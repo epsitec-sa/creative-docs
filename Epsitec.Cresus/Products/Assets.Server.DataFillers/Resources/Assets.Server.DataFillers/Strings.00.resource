@@ -76,4 +76,5 @@
   </data>
   <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
   <data name="Enum.MCH2Summary.Column.Adjust.Tooltip" id="KG2">Valeurs après corrections</data>
+  <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
 </bundle>

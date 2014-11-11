@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth = 200;
+		private const int popupWidth = 300;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;

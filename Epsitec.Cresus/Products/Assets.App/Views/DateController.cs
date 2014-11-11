@@ -303,11 +303,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		public const int controllerWidth  = DateController.widgetWidth;
+		public const int controllerWidth  = DateController.widgetWidth;  // = 235
 		public const int controllerHeight = DateController.lineHeight*2 + 4;
 
 		private const int indent          = 30;
-		private const int widgetWidth     = DateFieldController.controllerWidth + (int) (AbstractFieldController.lineHeight*7.5) + 3;
+		private const int widgetWidth     = DateFieldController.controllerWidth + (int) (AbstractFieldController.lineHeight*7.5) + 3;  // = 235
 		private const int lineHeight      = AbstractFieldController.lineHeight;
 
 
