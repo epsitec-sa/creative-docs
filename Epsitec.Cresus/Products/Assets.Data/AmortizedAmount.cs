@@ -11,6 +11,9 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		public AmortizedAmount
 		(
+			AmortizationMethod	amortizationMethod,
+			int					yearRank,
+			int					yearCount,
 			AmortizationType	amortizationType,
 			decimal?			previousAmount,
 			decimal?			initialAmount,
@@ -28,6 +31,9 @@ namespace Epsitec.Cresus.Assets.Data
 			int					entrySeed
 		)
 		{
+			this.AmortizationMethod = amortizationMethod;
+			this.YearRank           = yearRank;
+			this.YearCount          = yearCount;
 			this.AmortizationType   = amortizationType;
 			this.PreviousAmount     = previousAmount;
 			this.InitialAmount      = initialAmount;
@@ -47,6 +53,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
+			this.AmortizationMethod = (AmortizationMethod) IOHelpers.ReadTypeAttribute (reader, "AmortizationMethod", typeof (AmortizationMethod));
+			this.YearRank           = IOHelpers.ReadIntAttribute (reader, "YearRank").GetValueOrDefault ();
+			this.YearCount          = IOHelpers.ReadIntAttribute (reader, "YearCount").GetValueOrDefault ();
 			this.AmortizationType   = (AmortizationType) IOHelpers.ReadTypeAttribute (reader, "AmortizationType", typeof (AmortizationType));
 			this.PreviousAmount     = IOHelpers.ReadDecimalAttribute (reader, "PreviousAmount");
 			this.InitialAmount      = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
@@ -67,6 +76,9 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public readonly AmortizationMethod		AmortizationMethod;
+		public readonly int						YearRank;
+		public readonly int						YearCount;
 		public readonly AmortizationType		AmortizationType;
 		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;
@@ -168,13 +180,28 @@ namespace Epsitec.Cresus.Assets.Data
 				else
 				{
 					decimal value;
-					if (this.AmortizationType == AmortizationType.Linear)
+
+					if (this.AmortizationMethod == Data.AmortizationMethod.YearCount)
 					{
-						value = this.BaseAmount.GetValueOrDefault (0.0m);
+						if (this.AmortizationType == AmortizationType.Linear)
+						{
+							value = this.InitialAmount.GetValueOrDefault (0.0m);
+						}
+						else
+						{
+							value = this.InitialAmount.GetValueOrDefault (0.0m);
+						}
 					}
 					else
 					{
-						value = this.InitialAmount.GetValueOrDefault (0.0m);
+						if (this.AmortizationType == AmortizationType.Linear)
+						{
+							value = this.BaseAmount.GetValueOrDefault (0.0m);
+						}
+						else
+						{
+							value = this.InitialAmount.GetValueOrDefault (0.0m);
+						}
 					}
 
 					return value * this.EffectiveRate.GetValueOrDefault (1.0m) * this.Prorata;
@@ -209,7 +236,10 @@ namespace Epsitec.Cresus.Assets.Data
 		#region IEquatable<AmortizedAmount> Members
 		public bool Equals(AmortizedAmount other)
 		{
-			return this.AmortizationType   == other.AmortizationType
+			return this.AmortizationMethod == other.AmortizationMethod
+				&& this.YearRank           == other.YearRank
+				&& this.YearCount          == other.YearCount
+				&& this.AmortizationType   == other.AmortizationType
 				&& this.PreviousAmount     == other.PreviousAmount
 				&& this.InitialAmount      == other.InitialAmount
 				&& this.BaseAmount         == other.BaseAmount
@@ -241,7 +271,10 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public override int GetHashCode()
 		{
-			return this.AmortizationType  .GetHashCode ()
+			return this.AmortizationMethod.GetHashCode ()
+				 ^ this.YearRank          .GetHashCode ()
+				 ^ this.YearCount         .GetHashCode ()
+				 ^ this.AmortizationType  .GetHashCode ()
 				 ^ this.PreviousAmount    .GetHashCode ()
 				 ^ this.InitialAmount     .GetHashCode ()
 				 ^ this.BaseAmount        .GetHashCode ()
@@ -274,6 +307,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				value,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -296,6 +332,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				value,
@@ -318,6 +357,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -340,6 +382,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -362,6 +407,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -384,6 +432,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -406,6 +457,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -428,6 +482,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -450,6 +507,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -472,6 +532,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -494,6 +557,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -516,6 +582,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -538,6 +607,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -560,6 +632,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -582,6 +657,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -607,6 +685,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				amortizationType,
 				model.PreviousAmount,
 				model.InitialAmount,
@@ -629,6 +710,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				previousAmount,
 				model.InitialAmount,
@@ -651,6 +735,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				model.AmortizationType,
 				initialAmount,
 				initialAmount,
@@ -674,6 +761,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return new AmortizedAmount
 			(
+				model.AmortizationMethod,
+				model.YearRank,
+				model.YearCount,
 				amortizationType,
 				initialAmount,
 				initialAmount,
@@ -698,7 +788,10 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteTypeAttribute (writer, "AmortizationType", this.AmortizationType);
+			IOHelpers.WriteTypeAttribute (writer, "AmortizationMethod", this.AmortizationMethod);
+			IOHelpers.WriteIntAttribute  (writer, "YearRank",           this.YearRank);
+			IOHelpers.WriteIntAttribute  (writer, "YearCount",          this.YearCount);
+			IOHelpers.WriteTypeAttribute (writer, "AmortizationType",   this.AmortizationType);
 
 			IOHelpers.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);

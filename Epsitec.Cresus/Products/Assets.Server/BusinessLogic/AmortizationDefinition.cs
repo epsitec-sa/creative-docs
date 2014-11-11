@@ -10,12 +10,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(int rank, AmortizationMethod method, decimal rate, AmortizationType type, int yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
+		public AmortizationDefinition(AmortizationMethod method, decimal rate, AmortizationType type, int yearRank, int yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
-			this.Rank        = rank;
 			this.Method      = method;
 			this.Rate        = rate;
 			this.Type        = type;
+			this.YearRank    = yearRank;
 			this.YearCount   = yearCount;
 			this.Periodicity = periodicity;
 			this.ProrataType = prorataType;
@@ -27,7 +27,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Rate * this.PeriodMonthCount / 12.0m;
+				var rate = 0.0m;
+
+				switch (this.Method)
+				{
+					case AmortizationMethod.Rate:
+						rate = this.Rate * this.PeriodMonthCount / 12.0m;
+						break;
+						
+					case AmortizationMethod.YearCount:
+						int n = (this.YearCount * 12 / this.PeriodMonthCount) - this.YearRank;  // nb d'années restantes
+						if (n > 0)
+						{
+							rate = 1.0m / (decimal) n;
+						}
+						else
+						{
+							rate = 1.0m;
+						}
+						break;
+				}
+
+				return rate * this.PeriodMonthCount / 12.0m;
 			}
 		}
 
@@ -129,12 +150,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (0, AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0, 0.0m, 0.0m, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0, 0, 0.0m, 0.0m, 0.0m);
 
-		public readonly int						Rank;
 		public readonly AmortizationMethod		Method;
 		public readonly decimal					Rate;
 		public readonly AmortizationType		Type;
+		public readonly int						YearRank;
 		public readonly int						YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly ProrataType				ProrataType;

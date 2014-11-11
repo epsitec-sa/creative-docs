@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						x.Type == EventType.AmortizationExtra))
 					.Count ();
 
-				return new AmortizationDefinition (rank, m, taux.GetValueOrDefault (0.0m), t, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
+				return new AmortizationDefinition (m, taux.GetValueOrDefault (0.0m), t, rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
@@ -361,6 +361,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return new AmortizedAmount
 			(
+				def.Method, def.YearRank, def.YearCount,
 				amortizationType, null, null, null, def.EffectiveRate,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0

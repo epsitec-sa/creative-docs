@@ -146,6 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							{
 								var aa = new AmortizedAmount
 								(
+									AmortizationMethod.Unknown, 0, 0, 
 									AmortizationType.Unknown,
 									null, v, null, null, null, null, null, null,
 									EntryScenario.None, System.DateTime.MinValue,

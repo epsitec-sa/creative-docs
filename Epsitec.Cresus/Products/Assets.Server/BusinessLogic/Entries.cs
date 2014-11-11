@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Retourne le texte permettant de peupler le contrôleur qui montre les
 			//	exemples d'écritures pour les différents scénarios (EntrySamples).
-			var aa = new AmortizedAmount (AmortizationType.Unknown,
+			var aa = new AmortizedAmount (AmortizationMethod.Unknown, 0, 0, AmortizationType.Unknown,
 				null, null, null, null, null, null, null, null,
 				scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
 
