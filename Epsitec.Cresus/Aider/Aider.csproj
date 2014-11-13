@@ -96,6 +96,7 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController2DeleteAll.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
+    <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController5DeleteFunction.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController4CreateFunction.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController0CreateSubGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController13DeleteOfficeManagement.cs" />

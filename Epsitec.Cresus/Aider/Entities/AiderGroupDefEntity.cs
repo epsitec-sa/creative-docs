@@ -89,6 +89,21 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		
+		public static void InstantiateFunctionSubGroup(BusinessContext businessContext, AiderGroupDefEntity functionDef, AiderGroupDefEntity functionSubGroupDef)
+		{
+			var existingDefsWithThisFunction = AiderGroupDefEntity.FindGroupDefByFunction (businessContext, functionDef);
+			foreach (var existingGroupDef in existingDefsWithThisFunction)
+			{
+				//Create groups at right place
+				var groupsToComplete = AiderGroupEntity.FindGroupsFromGroupDef (businessContext, existingGroupDef);
+				foreach (var group in groupsToComplete)
+				{
+					group.CreateSubgroup (businessContext, functionSubGroupDef);
+				}
+			}
+		}
+
 		public static AiderGroupDefEntity CreateFunctionSubGroup(BusinessContext businessContext, AiderGroupDefEntity functionDef,AiderGroupDefEntity parent, string name,
 			 bool subgroupsAllowed, bool membersAllowed, Mutability mutability)
 		{
@@ -111,6 +126,33 @@ namespace Epsitec.Aider.Entities
 			parent.Subgroups.Add (aiderGroupDef);
 
 			return aiderGroupDef;
+		}
+
+		public static void DeleteFunctionSubGroup(BusinessContext businessContext, AiderGroupDefEntity functionToDelete, bool force)
+		{
+			if ((!functionToDelete.IsFunction ()) || (functionToDelete.Level <= 1))
+			{
+				throw new BusinessRuleException ("Action impossible");
+			}
+
+			var parentDef = AiderGroupDefEntity.FindParent (businessContext, functionToDelete);
+			var existingDefsWithThisFunction = AiderGroupDefEntity.FindGroupDefByFunction (businessContext, parentDef);
+			foreach (var existingGroupDef in existingDefsWithThisFunction)
+			{
+				var groupsToProcess = AiderGroupEntity.FindGroupsFromGroupDef (businessContext, existingGroupDef);
+				foreach (var group in groupsToProcess)
+				{
+					var subGroupsToRemove = group.Subgroups.Where (g => g.GroupDef == functionToDelete);
+
+					foreach (var subGroup in subGroupsToRemove)
+					{
+						AiderGroupEntity.Delete (businessContext, subGroup, force);
+					}
+				}
+			}
+
+			parentDef.Subgroups.Remove (functionToDelete);
+			businessContext.DeleteEntity (functionToDelete);
 		}
 
 		public static AiderGroupDefEntity CreateDefinitionSubGroup(BusinessContext businessContext, AiderGroupDefEntity parent, string name, 
@@ -149,7 +191,7 @@ namespace Epsitec.Aider.Entities
 			var aiderGroupDef = businessContext.CreateAndRegisterEntity<AiderGroupDefEntity> ();
 
 			aiderGroupDef.Name = name;
-			aiderGroupDef.Number = ""; //?
+			aiderGroupDef.Number = ""; //EERV internal field, deprecated
 			aiderGroupDef.Level = parent.Level + 1;
 			
 			
@@ -193,7 +235,7 @@ namespace Epsitec.Aider.Entities
 				prefixChar = 'P';
 			}
 
-			var rootGroupsDefs = AiderGroupDefEntity.FindRootGroupsDefinitions(businessContext);
+			var rootGroupsDefs = AiderGroupDefEntity.FindRootGroupsDefinitions (businessContext);
 			var number = AiderGroupIds.FindNextSubGroupDefNumber (rootGroupsDefs.Select (g => g.PathTemplate), prefixChar);
 			aiderGroupDef.PathTemplate = AiderGroupIds.CreateTopLevelPathTemplate (number);
 
@@ -226,6 +268,23 @@ namespace Epsitec.Aider.Entities
 			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.PathTemplate, path));
 
 			return dataContext.GetByRequest (request);
+		}
+
+		public static IEnumerable<AiderGroupDefEntity> FindGroupDefByFunction (BusinessContext businessContext, AiderGroupDefEntity functionDef)
+		{
+			if(!functionDef.IsFunction ())
+			{
+				throw new BusinessRuleException ("Action impossible sur cette définition de groupe");
+			}
+
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupDefEntity ()
+			{
+				Function = functionDef
+			};
+
+			return dataContext.GetByExample <AiderGroupDefEntity> (example);
 		}
 
 		public bool IsChildOf(AiderGroupDefEntity groupDef)

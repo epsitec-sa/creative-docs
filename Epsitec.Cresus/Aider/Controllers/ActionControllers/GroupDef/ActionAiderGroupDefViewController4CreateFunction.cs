@@ -55,6 +55,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 																			this.BusinessContext,
 																			this.Entity,
 																			name);
+			if (this.Entity.Level > 0)
+			{
+				AiderGroupDefEntity.InstantiateFunctionSubGroup (this.BusinessContext, this.Entity, groupDef);
+			}
+			
+			
+			
 		}
 	}
 }
