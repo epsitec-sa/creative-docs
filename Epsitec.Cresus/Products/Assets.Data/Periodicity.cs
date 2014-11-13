@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.Server.BusinessLogic
+namespace Epsitec.Cresus.Assets.Data
 {
 	//	La valeur correspond au nombre de mois. Mais elle n'est jamais déduite
 	//	ainsi. Il s'agit simplement d'une aide pour le debug, lorsque le

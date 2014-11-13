@@ -81,7 +81,6 @@
     <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
     <Compile Include="BusinessLogic\ObjectProperties.cs" />
-    <Compile Include="BusinessLogic\Periodicity.cs" />
     <Compile Include="BusinessLogic\PersonsLogic.cs" />
     <Compile Include="BusinessLogic\ProrataDetails.cs" />
     <Compile Include="BusinessLogic\ProrataType.cs" />

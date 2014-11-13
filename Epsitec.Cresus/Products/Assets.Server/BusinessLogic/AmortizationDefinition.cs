@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -23,35 +22,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Residual    = residual;
 		}
 
-		public decimal							EffectiveRate
-		{
-			get
-			{
-				var rate = 0.0m;
-
-				switch (this.Method)
-				{
-					case AmortizationMethod.Rate:
-						rate = this.Rate * this.PeriodMonthCount / 12.0m;
-						break;
-						
-					case AmortizationMethod.YearCount:
-						int n = (this.YearCount * 12 / this.PeriodMonthCount) - this.YearRank;  // nb d'années restantes
-						if (n > 0)
-						{
-							rate = 1.0m / (decimal) n;
-						}
-						else
-						{
-							rate = 1.0m;
-						}
-						break;
-				}
-
-				return rate * this.PeriodMonthCount / 12.0m;
-			}
-		}
-
 		public bool								IsEmpty
 		{
 			get
@@ -67,43 +37,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public bool								IsValid
-		{
-			get
-			{
-				return this.Error == ErrorType.Ok;
-			}
-		}
-
-		public ErrorType						Error
-		{
-			get
-			{
-				if (this.Rate < 0.0m || this.Rate > 1.0m)
-				{
-					return ErrorType.AmortizationInvalidRate;
-				}
-
-				if (this.Type == AmortizationType.Unknown)
-				{
-					return ErrorType.AmortizationInvalidType;
-				}
-
-				if (this.PeriodMonthCount == -1)
-				{
-					return ErrorType.AmortizationInvalidPeriod;
-				}
-
-				return ErrorType.Ok;
-			}
-		}
-
 
 		public int								PeriodMonthCount
 		{
 			get
 			{
-				return AmortizationDefinition.GetPeriodMonthCount (this.Periodicity);
+				return AmortizedAmount.GetPeriodMonthCount (this.Periodicity);
 			}
 		}
 
@@ -125,27 +64,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else
 			{
 				return date;
-			}
-		}
-
-		public static int GetPeriodMonthCount(Periodicity period)
-		{
-			switch (period)
-			{
-				case Periodicity.Annual:
-					return 12;
-
-				case Periodicity.Semestrial:
-					return 6;
-
-				case Periodicity.Trimestrial:
-					return 3;
-
-				case Periodicity.Mensual:
-					return 1;
-
-				default:
-					return -1;
 			}
 		}
 

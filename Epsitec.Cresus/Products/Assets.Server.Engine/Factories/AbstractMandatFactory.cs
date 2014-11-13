@@ -117,8 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				p.Value,
 				AmortizationType.Degressive,
 				initialAmount,
-				initialAmount,
-				1.0m - (finalAmount / initialAmount)
+				initialAmount
 			);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}

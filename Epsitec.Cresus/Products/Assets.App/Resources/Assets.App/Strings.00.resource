@@ -268,12 +268,12 @@
   <data name="AmortizedAmountController.Line2.Amortizatiion" id="KMC">Amortissement</data>
   <data name="AmortizedAmountController.Line2.BaseLinear" id="KNC">Valeur de base</data>
   <data name="AmortizedAmountController.Line2.BaseExp" id="KOC">Valeur précédente</data>
-  <data name="AmortizedAmountController.Line2.Prorata" id="KPC">Prorata</data>
+  <data name="AmortizedAmountController.Rate.Prorata" id="KPC">Prorata</data>
   <data name="AmortizedAmountController.Prorata.Title" id="KQC">Prorata</data>
   <data name="AmortizedAmountController.Prorata.Rate" id="KRC">Facteur correctif si "au prorata"</data>
   <data name="AmortizedAmountController.Prorata.Numerator" id="KSC">Prorata, nombre effectif</data>
   <data name="AmortizedAmountController.Prorata.Denominator" id="KTC">Prorata, nombre total</data>
-  <data name="AmortizedAmountController.Line2.Rate" id="KUC">Taux adapté selon la périodicité</data>
+  <data name="AmortizedAmountController.Line2.Rate" id="KUC">Taux</data>
   <data name="AmortizedAmountController.Entry.Delete.Text" id="KVC">Supprimer l'écriture</data>
   <data name="AmortizedAmountController.Entry.Show.Text" id="K0D">Voir l'écriture</data>
   <data name="AmortizedAmountController.Entry.Delete.Tooltip" id="K1D">Supprime l'écriture en mettant un montant nul</data>
@@ -444,4 +444,9 @@
   <data name="Popup.Quit.Question" id="KJI">Voulez-vous quitter le logiciel ?</data>
   <data name="Popup.Quit.Radios" id="KKI">Enregistrer avant de quitter&lt;br/&gt;Quitter sans enregistrer</data>
   <data name="Popup.Quit.MainButton" id="KLI">Quitter</data>
+  <data name="AmortizedAmountController.Rate.Title" id="KMI">Taux</data>
+  <data name="AmortizedAmountController.Rate.EffectiveRate" id="KNI">Taux effectif, adapté selon le prorata et la périodicité</data>
+  <data name="AmortizedAmountController.Rate.BaseRate" id="KOI">Taux de base</data>
+  <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
+  <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
 </bundle>

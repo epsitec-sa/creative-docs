@@ -67,4 +67,7 @@
   <data name="Enum.ObjectField.AccountAdjustDebit" id="K02">Débit correction</data>
   <data name="Enum.ObjectField.AmortizationMethod" id="K12">Méthode</data>
   <data name="Enum.ObjectField.AmortizationYearCount" id="K22">Nombre d'années</data>
+  <data name="AmortizedAmount.BaseRateSummary.Rate" id="K32">Taux de base</data>
+  <data name="AmortizedAmount.BaseRateSummary.YearCount.Linear" id="K42">1 / (NbAnnées − RangAnnée)&lt;br/&gt;1 / ({0} − {1})</data>
+  <data name="AmortizedAmount.BaseRateSummary.YearCount.Degressive" id="K52">1 − ((ValeurRésiduelle/ValeurPrécédente) ^ (1/(NbAnnées−RangAnnée)))&lt;br/&gt;1 − (({0}/{1}) ^ (1/({2}−{3})))</data>
 </bundle>

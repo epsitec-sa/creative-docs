@@ -128,6 +128,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line6  = this.CreateFrame (parent);
 			this.line67 = this.CreateInter (parent);
 			this.line7  = this.CreateFrame (parent);
+			this.line78 = this.CreateInter (parent);
+			this.line8  = this.CreateFrame (parent);
 
 			this.CreateEntryController (parent);
 			this.CreateLines ();
@@ -148,6 +150,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line6.Children.Clear ();
 			this.line67.Children.Clear ();
 			this.line7.Children.Clear ();
+			this.line78.Children.Clear ();
+			this.line8.Children.Clear ();
 
 			if (this.IsAmortization)
 			{
@@ -156,7 +160,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateRoundLine   (this.line3, this.line34);
 				this.CreateLine1       (this.line4, this.line45);
 				this.CreateLine2       (this.line5, this.line56);
-				this.CreateProrataLine (this.line6, this.line67);
+				this.CreateRateLine    (this.line6, this.line67);
+				this.CreateProrataLine (this.line7, this.line78);
 			}
 			else
 			{
@@ -168,9 +173,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void CreateCombos(Widget parent)
+		private void CreateScenarioCombo(Widget parent)
 		{
-			this.CreateLabel (parent, 100, "Opération");
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Scenario.ToString ());
 
 			this.scenarioFieldCombo = new TextFieldCombo
 			{
@@ -178,6 +183,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 				IsReadOnly       = true,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = 180,
+				PreferredHeight  = AbstractFieldController.lineHeight,
+				Margins          = new Margins (0, 10, 0, 0),
+				TabIndex         = ++this.tabIndex,
+			};
+
+			this.scenarioFieldCombo.ComboClosed += delegate
+			{
+				if (this.value.HasValue)
+				{
+					var scenario = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
+					if (this.value.Value.EntryScenario != scenario)
+					{
+						this.value = AmortizedAmount.SetEntryScenario (this.value.Value, scenario);
+						this.UpdateUI ();
+						this.OnValueEdited ();
+					}
+				}
+			};
+		}
+
+		private void CreateCombos(Widget parent)
+		{
+			this.CreateLabel (parent, 100, "");
+
+			this.methodTextFieldCombo = new TextFieldCombo
+			{
+				Parent           = parent,
+				IsReadOnly       = true,
+				Dock             = DockStyle.Left,
+				PreferredWidth   = 250,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = ++this.tabIndex,
@@ -194,14 +229,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex         = ++this.tabIndex,
 			};
 
-			this.scenarioFieldCombo.ComboClosed += delegate
+			this.methodTextFieldCombo.ComboClosed += delegate
 			{
 				if (this.value.HasValue)
 				{
-					var scenario = AmortizedAmountController.GetScenario (this.scenarioFieldCombo);
-					if (this.value.Value.EntryScenario != scenario)
+					var method = AmortizedAmountController.GetMethod (this.methodTextFieldCombo);
+					if (this.value.Value.AmortizationMethod != method)
 					{
-						this.value = AmortizedAmount.SetEntryScenario (this.value.Value, scenario);
+						this.value = AmortizedAmount.SetAmortizationMethod (this.value.Value, method);
+						this.CreateLines ();
 						this.UpdateUI ();
 						this.OnValueEdited ();
 					}
@@ -272,23 +308,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Line2.Title.ToString ());
 			this.amortizationAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Line2.Amortizatiion.ToString ());
 			this.CreateOper (parent, "=");
-			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, this.AmortizationType == AmortizationType.Linear ? Res.Strings.AmortizedAmountController.Line2.BaseLinear.ToString () : Res.Strings.AmortizedAmountController.Line2.BaseExp.ToString ());
+			this.baseAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, this.UseBaseValue ? Res.Strings.AmortizedAmountController.Line2.BaseLinear.ToString () : Res.Strings.AmortizedAmountController.Line2.BaseExp.ToString ());
 			this.CreateOper (parent, "×");
-			this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Line2.Rate.ToString (), this.UpdateEffectiveRate);
-			this.CreateOper (parent, "×");
-			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Line2.Prorata.ToString ());
 
-			this.CreateLink (bottomParent, x);
+			if (this.AmortizationMethod == Data.AmortizationMethod.Rate)
+			{
+				var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Line2.Rate.ToString ());
+				this.CreateLink (bottomParent, x);
+			}
+			else if (this.AmortizationMethod == Data.AmortizationMethod.YearCount)
+			{
+				this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, null);
+			}
+		}
+
+		private void CreateRateLine(Widget parent, Widget bottomParent)
+		{
+			if (this.AmortizationMethod == Data.AmortizationMethod.Rate)
+			{
+				this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Rate.Title.ToString ());
+				this.effectiveRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Rate.EffectiveRate.ToString ());
+				this.CreateOper (parent, "=");
+				this.baseRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Rate.BaseRate.ToString (), this.UpdateRate);
+				this.CreateOper (parent, "×");
+				var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Rate.Prorata.ToString ());
+				this.CreateOper (parent, "/");
+				this.periodicityTextField = this.CreateArg (parent, this.GetPeriodicity ());
+
+				this.CreateLink (bottomParent, x);
+			}
 		}
 
 		private void CreateProrataLine(Widget parent, Widget bottomParent)
 		{
-			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Prorata.Title.ToString ());
-			this.prorataRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Prorata.Rate.ToString ());
-			this.CreateOper (parent, "=");
-			this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Numerator.ToString (), this.UpdateProrataNumerator);
-			this.CreateOper (parent, "/");
-			this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Denominator.ToString (), this.UpdateProrataDenominator);
+			if (this.AmortizationMethod == Data.AmortizationMethod.Rate)
+			{
+				this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Prorata.Title.ToString ());
+				this.prorataRateTextField = this.CreateTextField (parent, AmortizedAmountController.RateWidth, Res.Strings.AmortizedAmountController.Prorata.Rate.ToString ());
+				this.CreateOper (parent, "=");
+				this.prorataNumeratorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Numerator.ToString (), this.UpdateProrataNumerator);
+				this.CreateOper (parent, "/");
+				this.prorataDenominatorTextField = this.CreateTextField (parent, AmortizedAmountController.IntWidth, Res.Strings.AmortizedAmountController.Prorata.Denominator.ToString (), this.UpdateProrataDenominator);
+			}
 		}
 
 		private void CreateButtons(Widget parent)
@@ -482,6 +543,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 			}
 
+			{
+				var line = this.CreateFrame (parent);
+				line.Margins = new Margins (0, 0, 0, 10);
+
+				this.CreateScenarioCombo (line);
+			}
+
 			this.entryController = new EntryController (this.accessor);
 			this.entryController.CreateUI (parent);
 
@@ -524,7 +592,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.value.HasValue)
 				{
-					this.typeTextFieldCombo.Visibility = this.IsAmortization;
+					this.methodTextFieldCombo.Visibility = this.IsAmortization;
+					this.typeTextFieldCombo  .Visibility = this.IsAmortization;
 
 					this.FinalAmount        = this.value.Value.FinalAmortizedAmount;
 					this.ResidualAmount     = this.value.Value.ResidualAmount.GetValueOrDefault (0.0m);
@@ -537,9 +606,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.AmortizationAmount = this.value.Value.BrutAmortization;
 					this.BaseAmount         = this.value.Value.BaseAmount;
-					this.EffectiveRate      = this.value.Value.EffectiveRate;
 
-					this.ProrataRate        = this.value.Value.Prorata;
+					this.EffectiveRate      = this.value.Value.EffectiveRate;
+					this.BaseRate           = this.value.Value.BaseRate;
+
+					this.ProrataRate        = this.value.Value.ProrataFactor;
 					this.ProrataNumerator   = this.value.Value.ProrataNumerator;
 					this.ProrataDenominator = this.value.Value.ProrataDenominator;
 
@@ -560,7 +631,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 					this.AmortizationAmount = null;
 					this.BaseAmount         = null;
+
 					this.EffectiveRate      = null;
+					this.BaseRate           = null;
 
 					this.ProrataRate        = null;
 					this.ProrataNumerator   = null;
@@ -569,6 +642,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.deleteEntryButton.Enable = false;
 					this.showEntryButton  .Enable = false;
 				}
+
+				AmortizedAmountController.UpdateMethod (this.methodTextFieldCombo);
+				AmortizedAmountController.SetMethod (this.methodTextFieldCombo, this.AmortizationMethod);
 
 				AmortizedAmountController.UpdateType (this.typeTextFieldCombo);
 				AmortizedAmountController.SetType (this.typeTextFieldCombo, this.AmortizationType);
@@ -586,6 +662,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.finalAmountTextField.Name = null;
 				}
 
+				this.UpdateBackColor (this.methodTextFieldCombo);
 				this.UpdateBackColor (this.typeTextFieldCombo);
 				this.UpdateBackColor (this.finalAmountTextField);
 				this.UpdateBackColor (this.residualAmountTextField);
@@ -596,6 +673,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.amortizationAmountTextField);
 				this.UpdateBackColor (this.baseAmountTextField);
 				this.UpdateBackColor (this.effectiveRateTextField);
+				this.UpdateBackColor (this.baseRateTextField);
 				this.UpdateBackColor (this.prorataRateTextField);
 				this.UpdateBackColor (this.prorataNumeratorTextField);
 				this.UpdateBackColor (this.prorataDenominatorTextField);
@@ -643,11 +721,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void UpdateEffectiveRate()
+		private void UpdateRate()
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.value = AmortizedAmount.SetEffectiveRate (this.value.Value, this.EffectiveRate);
+				this.value = AmortizedAmount.SetRate (this.value.Value, this.BaseRate);
 				this.UpdateUI ();
 				this.OnValueEdited ();
 			}
@@ -762,7 +840,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				if (this.AmortizationType == AmortizationType.Linear)
+				if (this.UseBaseValue)
 				{
 					AmortizedAmountController.SetAmount (this.initialAmountTextField, value);
 				}
@@ -794,7 +872,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				if (this.AmortizationType == AmortizationType.Linear)
+				if (this.UseBaseValue)
 				{
 					AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
 				}
@@ -810,6 +888,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				AmortizedAmountController.SetRate (this.effectiveRateTextField, value);
+
+				if (this.AmortizationMethod == AmortizationMethod.YearCount &&
+					this.effectiveRateTextField != null)
+				{
+					if (value.HasValue)
+					{
+						ToolTip.Default.SetToolTip (this.effectiveRateTextField, this.value.Value.BaseRateSummary);
+					}
+					else
+					{
+						ToolTip.Default.ClearToolTip (this.effectiveRateTextField);
+					}
+				}
+			}
+		}
+
+		private decimal? BaseRate
+		{
+			get
+			{
+				return AmortizedAmountController.GetRate (this.baseRateTextField);
+			}
+			set
+			{
+				AmortizedAmountController.SetRate (this.baseRateTextField, value);
 			}
 		}
 
@@ -920,6 +1023,44 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private static AmortizationMethod GetMethod(TextFieldCombo combo)
+		{
+			if (combo != null)
+			{
+				foreach (var e in EnumDictionaries.DictAmortizationMethods)
+				{
+					if (combo.Text == e.Value)
+					{
+						return (AmortizationMethod) e.Key;
+					}
+				}
+			}
+
+			return AmortizationMethod.Unknown;
+		}
+
+		private static void SetMethod(TextFieldCombo combo, AmortizationMethod value)
+		{
+			if (combo != null)
+			{
+				combo.Text = EnumDictionaries.GetAmortizationMethodName (value);
+			}
+		}
+
+		private static void UpdateMethod(TextFieldCombo combo)
+		{
+			if (combo != null)
+			{
+				combo.Items.Clear ();
+
+				foreach (var e in EnumDictionaries.DictAmortizationMethods)
+				{
+					combo.Items.Add (e.Value);
+				}
+			}
+		}
+
+
 		private static AmortizationType GetType(TextFieldCombo combo)
 		{
 			if (combo != null)
@@ -954,6 +1095,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					combo.Items.Add (e.Value);
 				}
+			}
+		}
+
+
+		private string GetPeriodicity()
+		{
+			if (this.value.HasValue)
+			{
+				int n = 12 / AmortizedAmount.GetPeriodMonthCount (this.value.Value.Periodicity);
+				var name = EnumDictionaries.GetPeriodicityName (this.value.Value.Periodicity);
+				return string.Format ("{0} ({1})", TypeConverters.IntToString (n), name);
+			}
+			else
+			{
+				return "1";
 			}
 		}
 
@@ -1050,11 +1206,36 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private bool UseBaseValue
+		{
+			//	false -> il faut utiliser la dernière valeur
+			//	true  -> il faut utiliser la valeur d'achat
+			get
+			{
+				return this.AmortizationMethod == AmortizationMethod.Rate
+					&& this.AmortizationType == AmortizationType.Linear;
+			}
+		}
 		private bool IsAmortization
 		{
 			get
 			{
 				return this.AmortizationType != AmortizationType.Unknown;
+			}
+		}
+
+		private AmortizationMethod AmortizationMethod
+		{
+			get
+			{
+				if (this.value.HasValue)
+				{
+					return this.value.Value.AmortizationMethod;
+				}
+				else
+				{
+					return AmortizationMethod.Unknown;
+				}
 			}
 		}
 
@@ -1177,12 +1358,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextField						amortizationAmountTextField;
 		private TextField						baseAmountTextField;
+
 		private TextField						effectiveRateTextField;
+		private TextField						baseRateTextField;
+		private TextField						periodicityTextField;
 
 		private TextField						prorataRateTextField;
 		private TextField						prorataNumeratorTextField;
 		private TextField						prorataDenominatorTextField;
 
+		private TextFieldCombo					methodTextFieldCombo;
 		private TextFieldCombo					typeTextFieldCombo;
 		private TextFieldCombo					scenarioFieldCombo;
 
@@ -1203,6 +1388,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox						line6;
 		private FrameBox						line67;
 		private FrameBox						line7;
+		private FrameBox						line78;
+		private FrameBox						line8;
 
 		private int								tabIndex;
 	}

@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
 			//	Crée l'événement d'aperçu d'amortissement.
-			if (details.Def.EffectiveRate == 0.0m)
+			if (details.Def.Rate == 0.0m)
 			{
 				//	Si le taux est nul, on ne génère pas d'amortissement.
 				return;
@@ -309,10 +309,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var aa = AmortizedAmount.SetPreview
 				(
 					p.Value,
+					details.Def.Rate,
 					details.Def.Type,
-					details.Def.EffectiveRate,
 					details.Prorata.Numerator,
 					details.Prorata.Denominator,
+					details.Def.Periodicity,
 					details.Def.Round,
 					details.Def.Residual,
 					EntryScenario.AmortizationAuto
@@ -361,8 +362,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return new AmortizedAmount
 			(
-				def.Method, def.YearRank, def.YearCount,
-				amortizationType, null, null, null, def.EffectiveRate,
+				def.Method, def.Rate, amortizationType, def.YearRank, def.YearCount, def.Periodicity,
+				null, null, null,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
 			);

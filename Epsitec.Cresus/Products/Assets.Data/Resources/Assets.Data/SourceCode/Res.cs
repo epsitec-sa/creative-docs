@@ -19,6 +19,40 @@ namespace Epsitec.Cresus.Assets.Data
 				global::System.Object.Equals (_stringsBundle, null);
 			}
 			
+			public static class AmortizedAmount
+			{
+				public static class BaseRateSummary
+				{
+					//	designer:str/HUK3201
+					public static global::Epsitec.Common.Types.FormattedText Rate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544387));
+						}
+					}
+					public static class YearCount
+					{
+						//	designer:str/HUK5201
+						public static global::Epsitec.Common.Types.FormattedText Degressive
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544389));
+							}
+						}
+						//	designer:str/HUK4201
+						public static global::Epsitec.Common.Types.FormattedText Linear
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544388));
+							}
+						}
+					}
+				}
+			}
+			
 			public static class Enum
 			{
 				public static class EventType
@@ -645,6 +679,40 @@ namespace Epsitec.Cresus.Assets.Data
 		
 		public static class StringIds
 		{
+			public static class AmortizedAmount
+			{
+				public static class BaseRateSummary
+				{
+					//	designer:str/HUK3201
+					public static global::Epsitec.Common.Support.Druid Rate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544387);
+						}
+					}
+					public static class YearCount
+					{
+						//	designer:str/HUK5201
+						public static global::Epsitec.Common.Support.Druid Degressive
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544389);
+							}
+						}
+						//	designer:str/HUK4201
+						public static global::Epsitec.Common.Support.Druid Linear
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544388);
+							}
+						}
+					}
+				}
+			}
+			
 			public static class Enum
 			{
 				public static class EventType

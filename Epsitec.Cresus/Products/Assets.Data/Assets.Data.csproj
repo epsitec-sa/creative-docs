@@ -60,6 +60,7 @@
     <Compile Include="MandatInfo.cs" />
     <Compile Include="IViewState.cs" />
     <Compile Include="AmortizationMethod.cs" />
+    <Compile Include="Periodicity.cs" />
     <Compile Include="SaveMandatMode.cs" />
     <Compile Include="UndoableDictionary.cs" />
     <Compile Include="UndoableList.cs" />
