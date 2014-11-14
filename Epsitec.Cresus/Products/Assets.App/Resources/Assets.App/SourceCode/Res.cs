@@ -609,12 +609,16 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 165));
 				//	designer:cap/JUKK301
 				public static readonly global::Epsitec.Common.Widgets.Command Goto = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 116));
+				//	designer:cap/JUKB601
+				public static readonly global::Epsitec.Common.Widgets.Command Hide = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 203));
 				//	designer:cap/JUK6501
 				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 166));
 				//	designer:cap/JUK7501
 				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 167));
 				//	designer:cap/JUK8501
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168));
+				//	designer:cap/JUKC601
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 204));
 			}
 		}
 		
@@ -1102,12 +1106,16 @@ namespace Epsitec.Cresus.Assets.App
 				public const long First = 0x7D3000140000A5L;
 				//	designer:cap/JUKK301
 				public const long Goto = 0x7D300014000074L;
+				//	designer:cap/JUKB601
+				public const long Hide = 0x7D3000140000CBL;
 				//	designer:cap/JUK6501
 				public const long Last = 0x7D3000140000A6L;
 				//	designer:cap/JUK7501
 				public const long Next = 0x7D3000140000A7L;
 				//	designer:cap/JUK8501
 				public const long Prev = 0x7D3000140000A8L;
+				//	designer:cap/JUKC601
+				public const long ShowAll = 0x7D3000140000CCL;
 			}
 			
 		}

@@ -11,6 +11,8 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.App.Settings;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 {
@@ -71,17 +73,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				{
 					this.simulation = value;
 					this.UpdateSimulation ();
-				}
-			}
-		}
-
-		public int								WarningsRedDotCount
-		{
-			set
-			{
-				if (this.buttonWarnings != null)
-				{
-					this.buttonWarnings.RedDotCount = value;
 				}
 			}
 		}
@@ -167,6 +158,25 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
+		}
+
+
+		public void UpdateWarningsRedDot()
+		{
+			//	Met à jour le nombre d'avertissements dans la pastille rouge sur le
+			//	bouton de la vue des avertissements.
+			//	ATTENTION: Il faut construire la liste complète des avertissements,
+			//	ce qui peut prendre du temps !
+			//	TODO: Rendre cela asynchrone !?
+			if (this.accessor.WarningsDirty && this.buttonWarnings != null)
+			{
+				var list = WarningsLogic.GetWarnings (this.accessor)
+					.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
+
+				this.buttonWarnings.RedDotCount = list.Count ();
+
+				this.accessor.WarningsDirty = false;
+			}
 		}
 
 

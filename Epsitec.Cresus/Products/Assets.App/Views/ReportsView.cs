@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void UpdateUI()
 		{
-			this.UpdateWarningsRedDot ();
+			this.mainToolbar.UpdateWarningsRedDot ();
 
 			this.OnViewStateChanged (this.ViewState);
 		}

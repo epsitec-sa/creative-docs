@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.UpdateScroller ();
 			this.UpdateController ();
 			this.UpdateToolbar ();
-			this.UpdateWarningsRedDot ();
+			this.mainToolbar.UpdateWarningsRedDot ();
 		}
 
 
@@ -1488,24 +1488,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.arrayLogic.Update (this.dataArray, this.nodeGetter, this.timelinesMode, groupedExcludeRange, this.Filter);
 		}
 
-
-		private void UpdateWarningsRedDot()
-		{
-			//	Met à jour le nombre d'avertissements dans la pastille rouge sur le
-			//	bouton de la vue des avertissements.
-			//	ATTENTION: Il faut construire la liste complète des avertissements,
-			//	ce qui peut prendre du temps !
-			//	TODO: Rendre cela asynchrone !?
-			if (this.accessor.WarningsDirty)
-			{
-				var list = new List<Warning> ();
-				WarningsLogic.GetWarnings (list, this.accessor);
-
-				this.mainToolbar.WarningsRedDotCount = list.Count;
-
-				this.accessor.WarningsDirty = false;
-			}
-		}
 
 		private void UpdateToolbar()
 		{

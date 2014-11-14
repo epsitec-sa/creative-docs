@@ -67,10 +67,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateFirstView()
 		{
-			var list = new List<Warning> ();
-			WarningsLogic.GetWarnings (list, this.accessor);
+			var list = WarningsLogic.GetWarnings (this.accessor)
+				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
 
-			this.CreateView (list.Count == 0 ? ViewType.Assets : ViewType.Warnings);
+			this.CreateView (list.Any () ? ViewType.Warnings : ViewType.Assets);
 			this.InitializeUndo ();
 		}
 
@@ -534,6 +534,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewState()
 		{
+			if (this.view == null)
+			{
+				return;
+			}
+
 			var viewState = this.view.ViewState;
 
 			if (viewState == null)

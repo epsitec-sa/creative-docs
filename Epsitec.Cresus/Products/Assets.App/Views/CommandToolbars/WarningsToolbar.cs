@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Settings;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
@@ -17,6 +18,32 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		public WarningsToolbar(DataAccessor accessor, CommandContext commandContext)
 			: base (accessor, commandContext)
 		{
+		}
+
+
+		public enum HelpLineButton
+		{
+			None,
+			ShowAll,
+			Goto,
+		}
+
+		public void SetHelpLineButton(HelpLineButton button)
+		{
+			switch (button)
+			{
+				case HelpLineButton.ShowAll:
+					this.SetHelpLineButton (this.showAllButton);
+					break;
+
+				case HelpLineButton.Goto:
+					this.SetHelpLineButton (this.gotoButton);
+					break;
+
+				default:
+					this.SetHelpLineButton (null);
+					break;
+			}
 		}
 
 
@@ -36,14 +63,27 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSeparator (1);
 
+			this.CreateButton (Res.Commands.Warnings.Hide, 1);
+			this.showAllButton =
+			this.CreateButton (Res.Commands.Warnings.ShowAll, 1);
+
+			this.CreateSeparator (1);
+
 			this.CreateButton (Res.Commands.Warnings.Deselect, 3);
 
 			this.CreateSeparator (3);
 
-			this.helplineTargetButton =
+			this.gotoButton =
 			this.CreateButton (Res.Commands.Warnings.Goto, 0);
 
 			this.CreateSearchController (SearchKind.Warnings, 4);
+
+			this.SetHelpLineButton (HelpLineButton.Goto);
 		}
+
+
+		private ButtonWithRedDot				showAllButton;
+		private ButtonWithRedDot				gotoButton;
+
 	}
 }

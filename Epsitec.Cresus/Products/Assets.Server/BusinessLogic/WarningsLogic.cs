@@ -77,10 +77,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static void GetWarnings(List<Warning> warnings, DataAccessor accessor)
+		public static List<Warning> GetWarnings(DataAccessor accessor)
 		{
 			//	Retourne la liste de tous les warnings actuels.
-			warnings.Clear ();
+			var warnings = new List<Warning> ();
 
 			//	Il doit y avoir au moins un champ obligatoire.
 			WarningsLogic.CheckRequiredField (warnings, accessor, BaseType.AssetsUserFields,  Res.Strings.WarningsLogic.RequiredUserFields.Missing.ToString ());
@@ -205,6 +205,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	Vérifie les amortissements.
 			WarningsLogic.CheckAmortizations (warnings, accessor);
+
+			return warnings;
 		}
 
 

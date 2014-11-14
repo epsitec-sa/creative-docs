@@ -518,6 +518,8 @@
     <EmbeddedResource Include="Images\Main.Undo.icon" />
     <EmbeddedResource Include="Images\Main.UndoHistory.icon" />
     <EmbeddedResource Include="Images\Main.RedoHistory.icon" />
+    <EmbeddedResource Include="Images\Warning.Hide.icon" />
+    <EmbeddedResource Include="Images\Warning.ShowAll.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

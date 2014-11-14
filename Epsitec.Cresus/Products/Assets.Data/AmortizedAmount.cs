@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.Data
 					//	Amortissement selon le nombre d'années.
 					int n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
 
-					if (n <= 0)
+					if (n <= 0 || !this.InitialAmount.HasValue)
 					{
 						rate = 1.0m;
 					}

@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
 			LocalSettings.searchInfos = new Dictionary<SearchKind, SearchInfo> ();
 			LocalSettings.createAssetDefaultGroups = new Dictionary<Guid, Guid> ();
+			LocalSettings.hiddenWarnings = new HashSet<string> ();
 
 			LocalSettings.Initialize (Timestamp.Now.Date);
 		}
@@ -70,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
+		#region Columns state
 		public static ColumnsState GetColumnsState(string name)
 		{
 			ColumnsState columnsState;
@@ -87,8 +89,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			LocalSettings.columnsStates[name] = columnsState;
 		}
+		#endregion
 
 
+		#region Search info
 		public static SearchInfo GetSearchInfo(SearchKind kind)
 		{
 			SearchInfo info;
@@ -106,8 +110,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			LocalSettings.searchInfos[kind] = info;
 		}
+		#endregion
 
 
+		#region Create group
 		public static void AddCreateGroup(Guid parentGroupGuid, Guid selectedGroupGuid)
 		{
 			LocalSettings.createAssetDefaultGroups[parentGroupGuid] = selectedGroupGuid;
@@ -125,6 +131,30 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				return Guid.Empty;
 			}
 		}
+		#endregion
+
+
+		#region Hidden warnings
+		public static void ClearHiddenWarnings()
+		{
+			LocalSettings.hiddenWarnings.Clear ();
+		}
+
+		public static void AddHiddenWarnings(string persistantUniqueId)
+		{
+			LocalSettings.hiddenWarnings.Add (persistantUniqueId);
+		}
+
+		public static bool IsHiddenWarnings(string persistantUniqueId)
+		{
+			return LocalSettings.hiddenWarnings.Contains (persistantUniqueId);
+		}
+
+		public static bool HasHiddenWarnings()
+		{
+			return LocalSettings.hiddenWarnings.Any ();
+		}
+		#endregion
 
 
 		#region Serialize
@@ -138,6 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.SerializeColumnsState (writer);
 			LocalSettings.SerializeSearchInfo (writer);
 			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
+			LocalSettings.SerializeHiddenWarnings (writer);
 
 			writer.WriteElementString ("CreateMandatDate",     LocalSettings.CreateMandatDate.ToStringIO ());
 			writer.WriteElementString ("CreateAssetDate",      LocalSettings.CreateAssetDate.ToStringIO ());
@@ -204,15 +235,30 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				writer.WriteStartElement ("CreateAssetDefaultGroups");
 
-				int i = 0;
 				foreach (var pair in LocalSettings.createAssetDefaultGroups)
 				{
-					var n = "Goup" + (i++).ToStringIO ();
-					writer.WriteStartElement (n);
+					writer.WriteStartElement ("Group");
 
-					IOHelpers.WriteStringAttribute (writer, "Parent", pair.Key.ToStringIO ());
+					IOHelpers.WriteStringAttribute (writer, "Parent",    pair.Key  .ToStringIO ());
 					IOHelpers.WriteStringAttribute (writer, "Selection", pair.Value.ToStringIO ());
 
+					writer.WriteEndElement ();
+				}
+
+				writer.WriteEndElement ();
+			}
+		}
+
+		private static void SerializeHiddenWarnings(System.Xml.XmlWriter writer)
+		{
+			if (LocalSettings.hiddenWarnings.Any ())
+			{
+				writer.WriteStartElement ("HiddenWarnings");
+
+				foreach (var persistantUniqueId in LocalSettings.hiddenWarnings)
+				{
+					writer.WriteStartElement ("Warning");
+					IOHelpers.WriteStringAttribute (writer, "PersistantUniqueId", persistantUniqueId);
 					writer.WriteEndElement ();
 				}
 
@@ -263,6 +309,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 						case "CreateAssetDefaultGroups":
 							LocalSettings.DeserializeCreateAssetDefaultGroups (reader);
+							break;
+
+						case "HiddenWarnings":
+							LocalSettings.DeserializeHiddenWarnings (reader);
 							break;
 
 						case "CreateMandatDate":
@@ -400,6 +450,23 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				}
 			}
 		}
+
+		private static void DeserializeHiddenWarnings(System.Xml.XmlReader reader)
+		{
+			LocalSettings.hiddenWarnings.Clear ();
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					LocalSettings.hiddenWarnings.Add (reader["PersistantUniqueId"]);
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
 		#endregion
 
 
@@ -428,5 +495,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 		private static readonly Dictionary<SearchKind, SearchInfo> searchInfos;
 		private static readonly Dictionary<Guid, Guid> createAssetDefaultGroups;
+		private static readonly HashSet<string>		hiddenWarnings;
 	}
 }

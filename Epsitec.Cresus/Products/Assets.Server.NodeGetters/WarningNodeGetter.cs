@@ -11,16 +11,21 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public class WarningNodeGetter : INodeGetter<Warning>  // outputNodes
 	{
-		public WarningNodeGetter(DataAccessor accessor, List<Warning> warnings)
+		public WarningNodeGetter(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-			this.inputWarnings = warnings;
+
+			this.inputWarnings = new List<Warning> ();
 		}
 
 
-		public void SetParams(SortingInstructions instructions)
+		public void SetParams(IEnumerable<Warning> warnings, SortingInstructions instructions)
 		{
+			this.inputWarnings.Clear ();
+			this.inputWarnings.AddRange (warnings);
+
 			this.sortingInstructions = instructions;
+
 			this.UpdateData ();
 		}
 

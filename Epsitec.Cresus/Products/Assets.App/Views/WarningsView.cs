@@ -36,28 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			base.CreateUI (parent);
 
-			var topBox = new FrameBox
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-			};
-
-			this.listFrameBox = new FrameBox
-			{
-				Parent = topBox,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.perfectFrameBox = new FrameBox
-			{
-				Parent              = topBox,
-				Dock                = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				BackColor           = ColorManager.TreeTableBackgroundColor,
-			};
-
-			this.listController.CreateUI (this.listFrameBox);
-			this.CreatePerfectUI (this.perfectFrameBox);
+			this.listController.CreateUI (parent);
 
 			this.DeepUpdateUI ();
 
@@ -88,35 +67,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private void CreatePerfectUI(Widget parent)
-		{
-			var topTitle = new TopTitle
-			{
-				Parent = parent,
-			};
-
-			var title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
-			topTitle.SetTitle (title);
-
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = Misc.GetRichTextImg ("Perfect", 0),
-				ContentAlignment = ContentAlignment.BottomCenter,
-				Margins          = new Margins (0, 0, 0, 10),
-				Dock             = DockStyle.Fill,
-			};
-
-			new StaticText
-			{
-				Parent           = parent,
-				Text             = Res.Strings.WarningView.Perfect.ToString (),
-				ContentAlignment = ContentAlignment.TopCenter,
-				Margins          = new Margins (0, 0, 10, 0),
-				Dock             = DockStyle.Fill,
-			};
-		}
-
 
 		public override void DataChanged()
 		{
@@ -132,17 +82,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void UpdateUI()
 		{
 			//	Met à jour les données des différents contrôleurs.
-			if (this.listController.IsEmpty)
-			{
-				this.listFrameBox.Visibility = false;
-				this.perfectFrameBox.Visibility = true;
-			}
-			else
-			{
-				this.listFrameBox.Visibility = true;
-				this.perfectFrameBox.Visibility = false;
-			}
-
 			using (this.ignoreChanges.Enter ())
 			{
 				this.listController.UpdateGraphicMode ();
@@ -163,7 +102,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.HelplineVisibility = this.listController.HelplineDesired;
 
 			this.UpdateToolbars ();
-			this.UpdateWarningsRedDot ();
+			this.mainToolbar.UpdateWarningsRedDot ();
 
 			this.OnViewStateChanged (this.ViewState);
 		}
@@ -237,8 +176,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private readonly WarningsToolbarTreeTableController	listController;
 
-		private FrameBox									listFrameBox;
-		private FrameBox									perfectFrameBox;
 		private Guid										selectedGuid;
 	}
 }

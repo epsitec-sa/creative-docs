@@ -155,6 +155,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		public void SetHelpLineButton(ButtonWithRedDot button)
+		{
+			this.helplineTargetButton = button;
+			this.MagicLayoutEngine ();
+		}
+
 		public void SetVisibility(Command command, bool visibility)
 		{
 			this.commandContext.GetCommandState (command).Visibility = visibility;

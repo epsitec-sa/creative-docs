@@ -16,6 +16,7 @@ using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -26,9 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Warnings);
 
-			var warnings = new List<Warning>();
-			WarningsLogic.GetWarnings (warnings, this.accessor);
-			this.nodeGetter = new WarningNodeGetter (this.accessor, warnings);
+			this.nodeGetter = new WarningNodeGetter (this.accessor);
+			this.UpdateWarnings ();
 		}
 
 		public override void Dispose()
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
-			this.NodeGetter.SetParams (this.sortingInstructions);
+			this.UpdateWarnings ();
 
 			this.UpdateController ();
 			this.UpdateToolbar ();
@@ -222,10 +222,75 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		#endregion
 
 
+		private void UpdateWarnings()
+		{
+			var list = WarningsLogic.GetWarnings (this.accessor)
+				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
+
+			this.NodeGetter.SetParams (list, this.sortingInstructions);
+		}
+
+
 		protected override void CreateToolbar()
 		{
 			this.toolbar = new WarningsToolbar (this.accessor, this.commandContext);
 			this.ConnectSearch ();
+		}
+
+		protected override void CreateControllerUI(Widget parent)
+		{
+			base.CreateControllerUI (parent);
+			this.CreatePerfectUI ();
+		}
+
+		private void CreatePerfectUI()
+		{
+			this.perfectFrame = new FrameBox
+			{
+				Parent     = this.controllerFrame.Parent,
+				Dock       = DockStyle.Fill,
+				Visibility = false,
+			};
+
+			new StaticText
+			{
+				Parent           = this.perfectFrame,
+				Text             = Misc.GetRichTextImg ("Perfect", 0),
+				ContentAlignment = ContentAlignment.BottomCenter,
+				Margins          = new Margins (0, 0, 0, 10),
+				Dock             = DockStyle.Fill,
+			};
+
+			new StaticText
+			{
+				Parent           = this.perfectFrame,
+				Text             = Res.Strings.WarningView.Perfect.ToString (),
+				ContentAlignment = ContentAlignment.TopCenter,
+				Margins          = new Margins (0, 0, 10, 0),
+				Dock             = DockStyle.Fill,
+			};
+
+			this.controllerFrame.IsVisibleChanged += delegate
+			{
+				this.perfectFrame.Visibility = !this.controllerFrame.Visibility;
+
+				if (this.perfectFrame.Visibility)
+				{
+					var list = WarningsLogic.GetWarnings (this.accessor);
+					if (list.Any ())
+					{
+						this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.ShowAll);
+					}
+					else
+					{
+						this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.None);
+					}
+				}
+				else
+				{
+					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.Goto);
+				}
+			};
 		}
 
 		protected override void CreateNodeFiller()
@@ -265,6 +330,32 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			base.OnLast ();
 		}
 
+		[Command (Res.CommandIds.Warnings.Hide)]
+		protected void OnHide()
+		{
+			if (this.selectedRow != -1)
+			{
+				var warning = this.nodeGetter[this.selectedRow];
+				LocalSettings.AddHiddenWarnings (warning.PersistantUniqueId);
+
+				this.SelectedRow = -1;
+				this.accessor.WarningsDirty = true;
+				this.UpdateData ();
+				this.OnUpdateView ();
+			}
+		}
+
+		[Command (Res.CommandIds.Warnings.ShowAll)]
+		protected void OnShowAll()
+		{
+			LocalSettings.ClearHiddenWarnings ();
+
+			this.SelectedRow = -1;
+			this.accessor.WarningsDirty = true;
+			this.UpdateData ();
+			this.OnUpdateView ();
+		}
+
 		[Command (Res.CommandIds.Warnings.Deselect)]
 		protected void OnDeselect()
 		{
@@ -297,9 +388,20 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.UpdateSelCommand (Res.Commands.Warnings.Next,  row, this.NextRowIndex);
 			this.UpdateSelCommand (Res.Commands.Warnings.Last,  row, this.LastRowIndex);
 
-			this.toolbar.SetEnable (Res.Commands.Warnings.Goto, this.VisibleSelectedRow != -1);
+			this.toolbar.SetEnable (Res.Commands.Warnings.Hide,     this.VisibleSelectedRow != -1);
+			this.toolbar.SetEnable (Res.Commands.Warnings.ShowAll,  LocalSettings.HasHiddenWarnings ());
+			this.toolbar.SetEnable (Res.Commands.Warnings.Deselect, this.VisibleSelectedRow != -1);
+			this.toolbar.SetEnable (Res.Commands.Warnings.Goto,     this.VisibleSelectedRow != -1);
 		}
 
+
+		private WarningsToolbar Toolbar
+		{
+			get
+			{
+				return this.toolbar as WarningsToolbar;
+			}
+		}
 
 		private WarningNodeGetter NodeGetter
 		{
@@ -308,5 +410,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				return this.nodeGetter as WarningNodeGetter;
 			}
 		}
+
+
+		private FrameBox						perfectFrame;
 	}
 }
