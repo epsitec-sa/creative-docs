@@ -652,14 +652,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
-				if (string.IsNullOrEmpty (this.finalAmountTextField.Text))
+				if (this.IsAmortization)
 				{
-					this.finalAmountTextField.Name = "Required";
-					this.fieldColorTypes.Add (FieldColorType.Error);
+					//	Le montant final n'est pas éditable pour un événement d'amortissement.
+					//	Il ne faut donc pas toucher à this.finalAmountTextField !
 				}
 				else
 				{
-					this.finalAmountTextField.Name = null;
+					if (string.IsNullOrEmpty (this.finalAmountTextField.Text))
+					{
+						this.finalAmountTextField.Name = "Required";
+						this.fieldColorTypes.Add (FieldColorType.Error);
+					}
+					else
+					{
+						this.finalAmountTextField.Name = null;
+					}
 				}
 
 				this.UpdateBackColor (this.methodTextFieldCombo);
