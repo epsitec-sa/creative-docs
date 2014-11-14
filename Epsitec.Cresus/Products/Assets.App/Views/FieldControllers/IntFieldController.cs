@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			get
 			{
-				return this.isMouseInside || this.hasFocus;
+				return !this.isReadOnly && (this.isMouseInside || this.hasFocus);
 			}
 		}
 
