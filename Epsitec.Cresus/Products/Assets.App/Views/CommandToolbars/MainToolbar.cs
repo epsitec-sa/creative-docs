@@ -117,9 +117,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSajex (10);
 
-			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Single);
-			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Event);
-			this.CreateButton (DockStyle.Left, Res.Commands.ViewMode.Multiple);
+			{
+				//	Les boutons sont mis dans un frame, afin qu'ils conservent leurs
+				//	place même s'ils sont cachés.
+				var frame = new FrameBox
+				{
+					Parent         = this.toolbar,
+					PreferredWidth = this.toolbar.PreferredHeight * 3,
+					Dock           = DockStyle.Left,
+				};
+
+				this.CreateButton (frame, Res.Commands.ViewMode.Single);
+				this.CreateButton (frame, Res.Commands.ViewMode.Event);
+				this.CreateButton (frame, Res.Commands.ViewMode.Multiple);
+			}
 
 			this.CreateSajex (10);
 
@@ -133,7 +144,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.CreateSajex (10);
 
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Edit);
+			{
+				//	Le bouton est mis dans un frame, afin qu'il conserve sa
+				//	place même s'il est caché.
+				var frame = new FrameBox
+				{
+					Parent         = this.toolbar,
+					PreferredWidth = this.toolbar.PreferredHeight * 1,
+					Dock           = DockStyle.Left,
+				};
+
+				this.CreateButton (frame, Res.Commands.Main.Edit);
+			}
+
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Locked);
 			//-this.buttonSimulation =
 			//-this.CreateButton (DockStyle.Left, Res.Commands.Main.Simulation);

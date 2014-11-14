@@ -181,6 +181,21 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		protected ButtonWithRedDot CreateButton(Widget parent, Command command, double widthScale = 1.0)
+		{
+			//	Crée un bouton pour une commande docké normalement.
+			var size = this.toolbar.PreferredHeight;
+
+			return new ButtonWithRedDot
+			{
+				Parent        = parent,
+				AutoFocus     = false,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (size*widthScale, size),
+				CommandObject = command,
+			};
+		}
+
 		protected ButtonWithRedDot CreateButton(DockStyle dock, Command command, double widthScale = 1.0)
 		{
 			//	Crée un bouton pour une commande docké normalement.

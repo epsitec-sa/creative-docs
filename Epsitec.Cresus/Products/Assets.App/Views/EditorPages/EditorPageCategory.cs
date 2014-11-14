@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			parent = this.CreateScrollable (parent, hasColorsExplanation: false);
 
-			                         this.CreateStringController  (parent, ObjectField.Number, editWidth: 90);
+			                         this.CreateStringController  (parent, ObjectField.Number,             editWidth: 90);
 			                         this.CreateStringController  (parent, ObjectField.Name);
-			                         this.CreateStringController  (parent, ObjectField.Description, lineCount: 5);
+			                         this.CreateStringController  (parent, ObjectField.Description,        lineCount: 5);
 			this.methodController  = this.CreateEnumController    (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods, editWidth: 250);
 			this.rateController    = this.CreateDecimalController (parent, ObjectField.AmortizationRate,   DecimalFormat.Rate);
 			                         this.CreateCalculatorButton  ();
