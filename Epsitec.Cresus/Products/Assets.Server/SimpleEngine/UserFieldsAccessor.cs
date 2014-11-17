@@ -114,7 +114,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public IEnumerable<UserField> GetUserFields(BaseType baseType)
 		{
-			//	Retourne la liste des rubriques utilisateur d'une base.
+			//	Retourne la liste des rubriques utilisateur d'une base triée selon
+			//	les numéros d'ordre (UserFieldOrder).
 			return this.GetUnsortedUserFields (baseType).OrderBy (x => x.Order);
 		}
 
@@ -143,20 +144,56 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
+		public void ChangeOrder(BaseType baseType, UserField userField, int order)
+		{
+			//	Modifie l'ordre d'une rubrique utilisateur, ce qui implique de modifier
+			//	l'ordre de toutes les rubriques.
+			var list = this.GetUserFields (baseType)
+				.Where (x => x.Field != userField.Field)
+				.ToArray ();  // tous les UserFields, sauf celui dont on change l'ordre
+
+			int newOrder = 0;
+			bool placed = false;
+
+			foreach (var existingUserField in list)
+			{
+				if (newOrder == order)  // est-ce que le UserField à modifier vient ici ?
+				{
+					this.RemoveUserField (baseType, userField.Guid);
+					this.AddUserField (baseType, new UserField (userField, newOrder++));
+					placed = true;
+				}
+
+				if (existingUserField.Order != newOrder)  // changement d'ordre ?
+				{
+					this.RemoveUserField (baseType, existingUserField.Guid);
+					this.AddUserField (baseType, new UserField (existingUserField, newOrder));
+				}
+
+				newOrder++;
+			}
+
+			if (!placed)
+			{
+				this.RemoveUserField (baseType, userField.Guid);
+				this.AddUserField (baseType, new UserField (userField, newOrder++));
+			}
+		}
+
 		public void AddUserField(BaseType baseType, UserField userField)
 		{
-			//	Ajoute une rubrique utilisateur à la fin.
+			//	Ajoute une rubrique utilisateur.
 			var obj = this.GetDataObject (userField);
 			this.accessor.Mandat.GetData (baseType).Add (obj);
 		}
 
-		public void InsertUserField(BaseType baseType, int index, UserField userField)
-		{
-			//	Ajoute une rubrique utilisateur à l'index choisi.
-			userField = new UserField (userField, index);
-			var obj = this.GetDataObject (userField);
-			this.accessor.Mandat.GetData (baseType).Add (obj);
-		}
+		//??public void InsertUserField(BaseType baseType, int index, UserField userField)
+		//??{
+		//??	//	Ajoute une rubrique utilisateur à l'index choisi.
+		//??	userField = new UserField (userField, index);
+		//??	var obj = this.GetDataObject (userField);
+		//??	this.accessor.Mandat.GetData (baseType).Add (obj);
+		//??}
 
 		public void RemoveUserField(BaseType baseType, Guid guid)
 		{

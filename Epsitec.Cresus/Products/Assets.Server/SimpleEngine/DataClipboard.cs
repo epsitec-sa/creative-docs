@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.userFields[baseType] = data;
 		}
 
-		public UserField PasteUserField(DataAccessor accessor, BaseType baseType, int index)
+		public UserField PasteUserField(DataAccessor accessor, BaseType baseType, int order)
 		{
 			//	Colle le UserField contenu dans le clipboard.
 			if (!this.userFields.ContainsKey (baseType))  // clipboard vide ?
@@ -289,7 +289,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var field = accessor.UserFieldsAccessor.GetNewUserField ();
 			var name = DataClipboard.GetCopyName (data.UserField.Name, accessor.GlobalSettings.CopyNameStrategy);
 			var userField = new UserField (data.UserField, field, name);
-			accessor.UserFieldsAccessor.InsertUserField (baseType, index, userField);
+			accessor.UserFieldsAccessor.AddUserField (baseType, userField);
+			accessor.UserFieldsAccessor.ChangeOrder (baseType, userField, order);
 			accessor.WarningsDirty = true;
 
 			return userField;

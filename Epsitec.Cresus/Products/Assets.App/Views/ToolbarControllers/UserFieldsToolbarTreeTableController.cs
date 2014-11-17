@@ -175,13 +175,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			var userField = new UserField (-1, Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
-			int index = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
-			if (index == 0)  // pas de sélection ?
+			int order = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
+			if (order == 0)  // pas de sélection ?
 			{
-				index = this.nodeGetter.Count;  // insère à la fin
+				order = this.nodeGetter.Count;  // insère à la fin
 			}
 
-			this.accessor.UserFieldsAccessor.InsertUserField (this.baseType, index, userField);
+			this.accessor.UserFieldsAccessor.AddUserField (this.baseType, userField);
+			this.accessor.UserFieldsAccessor.ChangeOrder (this.baseType, userField, order);
+
 			accessor.WarningsDirty = true;
 			this.UpdateData ();
 			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
@@ -228,13 +230,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.accessor.UndoManager.Start ();
 
-			int index = this.VisibleSelectedRow;
-			if (index == -1)  // pas de sélection ?
+			int order = this.VisibleSelectedRow;
+			if (order == -1)  // pas de sélection ?
 			{
-				index = this.nodeGetter.Count;  // insère à la fin
+				order = this.nodeGetter.Count;  // insère à la fin
 			}
 
-			var userField = this.accessor.Clipboard.PasteUserField (this.accessor, this.baseType, index);
+			var userField = this.accessor.Clipboard.PasteUserField (this.accessor, this.baseType, order);
 
 			if (userField.IsEmpty)
 			{
@@ -285,16 +287,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var userField = this.accessor.UserFieldsAccessor.GetUserField (node.Guid);
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
-			//	Supprime la rubrique à l'endroit actuel.
-			this.accessor.UserFieldsAccessor.RemoveUserField (this.baseType, node.Guid);
-
-			//	Insère la rubrique au nouvel endroit.
-			int index = newRow.Value;
-			this.accessor.UserFieldsAccessor.InsertUserField (this.baseType, index, userField);
+			//	Change l'ordre de la rubrique.
+			int order = newRow.Value;
+			this.accessor.UserFieldsAccessor.ChangeOrder (this.baseType, userField, order);
 
 			//	Met à jour et sélectionne la rubrique déplacée.
 			this.UpdateData ();
-			this.VisibleSelectedRow = index;
+			this.VisibleSelectedRow = order;
 
 			var desc = UndoManager.GetDescription (description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, this.SelectedGuid));
 			this.accessor.UndoManager.SetDescription (desc);
