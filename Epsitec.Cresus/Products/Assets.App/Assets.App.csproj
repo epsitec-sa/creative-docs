@@ -510,7 +510,7 @@
     <EmbeddedResource Include="Images\Search.Options.icon" />
     <EmbeddedResource Include="Images\Search.Prev.icon" />
     <EmbeddedResource Include="Images\Search.Next.icon" />
-    <EmbeddedResource Include="Images\Perfect.icon" />
+    <EmbeddedResource Include="Images\Warnings.Perfect.icon" />
     <EmbeddedResource Include="Images\Timeline.GroupedByMonth.icon" />
     <EmbeddedResource Include="Images\Timeline.GroupedByTrim.icon" />
     <EmbeddedResource Include="Images\Timeline.GroupedByYear.icon" />
@@ -520,6 +520,7 @@
     <EmbeddedResource Include="Images\Main.RedoHistory.icon" />
     <EmbeddedResource Include="Images\Warning.Hide.icon" />
     <EmbeddedResource Include="Images\Warning.ShowAll.icon" />
+    <EmbeddedResource Include="Images\Warnings.Hidden.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

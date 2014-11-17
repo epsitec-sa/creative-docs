@@ -17,6 +17,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
+using Epsitec.Cresus.Assets.Core.Helpers;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
@@ -224,9 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void UpdateWarnings()
 		{
-			var list = WarningsLogic.GetWarnings (this.accessor)
-				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
-
+			var list = LocalSettings.GetVisibleWarnings (this.accessor);
 			this.NodeGetter.SetParams (list, this.sortingInstructions);
 		}
 
@@ -252,19 +251,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				Visibility = false,
 			};
 
-			new StaticText
+			this.perfectIcon = new StaticText
 			{
 				Parent           = this.perfectFrame,
-				Text             = Misc.GetRichTextImg ("Perfect", 0),
 				ContentAlignment = ContentAlignment.BottomCenter,
 				Margins          = new Margins (0, 0, 0, 10),
 				Dock             = DockStyle.Fill,
 			};
 
-			new StaticText
+			this.perfectText = new StaticText
 			{
 				Parent           = this.perfectFrame,
-				Text             = Res.Strings.WarningView.Perfect.ToString (),
 				ContentAlignment = ContentAlignment.TopCenter,
 				Margins          = new Margins (0, 0, 10, 0),
 				Dock             = DockStyle.Fill,
@@ -273,24 +270,42 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.controllerFrame.IsVisibleChanged += delegate
 			{
 				this.perfectFrame.Visibility = !this.controllerFrame.Visibility;
+				this.UpdatePerfectUI ();
+			};
+		}
 
-				if (this.perfectFrame.Visibility)
+		private void UpdatePerfectUI()
+		{
+			var fullList = WarningsLogic.GetWarnings (this.accessor);
+			var visibleList = fullList.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
+			int hiddenCount = fullList.Count - visibleList.Count ();
+
+			if (this.perfectFrame.Visibility)
+			{
+				if (hiddenCount == 0)  // parfait, rien de caché ?
 				{
-					var list = WarningsLogic.GetWarnings (this.accessor);
-					if (list.Any ())
-					{
-						this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.ShowAll);
-					}
-					else
-					{
-						this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.None);
-					}
+					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.None);
 				}
 				else
 				{
-					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.Goto);
+					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.ShowAll);
 				}
-			};
+			}
+			else
+			{
+				this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.Goto);
+			}
+
+			if (hiddenCount == 0)  // parfait, rien de caché ?
+			{
+				this.perfectIcon.Text = Misc.GetRichTextImg ("Warnings.Perfect", 0);
+				this.perfectText.Text = Res.Strings.WarningView.Perfect.ToString ();
+			}
+			else  // aucun avertissement visible, mais y'a des cachés ?
+			{
+				this.perfectIcon.Text = Misc.GetRichTextImg ("Warnings.Hidden", 0);
+				this.perfectText.Text = string.Format(Res.Strings.WarningView.Hidden.ToString (), TypeConverters.IntToString (hiddenCount));
+			}
 		}
 
 		protected override void CreateNodeFiller()
@@ -413,5 +428,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 
 		private FrameBox						perfectFrame;
+		private StaticText						perfectIcon;
+		private StaticText						perfectText;
 	}
 }

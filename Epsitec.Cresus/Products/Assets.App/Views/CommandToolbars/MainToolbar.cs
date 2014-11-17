@@ -11,7 +11,6 @@ using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.App.Settings;
 
 namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
@@ -170,9 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			//	TODO: Rendre cela asynchrone !?
 			if (this.accessor.WarningsDirty && this.buttonWarnings != null)
 			{
-				var list = WarningsLogic.GetWarnings (this.accessor)
-					.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
-
+				var list = LocalSettings.GetVisibleWarnings (this.accessor);
 				this.buttonWarnings.RedDotCount = list.Count ();
 
 				this.accessor.WarningsDirty = false;

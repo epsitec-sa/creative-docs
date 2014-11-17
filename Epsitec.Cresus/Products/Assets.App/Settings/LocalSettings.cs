@@ -9,6 +9,7 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Export;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Settings
 {
@@ -135,6 +136,12 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 
 		#region Hidden warnings
+		public static IEnumerable<Warning> GetVisibleWarnings(DataAccessor accessor)
+		{
+			return WarningsLogic.GetWarnings (accessor)
+				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
+		}
+
 		public static void ClearHiddenWarnings()
 		{
 			LocalSettings.hiddenWarnings.Clear ();

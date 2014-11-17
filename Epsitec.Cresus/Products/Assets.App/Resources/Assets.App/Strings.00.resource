@@ -449,4 +449,5 @@
   <data name="AmortizedAmountController.Rate.BaseRate" id="KOI">Taux de base</data>
   <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
   <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
+  <data name="WarningView.Hidden" id="KRI">Aucun avertissement visible.&lt;br/&gt;Il y a {0} avertissements cachés.</data>
 </bundle>

@@ -11,7 +11,6 @@ using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Engine;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -67,9 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateFirstView()
 		{
-			var list = WarningsLogic.GetWarnings (this.accessor)
-				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
-
+			var list = LocalSettings.GetVisibleWarnings (this.accessor);
 			this.CreateView (list.Any () ? ViewType.Warnings : ViewType.Assets);
 			this.InitializeUndo ();
 		}

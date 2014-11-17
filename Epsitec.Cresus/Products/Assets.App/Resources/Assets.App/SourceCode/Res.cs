@@ -5354,6 +5354,14 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class WarningView
 			{
+				//	designer:str/JUKRI01
+				public static global::Epsitec.Common.Types.FormattedText Hidden
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544923));
+					}
+				}
 				//	designer:str/JUKLH01
 				public static global::Epsitec.Common.Types.FormattedText Perfect
 				{
@@ -9631,6 +9639,14 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class WarningView
 			{
+				//	designer:str/JUKRI01
+				public static global::Epsitec.Common.Support.Druid Hidden
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544923);
+					}
+				}
 				//	designer:str/JUKLH01
 				public static global::Epsitec.Common.Support.Druid Perfect
 				{
