@@ -560,6 +560,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.MainValue:
 					return FieldType.AmortizedAmount;
 
+				case ObjectField.AmortizationYearCount:
 				case ObjectField.AmortizationRate:
 				case ObjectField.ResidualValue:
 				case ObjectField.Round:
@@ -568,7 +569,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				case ObjectField.AmortizationMethod:
 				case ObjectField.AmortizationType:
-				case ObjectField.AmortizationYearCount:
 				case ObjectField.Periodicity:
 				case ObjectField.Prorata:
 					return FieldType.Int;

@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				{
 					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.None);
 				}
-				else
+				else  // aucun avertissement visible, mais y'a des cachés ?
 				{
 					this.Toolbar.SetHelpLineButton (WarningsToolbar.HelpLineButton.ShowAll);
 				}

@@ -138,6 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		#region Hidden warnings
 		public static IEnumerable<Warning> GetVisibleWarnings(DataAccessor accessor)
 		{
+			//	Retourne les avertissements, en masquant ceux qui sont cachés par l'utilisateur.
 			return WarningsLogic.GetWarnings (accessor)
 				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
 		}

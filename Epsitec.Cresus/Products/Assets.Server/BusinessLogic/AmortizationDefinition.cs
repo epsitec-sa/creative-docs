@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(AmortizationMethod method, decimal rate, AmortizationType type, int yearRank, int yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
+		public AmortizationDefinition(AmortizationMethod method, decimal rate, AmortizationType type, int yearRank, decimal yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
 			this.Method      = method;
 			this.Rate        = rate;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return this.Method      == AmortizationMethod.Unknown
 					&& this.Rate        == 0.0m
 					&& this.Type        == AmortizationType.Unknown
-					&& this.YearCount   == 0
+					&& this.YearCount   == 0.0m
 					&& this.Periodicity == 0
 					&& this.ProrataType == 0
 					&& this.Round       == 0.0m
@@ -68,13 +68,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0, 0, 0.0m, 0.0m, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0.0m, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly AmortizationMethod		Method;
 		public readonly decimal					Rate;
 		public readonly AmortizationType		Type;
 		public readonly int						YearRank;
-		public readonly int						YearCount;
+		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly ProrataType				ProrataType;
 		public readonly decimal					Round;

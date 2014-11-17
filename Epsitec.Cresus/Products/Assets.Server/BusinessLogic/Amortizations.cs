@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var method   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationMethod);
 			var taux     = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
 			var type     = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
-			var years    = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationYearCount);
+			var years    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationYearCount);
 			var period   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);

@@ -196,13 +196,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var name   = ObjectProperties.GetObjectPropertyString  (obj, null, ObjectField.Name);
 			var method = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationMethod);
 			var taux   = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationRate);
-			var years  = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationYearCount);
+			var years  = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationYearCount);
 			var type   = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
 			var period = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
 
 			var stringMethod = EnumDictionaries.GetAmortizationMethodSummary (method);
 			var stringTaux   = TypeConverters.RateToString (taux);
-			var stringYears  = TypeConverters.IntToString (years);
+			var stringYears  = TypeConverters.DecimalToString (years);
 			var stringType   = EnumDictionaries.GetAmortizationTypeName (type);
 			var stringPeriod = EnumDictionaries.GetPeriodicityName (period);
 

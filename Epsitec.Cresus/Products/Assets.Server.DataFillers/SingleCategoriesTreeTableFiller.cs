@@ -40,11 +40,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String, 220, Res.Strings.SingleCategoriesTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod,    TreeTableColumnType.String,  50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationMethod.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,    50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationRate.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,  80, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationType.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Int,     50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String,  220, Res.Strings.SingleCategoriesTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod,    TreeTableColumnType.String,   50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationMethod.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,     50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationRate.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,   80, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationType.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Decimal,  50, Res.Strings.SingleCategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var method = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationMethod);
 				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
 				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
-				var years  = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationYearCount);
+				var years  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationYearCount);
 
 				var m = EnumDictionaries.GetAmortizationMethodSummary (method);
 				var t = EnumDictionaries.GetAmortizationTypeName (type);
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell2 = new TreeTableCellString  (m,     cellState);
 				var cell3 = new TreeTableCellDecimal (rate,  cellState);
 				var cell4 = new TreeTableCellString  (t,     cellState);
-				var cell5 = new TreeTableCellInt     (years, cellState);
+				var cell5 = new TreeTableCellDecimal (years, cellState);
 
 				int columnRank = 0;
 

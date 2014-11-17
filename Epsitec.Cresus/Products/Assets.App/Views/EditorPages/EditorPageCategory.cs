@@ -25,18 +25,18 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			parent = this.CreateScrollable (parent, hasColorsExplanation: false);
 
-			                         this.CreateStringController  (parent, ObjectField.Number,             editWidth: 90);
+			                         this.CreateStringController  (parent, ObjectField.Number,                editWidth: 90);
 			                         this.CreateStringController  (parent, ObjectField.Name);
-			                         this.CreateStringController  (parent, ObjectField.Description,        lineCount: 5);
-			this.methodController  = this.CreateEnumController    (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods, editWidth: 250);
-			this.rateController    = this.CreateDecimalController (parent, ObjectField.AmortizationRate,   DecimalFormat.Rate);
+			                         this.CreateStringController  (parent, ObjectField.Description,           lineCount: 5);
+			this.methodController  = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
+			this.rateController    = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
 			                         this.CreateCalculatorButton  ();
-			this.typeController    = this.CreateEnumController    (parent, ObjectField.AmortizationType,   EnumDictionaries.DictAmortizationTypes, editWidth: 90);
-			this.yearController    = this.CreateIntController     (parent, ObjectField.AmortizationYearCount);
-			                         this.CreateEnumController    (parent, ObjectField.Periodicity,        EnumDictionaries.DictPeriodicities, editWidth: 90);
-			this.prorataController = this.CreateEnumController    (parent, ObjectField.Prorata,            EnumDictionaries.DictProrataTypes,  editWidth: 90);
-			                         this.CreateDecimalController (parent, ObjectField.Round,              DecimalFormat.Amount);
-			                         this.CreateDecimalController (parent, ObjectField.ResidualValue,      DecimalFormat.Amount);
+			this.typeController    = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+			this.yearController    = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
+			                         this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
+			this.prorataController = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes,  editWidth: 90);
+			                         this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);
+			                         this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount);
 
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private DecimalFieldController			rateController;
 		private Button							calculatorButton;
 		private EnumFieldController				typeController;
-		private IntFieldController				yearController;
+		private DecimalFieldController			yearController;
 		private EnumFieldController				prorataController;
 	}
 }

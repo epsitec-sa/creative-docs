@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Data
 			decimal?			rate,
 			AmortizationType	amortizationType,
 			int					yearRank,
-			int					yearCount,
+			decimal				yearCount,
 			Periodicity			periodicity,
 			decimal?			previousAmount,
 			decimal?			initialAmount,
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Rate               = IOHelpers.ReadDecimalAttribute (reader, "Rate");
 			this.AmortizationType   = (AmortizationType) IOHelpers.ReadTypeAttribute (reader, "AmortizationType", typeof (AmortizationType));
 			this.YearRank           = IOHelpers.ReadIntAttribute (reader, "YearRank").GetValueOrDefault ();
-			this.YearCount          = IOHelpers.ReadIntAttribute (reader, "YearCount").GetValueOrDefault ();
+			this.YearCount          = IOHelpers.ReadDecimalAttribute (reader, "YearCount").GetValueOrDefault (1.0m);
 			this.Periodicity        = (Periodicity) IOHelpers.ReadTypeAttribute (reader, "Periodicity", typeof (Periodicity));
 			this.PreviousAmount     = IOHelpers.ReadDecimalAttribute (reader, "PreviousAmount");
 			this.InitialAmount      = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly decimal?				Rate;
 		public readonly AmortizationType		AmortizationType;
 		public readonly int						YearRank;
-		public readonly int						YearCount;
+		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Assets.Data
 				else if (this.AmortizationMethod == AmortizationMethod.YearCount)
 				{
 					//	Amortissement selon le nombre d'années.
-					int n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
+					decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
 
 					if (n <= 0 || !this.InitialAmount.HasValue)
 					{
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Assets.Data
 					{
 						if (this.AmortizationType == AmortizationType.Linear)
 						{
-							rate = 1.0m / (decimal) n;
+							rate = 1.0m / n;
 						}
 						else if (this.AmortizationType == AmortizationType.Degressive)
 						{
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Assets.Data
 				else if (this.AmortizationMethod == AmortizationMethod.YearCount)
 				{
 					//	Amortissement selon le nombre d'années.
-					int n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
+					decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
 
 					if (n > 0)
 					{
@@ -196,11 +196,11 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private int								YearCountPeriodicity
+		private decimal							YearCountPeriodicity
 		{
 			get
 			{
-				return this.YearCount * 12 / this.PeriodMonthCount;
+				return this.YearCount * 12.0m / this.PeriodMonthCount;
 			}
 		}
 
@@ -949,7 +949,7 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "Rate",               this.Rate);
 			IOHelpers.WriteTypeAttribute    (writer, "AmortizationType",   this.AmortizationType);
 			IOHelpers.WriteIntAttribute     (writer, "YearRank",           this.YearRank);
-			IOHelpers.WriteIntAttribute     (writer, "YearCount",          this.YearCount);
+			IOHelpers.WriteDecimalAttribute (writer, "YearCount",          this.YearCount);
 			IOHelpers.WriteTypeAttribute    (writer, "Periodicity",        this.Periodicity);
 
 			IOHelpers.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);

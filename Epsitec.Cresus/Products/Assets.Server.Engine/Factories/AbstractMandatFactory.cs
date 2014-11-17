@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			{
 				var method = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationMethod);
 				var taux   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
-				var years  = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationYearCount);
+				var years  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationYearCount);
 				var type   = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,          catNane));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationMethod,    method.GetValueOrDefault (0)));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate,      taux.GetValueOrDefault ()));
-				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationYearCount, years.GetValueOrDefault (1)));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationYearCount, years.GetValueOrDefault (1.0m)));
 				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType,      type.GetValueOrDefault (1)));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,           period.GetValueOrDefault (12)));
 				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,               prorat.GetValueOrDefault ()));
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Number,                         number);
 			this.AddField (e, ObjectField.AmortizationMethod,             (int) AmortizationMethod.Rate);
 			this.AddField (e, ObjectField.AmortizationRate,               rate);
-			this.AddField (e, ObjectField.AmortizationYearCount,          10);
+			this.AddField (e, ObjectField.AmortizationYearCount,          10.0m);
 			this.AddField (e, ObjectField.AmortizationType,               (int) type);
 			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
 			this.AddField (e, ObjectField.Prorata,                        (int) prorata);
