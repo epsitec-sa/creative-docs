@@ -208,6 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				this.accessor.UndoManager.SetDescription (desc);
 
 				this.accessor.UserFieldsAccessor.RemoveUserField (this.baseType, this.SelectedGuid);
+				this.accessor.UserFieldsAccessor.ChangeOrder (this.baseType);  // renumérote tout
 				accessor.WarningsDirty = true;
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();

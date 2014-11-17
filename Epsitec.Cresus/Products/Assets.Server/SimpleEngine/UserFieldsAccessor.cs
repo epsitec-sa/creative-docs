@@ -144,12 +144,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public void ChangeOrder(BaseType baseType, UserField userField, int order)
+		public void ChangeOrder(BaseType baseType, UserField userField = null, int order = -1)
 		{
 			//	Modifie l'ordre d'une rubrique utilisateur, ce qui implique de modifier
 			//	l'ordre de toutes les rubriques.
+			//	Si userField = null, on renumérote simplement tout.
 			var list = this.GetUserFields (baseType)
-				.Where (x => x.Field != userField.Field)
+				.Where (x => userField == null || x.Field != userField.Field)
 				.ToArray ();  // tous les UserFields, sauf celui dont on change l'ordre
 
 			int newOrder = 0;
@@ -157,7 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			foreach (var existingUserField in list)
 			{
-				if (newOrder == order)  // est-ce que le UserField à modifier vient ici ?
+				if (userField != null && newOrder == order)  // est-ce que le UserField à modifier vient ici ?
 				{
 					this.RemoveUserField (baseType, userField.Guid);
 					this.AddUserField (baseType, new UserField (userField, newOrder++));
@@ -173,7 +174,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				newOrder++;
 			}
 
-			if (!placed)
+			if (userField != null && !placed)
 			{
 				this.RemoveUserField (baseType, userField.Guid);
 				this.AddUserField (baseType, new UserField (userField, newOrder++));
