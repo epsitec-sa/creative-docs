@@ -81,4 +81,5 @@
   <data name="CategoriesTreeTableFiller.AmortizationYearCount" id="KJ2">Années</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationMethod" id="KK2">Méthode</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
+  <data name="UserFieldsTreeTableFiller.Order" id="KM2">Ordre</data>
 </bundle>

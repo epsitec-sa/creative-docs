@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.Data
 		MergeImport,
 		MergeCurrent,
 
+		UserFieldOrder,
 		UserFieldType,
 		UserFieldRequired,
 		UserFieldColumnWidth,

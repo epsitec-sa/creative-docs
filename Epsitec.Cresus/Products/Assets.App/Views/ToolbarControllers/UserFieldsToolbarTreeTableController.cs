@@ -18,7 +18,7 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class UserFieldsToolbarTreeTableController : AbstractToolbarBothTreesController<GuidNode>, IDirty, System.IDisposable
+	public class UserFieldsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty, System.IDisposable
 	{
 		public UserFieldsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
@@ -37,7 +37,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
 			}
 
-			this.nodeGetter = new UserFieldNodeGetter (this.accessor, this.baseType);
+			var primary = new UserFieldNodeGetter (this.accessor, this.baseType);
+			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, this.baseType);
+			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}
 
 		public override void Dispose()
@@ -77,16 +79,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		protected override void CreateControllerUI(Widget parent)
-		{
-			base.CreateControllerUI (parent);
-
-			this.treeTableController.AllowsSorting = false;
-		}
-
-
 		public override void UpdateData()
 		{
+			this.secondaryGetter.SetParams (null, this.sortingInstructions);
+			(this.nodeGetter as SorterNodeGetter).SetParams (this.sortingInstructions);
+
 			this.UpdateController ();
 			this.UpdateToolbar ();
 		}
@@ -105,9 +102,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				Title = this.title,
 			};
 
-			TreeTableFiller<GuidNode>.FillColumns (this.treeTableController, this.dataFiller, "View.UserFields");
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.UserFields");
 
-			this.sortingInstructions = TreeTableFiller<GuidNode>.GetSortingInstructions (this.treeTableController);
+			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 
@@ -176,7 +173,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.accessor.UndoManager.Start ();
 
-			var userField = new UserField (Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
+			var userField = new UserField (-1, Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
 
 			int index = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
 			if (index == 0)  // pas de sélection ?
@@ -284,7 +281,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.accessor.UndoManager.Start ();
 
-			var node = (this.nodeGetter as UserFieldNodeGetter)[currentRow];
+			var node = (this.nodeGetter as SorterNodeGetter)[currentRow];
 			var userField = this.accessor.UserFieldsAccessor.GetUserField (node.Guid);
 			System.Diagnostics.Debug.Assert (!userField.IsEmpty);
 
@@ -329,5 +326,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.UserFields.Paste,  this.accessor.Clipboard.HasUserField (this.baseType));
 			this.toolbar.SetEnable (Res.Commands.UserFields.Export, !this.IsEmpty);
 		}
+
+
+		private SortableNodeGetter secondaryGetter;
 	}
 }

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class UserField : IGuid
 	{
-		public UserField(Guid guid, string name, ObjectField field, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
+		public UserField(Guid guid, int order, string name, ObjectField field, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
 			if (type != FieldType.String)
 			{
@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			this.guid         = guid;
+			this.Order        = order;
 			this.Name         = name;
 			this.Field        = field;
 			this.Type         = type;
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.TopMargin    = topMargin;
 		}
 
-		public UserField(string name, ObjectField field, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
+		public UserField(int order, string name, ObjectField field, FieldType type, bool required, int columnWidth, int? lineWidth, int? lineCount, int? summaryOrder, int topMargin)
 		{
 			if (type != FieldType.String)
 			{
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			this.guid         = Guid.NewGuid ();
+			this.Order        = order;
 			this.Name         = name;
 			this.Field        = field;
 			this.Type         = type;
@@ -51,6 +53,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public UserField(UserField model)
 		{
 			this.guid         = model.Guid;
+			this.Order        = model.Order;
 			this.Name         = model.Name;
 			this.Field        = model.Field;
 			this.Type         = model.Type;
@@ -65,8 +68,24 @@ namespace Epsitec.Cresus.Assets.Data
 		public UserField(UserField model, ObjectField field, string name)
 		{
 			this.guid         = Guid.NewGuid ();
+			this.Order        = model.Order;
 			this.Name         = name;
 			this.Field        = field;
+			this.Type         = model.Type;
+			this.Required     = model.Required;
+			this.ColumnWidth  = model.ColumnWidth;
+			this.LineWidth    = model.LineWidth;
+			this.LineCount    = model.LineCount;
+			this.SummaryOrder = model.SummaryOrder;
+			this.TopMargin    = model.TopMargin;
+		}
+
+		public UserField(UserField model, int order)
+		{
+			this.guid         = model.Guid;
+			this.Order        = order;
+			this.Name         = model.Name;
+			this.Field        = model.Field;
 			this.Type         = model.Type;
 			this.Required     = model.Required;
 			this.ColumnWidth  = model.ColumnWidth;
@@ -99,11 +118,12 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public static UserField Empty = new UserField (null, ObjectField.Unknown, FieldType.Unknown, false, 0, null, null, null, 0);
+		public static UserField Empty = new UserField (-1, null, ObjectField.Unknown, FieldType.Unknown, false, 0, null, null, null, 0);
 
 
 		private readonly Guid					guid;
 
+		public readonly int						Order;
 		public readonly string					Name;
 		public readonly ObjectField				Field;
 		public readonly FieldType				Type;

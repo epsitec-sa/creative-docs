@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private UserField GetUserField(ObjectField field)
 		{
 			//	Retourne une rubrique utilisateur.
-			var userField = this.GetUserFields ().Where (x => x.Field == field).FirstOrDefault ();
+			var userField = this.GetUnsortedUserFields ().Where (x => x.Field == field).FirstOrDefault ();
 
 			if (userField == null)
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public UserField GetUserField(Guid guid)
 		{
 			//	Retourne une rubrique utilisateur.
-			var userField = this.GetUserFields ().Where (x => x.Guid == guid).FirstOrDefault ();
+			var userField = this.GetUnsortedUserFields ().Where (x => x.Guid == guid).FirstOrDefault ();
 
 			if (userField == null)
 			{
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 			else
 			{
-				ObjectField max = this.GetUserFields ().Max (x => x.Field);
+				ObjectField max = this.GetUnsortedUserFields ().Max (x => x.Field);
 
 				if (max == ObjectField.UserFieldLast)
 				{
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		private IEnumerable<UserField> GetUserFields()
+		private IEnumerable<UserField> GetUnsortedUserFields()
 		{
 			//	Retourne la liste de toutes les rubriques utilisateur (des 2 bases).
 			foreach (var obj in this.accessor.Mandat.GetData (BaseType.AssetsUserFields))
@@ -113,6 +113,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 		public IEnumerable<UserField> GetUserFields(BaseType baseType)
+		{
+			//	Retourne la liste des rubriques utilisateur d'une base.
+			return this.GetUnsortedUserFields (baseType).OrderBy (x => x.Order);
+		}
+
+		private IEnumerable<UserField> GetUnsortedUserFields(BaseType baseType)
 		{
 			//	Retourne la liste des rubriques utilisateur d'une base.
 			switch (baseType.Kind)
@@ -147,8 +153,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		public void InsertUserField(BaseType baseType, int index, UserField userField)
 		{
 			//	Ajoute une rubrique utilisateur à l'index choisi.
+			userField = new UserField (userField, index);
 			var obj = this.GetDataObject (userField);
-			this.accessor.Mandat.GetData (baseType).Insert (index, obj);
+			this.accessor.Mandat.GetData (baseType).Add (obj);
 		}
 
 		public void RemoveUserField(BaseType baseType, Guid guid)
@@ -165,6 +172,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var obj = new DataObject (this.accessor.UndoManager, userField.Guid);
 			var e = new DataEvent (this.accessor.UndoManager, Timestamp.MaxValue, EventType.Input);
 			obj.AddEvent (e);
+
+			var p0 = new DataIntProperty (ObjectField.UserFieldOrder, userField.Order);
+			e.AddProperty (p0);
 
 			var p1 = new DataStringProperty (ObjectField.Name, userField.Name);
 			e.AddProperty (p1);
@@ -211,6 +221,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = obj.GetInputEvent ();
 			System.Diagnostics.Debug.Assert (e != null);
 
+			var p0 = e.GetProperty (ObjectField.UserFieldOrder       ) as DataIntProperty;
 			var p1 = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;
 			var p2 = e.GetProperty (ObjectField.UserFieldType        ) as DataIntProperty;
 			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth ) as DataIntProperty;
@@ -221,6 +232,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var p8 = e.GetProperty (ObjectField.UserFieldField       ) as DataIntProperty;
 			var p9 = e.GetProperty (ObjectField.UserFieldRequired    ) as DataIntProperty;
 
+			System.Diagnostics.Debug.Assert (p0 != null);
 			System.Diagnostics.Debug.Assert (p1 != null);
 			System.Diagnostics.Debug.Assert (p2 != null);
 			System.Diagnostics.Debug.Assert (p3 != null);
@@ -228,6 +240,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			System.Diagnostics.Debug.Assert (p8 != null);
 			System.Diagnostics.Debug.Assert (p9 != null);
 
+			var order       =               p0.Value;
 			var name        =               p1.Value;
 			var type        = (FieldType)   p2.Value;
 			var columnWidth =               p3.Value;
@@ -253,7 +266,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				summaryOrder = p6.Value;
 			}
 
-			return new UserField (obj.Guid, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
+			return new UserField (obj.Guid, order, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
 		}
 
 

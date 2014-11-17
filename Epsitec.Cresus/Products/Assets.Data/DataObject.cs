@@ -129,8 +129,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void AddEvent(DataEvent e)
 		{
-			int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
-			this.events.Insert (i, e);
+			//??int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
+			//??this.events.Insert (i, e);
+			this.events.Add (e);
 		}
 
 		public void RemoveEvent(DataEvent e)
