@@ -371,10 +371,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	lors de la création d'un événement de sortie.
 				aa = AmortizedAmount.SetInitialAmount (aa, 0.0m);
 			}
-			else if (e.Type == EventType.Adjust)
+			else if (e.Type == EventType.Increase ||
+					 e.Type == EventType.Decrease ||
+					 e.Type == EventType.Adjust)
 			{
 				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
-				//	la création d'un événement de correction.
+				//	la création d'un événement qui modifie la valeur.
 				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
 				if (currentAmount.HasValue && currentAmount.Value.FinalAmortizedAmount.HasValue)
 				{
