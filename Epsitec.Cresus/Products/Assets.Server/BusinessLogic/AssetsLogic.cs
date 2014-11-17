@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Crée la valeur comptable d'entrée, si nécessaire.
 			if (value.HasValue)
 			{
-				var e = asset.GetEvent (0);  // événement d'entrée
+				var e = asset.GetInputEvent ();  // événement d'entrée
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				var aa = p.Value;
 

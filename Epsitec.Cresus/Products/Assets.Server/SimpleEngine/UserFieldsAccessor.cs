@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private UserField GetUserField(DataObject obj)
 		{
 			//	Retourne le UserField à partir d'un objet, sans changer son Guid.
-			var e = obj.GetEvent (0);
+			var e = obj.GetInputEvent ();
 			System.Diagnostics.Debug.Assert (e != null);
 
 			var p1 = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;

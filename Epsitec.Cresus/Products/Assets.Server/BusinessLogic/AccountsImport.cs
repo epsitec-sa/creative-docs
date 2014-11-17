@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return;
 			}
 
-			var e = account.GetEvent (0);
+			var e = account.GetInputEvent ();
 
 			if (e.GetProperty (ObjectField.GroupParent) == null)
 			{
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			foreach (var account in this.accounts)
 			{
-				var e = account.GetEvent (0);
+				var e = account.GetInputEvent ();
 				var p = e.GetProperty (ObjectField.Number) as DataStringProperty;
 				if (p.Value == number)
 				{

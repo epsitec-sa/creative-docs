@@ -169,6 +169,37 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public Timestamp ChangeAssetEventTimestamp(DataObject obj, DataEvent e, System.DateTime date)
 		{
+			int position = 0;
+			var sameDates = obj.Events.Where (x => x.Timestamp.Date == date).ToArray ();
+
+			if (sameDates.Length != 0)  // y a-t-il d'autres événements à la même date ?
+			{
+				if (date < e.Timestamp.Date)  // recule l'événement ?
+				{
+					//	Si on recule l'événement à une date contenant déjà d'autres événements,
+					//	il devra venir après le dernier.
+					var last = sameDates.Max (x => x.Timestamp);
+					position = last.Position + 1;
+				}
+				else  // avance l'événement ?
+				{
+					//	Si on avance l'événement à une date contenant déjà d'autres événements,
+					//	il faut "pousser" la position de ceux-ci.
+					foreach (var s in sameDates)
+					{
+						var t = new Timestamp (date, s.Timestamp.Position + 1);
+						obj.ChangeEventTimestamp (s, t);
+					}
+				}
+			}
+
+			var timestamp = new Timestamp (date, position);
+			obj.ChangeEventTimestamp (e, timestamp);
+			obj.CheckEvents ();
+
+			return timestamp;
+
+#if false //??
 			//	Déplace un événement à une autre date, mais sans jamais modifier l'ordre des événements.
 			//	Retourne le nouveau timestamp de l'événement.
 			//	Exemple:
@@ -238,6 +269,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			obj.CheckEvents ();
 
 			return timestamp;
+#endif
 		}
 
 		public DataEvent CreateAssetEvent(DataObject obj, System.DateTime date, EventType type)
@@ -371,9 +403,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					//	Supprime tous les événements, ce qui est nécessaire pour
 					//	supprimer proprement toutes les écritures liées.
-					while (obj.EventsCount > 0)
+					while (obj.EventsAny)
 					{
-						this.RemoveObjectEvent (obj, obj.GetEvent (0));
+						var e = obj.UnsortedEvents.First ();
+						this.RemoveObjectEvent (obj, e);
 					}
 				}
 
@@ -418,8 +451,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			System.Diagnostics.Debug.Assert (  obj.EventsCount == 1);
 			System.Diagnostics.Debug.Assert (model.EventsCount == 1);
 
-			var dstEvent =   obj.GetEvent (0);  // événement unique de l'objet
-			var srcEvent = model.GetEvent (0);  // événement unique de l'objet
+			var dstEvent =   obj.GetInputEvent ();  // événement unique de l'objet
+			var srcEvent = model.GetInputEvent ();  // événement unique de l'objet
 
 			dstEvent.SetUndefinedProperties (srcEvent);
 		}

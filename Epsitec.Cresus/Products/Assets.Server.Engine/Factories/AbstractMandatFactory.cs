@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var guid = this.accessor.CreateObject (BaseType.Assets, date, name, Guid.Empty);
 			var o = this.accessor.GetObject (BaseType.Assets, guid);
 
-			var e = o.GetEvent (0);
+			var e = o.GetInputEvent ();
 
 			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (++this.eventNumber).ToString ()));
 

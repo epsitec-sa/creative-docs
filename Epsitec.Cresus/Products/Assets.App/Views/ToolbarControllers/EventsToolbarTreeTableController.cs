@@ -345,12 +345,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (timestamp.HasValue && this.obj != null)
 			{
-				int count = this.obj.EventsCount;
-				for (int row = 0; row < count; row++)
-				{
-					var e = this.obj.GetEvent (row);
+				var a = this.obj.Events.ToArray ();
 
-					if (e != null && e.Timestamp == timestamp.Value)
+				for (int row = 0; row < a.Length; row++)
+				{
+					var e = a[row];
+
+					if (e.Timestamp == timestamp.Value)
 					{
 						return row;
 					}
@@ -364,11 +365,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (this.obj != null)
 			{
-				var e = this.obj.GetEvent (row);
+				var a = this.obj.Events.ToArray ();
 
-				if (e != null)
+				if (row >= 0 && row < a.Length)
 				{
-					return e.Timestamp;
+					return a[row].Timestamp;
 				}
 			}
 

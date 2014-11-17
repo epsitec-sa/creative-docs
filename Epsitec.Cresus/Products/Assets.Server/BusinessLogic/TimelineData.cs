@@ -128,11 +128,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (obj != null)
 			{
-				int eventCount = obj.EventsCount;
+				var a = obj.Events.ToArray ();
 
-				for (int i=0; i<eventCount; i++)
+				for (int i=0; i<a.Length; i++)
 				{
-					var e = obj.GetEvent (i);
+					var e = a[i];
 					var t = e.Timestamp;
 
 					if (t.Date >= start)

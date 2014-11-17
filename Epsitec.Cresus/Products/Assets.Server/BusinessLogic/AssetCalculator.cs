@@ -12,9 +12,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static Timestamp? GetFirstTimestamp(DataObject obj)
 		{
 			//	Retourne la date d'entrée d'un objet.
-			if (obj.EventsCount > 0)
+			var e = obj.GetInputEvent ();
+			if (e != null)
 			{
-				return obj.GetEvent (0).Timestamp;
+				return e.Timestamp;
 			}
 
 			return null;
@@ -24,9 +25,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Retourne la date à sélectionner dans la timeline après la sélection
 			//	de l'objet.
-			if (obj.EventsCount > 0)
+			if (obj.EventsAny)
 			{
-				return obj.GetEvent (obj.EventsCount-1).Timestamp;
+				//	On sélectionnera le dernier événement.
+				return obj.UnsortedEvents.Max (x => x.Timestamp);
 			}
 
 			return null;
@@ -60,10 +62,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var start = Timestamp.MinValue;
 				bool isOutOfBounds = true;  // bloqué jusqu'au premier événement d'entrée
 
-				int eventCount = obj.EventsCount;
-				for (int i=0; i<eventCount; i++)
+				var a = obj.Events.ToArray ();
+
+				for (int i=0; i<a.Length; i++)
 				{
-					var e = obj.GetEvent (i);
+					var e = a[i];
 
 					if (e.Type == EventType.Input)
 					{
@@ -158,11 +161,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count () - 1;
+				var a = obj.Events.ToArray ();
+				int i = a.Where (x => x.Timestamp <= timestamp).Count () - 1;
 
-				if (i >= 0 && i < obj.EventsCount)
+				if (i >= 0 && i < a.Length)
 				{
-					return AssetCalculator.GetTerminalEvent (obj.GetEvent (i).Type);
+					return AssetCalculator.GetTerminalEvent (a[i].Type);
 				}
 			}
 
@@ -173,11 +177,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				int i = obj.Events.Where (x => x.Timestamp <= timestamp).Count ();
+				var a = obj.Events.ToArray ();
+				int i = a.Where (x => x.Timestamp <= timestamp).Count ();
 
-				if (i >= 0 && i < obj.EventsCount)
+				if (i >= 0 && i < a.Length)
 				{
-					return AssetCalculator.GetTerminalEvent (obj.GetEvent (i).Type);
+					return AssetCalculator.GetTerminalEvent (a[i].Type);
 				}
 			}
 

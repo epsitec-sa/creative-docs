@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (asset != null && e == null)
 			{
-				e = asset.GetEvent (0);  // prend l'événement d'entrée
+				e = asset.GetInputEvent ();  // prend l'événement d'entrée
 			}
 
 			var catObj = accessor.GetObject (BaseType.Categories, catGuid);
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void ClearAccounts(DataObject cat)
 		{
-			var e = cat.GetEvent (0);
+			var e = cat.GetInputEvent ();
 
 			foreach (var field in DataAccessor.AccountFields)
 			{

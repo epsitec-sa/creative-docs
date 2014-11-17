@@ -122,9 +122,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne la date d'entrée de l'objet.
 			get
 			{
-				if (this.obj.EventsCount > 0)
+				var e = this.obj.GetInputEvent ();
+				if (e != null)
 				{
-					var e = this.obj.GetEvent (0);
 					var date = e.Timestamp.Date;
 					return TypeConverters.DateToString (date);
 				}
@@ -140,10 +140,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
+				System.DateTime? date = null;
+				var e = obj.GetInputEvent ();
+				if (e != null)
+				{
+					date = e.Timestamp.Date;
+				}
+
 				var popup = new AssetCopyPopup (accessor, obj)
 				{
 					InputState = true,
-					Date       = obj.GetEvent (0).Timestamp.Date,
+					Date       = date,
 				};
 
 				popup.Create (target);

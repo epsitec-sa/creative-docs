@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private DataObject CopyBaseObject(DataObject obj)
 		{
 			//	Copie un objet sans timeline, c'est-à-dire tous les objets sauf ceux d'immobilisation.
-			var e = obj.GetEvent (0);
+			var e = obj.GetInputEvent ();
 
 			//	On conserve une copie de l'objet.
 			var objCopy = new DataObject (null);
@@ -142,12 +142,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	On insère l'objet collé.
 			var guid = accessor.CreateObject (baseType, inputDate.Value, name, Guid.Empty);
 			var objPaste = accessor.GetObject (baseType, guid);
-			var eventPaste = objPaste.GetEvent (0);
-			eventPaste.SetUndefinedProperties (data.Object.GetEvent (0));
+			var eventPaste = objPaste.GetInputEvent ();
+			eventPaste.SetUndefinedProperties (data.Object.GetInputEvent ());
 
 			if (baseType == BaseType.Assets)
 			{
-				this.SetMainValue (accessor, data.Object.GetEvent (0), objPaste, inputDate.Value);
+				this.SetMainValue (accessor, data.Object.GetInputEvent (), objPaste, inputDate.Value);
 			}
 
 			return objPaste;
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (modelProperty != null)
 			{
-				var eventPaste = objPaste.GetEvent (0);
+				var eventPaste = objPaste.GetInputEvent ();
 
 				var aa = new AmortizedAmount (AmortizationMethod.Unknown, 0, AmortizationType.Unknown,
 					0, 0, Periodicity.Unknown,

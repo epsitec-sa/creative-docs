@@ -80,6 +80,14 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public bool EventsAny
+		{
+			get
+			{
+				return this.events.Any ();
+			}
+		}
+
 		public int EventsCount
 		{
 			get
@@ -90,6 +98,16 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public IEnumerable<DataEvent> Events
 		{
+			//	Enumère chronologiquement les événements.
+			get
+			{
+				return this.events.OrderBy (x => x.Timestamp);
+			}
+		}
+
+		public IEnumerable<DataEvent> UnsortedEvents
+		{
+			//	Enumère non chronologiquement les événements.
 			get
 			{
 				return this.events;
@@ -120,10 +138,23 @@ namespace Epsitec.Cresus.Assets.Data
 			this.events.Remove (e);
 		}
 
-		public DataEvent GetEvent(int index)
+		public DataEvent GetInputEvent()
 		{
-			return this.events[index];
+			//	Retourne le premier événement d'entrée d'un objet.
+			if (this.events.Any ())
+			{
+				return this.Events.First ();
+			}
+			else
+			{
+				return null;
+			}
 		}
+
+		//??public DataEvent GetEvent(int index)
+		//??{
+		//??	return this.events[index];
+		//??}
 
 		public DataEvent GetEvent(Guid guid)
 		{
@@ -135,10 +166,10 @@ namespace Epsitec.Cresus.Assets.Data
 			return this.events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
 		}
 
-		public int GetIndex(DataEvent e)
-		{
-			return this.events.IndexOf (e);
-		}
+		//??public int GetIndex(DataEvent e)
+		//??{
+		//??	return this.events.IndexOf (e);
+		//??}
 
 		public DataEvent GetPrevEvent(Timestamp timestamp)
 		{

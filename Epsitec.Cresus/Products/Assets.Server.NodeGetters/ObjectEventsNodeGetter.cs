@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
 		{
 			this.dataObject          = dataObject;
+			this.dataEvents          = dataObject.Events.ToArray ();
 			this.sortingInstructions = sortingInstructions;
 		}
 
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 				else
 				{
-					return this.dataObject.EventsCount;
+					return this.dataEvents.Length;
 				}
 			}
 		}
@@ -47,14 +48,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				var e = this.dataObject.GetEvent (index);
-
-				if (e == null)
+				if (index < 0 || index >= this.dataEvents.Length)
 				{
 					return SortableNode.Empty;
 				}
 				else
 				{
+					var e = this.dataEvents[index];
+
 					var pp = e.GetProperty (this.sortingInstructions.PrimaryField);
 					var sp = e.GetProperty (this.sortingInstructions.SecondaryField);
 
@@ -70,6 +71,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly DataAccessor			accessor;
 
 		private DataObject						dataObject;
+		private DataEvent[]						dataEvents;
 		private SortingInstructions				sortingInstructions;
 	}
 }

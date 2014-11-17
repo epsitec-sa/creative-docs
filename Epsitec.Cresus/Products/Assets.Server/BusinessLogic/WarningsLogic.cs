@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return;
 			}
 
-			var e = cat.GetEvent (0);
+			var e = cat.GetInputEvent ();
 			var p = ObjectProperties.GetObjectProperty (cat, e.Timestamp, accountField, synthetic: true) as DataStringProperty;
 
 			if (p == null || string.IsNullOrEmpty (p.Value))
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void CheckEmpty(List<Warning> warnings, BaseType baseType, DataObject obj, ObjectField field)
 		{
-			var e = obj.GetEvent (0);
+			var e = obj.GetInputEvent ();
 			var p = e.GetProperty (field);
 			WarningsLogic.CheckEmpty (warnings, baseType, obj, Guid.Empty, field, p);
 		}

@@ -466,7 +466,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private Guid UpdateEntry(DataObject entry, EntryProperties entryProperties)
 		{
-			var e = entry.GetEvent (0);
+			var e = entry.GetInputEvent ();
 
 			e.AddProperty (new DataDateProperty    (ObjectField.EntryDate,          entryProperties.Date));
 			e.AddProperty (new DataStringProperty  (ObjectField.EntryDebitAccount,  entryProperties.Debit));
