@@ -244,6 +244,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void CreatePerfectUI()
 		{
+			//	Crée l'interface qui remplace le TreeTable par une grande icône :-)
+			//	et un texte montrant que tout est parfait.
 			this.perfectFrame = new FrameBox
 			{
 				Parent     = this.controllerFrame.Parent,
@@ -269,13 +271,22 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.controllerFrame.IsVisibleChanged += delegate
 			{
-				this.perfectFrame.Visibility = !this.controllerFrame.Visibility;
-				this.UpdatePerfectUI ();
+				if (this.toolbar != null)  // garde-fou assurant que le Dispose n'a pas été fait
+				{
+					this.perfectFrame.Visibility = !this.controllerFrame.Visibility;
+
+					if (this.perfectFrame.Visibility)
+					{
+						this.UpdatePerfectUI ();
+					}
+				}
 			};
 		}
 
 		private void UpdatePerfectUI()
 		{
+			//	Met à jour l'interface qui remplace le TreeTable par une grande icône :-)
+			//	et un texte montrant que tout est parfait.
 			var fullList = WarningsLogic.GetWarnings (this.accessor);
 			var visibleList = fullList.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
 			int hiddenCount = fullList.Count - visibleList.Count ();
