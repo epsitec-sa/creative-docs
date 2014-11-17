@@ -64,9 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				if (this.objectGuid != value)
 				{
 					this.objectGuid = value;
-
 					this.obj = this.accessor.GetObject (BaseType.Assets, this.objectGuid);
-					this.events = this.obj.Events.ToArray ();
 
 					this.dataFiller.DataObject = this.obj;
 
@@ -347,9 +345,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (timestamp.HasValue && this.obj != null)
 			{
-				for (int row = 0; row < this.events.Length; row++)
+				var a = this.obj.Events.ToArray ();
+
+				for (int row = 0; row < a.Length; row++)
 				{
-					var e = this.events[row];
+					var e = a[row];
 
 					if (e.Timestamp == timestamp.Value)
 					{
@@ -365,9 +365,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (this.obj != null)
 			{
-				if (row >= 0 && row < this.events.Length)
+				var a = this.obj.Events.ToArray ();
+
+				if (row >= 0 && row < a.Length)
 				{
-					return this.events[row].Timestamp;
+					return a[row].Timestamp;
 				}
 			}
 
@@ -388,6 +390,5 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private Guid								objectGuid;
 		private DataObject							obj;
-		private DataEvent[]							events;
 	}
 }

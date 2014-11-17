@@ -24,8 +24,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public void SetParams(DataObject dataObject, SortingInstructions sortingInstructions)
 		{
 			this.dataObject          = dataObject;
-			this.dataEvents          = dataObject.Events.ToArray ();
 			this.sortingInstructions = sortingInstructions;
+
+			if (this.dataObject == null)
+			{
+				this.dataEvents = null;
+			}
+			else
+			{
+				this.dataEvents = dataObject.Events.ToArray ();
+			}
 		}
 
 
@@ -48,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index < 0 || index >= this.dataEvents.Length)
+				if (this.dataEvents == null || index < 0 || index >= this.dataEvents.Length)
 				{
 					return SortableNode.Empty;
 				}
