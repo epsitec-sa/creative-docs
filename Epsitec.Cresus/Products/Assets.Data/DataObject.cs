@@ -174,11 +174,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent GetPrevEvent(Timestamp timestamp)
 		{
-			int i = this.events.Select (x => x.Timestamp).ToList ().IndexOf (timestamp);
+			var a = this.Events.ToList ();
+			int i = a.FindIndex (x => x.Timestamp == timestamp);
 
 			if (i > 0)
 			{
-				return this.events[i-1];
+				return a[i-1];
 			}
 			else
 			{
@@ -188,11 +189,12 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent GetNextEvent(Timestamp timestamp)
 		{
-			int i = this.events.Select (x => x.Timestamp).ToList ().IndexOf (timestamp);
+			var a = this.Events.ToList ();
+			int i = a.FindIndex (x => x.Timestamp == timestamp);
 
-			if (i >= 0 && i < this.events.Count-1)
+			if (i >= 0 && i < a.Count-1)
 			{
-				return this.events[i+1];
+				return a[i+1];
 			}
 			else
 			{

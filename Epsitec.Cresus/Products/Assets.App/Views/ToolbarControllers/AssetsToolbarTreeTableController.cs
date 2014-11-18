@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Assets);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode -> SortableCumulNode
-			var groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
-			var objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
-			this.nodeGetter = new ObjectsNodeGetter (this.accessor, groupNodeGetter, objectNodeGetter);
+			this.groupNodeGetter  = this.accessor.GetNodeGetter (BaseType.Groups);
+			this.objectNodeGetter = this.accessor.GetNodeGetter (BaseType.Assets);
+			this.nodeGetter = new ObjectsNodeGetter (this.accessor, this.groupNodeGetter, this.objectNodeGetter);
 		}
 
 		public override void Dispose()
@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
+			this.objectNodeGetter.Update ();
 			this.NodeGetter.SetParams (this.timestamp, this.rootGuid, Guid.Empty, this.sortingInstructions);
 			this.dataFiller.Timestamp = this.timestamp;
 
@@ -458,6 +459,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
+		private GuidNodeGetter						groupNodeGetter;
+		private GuidNodeGetter						objectNodeGetter;
 		private StateAtController					stateAtController;
 		private Timestamp?							selectedTimestamp;
 		private Timestamp?							timestamp;

@@ -113,9 +113,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private List<EntryNode> GetNodes()
 		{
 			var nodes = new List<EntryNode> ();
-			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
+			var entries = this.accessor.Mandat.GetData (BaseType.Entries).ToArray ();
 
-			for (int i=0; i<entries.Count; i++)
+			for (int i=0; i<entries.Length; i++)
 			{
 				var entry = entries[i];
 

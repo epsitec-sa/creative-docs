@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Persons);
 
-			var primary = this.accessor.GetNodeGetter (BaseType.Persons);
-			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, BaseType.Persons);
+			this.primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Persons);
+			this.secondaryGetter = new SortableNodeGetter (this.primaryNodeGetter, this.accessor, BaseType.Persons);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}
 
@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
+			this.primaryNodeGetter.Update ();
 			this.secondaryGetter.SetParams (null, this.sortingInstructions);
 			(this.nodeGetter as SorterNodeGetter).SetParams (this.sortingInstructions);
 
@@ -263,6 +264,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private SortableNodeGetter secondaryGetter;
+		private readonly GuidNodeGetter			primaryNodeGetter;
+		private readonly SortableNodeGetter		secondaryGetter;
 	}
 }

@@ -76,7 +76,6 @@
     <Compile Include="SortingMachine.cs" />
     <Compile Include="TreeNode.cs" />
     <Compile Include="TreeObjectsNodeGetter.cs" />
-    <Compile Include="UserFieldNodeGetter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Assets.Data\Assets.Data.csproj">

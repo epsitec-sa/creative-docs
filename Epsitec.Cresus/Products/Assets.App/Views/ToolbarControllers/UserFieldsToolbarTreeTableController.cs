@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
 			}
 
-			var primary = new UserFieldNodeGetter (this.accessor, this.baseType);
+			var primary = new GuidNodeGetter (this.accessor.Mandat, this.baseType);
 			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, this.baseType);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}

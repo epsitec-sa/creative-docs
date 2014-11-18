@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Groups);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
-			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
-			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, primaryNodeGetter);
+			this.primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);
+			this.nodeGetter = new GroupTreeNodeGetter (this.accessor, BaseType.Groups, this.primaryNodeGetter);
 		}
 
 		public override void Dispose()
@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
+			this.primaryNodeGetter.Update ();
 			this.NodeGetter.SetParams (null, this.sortingInstructions);
 
 			this.UpdateController ();
@@ -335,5 +336,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				return this.nodeGetter as GroupTreeNodeGetter;
 			}
 		}
+
+
+		private readonly GuidNodeGetter			primaryNodeGetter;
 	}
 }
