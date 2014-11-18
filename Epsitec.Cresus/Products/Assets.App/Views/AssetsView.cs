@@ -52,142 +52,56 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public override void CreateUI(Widget parent)
 		{
+			//	Crée tous les éléments d'interface pour les 3 modes ViewMode.
+			//	Ceux qui ne sont pas utiles seront cachés par la suite.
 			base.CreateUI (parent);
 
-			switch (this.mainToolbar.ViewMode)
+			var topFrameBox = new FrameBox
 			{
-				case ViewMode.Single:
-					this.CreateUISingle (parent);
-					break;
-
-				case ViewMode.Event:
-					this.CreateUIEvent (parent);
-					break;
-
-				case ViewMode.Multiple:
-					this.CreateUIMultiple (parent);
-					break;
-			}
-		}
-
-		private void CreateUISingle(Widget parent)
-		{
-			var topBox = new FrameBox
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-			};
-
-			this.listFrameBox = new FrameBox
-			{
-				Parent = topBox,
+				Parent = parent,
 				Dock   = DockStyle.Fill,
 			};
 
-			this.timelineFrameBox = new FrameBox
+			var bottomFrameBox = new FrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 10, 0),
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
 			};
 
-			this.listController.CreateUI (this.listFrameBox);
-			this.timelineController.CreateUI (this.timelineFrameBox);
+			this.CreateUILeft        (topFrameBox);
+			this.CreateUIArray       (topFrameBox);
+			this.CreateUIEdit        (topFrameBox);
+			this.CreateUITimeline    (bottomFrameBox);
+			this.CreateUICloseButton (topFrameBox);
 
-			this.CreateUIEdit (topBox);
 			this.DeepUpdateUI ();
-
-			//	Connexion des événements de la liste des objets à gauche.
-			{
-				this.listController.SelectedRowChanged += delegate
-				{
-					if (this.ignoreChanges.IsZero)
-					{
-						this.UpdateAfterListChanged ();
-					}
-				};
-
-				this.listController.RowDoubleClicked += delegate
-				{
-					this.OnListDoubleClicked ();
-				};
-
-				this.listController.UpdateAfterCreate += delegate (object sender, Guid guid, EventType eventType, Timestamp timestamp)
-				{
-					this.OnUpdateAfterObjectCreate (guid);
-				};
-
-				this.listController.UpdateAfterDelete += delegate
-				{
-					this.OnUpdateAfterObjectDelete ();
-				};
-
-				this.listController.UpdateView += delegate (object sender)
-				{
-					this.UpdateUI ();
-				};
-
-				this.listController.ChangeView += delegate (object sender, ViewType viewType)
-				{
-					this.OnChangeView (viewType);
-				};
-			}
-
-			//	Connexion des événements de la timeline en bas.
-			{
-				this.timelineController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
-				{
-					this.OnStartEdit (eventType, timestamp);
-				};
-
-				this.timelineController.DeepUpdate += delegate
-				{
-					this.DeepUpdateUI ();
-				};
-
-				this.timelineController.SelectedCellChanged += delegate
-				{
-					if (this.ignoreChanges.IsZero)
-					{
-						this.UpdateAfterTimelineChanged ();
-					}
-				};
-
-				this.timelineController.CellDoubleClicked += delegate
-				{
-					if (this.IsEditingPossible)
-					{
-						this.OnStartEdit ();
-					}
-				};
-			}
 		}
 
-		private void CreateUIEvent(Widget parent)
+		private void CreateUILeft(Widget parent)
 		{
-			var topBox = new FrameBox
+			this.leftFrameBox = new FrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
+				Parent = parent,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.listFrameBox = new FrameBox
 			{
-				Parent         = topBox,
+				Parent         = this.leftFrameBox,
 				Dock           = DockStyle.Fill,
 				PreferredWidth = LocalSettings.SplitterAssetsEventPos,
 			};
 
 			this.splitter = new VSplitter
 			{
-				Parent         = topBox,
+				Parent         = this.leftFrameBox,
 				Dock           = DockStyle.Left,
 				PreferredWidth = 10,
 			};
 
 			this.eventsFrameBox = new FrameBox
 			{
-				Parent  = topBox,
+				Parent  = this.leftFrameBox,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, AbstractScroller.DefaultBreadth),  // place pour StateAtController
 			};
@@ -195,26 +109,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.listController.CreateUI (this.listFrameBox);
 			this.eventsController.CreateUI (this.eventsFrameBox);
 
-			this.closeButton = new IconButton
-			{
-				Parent        = parent,
-				IconUri       = Misc.GetResourceIconUri ("TreeTable.Close"),
-				AutoFocus     = false,
-				Anchor        = AnchorStyles.TopRight,
-				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
-				Margins       = new Margins (0, 0, TopTitle.height, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.closeButton, Res.Strings.AssetsView.EventsClose.Tooltip.ToString ());
-
-			this.CreateUIEdit (topBox);
-			this.DeepUpdateUI ();
-
-			this.splitter.SplitterDragged += delegate
-			{
-				LocalSettings.SplitterAssetsEventPos = (int) this.listFrameBox.PreferredWidth;
-			};
-
 			//	Connexion des événements de la liste des objets à gauche.
 			{
 				this.listController.SelectedRowChanged += delegate
@@ -250,6 +144,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnChangeView (viewType);
 				};
 			}
+
+			this.splitter.SplitterDragged += delegate
+			{
+				LocalSettings.SplitterAssetsEventPos = (int) this.listFrameBox.PreferredWidth;
+			};
 
 			//	Connexion des événements de la liste des événements.
 			{
@@ -276,14 +175,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.OnUpdateAfterEventDelete ();
 				};
 			}
-
-			this.closeButton.Clicked += delegate
-			{
-				this.OnCloseColumn ();
-			};
 		}
 
-		private void CreateUIMultiple(Widget parent)
+		private void CreateUIArray(Widget parent)
 		{
 			this.timelinesArrayFrameBox = new FrameBox
 			{
@@ -292,9 +186,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			this.timelinesArrayController.CreateUI (this.timelinesArrayFrameBox);
-
-			this.CreateUIEdit (parent);
-			this.DeepUpdateUI ();
 
 			//	Connexion des événements du tableau des objets et timelines.
 			{
@@ -312,6 +203,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 				};
 
 				this.timelinesArrayController.CellDoubleClicked += delegate
+				{
+					if (this.IsEditingPossible)
+					{
+						this.OnStartEdit ();
+					}
+				};
+			}
+		}
+
+		private void CreateUITimeline(Widget parent)
+		{
+			this.timelineFrameBox = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Bottom,
+				Margins = new Margins (0, 0, 10, 0),
+			};
+
+			this.timelineController.CreateUI (timelineFrameBox);
+
+			//	Connexion des événements de la timeline en bas.
+			{
+				this.timelineController.StartEditing += delegate (object sender, EventType eventType, Timestamp timestamp)
+				{
+					this.OnStartEdit (eventType, timestamp);
+				};
+
+				this.timelineController.DeepUpdate += delegate
+				{
+					this.DeepUpdateUI ();
+				};
+
+				this.timelineController.SelectedCellChanged += delegate
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						this.UpdateAfterTimelineChanged ();
+					}
+				};
+
+				this.timelineController.CellDoubleClicked += delegate
 				{
 					if (this.IsEditingPossible)
 					{
@@ -361,6 +293,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.DataChanged ();
 				};
 			}
+		}
+
+		private void CreateUICloseButton(Widget parent)
+		{
+			this.closeButton = new IconButton
+			{
+				Parent        = parent,
+				IconUri       = Misc.GetResourceIconUri ("TreeTable.Close"),
+				AutoFocus     = false,
+				Anchor        = AnchorStyles.TopRight,
+				PreferredSize = new Size (AbstractCommandToolbar.secondaryToolbarHeight, AbstractCommandToolbar.secondaryToolbarHeight),
+				Margins       = new Margins (0, 0, TopTitle.height, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.closeButton, Res.Strings.AssetsView.EventsClose.Tooltip.ToString ());
+
+			this.closeButton.Clicked += delegate
+			{
+				this.OnCloseColumn ();
+			};
 		}
 
 
@@ -787,44 +739,67 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void UpdateViewModeGeometry()
 		{
-			if (this.mainToolbar.ViewMode == ViewMode.Event)
+			if (this.mainToolbar.ViewMode == ViewMode.Single)
 			{
-				this.UpdateEventGeometry ();
+				this.leftFrameBox          .Visibility = true;
+				this.listFrameBox          .Visibility = true;
+				this.splitter              .Visibility = false;
+				this.eventsFrameBox        .Visibility = false;
+				this.timelinesArrayFrameBox.Visibility = false;
+				this.timelineFrameBox      .Visibility = true;
+				this.closeButton           .Visibility = false;
 			}
-
-			this.editFrameBox.Visibility = this.isEditing;
-		}
-
-		private void UpdateEventGeometry()
-		{
-			if (!this.isShowEvents && !this.isEditing)
+			else if (this.mainToolbar.ViewMode == ViewMode.Event)
 			{
-				this.listFrameBox  .Visibility = true;
-				this.splitter      .Visibility = false;
-				this.eventsFrameBox.Visibility = false;
+				this.leftFrameBox          .Visibility = true;
 
-				this.listFrameBox.Dock = DockStyle.Fill;
+				if (!this.isShowEvents && !this.isEditing)
+				{
+					this.listFrameBox  .Visibility = true;
+					this.splitter      .Visibility = false;
+					this.eventsFrameBox.Visibility = false;
+
+					this.listFrameBox.Dock = DockStyle.Fill;
+				}
+				else if (this.isShowEvents && !this.isEditing)
+				{
+					this.listFrameBox  .Visibility = true;
+					this.splitter      .Visibility = true;
+					this.eventsFrameBox.Visibility = true;
+
+					this.listFrameBox.Dock = DockStyle.Left;
+				}
+				else if (this.isEditing)
+				{
+					this.listFrameBox  .Visibility = false;
+					this.splitter      .Visibility = false;
+					this.eventsFrameBox.Visibility = true;
+				}
+				else
+				{
+					System.Diagnostics.Debug.Fail ("Impossible statment");
+				}
+
+				this.timelinesArrayFrameBox.Visibility = false;
+				this.timelineFrameBox      .Visibility = false;
+				this.closeButton           .Visibility = this.isShowEvents || this.isEditing;
 			}
-			else if (this.isShowEvents && !this.isEditing)
+			else if (this.mainToolbar.ViewMode == ViewMode.Multiple)
 			{
-				this.listFrameBox  .Visibility = true;
-				this.splitter      .Visibility = true;
-				this.eventsFrameBox.Visibility = true;
-
-				this.listFrameBox.Dock = DockStyle.Left;
-			}
-			else if (this.isEditing)
-			{
-				this.listFrameBox  .Visibility = false;
-				this.splitter      .Visibility = false;
-				this.eventsFrameBox.Visibility = true;
+				this.leftFrameBox          .Visibility = false;
+				this.listFrameBox          .Visibility = false;
+				this.splitter              .Visibility = false;
+				this.eventsFrameBox        .Visibility = false;
+				this.timelinesArrayFrameBox.Visibility = true;
+				this.timelineFrameBox      .Visibility = false;
+				this.closeButton           .Visibility = false;
 			}
 			else
 			{
 				System.Diagnostics.Debug.Fail ("Impossible statment");
 			}
 
-			this.closeButton.Visibility = this.isShowEvents || this.isEditing;
+			this.editFrameBox.Visibility = this.isEditing;
 		}
 
 
@@ -857,12 +832,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly TimelinesArrayController			timelinesArrayController;
 		private readonly ObjectEditor						objectEditor;
 
+		private FrameBox									leftFrameBox;
 		private FrameBox									listFrameBox;
 		private VSplitter									splitter;
-		private FrameBox									timelineFrameBox;
 		private FrameBox									eventsFrameBox;
 		private FrameBox									timelinesArrayFrameBox;
 		private FrameBox									editFrameBox;
+		private FrameBox									timelineFrameBox;
 
 		private IconButton									closeButton;
 

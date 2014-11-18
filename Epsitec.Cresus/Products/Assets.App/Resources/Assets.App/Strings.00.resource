@@ -450,4 +450,8 @@
   <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
   <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
   <data name="WarningView.Hidden" id="KRI">Aucun avertissement visible.&lt;br/&gt;Il y a {0} avertissements cachés.</data>
+  <data name="SearchController.Options.Tooltip" id="KSI">Options pour les recherches</data>
+  <data name="SearchController.Next.Tooltip" id="KTI">Chercher en avant</data>
+  <data name="SearchController.Prev.Tooltip" id="KUI">Chercher en arrière</data>
+  <data name="SearchController.Clear.Tooltip" id="KVI">Commencer une nouvelle recherche</data>
 </bundle>

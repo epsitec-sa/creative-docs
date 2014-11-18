@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Crée une zone de recherche, qui pourra apparaître ou disparaître
 			//	selon le choix du "magic layout engine".
-			var controller = new SearchController (this.commandDispatcher, this.commandContext, kind);
+			var controller = new SearchController (kind);
 
 			var box = new FrameBox
 			{
