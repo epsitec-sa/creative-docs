@@ -134,21 +134,6 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		//??public T this[int index]
-		//??{
-		//??	get
-		//??	{
-		//??		if (index >= 0 && index < this.list.Count)
-		//??		{
-		//??			return this.list[index];
-		//??		}
-		//??		else
-		//??		{
-		//??			return null;
-		//??		}
-		//??	}
-		//??}
-
 
 		private class UndoData : IUndoData
 		{

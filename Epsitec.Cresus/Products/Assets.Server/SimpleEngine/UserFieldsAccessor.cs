@@ -188,14 +188,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.accessor.Mandat.GetData (baseType).Add (obj);
 		}
 
-		//??public void InsertUserField(BaseType baseType, int index, UserField userField)
-		//??{
-		//??	//	Ajoute une rubrique utilisateur à l'index choisi.
-		//??	userField = new UserField (userField, index);
-		//??	var obj = this.GetDataObject (userField);
-		//??	this.accessor.Mandat.GetData (baseType).Add (obj);
-		//??}
-
 		public void RemoveUserField(BaseType baseType, Guid guid)
 		{
 			//	Supprime une rubrique utilisateur.

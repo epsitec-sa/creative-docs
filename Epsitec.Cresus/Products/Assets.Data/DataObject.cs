@@ -129,8 +129,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void AddEvent(DataEvent e)
 		{
-			//??int i = this.events.Where (x => x.Timestamp < e.Timestamp).Count ();
-			//??this.events.Insert (i, e);
 			this.events.Add (e);
 		}
 
@@ -152,11 +150,6 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		//??public DataEvent GetEvent(int index)
-		//??{
-		//??	return this.events[index];
-		//??}
-
 		public DataEvent GetEvent(Guid guid)
 		{
 			return this.events[guid];
@@ -166,11 +159,6 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return this.events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
 		}
-
-		//??public int GetIndex(DataEvent e)
-		//??{
-		//??	return this.events.IndexOf (e);
-		//??}
 
 		public DataEvent GetPrevEvent(Timestamp timestamp)
 		{
