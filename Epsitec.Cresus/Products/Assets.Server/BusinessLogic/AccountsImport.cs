@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public DateRange Import(GuidList<DataObject> accounts, string filename)
+		public DateRange Import(GuidDictionary<DataObject> accounts, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		private string[]						lines;
-		private GuidList<DataObject>			accounts;
+		private GuidDictionary<DataObject>			accounts;
 		private System.DateTime					beginDate;
 		private System.DateTime					endDate;
 	}

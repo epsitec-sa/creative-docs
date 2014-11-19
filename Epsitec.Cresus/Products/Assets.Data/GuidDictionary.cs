@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public class GuidList<T> : IEnumerable<T>
+	public class GuidDictionary<T> : IEnumerable<T>
 		where T : class, IGuid
 	{
-		public GuidList(UndoManager undoManager)
+		public GuidDictionary(UndoManager undoManager)
 		{
 			this.undoManager = undoManager;
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.URemove (data.Item);
 			},
-			undoData, "GuidList.Add");
+			undoData, "GuidDictionary.Add");
 		}
 
 
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Data
 				var data = d as UndoData;
 				return this.UAdd (data.Item);
 			},
-			undoData, "GuidList.Remove");
+			undoData, "GuidDictionary.Remove");
 		}
 
 

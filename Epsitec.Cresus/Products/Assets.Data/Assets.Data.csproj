@@ -95,7 +95,7 @@
     <Compile Include="FieldType.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Guid.cs" />
-    <Compile Include="GuidList.cs" />
+    <Compile Include="GuidDictionary.cs" />
     <Compile Include="GuidNode.cs" />
     <Compile Include="GuidRatio.cs" />
     <Compile Include="Helpers\DateTime.cs" />

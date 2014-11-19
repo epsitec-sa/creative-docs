@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager = undoManager;
 			this.guid        = Guid.NewGuid ();
 
-			this.events = new GuidList<DataEvent> (undoManager);
+			this.events = new GuidDictionary<DataEvent> (undoManager);
 		}
 
 		public DataObject(UndoManager undoManager, Guid guid)
@@ -22,14 +22,14 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager = undoManager;
 			this.guid        = guid;
 
-			this.events = new GuidList<DataEvent> (undoManager);
+			this.events = new GuidDictionary<DataEvent> (undoManager);
 		}
 
 		public DataObject(UndoManager undoManager, System.Xml.XmlReader reader)
 		{
 			this.undoManager = undoManager;
 
-			this.events = new GuidList<DataEvent> (undoManager);
+			this.events = new GuidDictionary<DataEvent> (undoManager);
 
 			while (reader.Read ())
 			{
@@ -344,6 +344,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
-		private readonly GuidList<DataEvent>	events;
+		private readonly GuidDictionary<DataEvent>	events;
 	}
 }

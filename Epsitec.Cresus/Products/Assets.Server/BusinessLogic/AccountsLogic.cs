@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static bool Compare(GuidList<DataObject> accounts1, GuidList<DataObject> accounts2)
+		public static bool Compare(GuidDictionary<DataObject> accounts1, GuidDictionary<DataObject> accounts2)
 		{
 			//	Compare deux plans comptables.
 			var a1 = accounts1.ToArray ();

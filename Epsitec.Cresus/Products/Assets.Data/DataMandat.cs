@@ -20,15 +20,15 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields  = new GuidList<DataObject> (this.undoManager);
-			this.personsUserFields = new GuidList<DataObject> (this.undoManager);
-			this.assets            = new GuidList<DataObject> (this.undoManager);
-			this.categories        = new GuidList<DataObject> (this.undoManager);
-			this.groups            = new GuidList<DataObject> (this.undoManager);
-			this.persons           = new GuidList<DataObject> (this.undoManager);
-			this.entries           = new GuidList<DataObject> (this.undoManager);
-			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
-			this.reports           = new GuidList<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields  = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets            = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories        = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
 
 		public DataMandat(ComputerSettings computerSettings, System.Xml.XmlReader reader)
@@ -37,15 +37,15 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager      = new UndoManager ();
 			this.globalSettings   = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields  = new GuidList<DataObject> (this.undoManager);
-			this.personsUserFields = new GuidList<DataObject> (this.undoManager);
-			this.assets            = new GuidList<DataObject> (this.undoManager);
-			this.categories        = new GuidList<DataObject> (this.undoManager);
-			this.groups            = new GuidList<DataObject> (this.undoManager);
-			this.persons           = new GuidList<DataObject> (this.undoManager);
-			this.entries           = new GuidList<DataObject> (this.undoManager);
-			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidList<DataObject>> (this.undoManager);
-			this.reports           = new GuidList<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields  = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets            = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories        = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
 		}
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public GuidList<AbstractReportParams>	Reports
+		public GuidDictionary<AbstractReportParams>	Reports
 		{
 			get
 			{
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
-		public GuidList<DataObject> GetData(BaseType type)
+		public GuidDictionary<DataObject> GetData(BaseType type)
 		{
 			switch (type.Kind)
 			{
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 				default:
 					// Il vaut mieux retourner une liste vide, plutôt que null.
-					return new GuidList<DataObject> (this.undoManager);
+					return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
 
@@ -214,10 +214,10 @@ namespace Epsitec.Cresus.Assets.Data
 			return new BaseType (BaseTypeKind.Accounts, range);
 		}
 
-		public GuidList<DataObject> GetAccounts(DateRange range)
+		public GuidDictionary<DataObject> GetAccounts(DateRange range)
 		{
 			//	Retourne le plan comptable correspondant à une période.
-			GuidList<DataObject> accounts;
+			GuidDictionary<DataObject> accounts;
 			if (!range.IsEmpty && this.rangeAccounts.TryGetValue (range, out accounts))
 			{
 				return accounts;
@@ -225,11 +225,11 @@ namespace Epsitec.Cresus.Assets.Data
 			else
 			{
 				// Il vaut mieux retourner une liste vide, plutôt que null.
-				return new GuidList<DataObject> (this.undoManager);
+				return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
 
-		public void AddAccounts(DateRange dateRange, GuidList<DataObject> accounts)
+		public void AddAccounts(DateRange dateRange, GuidDictionary<DataObject> accounts)
 		{
 			//	Prend connaissance d'un nouveau plan comptable, qui est ajouté ou
 			//	qui remplace un existant, selon sa période.
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteEndElement ();
 		}
 
-		private void SerializeObjects(System.Xml.XmlWriter writer, string name, GuidList<DataObject> objects)
+		private void SerializeObjects(System.Xml.XmlWriter writer, string name, GuidDictionary<DataObject> objects)
 		{
 			writer.WriteStartElement (name);
 
@@ -421,7 +421,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private void DeserializeAccountsPeriod(System.Xml.XmlReader reader)
 		{
 			var dateRange = DateRange.Empty;
-			var objects = new GuidList<DataObject> (null);
+			var objects = new GuidDictionary<DataObject> (null);
 
 			while (reader.Read ())
 			{
@@ -498,7 +498,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private void DeserializeObjects(System.Xml.XmlReader reader, GuidList<DataObject> objects)
+		private void DeserializeObjects(System.Xml.XmlReader reader, GuidDictionary<DataObject> objects)
 		{
 			while (reader.Read ())
 			{
@@ -554,15 +554,15 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly ComputerSettings								computerSettings;
 		private readonly GlobalSettings									globalSettings;
 		private readonly UndoManager									undoManager;
-		private readonly GuidList<DataObject>							assetsUserFields;
-		private readonly GuidList<DataObject>							personsUserFields;
-		private readonly GuidList<DataObject>							assets;
-		private readonly GuidList<DataObject>							categories;
-		private readonly GuidList<DataObject>							groups;
-		private readonly GuidList<DataObject>							persons;
-		private readonly GuidList<DataObject>							entries;
-		private readonly UndoableDictionary<DateRange, GuidList<DataObject>> rangeAccounts;
-		private readonly GuidList<AbstractReportParams>					reports;
+		private readonly GuidDictionary<DataObject>							assetsUserFields;
+		private readonly GuidDictionary<DataObject>							personsUserFields;
+		private readonly GuidDictionary<DataObject>							assets;
+		private readonly GuidDictionary<DataObject>							categories;
+		private readonly GuidDictionary<DataObject>							groups;
+		private readonly GuidDictionary<DataObject>							persons;
+		private readonly GuidDictionary<DataObject>							entries;
+		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
+		private readonly GuidDictionary<AbstractReportParams>					reports;
 
 		private Guid													guid;
 		private string													name;
