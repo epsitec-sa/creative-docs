@@ -11,6 +11,7 @@ using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -73,17 +74,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetTiles(List<List<ObjectSummaryControllerTile>> tiles, bool isLocked)
 		{
-			this.tiles = tiles;
+			this.tiles    = tiles;
 			this.isLocked = isLocked;
 		}
 
 		public void UpdateFields(Guid objectGuid, Timestamp? timestamp)
 		{
-			this.obj       = this.accessor.GetObject (this.baseType, objectGuid);
-			this.timestamp = timestamp;
-			this.hasEvent  = false;
-			this.isOutOfBounds  = true;
-			this.eventType = EventType.Unknown;
+			this.obj           = this.accessor.GetObject (this.baseType, objectGuid);
+			this.timestamp     = timestamp;
+			this.hasEvent      = false;
+			this.isOutOfBounds = true;
+			this.eventType     = EventType.Unknown;
+
+			var method = AmortizationMethod.Unknown;
 
 			this.fieldColorTypes.Clear ();
 
@@ -97,9 +100,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.eventType = e.Type;
-					this.hasEvent  = true;
+					this.eventType      = e.Type;
+					this.hasEvent       = true;
 					this.isOutOfBounds  = false;
+
+					var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
+					if (p != null)
+					{
+						method = (AmortizationMethod) p.Value;
+					}
 				}
 			}
 
@@ -133,7 +142,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					for (int row = 0; row < rowsCount; row++)
 					{
 						var tile = this.GetTile (column, row);
-						var cell = this.GetCell (tile);
+						bool hidden = Amortizations.IsHidden (method, tile.Field);
+						var cell = this.GetCell (tile, hidden);
 						columns.Add (cell);
 
 						if (cell.HasValue && !cell.Value.Label)
@@ -217,7 +227,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			return new SummaryControllerTile (text, alignment: ContentAlignment.MiddleRight, label: true);
 		}
 
-		private SummaryControllerTile? GetCell(ObjectSummaryControllerTile tile)
+		private SummaryControllerTile? GetCell(ObjectSummaryControllerTile tile, bool hidden)
 		{
 			if (tile.IsEmpty || this.obj == null)
 			{
@@ -227,10 +237,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			if (tile.Text != null)
 			{
 				return new SummaryControllerTile (tile.Text, alignment: ContentAlignment.MiddleCenter, label: true);
-			}
-
-			if (tile.Field == ObjectField.AmortizationYearCount)
-			{
 			}
 
 			string text = null;
@@ -373,9 +379,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			bool defined   = this.IsDefined  (tile.Field);
 			bool readOnly  = this.IsReadOnly (tile.Field);
 
-			if (!hasError)
+			if (hidden)
 			{
-				hasError  = this.HasError (tile.Field, text);
+				//	Si un champ tel que le taux doit être caché (parce que la méthode
+				//	d'amortissement est AmortizationMethod.YearCount), on supprime son
+				//	texte et son tooltip éventuel. Le résumé affichera une case grise
+				//	et vide.
+				text     = null;
+				tooltip  = null;
+				readOnly = true;
+			}
+			else
+			{
+				if (!hasError)
+				{
+					hasError  = this.HasError (tile.Field, text);
+				}
 			}
 
 			return new SummaryControllerTile (text, tooltip, alignment, defined, readOnly, hasError);

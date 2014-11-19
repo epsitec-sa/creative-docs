@@ -544,8 +544,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static bool IsHidden(AmortizationMethod method, ObjectField field)
 		{
 			//	Indique si un champ n'a pas de sens pour une méthode d'amortissement donnée.
-			//	Par défaut, un champ est utile/visible. On teste spécifiquement les champs
-			//	inutiles à cacher.
+			//	Par défaut, un champ est visible. On teste spécifiquement les champs à cacher.
+			//	Ainsi, les champs ajoutés lors de développments futurs seront visibles par défaut.
+			//	false -> champ utile à montrer normalement
+			//	true  -> champ inutile à cacher
 			switch (method)
 			{
 				case AmortizationMethod.Rate:
