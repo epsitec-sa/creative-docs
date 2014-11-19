@@ -31,8 +31,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.methodController      = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
 			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
 			                             this.CreateCalculatorButton  ();
-			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 			this.yearController        = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
+			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 			this.periodicityController = this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes,  editWidth: 90);
 			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);

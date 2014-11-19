@@ -44,8 +44,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                TreeTableColumnType.String,   50, Res.Strings.CategoriesTreeTableFiller.Number.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod,    TreeTableColumnType.String,   70, Res.Strings.CategoriesTreeTableFiller.AmortizationMethod.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,     50, Res.Strings.CategoriesTreeTableFiller.AmortizationRate.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,   80, Res.Strings.CategoriesTreeTableFiller.AmortizationType.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Decimal,  60, Res.Strings.CategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,   80, Res.Strings.CategoriesTreeTableFiller.AmortizationType.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,           TreeTableColumnType.String,  100, Res.Strings.CategoriesTreeTableFiller.Periodicity.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,               TreeTableColumnType.String,  100, Res.Strings.CategoriesTreeTableFiller.Prorata.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Round,                 TreeTableColumnType.Amount,   70, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
@@ -85,8 +85,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var number = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
 				var method = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationMethod);
 				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
-				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
 				var years  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationYearCount);
+				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
@@ -97,8 +97,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					var am = (AmortizationMethod) method;
 
 					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationRate,      ref rate);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationType,      ref type);
 					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationYearCount, ref years);
+					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationType,      ref type);
 					CategoriesTreeTableFiller.Hide (am, ObjectField.Periodicity,           ref period);
 					CategoriesTreeTableFiller.Hide (am, ObjectField.Prorata,               ref prorat);
 					CategoriesTreeTableFiller.Hide (am, ObjectField.Round,                 ref round);
@@ -116,8 +116,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell12 = new TreeTableCellString  (number, cellState);
 				var cell13 = new TreeTableCellString  (m,      cellState);
 				var cell14 = new TreeTableCellDecimal (rate,   cellState);
-				var cell15 = new TreeTableCellString  (t,      cellState);
-				var cell16 = new TreeTableCellDecimal (years,  cellState);
+				var cell15 = new TreeTableCellDecimal (years,  cellState);
+				var cell16 = new TreeTableCellString  (t,      cellState);
 				var cell17 = new TreeTableCellString  (c,      cellState);
 				var cell18 = new TreeTableCellString  (r,      cellState);
 				var cell19 = new TreeTableCellDecimal (round,  cellState);
