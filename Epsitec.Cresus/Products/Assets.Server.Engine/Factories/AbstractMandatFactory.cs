@@ -263,7 +263,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 		}
 
-		protected void AddCat(string name, string desc, string number, decimal rate,
+		protected void AddCat(string name, string desc, string number,
+			AmortizationMethod method, decimal rate, decimal yearCount,
 			AmortizationType type, Periodicity periodicity, ProrataType prorata,
 			decimal round, decimal residual,
 			string accountPurchaseDebit = null, string accountPurchaseCredit = null,
@@ -286,9 +287,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Name,                           name);
 			this.AddField (e, ObjectField.Description,                    desc);
 			this.AddField (e, ObjectField.Number,                         number);
-			this.AddField (e, ObjectField.AmortizationMethod,             (int) AmortizationMethod.Rate);
+			this.AddField (e, ObjectField.AmortizationMethod,             (int) method);
 			this.AddField (e, ObjectField.AmortizationRate,               rate);
-			this.AddField (e, ObjectField.AmortizationYearCount,          10.0m);
+			this.AddField (e, ObjectField.AmortizationYearCount,          yearCount);
 			this.AddField (e, ObjectField.AmortizationType,               (int) type);
 			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
 			this.AddField (e, ObjectField.Prorata,                        (int) prorata);

@@ -122,18 +122,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (e.Type == EventType.Input)
 					{
 						//	On cherche si la valeur comptable est indéfinie à l'entrée.
-						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, ObjectField.MainValue);
+						WarningsLogic.CheckEmpty (warnings, asset, e, ObjectField.MainValue);
 
 						//	On cherche les champs définis par l'utilisateur restés indéfinis.
 						var requiredFields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 							.Where (x => x.Required)
 							.Select (x => x.Field)
 							.ToArray ();
-						WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e, requiredFields);
+						WarningsLogic.CheckEmpty (warnings, asset, e, requiredFields);
 					}
 
 					//	On cherche les champs pour l'amortissement indéfinis.
-					WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e,
+					WarningsLogic.CheckEmpty (warnings, asset, e,
 						ObjectField.CategoryName,
 						ObjectField.AmortizationMethod,
 						ObjectField.AmortizationRate,
@@ -401,6 +401,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			foreach (var obj in accessor.Mandat.GetData (baseType))
 			{
+				var method = AmortizationMethod.Unknown;
+
+				if (baseType.Kind == BaseTypeKind.Categories)
+				{
+					var e = obj.GetInputEvent ();
+					var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
+					if (p != null)
+					{
+						method = (AmortizationMethod) p.Value;
+					}
+				}
+
 				//	Dans la base des groupes, la première ligne n'a jamais de numéro
 				//	(c'est l'objet "Groupes", père de tous les groupes).
 				//	Il faut donc l'ignorer.
@@ -408,6 +420,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					foreach (var field in fields)
 					{
+						//	Pour les catégories d'amortissements, on ne vérifie pas les
+						//	champs qui n'ont pas de sens, selon la méthode d'amortissement.
+						if (baseType.Kind == BaseTypeKind.Categories)
+						{
+							if (Amortizations.IsHidden (method, field))
+							{
+								continue;  // ce champ n'a pas de sens
+							}
+						}
+
 						WarningsLogic.CheckEmpty (warnings, baseType, obj, field);
 					}
 				}
@@ -423,12 +445,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			WarningsLogic.CheckEmpty (warnings, baseType, obj, Guid.Empty, field, p);
 		}
 
-		private static void CheckEmpty(List<Warning> warnings, BaseType baseType, DataObject asset, DataEvent e, params ObjectField[] fields)
+		private static void CheckEmpty(List<Warning> warnings, DataObject asset, DataEvent e, params ObjectField[] fields)
 		{
+			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
+			var method = AmortizationMethod.Unknown;
+			{
+				var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
+				if (p != null)
+				{
+					method = (AmortizationMethod) p.Value;
+				}
+			}
+
 			foreach (var field in fields)
 			{
+				if (Amortizations.IsHidden (method, field))
+				{
+					continue;
+				}
+
 				var p = ObjectProperties.GetObjectProperty (asset, e.Timestamp, field, synthetic: true);
-				WarningsLogic.CheckEmpty (warnings, baseType, asset, e.Guid, field, p);
+				WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e.Guid, field, p);
 			}
 		}
 

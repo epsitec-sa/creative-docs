@@ -303,6 +303,26 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
+					public static class None
+					{
+						//	designer:str/IUKG201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544400));
+							}
+						}
+						//	designer:str/IUKH201
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544401));
+							}
+						}
+					}
+					
 					public static class Rate
 					{
 						//	designer:str/IUKB201
@@ -1100,6 +1120,26 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
+					public static class None
+					{
+						//	designer:str/IUKG201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+							}
+						}
+						//	designer:str/IUKH201
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544401);
+							}
+						}
+					}
+					
 					public static class Rate
 					{
 						//	designer:str/IUKB201

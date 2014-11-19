@@ -30,15 +30,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.CreateImportButton (parent);
 
-			                         this.CreateStringController  (parent, ObjectField.CategoryName);
-			this.methodController  = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
-			this.rateController    = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
-			                         this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
-			this.yearController    = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
-			                         this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
-			this.prorataController = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
-			                         this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);
-			                         this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount);
+			                             this.CreateStringController  (parent, ObjectField.CategoryName);
+			this.methodController      = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
+			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
+			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
+			this.yearController        = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
+			this.periodicityController = this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
+			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
+			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);
+			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount);
 
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
@@ -64,11 +64,24 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void UpdateControllers()
 		{
-			bool rate = (this.methodController.Value == (int) AmortizationMethod.Rate);
+			AmortizationMethod method;
 
-			this.rateController   .IsReadOnly = !rate;
-			this.yearController   .IsReadOnly =  rate;
-			this.prorataController.IsReadOnly = !rate;
+			if (this.methodController.Value.HasValue)
+			{
+				method = (AmortizationMethod) this.methodController.Value;
+			}
+			else
+			{
+				method = AmortizationMethod.Unknown;
+			}
+
+			this.rateController       .IsReadOnly = Amortizations.IsHidden (method, ObjectField.AmortizationRate);
+			this.typeController       .IsReadOnly = Amortizations.IsHidden (method, ObjectField.AmortizationType);
+			this.yearController       .IsReadOnly = Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
+			this.periodicityController.IsReadOnly = Amortizations.IsHidden (method, ObjectField.Periodicity);
+			this.prorataController    .IsReadOnly = Amortizations.IsHidden (method, ObjectField.Prorata);
+			this.roundController      .IsReadOnly = Amortizations.IsHidden (method, ObjectField.Round);
+			this.residualController   .IsReadOnly = Amortizations.IsHidden (method, ObjectField.ResidualValue);
 		}
 
 		private void CreateImportButton(Widget parent)
@@ -136,7 +149,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private EnumFieldController				methodController;
 		private DecimalFieldController			rateController;
+		private EnumFieldController				typeController;
 		private DecimalFieldController			yearController;
+		private EnumFieldController				periodicityController;
 		private EnumFieldController				prorataController;
+		private DecimalFieldController			roundController;
+		private DecimalFieldController			residualController;
 	}
 }

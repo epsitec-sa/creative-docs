@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.Data
 					return this.GetAccounts (type.AccountsDateRange);
 
 				default:
-					// Il vaut mieux retourner une liste vide, plutôt que null.
+					// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
 					return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 			else
 			{
-				// Il vaut mieux retourner une liste vide, plutôt que null.
+				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
 				return new GuidDictionary<DataObject> (this.undoManager);
 			}
 		}

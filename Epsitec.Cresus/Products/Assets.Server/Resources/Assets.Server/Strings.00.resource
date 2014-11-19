@@ -80,4 +80,6 @@
   <data name="Enum.AmortizationMethod.Rate.Summary" id="KD2">Taux</data>
   <data name="Enum.AmortizationMethod.YearCount.Summary" id="KE2">Années</data>
   <data name="CategoriesLogic.YearCount.Summary" id="KF2">{0} ans</data>
+  <data name="Enum.AmortizationMethod.None.Name" id="KG2">Pas d'amortissement</data>
+  <data name="Enum.AmortizationMethod.None.Summary" id="KH2">Aucun</data>
 </bundle>

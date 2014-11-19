@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private void CreateAmortizationPreview(DataObject obj, System.DateTime date, AmortizationDetails details)
 		{
 			//	Crée l'événement d'aperçu d'amortissement.
-			if (details.Def.Rate == 0.0m)
+			if (details.Def.None)
 			{
 				//	Si le taux est nul, on ne génère pas d'amortissement.
 				return;
@@ -539,6 +539,38 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 		#endregion
+
+
+		public static bool IsHidden(AmortizationMethod method, ObjectField field)
+		{
+			//	Indique si un champ n'a pas de sens pour une méthode d'amortissement donnée.
+			//	Par défaut, un champ est utile/visible. On teste spécifiquement les champs
+			//	inutiles à cacher.
+			switch (method)
+			{
+				case AmortizationMethod.Rate:
+					//	Si l'amortissement est calculé selon le taux, le nombre d'années
+					//	ne sert à rien.
+					return field == ObjectField.AmortizationYearCount;
+
+				case AmortizationMethod.YearCount:
+					//	Si l'amortissement est calculé selon le nombre d'années, le taux
+					//	ne sert à rien.
+					return field == ObjectField.AmortizationRate
+						|| field == ObjectField.Prorata;
+
+				default:
+					//	S'il n'y a pas d'amortissement généré automatiquement, tous les
+					//	champs suivants ne servent à rien.
+					return field == ObjectField.AmortizationYearCount
+						|| field == ObjectField.AmortizationRate
+						|| field == ObjectField.AmortizationType
+						|| field == ObjectField.Periodicity
+						|| field == ObjectField.Prorata
+						|| field == ObjectField.Round
+						|| field == ObjectField.ResidualValue;
+			}
+		}
 
 	
 		private readonly DataAccessor			accessor;

@@ -200,6 +200,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (method)
 			{
+				case AmortizationMethod.None:
+					return Res.Strings.Enum.AmortizationMethod.None.Name.ToString ();
+
 				case AmortizationMethod.Rate:
 					return Res.Strings.Enum.AmortizationMethod.Rate.Name.ToString ();
 
@@ -215,6 +218,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (method)
 			{
+				case AmortizationMethod.None:
+					return Res.Strings.Enum.AmortizationMethod.None.Summary.ToString ();
+
 				case AmortizationMethod.Rate:
 					return Res.Strings.Enum.AmortizationMethod.Rate.Summary.ToString ();
 
@@ -345,6 +351,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
+				yield return AmortizationMethod.None;
 				yield return AmortizationMethod.Rate;
 				yield return AmortizationMethod.YearCount;
 			}

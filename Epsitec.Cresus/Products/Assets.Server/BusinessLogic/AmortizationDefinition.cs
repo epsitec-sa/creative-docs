@@ -22,6 +22,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.Residual    = residual;
 		}
 
+		public bool								None
+		{
+			//	Retourne true s'il ne faut pas générer d'amortissement.
+			get
+			{
+				return this.Method == AmortizationMethod.None
+					|| this.Rate == 0.0m;
+			}
+		}
+
 		public bool								IsEmpty
 		{
 			get

@@ -196,10 +196,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			this.AddCat ("Amortissements manuels", 
 				"Un objet de cette catégorie ne sera jamais amorti automatiquement, car le taux défini est nul.",
-				"0", 0.0m, AmortizationType.Linear,
+				"0", AmortizationMethod.None, 0.0m, 10.0m, AmortizationType.Linear,
 				Periodicity.Annual, ProrataType.Prorata12, 1.0m, 1.0m);
 
-			this.AddCat ("Immobilier", null, "10", 0.10m, AmortizationType.Linear,
+			this.AddCat ("Immobilier", null, "10", AmortizationMethod.Rate, 0.10m, 10.0m, AmortizationType.Linear,
 				Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m,
 				"1600", "1000",
 				"1010", "1600",
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				"6900", "1600");
 //				"1000", "1010", "1600", "1600", "6930", "6900", "6900");
 
-			this.AddCat ("Véhicules", null, "20", 0.20m, AmortizationType.Degressive,
+			this.AddCat ("Véhicules", null, "20", AmortizationMethod.Rate, 0.20m, 10.0m, AmortizationType.Degressive,
 				Periodicity.Annual, ProrataType.Prorata12, 100.0m, 1.0m,
 				"1600", "1000",
 				"1010", "1530",
