@@ -229,6 +229,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new SummaryControllerTile (tile.Text, alignment: ContentAlignment.MiddleCenter, label: true);
 			}
 
+			if (tile.Field == ObjectField.AmortizationYearCount)
+			{
+			}
+
 			string text = null;
 			var alignment = ContentAlignment.MiddleCenter;
 			bool hasError = false;
@@ -263,7 +267,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var i = ObjectProperties.GetObjectPropertyInt (this.obj, this.timestamp, tile.Field);
 					if (i.HasValue)
 					{
-						if (tile.Field == ObjectField.AmortizationType)
+						if (tile.Field == ObjectField.AmortizationMethod)
+						{
+							text = EnumDictionaries.GetAmortizationMethodSummary (i);
+							alignment = ContentAlignment.MiddleLeft;
+						}
+						else if (tile.Field == ObjectField.AmortizationType)
 						{
 							text = EnumDictionaries.GetAmortizationTypeName (i);
 							alignment = ContentAlignment.MiddleLeft;

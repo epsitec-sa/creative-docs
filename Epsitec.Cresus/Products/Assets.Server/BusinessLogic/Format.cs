@@ -20,6 +20,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ObjectField.ResidualValue:
 					return DecimalFormat.Amount;
 
+				case ObjectField.AmortizationYearCount:
+					return DecimalFormat.Real;
+
 				default:
 					return DecimalFormat.Unknown;
 			}
