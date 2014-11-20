@@ -306,9 +306,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
 				//	la création d'un événement qui modifie la valeur.
 				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
-				if (currentAmount.HasValue && currentAmount.Value.FinalAmortizedAmount.HasValue)
+				if (currentAmount.HasValue && currentAmount.Value.OutputAmortizedAmount.HasValue)
 				{
-					aa = AmortizedAmount.SetInitialAmount (aa, currentAmount.Value.FinalAmortizedAmount);
+					aa = AmortizedAmount.SetInitialAmount (aa, currentAmount.Value.OutputAmortizedAmount);
 				}
 			}
 

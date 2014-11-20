@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return new AmortizedAmount
 			(
 				def.Method, def.Rate, amortizationType, def.YearRank, def.YearCount, def.Periodicity,
-				null, null, null,
+				null, null, null, null,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
 			);
@@ -472,15 +472,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					aa = AmortizedAmount.SetPreviousAmount (aa, lastAmount);
 					Amortizations.SetAmortizedAmount (e, aa);
 
-					lastAmount = aa.FinalAmortizedAmount;
-					lastBase   = aa.FinalAmortizedAmount;
+					lastAmount = aa.OutputAmortizedAmount;
+					lastBase   = aa.OutputAmortizedAmount;
 				}
 				else  // amortissement ?
 				{
 					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
 					Amortizations.SetAmortizedAmount (e, aa);
 
-					lastAmount = aa.FinalAmortizedAmount;
+					lastAmount = aa.OutputAmortizedAmount;
 				}
 
 				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures

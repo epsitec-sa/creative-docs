@@ -1227,6 +1227,42 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Forced
+				{
+					//	designer:str/JUK2J01
+					public static global::Epsitec.Common.Types.FormattedText Or
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544930));
+						}
+					}
+					//	designer:str/JUK1J01
+					public static global::Epsitec.Common.Types.FormattedText Output
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544929));
+						}
+					}
+					//	designer:str/JUK0J01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544928));
+						}
+					}
+					//	designer:str/JUK3J01
+					public static global::Epsitec.Common.Types.FormattedText Value
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544931));
+						}
+					}
+				}
+				
 				public static class Init
 				{
 					//	designer:str/JUK7C01
@@ -5552,6 +5588,42 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544738);
 							}
+						}
+					}
+				}
+				
+				public static class Forced
+				{
+					//	designer:str/JUK2J01
+					public static global::Epsitec.Common.Support.Druid Or
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544930);
+						}
+					}
+					//	designer:str/JUK1J01
+					public static global::Epsitec.Common.Support.Druid Output
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544929);
+						}
+					}
+					//	designer:str/JUK0J01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544928);
+						}
+					}
+					//	designer:str/JUK3J01
+					public static global::Epsitec.Common.Support.Druid Value
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544931);
 						}
 					}
 				}

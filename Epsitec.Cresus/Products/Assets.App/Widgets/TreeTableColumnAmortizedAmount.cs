@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.details)
 				{
 					//text = TypeConverters.ComputedAmountToString (cell.Value);  // TODO...
-					text = TypeConverters.AmountToString (cell.Value.Value.FinalAmortizedAmount);
+					text = TypeConverters.AmountToString (cell.Value.Value.OutputAmortizedAmount);
 				}
 				else
 				{
-					text = TypeConverters.AmountToString (cell.Value.Value.FinalAmortizedAmount);
+					text = TypeConverters.AmountToString (cell.Value.Value.OutputAmortizedAmount);
 				}
 
 				this.PaintText (graphics, textRect, text);

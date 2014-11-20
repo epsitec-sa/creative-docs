@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	exemples d'écritures pour les différents scénarios (EntrySamples).
 			var aa = new AmortizedAmount (AmortizationMethod.Unknown, 0, AmortizationType.Unknown,
 				0, 0, Periodicity.Unknown,
-				null, null, null, null, null, null, null,
+				null, null, null, null, null, null, null, null,
 				scenario, System.DateTime.Now, Guid.Empty, Guid.Empty, Guid.Empty, 0);
 
 			var ea = new EntryAccounts ();
@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+					return amount.OutputAmortizedAmount.GetValueOrDefault ();
 
 				case EntryScenario.Sale:
 					//	Lors d'une vente, la nouvelle valeur de l'objet est de zéro.
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	c'est-à-dire la dernière valeur moins la valeur actuelle (en
 					//	principe nulle).
 					return amount.PreviousAmount.GetValueOrDefault ()
-						 - amount.FinalAmortizedAmount.GetValueOrDefault ();
+						 - amount.OutputAmortizedAmount.GetValueOrDefault ();
 
 				case EntryScenario.AmortizationAuto:
 				case EntryScenario.AmortizationExtra:
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.Increase:
 				case EntryScenario.Decrease:
 				case EntryScenario.Adjust:
-					return amount.FinalAmortizedAmount.GetValueOrDefault ();
+					return amount.OutputAmortizedAmount.GetValueOrDefault ();
 
 				default:
 					return 0.0m;

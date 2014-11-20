@@ -586,7 +586,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (p is DataAmortizedAmountProperty)
 				{
 					var pp  = p as DataAmortizedAmountProperty;
-					hasWarning = !pp.Value.FinalAmortizedAmount.HasValue;
+					hasWarning = !pp.Value.OutputAmortizedAmount.HasValue;
 				}
 			}
 

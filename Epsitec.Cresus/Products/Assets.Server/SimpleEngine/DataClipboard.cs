@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var aa = new AmortizedAmount (AmortizationMethod.Unknown, 0, AmortizationType.Unknown,
 					0, 0, Periodicity.Unknown,
-					null, modelProperty.Value.FinalAmortizedAmount.Value,
+					null, null, modelProperty.Value.OutputAmortizedAmount.Value,
 					null, null, null, null, null, EntryScenario.Purchase, inputDate,
 					objPaste.Guid, eventPaste.Guid, Guid.Empty, 0);
 

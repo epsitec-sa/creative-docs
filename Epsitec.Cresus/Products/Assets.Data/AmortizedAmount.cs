@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 			int					yearRank,
 			decimal				yearCount,
 			Periodicity			periodicity,
+			decimal?			forcedAmount,
 			decimal?			previousAmount,
 			decimal?			initialAmount,
 			decimal?			baseAmount,
@@ -38,6 +39,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.YearRank           = yearRank;
 			this.YearCount          = yearCount;
 			this.Periodicity        = periodicity;
+			this.ForcedAmount       = forcedAmount;
 			this.PreviousAmount     = previousAmount;
 			this.InitialAmount      = initialAmount;
 			this.BaseAmount         = baseAmount;
@@ -61,6 +63,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.YearRank           = IOHelpers.ReadIntAttribute (reader, "YearRank").GetValueOrDefault ();
 			this.YearCount          = IOHelpers.ReadDecimalAttribute (reader, "YearCount").GetValueOrDefault (1.0m);
 			this.Periodicity        = (Periodicity) IOHelpers.ReadTypeAttribute (reader, "Periodicity", typeof (Periodicity));
+			this.ForcedAmount       = IOHelpers.ReadDecimalAttribute (reader, "ForcedAmount");
 			this.PreviousAmount     = IOHelpers.ReadDecimalAttribute (reader, "PreviousAmount");
 			this.InitialAmount      = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
 			this.BaseAmount         = IOHelpers.ReadDecimalAttribute (reader, "BaseAmount");
@@ -85,6 +88,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly int						YearRank;
 		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
+		public readonly decimal?				ForcedAmount;
 		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				BaseAmount;
@@ -249,6 +253,22 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public decimal?							OutputAmortizedAmount
+		{
+			//	Calcule la valeur de sortie.
+			get
+			{
+				if (this.ForcedAmount.HasValue)
+				{
+					return this.ForcedAmount;
+				}
+				else
+				{
+					return this.FinalAmortizedAmount;
+				}
+			}
+		}
+
 		public decimal?							FinalAmortizedAmount
 		{
 			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
@@ -316,7 +336,7 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return this.InitialAmount.GetValueOrDefault (0.0m)
-					 - this.FinalAmortizedAmount.GetValueOrDefault (0.0m);
+					 - this.OutputAmortizedAmount.GetValueOrDefault (0.0m);
 			}
 		}
 
@@ -359,6 +379,7 @@ namespace Epsitec.Cresus.Assets.Data
 				&& this.YearRank           == other.YearRank
 				&& this.YearCount          == other.YearCount
 				&& this.Periodicity        == other.Periodicity
+				&& this.ForcedAmount       == other.ForcedAmount
 				&& this.PreviousAmount     == other.PreviousAmount
 				&& this.InitialAmount      == other.InitialAmount
 				&& this.BaseAmount         == other.BaseAmount
@@ -395,6 +416,7 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.YearRank          .GetHashCode ()
 				 ^ this.YearCount         .GetHashCode ()
 				 ^ this.Periodicity       .GetHashCode ()
+				 ^ this.ForcedAmount      .GetHashCode ()
 				 ^ this.PreviousAmount    .GetHashCode ()
 				 ^ this.InitialAmount     .GetHashCode ()
 				 ^ this.BaseAmount        .GetHashCode ()
@@ -432,6 +454,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -458,6 +481,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -484,6 +508,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				value,
 				model.BaseAmount,
@@ -510,6 +535,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				value,
@@ -536,6 +562,34 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
+				model.PreviousAmount,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetForcedAmount(AmortizedAmount model, decimal? forcedAmount)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationMethod,
+				model.Rate,
+				model.AmortizationType,
+				model.YearRank,
+				model.YearCount,
+				model.Periodicity,
+				forcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -562,6 +616,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -588,6 +643,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -614,6 +670,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -640,6 +697,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -666,6 +724,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -692,6 +751,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -718,6 +778,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -744,6 +805,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -770,6 +832,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -796,6 +859,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -822,6 +886,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -852,6 +917,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				periodicity,
+				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -878,6 +944,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				previousAmount,
 				model.InitialAmount,
 				model.BaseAmount,
@@ -904,6 +971,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				initialAmount,
 				initialAmount,
 				baseAmount,
@@ -931,6 +999,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
+				model.ForcedAmount,
 				initialAmount,
 				initialAmount,
 				baseAmount,
@@ -960,6 +1029,7 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "YearCount",          this.YearCount);
 			IOHelpers.WriteTypeAttribute    (writer, "Periodicity",        this.Periodicity);
 
+			IOHelpers.WriteDecimalAttribute (writer, "ForcedAmount",       this.ForcedAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "BaseAmount",         this.BaseAmount);

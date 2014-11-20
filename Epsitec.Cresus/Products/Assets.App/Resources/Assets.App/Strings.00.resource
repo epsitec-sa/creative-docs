@@ -454,4 +454,8 @@
   <data name="SearchController.Next.Tooltip" id="KTI">Chercher en avant</data>
   <data name="SearchController.Prev.Tooltip" id="KUI">Chercher en arrière</data>
   <data name="SearchController.Clear.Tooltip" id="KVI">Commencer une nouvelle recherche</data>
+  <data name="AmortizedAmountController.Forced.Title" id="K0J">Valeur finale</data>
+  <data name="AmortizedAmountController.Forced.Output" id="K1J">Valeur comptable ou valeur imposée</data>
+  <data name="AmortizedAmountController.Forced.Or" id="K2J">ou</data>
+  <data name="AmortizedAmountController.Forced.Value" id="K3J">Vous pouvez ici imposer une valeur, qui prime&lt;br/&gt;sur tous les calculs d'amortissement ci-dessous</data>
 </bundle>

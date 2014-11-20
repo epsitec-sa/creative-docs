@@ -130,6 +130,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line7  = this.CreateFrame (parent);
 			this.line78 = this.CreateInter (parent);
 			this.line8  = this.CreateFrame (parent);
+			this.line89 = this.CreateInter (parent);
+			this.line9  = this.CreateFrame (parent);
 
 			this.CreateEntryController (parent);
 			this.CreateLines ();
@@ -152,16 +154,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.line7.Children.Clear ();
 			this.line78.Children.Clear ();
 			this.line8.Children.Clear ();
+			this.line89.Children.Clear ();
+			this.line9.Children.Clear ();
 
 			if (this.IsAmortization)
 			{
 				this.CreateCombos      (this.line1);
-				this.CreateMaxLine     (this.line2, this.line23);
-				this.CreateRoundLine   (this.line3, this.line34);
-				this.CreateLine1       (this.line4, this.line45);
-				this.CreateLine2       (this.line5, this.line56);
-				this.CreateRateLine    (this.line6, this.line67);
-				this.CreateProrataLine (this.line7, this.line78);
+				this.CreateForcedLine  (this.line2, this.line23);
+				this.CreateMaxLine     (this.line3, this.line34);
+				this.CreateRoundLine   (this.line4, this.line45);
+				this.CreateLine1       (this.line5, this.line56);
+				this.CreateLine2       (this.line6, this.line67);
+				this.CreateRateLine    (this.line7, this.line78);
+				this.CreateProrataLine (this.line8, this.line89);
 			}
 			else
 			{
@@ -263,6 +268,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Init.Title.ToString ());
 			this.finalAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Init.Value.ToString (), this.UpdateInitAmount);
+		}
+
+		private void CreateForcedLine(Widget parent, Widget bottomParent)
+		{
+			this.CreateLabel (parent, 100, Res.Strings.AmortizedAmountController.Forced.Title.ToString ());
+			this.outputAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Forced.Output.ToString ());
+			this.CreateOper (parent, "=");
+			var x = this.CreateArg (parent, Res.Strings.AmortizedAmountController.Init.Title.ToString ());
+			this.CreateOper (parent, Res.Strings.AmortizedAmountController.Forced.Or.ToString ());
+			this.forcedAmountTextField = this.CreateTextField (parent, AmortizedAmountController.AmountWidth, Res.Strings.AmortizedAmountController.Forced.Value.ToString (), this.UpdateForcedAmount);
+
+			this.CreateLink (bottomParent, x);
 		}
 
 		private void CreateMaxLine(Widget parent, Widget bottomParent)
@@ -595,6 +612,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.methodTextFieldCombo.Visibility = this.IsAmortization;
 					this.typeTextFieldCombo  .Visibility = this.IsAmortization;
 
+					this.OutputAmount       = this.value.Value.OutputAmortizedAmount;
+					this.ForcedAmount       = this.value.Value.ForcedAmount;
+
 					this.FinalAmount        = this.value.Value.FinalAmortizedAmount;
 					this.ResidualAmount     = this.value.Value.ResidualAmount.GetValueOrDefault (0.0m);
 
@@ -620,6 +640,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
+					this.OutputAmount       = null;
+					this.ForcedAmount       = null;
+
 					this.FinalAmount        = null;
 					this.ResidualAmount     = null;
 
@@ -672,6 +695,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				this.UpdateBackColor (this.methodTextFieldCombo);
 				this.UpdateBackColor (this.typeTextFieldCombo);
+				this.UpdateBackColor (this.outputAmountTextField);
+				this.UpdateBackColor (this.forcedAmountTextField);
 				this.UpdateBackColor (this.finalAmountTextField);
 				this.UpdateBackColor (this.residualAmountTextField);
 				this.UpdateBackColor (this.roundedAmountTextField);
@@ -739,6 +764,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private void UpdateForcedAmount()
+		{
+			if (this.ignoreChanges.IsZero)
+			{
+				this.value = AmortizedAmount.SetForcedAmount (this.value.Value, this.ForcedAmount);
+				this.UpdateUI ();
+				this.OnValueEdited ();
+			}
+		}
+
 		private void UpdateProrataNumerator()
 		{
 			if (this.ignoreChanges.IsZero)
@@ -779,6 +814,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private decimal? OutputAmount
+		{
+			get
+			{
+				return AmortizedAmountController.GetAmount (this.outputAmountTextField);
+			}
+			set
+			{
+				AmortizedAmountController.SetAmount (this.outputAmountTextField, value);
+			}
+		}
+
+		private decimal? ForcedAmount
+		{
+			get
+			{
+				return AmortizedAmountController.GetAmount (this.forcedAmountTextField);
+			}
+			set
+			{
+				AmortizedAmountController.SetAmount (this.forcedAmountTextField, value);
+			}
+		}
 
 		private decimal? FinalAmount
 		{
@@ -1355,6 +1414,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private PropertyState					propertyState;
 		private bool							isReadOnly;
 
+		private TextField						outputAmountTextField;
+		private TextField						forcedAmountTextField;
+
 		private TextField						finalAmountTextField;
 		private TextField						residualAmountTextField;
 
@@ -1398,6 +1460,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private FrameBox						line7;
 		private FrameBox						line78;
 		private FrameBox						line8;
+		private FrameBox						line89;
+		private FrameBox						line9;
 
 		private int								tabIndex;
 	}

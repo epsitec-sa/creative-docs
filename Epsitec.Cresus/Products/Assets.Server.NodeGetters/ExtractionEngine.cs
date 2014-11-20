@@ -62,9 +62,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas de la valeur comptable principale.
 					var value = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field);
 
-					if (value.HasValue && value.Value.FinalAmortizedAmount.HasValue)
+					if (value.HasValue && value.Value.OutputAmortizedAmount.HasValue)
 					{
-						m = value.Value.FinalAmortizedAmount.Value;
+						m = value.Value.OutputAmortizedAmount.Value;
 					}
 				}
 				else if (this.extractionInstructions.Select (x => x.ResultField).Contains (field))
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (p != null)
 			{
-				return p.Value.FinalAmortizedAmount;
+				return p.Value.OutputAmortizedAmount;
 			}
 
 			return null;
@@ -154,22 +154,22 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
 				{
 					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
 						extractionInstructions.Range.IsInside (e.Timestamp.Date))
 					{
 						if (lastValue.HasValue)
 						{
-							value = lastValue.Value - p.Value.FinalAmortizedAmount.Value;
+							value = lastValue.Value - p.Value.OutputAmortizedAmount.Value;
 						}
 						else
 						{
-							value = p.Value.FinalAmortizedAmount.Value;
+							value = p.Value.OutputAmortizedAmount.Value;
 						}
 					}
 
-					lastValue = p.Value.FinalAmortizedAmount.Value;
+					lastValue = p.Value.OutputAmortizedAmount.Value;
 				}
 			}
 
@@ -185,12 +185,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
 				{
 					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
 						extractionInstructions.Range.IsInside (e.Timestamp.Date))
 					{
-						value = p.Value.FinalAmortizedAmount.Value;
+						value = p.Value.OutputAmortizedAmount.Value;
 					}
 				}
 			}
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.FinalAmortizedAmount.HasValue)
+				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
 				{
 					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
 						extractionInstructions.Range.IsInside (e.Timestamp.Date))
@@ -216,11 +216,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 						if (lastValue.HasValue)
 						{
-							value = lastValue.Value - p.Value.FinalAmortizedAmount.Value;
+							value = lastValue.Value - p.Value.OutputAmortizedAmount.Value;
 						}
 						else
 						{
-							value = p.Value.FinalAmortizedAmount.Value;
+							value = p.Value.OutputAmortizedAmount.Value;
 						}
 
 						if (sum.HasValue)
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						}
 					}
 
-					lastValue = p.Value.FinalAmortizedAmount.Value;
+					lastValue = p.Value.OutputAmortizedAmount.Value;
 				}
 			}
 

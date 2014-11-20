@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var c = cell as TreeTableCellAmortizedAmount;
 				if (c.Value.HasValue)
 				{
-					return engine.IsMatching (c.Value.Value.FinalAmortizedAmount);
+					return engine.IsMatching (c.Value.Value.OutputAmortizedAmount);
 				}
 			}
 			else if (cell is TreeTableCellComputedAmount)
