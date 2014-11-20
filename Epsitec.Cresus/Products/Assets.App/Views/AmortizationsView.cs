@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.isEditing = true;
 			this.selectedTimestamp = timestamp;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
+			this.objectEditor.PageType = this.objectEditor.GetMainPageType ();
 
 			this.UpdateUI ();
 		}

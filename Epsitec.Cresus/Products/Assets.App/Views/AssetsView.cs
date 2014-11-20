@@ -605,7 +605,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.isEditing = true;
 			this.selectedTimestamp = timestamp;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
+			this.objectEditor.PageType = this.objectEditor.GetMainPageType (eventType);
 
 			this.UpdateUI ();
 		}
@@ -614,7 +614,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.isEditing = true;
 			this.selectedGuid = guid;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
+			this.objectEditor.PageType = this.objectEditor.GetMainPageType ();
 
 			this.DeepUpdateUI ();
 		}
@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.isShowEvents = true;
 			this.isEditing = true;
 			this.selectedTimestamp = timestamp;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
+			this.objectEditor.PageType = this.objectEditor.GetMainPageType ();
 
 			this.DeepUpdateUI ();
 		}

@@ -58,44 +58,26 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			}
 		}
 
-		public override PageType				MainPageType
+		public override PageType GetMainPageType(EventType eventType = EventType.Unknown)
 		{
-			get
+			if (eventType == EventType.Unknown)
 			{
-				switch (this.baseType.Kind)
-				{
-					case BaseTypeKind.Categories:
-						return PageType.Category;
+				eventType = this.eventType;
+			}
 
-					case BaseTypeKind.Groups:
-						return PageType.Group;
+			var pages = ObjectEditor.GetAvailablePages (this.baseType, true, eventType).ToArray ();
 
-					case BaseTypeKind.Persons:
-						return PageType.Person;
-
-					case BaseTypeKind.AssetsUserFields:
-					case BaseTypeKind.PersonsUserFields:
-						return PageType.UserFields;
-
-					case BaseTypeKind.Accounts:
-						return PageType.Account;
-
-					default:
-						var pages = ObjectEditor.GetAvailablePages (this.baseType, true, this.eventType).ToArray ();
-
-						if (pages.Length >= 2)
-						{
-							return pages[2];
-						}
-						else if (pages.Length == 1)
-						{
-							return pages[0];
-						}
-						else
-						{
-							return PageType.OneShot;
-						}
-				}
+			if (pages.Length >= 2)
+			{
+				return pages[2];  // on saute PageType.Summary et PageType.OneShot
+			}
+			else if (pages.Length == 1)
+			{
+				return pages[0];
+			}
+			else
+			{
+				return PageType.OneShot;
 			}
 		}
 

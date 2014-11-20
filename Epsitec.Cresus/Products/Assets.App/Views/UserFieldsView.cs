@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Démarre une édition après avoir créé un contact.
 			this.isEditing = true;
 			this.selectedGuid = guid;
-			this.objectEditor.PageType = this.objectEditor.MainPageType;
+			this.objectEditor.PageType = this.objectEditor.GetMainPageType ();
 
 			this.DeepUpdateUI ();
 		}

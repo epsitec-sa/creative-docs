@@ -77,6 +77,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public static string GetError(DataAccessor accessor, DataObject asset, DataEvent e, ObjectField field)
+		{
+			//	Retourne l'éventuelle erreur liée à un champ d'un événement d'un objet d'immobilisation.
+			var warnings = new List<Warning> ();
+
+			//	Cherche l'ensemble des erreurs pour l'événement de l'objet.
+			WarningsLogic.CheckAsset (warnings, accessor, asset, e);
+
+			//	On s'intéresse uniquement à la première erreur qui concerne le champ.
+			var warning = warnings.Where (x => x.Field == field).FirstOrDefault ();
+			if (!warning.IsEmpty)
+			{
+				return warning.Description;
+			}
+
+			return null;  // ok
+		}
+
+
 		public static List<Warning> GetWarnings(DataAccessor accessor)
 		{
 			//	Retourne la liste de tous les warnings actuels.
@@ -107,6 +126,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					WarningsLogic.CheckCategoryAccount (warnings, accessor, cat, field, ref skip);
 				}
+
+				//	On cherche les catégories d'amortissement incorrectement définies.
+				WarningsLogic.CheckAmortization (warnings, accessor, cat);
 			}
 
 			//	On cherche les champs indéfinis dans les groupes.
@@ -119,53 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				foreach (var e in asset.Events)
 				{
-					if (e.Type == EventType.Input)
-					{
-						//	On cherche si la valeur comptable est indéfinie à l'entrée.
-						WarningsLogic.CheckEmpty (warnings, asset, e, ObjectField.MainValue);
-
-						//	On cherche les champs définis par l'utilisateur restés indéfinis.
-						var requiredFields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
-							.Where (x => x.Required)
-							.Select (x => x.Field)
-							.ToArray ();
-						WarningsLogic.CheckEmpty (warnings, asset, e, requiredFields);
-					}
-
-					//	On cherche les champs pour l'amortissement indéfinis.
-					WarningsLogic.CheckEmpty (warnings, asset, e,
-						ObjectField.CategoryName,
-						ObjectField.AmortizationMethod,
-						ObjectField.AmortizationRate,
-						ObjectField.AmortizationYearCount,
-						ObjectField.AmortizationType,
-						ObjectField.Periodicity,
-						ObjectField.Prorata,
-						ObjectField.Round,
-						ObjectField.ResidualValue);
-
-					//	On cherche les comptes indéfinis.
-					if (WarningsLogic.IsDefinableAccount (e.Type))
-					{
-						bool skip = false;
-						foreach (var field in DataAccessor.AccountFields)
-						{
-							WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, field, ref skip);
-						}
-					}
-
-					//	On cherche les comptes incorrects dans les écritures.
-					WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
-
-					//	On cherche les groupes avec des ratios dont la somme n'est pas 100%.
-					var guid = GroupsGuidRatioLogic.GetPercentErrorGroupGuid (accessor, e);
-					if (!guid.IsEmpty)
-					{
-						var groupName = GroupsLogic.GetShortName (accessor, guid);
-						var message = string.Format (Res.Strings.WarningsLogic.Ratio.Percent.ToString (), groupName);
-						var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.GroupGuidRatioFirst, message);
-						warnings.Add (warning);
-					}
+					WarningsLogic.CheckAsset (warnings, accessor, asset, e);
 				}
 			}
 
@@ -209,6 +185,61 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return warnings;
 		}
 
+		private static void CheckAsset(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e)
+		{
+			//	Cherche toutes les erreurs liées à un événement d'un objet d'immobilisation.
+			if (e.Type == EventType.Input)
+			{
+				//	On cherche si la valeur comptable est indéfinie à l'entrée.
+				WarningsLogic.CheckEmpty (warnings, asset, e, ObjectField.MainValue);
+
+				//	On cherche les champs définis par l'utilisateur restés indéfinis.
+				var requiredFields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
+					.Where (x => x.Required)
+					.Select (x => x.Field)
+					.ToArray ();
+				WarningsLogic.CheckEmpty (warnings, asset, e, requiredFields);
+			}
+
+			if (WarningsLogic.IsDefinableAccount (e.Type))
+			{
+				//	On cherche les champs pour l'amortissement indéfinis.
+				WarningsLogic.CheckEmpty (warnings, asset, e,
+				ObjectField.CategoryName,
+				ObjectField.AmortizationMethod,
+				ObjectField.AmortizationRate,
+				ObjectField.AmortizationYearCount,
+				ObjectField.AmortizationType,
+				ObjectField.Periodicity,
+				ObjectField.Prorata,
+				ObjectField.Round,
+				ObjectField.ResidualValue);
+
+				//	On cherche les amortissements incorrectement définis.
+				WarningsLogic.CheckAmortization (warnings, accessor, BaseType.Assets, asset, e);
+
+				//	On cherche les comptes indéfinis.
+				bool skip = false;
+				foreach (var field in DataAccessor.AccountFields)
+				{
+					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, field, ref skip);
+				}
+			}
+
+			//	On cherche les comptes incorrects dans les écritures.
+			WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
+
+			//	On cherche les groupes avec des ratios dont la somme n'est pas 100%.
+			var guid = GroupsGuidRatioLogic.GetPercentErrorGroupGuid (accessor, e);
+			if (!guid.IsEmpty)
+			{
+				var groupName = GroupsLogic.GetShortName (accessor, guid);
+				var message = string.Format (Res.Strings.WarningsLogic.Ratio.Percent.ToString (), groupName);
+				var warning = new Warning (BaseType.Assets, asset.Guid, e.Guid, ObjectField.GroupGuidRatioFirst, message);
+				warnings.Add (warning);
+			}
+		}
+
 
 		private static void CheckRequiredField(List<Warning> warnings, DataAccessor accessor, BaseType baseType, string description)
 		{
@@ -229,6 +260,74 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var warning = new Warning (baseType, guid, Guid.Empty, ObjectField.Unknown, description);
 				warnings.Add (warning);
+			}
+		}
+
+
+		private static void CheckAmortization(List<Warning> warnings, DataAccessor accessor, DataObject cat)
+		{
+			var e = cat.GetInputEvent ();
+			WarningsLogic.CheckAmortization (warnings, accessor, BaseType.Categories, cat, e);
+		}
+
+		private static void CheckAmortization(List<Warning> warnings, DataAccessor accessor, BaseType baseType, DataObject obj, DataEvent e)
+		{
+			//	On cherche les paramètres d'amortissement incorrectement définis.
+			var pMethod   = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationMethod,    synthetic: true) as DataIntProperty;
+			var pRate     = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationRate,      synthetic: true) as DataDecimalProperty;
+			var pYears    = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationYearCount, synthetic: true) as DataDecimalProperty;
+			var pType     = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationType,      synthetic: true) as DataIntProperty;
+			var pRound    = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.Round,                 synthetic: true) as DataDecimalProperty;
+			var pResidual = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.ResidualValue,         synthetic: true) as DataDecimalProperty;
+
+			var method   = (pMethod   == null) ? AmortizationMethod.Unknown : (AmortizationMethod) pMethod.Value;
+			var rate     = (pRate     == null) ? 0.0m : pRate.Value;
+			var years    = (pYears    == null) ? 0.0m : pYears.Value;
+			var type     = (pType     == null) ? AmortizationType.Unknown : (AmortizationType) pType.Value;
+			var round    = (pRound    == null) ? 0.0m : pRound.Value;
+			var residual = (pResidual == null) ? 0.0m : pResidual.Value;
+
+			var eventGuid = (baseType == BaseType.Assets) ? e.Guid : Guid.Empty;
+
+			if (round < 0.0m)
+			{
+				var description = Res.Strings.WarningsLogic.Value.GreaterOrEqualToZero.ToString ();
+				var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.Round, description);
+				warnings.Add (warning);
+			}
+
+			if (residual < 0.0m)
+			{
+				var description = Res.Strings.WarningsLogic.Value.GreaterOrEqualToZero.ToString ();
+				var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.ResidualValue, description);
+				warnings.Add (warning);
+			}
+
+			if (method == AmortizationMethod.Rate)
+			{
+				if (rate < 0.0m)
+				{
+					var description = Res.Strings.WarningsLogic.Value.GreaterOrEqualToZero.ToString ();
+					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationRate, description);
+					warnings.Add (warning);
+				}
+			}
+			else if (method == AmortizationMethod.YearCount)
+			{
+				if (years <= 0.0m)
+				{
+					var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
+					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationYearCount, description);
+					warnings.Add (warning);
+				}
+
+				if (type     == AmortizationType.Degressive  &&
+					residual <= 0.0m)
+				{
+					var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
+					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.ResidualValue, description);
+					warnings.Add (warning);
+				}
 			}
 		}
 
@@ -450,7 +549,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
 			var method = AmortizationMethod.Unknown;
 			{
-				var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
+				var p = asset.GetSyntheticProperty (e.Timestamp, ObjectField.AmortizationMethod) as DataIntProperty;
 				if (p != null)
 				{
 					method = (AmortizationMethod) p.Value;

@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.hasEvent       = true;
 					this.isOutOfBounds  = false;
 
-					var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
+					var p = this.obj.GetSyntheticProperty (e.Timestamp, ObjectField.AmortizationMethod) as DataIntProperty;
 					if (p != null)
 					{
 						method = (AmortizationMethod) p.Value;
@@ -391,9 +391,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				if (!hasError)
+				if (!hasError)  // ok ?
 				{
-					hasError  = this.HasError (tile.Field, text);
+					var err = this.GetError (this.obj, this.timestamp, tile.Field);
+					if (!string.IsNullOrEmpty (err))
+					{
+						hasError = true;
+						tooltip = string.Concat (tooltip, "<br/>", err);  // ajoute l'erreur à la fin du tooltip
+					}
 				}
 			}
 
@@ -417,17 +422,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private bool HasError(ObjectField field, string text)
+		private string GetError(DataObject asset, Timestamp? timestamp, ObjectField field)
 		{
-			if (WarningsLogic.IsRequired (this.accessor, this.baseType, field))
+			//	Retourne l'éventuelle erreur liée à un champ d'un événement d'un objet d'immobilisation.
+			if (timestamp.HasValue)
 			{
-				if (string.IsNullOrEmpty (text))
+				var e = asset.GetEvent (timestamp.Value);
+				if (e != null)
 				{
-					return true;
+					return WarningsLogic.GetError (this.accessor, asset, e, field);
 				}
 			}
 
-			return false;
+			return null;  // ok
 		}
 
 		private bool IsReadOnly(ObjectField field)

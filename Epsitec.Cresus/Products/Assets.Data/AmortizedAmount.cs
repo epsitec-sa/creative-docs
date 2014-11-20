@@ -147,9 +147,17 @@ namespace Epsitec.Cresus.Assets.Data
 						}
 						else if (this.AmortizationType == AmortizationType.Degressive)
 						{
-							var x = this.ResidualAmount / this.InitialAmount.GetValueOrDefault (0.0m);
-							var y = 1.0m / n;
-							rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
+							if (this.ResidualAmount.GetValueOrDefault (0.0m) == 0.0m ||
+								this.InitialAmount.GetValueOrDefault (0.0m) == 0.0m)
+							{
+								rate = 1.0m;
+							}
+							else
+							{
+								var x = this.ResidualAmount.GetValueOrDefault (0.0m) / this.InitialAmount.GetValueOrDefault (0.0m);
+								var y = 1.0m / n;
+								rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
+							}
 						}
 					}
 				}

@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 			set;
 		}
 
-		public abstract PageType				MainPageType
+		public virtual PageType GetMainPageType(EventType eventType = EventType.Unknown)
 		{
-			get;
+			return PageType.Unknown;
 		}
 
 		public virtual void CreateUI(Widget parent)

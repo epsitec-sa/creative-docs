@@ -82,4 +82,6 @@
   <data name="CategoriesLogic.YearCount.Summary" id="KF2">{0} ans</data>
   <data name="Enum.AmortizationMethod.None.Name" id="KG2">Pas d'amortissement</data>
   <data name="Enum.AmortizationMethod.None.Summary" id="KH2">Aucun</data>
+  <data name="WarningsLogic.Value.GreaterOrEqualToZero" id="KM2">Cette valeur doit être plus grande ou égale à zéro</data>
+  <data name="WarningsLogic.Value.GreaterThanZero" id="KP2">Cette valeur doit être plus grande que zéro</data>
 </bundle>
