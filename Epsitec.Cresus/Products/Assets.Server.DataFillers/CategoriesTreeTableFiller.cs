@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,               TreeTableColumnType.String,  100, Res.Strings.CategoriesTreeTableFiller.Prorata.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Round,                 TreeTableColumnType.Amount,   70, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,         TreeTableColumnType.Amount,  100, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Expression,            TreeTableColumnType.String,  200, Res.Strings.CategoriesTreeTableFiller.Expression.ToString ()));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			int columnCount = 10 + DataAccessor.AccountFields.Count ();
+			int columnCount = 11 + DataAccessor.AccountFields.Count ();
 			for (int i=0; i<columnCount; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
@@ -91,6 +92,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
 				var resid  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
+				var exp    = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Expression);
 
 				if (method.HasValue)
 				{
@@ -122,6 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell18 = new TreeTableCellString  (r,      cellState);
 				var cell19 = new TreeTableCellDecimal (round,  cellState);
 				var cell20 = new TreeTableCellDecimal (resid,  cellState);
+				var cell21 = new TreeTableCellString  (exp,    cellState);
 
 				int columnRank = 0;
 
@@ -135,6 +138,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell18);
 				content.Columns[columnRank++].AddRow (cell19);
 				content.Columns[columnRank++].AddRow (cell20);
+				content.Columns[columnRank++].AddRow (cell21);
 
 				foreach (var field in DataAccessor.AccountFields)
 				{

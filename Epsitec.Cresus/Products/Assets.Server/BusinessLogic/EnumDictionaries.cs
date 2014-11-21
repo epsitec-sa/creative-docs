@@ -209,6 +209,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case AmortizationMethod.YearCount:
 					return Res.Strings.Enum.AmortizationMethod.YearCount.Name.ToString ();
 
+				case AmortizationMethod.Expression:
+					return Res.Strings.Enum.AmortizationMethod.Expression.Name.ToString ();
+
 				default:
 					return null;
 			}
@@ -226,6 +229,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case AmortizationMethod.YearCount:
 					return Res.Strings.Enum.AmortizationMethod.YearCount.Summary.ToString ();
+
+				case AmortizationMethod.Expression:
+					return Res.Strings.Enum.AmortizationMethod.Expression.Summary.ToString ();
 
 				default:
 					return null;
@@ -354,6 +360,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return AmortizationMethod.None;
 				yield return AmortizationMethod.Rate;
 				yield return AmortizationMethod.YearCount;
+				yield return AmortizationMethod.Expression;
 			}
 		}
 

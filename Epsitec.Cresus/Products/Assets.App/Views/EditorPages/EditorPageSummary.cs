@@ -103,6 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				case ObjectField.Prorata:
 				case ObjectField.Round:
 				case ObjectField.ResidualValue:
+				case ObjectField.Expression:
 					return PageType.AmortizationDefinition;
 
 				default:
@@ -191,6 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Prorata));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.Round));
 				c3.Add (new ObjectSummaryControllerTile (ObjectField.ResidualValue));
+				c3.Add (new ObjectSummaryControllerTile (ObjectField.Expression));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{

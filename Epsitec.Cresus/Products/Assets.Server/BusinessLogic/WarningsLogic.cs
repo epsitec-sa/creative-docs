@@ -48,7 +48,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
 					|| field == ObjectField.Round
-					|| field == ObjectField.ResidualValue;
+					|| field == ObjectField.ResidualValue
+					|| field == ObjectField.Expression;
 			}
 			else if (baseType == BaseType.Assets)
 			{
@@ -62,7 +63,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
 					|| field == ObjectField.Round
-					|| field == ObjectField.ResidualValue;
+					|| field == ObjectField.ResidualValue
+					|| field == ObjectField.Expression;
 			}
 			else if (baseType == BaseType.Groups)
 			{
@@ -115,7 +117,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
 				ObjectField.Round,
-				ObjectField.ResidualValue);
+				ObjectField.ResidualValue,
+				ObjectField.Expression);
 
 			//	On cherche les comptes indéfinis dans les catégories.
 			foreach (var cat in accessor.Mandat.GetData (BaseType.Categories))
@@ -213,7 +216,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
 				ObjectField.Round,
-				ObjectField.ResidualValue);
+				ObjectField.ResidualValue,
+				ObjectField.Expression);
 
 				//	On cherche les amortissements incorrectement définis.
 				WarningsLogic.CheckAmortization (warnings, accessor, BaseType.Assets, asset, e);
@@ -279,6 +283,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var pType     = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationType,      synthetic: true) as DataIntProperty;
 			var pRound    = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.Round,                 synthetic: true) as DataDecimalProperty;
 			var pResidual = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.ResidualValue,         synthetic: true) as DataDecimalProperty;
+			var pExp      = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.Expression,            synthetic: true) as DataStringProperty;
 
 			var method   = (pMethod   == null) ? AmortizationMethod.Unknown : (AmortizationMethod) pMethod.Value;
 			var rate     = (pRate     == null) ? 0.0m : pRate.Value;
@@ -286,6 +291,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var type     = (pType     == null) ? AmortizationType.Unknown : (AmortizationType) pType.Value;
 			var round    = (pRound    == null) ? 0.0m : pRound.Value;
 			var residual = (pResidual == null) ? 0.0m : pResidual.Value;
+			var exp      = (pExp      == null) ? null : pExp.Value;
 
 			var eventGuid = (baseType == BaseType.Assets) ? e.Guid : Guid.Empty;
 
@@ -326,6 +332,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
 					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.ResidualValue, description);
+					warnings.Add (warning);
+				}
+			}
+			else if (method == AmortizationMethod.Expression)
+			{
+				if (string.IsNullOrEmpty (exp))
+				{
+					var description = Res.Strings.WarningsLogic.Value.Expression.ToString ();
+					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.Expression, description);
 					warnings.Add (warning);
 				}
 			}

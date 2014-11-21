@@ -144,6 +144,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.Round:
 					return Res.Strings.Enum.ObjectField.Round.ToString ();
 
+				case ObjectField.Expression:
+					return Res.Strings.Enum.ObjectField.Expression.ToString ();
+
 				case ObjectField.UserFieldColumnWidth:
 					return Res.Strings.Enum.ObjectField.UserFieldColumnWidth.ToString ();
 

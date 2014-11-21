@@ -722,6 +722,34 @@ namespace Epsitec.Cresus.Assets.Data
 			);
 		}
 
+		public static AmortizedAmount SetExpression(AmortizedAmount model, string expression)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationMethod,
+				model.Rate,
+				model.AmortizationType,
+				model.YearRank,
+				model.YearCount,
+				model.Periodicity,
+				model.ForcedAmount,
+				model.PreviousAmount,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				expression,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
 		public static AmortizedAmount SetEntryScenario(AmortizedAmount model, EntryScenario value)
 		{
 			return new AmortizedAmount

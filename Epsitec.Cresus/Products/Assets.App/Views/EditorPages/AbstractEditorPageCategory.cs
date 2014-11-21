@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
 			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount, editWidth: 90);
 			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount, editWidth: 90);
+			this.expressionController  = this.CreateStringController  (parent, ObjectField.Expression,            editWidth: AbstractFieldController.maxWidth, lineCount: 3);
 		}
 
 		protected void CreateAccountsUI(Widget parent, System.DateTime? forcedDate)
@@ -79,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.prorataController    .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Prorata);
 			this.roundController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Round);
 			this.residualController   .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.ResidualValue);
+			this.expressionController .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Expression);
 		}
 
 
@@ -198,5 +200,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected EnumFieldController			prorataController;
 		protected DecimalFieldController		roundController;
 		protected DecimalFieldController		residualController;
+		protected StringFieldController			expressionController;
 	}
 }

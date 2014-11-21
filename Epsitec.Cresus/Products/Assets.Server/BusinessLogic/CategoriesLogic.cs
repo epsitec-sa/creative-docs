@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,               ObjectField.Prorata);
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                 ObjectField.Round);
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,         ObjectField.ResidualValue);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Expression,            ObjectField.Expression);
 
 			foreach (var field in DataAccessor.AccountFields)
 			{
@@ -199,6 +200,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var years  = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.AmortizationYearCount);
 			var type   = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.AmortizationType);
 			var period = ObjectProperties.GetObjectPropertyInt     (obj, null, ObjectField.Periodicity);
+			var exp    = ObjectProperties.GetObjectPropertyString  (obj, null, ObjectField.Expression);
 
 			var stringMethod = EnumDictionaries.GetAmortizationMethodSummary (method);
 			var stringTaux   = TypeConverters.RateToString (taux);
@@ -210,6 +212,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				stringYears = string.Format (Res.Strings.CategoriesLogic.YearCount.Summary.ToString (), stringYears);
 				return string.Format ("{0} {1} {2} {3}", name, stringYears, stringType, stringPeriod);
+			}
+			else if (method == (int) AmortizationMethod.Expression)
+			{
+				return string.Format ("{0} {1}", name, exp);
 			}
 			else
 			{

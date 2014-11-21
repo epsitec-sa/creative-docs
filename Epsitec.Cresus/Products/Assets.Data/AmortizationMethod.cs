@@ -13,5 +13,6 @@ namespace Epsitec.Cresus.Assets.Data
 		None,			// pas d'amortissement
 		Rate,			// amortissement classique selon un taux
 		YearCount,		// amortissement selon une durée en années
+		Expression,
 	}
 }

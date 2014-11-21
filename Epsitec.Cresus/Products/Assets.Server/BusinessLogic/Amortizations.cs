@@ -265,6 +265,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
+			var exp      = ObjectProperties.GetObjectPropertyString  (obj, timestamp, ObjectField.Expression);
 
 			if (method.HasValue && taux.HasValue && type.HasValue && years.HasValue && period.HasValue)
 			{
@@ -281,7 +282,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						x.Type == EventType.AmortizationExtra))
 					.Count ();
 
-				return new AmortizationDefinition (m, taux.GetValueOrDefault (0.0m), t, rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
+				return new AmortizationDefinition (m, taux.GetValueOrDefault (0.0m), t, rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m), exp);
 			}
 			else
 			{
@@ -554,13 +555,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case AmortizationMethod.Rate:
 					//	Si l'amortissement est calculé selon le taux, le nombre d'années
 					//	ne sert à rien.
-					return field == ObjectField.AmortizationYearCount;
+					return field == ObjectField.AmortizationYearCount
+						|| field == ObjectField.Expression;
 
 				case AmortizationMethod.YearCount:
 					//	Si l'amortissement est calculé selon le nombre d'années, le taux
 					//	ne sert à rien.
 					return field == ObjectField.AmortizationRate
-						|| field == ObjectField.Prorata;
+						|| field == ObjectField.Prorata
+						|| field == ObjectField.Expression;
+
+				case AmortizationMethod.Expression:
+					return field == ObjectField.AmortizationYearCount
+						|| field == ObjectField.AmortizationRate
+						|| field == ObjectField.AmortizationType
+						|| field == ObjectField.Periodicity
+						|| field == ObjectField.Prorata
+						|| field == ObjectField.Round
+						|| field == ObjectField.ResidualValue;
 
 				default:
 					//	S'il n'y a pas d'amortissement généré automatiquement, tous les
@@ -571,7 +583,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						|| field == ObjectField.Periodicity
 						|| field == ObjectField.Prorata
 						|| field == ObjectField.Round
-						|| field == ObjectField.ResidualValue;
+						|| field == ObjectField.ResidualValue
+						|| field == ObjectField.Expression;
 			}
 		}
 

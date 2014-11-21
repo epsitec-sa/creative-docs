@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Prorata,
 		Round,
 		ResidualValue,
+		Expression,
 
 		//	Définition d'un groupe.
 		GroupSuggestedDuringCreation,

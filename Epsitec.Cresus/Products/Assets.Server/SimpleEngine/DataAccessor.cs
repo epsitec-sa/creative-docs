@@ -471,6 +471,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.Prorata;
 				yield return ObjectField.Round;
 				yield return ObjectField.ResidualValue;
+				yield return ObjectField.Expression;
 
 				foreach (var field in DataAccessor.AccountFields)
 				{

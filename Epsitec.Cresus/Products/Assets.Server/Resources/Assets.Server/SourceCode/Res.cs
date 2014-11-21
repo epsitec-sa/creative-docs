@@ -303,6 +303,26 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
+					public static class Expression
+					{
+						//	designer:str/IUKR201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544411));
+							}
+						}
+						//	designer:str/IUKS201
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544412));
+							}
+						}
+					}
+					
 					public static class None
 					{
 						//	designer:str/IUKG201
@@ -795,6 +815,14 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class Value
 				{
+					//	designer:str/IUKQ201
+					public static global::Epsitec.Common.Types.FormattedText Expression
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544410));
+						}
+					}
 					//	designer:str/IUKM201
 					public static global::Epsitec.Common.Types.FormattedText GreaterOrEqualToZero
 					{
@@ -1140,6 +1168,26 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
+					public static class Expression
+					{
+						//	designer:str/IUKR201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544411);
+							}
+						}
+						//	designer:str/IUKS201
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544412);
+							}
+						}
+					}
+					
 					public static class None
 					{
 						//	designer:str/IUKG201
@@ -1632,6 +1680,14 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class Value
 				{
+					//	designer:str/IUKQ201
+					public static global::Epsitec.Common.Support.Druid Expression
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544410);
+						}
+					}
 					//	designer:str/IUKM201
 					public static global::Epsitec.Common.Support.Druid GreaterOrEqualToZero
 					{
