@@ -250,9 +250,9 @@
   <data name="ToolbarControllers.UserFieldsTreeTable.NewName" id="K1C">Nouveau</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.DeleteQuestion" id="K2C">Voulez-vous supprimer le champ "{0}" ?</data>
   <data name="ViewStates.Accounts.Description" id="K6C">Période {0}</data>
-  <data name="AmortizedAmountController.Init.Title" id="K7C">Valeur comptable</data>
+  <data name="AmortizedAmountController.Init.Title" id="K7C">Valeur calculée</data>
   <data name="AmortizedAmountController.Init.Value" id="K8C">Valeur initiale</data>
-  <data name="AmortizedAmountController.Max.Title" id="K9C">Valeur comptable</data>
+  <data name="AmortizedAmountController.Max.Title" id="K9C">Valeur calculée</data>
   <data name="AmortizedAmountController.Max.Final" id="KAC">Valeur finale amortie</data>
   <data name="AmortizedAmountController.Max.Rounded" id="KBC">Valeur arrondie</data>
   <data name="AmortizedAmountController.Max.Residual" id="KCC">Valeur résiduelle</data>
@@ -455,9 +455,9 @@
   <data name="SearchController.Prev.Tooltip" id="KUI">Chercher en arrière</data>
   <data name="SearchController.Clear.Tooltip" id="KVI">Commencer une nouvelle recherche</data>
   <data name="AmortizedAmountController.Forced.Title" id="K0J">Valeur finale</data>
-  <data name="AmortizedAmountController.Forced.Output" id="K1J">Valeur comptable ou valeur imposée</data>
+  <data name="AmortizedAmountController.Forced.Output" id="K1J">Valeur calculée ou valeur imposée</data>
   <data name="AmortizedAmountController.Forced.Or" id="K2J">ou</data>
-  <data name="AmortizedAmountController.Forced.Value" id="K3J">Vous pouvez ici imposer une valeur, qui prime&lt;br/&gt;sur tous les calculs d'amortissement ci-dessous</data>
+  <data name="AmortizedAmountController.Forced.Value" id="K3J">Vous pouvez imposer ici une valeur qui prime&lt;br/&gt;sur tous les calculs d'amortissement ci-dessous</data>
   <data name="EditorPages.Category.YearsCalculatorButton" id="K4J">Calculer d'après le nombre d'années et de mois</data>
   <data name="Popup.YearsCalculator.Title" id="K5J">Calcul du nombre d'années</data>
   <data name="Popup.YearsCalculator.TotalYears" id="K6J">Nombre d'années</data>
