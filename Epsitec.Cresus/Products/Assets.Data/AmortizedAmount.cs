@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Assets.Data
 			decimal?			prorataDenominator,
 			decimal?			roundAmount,
 			decimal?			residualAmount,
+			string				expression,
 			EntryScenario		entryScenario,
 			System.DateTime		date,
 			Guid				assetGuid,
@@ -47,6 +48,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ProrataDenominator = prorataDenominator;
 			this.RoundAmount        = roundAmount;
 			this.ResidualAmount     = residualAmount;
+			this.Expression         = expression;
 			this.EntryScenario      = entryScenario;
 			this.Date               = date;
 			this.AssetGuid          = assetGuid;
@@ -71,6 +73,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ProrataDenominator = IOHelpers.ReadDecimalAttribute (reader, "ProrataDenominator");
 			this.RoundAmount        = IOHelpers.ReadDecimalAttribute (reader, "RoundAmount");
 			this.ResidualAmount     = IOHelpers.ReadDecimalAttribute (reader, "ResidualAmount");
+			this.Expression         = IOHelpers.ReadStringAttribute (reader, "Expression");
 			this.EntryScenario      = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
 			this.Date               = IOHelpers.ReadDateAttribute (reader, "Date").GetValueOrDefault ();
 			this.AssetGuid          = IOHelpers.ReadGuidAttribute (reader, "AssetGuid");
@@ -96,6 +99,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly decimal?				ProrataDenominator;
 		public readonly decimal?				RoundAmount;
 		public readonly decimal?				ResidualAmount;
+		public readonly string					Expression;
 		public readonly EntryScenario			EntryScenario;
 		public readonly System.DateTime			Date;
 		public readonly Guid					AssetGuid;
@@ -379,6 +383,7 @@ namespace Epsitec.Cresus.Assets.Data
 				&& this.ProrataDenominator == other.ProrataDenominator
 				&& this.RoundAmount        == other.RoundAmount
 				&& this.ResidualAmount     == other.ResidualAmount
+				&& this.Expression         == other.Expression
 				&& this.EntryScenario      == other.EntryScenario
 				&& this.Date               == other.Date
 				&& this.AssetGuid          == other.AssetGuid
@@ -416,6 +421,7 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.ProrataDenominator.GetHashCode ()
 				 ^ this.RoundAmount       .GetHashCode ()
 				 ^ this.ResidualAmount    .GetHashCode ()
+				 ^ this.Expression        .GetHashCode ()
 				 ^ this.EntryScenario     .GetHashCode ()
 				 ^ this.Date              .GetHashCode ()
 				 ^ this.AssetGuid         .GetHashCode ()
@@ -454,6 +460,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -481,6 +488,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -508,6 +516,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -535,6 +544,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -562,6 +572,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -589,6 +600,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -616,6 +628,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -643,6 +656,7 @@ namespace Epsitec.Cresus.Assets.Data
 				value,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -670,6 +684,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				value,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -697,6 +712,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				value,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -724,6 +740,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				value,
 				model.Date,
 				model.AssetGuid,
@@ -751,6 +768,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				value,
 				model.AssetGuid,
@@ -778,6 +796,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				value,
@@ -805,6 +824,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -832,6 +852,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -859,6 +880,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -886,6 +908,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -917,6 +940,7 @@ namespace Epsitec.Cresus.Assets.Data
 				prorataDenominator,
 				roundAmount,
 				residualAmount,
+				model.Expression,
 				entryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -944,6 +968,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -971,6 +996,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -999,6 +1025,7 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
+				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -1029,6 +1056,8 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);
 			IOHelpers.WriteDecimalAttribute (writer, "RoundAmount",        this.RoundAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "ResidualAmount",     this.ResidualAmount);
+
+			IOHelpers.WriteStringAttribute (writer, "Expression", this.Expression);
 
 			IOHelpers.WriteTypeAttribute (writer, "EntryScenario", this.EntryScenario);
 

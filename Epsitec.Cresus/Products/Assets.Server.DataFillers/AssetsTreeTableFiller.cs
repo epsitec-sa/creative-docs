@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								(
 									AmortizationMethod.Unknown, 0, AmortizationType.Unknown,
 									0, 0, Periodicity.Unknown,
-									null, null, v, null, null, null, null, null,
+									null, null, v, null, null, null, null, null, null,
 									EntryScenario.None, System.DateTime.MinValue,
 									Guid.Empty, Guid.Empty, Guid.Empty, 0
 								);
