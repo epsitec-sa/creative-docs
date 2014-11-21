@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -19,6 +20,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class NavigationTreeTableController : System.IDisposable
 	{
+		public NavigationTreeTableController(DataAccessor accessor)
+		{
+			this.accessor = accessor;
+		}
+
+
 		public bool								Enable
 		{
 			get
@@ -45,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		{
 			parent.BackColor = ColorManager.TreeTableOutColor;
 
-			this.treeTable = new TreeTable (rowHeight, headerHeight, footerHeight)
+			this.treeTable = new TreeTable (this.accessor, rowHeight, headerHeight, footerHeight)
 			{
 				Parent = parent,
 				Dock   = DockStyle.Fill,
@@ -300,6 +307,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		public event EventHandler<KeyCode> DokeySelect;
 		#endregion
 
+
+		private readonly DataAccessor			accessor;
 
 		private TreeTable						treeTable;
 		private VScroller						scroller;

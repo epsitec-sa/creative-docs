@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.accessor = accessor;
 
-			this.controller = new NavigationTreeTableController ();
+			this.controller = new NavigationTreeTableController (this.accessor);
 
 			this.nodeGetter = new ReportsNodeGetter (this.accessor);
 			this.Update ();

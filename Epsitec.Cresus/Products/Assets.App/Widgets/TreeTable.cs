@@ -11,6 +11,7 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -24,8 +25,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTable : Widget
 	{
-		public TreeTable(int rowHeight, int headerHeight, int footerHeight)
+		public TreeTable(DataAccessor accessor, int rowHeight, int headerHeight, int footerHeight)
 		{
+			this.accessor = accessor;
+
 			//	Permet de mettre le focus sur le TreeTable. Cela est nécessaire pour que les
 			//	touches flèches fonctionnent. Sinon, ProcessMessage n'est pas appelé !
 			this.AutoFocus = true;
@@ -441,7 +444,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var description = this.columnDescriptions.Where (x => x.Field == columnState.Field).FirstOrDefault ();
 
-				var column = TreeTableColumnHelper.Create (description);
+				var column = TreeTableColumnHelper.Create (this.accessor, description);
 
 				column.PreferredWidth = columnState.FinalWidth;
 				column.Index          = index;
@@ -903,6 +906,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		private readonly DataAccessor					accessor;
 		private readonly List<AbstractTreeTableColumn>	treeTableColumns;
 		private readonly FrameBox						leftContainer;
 		private readonly Scrollable						columnsContainer;

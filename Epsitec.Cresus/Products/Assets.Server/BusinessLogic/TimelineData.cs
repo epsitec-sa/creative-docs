@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (p != null)
 			{
-				return p.Value.OutputAmortizedAmount;
+				return this.accessor.GetAmortizedAmount (p);
 			}
 
 			return null;

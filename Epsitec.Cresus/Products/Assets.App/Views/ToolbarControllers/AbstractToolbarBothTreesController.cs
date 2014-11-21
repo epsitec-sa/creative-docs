@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void CreateTreeTableControllerUI(Widget parent)
 		{
 			//	Crée le contrôleur TreeTable.
-			this.treeTableController = new NavigationTreeTableController ();
+			this.treeTableController = new NavigationTreeTableController (this.accessor);
 
 			var frame = new FrameBox
 			{
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void Search(SearchDefinition definition, int direction)
 		{
-			var row = FillerSearchEngine<T>.Search (this.nodeGetter, this.dataFiller, definition, this.VisibleSelectedRow, direction);
+			var row = FillerSearchEngine<T>.Search (this.accessor, this.nodeGetter, this.dataFiller, definition, this.VisibleSelectedRow, direction);
 
 			if (row != -1)
 			{

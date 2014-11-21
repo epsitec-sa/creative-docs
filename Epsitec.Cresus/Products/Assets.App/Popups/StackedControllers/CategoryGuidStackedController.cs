@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 			var controllerFrame = this.CreateControllerFrame (parent);
 			controllerFrame.Padding = new Margins (2);
 
-			this.controller = new NavigationTreeTableController ();
+			this.controller = new NavigationTreeTableController (this.accessor);
 			this.controller.CreateUI (controllerFrame, headerHeight: 0, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;

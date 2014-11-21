@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 	public static class FillerSearchEngine<T>
 		where T : struct
 	{
-		public static int Search(INodeGetter<T> nodeGetter, AbstractTreeTableFiller<T> dataFiller,
+		public static int Search(DataAccessor accessor, INodeGetter<T> nodeGetter, AbstractTreeTableFiller<T> dataFiller,
 			SearchDefinition definition, int row, int direction)
 		{
 			//	A partir d'une ligne donnée, on cherche la prochaine ligne correspondant
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				}
 
 				var content = dataFiller.GetContent (row, 1, -1);  // demande juste une ligne
-				var result = FillerSearchEngine<T>.Search (content, engine);
+				var result = FillerSearchEngine<T>.Search (accessor, content, engine);
 
 				if (!result.IsEmpty)  // trouvé ?
 				{
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private static Result Search(TreeTableContentItem content, SearchEngine engine)
+		private static Result Search(DataAccessor accessor, TreeTableContentItem content, SearchEngine engine)
 		{
 			if (content.Columns.Any ())
 			{
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					{
 						var cell = content.Columns[column].Cells[row];
 
-						if (FillerSearchEngine<T>.IsMatching (engine, cell))
+						if (FillerSearchEngine<T>.IsMatching (accessor, engine, cell))
 						{
 							return new Result (column, row);  // retourne l'emplacement trouvé
 						}
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private static bool IsMatching(SearchEngine engine, AbstractTreeTableCell cell)
+		private static bool IsMatching(DataAccessor accessor, SearchEngine engine, AbstractTreeTableCell cell)
 		{
 			//	Cherche si le contenu d'une cellule match avec le pattern, quel que soit
 			//	le type de la cellule.
@@ -100,7 +101,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var c = cell as TreeTableCellAmortizedAmount;
 				if (c.Value.HasValue)
 				{
-					return engine.IsMatching (c.Value.Value.OutputAmortizedAmount);
+					return engine.IsMatching (accessor.GetAmortizedAmount (c.Value));
 				}
 			}
 			else if (cell is TreeTableCellComputedAmount)

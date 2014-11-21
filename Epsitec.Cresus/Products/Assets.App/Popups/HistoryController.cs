@@ -8,14 +8,16 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryController
 	{
-		public HistoryController(HistoryAccessor accessor)
+		public HistoryController(DataAccessor accessor, HistoryAccessor historyAccessor)
 		{
 			this.accessor = accessor;
+			this.historyAccessor = historyAccessor;
 		}
 
 
@@ -30,10 +32,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Utilise au maximum les 3/4 de la hauteur.
 			int max = (int) (h*0.75) / HistoryController.rowHeight;
 
-			int rows = System.Math.Min (this.accessor.RowsCount, max);
+			int rows = System.Math.Min (this.historyAccessor.RowsCount, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = this.accessor.ColumnsWidth
+			int dx = this.historyAccessor.ColumnsWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
@@ -47,7 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		public void CreateUI(Widget parent)
 		{
-			if (this.accessor.RowsCount == 0)
+			if (this.historyAccessor.RowsCount == 0)
 			{
 				new StaticText
 				{
@@ -59,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				var treeTable = new SimpleTreeTableController (this.accessor.Filler);
+				var treeTable = new SimpleTreeTableController (this.accessor, this.historyAccessor.Filler);
 
 				treeTable.CreateUI (parent, rowHeight: HistoryController.rowHeight, headerHeight: HistoryController.headerHeight, footerHeight: 0, treeTableName: "Popup.History");
 				treeTable.AllowsMovement = false;
@@ -68,11 +70,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				//	première ligne visible dans le TreeTable.
 				parent.Window.ForceLayout ();
 
-				treeTable.SelectedRow = this.accessor.SelectedRow;
+				treeTable.SelectedRow = this.historyAccessor.SelectedRow;
 
 				treeTable.RowClicked += delegate (object sender, int row)
 				{
-					var timestamp = this.accessor.GetTimestamp (row);
+					var timestamp = this.historyAccessor.GetTimestamp (row);
 					if (timestamp.HasValue)
 					{
 						this.OnNavigate (timestamp.Value);
@@ -95,6 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int headerHeight     = 22;
 		private const int rowHeight        = 18;
 
-		private readonly HistoryAccessor accessor;
+		private readonly DataAccessor			accessor;
+		private readonly HistoryAccessor		historyAccessor;
 	}
 }

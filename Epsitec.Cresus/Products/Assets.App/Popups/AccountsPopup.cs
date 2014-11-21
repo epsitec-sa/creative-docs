@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.baseType = baseType;
 			this.title    = title;
 
-			this.controller = new NavigationTreeTableController();
+			this.controller = new NavigationTreeTableController(this.accessor);
 
 			var existingCategories = AccountsLogic.GetCategories (this.accessor, this.baseType);
 			this.filterController = new AccountsFilterController (existingCategories);

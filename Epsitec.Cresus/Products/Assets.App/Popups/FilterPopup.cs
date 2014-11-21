@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
-			this.controller = new NavigationTreeTableController();
+			this.controller = new NavigationTreeTableController (this.accessor);
 
 			//	GuidNode -> ParentPositionNode -> LevelNode -> TreeNode
 			var primaryNodeGetter = this.accessor.GetNodeGetter (BaseType.Groups);

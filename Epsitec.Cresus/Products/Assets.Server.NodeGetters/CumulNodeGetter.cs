@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	ainsi que les valeurs à extraire en vue d'un rapport.
 					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
-						var v = this.extractionEngine.GetValueAccordingToRatio (obj, this.timestamp, hiddenTreeNode.Ratio, field);
+						var v = this.extractionEngine.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, hiddenTreeNode.Ratio, field);
 						if (v.HasValue)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?

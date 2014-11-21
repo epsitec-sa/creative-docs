@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.Expression;
 
 namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
@@ -16,8 +17,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.computerSettings = computerSettings;
 			this.clipboard        = clipboard;
 
-			this.userFieldsAccessor = new UserFieldsAccessor (this);
-			this.editionAccessor    = new EditionAccessor (this);
+			this.userFieldsAccessor      = new UserFieldsAccessor (this);
+			this.editionAccessor         = new EditionAccessor (this);
+			this.amortizationExpressions = new AmortizationExpressions ();
 
 			this.cleanerAgents = new List<AbstractCleanerAgent> ();
 		}
@@ -110,10 +112,32 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public AmortizationExpressions			AmortizationExpressions
+		{
+			get
+			{
+				return this.amortizationExpressions;
+			}
+		}
+
 		public GuidNodeGetter GetNodeGetter(BaseType baseType)
 		{
 			//	Retourne un moyen standardisé d'accès en lecture aux données d'une base.
 			return new GuidNodeGetter (this.mandat, baseType);
+		}
+
+
+		public decimal? GetAmortizedAmount(AmortizedAmount? aa)
+		{
+			// TODO: C'est ici qu'il faudra utiliser AmortizationExpressions !
+			if (aa.HasValue)
+			{
+				return aa.Value.OutputAmortizedAmount;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 
@@ -306,9 +330,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
 				//	la création d'un événement qui modifie la valeur.
 				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
-				if (currentAmount.HasValue && currentAmount.Value.OutputAmortizedAmount.HasValue)
+				if (currentAmount.HasValue)
 				{
-					aa = AmortizedAmount.SetInitialAmount (aa, currentAmount.Value.OutputAmortizedAmount);
+					var init = this.GetAmortizedAmount (currentAmount);
+					if (init.HasValue)
+					{
+						aa = AmortizedAmount.SetInitialAmount (aa, init);
+					}
 				}
 			}
 
@@ -558,6 +586,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private readonly DataClipboard			clipboard;
 		private readonly UserFieldsAccessor		userFieldsAccessor;
 		private readonly EditionAccessor		editionAccessor;
+		private readonly AmortizationExpressions amortizationExpressions;
 		private readonly List<AbstractCleanerAgent> cleanerAgents;
 
 		private DataMandat						mandat;

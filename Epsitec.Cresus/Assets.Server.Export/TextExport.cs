@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -13,9 +14,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class TextExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public override void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
-			base.Export (instructions, profile, filler, columnsState);
+			base.Export (accessor, instructions, profile, filler, columnsState);
 
 			this.FillArray (this.Profile.HasHeader);
 			var data = this.GetData ();

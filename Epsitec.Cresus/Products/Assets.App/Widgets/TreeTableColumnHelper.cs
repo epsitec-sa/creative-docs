@@ -6,12 +6,13 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	public static class TreeTableColumnHelper
 	{
-		public static AbstractTreeTableColumn Create(TreeTableColumnDescription description)
+		public static AbstractTreeTableColumn Create(DataAccessor accessor, TreeTableColumnDescription description)
 		{
 			AbstractTreeTableColumn column = null;
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TreeTableColumnType.AmortizedAmount:
-					column = new TreeTableColumnAmortizedAmount (details: false);
+					column = new TreeTableColumnAmortizedAmount (accessor, details: false);
 					break;
 
 				case TreeTableColumnType.DetailedComputedAmount:
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					break;
 
 				case TreeTableColumnType.DetailedAmortizedAmount:
-					column = new TreeTableColumnAmortizedAmount (details: true);
+					column = new TreeTableColumnAmortizedAmount (accessor, details: true);
 					break;
 
 				case TreeTableColumnType.Int:

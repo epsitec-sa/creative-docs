@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (amount.EntryScenario)
 			{
 				case EntryScenario.Purchase:
-					return amount.OutputAmortizedAmount.GetValueOrDefault ();
+					return this.accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
 
 				case EntryScenario.Sale:
 					//	Lors d'une vente, la nouvelle valeur de l'objet est de zéro.
@@ -427,16 +427,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	c'est-à-dire la dernière valeur moins la valeur actuelle (en
 					//	principe nulle).
 					return amount.PreviousAmount.GetValueOrDefault ()
-						 - amount.OutputAmortizedAmount.GetValueOrDefault ();
+						 - this.accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
 
 				case EntryScenario.AmortizationAuto:
 				case EntryScenario.AmortizationExtra:
-					return amount.FinalAmortization;
+					return amount.InitialAmount.GetValueOrDefault ()
+						 - this.accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
 
 				case EntryScenario.Increase:
 				case EntryScenario.Decrease:
 				case EntryScenario.Adjust:
-					return amount.OutputAmortizedAmount.GetValueOrDefault ();
+					return this.accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
 
 				default:
 					return 0.0m;

@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -15,11 +16,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class SimpleTreeTableController
 	{
-		public SimpleTreeTableController(AbstractTreeTableFiller<GuidNode> dataFiller)
+		public SimpleTreeTableController(DataAccessor accessor, AbstractTreeTableFiller<GuidNode> dataFiller)
 		{
+			this.accessor = accessor;
 			this.dataFiller = dataFiller;
 
-			this.controller = new NavigationTreeTableController ();
+			this.controller = new NavigationTreeTableController (this.accessor);
 
 			this.visibleSelectedRow = -1;
 		}
@@ -88,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		#endregion
 
 
+		private readonly DataAccessor						accessor;
 		private readonly AbstractTreeTableFiller<GuidNode>	dataFiller;
 		private readonly NavigationTreeTableController		controller;
 

@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new TextExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new XmlExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new YamlExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new JsonExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new PdfExport<T> ())
 			{
-				engine.Export (instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
 			}
 		}
 

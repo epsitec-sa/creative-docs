@@ -472,15 +472,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					aa = AmortizedAmount.SetPreviousAmount (aa, lastAmount);
 					Amortizations.SetAmortizedAmount (e, aa);
 
-					lastAmount = aa.OutputAmortizedAmount;
-					lastBase   = aa.OutputAmortizedAmount;
+					lastAmount = accessor.GetAmortizedAmount (aa);
+					lastBase   = accessor.GetAmortizedAmount (aa);
 				}
 				else  // amortissement ?
 				{
 					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
 					Amortizations.SetAmortizedAmount (e, aa);
 
-					lastAmount = aa.OutputAmortizedAmount;
+					lastAmount = accessor.GetAmortizedAmount (aa);
 				}
 
 				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.visibleSelectedRow = -1;
 
-			this.controller = new NavigationTreeTableController();
+			this.controller = new NavigationTreeTableController(this.accessor);
 
 			var primary     = this.accessor.GetNodeGetter (BaseType.Categories);
 			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Categories);

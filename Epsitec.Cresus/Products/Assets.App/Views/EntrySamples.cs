@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			int totalRows = EntrySamples.Scenarios.Count ();
 
-			this.treeTable = new TreeTable (EntrySamples.rowHeight, EntrySamples.rowHeight, 0)
+			this.treeTable = new TreeTable (this.accessor, EntrySamples.rowHeight, EntrySamples.rowHeight, 0)
 			{
 				Parent          = box,
 				Dock            = DockStyle.Top,

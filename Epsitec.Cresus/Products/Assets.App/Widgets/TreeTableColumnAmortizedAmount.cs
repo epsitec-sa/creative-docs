@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
@@ -14,8 +15,9 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	/// </summary>
 	public class TreeTableColumnAmortizedAmount : AbstractTreeTableColumn
 	{
-		public TreeTableColumnAmortizedAmount(bool details = false)
+		public TreeTableColumnAmortizedAmount(DataAccessor accessor, bool details = false)
 		{
+			this.accessor = accessor;
 			this.details = details;
 		}
 
@@ -33,11 +35,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.details)
 				{
 					//text = TypeConverters.ComputedAmountToString (cell.Value);  // TODO...
-					text = TypeConverters.AmountToString (cell.Value.Value.OutputAmortizedAmount);
+					text = TypeConverters.AmountToString (this.accessor.GetAmortizedAmount (cell.Value));
 				}
 				else
 				{
-					text = TypeConverters.AmountToString (cell.Value.Value.OutputAmortizedAmount);
+					text = TypeConverters.AmountToString (this.accessor.GetAmortizedAmount (cell.Value));
 				}
 
 				this.PaintText (graphics, textRect, text);
@@ -53,6 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private readonly bool details;
+		private readonly DataAccessor			accessor;
+		private readonly bool					details;
 	}
 }

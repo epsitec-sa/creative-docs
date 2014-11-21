@@ -332,16 +332,6 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public decimal							FinalAmortization
-		{
-			//	Calcule l'amortissement final effectif.
-			get
-			{
-				return this.InitialAmount.GetValueOrDefault (0.0m)
-					 - this.OutputAmortizedAmount.GetValueOrDefault (0.0m);
-			}
-		}
-
 		public decimal							BrutAmortization
 		{
 			//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale

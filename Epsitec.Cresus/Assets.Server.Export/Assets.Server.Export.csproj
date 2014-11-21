@@ -98,6 +98,10 @@
       <Project>{061c8eb2-f3f6-419c-84c1-a667ffbea60f}</Project>
       <Name>Assets.Server.DataFillers</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.Server\Assets.Server.csproj">
+      <Project>{3e4f5e64-20fc-49fb-98e3-e30f5ae81877}</Project>
+      <Name>Assets.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

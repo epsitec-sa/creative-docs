@@ -5,14 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	public abstract class AbstractExport<T> : System.IDisposable
 		where T : struct
 	{
-		public virtual void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public virtual void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
+			this.accessor     = accessor;
 			this.instructions = instructions;
 			this.profile      = profile;
 			this.filler       = filler;
@@ -126,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (cell.Value.HasValue)
 			{
-				return this.AmountToString (cell.Value.Value.OutputAmortizedAmount);
+				return this.AmountToString (this.accessor.GetAmortizedAmount (cell.Value));
 			}
 			else
 			{
@@ -279,6 +281,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		#endregion
 
 
+		protected DataAccessor					accessor;
 		protected ExportInstructions			instructions;
 		protected AbstractExportProfile			profile;
 		protected AbstractTreeTableFiller<T>	filler;

@@ -8,6 +8,7 @@ using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.Engine;
 using Epsitec.Cresus.Assets.Export.Helpers;
 using Epsitec.Cresus.Assets.Server.DataFillers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -17,11 +18,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class PdfExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public override void Export(ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public override void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
 			this.humanFormat = true;
 
-			base.Export (instructions, profile, filler, columnsState);
+			base.Export (accessor, instructions, profile, filler, columnsState);
 
 			this.FillArray (false);
 			this.ExportPdf (filler.Title);

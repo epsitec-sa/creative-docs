@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				if (node.BaseType == BaseType.Assets)
 				{
 					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-					return this.GetValueAccordingToRatio (obj, this.timestamp, node.Ratio, field);
+					return this.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, node.Ratio, field);
 				}
 				else
 				{
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValueAccordingToRatio(DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
+		public decimal? GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ, en tenant compte du ratio.
 			if (obj != null)
@@ -62,9 +62,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas de la valeur comptable principale.
 					var value = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field);
 
-					if (value.HasValue && value.Value.OutputAmortizedAmount.HasValue)
+					if (value.HasValue)
 					{
-						m = value.Value.OutputAmortizedAmount.Value;
+						var aa = this.accessor.GetAmortizedAmount (value.Value);
+						if (aa.HasValue)
+						{
+							m = aa.Value;
+						}
 					}
 				}
 				else if (this.extractionInstructions.Select (x => x.ResultField).Contains (field))
@@ -72,7 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
 					//	(ObjectField.MCH2Report+n).
 					var ei = this.extractionInstructions.Where (x => x.ResultField == field).FirstOrDefault ();
-					m = ExtractionEngine.GetExtractionInstructions (obj, ei);
+					m = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
 				}
 				else
 				{
@@ -102,7 +106,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static decimal? GetExtractionInstructions(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
 			if (obj != null)
@@ -110,16 +114,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				switch (extractionInstructions.ExtractionAmount)
 				{
 					case ExtractionAmount.StateAt:
-						return ExtractionEngine.GetStateAt (obj, extractionInstructions);
+						return ExtractionEngine.GetStateAt (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.DeltaFiltered:
-						return ExtractionEngine.GetDeltaFiltered (obj, extractionInstructions);
+						return ExtractionEngine.GetDeltaFiltered (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.LastFiltered:
-						return ExtractionEngine.GetLastFiltered (obj, extractionInstructions);
+						return ExtractionEngine.GetLastFiltered (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.Amortizations:
-						return ExtractionEngine.GetAmortizations (obj, extractionInstructions);
+						return ExtractionEngine.GetAmortizations (accessor, obj, extractionInstructions);
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
@@ -129,7 +133,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static decimal? GetStateAt(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetStateAt(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne la valeur définie à la fin de la période, ou antérieurement.
 			var timestamp = new Timestamp(extractionInstructions.Range.ExcludeTo, 0);
@@ -137,13 +141,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (p != null)
 			{
-				return p.Value.OutputAmortizedAmount;
+				return accessor.GetAmortizedAmount (p.Value);
 			}
 
 			return null;
 		}
 
-		private static decimal? GetDeltaFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetDeltaFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Pour une période donnée, retourne la variation d'une valeur suite à un
 			//	type d'événement donné (début - fin, donc une valeur qui diminue suite
@@ -154,29 +158,33 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
+				if (p != null)
 				{
-					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
-						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					var aa = accessor.GetAmortizedAmount (p.Value);
+					if (aa.HasValue)
 					{
-						if (lastValue.HasValue)
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
-							value = lastValue.Value - p.Value.OutputAmortizedAmount.Value;
+							if (lastValue.HasValue)
+							{
+								value = lastValue.Value - aa.Value;
+							}
+							else
+							{
+								value = aa.Value;
+							}
 						}
-						else
-						{
-							value = p.Value.OutputAmortizedAmount.Value;
-						}
-					}
 
-					lastValue = p.Value.OutputAmortizedAmount.Value;
+						lastValue = aa.Value;
+					}
 				}
 			}
 
 			return value;
 		}
 
-		private static decimal? GetLastFiltered(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetLastFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
 			//	d'un type donné.
@@ -185,12 +193,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
+				if (p != null)
 				{
-					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
-						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					var aa = accessor.GetAmortizedAmount (p.Value);
+					if (aa.HasValue)
 					{
-						value = p.Value.OutputAmortizedAmount.Value;
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+							extractionInstructions.Range.IsInside (e.Timestamp.Date))
+						{
+							value = aa.Value;
+						}
 					}
 				}
 			}
@@ -198,7 +210,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return value;
 		}
 
-		private static decimal? GetAmortizations(DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetAmortizations(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne le total des amortissements effectués dans une période donnée.
 			decimal? lastValue = null;
@@ -207,33 +219,37 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			foreach (var e in obj.Events)
 			{
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null && p.Value.OutputAmortizedAmount.HasValue)
+				if (p != null)
 				{
-					if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
-						extractionInstructions.Range.IsInside (e.Timestamp.Date))
+					var aa = accessor.GetAmortizedAmount (p.Value);
+					if (aa.HasValue)
 					{
-						decimal value;
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+							extractionInstructions.Range.IsInside (e.Timestamp.Date))
+						{
+							decimal value;
 
-						if (lastValue.HasValue)
-						{
-							value = lastValue.Value - p.Value.OutputAmortizedAmount.Value;
-						}
-						else
-						{
-							value = p.Value.OutputAmortizedAmount.Value;
+							if (lastValue.HasValue)
+							{
+								value = lastValue.Value - aa.Value;
+							}
+							else
+							{
+								value = aa.Value;
+							}
+
+							if (sum.HasValue)
+							{
+								sum += value;
+							}
+							else
+							{
+								sum = value;
+							}
 						}
 
-						if (sum.HasValue)
-						{
-							sum += value;
-						}
-						else
-						{
-							sum = value;
-						}
+						lastValue = aa.Value;
 					}
-
-					lastValue = p.Value.OutputAmortizedAmount.Value;
 				}
 			}
 

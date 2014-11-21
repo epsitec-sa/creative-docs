@@ -191,20 +191,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (e.Type == EventType.Input)
 			{
 				//	On cherche si la valeur comptable est indéfinie à l'entrée.
-				WarningsLogic.CheckEmpty (warnings, asset, e, ObjectField.MainValue);
+				WarningsLogic.CheckEmpty (warnings, accessor, asset, e, ObjectField.MainValue);
 
 				//	On cherche les champs définis par l'utilisateur restés indéfinis.
 				var requiredFields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
 					.Where (x => x.Required)
 					.Select (x => x.Field)
 					.ToArray ();
-				WarningsLogic.CheckEmpty (warnings, asset, e, requiredFields);
+				WarningsLogic.CheckEmpty (warnings, accessor, asset, e, requiredFields);
 			}
 
 			if (WarningsLogic.IsDefinableAccount (e.Type))
 			{
 				//	On cherche les champs pour l'amortissement indéfinis.
-				WarningsLogic.CheckEmpty (warnings, asset, e,
+				WarningsLogic.CheckEmpty (warnings, accessor, asset, e,
 				ObjectField.CategoryName,
 				ObjectField.AmortizationMethod,
 				ObjectField.AmortizationRate,
@@ -529,7 +529,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 							}
 						}
 
-						WarningsLogic.CheckEmpty (warnings, baseType, obj, field);
+						WarningsLogic.CheckEmpty (warnings, accessor, baseType, obj, field);
 					}
 				}
 
@@ -537,14 +537,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static void CheckEmpty(List<Warning> warnings, BaseType baseType, DataObject obj, ObjectField field)
+		private static void CheckEmpty(List<Warning> warnings, DataAccessor accessor, BaseType baseType, DataObject obj, ObjectField field)
 		{
 			var e = obj.GetInputEvent ();
 			var p = e.GetProperty (field);
-			WarningsLogic.CheckEmpty (warnings, baseType, obj, Guid.Empty, field, p);
+			WarningsLogic.CheckEmpty (warnings, accessor, baseType, obj, Guid.Empty, field, p);
 		}
 
-		private static void CheckEmpty(List<Warning> warnings, DataObject asset, DataEvent e, params ObjectField[] fields)
+		private static void CheckEmpty(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e, params ObjectField[] fields)
 		{
 			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
 			var method = AmortizationMethod.Unknown;
@@ -564,11 +564,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 
 				var p = ObjectProperties.GetObjectProperty (asset, e.Timestamp, field, synthetic: true);
-				WarningsLogic.CheckEmpty (warnings, BaseType.Assets, asset, e.Guid, field, p);
+				WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Assets, asset, e.Guid, field, p);
 			}
 		}
 
-		private static void CheckEmpty(List<Warning> warnings, BaseType baseType, DataObject obj, Guid eventGuid, ObjectField field, AbstractDataProperty p)
+		private static void CheckEmpty(List<Warning> warnings, DataAccessor accessor, BaseType baseType, DataObject obj, Guid eventGuid, ObjectField field, AbstractDataProperty p)
 		{
 			bool hasWarning = false;
 
@@ -586,7 +586,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (p is DataAmortizedAmountProperty)
 				{
 					var pp  = p as DataAmortizedAmountProperty;
-					hasWarning = !pp.Value.OutputAmortizedAmount.HasValue;
+					var aa = accessor.GetAmortizedAmount (pp.Value);
+					hasWarning = !aa.HasValue;
 				}
 			}
 

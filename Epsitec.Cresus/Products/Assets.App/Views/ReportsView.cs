@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateTreeTable()
 		{
-			this.treeTableController = new NavigationTreeTableController ();
+			this.treeTableController = new NavigationTreeTableController (this.accessor);
 			this.treeTableController.CreateUI (this.mainFrame, footerHeight: 0);
 
 			this.report.Initialize (this.treeTableController);

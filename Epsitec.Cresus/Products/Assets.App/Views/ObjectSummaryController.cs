@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (this.obj, this.timestamp, tile.Field);
 					if (aa.HasValue)
 					{
-						text = TypeConverters.AmountToString (aa.Value.OutputAmortizedAmount);
+						text = TypeConverters.AmountToString (this.accessor.GetAmortizedAmount (aa));
 						alignment = ContentAlignment.MiddleRight;
 					}
 					break;

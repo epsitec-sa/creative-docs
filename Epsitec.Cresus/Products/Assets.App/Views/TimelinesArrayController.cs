@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void Search(SearchDefinition definition, int direction)
 		{
-			var row = FillerSearchEngine<SortableCumulNode>.Search (this.nodeGetter, this.dataFiller, definition, this.selectedRow, direction);
+			var row = FillerSearchEngine<SortableCumulNode>.Search (this.accessor, this.nodeGetter, this.dataFiller, definition, this.selectedRow, direction);
 
 			if (row != -1)
 			{
