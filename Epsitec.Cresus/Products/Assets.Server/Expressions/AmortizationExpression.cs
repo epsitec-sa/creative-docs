@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
@@ -28,7 +30,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					"}").Replace ("$", expression);
 			}
 
-#if false
 			var tree = SyntaxFactory.ParseSyntaxTree (expression);
 
 			var compilation = CSharpCompilation.Create ("calc.dll",
@@ -48,9 +49,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					this.error = string.Format ("Failed to compile:\n{0}", string.Join ("\n", compileResult.Diagnostics.Select (x => x.ToString ())));
 				}
 			}
-#else
-			this.error = "Not implemented";
-#endif
 		}
 
 
