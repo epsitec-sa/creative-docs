@@ -260,6 +260,9 @@ namespace Epsitec.Cresus.Assets.Data
 		public decimal?							OutputAmortizedAmount
 		{
 			//	Calcule la valeur de sortie.
+			//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
+			//	qu'il faut utiliser, mais DataAccessor.GetAmortizedAmount(), afin de
+			//	permettre d'évaluer les expressions C# !
 			get
 			{
 				if (this.ForcedAmount.HasValue)

@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public decimal? GetAmortizedAmount(AmortizedAmount? aa)
 		{
-			// TODO: C'est ici qu'il faudra utiliser AmortizationExpressions !
+			//	Retourne la valeur de sortie d'un amortissement.
 			if (aa.HasValue)
 			{
 				if (string.IsNullOrEmpty (aa.Value.Expression))
@@ -138,7 +138,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					return this.amortizationExpressions.Evaluate (aa.Value.Expression, 123.0m, 0.1m, 7);
+					var exp   = aa.Value.Expression;
+					var value = aa.Value.InitialAmount.GetValueOrDefault ();
+					var rate  = aa.Value.Rate.GetValueOrDefault ();
+					var count = aa.Value.YearRank;
+
+					return this.amortizationExpressions.Evaluate (exp, value, rate, count);
 				}
 			}
 			else

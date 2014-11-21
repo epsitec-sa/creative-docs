@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					Amortizations.SetAmortizedAmount (e, aa);
 
 					lastAmount = accessor.GetAmortizedAmount (aa);
-					lastBase   = accessor.GetAmortizedAmount (aa);
+					lastBase   = lastAmount;
 				}
 				else  // amortissement ?
 				{
