@@ -76,6 +76,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					return (decimal) answer;
 				}
+				else if (answer is double)
+				{
+					var a = (double) answer;
+					return (decimal) a;
+				}
+				else if (answer is int)
+				{
+					var a = (int) answer;
+					return (decimal) a;
+				}
 			}
 
 			return null;

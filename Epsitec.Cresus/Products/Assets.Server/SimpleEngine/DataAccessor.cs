@@ -132,7 +132,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			// TODO: C'est ici qu'il faudra utiliser AmortizationExpressions !
 			if (aa.HasValue)
 			{
-				return aa.Value.OutputAmortizedAmount;
+				if (string.IsNullOrEmpty (aa.Value.Expression))
+				{
+					return aa.Value.OutputAmortizedAmount;
+				}
+				else
+				{
+					return this.amortizationExpressions.Evaluate (aa.Value.Expression, 123.0m, 0.1m, 7);
+				}
 			}
 			else
 			{

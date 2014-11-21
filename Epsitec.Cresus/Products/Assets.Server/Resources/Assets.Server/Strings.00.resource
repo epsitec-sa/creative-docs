@@ -85,6 +85,6 @@
   <data name="WarningsLogic.Value.GreaterOrEqualToZero" id="KM2">Cette valeur doit être plus grande ou égale à zéro</data>
   <data name="WarningsLogic.Value.GreaterThanZero" id="KP2">Cette valeur doit être plus grande que zéro</data>
   <data name="WarningsLogic.Value.Expression" id="KQ2">Il manque l'expression</data>
-  <data name="Enum.AmortizationMethod.Expression.Name" id="KR2">Expression</data>
+  <data name="Enum.AmortizationMethod.Expression.Name" id="KR2">Amortissement selon une expression C#</data>
   <data name="Enum.AmortizationMethod.Expression.Summary" id="KS2">Expression</data>
 </bundle>

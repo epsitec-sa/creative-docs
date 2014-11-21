@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			(
 				def.Method, def.Rate, amortizationType, def.YearRank, def.YearCount, def.Periodicity,
 				null, null, null, null,
-				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, null,
+				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, def.Expression,
 				entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
 			);
