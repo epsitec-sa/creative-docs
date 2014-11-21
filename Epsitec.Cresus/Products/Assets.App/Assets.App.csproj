@@ -202,6 +202,7 @@
     <Compile Include="Views\CommandToolbars\CategoriesToolbar.cs" />
     <Compile Include="Views\CommandToolbars\EntriesToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AssetsToolbar.cs" />
+    <Compile Include="Views\EditorPages\AbstractEditorPageCategory.cs" />
     <Compile Include="Views\FieldColorType.cs" />
     <Compile Include="Views\EditorPages\ColorsExplanationController.cs" />
     <Compile Include="Views\Editors\AbstractEditor.cs" />
