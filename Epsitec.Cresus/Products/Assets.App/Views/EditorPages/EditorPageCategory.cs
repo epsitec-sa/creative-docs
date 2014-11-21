@@ -29,14 +29,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			                             this.CreateStringController  (parent, ObjectField.Name);
 			                             this.CreateStringController  (parent, ObjectField.Description,           lineCount: 5);
 			this.methodController      = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
-			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
-			                             this.CreateCalculatorButton  ();
-			this.yearController        = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
+			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate, editWidth: 90);
+			                             this.CreateRateCalculatorButton ();
+			this.yearsController       = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real, editWidth: 90);
+			                             this.CreateYearsCalculatorButton ();
 			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 			this.periodicityController = this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes,  editWidth: 90);
-			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);
-			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount);
+			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount, editWidth: 90);
+			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount, editWidth: 90);
 
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 
@@ -78,39 +79,59 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 
 			this.rateController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationRate);
-			this.calculatorButton     .Enable     = !Amortizations.IsHidden (method, ObjectField.AmortizationRate);
+			this.rateCalculatorButton     .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationRate);
+			this.yearsController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
+			this.yearsCalculatorButton    .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
 			this.typeController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationType);
-			this.yearController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
 			this.periodicityController.IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Periodicity);
 			this.prorataController    .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Prorata);
 			this.roundController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Round);
 			this.residualController   .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.ResidualValue);
 		}
 
-		private void CreateCalculatorButton()
+
+		private void CreateRateCalculatorButton()
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du taux.
-			var text = Res.Strings.EditorPages.Category.CalculatorButton.ToString ();
-			var width = text.GetTextWidth ();
-
-			this.calculatorButton = new Button
+			this.rateCalculatorButton = new Button
 			{
 				Parent          = this.rateController.FrameBox,
-				Text            = text,
-				PreferredWidth  = width + 20,
+				Text            = Res.Strings.EditorPages.Category.RateCalculatorButton.ToString (),
+				PreferredWidth  = AbstractFieldController.maxWidth - 90,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
 				Dock            = DockStyle.Left,
 			};
 
-			this.calculatorButton.Clicked += delegate
+			this.rateCalculatorButton.Clicked += delegate
 			{
-				this.ShowCalculatorPopup (this.calculatorButton);
+				this.ShowRateCalculatorPopup (this.rateCalculatorButton);
 			};
 		}
 
-		private void ShowCalculatorPopup(Widget target)
+		private void CreateYearsCalculatorButton()
+		{
+			//	Crée le bouton qui ouvre le Popup de calculation du nombre d'années.
+			this.yearsCalculatorButton = new Button
+			{
+				Parent          = this.yearsController.FrameBox,
+				Text            = Res.Strings.EditorPages.Category.YearsCalculatorButton.ToString (),
+				PreferredWidth  = AbstractFieldController.maxWidth - 90,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+			};
+
+			this.yearsCalculatorButton.Clicked += delegate
+			{
+				this.ShowYearsCalculatorPopup (this.yearsCalculatorButton);
+			};
+		}
+
+
+		private void ShowRateCalculatorPopup(Widget target)
 		{
 			//	Affiche le Popup de calculation du taux.
 			var popup = new RateCalculatorPopup (accessor)
@@ -130,12 +151,40 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 		}
 
+		private void ShowYearsCalculatorPopup(Widget target)
+		{
+			//	Affiche le Popup de calculation du taux.
+			var popup = new YearsCalculatorPopup (accessor)
+			{
+				Years = this.accessor.EditionAccessor.GetFieldDecimal (ObjectField.AmortizationYearCount),
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					this.SetYears (popup.Years);
+				}
+			};
+		}
+
+
 		private void SetRate(decimal? value)
 		{
 			this.accessor.EditionAccessor.SetField (ObjectField.AmortizationRate, value);
 			this.rateController.Value = value;
 
 			this.OnValueEdited (ObjectField.AmortizationRate);
+		}
+
+		private void SetYears(decimal? value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AmortizationYearCount, value);
+			this.yearsController.Value = value;
+
+			this.OnValueEdited (ObjectField.AmortizationYearCount);
 		}
 
 		private void SetType(AmortizationType value)
@@ -149,9 +198,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private EnumFieldController				methodController;
 		private DecimalFieldController			rateController;
-		private Button							calculatorButton;
+		private Button							rateCalculatorButton;
+		private DecimalFieldController			yearsController;
+		private Button							yearsCalculatorButton;
 		private EnumFieldController				typeController;
-		private DecimalFieldController			yearController;
 		private EnumFieldController				periodicityController;
 		private EnumFieldController				prorataController;
 		private DecimalFieldController			roundController;

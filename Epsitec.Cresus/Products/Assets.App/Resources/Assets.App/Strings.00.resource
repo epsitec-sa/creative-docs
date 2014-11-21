@@ -202,7 +202,7 @@
   <data name="EditorPages.Category.AccountsSubtitle" id="K39">Comptes à utiliser pour passer les écritures comptables :</data>
   <data name="EditorPages.AmortizationDefinition.Import" id="K49">Importer</data>
   <data name="EditorPages.AmortizationDefinition.ImportHelp" id="K59">Importez une catégorie d'immobilisation existante, puis modifiez éventuellement sa définition ci-dessous.</data>
-  <data name="EditorPages.Category.CalculatorButton" id="K69">Calculer d'après le nombre d'années</data>
+  <data name="EditorPages.Category.RateCalculatorButton" id="K69">Calculer d'après le nombre d'années</data>
   <data name="EditorPages.OneShot.Info" id="K79">Informations ponctuelles liées à l'événement:</data>
   <data name="EditorPages.Summary.Event" id="K89">Evénement</data>
   <data name="EditorPages.Summary.Groups" id="K99">Groupes</data>
@@ -458,4 +458,8 @@
   <data name="AmortizedAmountController.Forced.Output" id="K1J">Valeur comptable ou valeur imposée</data>
   <data name="AmortizedAmountController.Forced.Or" id="K2J">ou</data>
   <data name="AmortizedAmountController.Forced.Value" id="K3J">Vous pouvez ici imposer une valeur, qui prime&lt;br/&gt;sur tous les calculs d'amortissement ci-dessous</data>
+  <data name="EditorPages.Category.YearsCalculatorButton" id="K4J">Calculer d'après le nombre d'années et de mois</data>
+  <data name="Popup.YearsCalculator.Title" id="K5J">Calcul du nombre d'années</data>
+  <data name="Popup.YearsCalculator.TotalYears" id="K6J">Nombre d'années</data>
+  <data name="Popup.YearsCalculator.TotalMonths" id="K7J">Nombre de mois</data>
 </bundle>

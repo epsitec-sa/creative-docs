@@ -548,13 +548,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			return controller;
 		}
 
-		protected DecimalFieldController CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format)
+		protected DecimalFieldController CreateDecimalController(Widget parent, ObjectField field, DecimalFormat format, int? editWidth = null)
 		{
 			var controller = new DecimalFieldController (this.accessor)
 			{
 				Field         = field,
 				Required      = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
 				Label         = this.accessor.GetFieldName (field),
+				EditWidth     = editWidth.HasValue ? editWidth.Value : 0,
 				DecimalFormat = format,
 				TabIndex      = this.tabIndex,
 			};

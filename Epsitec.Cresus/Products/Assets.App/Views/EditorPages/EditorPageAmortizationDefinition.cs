@@ -32,13 +32,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			                             this.CreateStringController  (parent, ObjectField.CategoryName);
 			this.methodController      = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
-			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate);
-			this.yearController        = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real);
+			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate, editWidth: 90);
+			this.yearController        = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real, editWidth: 90);
 			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
 			this.periodicityController = this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
 			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
-			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount);
-			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount);
+			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount, editWidth: 90);
+			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount, editWidth: 90);
 
 			this.CreateSubtitle (parent, Res.Strings.EditorPages.Category.AccountsSubtitle.ToString ());
 

@@ -106,6 +106,7 @@
     <Compile Include="Popups\FilterControllers\SimpleFilterController.cs" />
     <Compile Include="Popups\FilterControllers\AbstractFilterController.cs" />
     <Compile Include="Popups\QuitPopup.cs" />
+    <Compile Include="Popups\YearsCalculatorPopup.cs" />
     <Compile Include="Popups\SaveMandatPopup.cs" />
     <Compile Include="Popups\OpenMandatPopup.cs" />
     <Compile Include="Popups\UndoListPopup.cs" />

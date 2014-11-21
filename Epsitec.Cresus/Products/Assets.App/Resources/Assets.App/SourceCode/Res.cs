@@ -1804,11 +1804,19 @@ namespace Epsitec.Cresus.Assets.App
 						}
 					}
 					//	designer:str/JUK6901
-					public static global::Epsitec.Common.Types.FormattedText CalculatorButton
+					public static global::Epsitec.Common.Types.FormattedText RateCalculatorButton
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544614));
+						}
+					}
+					//	designer:str/JUK4J01
+					public static global::Epsitec.Common.Types.FormattedText YearsCalculatorButton
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544932));
 						}
 					}
 				}
@@ -4871,6 +4879,34 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class YearsCalculator
+				{
+					//	designer:str/JUK5J01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544933));
+						}
+					}
+					//	designer:str/JUK7J01
+					public static global::Epsitec.Common.Types.FormattedText TotalMonths
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544935));
+						}
+					}
+					//	designer:str/JUK6J01
+					public static global::Epsitec.Common.Types.FormattedText TotalYears
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544934));
+						}
+					}
+				}
+				
 				public static class YesNo
 				{
 					//	designer:str/JUKD501
@@ -6169,11 +6205,19 @@ namespace Epsitec.Cresus.Assets.App
 						}
 					}
 					//	designer:str/JUK6901
-					public static global::Epsitec.Common.Support.Druid CalculatorButton
+					public static global::Epsitec.Common.Support.Druid RateCalculatorButton
 					{
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544614);
+						}
+					}
+					//	designer:str/JUK4J01
+					public static global::Epsitec.Common.Support.Druid YearsCalculatorButton
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544932);
 						}
 					}
 				}
@@ -9232,6 +9276,34 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544889);
 							}
+						}
+					}
+				}
+				
+				public static class YearsCalculator
+				{
+					//	designer:str/JUK5J01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544933);
+						}
+					}
+					//	designer:str/JUK7J01
+					public static global::Epsitec.Common.Support.Druid TotalMonths
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544935);
+						}
+					}
+					//	designer:str/JUK6J01
+					public static global::Epsitec.Common.Support.Druid TotalYears
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544934);
 						}
 					}
 				}

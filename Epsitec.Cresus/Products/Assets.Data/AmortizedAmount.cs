@@ -273,6 +273,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
 			//	valeur résiduelle.
+			//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
+			//	qu'il faut utiliser, mais OutputAmortizedAmount ci-dessus !
 			get
 			{
 				if (this.AmortizationType == AmortizationType.Unknown)

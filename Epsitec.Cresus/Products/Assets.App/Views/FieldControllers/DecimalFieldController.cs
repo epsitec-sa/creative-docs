@@ -162,13 +162,20 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			get
 			{
-				switch (this.DecimalFormat)
+				if (this.EditWidth == 0)
 				{
-					case DecimalFormat.Rate:
-						return 50;
+					switch (this.DecimalFormat)
+					{
+						case DecimalFormat.Rate:
+							return 50;
 
-					default:
-						return 90;
+						default:
+							return 90;
+					}
+				}
+				else
+				{
+					return this.EditWidth;
 				}
 			}
 		}
