@@ -37,6 +37,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case BaseTypeKind.Accounts:
 					return ViewTypeKind.Accounts;
 
+				case BaseTypeKind.Methods:
+					return ViewTypeKind.Methods;
+
 				default:
 					return ViewTypeKind.Unknown;
 			}
@@ -78,6 +81,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case ViewTypeKind.Accounts:
 					return "View.Accounts";
+
+				case ViewTypeKind.Methods:
+					return "View.Methods";
 
 				default:
 					return null;
@@ -139,6 +145,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewTypeKind.Accounts:
 					return Res.Strings.Enum.ViewTypeKind.Accounts.ToString ();
 
+				case ViewTypeKind.Methods:
+					return Res.Strings.Enum.ViewTypeKind.Methods.ToString ();
+
 				default:
 					return null;
 			}
@@ -180,6 +189,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				case PageType.Account:
 					return Res.Strings.Enum.PageType.Account.ToString ();
+
+				case PageType.Method:
+					return Res.Strings.Enum.PageType.Method.ToString ();
 
 				default:
 					return null;

@@ -10,9 +10,11 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		Unknown,
 
-		None,			// pas d'amortissement
-		Rate,			// amortissement classique selon un taux
-		YearCount,		// amortissement selon une durée en années
-		Expression,
+		None,				// pas d'amortissement
+		RateLinear,			// amortissement classique selon un taux linéaire
+		RateDegressive,		// amortissement classique selon un taux dégressif
+		YearsLinear,		// amortissement selon une durée en années linéaire
+		YearsDegressive,	// amortissement selon une durée en années dégressif
+		Custom,				// amortissement selon une expression C# personnalisée
 	}
 }

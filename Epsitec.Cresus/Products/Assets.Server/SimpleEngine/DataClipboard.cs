@@ -166,9 +166,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				var init = accessor.GetAmortizedAmount (modelProperty.Value);
 
-				var aa = new AmortizedAmount (AmortizationMethod.Unknown, 0, AmortizationType.Unknown,
+				var aa = new AmortizedAmount (AmortizationMethod.Unknown, null, 0,
 					0, 0, Periodicity.Unknown,
-					null, null, init, null, null, null, null, null, null, EntryScenario.Purchase, inputDate,
+					null, null, init, null, null, null, null, null, EntryScenario.Purchase, inputDate,
 					objPaste.Guid, eventPaste.Guid, Guid.Empty, 0);
 
 				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures

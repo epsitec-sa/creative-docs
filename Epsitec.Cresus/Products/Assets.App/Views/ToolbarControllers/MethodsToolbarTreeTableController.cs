@@ -18,15 +18,15 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 {
-	public class CategoriesToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty, System.IDisposable
+	public class MethodsToolbarTreeTableController : AbstractToolbarBothTreesController<SortableNode>, IDirty, System.IDisposable
 	{
-		public CategoriesToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
+		public MethodsToolbarTreeTableController(DataAccessor accessor, CommandContext commandContext, BaseType baseType)
 			: base (accessor, commandContext, baseType)
 		{
-			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Categories);
+			this.title = AbstractView.GetViewTitle (this.accessor, ViewType.Methods);
 
-			this.primaryGetter = this.accessor.GetNodeGetter (BaseType.Categories);
-			this.secondaryGetter = new SortableNodeGetter (this.primaryGetter, this.accessor, BaseType.Categories);
+			this.primaryGetter = this.accessor.GetNodeGetter (BaseType.Methods);
+			this.secondaryGetter = new SortableNodeGetter (this.primaryGetter, this.accessor, BaseType.Methods);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}
 
@@ -81,75 +81,75 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		protected override void CreateToolbar()
 		{
-			this.toolbar = new CategoriesToolbar (this.accessor, this.commandContext);
+			this.toolbar = new MethodsToolbar (this.accessor, this.commandContext);
 			this.ConnectSearch ();
 		}
 
 		protected override void CreateNodeFiller()
 		{
-			this.dataFiller = new CategoriesTreeTableFiller (this.accessor, this.nodeGetter)
+			this.dataFiller = new MethodsTreeTableFiller (this.accessor, this.nodeGetter)
 			{
 				Title = this.title,
 			};
 
-			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Categories");
+			TreeTableFiller<SortableNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Expression");
 
 			this.sortingInstructions = TreeTableFiller<SortableNode>.GetSortingInstructions (this.treeTableController);
 		}
 
 
-		[Command (Res.CommandIds.Categories.First)]
+		[Command (Res.CommandIds.Methods.First)]
 		protected override void OnFirst()
 		{
 			base.OnFirst ();
 		}
 
-		[Command (Res.CommandIds.Categories.Prev)]
+		[Command (Res.CommandIds.Methods.Prev)]
 		protected override void OnPrev()
 		{
 			base.OnPrev ();
 		}
 
-		[Command (Res.CommandIds.Categories.Next)]
+		[Command (Res.CommandIds.Methods.Next)]
 		protected override void OnNext()
 		{
 			base.OnNext ();
 		}
 
-		[Command (Res.CommandIds.Categories.Last)]
+		[Command (Res.CommandIds.Methods.Last)]
 		protected override void OnLast()
 		{
 			base.OnLast ();
 		}
 
-		[Command (Res.CommandIds.Categories.Deselect)]
+		[Command (Res.CommandIds.Methods.Deselect)]
 		protected void OnDeselect()
 		{
 			this.VisibleSelectedRow = -1;
 		}
 
-		[Command (Res.CommandIds.Categories.New)]
+		[Command (Res.CommandIds.Methods.New)]
 		protected void OnNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
 			this.ShowCreatePopup (target);
 		}
 
-		[Command (Res.CommandIds.Categories.Delete)]
+		[Command (Res.CommandIds.Methods.Delete)]
 		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			var name = CategoriesLogic.GetSummary (this.accessor, this.SelectedGuid);
-			var question = string.Format (Res.Strings.ToolbarControllers.CategoriesTreeTable.DeleteQuestion.ToString (), name);
+			var name = MethodsLogic.GetSummary (this.accessor, this.SelectedGuid);
+			var question = string.Format (Res.Strings.ToolbarControllers.MethodsTreeTable.DeleteQuestion.ToString (), name);
 
 			YesNoPopup.Show (target, question, delegate
 			{
 				this.accessor.UndoManager.Start ();
-				var desc = UndoManager.GetDescription (Res.Commands.Categories.Delete.Description, CategoriesLogic.GetSummary (this.accessor, this.SelectedGuid));
+				var desc = UndoManager.GetDescription (Res.Commands.Methods.Delete.Description, MethodsLogic.GetSummary (this.accessor, this.SelectedGuid));
 				this.accessor.UndoManager.SetDescription (desc);
 
-				this.accessor.RemoveObject (BaseType.Categories, this.SelectedGuid);
+				this.accessor.RemoveObject (BaseType.Methods, this.SelectedGuid);
 				this.UpdateData ();
 				this.OnUpdateAfterDelete ();
 
@@ -157,25 +157,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			});
 		}
 
-		[Command (Res.CommandIds.Categories.Copy)]
+		[Command (Res.CommandIds.Methods.Copy)]
 		protected override void OnCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			base.OnCopy (dispatcher, e);
 		}
 
-		[Command (Res.CommandIds.Categories.Paste)]
+		[Command (Res.CommandIds.Methods.Paste)]
 		protected override void OnPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.accessor.UndoManager.Start ();
 
 			base.OnPaste (dispatcher, e);
 
-			var desc = UndoManager.GetDescription (Res.Commands.Categories.Paste.Description, CategoriesLogic.GetSummary (this.accessor, this.SelectedGuid));
+			var desc = UndoManager.GetDescription (Res.Commands.Methods.Paste.Description, MethodsLogic.GetSummary (this.accessor, this.SelectedGuid));
 			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
-		[Command (Res.CommandIds.Categories.Export)]
+		[Command (Res.CommandIds.Methods.Export)]
 		protected override void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			base.OnExport (dispatcher, e);
@@ -186,20 +186,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche le menu contextuel.
 			MenuPopup.Show (this.toolbar, this.treeTableFrame, pos,
-				Res.Commands.Categories.New,
-				Res.Commands.Categories.Delete,
+				Res.Commands.Methods.New,
+				Res.Commands.Methods.Delete,
 				null,
-				Res.Commands.Categories.Copy,
-				Res.Commands.Categories.Paste);
+				Res.Commands.Methods.Copy,
+				Res.Commands.Methods.Paste);
 		}
 
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateCategoryPopup (this.accessor)
-			{
-				ObjectModel = this.SelectedGuid,
-			};
+			var popup = new CreateMethodPopup (this.accessor);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -207,40 +204,28 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				if (name == "ok")
 				{
-					this.CreateObject (popup.ObjectName, popup.ObjectModel);
+					this.CreateObject (popup.ObjectName);
 				}
 			};
 		}
 
-		private void CreateObject(string name, Guid model)
+		private void CreateObject(string name)
 		{
 			this.accessor.UndoManager.Start ();
 
 			var date = this.accessor.Mandat.StartDate;
+			var p1 = new DataStringProperty (ObjectField.Name, name);
+			var guid = this.accessor.CreateObject (BaseType.Methods, date, Guid.Empty, p1);
 
-			var p1 = new DataStringProperty  (ObjectField.Name,          name);
-			var p2 = new DataIntProperty     (ObjectField.Periodicity,   (int) Periodicity.Annual);
-			var p3 = new DataIntProperty     (ObjectField.Prorata,       (int) ProrataType.None);
-			var p4 = new DataDecimalProperty (ObjectField.Round,         1.0m);
-			var p5 = new DataDecimalProperty (ObjectField.ResidualValue, 1.0m);
-
-			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, p1, p2, p3, p4, p5);
-
-			var obj = this.accessor.GetObject (BaseType.Categories, guid);
+			var obj = this.accessor.GetObject (BaseType.Methods, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			if (!model.IsEmpty)
-			{
-				var objModel = this.accessor.GetObject (BaseType.Categories, model);
-				this.accessor.CopyObject (obj, objModel);
-			}
-			
 			this.UpdateData ();
 
 			this.SelectedGuid = guid;
 			this.OnUpdateAfterCreate (guid, EventType.Input, Timestamp.Now);  // Timestamp quelconque !
 
-			var desc = UndoManager.GetDescription (Res.Commands.Categories.New.Description, CategoriesLogic.GetSummary (this.accessor, guid));
+			var desc = UndoManager.GetDescription (Res.Commands.Methods.New.Description, MethodsLogic.GetSummary (this.accessor, guid));
 			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
@@ -252,18 +237,18 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			int row = this.VisibleSelectedRow;
 
-			this.UpdateSelCommand (Res.Commands.Categories.First, row, this.FirstRowIndex);
-			this.UpdateSelCommand (Res.Commands.Categories.Prev,  row, this.PrevRowIndex);
-			this.UpdateSelCommand (Res.Commands.Categories.Next,  row, this.NextRowIndex);
-			this.UpdateSelCommand (Res.Commands.Categories.Last,  row, this.LastRowIndex);
+			this.UpdateSelCommand (Res.Commands.Methods.First, row, this.FirstRowIndex);
+			this.UpdateSelCommand (Res.Commands.Methods.Prev,  row, this.PrevRowIndex);
+			this.UpdateSelCommand (Res.Commands.Methods.Next,  row, this.NextRowIndex);
+			this.UpdateSelCommand (Res.Commands.Methods.Last,  row, this.LastRowIndex);
 
-			this.toolbar.SetEnable (Res.Commands.Categories.New,      true);
-			this.toolbar.SetEnable (Res.Commands.Categories.Delete,   row != -1);
-			this.toolbar.SetEnable (Res.Commands.Categories.Deselect, row != -1);
+			this.toolbar.SetEnable (Res.Commands.Methods.New,      true);
+			this.toolbar.SetEnable (Res.Commands.Methods.Delete,   row != -1);
+			this.toolbar.SetEnable (Res.Commands.Methods.Deselect, row != -1);
 
-			this.toolbar.SetEnable (Res.Commands.Categories.Copy,   this.IsCopyEnable);
-			this.toolbar.SetEnable (Res.Commands.Categories.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
-			this.toolbar.SetEnable (Res.Commands.Categories.Export, !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Methods.Copy,   this.IsCopyEnable);
+			this.toolbar.SetEnable (Res.Commands.Methods.Paste,  this.accessor.Clipboard.HasObject (this.baseType));
+			this.toolbar.SetEnable (Res.Commands.Methods.Export, !this.IsEmpty);
 		}
 
 

@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
 			context.PrepareOffset  = this.PrepareOffset;
 			context.PrepareLength1 = this.PrepareLength1;
 			context.PrepareLength2 = this.PrepareLength2;
-			context.MaxLength        = this.MaxLength;
+			context.MaxLength      = this.MaxLength;
 			context.UndoSeparator  = this.UndoSeparator;
 		}
 

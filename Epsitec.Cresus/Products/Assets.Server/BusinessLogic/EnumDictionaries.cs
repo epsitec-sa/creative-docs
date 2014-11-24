@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -40,16 +39,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		public static string GetAmortizationTypeName(int? type)
-		{
-			if (type.HasValue)
-			{
-				return EnumDictionaries.GetAmortizationTypeName ((AmortizationType) type.Value);
-			}
-
-			return null;
-		}
-
 		public static string GetProrataTypeName(int? type)
 		{
 			if (type.HasValue)
@@ -76,21 +65,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case Periodicity.Mensual:
 					return Res.Strings.Enum.Periodicity.Mensual.ToString ();
-
-				default:
-					return null;
-			}
-		}
-
-		public static string GetAmortizationTypeName(AmortizationType type)
-		{
-			switch (type)
-			{
-				case AmortizationType.Linear:
-					return Res.Strings.Enum.AmortizationType.Linear.ToString ();
-
-				case AmortizationType.Degressive:
-					return Res.Strings.Enum.AmortizationType.Degressive.ToString ();
 
 				default:
 					return null;
@@ -203,14 +177,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case AmortizationMethod.None:
 					return Res.Strings.Enum.AmortizationMethod.None.Name.ToString ();
 
-				case AmortizationMethod.Rate:
-					return Res.Strings.Enum.AmortizationMethod.Rate.Name.ToString ();
+				case AmortizationMethod.RateLinear:
+					return Res.Strings.Enum.AmortizationMethod.RateLinear.Name.ToString ();
 
-				case AmortizationMethod.YearCount:
-					return Res.Strings.Enum.AmortizationMethod.YearCount.Name.ToString ();
+				case AmortizationMethod.RateDegressive:
+					return Res.Strings.Enum.AmortizationMethod.RateDegressive.Name.ToString ();
 
-				case AmortizationMethod.Expression:
-					return Res.Strings.Enum.AmortizationMethod.Expression.Name.ToString ();
+				case AmortizationMethod.YearsLinear:
+					return Res.Strings.Enum.AmortizationMethod.YearsLinear.Name.ToString ();
+
+				case AmortizationMethod.YearsDegressive:
+					return Res.Strings.Enum.AmortizationMethod.YearsDegressive.Name.ToString ();
+
+				case AmortizationMethod.Custom:
+					return Res.Strings.Enum.AmortizationMethod.Custom.Name.ToString ();
 
 				default:
 					return null;
@@ -224,14 +204,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case AmortizationMethod.None:
 					return Res.Strings.Enum.AmortizationMethod.None.Summary.ToString ();
 
-				case AmortizationMethod.Rate:
-					return Res.Strings.Enum.AmortizationMethod.Rate.Summary.ToString ();
+				case AmortizationMethod.RateLinear:
+					return Res.Strings.Enum.AmortizationMethod.RateLinear.Summary.ToString ();
 
-				case AmortizationMethod.YearCount:
-					return Res.Strings.Enum.AmortizationMethod.YearCount.Summary.ToString ();
+				case AmortizationMethod.RateDegressive:
+					return Res.Strings.Enum.AmortizationMethod.RateDegressive.Summary.ToString ();
 
-				case AmortizationMethod.Expression:
-					return Res.Strings.Enum.AmortizationMethod.Expression.Summary.ToString ();
+				case AmortizationMethod.YearsLinear:
+					return Res.Strings.Enum.AmortizationMethod.YearsLinear.Summary.ToString ();
+
+				case AmortizationMethod.YearsDegressive:
+					return Res.Strings.Enum.AmortizationMethod.YearsDegressive.Summary.ToString ();
+
+				case AmortizationMethod.Custom:
+					return Res.Strings.Enum.AmortizationMethod.Custom.Summary.ToString ();
 
 				default:
 					return null;
@@ -358,35 +344,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				yield return AmortizationMethod.None;
-				yield return AmortizationMethod.Rate;
-				yield return AmortizationMethod.YearCount;
-				yield return AmortizationMethod.Expression;
-			}
-		}
-
-
-		public static Dictionary<int, string> DictAmortizationTypes
-		{
-			get
-			{
-				var dict = new Dictionary<int, string> ();
-
-				foreach (var type in EnumDictionaries.EnumAmortizationTypes)
-				{
-					var text = EnumDictionaries.GetAmortizationTypeName (type);
-					dict.Add ((int) type, text);
-				}
-
-				return dict;
-			}
-		}
-
-		private static IEnumerable<AmortizationType> EnumAmortizationTypes
-		{
-			get
-			{
-				yield return AmortizationType.Linear;
-				yield return AmortizationType.Degressive;
+				yield return AmortizationMethod.RateLinear;
+				yield return AmortizationMethod.RateDegressive;
+				yield return AmortizationMethod.YearsLinear;
+				yield return AmortizationMethod.YearsDegressive;
+				yield return AmortizationMethod.Custom;
 			}
 		}
 

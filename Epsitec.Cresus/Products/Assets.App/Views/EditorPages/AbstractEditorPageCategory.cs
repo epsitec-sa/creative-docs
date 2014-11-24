@@ -22,17 +22,20 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void CreateCommonUI(Widget parent)
 		{
-			this.methodController      = this.CreateEnumController    (parent, ObjectField.AmortizationMethod,    EnumDictionaries.DictAmortizationMethods, editWidth: 250);
-			this.rateController        = this.CreateDecimalController (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate, editWidth: 90);
-			                             this.CreateRateCalculatorButton ();
-			this.yearsController       = this.CreateDecimalController (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real, editWidth: 90);
+			this.methodController      = this.CreateMethodGuidController  (parent, ObjectField.MethodGuid);
+			this.rateController        = this.CreateDecimalController     (parent, ObjectField.AmortizationRate,      DecimalFormat.Rate, editWidth: 90);
+			                             this.CreateRateCalculatorButton  ();
+			this.yearsController       = this.CreateDecimalController     (parent, ObjectField.AmortizationYearCount, DecimalFormat.Real, editWidth: 90);
 			                             this.CreateYearsCalculatorButton ();
-			this.typeController        = this.CreateEnumController    (parent, ObjectField.AmortizationType,      EnumDictionaries.DictAmortizationTypes, editWidth: 90);
-			this.periodicityController = this.CreateEnumController    (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
-			this.prorataController     = this.CreateEnumController    (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
-			this.roundController       = this.CreateDecimalController (parent, ObjectField.Round,                 DecimalFormat.Amount, editWidth: 90);
-			this.residualController    = this.CreateDecimalController (parent, ObjectField.ResidualValue,         DecimalFormat.Amount, editWidth: 90);
-			this.expressionController  = this.CreateStringController  (parent, ObjectField.Expression,            editWidth: AbstractFieldController.maxWidth, lineCount: 3);
+			this.periodicityController = this.CreateEnumController        (parent, ObjectField.Periodicity,           EnumDictionaries.DictPeriodicities, editWidth: 90);
+			this.prorataController     = this.CreateEnumController        (parent, ObjectField.Prorata,               EnumDictionaries.DictProrataTypes, editWidth: 90);
+			this.roundController       = this.CreateDecimalController     (parent, ObjectField.Round,                 DecimalFormat.Amount, editWidth: 90);
+			this.residualController    = this.CreateDecimalController     (parent, ObjectField.ResidualValue,         DecimalFormat.Amount, editWidth: 90);
+
+			this.methodController.ValueEdited += delegate
+			{
+				this.UpdateControllers ();
+			};
 		}
 
 		protected void CreateAccountsUI(Widget parent, System.DateTime? forcedDate)
@@ -44,11 +47,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.entrySamples = new EntrySamples (this.accessor, forcedDate);
 			this.entrySamples.CreateUI (parent);
-
-			this.methodController.ValueEdited += delegate
-			{
-				this.UpdateControllers ();
-			};
 		}
 
 
@@ -62,25 +60,24 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			AmortizationMethod method;
 
-			if (this.methodController.Value.HasValue)
-			{
-				method = (AmortizationMethod) this.methodController.Value;
-			}
-			else
+			if (this.methodController.Value.IsEmpty)
 			{
 				method = AmortizationMethod.Unknown;
 			}
+			else
+			{
+				method = MethodsLogic.GetMethod(this.accessor, this.methodController.Value);
+			}
 
+			this.methodController     .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.MethodGuid);
 			this.rateController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationRate);
 			this.rateCalculatorButton     .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationRate);
 			this.yearsController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
 			this.yearsCalculatorButton    .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
-			this.typeController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationType);
 			this.periodicityController.IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Periodicity);
 			this.prorataController    .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Prorata);
 			this.roundController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Round);
 			this.residualController   .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.ResidualValue);
-			this.expressionController .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Expression);
 		}
 
 
@@ -140,7 +137,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				if (name == "ok")
 				{
 					this.SetRate (popup.Rate);
-					this.SetType (AmortizationType.Linear);
 				}
 			};
 		}
@@ -181,25 +177,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.OnValueEdited (ObjectField.AmortizationYearCount);
 		}
 
-		private void SetType(AmortizationType value)
-		{
-			this.accessor.EditionAccessor.SetField (ObjectField.AmortizationType, (int) value);
-			this.typeController.Value = (int) value;
 
-			this.OnValueEdited (ObjectField.AmortizationType);
-		}
-
-
-		protected EnumFieldController			methodController;
-		protected DecimalFieldController		rateController;
-		protected Button						rateCalculatorButton;
-		protected DecimalFieldController		yearsController;
-		protected Button						yearsCalculatorButton;
-		protected EnumFieldController			typeController;
-		protected EnumFieldController			periodicityController;
-		protected EnumFieldController			prorataController;
-		protected DecimalFieldController		roundController;
-		protected DecimalFieldController		residualController;
-		protected StringFieldController			expressionController;
+		private MethodGuidFieldController		methodController;
+		private DecimalFieldController			rateController;
+		private Button							rateCalculatorButton;
+		private DecimalFieldController			yearsController;
+		private Button							yearsCalculatorButton;
+		private EnumFieldController				periodicityController;
+		private EnumFieldController				prorataController;
+		private DecimalFieldController			roundController;
+		private DecimalFieldController			residualController;
 	}
 }

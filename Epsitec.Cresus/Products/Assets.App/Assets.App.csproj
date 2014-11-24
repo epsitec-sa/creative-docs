@@ -102,10 +102,13 @@
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
+    <Compile Include="Popups\CreateMethodPopup.cs" />
     <Compile Include="Popups\FilterControllers\AccountsFilterController.cs" />
     <Compile Include="Popups\FilterControllers\SimpleFilterController.cs" />
     <Compile Include="Popups\FilterControllers\AbstractFilterController.cs" />
+    <Compile Include="Popups\MethodsPopup.cs" />
     <Compile Include="Popups\QuitPopup.cs" />
+    <Compile Include="Popups\StackedControllers\MethodGuidStackedController.cs" />
     <Compile Include="Popups\YearsCalculatorPopup.cs" />
     <Compile Include="Popups\SaveMandatPopup.cs" />
     <Compile Include="Popups\OpenMandatPopup.cs" />
@@ -190,6 +193,9 @@
     <Compile Include="Settings\SearchKind.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
+    <Compile Include="Views\CommandToolbars\MethodsToolbar.cs" />
+    <Compile Include="Views\EditorPages\EditorPageMethod.cs" />
+    <Compile Include="Views\MethodsView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AccountsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\AssetsLeftToolbar.cs" />
@@ -209,9 +215,12 @@
     <Compile Include="Views\FieldControllers\AbstractFieldController.cs" />
     <Compile Include="Popups\HistoryController.cs" />
     <Compile Include="Views\FieldControllers\BoolFieldController.cs" />
+    <Compile Include="Views\FieldControllers\MethodGuidFieldController.cs" />
     <Compile Include="Views\ReportChoiceController.cs" />
     <Compile Include="Views\EntrySamples.cs" />
+    <Compile Include="Views\ToolbarControllers\MethodsToolbarTreeTableController.cs" />
     <Compile Include="Views\ToolbarControllers\WarningsToolbarTreeTableController.cs" />
+    <Compile Include="Views\ViewStates\MethodsViewState.cs" />
     <Compile Include="Views\ViewStates\WarningsViewState.cs" />
     <Compile Include="Views\WarningsView.cs" />
     <Compile Include="Views\ViewStates\AccountsViewState.cs" />
@@ -523,6 +532,7 @@
     <EmbeddedResource Include="Images\Warning.Hide.icon" />
     <EmbeddedResource Include="Images\Warning.ShowAll.icon" />
     <EmbeddedResource Include="Images\Warnings.Hidden.icon" />
+    <EmbeddedResource Include="Images\View.Methods.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

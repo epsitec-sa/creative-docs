@@ -98,6 +98,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 						break;
 
+					case FieldType.GuidMethod:
+						var ge = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, field, false);
+						var te = MethodsLogic.GetSummary (accessor, ge);
+						if (!string.IsNullOrEmpty (te))
+						{
+							line = te;
+						}
+						break;
+
 					case FieldType.GuidRatio:
 						var gr = ObjectProperties.GetObjectPropertyGuidRatio (obj, timestamp, field, false);
 						var tr = GroupsLogic.GetShortName (accessor, gr);
@@ -197,15 +206,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//?}
 
 			yield return ObjectField.CategoryName;
-			yield return ObjectField.AmortizationMethod;
+			yield return ObjectField.MethodGuid;
 			yield return ObjectField.AmortizationRate;
 			yield return ObjectField.AmortizationYearCount;
-			yield return ObjectField.AmortizationType;
 			yield return ObjectField.Periodicity;
 			yield return ObjectField.Prorata;
 			yield return ObjectField.Round;
 			yield return ObjectField.ResidualValue;
-			yield return ObjectField.Expression;
 
 			foreach (var field in DataAccessor.AccountFields)
 			{

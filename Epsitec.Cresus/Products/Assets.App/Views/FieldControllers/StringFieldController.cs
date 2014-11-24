@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		public StringFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
+			this.maxLength = 500;
 		}
 
 
@@ -44,6 +45,23 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 							}
 						}
 					}
+				}
+			}
+		}
+
+		public int								MaxLength
+		{
+			get
+			{
+				return this.maxLength;
+			}
+			set
+			{
+				this.maxLength = value;
+
+				if (this.textField != null)
+				{
+					this.textField.MaxLength = this.maxLength;
 				}
 			}
 		}
@@ -101,6 +119,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					PreferredHeight = AbstractFieldController.lineHeight,
 					TabIndex        = ++this.TabIndex,
 					Text            = this.value,
+					MaxLength       = this.maxLength,
 				};
 			}
 			else
@@ -113,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					PreferredHeight = StringFieldController.GetMultiHeight (this.LineCount),
 					TabIndex        = ++this.TabIndex,
 					Text            = this.value,
+					MaxLength       = this.maxLength,
 				};
 			}
 
@@ -165,5 +185,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private AbstractTextField				textField;
 		private string							value;
+		private int								maxLength;
 	}
 }

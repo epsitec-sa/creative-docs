@@ -132,18 +132,95 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Retourne la valeur de sortie d'un amortissement.
 			if (aa.HasValue)
 			{
+				object result;
+
+				switch (aa.Value.AmortizationMethod)
+				{
+					case AmortizationMethod.RateLinear:
+						result = AmortizationExpression.Calculator_RateLinear.Evaluate (
+							aa.Value.ForcedAmount,
+							aa.Value.BaseAmount.GetValueOrDefault (),
+							aa.Value.InitialAmount.GetValueOrDefault (),
+							aa.Value.ResidualAmount.GetValueOrDefault (),
+							aa.Value.RoundAmount.GetValueOrDefault (),
+							aa.Value.Rate.GetValueOrDefault (),
+							aa.Value.PeriodicityFactor,
+							aa.Value.ProrataNumerator.GetValueOrDefault (),
+							aa.Value.ProrataDenominator.GetValueOrDefault (),
+							aa.Value.YearCountPeriodicity,
+							aa.Value.YearRank
+							);
+						return AmortizationExpression.CastResult (result);
+
+					case AmortizationMethod.RateDegressive:
+						result = AmortizationExpression.Calculator_RateDegressive.Evaluate (
+							aa.Value.ForcedAmount,
+							aa.Value.BaseAmount.GetValueOrDefault (),
+							aa.Value.InitialAmount.GetValueOrDefault (),
+							aa.Value.ResidualAmount.GetValueOrDefault (),
+							aa.Value.RoundAmount.GetValueOrDefault (),
+							aa.Value.Rate.GetValueOrDefault (),
+							aa.Value.PeriodicityFactor,
+							aa.Value.ProrataNumerator.GetValueOrDefault (),
+							aa.Value.ProrataDenominator.GetValueOrDefault (),
+							aa.Value.YearCountPeriodicity,
+							aa.Value.YearRank
+							);
+						return AmortizationExpression.CastResult (result);
+
+					case AmortizationMethod.YearsLinear:
+						result = AmortizationExpression.Calculator_YearsLinear.Evaluate (
+							aa.Value.ForcedAmount,
+							aa.Value.BaseAmount.GetValueOrDefault (),
+							aa.Value.InitialAmount.GetValueOrDefault (),
+							aa.Value.ResidualAmount.GetValueOrDefault (),
+							aa.Value.RoundAmount.GetValueOrDefault (),
+							aa.Value.Rate.GetValueOrDefault (),
+							aa.Value.PeriodicityFactor,
+							aa.Value.ProrataNumerator.GetValueOrDefault (),
+							aa.Value.ProrataDenominator.GetValueOrDefault (),
+							aa.Value.YearCountPeriodicity,
+							aa.Value.YearRank
+							);
+						return AmortizationExpression.CastResult (result);
+
+					case AmortizationMethod.YearsDegressive:
+						result = AmortizationExpression.Calculator_YearsDegressive.Evaluate (
+							aa.Value.ForcedAmount,
+							aa.Value.BaseAmount.GetValueOrDefault (),
+							aa.Value.InitialAmount.GetValueOrDefault (),
+							aa.Value.ResidualAmount.GetValueOrDefault (),
+							aa.Value.RoundAmount.GetValueOrDefault (),
+							aa.Value.Rate.GetValueOrDefault (),
+							aa.Value.PeriodicityFactor,
+							aa.Value.ProrataNumerator.GetValueOrDefault (),
+							aa.Value.ProrataDenominator.GetValueOrDefault (),
+							aa.Value.YearCountPeriodicity,
+							aa.Value.YearRank
+							);
+						return AmortizationExpression.CastResult (result);
+				}
+
 				if (string.IsNullOrEmpty (aa.Value.Expression))
 				{
-					return aa.Value.OutputAmortizedAmount;
+					return aa.Value.InitialAmount;
 				}
 				else
 				{
-					var exp   = aa.Value.Expression;
-					var value = aa.Value.InitialAmount.GetValueOrDefault ();
-					var rate  = aa.Value.Rate.GetValueOrDefault ();
-					var count = aa.Value.YearRank;
-
-					return this.amortizationExpressions.Evaluate (exp, value, rate, count);
+					return this.amortizationExpressions.Evaluate (
+						aa.Value.Expression,
+						aa.Value.ForcedAmount,
+						aa.Value.BaseAmount.GetValueOrDefault (),
+						aa.Value.InitialAmount.GetValueOrDefault (),
+						aa.Value.ResidualAmount.GetValueOrDefault (),
+						aa.Value.RoundAmount.GetValueOrDefault (),
+						aa.Value.Rate.GetValueOrDefault (),
+						aa.Value.PeriodicityFactor,
+						aa.Value.ProrataNumerator.GetValueOrDefault (),
+						aa.Value.ProrataDenominator.GetValueOrDefault (),
+						aa.Value.YearCountPeriodicity,
+						aa.Value.YearRank
+						);
 				}
 			}
 			else
@@ -282,52 +359,47 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return;
 			}
 
-			var amortizationType = AmortizationType.Unknown;
-			var entryScenario    = EntryScenario.None;
+			bool fixAmount = true;
+			var entryScenario = EntryScenario.None;
 
 			switch (e.Type)
 			{
 				case EventType.Input:
-					amortizationType = AmortizationType.Unknown;  // montant fixe
-					entryScenario    = EntryScenario.Purchase;
+					entryScenario = EntryScenario.Purchase;
 					break;
 
 				case EventType.Increase:
-					amortizationType = AmortizationType.Unknown;  // montant fixe
-					entryScenario    = EntryScenario.Increase;
+					entryScenario = EntryScenario.Increase;
 					break;
 
 				case EventType.Decrease:
-					amortizationType = AmortizationType.Unknown;  // montant fixe
-					entryScenario    = EntryScenario.Decrease;
+					entryScenario = EntryScenario.Decrease;
 					break;
 
 				case EventType.Adjust:
-					amortizationType = AmortizationType.Unknown;  // montant fixe
-					entryScenario    = EntryScenario.Adjust;
+					entryScenario = EntryScenario.Adjust;
 					break;
 
 				case EventType.AmortizationAuto:
 				case EventType.AmortizationPreview:
-					amortizationType = AmortizationType.Linear;
-					entryScenario    = EntryScenario.AmortizationAuto;
+					fixAmount     = false;
+					entryScenario = EntryScenario.AmortizationAuto;
 					break;
 
 				case EventType.AmortizationExtra:
-					amortizationType = AmortizationType.Linear;
-					entryScenario    = EntryScenario.AmortizationExtra;
+					fixAmount     = false;
+					entryScenario = EntryScenario.AmortizationExtra;
 					break;
 
 				case EventType.Output:
-					amortizationType = AmortizationType.Unknown;  // montant fixe
-					entryScenario    = EntryScenario.Sale;
+					entryScenario = EntryScenario.Sale;
 					break;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown EventType {0}", e.Type.ToString ()));
 			}
 
-			var aa = Amortizations.InitialiseAmortizedAmount (obj, e, timestamp, amortizationType, entryScenario);
+			var aa = Amortizations.InitialiseAmortizedAmount (this, obj, e, timestamp, fixAmount, entryScenario);
 
 			if (e.Type == EventType.Output)
 			{
@@ -475,15 +547,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 
 				yield return ObjectField.CategoryName;
-				yield return ObjectField.AmortizationMethod;
+				yield return ObjectField.MethodGuid;
 				yield return ObjectField.AmortizationRate;
 				yield return ObjectField.AmortizationYearCount;
-				yield return ObjectField.AmortizationType;
 				yield return ObjectField.Periodicity;
 				yield return ObjectField.Prorata;
 				yield return ObjectField.Round;
 				yield return ObjectField.ResidualValue;
-				yield return ObjectField.Expression;
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -526,6 +596,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.AccountDecreaseCredit;
 				yield return ObjectField.AccountAdjustDebit;
 				yield return ObjectField.AccountAdjustCredit;
+			}
+		}
+
+		public static IEnumerable<ObjectField> MethodFields
+		{
+			get
+			{
+				yield return ObjectField.Name;
+				yield return ObjectField.Expression;
 			}
 		}
 
@@ -572,7 +651,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return FieldType.Decimal;
 
 				case ObjectField.AmortizationMethod:
-				case ObjectField.AmortizationType:
 				case ObjectField.Periodicity:
 				case ObjectField.Prorata:
 					return FieldType.Int;
@@ -588,6 +666,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.Account;
+
+				case ObjectField.MethodGuid:
+					return FieldType.GuidMethod;
 
 				default:
 					return FieldType.String;

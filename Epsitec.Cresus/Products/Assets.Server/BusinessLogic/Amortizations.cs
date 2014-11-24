@@ -257,20 +257,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
-			var method   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationMethod);
+			var exp      = ObjectProperties.GetObjectPropertyGuid    (obj, timestamp, ObjectField.MethodGuid);
 			var taux     = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationRate);
-			var type     = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.AmortizationType);
 			var years    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.AmortizationYearCount);
 			var period   = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Periodicity);
 			var prorata  = ObjectProperties.GetObjectPropertyInt     (obj, timestamp, ObjectField.Prorata);
 			var round    = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.Round);
 			var residual = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, ObjectField.ResidualValue);
-			var exp      = ObjectProperties.GetObjectPropertyString  (obj, timestamp, ObjectField.Expression);
 
-			if (method.HasValue && taux.HasValue && type.HasValue && years.HasValue && period.HasValue)
+			if (!exp.IsEmpty && taux.HasValue && years.HasValue && period.HasValue)
 			{
-				var m = (AmortizationMethod) method;
-				var t = (AmortizationType) type;
 				var p = (Periodicity) period;
 				var r = (ProrataType) prorata;
 
@@ -282,7 +278,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						x.Type == EventType.AmortizationExtra))
 					.Count ();
 
-				return new AmortizationDefinition (m, taux.GetValueOrDefault (0.0m), t, rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m), exp);
+				return new AmortizationDefinition (exp, taux.GetValueOrDefault (0.0m), rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
@@ -311,7 +307,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				(
 					p.Value,
 					details.Def.Rate,
-					details.Def.Type,
 					details.Prorata.Numerator,
 					details.Prorata.Denominator,
 					details.Def.Periodicity,
@@ -324,8 +319,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static AmortizedAmount InitialiseAmortizedAmount(DataObject obj, DataEvent e, Timestamp timestamp,
-			AmortizationType amortizationType, EntryScenario entryScenario)
+		public static AmortizedAmount InitialiseAmortizedAmount(DataAccessor accessor,
+			DataObject obj, DataEvent e, Timestamp timestamp,
+			bool fixAmount, EntryScenario entryScenario)
 		{
 			//	Initialise une fois pour toutes le AmortizedAmount d'un objet.
 			//	Collecte tous les champs qui définissent comment générer l'écriture.
@@ -359,13 +355,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				valueDate = inputDate;
 			}
 
+			AmortizationMethod method;
+			string exp;
+
+			if (fixAmount)
+			{
+				method = AmortizationMethod.None;
+				exp = null;
+			}
+			else
+			{
+				method = MethodsLogic.GetMethod (accessor, def.ExpressionGuid);
+				exp = MethodsLogic.GetExpression (accessor, def.ExpressionGuid);
+			}
+
 			var prorata = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
 
 			return new AmortizedAmount
 			(
-				def.Method, def.Rate, amortizationType, def.YearRank, def.YearCount, def.Periodicity,
+				method, exp, def.Rate, def.YearRank, def.YearCount, def.Periodicity,
 				null, null, null, null,
-				prorata.Numerator, prorata.Denominator, def.Round, def.Residual, def.Expression,
+				prorata.Numerator, prorata.Denominator, def.Round, def.Residual,
 				entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
 			);
@@ -469,7 +479,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var aa = p.Value;
 
-				if (aa.AmortizationType == AmortizationType.Unknown)  // montant fixe ?
+				if (aa.AmortizationMethod == AmortizationMethod.None)  // montant fixe ?
 				{
 					aa = AmortizedAmount.SetPreviousAmount (aa, lastAmount);
 					Amortizations.SetAmortizedAmount (e, aa);
@@ -552,39 +562,31 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	true  -> champ inutile à cacher
 			switch (method)
 			{
-				case AmortizationMethod.Rate:
+				case AmortizationMethod.RateLinear:
+				case AmortizationMethod.RateDegressive:
 					//	Si l'amortissement est calculé selon le taux, le nombre d'années
 					//	ne sert à rien.
-					return field == ObjectField.AmortizationYearCount
-						|| field == ObjectField.Expression;
+					return field == ObjectField.AmortizationYearCount;
 
-				case AmortizationMethod.YearCount:
+				case AmortizationMethod.YearsLinear:
+				case AmortizationMethod.YearsDegressive:
 					//	Si l'amortissement est calculé selon le nombre d'années, le taux
 					//	ne sert à rien.
 					return field == ObjectField.AmortizationRate
-						|| field == ObjectField.Prorata
-						|| field == ObjectField.Expression;
+						|| field == ObjectField.Prorata;
 
-				case AmortizationMethod.Expression:
-					return field == ObjectField.AmortizationYearCount
-						|| field == ObjectField.AmortizationRate
-						|| field == ObjectField.AmortizationType
-						|| field == ObjectField.Periodicity
-						|| field == ObjectField.Prorata
-						|| field == ObjectField.Round
-						|| field == ObjectField.ResidualValue;
+				case AmortizationMethod.Custom:
+					return false;
 
 				default:
 					//	S'il n'y a pas d'amortissement généré automatiquement, tous les
 					//	champs suivants ne servent à rien.
 					return field == ObjectField.AmortizationYearCount
 						|| field == ObjectField.AmortizationRate
-						|| field == ObjectField.AmortizationType
 						|| field == ObjectField.Periodicity
 						|| field == ObjectField.Prorata
 						|| field == ObjectField.Round
-						|| field == ObjectField.ResidualValue
-						|| field == ObjectField.Expression;
+						|| field == ObjectField.ResidualValue;
 			}
 		}
 

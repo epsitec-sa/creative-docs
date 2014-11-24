@@ -274,6 +274,9 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 				case BaseTypeKind.Accounts:
 					return ObjectEditor.GetAccountsAvailablePages (hasEvent, type);
 
+				case BaseTypeKind.Methods:
+					return ObjectEditor.GetMethodsAvailablePages (hasEvent, type);
+
 				default:
 					return null;
 			}
@@ -352,6 +355,12 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 		{
 			//	Retourne les pages autorisées pour un type d'événement donné.
 			yield return PageType.Account;
+		}
+
+		private static IEnumerable<PageType> GetMethodsAvailablePages(bool hasEvent, EventType type)
+		{
+			//	Retourne les pages autorisées pour un type d'événement donné.
+			yield return PageType.Method;
 		}
 
 

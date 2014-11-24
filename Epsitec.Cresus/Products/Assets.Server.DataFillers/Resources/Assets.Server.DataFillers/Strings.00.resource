@@ -4,7 +4,6 @@
   <data name="CategoriesTreeTableFiller.Name" id="K1">Catégorie</data>
   <data name="CategoriesTreeTableFiller.Number" id="K2">N°</data>
   <data name="CategoriesTreeTableFiller.AmortizationRate" id="K3">Taux</data>
-  <data name="CategoriesTreeTableFiller.AmortizationType" id="K4">Type</data>
   <data name="CategoriesTreeTableFiller.Periodicity" id="K5">Périodicité</data>
   <data name="CategoriesTreeTableFiller.Prorata" id="K6">Prorata</data>
   <data name="CategoriesTreeTableFiller.Round" id="K7">Arrondi</data>
@@ -31,7 +30,6 @@
   <data name="SingleAccountTreeTableFiller.Name" id="K21">Compte</data>
   <data name="SingleCategoriesTreeTableFiller.Name" id="K31">Catégories</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationRate" id="K41">Taux</data>
-  <data name="SingleCategoriesTreeTableFiller.AmortizationType" id="K51">Type</data>
   <data name="SingleGroupsTreeTableFiller.Name" id="K61">Objet</data>
   <data name="SingleObjectsTreeTableFiller.Name" id="K71">Objet</data>
   <data name="SinglePersonsTreeTableFiller.Name" id="K81">Contacts</data>
@@ -79,8 +77,11 @@
   <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
   <data name="CategoriesTreeTableFiller.AmortizationMethod" id="KI2">Méthode</data>
   <data name="CategoriesTreeTableFiller.AmortizationYearCount" id="KJ2">Années</data>
-  <data name="SingleCategoriesTreeTableFiller.AmortizationMethod" id="KK2">Méthode</data>
+  <data name="SingleCategoriesTreeTableFiller.Method" id="KK2">Méthode</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
   <data name="UserFieldsTreeTableFiller.Order" id="KM2">Ordre</data>
-  <data name="CategoriesTreeTableFiller.Expression" id="KN2">Expression</data>
+  <data name="CategoriesTreeTableFiller.Method" id="KN2">Méthode</data>
+  <data name="ExpressionsTreeTableFiller.Name" id="KO2">Nom</data>
+  <data name="ExpressionsTreeTableFiller.Expression" id="KP2">Expression</data>
+  <data name="ExpressionsTreeTableFiller.AmortizationMethod" id="KQ2">Type</data>
 </bundle>

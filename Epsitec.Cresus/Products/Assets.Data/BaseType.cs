@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public static BaseType PersonsUserFields = new BaseType (BaseTypeKind.PersonsUserFields);
 		public static BaseType Entries           = new BaseType (BaseTypeKind.Entries);
 		public static BaseType Accounts          = new BaseType (BaseTypeKind.Accounts);
+		public static BaseType Methods           = new BaseType (BaseTypeKind.Methods);
 
 		public readonly BaseTypeKind			Kind;
 		public readonly DateRange				AccountsDateRange;

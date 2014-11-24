@@ -42,15 +42,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				columns.Add (new TreeTableColumnDescription (ObjectField.Name,                  TreeTableColumnType.String,  180, Res.Strings.CategoriesTreeTableFiller.Name.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Number,                TreeTableColumnType.String,   50, Res.Strings.CategoriesTreeTableFiller.Number.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod,    TreeTableColumnType.String,   70, Res.Strings.CategoriesTreeTableFiller.AmortizationMethod.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.MethodGuid,            TreeTableColumnType.String,  180, Res.Strings.CategoriesTreeTableFiller.Method.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationRate,      TreeTableColumnType.Rate,     50, Res.Strings.CategoriesTreeTableFiller.AmortizationRate.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationYearCount, TreeTableColumnType.Decimal,  60, Res.Strings.CategoriesTreeTableFiller.AmortizationYearCount.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationType,      TreeTableColumnType.String,   80, Res.Strings.CategoriesTreeTableFiller.AmortizationType.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Periodicity,           TreeTableColumnType.String,  100, Res.Strings.CategoriesTreeTableFiller.Periodicity.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Prorata,               TreeTableColumnType.String,  100, Res.Strings.CategoriesTreeTableFiller.Prorata.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Round,                 TreeTableColumnType.Amount,   70, Res.Strings.CategoriesTreeTableFiller.Round.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.ResidualValue,         TreeTableColumnType.Amount,  100, Res.Strings.CategoriesTreeTableFiller.ResidualValue.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Expression,            TreeTableColumnType.String,  200, Res.Strings.CategoriesTreeTableFiller.Expression.ToString ()));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -65,7 +63,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			int columnCount = 11 + DataAccessor.AccountFields.Count ();
+			int columnCount = 9 + DataAccessor.AccountFields.Count ();
 			for (int i=0; i<columnCount; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
@@ -84,31 +82,24 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var name   = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
 				var number = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
-				var method = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationMethod);
+				var mg     = ObjectProperties.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.MethodGuid);
 				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
 				var years  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationYearCount);
-				var type   = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
 				var resid  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
-				var exp    = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Expression);
 
-				if (method.HasValue)
-				{
-					var am = (AmortizationMethod) method;
+				var method = MethodsLogic.GetMethod (this.accessor, mg);
 
-					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationRate,      ref rate);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationYearCount, ref years);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.AmortizationType,      ref type);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.Periodicity,           ref period);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.Prorata,               ref prorat);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.Round,                 ref round);
-					CategoriesTreeTableFiller.Hide (am, ObjectField.ResidualValue,         ref resid);
-				}
+				CategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationRate,      ref rate);
+				CategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationYearCount, ref years);
+				CategoriesTreeTableFiller.Hide (method, ObjectField.Periodicity,           ref period);
+				CategoriesTreeTableFiller.Hide (method, ObjectField.Prorata,               ref prorat);
+				CategoriesTreeTableFiller.Hide (method, ObjectField.Round,                 ref round);
+				CategoriesTreeTableFiller.Hide (method, ObjectField.ResidualValue,         ref resid);
 
-				var m = EnumDictionaries.GetAmortizationMethodSummary (method);
-				var t = EnumDictionaries.GetAmortizationTypeName (type);
+				var m = MethodsLogic.GetSummary (this.accessor, mg);
 				var c = EnumDictionaries.GetPeriodicityName (period);
 				var r = EnumDictionaries.GetProrataTypeName (prorat);
 
@@ -119,12 +110,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell13 = new TreeTableCellString  (m,      cellState);
 				var cell14 = new TreeTableCellDecimal (rate,   cellState);
 				var cell15 = new TreeTableCellDecimal (years,  cellState);
-				var cell16 = new TreeTableCellString  (t,      cellState);
-				var cell17 = new TreeTableCellString  (c,      cellState);
-				var cell18 = new TreeTableCellString  (r,      cellState);
-				var cell19 = new TreeTableCellDecimal (round,  cellState);
-				var cell20 = new TreeTableCellDecimal (resid,  cellState);
-				var cell21 = new TreeTableCellString  (exp,    cellState);
+				var cell16 = new TreeTableCellString  (c,      cellState);
+				var cell17 = new TreeTableCellString  (r,      cellState);
+				var cell18 = new TreeTableCellDecimal (round,  cellState);
+				var cell19 = new TreeTableCellDecimal (resid,  cellState);
 
 				int columnRank = 0;
 
@@ -137,8 +126,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell17);
 				content.Columns[columnRank++].AddRow (cell18);
 				content.Columns[columnRank++].AddRow (cell19);
-				content.Columns[columnRank++].AddRow (cell20);
-				content.Columns[columnRank++].AddRow (cell21);
 
 				foreach (var field in DataAccessor.AccountFields)
 				{

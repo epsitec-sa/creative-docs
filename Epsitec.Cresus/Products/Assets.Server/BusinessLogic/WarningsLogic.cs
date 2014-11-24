@@ -41,30 +41,26 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				//	Liste des champs obligatoires d'une catégorie d'immobilisation.
 				return field == ObjectField.Name
-					|| field == ObjectField.AmortizationMethod
+					|| field == ObjectField.MethodGuid
 					|| field == ObjectField.AmortizationRate
 					|| field == ObjectField.AmortizationYearCount
-					|| field == ObjectField.AmortizationType
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
 					|| field == ObjectField.Round
-					|| field == ObjectField.ResidualValue
-					|| field == ObjectField.Expression;
+					|| field == ObjectField.ResidualValue;
 			}
 			else if (baseType == BaseType.Assets)
 			{
 				//	Liste des champs obligatoires d'un objet d'immobilisation.
 				return field == ObjectField.MainValue
 					|| field == ObjectField.CategoryName
-					|| field == ObjectField.AmortizationMethod
+					|| field == ObjectField.MethodGuid
 					|| field == ObjectField.AmortizationRate
 					|| field == ObjectField.AmortizationYearCount
-					|| field == ObjectField.AmortizationType
 					|| field == ObjectField.Periodicity
 					|| field == ObjectField.Prorata
 					|| field == ObjectField.Round
-					|| field == ObjectField.ResidualValue
-					|| field == ObjectField.Expression;
+					|| field == ObjectField.ResidualValue;
 			}
 			else if (baseType == BaseType.Groups)
 			{
@@ -110,15 +106,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	On cherche les champs indéfinis dans les catégories.
 			WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Categories,
 				ObjectField.Name,
-				ObjectField.AmortizationMethod,
+				ObjectField.MethodGuid,
 				ObjectField.AmortizationRate,
 				ObjectField.AmortizationYearCount,
-				ObjectField.AmortizationType,
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
 				ObjectField.Round,
-				ObjectField.ResidualValue,
-				ObjectField.Expression);
+				ObjectField.ResidualValue);
 
 			//	On cherche les comptes indéfinis dans les catégories.
 			foreach (var cat in accessor.Mandat.GetData (BaseType.Categories))
@@ -209,15 +203,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//	On cherche les champs pour l'amortissement indéfinis.
 				WarningsLogic.CheckEmpty (warnings, accessor, asset, e,
 				ObjectField.CategoryName,
-				ObjectField.AmortizationMethod,
+				ObjectField.MethodGuid,
 				ObjectField.AmortizationRate,
 				ObjectField.AmortizationYearCount,
-				ObjectField.AmortizationType,
 				ObjectField.Periodicity,
 				ObjectField.Prorata,
 				ObjectField.Round,
-				ObjectField.ResidualValue,
-				ObjectField.Expression);
+				ObjectField.ResidualValue);
 
 				//	On cherche les amortissements incorrectement définis.
 				WarningsLogic.CheckAmortization (warnings, accessor, BaseType.Assets, asset, e);
@@ -277,23 +269,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static void CheckAmortization(List<Warning> warnings, DataAccessor accessor, BaseType baseType, DataObject obj, DataEvent e)
 		{
 			//	On cherche les paramètres d'amortissement incorrectement définis.
-			var pMethod   = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationMethod,    synthetic: true) as DataIntProperty;
+			var pExp      = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.MethodGuid,            synthetic: true) as DataGuidProperty;
 			var pRate     = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationRate,      synthetic: true) as DataDecimalProperty;
 			var pYears    = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationYearCount, synthetic: true) as DataDecimalProperty;
-			var pType     = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.AmortizationType,      synthetic: true) as DataIntProperty;
 			var pRound    = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.Round,                 synthetic: true) as DataDecimalProperty;
 			var pResidual = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.ResidualValue,         synthetic: true) as DataDecimalProperty;
-			var pExp      = ObjectProperties.GetObjectProperty (obj, e.Timestamp, ObjectField.Expression,            synthetic: true) as DataStringProperty;
 
-			var method   = (pMethod   == null) ? AmortizationMethod.Unknown : (AmortizationMethod) pMethod.Value;
 			var rate     = (pRate     == null) ? 0.0m : pRate.Value;
 			var years    = (pYears    == null) ? 0.0m : pYears.Value;
-			var type     = (pType     == null) ? AmortizationType.Unknown : (AmortizationType) pType.Value;
 			var round    = (pRound    == null) ? 0.0m : pRound.Value;
 			var residual = (pResidual == null) ? 0.0m : pResidual.Value;
-			var exp      = (pExp      == null) ? null : pExp.Value;
+			var exp      = (pExp      == null) ? Guid.Empty : pExp.Value;
 
 			var eventGuid = (baseType == BaseType.Assets) ? e.Guid : Guid.Empty;
+			var method = MethodsLogic.GetMethod (accessor, exp);
 
 			if (round < 0.0m)
 			{
@@ -309,7 +298,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				warnings.Add (warning);
 			}
 
-			if (method == AmortizationMethod.Rate)
+			if (method == AmortizationMethod.RateLinear ||
+				method == AmortizationMethod.RateDegressive)
 			{
 				if (rate < 0.0m)
 				{
@@ -318,7 +308,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					warnings.Add (warning);
 				}
 			}
-			else if (method == AmortizationMethod.YearCount)
+			else if (method == AmortizationMethod.YearsLinear ||
+					 method == AmortizationMethod.YearsDegressive)
 			{
 				if (years <= 0.0m)
 				{
@@ -326,18 +317,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationYearCount, description);
 					warnings.Add (warning);
 				}
-
-				if (type     == AmortizationType.Degressive  &&
-					residual <= 0.0m)
-				{
-					var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
-					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.ResidualValue, description);
-					warnings.Add (warning);
-				}
 			}
-			else if (method == AmortizationMethod.Expression)
+			else if (method == AmortizationMethod.Custom)
 			{
-				if (string.IsNullOrEmpty (exp))
+				if (exp.IsEmpty)
 				{
 					var description = Res.Strings.WarningsLogic.Value.Expression.ToString ();
 					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.Expression, description);
@@ -520,10 +503,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (baseType.Kind == BaseTypeKind.Categories)
 				{
 					var e = obj.GetInputEvent ();
-					var p = e.GetProperty (ObjectField.AmortizationMethod) as DataIntProperty;
-					if (p != null)
+					var p = e.GetProperty (ObjectField.MethodGuid) as DataGuidProperty;
+					if (p != null && !p.Value.IsEmpty)
 					{
-						method = (AmortizationMethod) p.Value;
+						method = MethodsLogic.GetMethod (accessor, p.Value);
 					}
 				}
 
@@ -564,10 +547,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
 			var method = AmortizationMethod.Unknown;
 			{
-				var p = asset.GetSyntheticProperty (e.Timestamp, ObjectField.AmortizationMethod) as DataIntProperty;
-				if (p != null)
+				var p = asset.GetSyntheticProperty (e.Timestamp, ObjectField.MethodGuid) as DataGuidProperty;
+				if (p != null && !p.Value.IsEmpty)
 				{
-					method = (AmortizationMethod) p.Value;
+					method = MethodsLogic.GetMethod (accessor, p.Value);
 				}
 			}
 

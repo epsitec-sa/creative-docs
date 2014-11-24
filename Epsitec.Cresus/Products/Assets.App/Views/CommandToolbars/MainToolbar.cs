@@ -214,6 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		[Command (Res.CommandIds.View.AssetsSettings)]
 		[Command (Res.CommandIds.View.PersonsSettings)]
 		[Command (Res.CommandIds.View.Accounts)]
+		[Command (Res.CommandIds.View.Methods)]
 		private void OnView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ViewType = ViewType.FromDefaultKind (this.accessor, MainToolbar.GetViewKind (e.Command));
@@ -362,6 +363,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				case ViewTypeKind.Accounts:
 					return Res.Commands.View.Accounts;
 
+				case ViewTypeKind.Methods:
+					return Res.Commands.View.Methods;
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported ViewType {0}", kind.ToString ()));
 			}
@@ -375,6 +379,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				yield return ViewTypeKind.AssetsSettings;
 				yield return ViewTypeKind.PersonsSettings;
 				yield return ViewTypeKind.Accounts;
+				yield return ViewTypeKind.Methods;
 			}
 		}
 
@@ -394,6 +399,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				yield return ViewTypeKind.AssetsSettings;
 				yield return ViewTypeKind.PersonsSettings;
 				yield return ViewTypeKind.Accounts;
+				yield return ViewTypeKind.Methods;
 			}
 		}
 		#endregion

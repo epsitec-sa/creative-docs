@@ -25,18 +25,20 @@ namespace Epsitec.Cresus.Assets.Data
 
 		//	Définitions d'une catégorie.
 		CategoryName,
-		AmortizationMethod,
+		MethodGuid,
 		AmortizationYearCount,
 		AmortizationRate,
-		AmortizationType,
 		Periodicity,
 		Prorata,
 		Round,
 		ResidualValue,
-		Expression,
 
 		//	Définition d'un groupe.
 		GroupSuggestedDuringCreation,
+
+		//	Définition d'une méthode.
+		AmortizationMethod,
+		Expression,
 
 		AccountPurchaseDebit,
 		AccountPurchaseCredit,

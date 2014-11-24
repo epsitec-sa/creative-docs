@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				DummyAccounts.AddAccounts (this.accessor.Mandat, "monvillage 2014");
 			}
 
+			this.CreateMethodsSamples ();
 			this.CreateGroupsSamples ();
 			this.CreateCatsSamples ();
 
@@ -198,10 +199,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			this.AddCat ("Amortissements manuels",
 				"Un objet de cette catégorie ne sera jamais amorti automatiquement, car le taux défini est nul.",
-				"0", AmortizationMethod.None, 0.0m, 10.0m, AmortizationType.Linear,
+				"0", "Aucun", 0.0m, 10.0m,
 				Periodicity.Annual, ProrataType.Prorata12, 1.0m, 1.0m);
 
-			this.AddCat ("Immobilier", null, "10", AmortizationMethod.YearCount, 0.10m, 20.0m, AmortizationType.Linear,
+			this.AddCat ("Immobilier", null, "10", "Années linéaires", 0.10m, 20.0m,
 				Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m,
 				".14040.01", ".10020.01",
 				".10010.01", ".14040.01",
@@ -212,8 +213,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				"9610.3499.00", ".14040.01");
 //				".10020.01", ".10010.01", ".14040.01", ".14040.01", "0290.3300.40", "9610.3499.00", "9610.3499.00");
 
-			this.AddCat ("Véhicules", null, "20", AmortizationMethod.YearCount, 0.20m, 10.0m, AmortizationType.Degressive,
-				Periodicity.Annual, ProrataType.Prorata12,  100.0m, 1.0m,
+			this.AddCat ("Véhicules", null, "20", "Années linéaires", 0.20m, 10.0m,
+				Periodicity.Annual, ProrataType.Prorata12, 100.0m, 1.0m,
 				".14040.01", ".10020.01",
 				".10010.01", ".14060.01",
 				"0290.3300.60", ".14060.01",

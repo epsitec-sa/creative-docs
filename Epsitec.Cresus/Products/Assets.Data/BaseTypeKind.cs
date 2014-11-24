@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Assets.Data
 		PersonsUserFields,
 		Entries,
 		Accounts,
+		Methods,
 	}
 }

@@ -462,4 +462,10 @@
   <data name="Popup.YearsCalculator.Title" id="K5J">Calcul du nombre d'années</data>
   <data name="Popup.YearsCalculator.TotalYears" id="K6J">Nombre d'années</data>
   <data name="Popup.YearsCalculator.TotalMonths" id="K7J">Nombre de mois</data>
+  <data name="Enum.ViewTypeKind.Methods" id="K8J">Méthodes d'amortissements</data>
+  <data name="Enum.PageType.Method" id="K9J">Méthode d'amortissement</data>
+  <data name="ToolbarControllers.MethodsTreeTable.DeleteQuestion" id="KAJ">Voulez-vous supprimer la méthode "{0}" ?</data>
+  <data name="Popup.CreateMethod.Title" id="KBJ">Création d'une nouvelle méthode d'amortissement</data>
+  <data name="FieldControllers.Method.Goto" id="KCJ">Aller sur la méthode d'amortissement</data>
+  <data name="Popup.Methods.Title" id="KDJ">Choix de la méthode d'amortissement</data>
 </bundle>

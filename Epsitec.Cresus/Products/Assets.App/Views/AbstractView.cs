@@ -270,6 +270,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var baseType = new BaseType (BaseTypeKind.Accounts, viewType.AccountsDateRange);
 					return new AccountsView (accessor, commandContext, toolbar, viewType, baseType);
 
+				case ViewTypeKind.Methods:
+					return new MethodsView (accessor, commandContext, toolbar, viewType);
+
 				default:
 					return null;
 			}

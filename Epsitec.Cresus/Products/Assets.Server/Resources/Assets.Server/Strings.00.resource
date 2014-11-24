@@ -22,8 +22,6 @@
   <data name="Enum.Periodicity.Semestrial" id="KJ">Semestriel</data>
   <data name="Enum.Periodicity.Trimestrial" id="KK">Trimestriel</data>
   <data name="Enum.Periodicity.Mensual" id="KL">Mensuel</data>
-  <data name="Enum.AmortizationType.Linear" id="KM">Linéaire</data>
-  <data name="Enum.AmortizationType.Degressive" id="KN">Dégressif</data>
   <data name="Enum.ProrataType.None" id="KO">Aucun</data>
   <data name="Enum.ProrataType.Prorata365" id="KP">Sur 365 jours</data>
   <data name="Enum.ProrataType.Prorata360" id="KQ">Sur 360 jours</data>
@@ -75,16 +73,21 @@
   <data name="EditionAccessor.Undo.Modify.AssetUserField" id="K82">Modification d'un champ d'un objet d'immobilisation</data>
   <data name="Enum.EntryScenario.Adjust" id="K92">Correction</data>
   <data name="Enum.EntryScenario.Title.Adjust" id="KA2">Correction {0}</data>
-  <data name="Enum.AmortizationMethod.Rate.Name" id="KB2">Amortissement selon le taux</data>
-  <data name="Enum.AmortizationMethod.YearCount.Name" id="KC2">Amortissement selon le nombre d'années</data>
-  <data name="Enum.AmortizationMethod.Rate.Summary" id="KD2">Taux</data>
-  <data name="Enum.AmortizationMethod.YearCount.Summary" id="KE2">Années</data>
+  <data name="Enum.AmortizationMethod.RateLinear.Name" id="KB2">Amortissement linéaire selon un taux</data>
+  <data name="Enum.AmortizationMethod.YearsLinear.Name" id="KC2">Amortissement linéaire selon le nombre d'années</data>
+  <data name="Enum.AmortizationMethod.RateLinear.Summary" id="KD2">Taux linéaire</data>
+  <data name="Enum.AmortizationMethod.YearsLinear.Summary" id="KE2">Années linéaires</data>
   <data name="CategoriesLogic.YearCount.Summary" id="KF2">{0} ans</data>
   <data name="Enum.AmortizationMethod.None.Name" id="KG2">Pas d'amortissement</data>
   <data name="Enum.AmortizationMethod.None.Summary" id="KH2">Aucun</data>
   <data name="WarningsLogic.Value.GreaterOrEqualToZero" id="KM2">Cette valeur doit être plus grande ou égale à zéro</data>
   <data name="WarningsLogic.Value.GreaterThanZero" id="KP2">Cette valeur doit être plus grande que zéro</data>
   <data name="WarningsLogic.Value.Expression" id="KQ2">Il manque l'expression</data>
-  <data name="Enum.AmortizationMethod.Expression.Name" id="KR2">Amortissement selon une expression C#</data>
-  <data name="Enum.AmortizationMethod.Expression.Summary" id="KS2">Expression</data>
+  <data name="Enum.AmortizationMethod.Custom.Name" id="KR2">Amortissement selon une expression C#</data>
+  <data name="Enum.AmortizationMethod.Custom.Summary" id="KS2">Expression</data>
+  <data name="Enum.AmortizationMethod.RateDegressive.Name" id="KT2">Amortissement dégressif selon un taux</data>
+  <data name="Enum.AmortizationMethod.RateDegressive.Summary" id="KU2">Taux dégressif</data>
+  <data name="Enum.AmortizationMethod.YearsDegressive.Name" id="KV2">Amortissement dégressif selon le nombre d'années</data>
+  <data name="Enum.AmortizationMethod.YearsDegressive.Summary" id="K03">Années dégressives</data>
+  <data name="MethodsLogic.ExpressionSummary" id="K13">{0} lignes C#</data>
 </bundle>

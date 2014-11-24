@@ -162,6 +162,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
+				else if (controller is MethodGuidFieldController)
+				{
+					var c = controller as MethodGuidFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
+				}
 				else if (controller is AccountFieldController)
 				{
 					var c = controller as AccountFieldController;
@@ -281,6 +290,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					this.CreatePersonGuidController (parent, userField.Field);
 					break;
 
+				case FieldType.GuidMethod:
+					this.CreateMethodGuidController (parent, userField.Field);
+					break;
+
 				case FieldType.Account:
 					this.CreateAccountController (parent, userField.Field);
 					break;
@@ -339,6 +352,51 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected PersonGuidFieldController CreatePersonGuidController(Widget parent, ObjectField field)
 		{
 			var controller = new PersonGuidFieldController (this.accessor)
+			{
+				Accessor  = this.accessor,
+				Field     = field,
+				Required  = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
+				Label     = this.accessor.GetFieldName (field),
+				EditWidth = AbstractFieldController.maxWidth,
+				TabIndex  = this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+
+			return controller;
+		}
+
+		protected MethodGuidFieldController CreateMethodGuidController(Widget parent, ObjectField field)
+		{
+			var controller = new MethodGuidFieldController (this.accessor)
 			{
 				Accessor  = this.accessor,
 				Field     = field,
@@ -458,7 +516,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			return controller;
 		}
 
-		protected StringFieldController CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1)
+		protected StringFieldController CreateStringController(Widget parent, ObjectField field, int editWidth = AbstractFieldController.maxWidth, int lineCount = 1, int maxLength = 500)
 		{
 			var controller = new StringFieldController (this.accessor)
 			{
@@ -468,6 +526,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				EditWidth = editWidth,
 				LineCount = lineCount,
 				TabIndex  = this.tabIndex,
+				MaxLength = maxLength,
 			};
 
 			controller.CreateUI (parent);
@@ -962,6 +1021,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 				case PageType.Account:
 					return new EditorPageAccount (accessor, baseType, isTimeless: true);
+
+				case PageType.Method:
+					return new EditorPageMethod (accessor, baseType, isTimeless: true);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported page type {0}", page.ToString ()));

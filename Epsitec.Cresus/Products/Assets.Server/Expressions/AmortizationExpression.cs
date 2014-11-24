@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Epsitec.Common.Widgets;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -18,14 +19,21 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	{
 		public AmortizationExpression(string expression)
 		{
+			expression = TextLayout.ConvertToSimpleText (expression);
+
 			if (!expression.StartsWith ("public static class Calculator"))
 			{
 				expression =
 					("public static class Calculator\n" +
 					"{\n" +
-					"    public static object Evaluate(decimal value, decimal rate, int count)\n" +
+					"    public static object Evaluate(" +
+							"decimal? forcedAmount, decimal baseAmount, decimal initialAmount, " +
+							"decimal residualAmount, decimal roundAmount, " +
+							"decimal rate, decimal periodicityFactor, " +
+							"decimal prorataNumerator, decimal prorataDenominator, " +
+							"decimal yearCount, int yearRank)\n" +
 					"    {\n" + 
-					"        return $;\n" +
+					"        $;\n" +
 					"    }\n" +
 					"}").Replace ("$", expression);
 			}
@@ -52,6 +60,196 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
+		#region Compilation samples
+		public static class Calculator_RateLinear
+		{
+			public static object Evaluate(
+				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
+				decimal residualAmount, decimal roundAmount,
+				decimal rate, decimal periodicityFactor,
+				decimal prorataNumerator, decimal prorataDenominator,
+				decimal yearCount, int yearRank)
+			{
+				if (forcedAmount.HasValue)
+				{
+					return forcedAmount.Value;
+				}
+				else
+				{
+					rate *= periodicityFactor;
+
+					if (prorataDenominator != 0)
+					{
+						rate *= prorataNumerator / prorataDenominator;
+					}
+
+					var amortization = baseAmount * rate;
+					var value = initialAmount - amortization;
+
+					if (roundAmount > 0)
+					{
+						if (value < 0)
+						{
+							value -= roundAmount/2;
+						}
+						else
+						{
+							value += roundAmount/2;
+						}
+
+						value -= (value % roundAmount);
+					}
+
+					return value = System.Math.Max (value, residualAmount);
+				}
+			}
+		}
+
+		public static class Calculator_RateDegressive
+		{
+			public static object Evaluate(
+				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
+				decimal residualAmount, decimal roundAmount,
+				decimal rate, decimal periodicityFactor,
+				decimal prorataNumerator, decimal prorataDenominator,
+				decimal yearCount, int yearRank)
+			{
+				if (forcedAmount.HasValue)
+				{
+					return forcedAmount.Value;
+				}
+				else
+				{
+					rate *= periodicityFactor;
+
+					if (prorataDenominator != 0)
+					{
+						rate *= prorataNumerator / prorataDenominator;
+					}
+
+					var amortization = initialAmount * rate;
+					var value = initialAmount - amortization;
+
+					if (roundAmount > 0)
+					{
+						if (value < 0)
+						{
+							value -= roundAmount/2;
+						}
+						else
+						{
+							value += roundAmount/2;
+						}
+
+						value -= (value % roundAmount);
+					}
+
+					return value = System.Math.Max (value, residualAmount);
+				}
+			}
+		}
+
+		public static class Calculator_YearsLinear
+		{
+			public static object Evaluate(
+				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
+				decimal residualAmount, decimal roundAmount,
+				decimal rate, decimal periodicityFactor,
+				decimal prorataNumerator, decimal prorataDenominator,
+				decimal yearCount, int yearRank)
+			{
+				if (forcedAmount.HasValue)
+				{
+					return forcedAmount.Value;
+				}
+				else
+				{
+					rate = 1.0m;
+					decimal n = yearCount - yearRank;  // nb d'années restantes
+
+					if (n > 0)
+					{
+						rate = 1.0m / n;
+					}
+
+					var amortization = initialAmount * rate;
+					var value = initialAmount - amortization;
+
+					if (roundAmount > 0)
+					{
+						if (value < 0)
+						{
+							value -= roundAmount/2;
+						}
+						else
+						{
+							value += roundAmount/2;
+						}
+
+						value -= (value % roundAmount);
+					}
+
+					return value = System.Math.Max (value, residualAmount);
+				}
+			}
+		}
+
+		public static class Calculator_YearsDegressive
+		{
+			public static object Evaluate(
+				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
+				decimal residualAmount, decimal roundAmount,
+				decimal rate, decimal periodicityFactor,
+				decimal prorataNumerator, decimal prorataDenominator,
+				decimal yearCount, int yearRank)
+			{
+				if (forcedAmount.HasValue)
+				{
+					return forcedAmount.Value;
+				}
+				else
+				{
+					rate = 1.0m;
+					decimal n = yearCount - yearRank;  // nb d'années restantes
+
+					if (n > 0)
+					{
+						if (residualAmount == 0 || initialAmount == 0)
+						{
+							rate = 1.0m;
+						}
+						else
+						{
+							var x = residualAmount / initialAmount;
+							var y = 1.0m / n;
+							rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
+						}
+					}
+
+					var amortization = initialAmount * rate;
+					var value = initialAmount - amortization;
+
+					if (roundAmount > 0)
+					{
+						if (value < 0)
+						{
+							value -= roundAmount/2;
+						}
+						else
+						{
+							value += roundAmount/2;
+						}
+
+						value -= (value % roundAmount);
+					}
+
+					return value = System.Math.Max (value, residualAmount);
+				}
+			}
+		}
+		#endregion
+
+
 		public string Error
 		{
 			get
@@ -61,34 +259,53 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(decimal value, decimal rate, int count)
+		public decimal? Evaluate(decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
+			decimal residualAmount, decimal roundAmount,
+			decimal rate, decimal periodicityFactor,
+			decimal prorataNumerator, decimal prorataDenominator,
+			decimal yearCount, int yearRank)
 		{
 			if (this.compiledAssembly != null)
 			{
 				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
 				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
 
-				object[] parameters = { value, rate, count };
+				object[] parameters =
+				{
+					forcedAmount, baseAmount, initialAmount,
+					residualAmount, roundAmount,
+					rate, periodicityFactor,
+					prorataNumerator, prorataDenominator,
+					yearCount, yearRank
+				};
 
 				object answer = evaluate.Invoke (null, parameters);
-
-				if (answer is decimal)
-				{
-					return (decimal) answer;
-				}
-				else if (answer is double)
-				{
-					var a = (double) answer;
-					return (decimal) a;
-				}
-				else if (answer is int)
-				{
-					var a = (int) answer;
-					return (decimal) a;
-				}
+				return AmortizationExpression.CastResult (answer);
 			}
 
 			return null;
+		}
+
+		public static decimal? CastResult(object answer)
+		{
+			if (answer is decimal)
+			{
+				return (decimal) answer;
+			}
+			else if (answer is double)
+			{
+				var a = (double) answer;
+				return (decimal) a;
+			}
+			else if (answer is int)
+			{
+				var a = (int) answer;
+				return (decimal) a;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 

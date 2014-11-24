@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
-					public static class Expression
+					public static class Custom
 					{
 						//	designer:str/IUKR201
 						public static global::Epsitec.Common.Types.FormattedText Name
@@ -343,7 +343,27 @@ namespace Epsitec.Cresus.Assets.Server
 						}
 					}
 					
-					public static class Rate
+					public static class RateDegressive
+					{
+						//	designer:str/IUKT201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544413));
+							}
+						}
+						//	designer:str/IUKU201
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544414));
+							}
+						}
+					}
+					
+					public static class RateLinear
 					{
 						//	designer:str/IUKB201
 						public static global::Epsitec.Common.Types.FormattedText Name
@@ -363,7 +383,27 @@ namespace Epsitec.Cresus.Assets.Server
 						}
 					}
 					
-					public static class YearCount
+					public static class YearsDegressive
+					{
+						//	designer:str/IUKV201
+						public static global::Epsitec.Common.Types.FormattedText Name
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544415));
+							}
+						}
+						//	designer:str/IUK0301
+						public static global::Epsitec.Common.Types.FormattedText Summary
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544416));
+							}
+						}
+					}
+					
+					public static class YearsLinear
 					{
 						//	designer:str/IUKC201
 						public static global::Epsitec.Common.Types.FormattedText Name
@@ -380,26 +420,6 @@ namespace Epsitec.Cresus.Assets.Server
 							{
 								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
 							}
-						}
-					}
-				}
-				
-				public static class AmortizationType
-				{
-					//	designer:str/IUKN001
-					public static global::Epsitec.Common.Types.FormattedText Degressive
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343));
-						}
-					}
-					//	designer:str/IUKM001
-					public static global::Epsitec.Common.Types.FormattedText Linear
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544342));
 						}
 					}
 				}
@@ -683,6 +703,18 @@ namespace Epsitec.Cresus.Assets.Server
 						{
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544326));
 						}
+					}
+				}
+			}
+			
+			public static class MethodsLogic
+			{
+				//	designer:str/IUK1301
+				public static global::Epsitec.Common.Types.FormattedText ExpressionSummary
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544417));
 					}
 				}
 			}
@@ -1168,7 +1200,7 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationMethod
 				{
-					public static class Expression
+					public static class Custom
 					{
 						//	designer:str/IUKR201
 						public static global::Epsitec.Common.Support.Druid Name
@@ -1208,7 +1240,27 @@ namespace Epsitec.Cresus.Assets.Server
 						}
 					}
 					
-					public static class Rate
+					public static class RateDegressive
+					{
+						//	designer:str/IUKT201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544413);
+							}
+						}
+						//	designer:str/IUKU201
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544414);
+							}
+						}
+					}
+					
+					public static class RateLinear
 					{
 						//	designer:str/IUKB201
 						public static global::Epsitec.Common.Support.Druid Name
@@ -1228,7 +1280,27 @@ namespace Epsitec.Cresus.Assets.Server
 						}
 					}
 					
-					public static class YearCount
+					public static class YearsDegressive
+					{
+						//	designer:str/IUKV201
+						public static global::Epsitec.Common.Support.Druid Name
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544415);
+							}
+						}
+						//	designer:str/IUK0301
+						public static global::Epsitec.Common.Support.Druid Summary
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544416);
+							}
+						}
+					}
+					
+					public static class YearsLinear
 					{
 						//	designer:str/IUKC201
 						public static global::Epsitec.Common.Support.Druid Name
@@ -1245,26 +1317,6 @@ namespace Epsitec.Cresus.Assets.Server
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
 							}
-						}
-					}
-				}
-				
-				public static class AmortizationType
-				{
-					//	designer:str/IUKN001
-					public static global::Epsitec.Common.Support.Druid Degressive
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544343);
-						}
-					}
-					//	designer:str/IUKM001
-					public static global::Epsitec.Common.Support.Druid Linear
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544342);
 						}
 					}
 				}
@@ -1548,6 +1600,18 @@ namespace Epsitec.Cresus.Assets.Server
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544326);
 						}
+					}
+				}
+			}
+			
+			public static class MethodsLogic
+			{
+				//	designer:str/IUK1301
+				public static global::Epsitec.Common.Support.Druid ExpressionSummary
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544417);
 					}
 				}
 			}

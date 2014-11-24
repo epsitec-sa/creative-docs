@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
 			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
 			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods       = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
@@ -44,6 +45,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
 			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
 			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods       = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
@@ -188,6 +190,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case BaseTypeKind.Accounts:
 					return this.GetAccounts (type.AccountsDateRange);
+
+				case BaseTypeKind.Methods:
+					return this.methods;
 
 				default:
 					// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
@@ -554,15 +559,16 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly ComputerSettings								computerSettings;
 		private readonly GlobalSettings									globalSettings;
 		private readonly UndoManager									undoManager;
-		private readonly GuidDictionary<DataObject>							assetsUserFields;
-		private readonly GuidDictionary<DataObject>							personsUserFields;
-		private readonly GuidDictionary<DataObject>							assets;
-		private readonly GuidDictionary<DataObject>							categories;
-		private readonly GuidDictionary<DataObject>							groups;
-		private readonly GuidDictionary<DataObject>							persons;
-		private readonly GuidDictionary<DataObject>							entries;
+		private readonly GuidDictionary<DataObject>						assetsUserFields;
+		private readonly GuidDictionary<DataObject>						personsUserFields;
+		private readonly GuidDictionary<DataObject>						assets;
+		private readonly GuidDictionary<DataObject>						categories;
+		private readonly GuidDictionary<DataObject>						groups;
+		private readonly GuidDictionary<DataObject>						persons;
+		private readonly GuidDictionary<DataObject>						entries;
+		private readonly GuidDictionary<DataObject>						methods;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
-		private readonly GuidDictionary<AbstractReportParams>					reports;
+		private readonly GuidDictionary<AbstractReportParams>			reports;
 
 		private Guid													guid;
 		private string													name;

@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Data.Reports;
@@ -118,7 +119,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var aa = AmortizedAmount.SetAmortizedAmount
 			(
 				p.Value,
-				AmortizationType.Degressive,
 				initialAmount,
 				initialAmount
 			);
@@ -173,20 +173,18 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			if (cat != null)
 			{
-				var method = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationMethod);
-				var taux   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
+				var method = ObjectProperties.GetObjectPropertyGuid    (cat, null, ObjectField.MethodGuid);
+				var rate   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
 				var years  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationYearCount);
-				var type   = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.AmortizationType);
 				var period = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
 				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
 				var round  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
 				var rest   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
 
 				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,          catNane));
-				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationMethod,    method.GetValueOrDefault (0)));
-				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate,      taux.GetValueOrDefault ()));
+				e.AddProperty (new DataGuidProperty    (ObjectField.MethodGuid,            method));
+				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate,      rate.GetValueOrDefault (0.0m)));
 				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationYearCount, years.GetValueOrDefault (1.0m)));
-				e.AddProperty (new DataIntProperty     (ObjectField.AmortizationType,      type.GetValueOrDefault (1)));
 				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,           period.GetValueOrDefault (12)));
 				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,               prorat.GetValueOrDefault ()));
 				e.AddProperty (new DataDecimalProperty (ObjectField.Round,                 round.GetValueOrDefault ()));
@@ -264,8 +262,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		}
 
 		protected void AddCat(string name, string desc, string number,
-			AmortizationMethod method, decimal rate, decimal yearCount,
-			AmortizationType type, Periodicity periodicity, ProrataType prorata,
+			string methodName,
+			decimal rate, decimal yearCount,
+			Periodicity periodicity, ProrataType prorata,
 			decimal round, decimal residual,
 			string accountPurchaseDebit = null, string accountPurchaseCredit = null,
 			string accountSaleDebit = null, string accountSaleCredit = null,
@@ -284,18 +283,19 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
-			this.AddField (e, ObjectField.Name,                           name);
+			var exp = this.GetMethod (methodName);
+
+			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.Description,                    desc);
 			this.AddField (e, ObjectField.Number,                         number);
-			this.AddField (e, ObjectField.AmortizationMethod,             (int) method);
+			this.AddField (e, ObjectField.MethodGuid,                     exp.Guid);
 			this.AddField (e, ObjectField.AmortizationRate,               rate);
 			this.AddField (e, ObjectField.AmortizationYearCount,          yearCount);
-			this.AddField (e, ObjectField.AmortizationType,               (int) type);
 			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
 			this.AddField (e, ObjectField.Prorata,                        (int) prorata);
 			this.AddField (e, ObjectField.Round,                          round);
 			this.AddField (e, ObjectField.ResidualValue,                  residual);
-			this.AddField (e, ObjectField.AccountPurchaseDebit,	          accountPurchaseDebit);
+			this.AddField (e, ObjectField.AccountPurchaseDebit, accountPurchaseDebit);
 			this.AddField (e, ObjectField.AccountPurchaseCredit,	      accountPurchaseCredit);
 			this.AddField (e, ObjectField.AccountSaleDebit,	              accountSaleDebit);
 			this.AddField (e, ObjectField.AccountSaleCredit,	          accountSaleCredit);
@@ -309,6 +309,87 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.AccountDecreaseCredit,          accountDecreaseCredit);
 			this.AddField (e, ObjectField.AccountAdjustDebit,             accountAdjustDebit);
 			this.AddField (e, ObjectField.AccountAdjustCredit,            accountAdjustCredit);
+		}
+
+
+		protected virtual void CreateMethodsSamples()
+		{
+			this.AddMethod ("Aucun",              AmortizationMethod.None);
+			this.AddMethod ("Taux linéaire",      AmortizationMethod.RateLinear);
+			this.AddMethod ("Taux dégressif",     AmortizationMethod.RateDegressive);
+			this.AddMethod ("Années linéaires",   AmortizationMethod.YearsLinear);
+			this.AddMethod ("Années dégressives", AmortizationMethod.YearsDegressive);
+
+			this.AddMethod ("Test", AmortizationMethod.Custom, "return 123;");
+			this.AddMethod ("Complexe", AmortizationMethod.Custom, AbstractMandatFactory.GetExp (AbstractMandatFactory.exp1));
+		}
+
+		private static string GetExp(string[] lines)
+		{
+			return TextLayout.ConvertToTaggedText (string.Join ("\n", lines)).Replace ("<tab/>", "  ");
+		}
+
+		private static string[] exp1 =
+		{
+			"public static class Calculator", 
+			"{", 
+			"	public static object Evaluate(", 
+			"		decimal? forcedAmount, decimal baseAmount, decimal initialAmount,", 
+			"		decimal residualAmount, decimal roundAmount,", 
+			"		decimal rate, decimal periodicityFactor,", 
+			"		decimal prorataNumerator, decimal prorataDenominator,", 
+			"		decimal yearCount, int yearRank)", 
+			"	{", 
+			"		if (forcedAmount.HasValue)", 
+			"		{", 
+			"			return forcedAmount.Value;", 
+			"		}", 
+			"		else", 
+			"		{", 
+			"			rate *= periodicityFactor;", 
+			"", 
+			"			if (prorataDenominator != 0)", 
+			"			{", 
+			"				rate *= prorataNumerator / prorataDenominator;", 
+			"			}", 
+			"", 
+			"			var amortization = baseAmount * rate;", 
+			"			var value = initialAmount - amortization;", 
+			"", 
+			"			if (roundAmount > 0)", 
+			"			{", 
+			"				if (value < 0)", 
+			"				{", 
+			"					value -= roundAmount/2;", 
+			"				}", 
+			"				else", 
+			"				{", 
+			"					value += roundAmount/2;", 
+			"				}", 
+			"", 
+			"				value -= (value % roundAmount);", 
+			"			}", 
+			"", 
+			"			return value = System.Math.Max (value, residualAmount);", 
+			"		}", 
+			"	}", 
+			"}", 
+		};
+
+		protected void AddMethod(string name, AmortizationMethod method, string exp = null)
+		{
+			var cats = this.accessor.Mandat.GetData (BaseType.Methods);
+			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
+
+			var o = new DataObject (this.accessor.UndoManager);
+			cats.Add (o);
+
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
+			o.AddEvent (e);
+
+			this.AddField (e, ObjectField.Name, name);
+			this.AddField (e, ObjectField.AmortizationMethod, (int) method);
+			this.AddField (e, ObjectField.Expression, exp);
 		}
 
 
@@ -398,6 +479,23 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			}
 
 			System.Diagnostics.Debug.Fail (string.Format ("La catégorie {0} n'existe pas !", text));
+			return null;
+		}
+
+		protected DataObject GetMethod(string text)
+		{
+			var list = this.accessor.Mandat.GetData (BaseType.Methods);
+
+			foreach (var exp in list)
+			{
+				var nom = ObjectProperties.GetObjectPropertyString (exp, null, ObjectField.Name);
+				if (nom == text)
+				{
+					return exp;
+				}
+			}
+
+			System.Diagnostics.Debug.Fail (string.Format ("La méthode d'amortissement {0} n'existe pas !", text));
 			return null;
 		}
 

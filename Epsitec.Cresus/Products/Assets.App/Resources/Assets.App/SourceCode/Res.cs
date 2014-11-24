@@ -303,6 +303,35 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class Methods
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Methods.Copy, null);
+				}
+				
+				//	designer:cap/JUKE601
+				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 206));
+				//	designer:cap/JUKF601
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 207));
+				//	designer:cap/JUKG601
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 208));
+				//	designer:cap/JUKH601
+				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 209));
+				//	designer:cap/JUKI601
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 210));
+				//	designer:cap/JUKJ601
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 211));
+				//	designer:cap/JUKK601
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 212));
+				//	designer:cap/JUKL601
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 213));
+				//	designer:cap/JUKM601
+				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 214));
+				//	designer:cap/JUKN601
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 215));
+			}
+			
 			public static class Persons
 			{
 				internal static void _Initialize()
@@ -552,6 +581,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Entries = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8));
 				//	designer:cap/JUK2001
 				public static readonly global::Epsitec.Common.Widgets.Command Groups = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
+				//	designer:cap/JUKD601
+				public static readonly global::Epsitec.Common.Widgets.Command Methods = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 205));
 				//	designer:cap/JUK9001
 				public static readonly global::Epsitec.Common.Widgets.Command Persons = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9));
 				//	designer:cap/JUKC001
@@ -848,6 +879,30 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class Methods
+			{
+				//	designer:cap/JUKE601
+				public const long Copy = 0x7D3000140000CEL;
+				//	designer:cap/JUKF601
+				public const long Delete = 0x7D3000140000CFL;
+				//	designer:cap/JUKG601
+				public const long Deselect = 0x7D3000140000D0L;
+				//	designer:cap/JUKH601
+				public const long Export = 0x7D3000140000D1L;
+				//	designer:cap/JUKI601
+				public const long First = 0x7D3000140000D2L;
+				//	designer:cap/JUKJ601
+				public const long Last = 0x7D3000140000D3L;
+				//	designer:cap/JUKK601
+				public const long New = 0x7D3000140000D4L;
+				//	designer:cap/JUKL601
+				public const long Next = 0x7D3000140000D5L;
+				//	designer:cap/JUKM601
+				public const long Paste = 0x7D3000140000D6L;
+				//	designer:cap/JUKN601
+				public const long Prev = 0x7D3000140000D7L;
+			}
+			
 			public static class Persons
 			{
 				//	designer:cap/JUKG301
@@ -1047,6 +1102,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Entries = 0x7D300014000008L;
 				//	designer:cap/JUK2001
 				public const long Groups = 0x7D300014000002L;
+				//	designer:cap/JUKD601
+				public const long Methods = 0x7D3000140000CDL;
 				//	designer:cap/JUK9001
 				public const long Persons = 0x7D300014000009L;
 				//	designer:cap/JUKC001
@@ -2517,6 +2574,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544841));
 						}
 					}
+					//	designer:str/JUK9J01
+					public static global::Epsitec.Common.Types.FormattedText Method
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544937));
+						}
+					}
 					//	designer:str/JUK4G01
 					public static global::Epsitec.Common.Types.FormattedText OneShot
 					{
@@ -2707,6 +2772,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544851));
+						}
+					}
+					//	designer:str/JUK8J01
+					public static global::Epsitec.Common.Types.FormattedText Methods
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544936));
 						}
 					}
 					//	designer:str/JUKKG01
@@ -3068,6 +3141,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544640));
+						}
+					}
+				}
+				
+				public static class Method
+				{
+					//	designer:str/JUKCJ01
+					public static global::Epsitec.Common.Types.FormattedText Goto
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544940));
 						}
 					}
 				}
@@ -3800,6 +3885,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class CreateMethod
+				{
+					//	designer:str/JUKBJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544939));
+						}
+					}
+				}
+				
 				public static class CreatePerson
 				{
 					//	designer:str/JUKE201
@@ -4502,6 +4599,18 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544464));
 							}
+						}
+					}
+				}
+				
+				public static class Methods
+				{
+					//	designer:str/JUKDJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544941));
 						}
 					}
 				}
@@ -5379,6 +5488,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544691));
+						}
+					}
+				}
+				
+				public static class MethodsTreeTable
+				{
+					//	designer:str/JUKAJ01
+					public static global::Epsitec.Common.Types.FormattedText DeleteQuestion
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544938));
 						}
 					}
 				}
@@ -6918,6 +7039,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544841);
 						}
 					}
+					//	designer:str/JUK9J01
+					public static global::Epsitec.Common.Support.Druid Method
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544937);
+						}
+					}
 					//	designer:str/JUK4G01
 					public static global::Epsitec.Common.Support.Druid OneShot
 					{
@@ -7108,6 +7237,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544851);
+						}
+					}
+					//	designer:str/JUK8J01
+					public static global::Epsitec.Common.Support.Druid Methods
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544936);
 						}
 					}
 					//	designer:str/JUKKG01
@@ -7469,6 +7606,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544640);
+						}
+					}
+				}
+				
+				public static class Method
+				{
+					//	designer:str/JUKCJ01
+					public static global::Epsitec.Common.Support.Druid Goto
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544940);
 						}
 					}
 				}
@@ -8201,6 +8350,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class CreateMethod
+				{
+					//	designer:str/JUKBJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544939);
+						}
+					}
+				}
+				
 				public static class CreatePerson
 				{
 					//	designer:str/JUKE201
@@ -8903,6 +9064,18 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544464);
 							}
+						}
+					}
+				}
+				
+				public static class Methods
+				{
+					//	designer:str/JUKDJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544941);
 						}
 					}
 				}
@@ -9784,6 +9957,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class MethodsTreeTable
+				{
+					//	designer:str/JUKAJ01
+					public static global::Epsitec.Common.Support.Druid DeleteQuestion
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544938);
+						}
+					}
+				}
+				
 				public static class PersonsTreeTable
 				{
 					//	designer:str/JUKCI01
@@ -9875,6 +10060,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Groups._Initialize ();
 			Commands.Main._Initialize ();
 			Commands.Main.Navigate._Initialize ();
+			Commands.Methods._Initialize ();
 			Commands.Persons._Initialize ();
 			Commands.Popup._Initialize ();
 			Commands.Popup.TreeTable._Initialize ();

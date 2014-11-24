@@ -9,18 +9,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(AmortizationMethod method, decimal rate, AmortizationType type, int yearRank, decimal yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual, string expression)
+		public AmortizationDefinition(Guid expressionGuid, decimal rate, int yearRank, decimal yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
-			this.Method      = method;
-			this.Rate        = rate;
-			this.Type        = type;
-			this.YearRank    = yearRank;
-			this.YearCount   = yearCount;
-			this.Periodicity = periodicity;
-			this.ProrataType = prorataType;
-			this.Round       = round;
-			this.Residual    = residual;
-			this.Expression  = expression;
+			this.ExpressionGuid  = expressionGuid;
+			this.Rate            = rate;
+			this.YearRank        = yearRank;
+			this.YearCount       = yearCount;
+			this.Periodicity     = periodicity;
+			this.ProrataType     = prorataType;
+			this.Round           = round;
+			this.Residual        = residual;
 		}
 
 		public bool								None
@@ -28,8 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Retourne true s'il ne faut pas générer d'amortissement.
 			get
 			{
-				return this.Method == AmortizationMethod.None
-					|| this.Rate == 0.0m;
+				return this.Rate == 0.0m;
 			}
 		}
 
@@ -37,9 +34,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Method      == AmortizationMethod.Unknown
+				return this.ExpressionGuid.IsEmpty
 					&& this.Rate        == 0.0m
-					&& this.Type        == AmortizationType.Unknown
 					&& this.YearCount   == 0.0m
 					&& this.Periodicity == 0
 					&& this.ProrataType == 0
@@ -79,17 +75,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, 0.0m, AmortizationType.Unknown, 0, 0.0m, 0, 0.0m, 0.0m, 0.0m, null);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (Guid.Empty, 0.0m, 0, 0.0m, 0, 0.0m, 0.0m, 0.0m);
 
-		public readonly AmortizationMethod		Method;
+		public readonly Guid					ExpressionGuid;
 		public readonly decimal					Rate;
-		public readonly AmortizationType		Type;
 		public readonly int						YearRank;
 		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly ProrataType				ProrataType;
 		public readonly decimal					Round;
 		public readonly decimal					Residual;
-		public readonly string					Expression;
 	}
 }

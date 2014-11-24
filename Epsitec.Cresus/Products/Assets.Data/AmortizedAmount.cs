@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public AmortizedAmount
 		(
 			AmortizationMethod	amortizationMethod,
+			string				expression,
 			decimal?			rate,
-			AmortizationType	amortizationType,
 			int					yearRank,
 			decimal				yearCount,
 			Periodicity			periodicity,
@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Assets.Data
 			decimal?			prorataDenominator,
 			decimal?			roundAmount,
 			decimal?			residualAmount,
-			string				expression,
 			EntryScenario		entryScenario,
 			System.DateTime		date,
 			Guid				assetGuid,
@@ -35,8 +34,8 @@ namespace Epsitec.Cresus.Assets.Data
 		)
 		{
 			this.AmortizationMethod = amortizationMethod;
+			this.Expression         = expression;
 			this.Rate               = rate;
-			this.AmortizationType   = amortizationType;
 			this.YearRank           = yearRank;
 			this.YearCount          = yearCount;
 			this.Periodicity        = periodicity;
@@ -48,7 +47,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ProrataDenominator = prorataDenominator;
 			this.RoundAmount        = roundAmount;
 			this.ResidualAmount     = residualAmount;
-			this.Expression         = expression;
 			this.EntryScenario      = entryScenario;
 			this.Date               = date;
 			this.AssetGuid          = assetGuid;
@@ -60,8 +58,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
 			this.AmortizationMethod = (AmortizationMethod) IOHelpers.ReadTypeAttribute (reader, "AmortizationMethod", typeof (AmortizationMethod));
+			this.Expression         = IOHelpers.ReadStringAttribute (reader, "Expression");
 			this.Rate               = IOHelpers.ReadDecimalAttribute (reader, "Rate");
-			this.AmortizationType   = (AmortizationType) IOHelpers.ReadTypeAttribute (reader, "AmortizationType", typeof (AmortizationType));
 			this.YearRank           = IOHelpers.ReadIntAttribute (reader, "YearRank").GetValueOrDefault ();
 			this.YearCount          = IOHelpers.ReadDecimalAttribute (reader, "YearCount").GetValueOrDefault (1.0m);
 			this.Periodicity        = (Periodicity) IOHelpers.ReadTypeAttribute (reader, "Periodicity", typeof (Periodicity));
@@ -73,7 +71,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.ProrataDenominator = IOHelpers.ReadDecimalAttribute (reader, "ProrataDenominator");
 			this.RoundAmount        = IOHelpers.ReadDecimalAttribute (reader, "RoundAmount");
 			this.ResidualAmount     = IOHelpers.ReadDecimalAttribute (reader, "ResidualAmount");
-			this.Expression         = IOHelpers.ReadStringAttribute (reader, "Expression");
 			this.EntryScenario      = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
 			this.Date               = IOHelpers.ReadDateAttribute (reader, "Date").GetValueOrDefault ();
 			this.AssetGuid          = IOHelpers.ReadGuidAttribute (reader, "AssetGuid");
@@ -86,8 +83,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 
 		public readonly AmortizationMethod		AmortizationMethod;
+		public readonly string					Expression;
 		public readonly decimal?				Rate;
-		public readonly AmortizationType		AmortizationType;
 		public readonly int						YearRank;
 		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
@@ -99,7 +96,6 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly decimal?				ProrataDenominator;
 		public readonly decimal?				RoundAmount;
 		public readonly decimal?				ResidualAmount;
-		public readonly string					Expression;
 		public readonly EntryScenario			EntryScenario;
 		public readonly System.DateTime			Date;
 		public readonly Guid					AssetGuid;
@@ -108,111 +104,111 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly int						EntrySeed;
 
 
-		public decimal?							EffectiveRate
-		{
-			get
-			{
-				if (this.AmortizationMethod == AmortizationMethod.Rate)
-				{
-					return this.BaseRate * this.ProrataFactor * this.PeriodicityFactor;
-				}
-				else
-				{
-					return this.BaseRate;
-				}
-			}
-		}
+		//??public decimal?							EffectiveRate
+		//??{
+		//??	get
+		//??	{
+		//??		if (this.AmortizationMethod == AmortizationMethod.Rate)
+		//??		{
+		//??			return this.BaseRate * this.ProrataFactor * this.PeriodicityFactor;
+		//??		}
+		//??		else
+		//??		{
+		//??			return this.BaseRate;
+		//??		}
+		//??	}
+		//??}
 
-		public decimal?							BaseRate
-		{
-			//	Calcule le taux de l'amortissement. C'est ici que se cachent les formules plus
-			//	ou moins subtiles de calcul de l'amortissement, qu'il faudra un jour étendre.
-			//	Le taux calculé ne tient pas compte du prorata.
-			//	Le taux calculé ne tient pas compte de la périodicité en mode AmortizationMethod.Rate.
-			get
-			{
-				var rate = 0.0m;
+		//??public decimal?							BaseRate
+		//??{
+		//??	//	Calcule le taux de l'amortissement. C'est ici que se cachent les formules plus
+		//??	//	ou moins subtiles de calcul de l'amortissement, qu'il faudra un jour étendre.
+		//??	//	Le taux calculé ne tient pas compte du prorata.
+		//??	//	Le taux calculé ne tient pas compte de la périodicité en mode AmortizationMethod.Rate.
+		//??	get
+		//??	{
+		//??		var rate = 0.0m;
+		//??
+		//??		if (this.AmortizationMethod == AmortizationMethod.Rate)
+		//??		{
+		//??			//	Amortissement selon le taux.
+		//??			rate = this.Rate.GetValueOrDefault (0.0m);
+		//??		}
+		//??		else if (this.AmortizationMethod == AmortizationMethod.YearCount)
+		//??		{
+		//??			//	Amortissement selon le nombre d'années.
+		//??			decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
+		//??
+		//??			if (n <= 0 || !this.InitialAmount.HasValue)
+		//??			{
+		//??				rate = 1.0m;
+		//??			}
+		//??			else
+		//??			{
+		//??				if (this.AmortizationType == AmortizationType.Linear)
+		//??				{
+		//??					rate = 1.0m / n;
+		//??				}
+		//??				else if (this.AmortizationType == AmortizationType.Degressive)
+		//??				{
+		//??					if (this.ResidualAmount.GetValueOrDefault (0.0m) == 0.0m ||
+		//??						this.InitialAmount.GetValueOrDefault (0.0m) == 0.0m)
+		//??					{
+		//??						rate = 1.0m;
+		//??					}
+		//??					else
+		//??					{
+		//??						var x = this.ResidualAmount.GetValueOrDefault (0.0m) / this.InitialAmount.GetValueOrDefault (0.0m);
+		//??						var y = 1.0m / n;
+		//??						rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
+		//??					}
+		//??				}
+		//??			}
+		//??		}
+		//??
+		//??		return rate;
+		//??	}
+		//??}
 
-				if (this.AmortizationMethod == AmortizationMethod.Rate)
-				{
-					//	Amortissement selon le taux.
-					rate = this.Rate.GetValueOrDefault (0.0m);
-				}
-				else if (this.AmortizationMethod == AmortizationMethod.YearCount)
-				{
-					//	Amortissement selon le nombre d'années.
-					decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
+		//??public string							BaseRateSummary
+		//??{
+		//??	//	Retourne un texte expliquant la façon dont est calculé BaseRate.
+		//??	get
+		//??	{
+		//??		if (this.AmortizationMethod == AmortizationMethod.Rate)
+		//??		{
+		//??			//	Amortissement selon le taux.
+		//??			return Res.Strings.AmortizedAmount.BaseRateSummary.Rate.ToString ();
+		//??		}
+		//??		else if (this.AmortizationMethod == AmortizationMethod.YearCount)
+		//??		{
+		//??			//	Amortissement selon le nombre d'années.
+		//??			decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
+		//??
+		//??			if (n > 0)
+		//??			{
+		//??				if (this.AmortizationType == AmortizationType.Linear)
+		//??				{
+		//??					return string.Format (Res.Strings.AmortizedAmount.BaseRateSummary.YearCount.Linear.ToString (),
+		//??						this.YearCountPeriodicity.ToString (System.Globalization.CultureInfo.InvariantCulture),
+		//??						this.YearRank.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		//??				}
+		//??				else if (this.AmortizationType == AmortizationType.Degressive)
+		//??				{
+		//??					return string.Format (Res.Strings.AmortizedAmount.BaseRateSummary.YearCount.Degressive.ToString (),
+		//??						this.ResidualAmount.GetValueOrDefault (0.0m).ToString ("0.00", System.Globalization.CultureInfo.InvariantCulture),
+		//??						this.InitialAmount.GetValueOrDefault (0.0m).ToString ("0.00", System.Globalization.CultureInfo.InvariantCulture),
+		//??						this.YearCountPeriodicity.ToString (System.Globalization.CultureInfo.InvariantCulture),
+		//??						this.YearRank.ToString (System.Globalization.CultureInfo.InvariantCulture));
+		//??				}
+		//??			}
+		//??		}
+		//??
+		//??		return null;
+		//??	}
+		//??}
 
-					if (n <= 0 || !this.InitialAmount.HasValue)
-					{
-						rate = 1.0m;
-					}
-					else
-					{
-						if (this.AmortizationType == AmortizationType.Linear)
-						{
-							rate = 1.0m / n;
-						}
-						else if (this.AmortizationType == AmortizationType.Degressive)
-						{
-							if (this.ResidualAmount.GetValueOrDefault (0.0m) == 0.0m ||
-								this.InitialAmount.GetValueOrDefault (0.0m) == 0.0m)
-							{
-								rate = 1.0m;
-							}
-							else
-							{
-								var x = this.ResidualAmount.GetValueOrDefault (0.0m) / this.InitialAmount.GetValueOrDefault (0.0m);
-								var y = 1.0m / n;
-								rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
-							}
-						}
-					}
-				}
-
-				return rate;
-			}
-		}
-
-		public string							BaseRateSummary
-		{
-			//	Retourne un texte expliquant la façon dont est calculé BaseRate.
-			get
-			{
-				if (this.AmortizationMethod == AmortizationMethod.Rate)
-				{
-					//	Amortissement selon le taux.
-					return Res.Strings.AmortizedAmount.BaseRateSummary.Rate.ToString ();
-				}
-				else if (this.AmortizationMethod == AmortizationMethod.YearCount)
-				{
-					//	Amortissement selon le nombre d'années.
-					decimal n = this.YearCountPeriodicity - this.YearRank;  // nb d'années restantes
-
-					if (n > 0)
-					{
-						if (this.AmortizationType == AmortizationType.Linear)
-						{
-							return string.Format (Res.Strings.AmortizedAmount.BaseRateSummary.YearCount.Linear.ToString (),
-								this.YearCountPeriodicity.ToString (System.Globalization.CultureInfo.InvariantCulture),
-								this.YearRank.ToString (System.Globalization.CultureInfo.InvariantCulture));
-						}
-						else if (this.AmortizationType == AmortizationType.Degressive)
-						{
-							return string.Format (Res.Strings.AmortizedAmount.BaseRateSummary.YearCount.Degressive.ToString (),
-								this.ResidualAmount.GetValueOrDefault (0.0m).ToString ("0.00", System.Globalization.CultureInfo.InvariantCulture),
-								this.InitialAmount.GetValueOrDefault (0.0m).ToString ("0.00", System.Globalization.CultureInfo.InvariantCulture),
-								this.YearCountPeriodicity.ToString (System.Globalization.CultureInfo.InvariantCulture),
-								this.YearRank.ToString (System.Globalization.CultureInfo.InvariantCulture));
-						}
-					}
-				}
-
-				return null;
-			}
-		}
-
-		private decimal							YearCountPeriodicity
+		public decimal							YearCountPeriodicity
 		{
 			get
 			{
@@ -243,7 +239,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		private decimal							PeriodicityFactor
+		public decimal							PeriodicityFactor
 		{
 			//	Retourne le facteur multiplicateur pour la périodicité, compris entre 0 et 1.
 			//	Annuel      -> 12/12
@@ -257,124 +253,124 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public decimal?							OutputAmortizedAmount
-		{
-			//	Calcule la valeur de sortie.
-			//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
-			//	qu'il faut utiliser, mais DataAccessor.GetAmortizedAmount(), afin de
-			//	permettre d'évaluer les expressions C# !
-			get
-			{
-				if (this.ForcedAmount.HasValue)
-				{
-					return this.ForcedAmount;
-				}
-				else
-				{
-					return this.FinalAmortizedAmount;
-				}
-			}
-		}
+		//??public decimal?							OutputAmortizedAmount
+		//??{
+		//??	//	Calcule la valeur de sortie.
+		//??	//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
+		//??	//	qu'il faut utiliser, mais DataAccessor.GetAmortizedAmount(), afin de
+		//??	//	permettre d'évaluer les expressions C# !
+		//??	get
+		//??	{
+		//??		if (this.ForcedAmount.HasValue)
+		//??		{
+		//??			return this.ForcedAmount;
+		//??		}
+		//??		else
+		//??		{
+		//??			return this.FinalAmortizedAmount;
+		//??		}
+		//??	}
+		//??}
 
-		public decimal?							FinalAmortizedAmount
-		{
-			//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
-			//	valeur résiduelle.
-			//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
-			//	qu'il faut utiliser, mais OutputAmortizedAmount ci-dessus !
-			get
-			{
-				if (this.AmortizationType == AmortizationType.Unknown)
-				{
-					return this.InitialAmount;
-				}
-				else
-				{
-					var rounded = this.RoundedAmortizedAmount;
+		//??public decimal?							FinalAmortizedAmount
+		//??{
+		//??	//	Calcule la valeur amortie finale, en tenant compte de l'arrondi et de la
+		//??	//	valeur résiduelle.
+		//??	//	Pour obtenir la valeur après amortissement, ce n'est pas cette propriété
+		//??	//	qu'il faut utiliser, mais OutputAmortizedAmount ci-dessus !
+		//??	get
+		//??	{
+		//??		if (this.AmortizationType == AmortizationType.Unknown)
+		//??		{
+		//??			return this.InitialAmount;
+		//??		}
+		//??		else
+		//??		{
+		//??			var rounded = this.RoundedAmortizedAmount;
+		//??
+		//??			if (rounded.HasValue && this.ResidualAmount.HasValue)
+		//??			{
+		//??				return System.Math.Max (rounded.Value, this.ResidualAmount.Value);
+		//??			}
+		//??			else
+		//??			{
+		//??				return rounded;
+		//??			}
+		//??		}
+		//??	}
+		//??}
 
-					if (rounded.HasValue && this.ResidualAmount.HasValue)
-					{
-						return System.Math.Max (rounded.Value, this.ResidualAmount.Value);
-					}
-					else
-					{
-						return rounded;
-					}
-				}
-			}
-		}
+		//??public decimal?							RoundedAmortizedAmount
+		//??{
+		//??	//	Calcule la valeur amortie arrondie, sans tenir compte de la valeur résiduelle.
+		//??	get
+		//??	{
+		//??		if (this.AmortizationType == AmortizationType.Unknown)
+		//??		{
+		//??			return this.InitialAmount;
+		//??		}
+		//??		else
+		//??		{
+		//??			var brut = this.BrutAmortizedAmount;
+		//??
+		//??			if (brut.HasValue && this.RoundAmount.HasValue)
+		//??			{
+		//??				return AmortizedAmount.Round (brut.Value, this.RoundAmount.Value);
+		//??			}
+		//??			else
+		//??			{
+		//??				return brut;
+		//??			}
+		//??		}
+		//??	}
+		//??}
 
-		public decimal?							RoundedAmortizedAmount
-		{
-			//	Calcule la valeur amortie arrondie, sans tenir compte de la valeur résiduelle.
-			get
-			{
-				if (this.AmortizationType == AmortizationType.Unknown)
-				{
-					return this.InitialAmount;
-				}
-				else
-				{
-					var brut = this.BrutAmortizedAmount;
+		//??public decimal?							BrutAmortizedAmount
+		//??{
+		//??	//	Calcule la valeur amortie, sans tenir compte de l'arrondi ni de la valeur
+		//??	//	résiduelle.
+		//??	get
+		//??	{
+		//??		return System.Math.Max (this.InitialAmount.GetValueOrDefault (0.0m) - this.BrutAmortization, 0.0m);
+		//??	}
+		//??}
 
-					if (brut.HasValue && this.RoundAmount.HasValue)
-					{
-						return AmortizedAmount.Round (brut.Value, this.RoundAmount.Value);
-					}
-					else
-					{
-						return brut;
-					}
-				}
-			}
-		}
-
-		public decimal?							BrutAmortizedAmount
-		{
-			//	Calcule la valeur amortie, sans tenir compte de l'arrondi ni de la valeur
-			//	résiduelle.
-			get
-			{
-				return System.Math.Max (this.InitialAmount.GetValueOrDefault (0.0m) - this.BrutAmortization, 0.0m);
-			}
-		}
-
-		public decimal							BrutAmortization
-		{
-			//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale
-			//	pour obtenir la valeur amortie.
-			get
-			{
-				if (this.AmortizationMethod == Data.AmortizationMethod.Rate)
-				{
-					if (this.AmortizationType == AmortizationType.Linear)
-					{
-						decimal value = this.BaseAmount.GetValueOrDefault (0.0m);
-						return value * this.EffectiveRate.GetValueOrDefault (1.0m);
-					}
-					else if (this.AmortizationType == AmortizationType.Degressive)
-					{
-						decimal value = this.InitialAmount.GetValueOrDefault (0.0m);
-						return value * this.EffectiveRate.GetValueOrDefault (1.0m);
-					}
-				}
-				else if (this.AmortizationMethod == Data.AmortizationMethod.YearCount)
-				{
-					decimal value = this.InitialAmount.GetValueOrDefault (0.0m);
-					return value * this.EffectiveRate.GetValueOrDefault (1.0m);
-				}
-
-				return 0.0m;
-			}
-		}
+		//??public decimal							BrutAmortization
+		//??{
+		//??	//	Calcule l'amortissement brut, qu'il faudra soustraire à la valeur initiale
+		//??	//	pour obtenir la valeur amortie.
+		//??	get
+		//??	{
+		//??		if (this.AmortizationMethod == Data.AmortizationMethod.Rate)
+		//??		{
+		//??			if (this.AmortizationType == AmortizationType.Linear)
+		//??			{
+		//??				decimal value = this.BaseAmount.GetValueOrDefault (0.0m);
+		//??				return value * this.EffectiveRate.GetValueOrDefault (1.0m);
+		//??			}
+		//??			else if (this.AmortizationType == AmortizationType.Degressive)
+		//??			{
+		//??				decimal value = this.InitialAmount.GetValueOrDefault (0.0m);
+		//??				return value * this.EffectiveRate.GetValueOrDefault (1.0m);
+		//??			}
+		//??		}
+		//??		else if (this.AmortizationMethod == Data.AmortizationMethod.YearCount)
+		//??		{
+		//??			decimal value = this.InitialAmount.GetValueOrDefault (0.0m);
+		//??			return value * this.EffectiveRate.GetValueOrDefault (1.0m);
+		//??		}
+		//??
+		//??		return 0.0m;
+		//??	}
+		//??}
 
 
 		#region IEquatable<AmortizedAmount> Members
 		public bool Equals(AmortizedAmount other)
 		{
 			return this.AmortizationMethod == other.AmortizationMethod
+				&& this.Expression         == other.Expression
 				&& this.Rate               == other.Rate
-				&& this.AmortizationType   == other.AmortizationType
 				&& this.YearRank           == other.YearRank
 				&& this.YearCount          == other.YearCount
 				&& this.Periodicity        == other.Periodicity
@@ -386,7 +382,6 @@ namespace Epsitec.Cresus.Assets.Data
 				&& this.ProrataDenominator == other.ProrataDenominator
 				&& this.RoundAmount        == other.RoundAmount
 				&& this.ResidualAmount     == other.ResidualAmount
-				&& this.Expression         == other.Expression
 				&& this.EntryScenario      == other.EntryScenario
 				&& this.Date               == other.Date
 				&& this.AssetGuid          == other.AssetGuid
@@ -411,8 +406,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public override int GetHashCode()
 		{
 			return this.AmortizationMethod.GetHashCode ()
+				 ^ this.Expression        .GetHashCode ()
 				 ^ this.Rate              .GetHashCode ()
-				 ^ this.AmortizationType  .GetHashCode ()
 				 ^ this.YearRank          .GetHashCode ()
 				 ^ this.YearCount         .GetHashCode ()
 				 ^ this.Periodicity       .GetHashCode ()
@@ -424,7 +419,6 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.ProrataDenominator.GetHashCode ()
 				 ^ this.RoundAmount       .GetHashCode ()
 				 ^ this.ResidualAmount    .GetHashCode ()
-				 ^ this.Expression        .GetHashCode ()
 				 ^ this.EntryScenario     .GetHashCode ()
 				 ^ this.Date              .GetHashCode ()
 				 ^ this.AssetGuid         .GetHashCode ()
@@ -450,8 +444,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				method,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -463,35 +457,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
-				model.EntryScenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
-				model.EntryGuid,
-				model.EntrySeed
-			);
-		}
-
-		public static AmortizedAmount SetAmortizationType(AmortizedAmount model, AmortizationType value)
-		{
-			return new AmortizedAmount
-			(
-				model.AmortizationMethod,
-				model.Rate,
-				value,
-				model.YearRank,
-				model.YearCount,
-				model.Periodicity,
-				model.ForcedAmount,
-				model.PreviousAmount,
-				model.InitialAmount,
-				model.BaseAmount,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -506,8 +471,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -519,7 +484,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -534,8 +498,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -547,7 +511,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -562,8 +525,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				value,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -575,7 +538,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -590,8 +552,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -603,7 +565,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -618,8 +579,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -631,7 +592,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -646,8 +606,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -659,7 +619,6 @@ namespace Epsitec.Cresus.Assets.Data
 				value,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -674,8 +633,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -687,7 +646,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				value,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -702,8 +660,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -715,7 +673,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				value,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -730,8 +687,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -743,7 +700,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -758,8 +714,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -771,7 +727,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				value,
 				model.Date,
 				model.AssetGuid,
@@ -786,8 +741,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -799,7 +754,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				value,
 				model.AssetGuid,
@@ -814,8 +768,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -827,7 +781,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				value,
@@ -842,8 +795,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -855,7 +808,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -870,8 +822,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -883,7 +835,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -898,8 +849,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -911,7 +862,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -926,8 +876,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -939,7 +889,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -950,7 +899,6 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 		public static AmortizedAmount SetPreview(AmortizedAmount model, decimal? rate,
-			AmortizationType amortizationType,
 			decimal? prorataNumerator, decimal? prorataDenominator,
 			Periodicity periodicity,
 			decimal? roundAmount, decimal? residualAmount, EntryScenario entryScenario)
@@ -958,8 +906,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				rate,
-				amortizationType,
 				model.YearRank,
 				model.YearCount,
 				periodicity,
@@ -971,7 +919,6 @@ namespace Epsitec.Cresus.Assets.Data
 				prorataDenominator,
 				roundAmount,
 				residualAmount,
-				model.Expression,
 				entryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -986,8 +933,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -999,7 +946,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -1014,8 +960,8 @@ namespace Epsitec.Cresus.Assets.Data
 			return new AmortizedAmount
 			(
 				model.AmortizationMethod,
+				model.Expression,
 				model.Rate,
-				model.AmortizationType,
 				model.YearRank,
 				model.YearCount,
 				model.Periodicity,
@@ -1027,36 +973,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.ProrataDenominator,
 				model.RoundAmount,
 				model.ResidualAmount,
-				model.Expression,
-				model.EntryScenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
-				model.EntryGuid,
-				model.EntrySeed
-			);
-		}
-
-		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model,
-			AmortizationType amortizationType, decimal? initialAmount, decimal? baseAmount)
-		{
-			return new AmortizedAmount
-			(
-				model.AmortizationMethod,
-				model.Rate,
-				amortizationType,
-				model.YearRank,
-				model.YearCount,
-				model.Periodicity,
-				model.ForcedAmount,
-				initialAmount,
-				initialAmount,
-				baseAmount,
-				model.ProrataNumerator,
-				model.ProrataDenominator,
-				model.RoundAmount,
-				model.ResidualAmount,
-				model.Expression,
 				model.EntryScenario,
 				model.Date,
 				model.AssetGuid,
@@ -1073,8 +989,8 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement (name);
 
 			IOHelpers.WriteTypeAttribute    (writer, "AmortizationMethod", this.AmortizationMethod);
+			IOHelpers.WriteStringAttribute  (writer, "Expression",         this.Expression);
 			IOHelpers.WriteDecimalAttribute (writer, "Rate",               this.Rate);
-			IOHelpers.WriteTypeAttribute    (writer, "AmortizationType",   this.AmortizationType);
 			IOHelpers.WriteIntAttribute     (writer, "YearRank",           this.YearRank);
 			IOHelpers.WriteDecimalAttribute (writer, "YearCount",          this.YearCount);
 			IOHelpers.WriteTypeAttribute    (writer, "Periodicity",        this.Periodicity);
@@ -1087,8 +1003,6 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);
 			IOHelpers.WriteDecimalAttribute (writer, "RoundAmount",        this.RoundAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "ResidualAmount",     this.ResidualAmount);
-
-			IOHelpers.WriteStringAttribute (writer, "Expression", this.Expression);
 
 			IOHelpers.WriteTypeAttribute (writer, "EntryScenario", this.EntryScenario);
 

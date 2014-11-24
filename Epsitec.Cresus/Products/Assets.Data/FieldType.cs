@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Account,		// compte
 		GuidGroup,		// Guid d'un groupe
 		GuidPerson,		// Guid d'une personne
+		GuidMethod,		// Guid d'une méthode d'amortissement
 		GuidRatio,		// couple Guid + Ratio (decimal)
 	}
 }

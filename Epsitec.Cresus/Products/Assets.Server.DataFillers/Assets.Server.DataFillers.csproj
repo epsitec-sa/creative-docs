@@ -46,6 +46,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="MethodsTreeTableFiller.cs" />
     <Compile Include="ColumnState.cs" />
     <Compile Include="ColumnsState.cs" />
     <Compile Include="AbstractTreeTableCell.cs" />

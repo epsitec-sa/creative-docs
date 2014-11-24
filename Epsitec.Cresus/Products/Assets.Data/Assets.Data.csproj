@@ -69,7 +69,6 @@
     <Compile Include="UndoGroup.cs" />
     <Compile Include="UndoManager.cs" />
     <Compile Include="Reports\AbstractReportParams.cs" />
-    <Compile Include="AmortizationType.cs" />
     <Compile Include="AmortizedAmount.cs" />
     <Compile Include="BaseTypeKind.cs" />
     <Compile Include="BaseType.cs" />

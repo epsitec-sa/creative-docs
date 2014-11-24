@@ -171,6 +171,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				case BaseTypeKind.Accounts:
 					return this.GotoAccounts (warning);
 
+				case BaseTypeKind.Methods:
+					return this.GotoMethods (warning);
+
 				default:
 					return null;
 			}
@@ -219,6 +222,11 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private AbstractViewState GotoAccounts(Warning warning)
 		{
 			return AccountsView.GetViewState (this.accessor, null, null);
+		}
+
+		private AbstractViewState GotoMethods(Warning warning)
+		{
+			return MethodsView.GetViewState (warning.ObjectGuid, warning.Field);
 		}
 		#endregion
 

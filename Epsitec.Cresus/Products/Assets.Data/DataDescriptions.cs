@@ -75,9 +75,6 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AmortizationYearCount:
 					return Res.Strings.Enum.ObjectField.AmortizationYearCount.ToString ();
 
-				case ObjectField.AmortizationType:
-					return Res.Strings.Enum.ObjectField.AmortizationType.ToString ();
-
 				case ObjectField.CategoryName:
 					return Res.Strings.Enum.ObjectField.CategoryName.ToString ();
 
@@ -143,6 +140,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.Round:
 					return Res.Strings.Enum.ObjectField.Round.ToString ();
+
+				case ObjectField.MethodGuid:
+					return Res.Strings.Enum.ObjectField.Method.ToString ();
 
 				case ObjectField.Expression:
 					return Res.Strings.Enum.ObjectField.Expression.ToString ();

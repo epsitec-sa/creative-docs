@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		Warnings,
 		Entries,
 		Accounts,
+		Expressions,
 	}
 }

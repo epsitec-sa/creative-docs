@@ -104,10 +104,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.hasEvent       = true;
 					this.isOutOfBounds  = false;
 
-					var p = this.obj.GetSyntheticProperty (e.Timestamp, ObjectField.AmortizationMethod) as DataIntProperty;
-					if (p != null)
+					var p = this.obj.GetSyntheticProperty (e.Timestamp, ObjectField.MethodGuid) as DataGuidProperty;
+					if (p != null && !p.Value.IsEmpty)
 					{
-						method = (AmortizationMethod) p.Value;
+						method = MethodsLogic.GetMethod (this.accessor, p.Value);
 					}
 				}
 			}
@@ -273,17 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var i = ObjectProperties.GetObjectPropertyInt (this.obj, this.timestamp, tile.Field);
 					if (i.HasValue)
 					{
-						if (tile.Field == ObjectField.AmortizationMethod)
-						{
-							text = EnumDictionaries.GetAmortizationMethodSummary (i);
-							alignment = ContentAlignment.MiddleLeft;
-						}
-						else if (tile.Field == ObjectField.AmortizationType)
-						{
-							text = EnumDictionaries.GetAmortizationTypeName (i);
-							alignment = ContentAlignment.MiddleLeft;
-						}
-						else if (tile.Field == ObjectField.Periodicity)
+						if (tile.Field == ObjectField.Periodicity)
 						{
 							text = EnumDictionaries.GetPeriodicityName (i);
 							alignment = ContentAlignment.MiddleLeft;
@@ -342,6 +332,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 					if (!gp.IsEmpty)
 					{
 						text = PersonsLogic.GetSummary (this.accessor, gp);
+						alignment = ContentAlignment.MiddleLeft;
+					}
+					break;
+
+				case FieldType.GuidMethod:
+					var ge = ObjectProperties.GetObjectPropertyGuid (this.obj, this.timestamp, tile.Field);
+					if (!ge.IsEmpty)
+					{
+						text = MethodsLogic.GetSummary (this.accessor, ge);
 						alignment = ContentAlignment.MiddleLeft;
 					}
 					break;
