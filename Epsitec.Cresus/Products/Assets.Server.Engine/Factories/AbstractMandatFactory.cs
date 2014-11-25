@@ -3,11 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Engine
@@ -320,59 +320,29 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddMethod ("Années linéaires",   AmortizationMethod.YearsLinear);
 			this.AddMethod ("Années dégressives", AmortizationMethod.YearsDegressive);
 
-			this.AddMethod ("Test", AmortizationMethod.Custom, "return 123;");
-			this.AddMethod ("Complexe", AmortizationMethod.Custom, AbstractMandatFactory.GetExp (AbstractMandatFactory.exp1));
-		}
-
-		private static string GetExp(string[] lines)
-		{
-			return TextLayout.ConvertToTaggedText (string.Join ("\n", lines)).Replace ("<tab/>", "  ");
+			this.AddMethod ("Test", AmortizationMethod.Custom, AmortizationExpression.GetExpression ("return 123;"));
+			this.AddMethod ("Complexe", AmortizationMethod.Custom, AmortizationExpression.GetExpression (AbstractMandatFactory.exp1));
 		}
 
 		private static string[] exp1 =
 		{
-			"public static class Calculator", 
+			"if (data.ForcedAmount.HasValue)", 
 			"{", 
-			"	public static object Evaluate(", 
-			"		decimal? forcedAmount, decimal baseAmount, decimal initialAmount,", 
-			"		decimal residualAmount, decimal roundAmount,", 
-			"		decimal rate, decimal periodicityFactor,", 
-			"		decimal prorataNumerator, decimal prorataDenominator,", 
-			"		decimal yearCount, int yearRank)", 
+			"	return data.ForcedAmount.Value;", 
+			"}", 
+			"else", 
+			"{", 
+			"	var rate = data.Rate * data.PeriodicityFactor;", 
+			"",
+			"	if (data.ProrataDenominator != 0)", 
 			"	{", 
-			"		if (forcedAmount.HasValue)", 
-			"		{", 
-			"			return forcedAmount.Value;", 
-			"		}", 
-			"		else", 
-			"		{", 
-			"			rate *= periodicityFactor;", 
-			"", 
-			"			if (prorataDenominator != 0)", 
-			"			{", 
-			"				rate *= prorataNumerator / prorataDenominator;", 
-			"			}", 
-			"", 
-			"			var amortization = baseAmount * rate;", 
-			"			var value = initialAmount - amortization;", 
-			"", 
-			"			if (roundAmount > 0)", 
-			"			{", 
-			"				if (value < 0)", 
-			"				{", 
-			"					value -= roundAmount/2;", 
-			"				}", 
-			"				else", 
-			"				{", 
-			"					value += roundAmount/2;", 
-			"				}", 
-			"", 
-			"				value -= (value % roundAmount);", 
-			"			}", 
-			"", 
-			"			return value = System.Math.Max (value, residualAmount);", 
-			"		}", 
+			"		rate *= data.ProrataNumerator / data.ProrataDenominator;", 
 			"	}", 
+			"",
+			"	var amortization = data.BaseAmount * rate;", 
+			"	var value = data.InitialAmount - amortization;", 
+			"	value = data.Round (value);",
+			"	return data.Residual (value);",
 			"}", 
 		};
 

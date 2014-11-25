@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.lines = new FrameBox[14];
+			this.lines = new FrameBox[15];
 
 			for (int i=0; i<this.lines.Length; i++)
 			{
@@ -134,12 +134,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.IsAmortization)
 			{
-				this.CreateCombos (this.lines[0]);
+				this.CreateMethodCombo (this.lines[0]);
 				this.CreateInitLines ();
 			}
 			else
 			{
-				this.CreateCombos (this.lines[0]);
+				this.CreateMethodCombo (this.lines[0]);
 				this.CreateInitLine ();
 			}
 
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateCombos(Widget parent)
+		private void CreateMethodCombo(Widget parent)
 		{
 			this.CreateLabel (parent, 100, "");
 
@@ -185,8 +185,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				Parent           = parent,
 				IsReadOnly       = true,
+				Enable           = false,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 250,
+				PreferredWidth   = AbstractFieldController.maxWidth,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 				TabIndex         = ++this.tabIndex,
@@ -221,41 +222,49 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateLabel (this.lines[++i], 100, "Valeur comptable");
 			this.outputAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
 
-			this.CreateLabel (this.lines[++i], 100, "ForcedAmount");
+			this.CreateLabel (this.lines[++i], 100, "Valeur imposée");
 			this.forcedAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateForcedAmount);
+			this.CreateArgument (this.lines[i], "ForcedAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "BaseAmount");
+			this.CreateLabel (this.lines[++i], 100, "Valeur de base");
 			this.baseAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			this.CreateArgument (this.lines[i], "BaseAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "InitialAmount");
+			this.CreateLabel (this.lines[++i], 100, "Valeur initiale");
 			this.initialAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			this.CreateArgument (this.lines[i], "InitialAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "ResidualAmount");
+			this.CreateLabel (this.lines[++i], 100, "Valeur résiduelle");
 			this.residualAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateResidualAmount);
+			this.CreateArgument (this.lines[i], "ResidualAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "RoundAmount");
+			this.CreateLabel (this.lines[++i], 100, "Arrondi");
 			this.roundAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRoundAmount);
+			this.CreateArgument (this.lines[i], "RoundAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "Rate");
+			this.CreateLabel (this.lines[++i], 100, "Taux");
 			this.rateTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRate);
+			this.CreateArgument (this.lines[i], "Rate");
 
-			this.CreateLabel (this.lines[++i], 100, "PeriodicityFactor");
+			this.CreateLabel (this.lines[++i], 100, "Périodicité");
 			this.periodicityFactorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			this.CreateArgument (this.lines[i], "PeriodicityFactor");
 
-			this.CreateLabel (this.lines[++i], 100, "ProrataNumerator");
+			this.CreateLabel (this.lines[++i], 100, "Prorata num.");
 			this.prorataNumeratorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataNumerator);
+			this.CreateArgument (this.lines[i], "ProrataNumerator");
 
-			this.CreateLabel (this.lines[++i], 100, "ProrataDenominator");
+			this.CreateLabel (this.lines[++i], 100, "Prorata dénom.");
 			this.prorataDenominatorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataDenominator);
+			this.CreateArgument (this.lines[i], "ProrataDenominator");
 
-			this.CreateLabel (this.lines[++i], 100, "YearCount");
+			this.CreateLabel (this.lines[++i], 100, "Total années");
 			this.yearCountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			this.CreateArgument (this.lines[i], "YearCount");
 
-			this.CreateLabel (this.lines[++i], 100, "YearRank");
+			this.CreateLabel (this.lines[++i], 100, "Rang année");
 			this.yearRankTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-
-			this.CreateLabel (this.lines[++i], 100, "Expression");
-			this.expressionTextField = this.CreateTextField (this.lines[i], 250, "TODO");
+			this.CreateArgument (this.lines[i], "YearRank");
 		}
 
 		private void CreateButtons(Widget parent)
@@ -325,20 +334,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 36, 0, 5),
+				Margins         = new Margins (0, 36, 0, 1),
 			};
 		}
-
-		//??private FrameBox CreateInter(Widget parent, int h = 13)
-		//??{
-		//??	return new FrameBox
-		//??	{
-		//??		Parent          = parent,
-		//??		Dock            = DockStyle.Top,
-		//??		PreferredHeight = h,
-		//??		Margins         = new Margins (0, 36, 0, 0),
-		//??	};
-		//??}
 
 		private TextField CreateTextField(Widget parent, int width, string tooltip, System.Action action = null)
 		{
@@ -384,6 +382,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				ContentAlignment = ContentAlignment.TopRight,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (0, 10, 1, 0),
+			};
+		}
+
+		private void CreateArgument(Widget parent, string text)
+		{
+			new StaticText
+			{
+				Parent           = parent,
+				Dock             = DockStyle.Fill,
+				PreferredHeight  = AbstractFieldController.lineHeight - 1,
+				Text             = "<i>(" + text + ")</i>",
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Margins          = new Margins (10, 0, 1, 0),
 			};
 		}
 
@@ -512,7 +524,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ProrataDenominator = this.value.Value.ProrataDenominator;
 					this.YearCount          = this.value.Value.YearCount;
 					this.YearRank           = this.value.Value.YearRank;
-					this.Expression         = this.value.Value.Expression;
 
 					bool hasEntry = Entries.HasEntry (this.accessor, this.value.Value);
 					this.deleteEntryButton.Enable = hasEntry && !this.isReadOnly;
@@ -532,7 +543,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.ProrataDenominator = null;
 					this.YearCount          = null;
 					this.YearRank           = null;
-					this.Expression         = null;
 
 					this.deleteEntryButton.Enable = false;
 					this.showEntryButton  .Enable = false;
@@ -575,7 +585,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateBackColor (this.prorataDenominatorTextField);
 				this.UpdateBackColor (this.yearCountTextField);
 				this.UpdateBackColor (this.yearRankTextField);
-				this.UpdateBackColor (this.expressionTextField);
 				this.UpdateBackColor (this.scenarioFieldCombo);
 
 				{
@@ -812,28 +821,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				AmortizedAmountController.SetInt (this.yearRankTextField, value);
-			}
-		}
-
-		private string Expression
-		{
-			get
-			{
-				if (this.expressionTextField == null)
-				{
-					return null;
-				}
-				else
-				{
-					return this.expressionTextField.Text;
-				}
-			}
-			set
-			{
-				if (this.expressionTextField != null)
-				{
-					this.expressionTextField.Text = value;
-				}
 			}
 		}
 
@@ -1189,9 +1176,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private const int AmountWidth = 80;
-		private const int RoundWidth  = 60;
-		private const int RateWidth   = 60;
-		private const int IntWidth    = 45;
 
 
 		private readonly DataAccessor			accessor;
@@ -1215,7 +1199,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextField						prorataDenominatorTextField;
 		private TextField						yearCountTextField;
 		private TextField						yearRankTextField;
-		private TextField						expressionTextField;
 
 		private TextFieldCombo					methodTextFieldCombo;
 		private TextFieldCombo					scenarioFieldCombo;

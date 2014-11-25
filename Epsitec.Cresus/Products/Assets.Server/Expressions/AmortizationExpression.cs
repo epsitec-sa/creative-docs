@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Data;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -15,35 +16,28 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	/// Gère une expression d'amortissement, qui est immédiatement compilée.
 	/// Cette classe est immutable.
 	/// </summary>
-	public class AmortizationExpression
+	public class AmortizationExpression : System.IDisposable
 	{
-		public AmortizationExpression(string expression)
+		public AmortizationExpression(string taggedExpression)
 		{
-			expression = TextLayout.ConvertToSimpleText (expression);
-
-			if (!expression.StartsWith ("public static class Calculator"))
+			if (string.IsNullOrEmpty (taggedExpression))
 			{
-				expression =
-					("public static class Calculator\n" +
-					"{\n" +
-					"    public static object Evaluate(" +
-							"decimal? forcedAmount, decimal baseAmount, decimal initialAmount, " +
-							"decimal residualAmount, decimal roundAmount, " +
-							"decimal rate, decimal periodicityFactor, " +
-							"decimal prorataNumerator, decimal prorataDenominator, " +
-							"decimal yearCount, int yearRank)\n" +
-					"    {\n" + 
-					"        $;\n" +
-					"    }\n" +
-					"}").Replace ("$", expression);
+				this.error = "Empty expression";  // anglais, ne pas traduire
+				return;
 			}
+
+			var expression = AmortizationExpression.ConvertToSimpleText (taggedExpression);
 
 			var tree = SyntaxFactory.ParseSyntaxTree (expression);
 
 			var compilation = CSharpCompilation.Create ("calc.dll",
 				options: new CSharpCompilationOptions (OutputKind.DynamicallyLinkedLibrary),
 				syntaxTrees: new[] { tree },
-				references: new[] { MetadataReference.CreateFromAssembly (typeof (object).Assembly) });
+				references: new[]
+				{
+					MetadataReference.CreateFromAssembly (typeof (object).Assembly),
+					MetadataReference.CreateFromAssembly (typeof (Data).Assembly)
+				});
 
 			using (var stream = new MemoryStream ())
 			{
@@ -54,196 +48,180 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				}
 				else
 				{
-					this.error = string.Format ("Failed to compile:\n{0}", string.Join ("\n", compileResult.Diagnostics.Select (x => x.ToString ())));
+					// Anglais, ne pas traduire.
+					this.error = string.Format ("Failed to compile:<br/>{0}", string.Join ("<br/>", compileResult.Diagnostics.Select (x => x.ToString ())));
 				}
 			}
 		}
 
-
-		#region Compilation samples
-		public static class Calculator_RateLinear
+		public void Dispose()
 		{
-			public static object Evaluate(
-				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-				decimal residualAmount, decimal roundAmount,
-				decimal rate, decimal periodicityFactor,
-				decimal prorataNumerator, decimal prorataDenominator,
-				decimal yearCount, int yearRank)
+		}
+
+
+		#region Expression
+		public static string DefaultExpression
+		{
+			get
 			{
-				if (forcedAmount.HasValue)
+				return AmortizationExpression.GetExpression ("return 0;");
+			}
+		}
+
+		public static string GetExpression(params string[] insideLines)
+		{
+			var merged = new List<string> ();
+
+			foreach (var skeletonLine in AmortizationExpression.SkeletonLines)
+			{
+				if (skeletonLine.Contains ("$"))
 				{
-					return forcedAmount.Value;
+					foreach (var insideLine in insideLines)
+					{
+						merged.Add (skeletonLine.Replace ("$", insideLine));
+					}
 				}
 				else
 				{
-					rate *= periodicityFactor;
+					merged.Add (skeletonLine);
+				}
+			}
 
-					if (prorataDenominator != 0)
+			return AmortizationExpression.JoinExpression (merged.ToArray ());
+		}
+
+		private static string JoinExpression(params string[] lines)
+		{
+			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines))
+				.Replace ("<tab/>", "    ");
+		}
+
+		private static string ConvertToSimpleText(string expression)
+		{
+			return TextLayout.ConvertToSimpleText (expression);
+		}
+
+		private static string ConvertToTaggedText(string expression)
+		{
+			return TextLayout.ConvertToTaggedText (expression);
+		}
+
+		private static string[] SkeletonLines =
+		{
+			"using Epsitec.Cresus.Assets.Server.Expression;", 
+			"", 
+			"public static class Calculator", 
+			"{", 
+			"	public static object Evaluate(Data data)", 
+			"	{", 
+			"		$",  // partie centrale remplacée par du code
+			"	}", 
+			"}", 
+		};
+		#endregion
+
+
+		#region Standard calculators
+		public static class Calculator_RateLinear
+		{
+			public static object Evaluate(Data data)
+			{
+				if (data.ForcedAmount.HasValue)
+				{
+					return data.ForcedAmount.Value;
+				}
+				else
+				{
+					var rate = data.Rate * data.PeriodicityFactor;
+
+					if (data.ProrataDenominator != 0)
 					{
-						rate *= prorataNumerator / prorataDenominator;
+						rate *= data.ProrataNumerator / data.ProrataDenominator;
 					}
 
-					var amortization = baseAmount * rate;
-					var value = initialAmount - amortization;
-
-					if (roundAmount > 0)
-					{
-						if (value < 0)
-						{
-							value -= roundAmount/2;
-						}
-						else
-						{
-							value += roundAmount/2;
-						}
-
-						value -= (value % roundAmount);
-					}
-
-					return value = System.Math.Max (value, residualAmount);
+					var amortization = data.BaseAmount * rate;
+					var value = data.InitialAmount - amortization;
+					value = data.Round (value);
+					return data.Residual (value);
 				}
 			}
 		}
 
 		public static class Calculator_RateDegressive
 		{
-			public static object Evaluate(
-				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-				decimal residualAmount, decimal roundAmount,
-				decimal rate, decimal periodicityFactor,
-				decimal prorataNumerator, decimal prorataDenominator,
-				decimal yearCount, int yearRank)
+			public static object Evaluate(Data data)
 			{
-				if (forcedAmount.HasValue)
+				if (data.ForcedAmount.HasValue)
 				{
-					return forcedAmount.Value;
+					return data.ForcedAmount.Value;
 				}
 				else
 				{
-					rate *= periodicityFactor;
+					var rate = data.Rate * data.PeriodicityFactor;
 
-					if (prorataDenominator != 0)
+					if (data.ProrataDenominator != 0)
 					{
-						rate *= prorataNumerator / prorataDenominator;
+						rate *= data.ProrataNumerator / data.ProrataDenominator;
 					}
 
-					var amortization = initialAmount * rate;
-					var value = initialAmount - amortization;
-
-					if (roundAmount > 0)
-					{
-						if (value < 0)
-						{
-							value -= roundAmount/2;
-						}
-						else
-						{
-							value += roundAmount/2;
-						}
-
-						value -= (value % roundAmount);
-					}
-
-					return value = System.Math.Max (value, residualAmount);
+					var amortization = data.InitialAmount * rate;
+					var value = data.InitialAmount - amortization;
+					value = data.Round (value);
+					return data.Residual (value);
 				}
 			}
 		}
 
 		public static class Calculator_YearsLinear
 		{
-			public static object Evaluate(
-				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-				decimal residualAmount, decimal roundAmount,
-				decimal rate, decimal periodicityFactor,
-				decimal prorataNumerator, decimal prorataDenominator,
-				decimal yearCount, int yearRank)
+			public static object Evaluate(Data data)
 			{
-				if (forcedAmount.HasValue)
+				if (data.ForcedAmount.HasValue)
 				{
-					return forcedAmount.Value;
+					return data.ForcedAmount.Value;
 				}
 				else
 				{
-					rate = 1.0m;
-					decimal n = yearCount - yearRank;  // nb d'années restantes
+					var rate = 1.0m;
+					decimal n = data.YearCount - data.YearRank;  // nb d'années restantes
 
 					if (n > 0)
 					{
 						rate = 1.0m / n;
 					}
 
-					var amortization = initialAmount * rate;
-					var value = initialAmount - amortization;
-
-					if (roundAmount > 0)
-					{
-						if (value < 0)
-						{
-							value -= roundAmount/2;
-						}
-						else
-						{
-							value += roundAmount/2;
-						}
-
-						value -= (value % roundAmount);
-					}
-
-					return value = System.Math.Max (value, residualAmount);
+					var amortization = data.InitialAmount * rate;
+					var value = data.InitialAmount - amortization;
+					value = data.Round (value);
+					return data.Residual (value);
 				}
 			}
 		}
 
 		public static class Calculator_YearsDegressive
 		{
-			public static object Evaluate(
-				decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-				decimal residualAmount, decimal roundAmount,
-				decimal rate, decimal periodicityFactor,
-				decimal prorataNumerator, decimal prorataDenominator,
-				decimal yearCount, int yearRank)
+			public static object Evaluate(Data data)
 			{
-				if (forcedAmount.HasValue)
+				if (data.ForcedAmount.HasValue)
 				{
-					return forcedAmount.Value;
+					return data.ForcedAmount.Value;
 				}
 				else
 				{
-					rate = 1.0m;
-					decimal n = yearCount - yearRank;  // nb d'années restantes
+					var rate = 1.0m;
+					decimal n = data.YearCount - data.YearRank;  // nb d'années restantes
 
-					if (n > 0)
+					if (n > 0 && data.ResidualAmount != 0 && data.InitialAmount != 0)
 					{
-						if (residualAmount == 0 || initialAmount == 0)
-						{
-							rate = 1.0m;
-						}
-						else
-						{
-							var x = residualAmount / initialAmount;
-							var y = 1.0m / n;
-							rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
-						}
+						var x = data.ResidualAmount / data.InitialAmount;
+						var y = 1.0m / n;
+						rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
 					}
 
-					var amortization = initialAmount * rate;
-					var value = initialAmount - amortization;
-
-					if (roundAmount > 0)
-					{
-						if (value < 0)
-						{
-							value -= roundAmount/2;
-						}
-						else
-						{
-							value += roundAmount/2;
-						}
-
-						value -= (value % roundAmount);
-					}
-
-					return value = System.Math.Max (value, residualAmount);
+					var amortization = data.InitialAmount * rate;
+					var value = data.InitialAmount - amortization;
+					value = data.Round (value);
+					return data.Residual (value);
 				}
 			}
 		}
@@ -259,25 +237,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-			decimal residualAmount, decimal roundAmount,
-			decimal rate, decimal periodicityFactor,
-			decimal prorataNumerator, decimal prorataDenominator,
-			decimal yearCount, int yearRank)
+		public decimal? Evaluate(Data data)
 		{
 			if (this.compiledAssembly != null)
 			{
 				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
 				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
 
-				object[] parameters =
-				{
-					forcedAmount, baseAmount, initialAmount,
-					residualAmount, roundAmount,
-					rate, periodicityFactor,
-					prorataNumerator, prorataDenominator,
-					yearCount, yearRank
-				};
+				object[] parameters = { data };
 
 				object answer = evaluate.Invoke (null, parameters);
 				return AmortizationExpression.CastResult (answer);

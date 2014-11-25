@@ -25,12 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(string expression,
-			decimal? forcedAmount, decimal baseAmount, decimal initialAmount,
-			decimal residualAmount, decimal roundAmount,
-			decimal rate, decimal periodicityFactor,
-			decimal prorataNumerator, decimal prorataDenominator,
-			decimal yearCount, int yearRank)
+		public decimal? Evaluate(string expression, Data data)
 		{
 			AmortizationExpression ae;
 			if (!this.expressions.TryGetValue (expression, out ae))  // pas encore dans le dico ?
@@ -39,12 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				this.expressions.Add (expression, ae);  // on l'ajoute dans le dico
 			}
 
-			return ae.Evaluate (
-				forcedAmount, baseAmount, initialAmount,
-				residualAmount, roundAmount,
-				rate, periodicityFactor,
-				prorataNumerator, prorataDenominator,
-				yearCount, yearRank);
+			return ae.Evaluate (data);
 		}
 
 

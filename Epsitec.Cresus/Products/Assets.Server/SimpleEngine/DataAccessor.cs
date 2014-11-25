@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public decimal? GetAmortizedAmount(AmortizedAmount? aa)
 		{
-			//	Retourne la valeur de sortie d'un amortissement.
+			//	Calcule la valeur de sortie d'un amortissement.
 			if (aa.HasValue)
 			{
 				object result;
@@ -137,67 +137,19 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				switch (aa.Value.AmortizationMethod)
 				{
 					case AmortizationMethod.RateLinear:
-						result = AmortizationExpression.Calculator_RateLinear.Evaluate (
-							aa.Value.ForcedAmount,
-							aa.Value.BaseAmount.GetValueOrDefault (),
-							aa.Value.InitialAmount.GetValueOrDefault (),
-							aa.Value.ResidualAmount.GetValueOrDefault (),
-							aa.Value.RoundAmount.GetValueOrDefault (),
-							aa.Value.Rate.GetValueOrDefault (),
-							aa.Value.PeriodicityFactor,
-							aa.Value.ProrataNumerator.GetValueOrDefault (),
-							aa.Value.ProrataDenominator.GetValueOrDefault (),
-							aa.Value.YearCountPeriodicity,
-							aa.Value.YearRank
-							);
+						result = AmortizationExpression.Calculator_RateLinear.Evaluate (new Expression.Data(aa.Value));
 						return AmortizationExpression.CastResult (result);
 
 					case AmortizationMethod.RateDegressive:
-						result = AmortizationExpression.Calculator_RateDegressive.Evaluate (
-							aa.Value.ForcedAmount,
-							aa.Value.BaseAmount.GetValueOrDefault (),
-							aa.Value.InitialAmount.GetValueOrDefault (),
-							aa.Value.ResidualAmount.GetValueOrDefault (),
-							aa.Value.RoundAmount.GetValueOrDefault (),
-							aa.Value.Rate.GetValueOrDefault (),
-							aa.Value.PeriodicityFactor,
-							aa.Value.ProrataNumerator.GetValueOrDefault (),
-							aa.Value.ProrataDenominator.GetValueOrDefault (),
-							aa.Value.YearCountPeriodicity,
-							aa.Value.YearRank
-							);
+						result = AmortizationExpression.Calculator_RateDegressive.Evaluate (new Expression.Data(aa.Value));
 						return AmortizationExpression.CastResult (result);
 
 					case AmortizationMethod.YearsLinear:
-						result = AmortizationExpression.Calculator_YearsLinear.Evaluate (
-							aa.Value.ForcedAmount,
-							aa.Value.BaseAmount.GetValueOrDefault (),
-							aa.Value.InitialAmount.GetValueOrDefault (),
-							aa.Value.ResidualAmount.GetValueOrDefault (),
-							aa.Value.RoundAmount.GetValueOrDefault (),
-							aa.Value.Rate.GetValueOrDefault (),
-							aa.Value.PeriodicityFactor,
-							aa.Value.ProrataNumerator.GetValueOrDefault (),
-							aa.Value.ProrataDenominator.GetValueOrDefault (),
-							aa.Value.YearCountPeriodicity,
-							aa.Value.YearRank
-							);
+						result = AmortizationExpression.Calculator_YearsLinear.Evaluate (new Expression.Data(aa.Value));
 						return AmortizationExpression.CastResult (result);
 
 					case AmortizationMethod.YearsDegressive:
-						result = AmortizationExpression.Calculator_YearsDegressive.Evaluate (
-							aa.Value.ForcedAmount,
-							aa.Value.BaseAmount.GetValueOrDefault (),
-							aa.Value.InitialAmount.GetValueOrDefault (),
-							aa.Value.ResidualAmount.GetValueOrDefault (),
-							aa.Value.RoundAmount.GetValueOrDefault (),
-							aa.Value.Rate.GetValueOrDefault (),
-							aa.Value.PeriodicityFactor,
-							aa.Value.ProrataNumerator.GetValueOrDefault (),
-							aa.Value.ProrataDenominator.GetValueOrDefault (),
-							aa.Value.YearCountPeriodicity,
-							aa.Value.YearRank
-							);
+						result = AmortizationExpression.Calculator_YearsDegressive.Evaluate (new Expression.Data(aa.Value));
 						return AmortizationExpression.CastResult (result);
 				}
 
@@ -207,20 +159,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					return this.amortizationExpressions.Evaluate (
-						aa.Value.Expression,
-						aa.Value.ForcedAmount,
-						aa.Value.BaseAmount.GetValueOrDefault (),
-						aa.Value.InitialAmount.GetValueOrDefault (),
-						aa.Value.ResidualAmount.GetValueOrDefault (),
-						aa.Value.RoundAmount.GetValueOrDefault (),
-						aa.Value.Rate.GetValueOrDefault (),
-						aa.Value.PeriodicityFactor,
-						aa.Value.ProrataNumerator.GetValueOrDefault (),
-						aa.Value.ProrataDenominator.GetValueOrDefault (),
-						aa.Value.YearCountPeriodicity,
-						aa.Value.YearRank
-						);
+					return this.amortizationExpressions.Evaluate (aa.Value.Expression, new Expression.Data(aa.Value));
 				}
 			}
 			else
