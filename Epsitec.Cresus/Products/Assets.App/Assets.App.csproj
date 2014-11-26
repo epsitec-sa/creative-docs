@@ -535,6 +535,8 @@
     <EmbeddedResource Include="Images\Warning.ShowAll.icon" />
     <EmbeddedResource Include="Images\Warnings.Hidden.icon" />
     <EmbeddedResource Include="Images\View.Methods.icon" />
+    <EmbeddedResource Include="Images\Method.Locked.icon" />
+    <EmbeddedResource Include="Images\Method.Unlocked.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

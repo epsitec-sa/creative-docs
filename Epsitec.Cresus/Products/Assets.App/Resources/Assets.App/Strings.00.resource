@@ -470,4 +470,13 @@
   <data name="Popup.Methods.Title" id="KDJ">Choix de la méthode d'amortissement</data>
   <data name="Popup.ShowExpression.Title" id="KEJ">Code C#</data>
   <data name="Popup.TestExpression.Title" id="KFJ">Test d'une expression</data>
+  <data name="EditorPages.Method.Locked.Tooltip" id="KGJ">Déverrouille les boutons pour insérer une expression</data>
+  <data name="EditorPages.Method.RateLinear.Button" id="KHJ">Taux linéaire</data>
+  <data name="EditorPages.Method.RateLinear.Tooltip" id="KIJ">Insère une expression qui calcule un&lt;br/&gt;amortissement linéaire selon un taux</data>
+  <data name="EditorPages.Method.RateDegressive.Button" id="KJJ">Taux dégressif</data>
+  <data name="EditorPages.Method.RateDegressive.Tooltip" id="KKJ">Insère une expression qui calcule un&lt;br/&gt;amortissement dégressif selon un taux</data>
+  <data name="EditorPages.Method.YearsLinear.Button" id="KLJ">Années lin.</data>
+  <data name="EditorPages.Method.YearsLinear.Tooltip" id="KMJ">Insère une expression qui calcule un amortissement&lt;br/&gt;linéaire selon un durée en années</data>
+  <data name="EditorPages.Method.YearsDegressive.Button" id="KNJ">Années dég.</data>
+  <data name="EditorPages.Method.YearsDegressive.Tooltip" id="KOJ">Insère une expression qui calcule un amortissement&lt;br/&gt;dégressif selon un durée en années</data>
 </bundle>

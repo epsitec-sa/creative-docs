@@ -82,11 +82,25 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", list));
 		}
 
-		public static string DefaultExpression
+		public static string GetDefaultExpression(SampleType type)
 		{
-			get
+			switch (type)
 			{
-				return AmortizationExpression.Format (AmortizationExpression.defaultLines);
+				case SampleType.RateLinear:
+					return AmortizationExpression.Format (AmortizationExpression.defaultLinesRateLinear);
+
+				case SampleType.RateDegressive:
+					return AmortizationExpression.Format (AmortizationExpression.defaultLinesRateDegressive);
+
+				case SampleType.YearsLinear:
+					return AmortizationExpression.Format (AmortizationExpression.defaultLinesYearsLinear);
+
+				case SampleType.YearsDegressive:
+					return AmortizationExpression.Format (AmortizationExpression.defaultLinesYearsDegressive);
+
+				default:
+					return AmortizationExpression.Format (AmortizationExpression.defaultLinesNull);
+
 			}
 		}
 
@@ -113,7 +127,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		private static string[] defaultLines =
+		private static string[] defaultLinesRateLinear =
 		{
 			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
 			"var amortization = BaseAmount * rate;",
@@ -122,6 +136,58 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Round (value);",
 			"value = Residual (value);",
 			"value = Override (value);",
+		};
+
+		private static string[] defaultLinesRateDegressive =
+		{
+			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
+			"var amortization = InitialAmount * rate;",
+			"",
+			"value = value - amortization;",
+			"value = Round (value);",
+			"value = Residual (value);",
+			"value = Override (value);",
+		};
+
+		private static string[] defaultLinesYearsLinear =
+		{
+			"var rate = 1.0m;",
+			"decimal n = YearCount - YearRank;  // remaining years",
+			"",
+			"if (n > 0)",
+			"{",
+			"	rate = 1.0m / n;",
+			"}",
+			"",
+			"var amortization = InitialAmount * rate;",
+			"value = value - amortization;",
+			"value = Round (value);",
+			"value = Residual (value);",
+			"value = Override (value);",
+		};
+
+		private static string[] defaultLinesYearsDegressive =
+		{
+			"var rate = 1.0m;",
+			"decimal n = YearCount - YearRank;  // remaining years",
+			"",
+			"if (n > 0 && ResidualAmount != 0 && InitialAmount != 0)",
+			"{",
+			"	var x = ResidualAmount / InitialAmount;",
+			"	var y = 1.0m / n;",
+			"	rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);",
+			"}",
+			"",
+			"var amortization = InitialAmount * rate;",
+			"value = value - amortization;",
+			"value = Round (value);",
+			"value = Residual (value);",
+			"value = Override (value);",
+		};
+
+		private static string[] defaultLinesNull =
+		{
+			"value = 0;",
 		};
 
 		private static string[] skeletonLines =
@@ -139,24 +205,24 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"		var calculator = new InternalCalculator(amount);",
 			"		return calculator.Evaluate();",
 			"	}",
-			"}",
 			"",
-			"public class InternalCalculator : AbstractCalculator",
-			"{",
-			"	public InternalCalculator(AmortizedAmount amount)",
-			"		: base (amount)",
+			"	private class InternalCalculator : AbstractCalculator",
 			"	{",
-			"	}",
+			"		public InternalCalculator(AmortizedAmount amount)",
+			"			: base (amount)",
+			"		{",
+			"		}",
 			"",
-			"	public override object Evaluate()",
-			"	{",
-			"		decimal value = this.InitialAmount;",
+			"		public override object Evaluate()",
+			"		{",
+			"			decimal value = this.InitialAmount;",
 			"",
 			"//----------------------------------------------",
 			"$",
 			"//----------------------------------------------",
 			"",
-			"		return value;",
+			"			return value;",
+			"		}",
 			"	}",
 			"}",
 		};

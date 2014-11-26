@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
@@ -19,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		public EditorPageMethod(DataAccessor accessor, BaseType baseType, bool isTimeless)
 			: base (accessor, baseType, isTimeless)
 		{
+			this.sampleButtons = new List<Button> ();
 		}
 
 
@@ -28,9 +30,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.nameController       = this.CreateStringController (parent, ObjectField.Name);
 			this.methodController     = this.CreateEnumController   (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods);
-			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 25, maxLength: 10000);
+			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 20, maxLength: 10000);
 
-			this.CreateButtons (parent);
+			this.CreateSampleButtons (parent);
+			this.CreateActionButtons (parent);
 			this.CreateOutputConsole (parent);
 
 			this.methodController.ValueEdited += delegate
@@ -45,7 +48,68 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.UpdateControllers ();
 		}
 
-		private void CreateButtons(Widget parent)
+		private void CreateSampleButtons(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 21,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (110-21-5, 0, 5, 0),
+			};
+
+			bool locked = true;
+
+			this.lockButton = new IconButton
+			{
+				Parent          = frame,
+				PreferredWidth  = 21,
+				IconUri         = Misc.GetResourceIconUri ("Method.Locked"),
+				ButtonStyle     = ButtonStyle.ToolItem,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 5, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.lockButton, Res.Strings.EditorPages.Method.Locked.Tooltip.ToString ());
+
+			this.lockButton.Clicked += delegate
+			{
+				locked = !locked;
+				this.lockButton.IconUri = Misc.GetResourceIconUri (locked ? "Method.Locked" : "Method.Unlocked");
+
+				foreach (var button in this.sampleButtons)
+				{
+					button.Enable = !locked;
+				}
+			};
+
+			foreach (var sample in EditorPageMethod.Samples)
+			{
+				var button = new Button
+				{
+					Parent          = frame,
+					PreferredWidth  = 90,
+					Text            = sample.Title,
+					ButtonStyle     = ButtonStyle.Icon,
+					AutoFocus       = false,
+					Enable          = !locked,
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (0, 5, 0, 0),
+				};
+
+				ToolTip.Default.SetToolTip (button, sample.Tooltip);
+
+				button.Clicked += delegate
+				{
+					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (sample.Type);
+				};
+
+				this.sampleButtons.Add (button);
+			}
+		}
+
+		private void CreateActionButtons(Widget parent)
 		{
 			var frame = new FrameBox
 			{
@@ -120,17 +184,25 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
 
+			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
+
 			this.expressionController.IsReadOnly = !expressionEnable;
-			this.compileButton.Visibility = expressionEnable;
-			this.showButton.Visibility = expressionEnable;
-			this.testButton.Visibility = expressionEnable;
-			this.outputConsole.Visibility = expressionEnable;
+			this.lockButton          .Visibility =  expressionEnable;
+			this.compileButton       .Visibility =  expressionEnable;
+			this.showButton          .Visibility =  expressionEnable;
+			this.testButton          .Visibility =  expressionEnable;
+			this.outputConsole       .Visibility =  expressionEnable;
+
+			foreach (var button in this.sampleButtons)
+			{
+				button.Visibility = expressionEnable;
+			}
 
 			if (expressionEnable)
 			{
 				if (string.IsNullOrEmpty (this.expressionController.Value))
 				{
-					this.expressionController.Value = AmortizationExpression.DefaultExpression;
+					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (SampleType.RateLinear);
 				}
 			}
 			else
@@ -196,9 +268,55 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
+		private static IEnumerable<Sample> Samples
+		{
+			get
+			{
+				yield return new Sample
+				{
+					Type    = SampleType.RateLinear,
+					Title   = Res.Strings.EditorPages.Method.RateLinear.Button.ToString (),
+					Tooltip = Res.Strings.EditorPages.Method.RateLinear.Tooltip.ToString (),
+				};
+
+				yield return new Sample
+				{
+					Type    = SampleType.RateDegressive,
+					Title   = Res.Strings.EditorPages.Method.RateDegressive.Button.ToString (),
+					Tooltip = Res.Strings.EditorPages.Method.RateDegressive.Tooltip.ToString (),
+				};
+
+				yield return new Sample
+				{
+					Type    = SampleType.YearsLinear,
+					Title   = Res.Strings.EditorPages.Method.YearsLinear.Button.ToString (),
+					Tooltip = Res.Strings.EditorPages.Method.YearsLinear.Tooltip.ToString (),
+				};
+
+				yield return new Sample
+				{
+					Type    = SampleType.YearsDegressive,
+					Title   = Res.Strings.EditorPages.Method.YearsDegressive.Button.ToString (),
+					Tooltip = Res.Strings.EditorPages.Method.YearsDegressive.Tooltip.ToString (),
+				};
+			}
+		}
+
+
+		private struct Sample
+		{
+			public SampleType					Type;
+			public string						Title;
+			public string						Tooltip;
+		}
+
+
+		private readonly List<Button>			sampleButtons;
+
 		private StringFieldController			nameController;
 		private EnumFieldController				methodController;
 		private StringFieldController			expressionController;
+		private IconButton						lockButton;
 		private Button							compileButton;
 		private Button							showButton;
 		private Button							testButton;

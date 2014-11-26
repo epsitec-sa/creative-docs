@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -64,6 +65,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					this.textField.MaxLength = this.maxLength;
 				}
 			}
+		}
+
+		public void SetFont(Font font)
+		{
+			this.textField.TextLayout.DefaultFont = font;
 		}
 
 		private void UpdateValue()

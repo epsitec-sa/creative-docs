@@ -2001,6 +2001,101 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Method
+				{
+					public static class Locked
+					{
+						//	designer:str/JUKGJ01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544944));
+							}
+						}
+					}
+					
+					public static class RateDegressive
+					{
+						//	designer:str/JUKJJ01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544947));
+							}
+						}
+						//	designer:str/JUKKJ01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544948));
+							}
+						}
+					}
+					
+					public static class RateLinear
+					{
+						//	designer:str/JUKHJ01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544945));
+							}
+						}
+						//	designer:str/JUKIJ01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544946));
+							}
+						}
+					}
+					
+					public static class YearsDegressive
+					{
+						//	designer:str/JUKNJ01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544951));
+							}
+						}
+						//	designer:str/JUKOJ01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544952));
+							}
+						}
+					}
+					
+					public static class YearsLinear
+					{
+						//	designer:str/JUKLJ01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544949));
+							}
+						}
+						//	designer:str/JUKMJ01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544950));
+							}
+						}
+					}
+				}
+				
 				public static class OneShot
 				{
 					//	designer:str/JUK7901
@@ -6485,6 +6580,101 @@ namespace Epsitec.Cresus.Assets.App
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544608);
+							}
+						}
+					}
+				}
+				
+				public static class Method
+				{
+					public static class Locked
+					{
+						//	designer:str/JUKGJ01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544944);
+							}
+						}
+					}
+					
+					public static class RateDegressive
+					{
+						//	designer:str/JUKJJ01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544947);
+							}
+						}
+						//	designer:str/JUKKJ01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544948);
+							}
+						}
+					}
+					
+					public static class RateLinear
+					{
+						//	designer:str/JUKHJ01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544945);
+							}
+						}
+						//	designer:str/JUKIJ01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544946);
+							}
+						}
+					}
+					
+					public static class YearsDegressive
+					{
+						//	designer:str/JUKNJ01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544951);
+							}
+						}
+						//	designer:str/JUKOJ01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544952);
+							}
+						}
+					}
+					
+					public static class YearsLinear
+					{
+						//	designer:str/JUKLJ01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544949);
+							}
+						}
+						//	designer:str/JUKMJ01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544950);
 							}
 						}
 					}
