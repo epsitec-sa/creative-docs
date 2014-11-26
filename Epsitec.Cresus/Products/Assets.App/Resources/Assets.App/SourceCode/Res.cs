@@ -4945,6 +4945,30 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class ShowExpression
+				{
+					//	designer:str/JUKEJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544942));
+						}
+					}
+				}
+				
+				public static class TestExpression
+				{
+					//	designer:str/JUKFJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544943));
+						}
+					}
+				}
+				
 				public static class UndoList
 				{
 					public static class Redo
@@ -9406,6 +9430,30 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544912);
 							}
+						}
+					}
+				}
+				
+				public static class ShowExpression
+				{
+					//	designer:str/JUKEJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544942);
+						}
+					}
+				}
+				
+				public static class TestExpression
+				{
+					//	designer:str/JUKFJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544943);
 						}
 					}
 				}

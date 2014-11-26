@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -65,22 +66,22 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Margins         = new Margins (0, 5, 0, 0),
 			};
 
-			this.debugButton = new Button
+			this.showButton = new Button
 			{
 				Parent          = frame,
 				PreferredWidth  = 90,
-				Text            = "Debug",  // anglais, ne pas traduire
+				Text            = "Show C#",  // anglais, ne pas traduire
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 5, 0, 0),
 			};
 
-			this.runButton = new Button
+			this.testButton = new Button
 			{
 				Parent          = frame,
 				PreferredWidth  = 90,
-				Text            = "Run",  // anglais, ne pas traduire
+				Text            = "Test",  // anglais, ne pas traduire
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
 				Dock            = DockStyle.Left,
@@ -92,14 +93,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.Compile ();
 			};
 
-			this.debugButton.Clicked += delegate
+			this.showButton.Clicked += delegate
 			{
-				this.Debug ();
+				this.Show ();
 			};
 
-			this.runButton.Clicked += delegate
+			this.testButton.Clicked += delegate
 			{
-				this.Run ();
+				this.Test ();
 			};
 		}
 
@@ -121,8 +122,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.expressionController.IsReadOnly = !expressionEnable;
 			this.compileButton.Visibility = expressionEnable;
-			this.debugButton.Visibility = expressionEnable;
-			this.runButton.Visibility = expressionEnable;
+			this.showButton.Visibility = expressionEnable;
+			this.testButton.Visibility = expressionEnable;
 			this.outputConsole.Visibility = expressionEnable;
 
 			if (expressionEnable)
@@ -167,12 +168,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
-		private void Debug()
+		private void Show()
 		{
+			var expression = AmortizationExpression.GetDebugExpression (this.expressionController.Value);
+			ShowExpressionPopup.Show (this.showButton, this.accessor, expression);
 		}
 
-		private void Run()
+		private void Test()
 		{
+			var expression = new AmortizationExpression (this.expressionController.Value);
+			TestExpressionPopup.Show (this.testButton, this.accessor, expression);
 		}
 
 		private AmortizationMethod CurrentMethod
@@ -195,8 +200,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private EnumFieldController				methodController;
 		private StringFieldController			expressionController;
 		private Button							compileButton;
-		private Button							debugButton;
-		private Button							runButton;
+		private Button							showButton;
+		private Button							testButton;
 		private TextFieldMulti					outputConsole;
 	}
 }

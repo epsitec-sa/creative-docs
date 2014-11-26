@@ -468,4 +468,6 @@
   <data name="Popup.CreateMethod.Title" id="KBJ">Création d'une nouvelle méthode d'amortissement</data>
   <data name="FieldControllers.Method.Goto" id="KCJ">Aller sur la méthode d'amortissement</data>
   <data name="Popup.Methods.Title" id="KDJ">Choix de la méthode d'amortissement</data>
+  <data name="Popup.ShowExpression.Title" id="KEJ">Code C#</data>
+  <data name="Popup.TestExpression.Title" id="KFJ">Test d'une expression</data>
 </bundle>

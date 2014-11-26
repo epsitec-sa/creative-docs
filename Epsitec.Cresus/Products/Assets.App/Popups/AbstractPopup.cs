@@ -272,7 +272,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (button.Enable)
 				{
-					this.ClosePopup ();
+					if (button.Name != "NoClose")
+					{
+						this.ClosePopup ();
+					}
+
 					this.OnButtonClicked (button.Name);
 				}
 			};

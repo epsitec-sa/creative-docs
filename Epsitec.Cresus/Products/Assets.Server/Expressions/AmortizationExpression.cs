@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -62,6 +63,25 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 
 		#region Expression
+		public static string GetDebugExpression(string inside)
+		{
+			//	Retourne le code C# complet avec les lignes numérotées.
+			var x = AmortizationExpression.ConvertToSimpleText (inside);
+			var y = AmortizationExpression.Skeleton.Replace ("$", x);
+			var z = y.Split ('\n');
+
+			var list = new List<string> ();
+			int index = 1;
+
+			foreach (var line in z)
+			{
+				string s = string.Format ("{0}:\t{1}", TypeConverters.IntToString (index++), line);
+				list.Add (s);
+			}
+
+			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", list));
+		}
+
 		public static string DefaultExpression
 		{
 			get

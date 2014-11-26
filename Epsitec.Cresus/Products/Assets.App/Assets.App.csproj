@@ -102,6 +102,8 @@
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
+    <Compile Include="Popups\TestExpressionPopup.cs" />
+    <Compile Include="Popups\ShowExpressionPopup.cs" />
     <Compile Include="Popups\CreateMethodPopup.cs" />
     <Compile Include="Popups\FilterControllers\AccountsFilterController.cs" />
     <Compile Include="Popups\FilterControllers\SimpleFilterController.cs" />
