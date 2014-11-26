@@ -30,9 +30,6 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Field<string> ()
 					.Title ("Nom d'affichage")
 				.End ()
-				.Field<string> ()
-					.Title ("Email")
-				.End ()
 				.Field<AiderContactEntity> ()
 					.Title ("Contact")
 				.End ()
@@ -58,10 +55,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string, string, AiderContactEntity, AiderUserRoleEntity, AiderGroupEntity, bool, string, string, AiderUserEntity> (this.Execute);
+			return FunctionExecutor.Create<string, string, AiderContactEntity, AiderUserRoleEntity, AiderGroupEntity, bool, string, string, AiderUserEntity> (this.Execute);
 		}
 
-		private AiderUserEntity Execute(string username, string displayname, string email, AiderContactEntity contact, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
+		private AiderUserEntity Execute(string username, string displayname,  AiderContactEntity contact, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
 		{
 			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
 			{
@@ -75,26 +72,26 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException (this.Entity, "Le rôle est obligatoire");
 			}
 
-			if (parish.IsNotNull () && contact.IsNotNull ())
+			if (contact.IsNull ())
 			{
-				//Create usergroup participation
-				var newUserGroup = parish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
-				var participationData = new List<ParticipationData> ();
-				participationData.Add (new ParticipationData (contact));
-				newUserGroup.AddParticipations (this.BusinessContext, participationData, Date.Today, FormattedText.Null);
+				throw new BusinessRuleException (this.Entity, "Un contact est obligatoire");
 			}
-
-
-			var user = this.BusinessContext.CreateAndRegisterEntity<AiderUserEntity> ();
-
-			user.LoginName = username;
-			user.DisplayName = displayname;
-			user.Email = email;
-			user.Role = role;
-			user.Parish = parish;
-			user.Contact = contact;
+			
+			
+			var user = AiderUserEntity.Create (this.BusinessContext, username, displayname, contact, role, parish);
 			user.SetAdmininistrator (this.BusinessContext, admin);
 			user.SetPassword (password, confirmation);
+
+			if (contact.Person.Employee.IsNull ())
+			{
+				var employee = AiderEmployeeEntity.Create (this.BusinessContext, 
+											contact.Person,
+											user,
+											Enumerations.EmployeeType.BenevoleAIDER,
+											"",
+											Enumerations.EmployeeActivity.None,
+											"");
+			}
 
 			return user;
 		}

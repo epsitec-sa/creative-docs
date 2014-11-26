@@ -175,6 +175,25 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (this);
 		}
 
+		public static AiderUserEntity Create(
+			BusinessContext businessContext, 
+			string username, 
+			string displayname,  
+			AiderContactEntity contact, 
+			AiderUserRoleEntity role, 
+			AiderGroupEntity parish)
+		{
+			var user = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
+
+			user.LoginName = username;
+			user.DisplayName = displayname;
+			user.Role = role;
+			user.Parish = parish;
+			user.Contact = contact;
+
+			return user;
+		}
+
 
 		partial void OnParishChanging(AiderGroupEntity oldValue, AiderGroupEntity newValue)
 		{
