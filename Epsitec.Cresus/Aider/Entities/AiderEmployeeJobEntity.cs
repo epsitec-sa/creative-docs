@@ -28,6 +28,25 @@ namespace Epsitec.Aider.Entities
 		{
 			context.DeleteEntity (this);
 		}
+
+		public static AiderEmployeeJobEntity Create(
+			BusinessContext context, 
+			AiderEmployeeEntity employee, 
+			Enumerations.EmployeeJobFunction function,
+			Enumerations.EmployeeEmployer employer,
+			AiderOfficeManagementEntity office,
+			string detail)
+		{
+			var job = context.CreateAndRegisterEntity<AiderEmployeeJobEntity> ();
+
+			job.Employee = employee;
+			job.EmployeeJobFunction = function;
+			job.Employer = employer;
+			job.Office = office;
+			job.Description = detail;
+
+			return job;
+		}
 	}
 }
 

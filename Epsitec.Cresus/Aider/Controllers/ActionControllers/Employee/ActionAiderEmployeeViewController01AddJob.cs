@@ -59,13 +59,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Le lieu d'église manque.");
 			}
 
-			var job = this.BusinessContext.CreateAndRegisterEntity<AiderEmployeeJobEntity> ();
-
-			job.Employee = this.Entity;
-			job.EmployeeJobFunction = function;
-			job.Employer = employer;
-			job.Office = office;
-			job.Description = detail;
+			AiderEmployeeJobEntity.Create (this.BusinessContext, this.Entity, function, employer, office, detail);
 		}
 	}
 }
