@@ -117,6 +117,14 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-initdefaultemployee"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.InitDefaultEmployee (args));
+					return;
+				}
+
+				
+
 				if (args.Contains ("-populateusergroups"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.PopulateUserGroups (args));
@@ -485,6 +493,14 @@ namespace Epsitec.Aider
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroups.InitParishUserGroups (coreData);
 				AiderUsersGroups.InitRegionalUserGroups (coreData);
+			});
+		}
+
+		private static void InitDefaultEmployee(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				AiderCollaborators.Start (coreData);
 			});
 		}
 
