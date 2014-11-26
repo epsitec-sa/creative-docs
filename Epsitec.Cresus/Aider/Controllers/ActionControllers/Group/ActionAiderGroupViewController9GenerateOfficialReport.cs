@@ -43,6 +43,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var aiderUser       = userManager.AuthenticatedUser;
 			var sender		    = this.BusinessContext.GetLocalEntity (aiderUser.OfficeSender);
 
+			if(sender.IsNull ())
+			{
+				throw new BusinessRuleException ("Vous n'êtes pas définit en tant que expéditeur");
+			}
+
 			var title1 = TextFormatter.FormatText ("Assemblée paroissiale du", date.ToShortDateString (), "à~", place.IsNull () ? null : place.Name);
 			var title2 = TextFormatter.FormatText (title);
 
