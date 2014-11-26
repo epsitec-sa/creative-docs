@@ -652,8 +652,14 @@ namespace Epsitec.Aider.Entities
 		public AiderContactEntity GetMainContact()
 		{
 			var mainAddress = this.GetAddress ();
-
-			return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
+			if (mainAddress.IsNotNull ())
+			{
+				return this.Contacts.FirstOrDefault (c => c.GetAddress () == mainAddress);
+			}
+			else
+			{
+				return this.Contacts.FirstOrDefault ();
+			}
 		}
 
 		public string GetMainPhone()
