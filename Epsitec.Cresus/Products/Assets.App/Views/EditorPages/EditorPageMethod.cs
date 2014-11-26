@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.methodController     = this.CreateEnumController   (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods);
 			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 25, maxLength: 10000);
 
-			this.CreateCompileButton (parent);
+			this.CreateButtons (parent);
 			this.CreateOutputConsole (parent);
 
 			this.methodController.ValueEdited += delegate
@@ -44,22 +44,62 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.UpdateControllers ();
 		}
 
-		private void CreateCompileButton(Widget parent)
+		private void CreateButtons(Widget parent)
 		{
-			this.compileButton = new Button
+			var frame = new FrameBox
 			{
 				Parent          = parent,
-				Text            = "Compile",  // anglais, ne pas traduire
 				PreferredHeight = 21,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (110, 0, 5, 0),
+			};
+
+			this.compileButton = new Button
+			{
+				Parent          = frame,
+				PreferredWidth  = 90,
+				Text            = "Compile",  // anglais, ne pas traduire
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (110, 40+300, 5, 0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 5, 0, 0),
+			};
+
+			this.debugButton = new Button
+			{
+				Parent          = frame,
+				PreferredWidth  = 90,
+				Text            = "Debug",  // anglais, ne pas traduire
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 5, 0, 0),
+			};
+
+			this.runButton = new Button
+			{
+				Parent          = frame,
+				PreferredWidth  = 90,
+				Text            = "Run",  // anglais, ne pas traduire
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 5, 0, 0),
 			};
 
 			this.compileButton.Clicked += delegate
 			{
 				this.Compile ();
+			};
+
+			this.debugButton.Clicked += delegate
+			{
+				this.Debug ();
+			};
+
+			this.runButton.Clicked += delegate
+			{
+				this.Run ();
 			};
 		}
 
@@ -81,6 +121,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.expressionController.IsReadOnly = !expressionEnable;
 			this.compileButton.Visibility = expressionEnable;
+			this.debugButton.Visibility = expressionEnable;
+			this.runButton.Visibility = expressionEnable;
 			this.outputConsole.Visibility = expressionEnable;
 
 			if (expressionEnable)
@@ -94,6 +136,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				this.expressionController.Value = null;
 			}
+
+			this.outputConsole.Text = null;  // efface le message précédent
 		}
 
 		private void Compile()
@@ -123,6 +167,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
+		private void Debug()
+		{
+		}
+
+		private void Run()
+		{
+		}
+
 		private AmortizationMethod CurrentMethod
 		{
 			get
@@ -143,6 +195,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private EnumFieldController				methodController;
 		private StringFieldController			expressionController;
 		private Button							compileButton;
+		private Button							debugButton;
+		private Button							runButton;
 		private TextFieldMulti					outputConsole;
 	}
 }

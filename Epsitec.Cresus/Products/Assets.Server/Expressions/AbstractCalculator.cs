@@ -7,35 +7,9 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
-	public struct Data
+	public abstract class AbstractCalculator
 	{
-		//??public Data(
-		//??	decimal? forcedAmount,
-		//??	decimal baseAmount,
-		//??	decimal initialAmount,
-		//??	decimal residualAmount,
-		//??	decimal roundAmount,
-		//??	decimal rate,
-		//??	decimal periodicityFactor,
-		//??	decimal prorataNumerator,
-		//??	decimal prorataDenominator,
-		//??	decimal yearCount,
-		//??	int yearRank)
-		//??{
-		//??	this.ForcedAmount       = forcedAmount;
-		//??	this.BaseAmount         = baseAmount;
-		//??	this.InitialAmount      = initialAmount;
-		//??	this.ResidualAmount     = residualAmount;
-		//??	this.RoundAmount        = roundAmount;
-		//??	this.Rate               = rate;
-		//??	this.PeriodicityFactor  = periodicityFactor;
-		//??	this.ProrataNumerator   = prorataNumerator;
-		//??	this.ProrataDenominator = prorataDenominator;
-		//??	this.YearCount          = yearCount;
-		//??	this.YearRank           = yearRank;
-		//??}
-
-		public Data(AmortizedAmount amount)
+		public AbstractCalculator(AmortizedAmount amount)
 		{
 			this.ForcedAmount       = amount.ForcedAmount;
 			this.BaseAmount         = amount.BaseAmount.GetValueOrDefault ();
@@ -50,7 +24,24 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.YearRank           = amount.YearRank;
 		}
 
-		public decimal Round(decimal value)
+		public abstract object Evaluate();
+
+		protected decimal ProrataFactor
+		{
+			get
+			{
+				if (this.ProrataDenominator != 0)
+				{
+					return this.ProrataNumerator / this.ProrataDenominator;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+
+		protected decimal Round(decimal value)
 		{
 			if (this.RoundAmount > 0.0m)
 			{
@@ -69,9 +60,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return value;
 		}
 
-		public decimal Residual(decimal value)
+		protected decimal Residual(decimal value)
 		{
 			return System.Math.Max (value, this.ResidualAmount);
+		}
+
+		protected decimal Override(decimal value)
+		{
+			return this.ForcedAmount.GetValueOrDefault (value);
 		}
 
 		public readonly decimal?				ForcedAmount;		// valeur forcée facultative

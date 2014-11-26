@@ -320,33 +320,22 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddMethod ("Années linéaires",   AmortizationMethod.YearsLinear);
 			this.AddMethod ("Années dégressives", AmortizationMethod.YearsDegressive);
 
-			this.AddMethod ("Test", AmortizationMethod.Custom, AmortizationExpression.GetExpression ("return 123;"));
-			this.AddMethod ("Complexe", AmortizationMethod.Custom, AmortizationExpression.GetExpression (AbstractMandatFactory.exp1));
+			this.AddMethod ("Test", AmortizationMethod.Custom, "return 123;");
+			this.AddMethod ("Complexe", AmortizationMethod.Custom, AbstractMandatFactory.exp1);
 		}
 
 		private static string[] exp1 =
 		{
-			"if (data.ForcedAmount.HasValue)", 
-			"{", 
-			"	return data.ForcedAmount.Value;", 
-			"}", 
-			"else", 
-			"{", 
-			"	var rate = data.Rate * data.PeriodicityFactor;", 
+			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
+			"var amortization = BaseAmount * rate;",
 			"",
-			"	if (data.ProrataDenominator != 0)", 
-			"	{", 
-			"		rate *= data.ProrataNumerator / data.ProrataDenominator;", 
-			"	}", 
-			"",
-			"	var amortization = data.BaseAmount * rate;", 
-			"	var value = data.InitialAmount - amortization;", 
-			"	value = data.Round (value);",
-			"	return data.Residual (value);",
-			"}", 
+			"value = value - amortization;",
+			"value = Round (value);",
+			"value = Residual (value);",
+			"value = Override (value);",
 		};
 
-		protected void AddMethod(string name, AmortizationMethod method, string exp = null)
+		protected void AddMethod(string name, AmortizationMethod method, params string[] lines)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Methods);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -359,7 +348,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.AmortizationMethod, (int) method);
-			this.AddField (e, ObjectField.Expression, exp);
+
+			if (lines.Length > 0)
+			{
+				var exp = AmortizationExpression.Format (lines);
+				this.AddField (e, ObjectField.Expression, exp);
+			}
 		}
 
 

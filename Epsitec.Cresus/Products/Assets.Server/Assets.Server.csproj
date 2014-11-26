@@ -112,7 +112,11 @@
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
     <Compile Include="BusinessLogic\AccountCategory.cs" />
     <Compile Include="BusinessLogic\AccountType.cs" />
-    <Compile Include="Expressions\Data.cs" />
+    <Compile Include="Expressions\RateDegressiveCalculator.cs" />
+    <Compile Include="Expressions\YearsDegressiveCalculator.cs" />
+    <Compile Include="Expressions\YearsLinearCalculator.cs" />
+    <Compile Include="Expressions\RateLinearCalculator.cs" />
+    <Compile Include="Expressions\AbstractCalculator.cs" />
     <Compile Include="Expressions\AmortizationExpressions.cs" />
     <Compile Include="Expressions\AmortizationExpression.cs" />
     <Compile Include="Resources\Assets.Server\SourceCode\Res.cs" />

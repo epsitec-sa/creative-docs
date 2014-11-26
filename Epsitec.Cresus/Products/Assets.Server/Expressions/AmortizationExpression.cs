@@ -26,7 +26,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				return;
 			}
 
-			var expression = AmortizationExpression.ConvertToSimpleText (taggedExpression);
+			var expression = AmortizationExpression.Skeleton
+				.Replace ("$", AmortizationExpression.ConvertToSimpleText (taggedExpression));
 
 			var tree = SyntaxFactory.ParseSyntaxTree (expression);
 
@@ -36,7 +37,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				references: new[]
 				{
 					MetadataReference.CreateFromAssembly (typeof (object).Assembly),
-					MetadataReference.CreateFromAssembly (typeof (Data).Assembly)
+					MetadataReference.CreateFromAssembly (typeof (AbstractCalculator).Assembly),
+					MetadataReference.CreateFromAssembly (typeof (AmortizedAmount).Assembly)
 				});
 
 			using (var stream = new MemoryStream ())
@@ -64,36 +66,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			get
 			{
-				return AmortizationExpression.GetExpression ("return 0;");
+				return AmortizationExpression.Format (AmortizationExpression.defaultLines);
 			}
 		}
 
-		public static string GetExpression(params string[] insideLines)
+		public static string Format(params string[] lines)
 		{
-			var merged = new List<string> ();
-
-			foreach (var skeletonLine in AmortizationExpression.SkeletonLines)
-			{
-				if (skeletonLine.Contains ("$"))
-				{
-					foreach (var insideLine in insideLines)
-					{
-						merged.Add (skeletonLine.Replace ("$", insideLine));
-					}
-				}
-				else
-				{
-					merged.Add (skeletonLine);
-				}
-			}
-
-			return AmortizationExpression.JoinExpression (merged.ToArray ());
-		}
-
-		private static string JoinExpression(params string[] lines)
-		{
-			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines))
-				.Replace ("<tab/>", "    ");
+			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines));
 		}
 
 		private static string ConvertToSimpleText(string expression)
@@ -106,125 +85,61 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return TextLayout.ConvertToTaggedText (expression);
 		}
 
-		private static string[] SkeletonLines =
+		private static string Skeleton
 		{
-			"using Epsitec.Cresus.Assets.Server.Expression;", 
-			"", 
-			"public static class Calculator", 
-			"{", 
-			"	public static object Evaluate(Data data)", 
-			"	{", 
-			"		$",  // partie centrale remplacée par du code
-			"	}", 
-			"}", 
+			get
+			{
+				return string.Join ("\n", AmortizationExpression.skeletonLines);
+			}
+		}
+
+		private static string[] defaultLines =
+		{
+			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
+			"var amortization = BaseAmount * rate;",
+			"",
+			"value = value - amortization;",
+			"value = Round (value);",
+			"value = Residual (value);",
+			"value = Override (value);",
 		};
-		#endregion
 
-
-		#region Standard calculators
-		public static class Calculator_RateLinear
+		private static string[] skeletonLines =
 		{
-			public static object Evaluate(Data data)
-			{
-				if (data.ForcedAmount.HasValue)
-				{
-					return data.ForcedAmount.Value;
-				}
-				else
-				{
-					var rate = data.Rate * data.PeriodicityFactor;
-
-					if (data.ProrataDenominator != 0)
-					{
-						rate *= data.ProrataNumerator / data.ProrataDenominator;
-					}
-
-					var amortization = data.BaseAmount * rate;
-					var value = data.InitialAmount - amortization;
-					value = data.Round (value);
-					return data.Residual (value);
-				}
-			}
-		}
-
-		public static class Calculator_RateDegressive
-		{
-			public static object Evaluate(Data data)
-			{
-				if (data.ForcedAmount.HasValue)
-				{
-					return data.ForcedAmount.Value;
-				}
-				else
-				{
-					var rate = data.Rate * data.PeriodicityFactor;
-
-					if (data.ProrataDenominator != 0)
-					{
-						rate *= data.ProrataNumerator / data.ProrataDenominator;
-					}
-
-					var amortization = data.InitialAmount * rate;
-					var value = data.InitialAmount - amortization;
-					value = data.Round (value);
-					return data.Residual (value);
-				}
-			}
-		}
-
-		public static class Calculator_YearsLinear
-		{
-			public static object Evaluate(Data data)
-			{
-				if (data.ForcedAmount.HasValue)
-				{
-					return data.ForcedAmount.Value;
-				}
-				else
-				{
-					var rate = 1.0m;
-					decimal n = data.YearCount - data.YearRank;  // nb d'années restantes
-
-					if (n > 0)
-					{
-						rate = 1.0m / n;
-					}
-
-					var amortization = data.InitialAmount * rate;
-					var value = data.InitialAmount - amortization;
-					value = data.Round (value);
-					return data.Residual (value);
-				}
-			}
-		}
-
-		public static class Calculator_YearsDegressive
-		{
-			public static object Evaluate(Data data)
-			{
-				if (data.ForcedAmount.HasValue)
-				{
-					return data.ForcedAmount.Value;
-				}
-				else
-				{
-					var rate = 1.0m;
-					decimal n = data.YearCount - data.YearRank;  // nb d'années restantes
-
-					if (n > 0 && data.ResidualAmount != 0 && data.InitialAmount != 0)
-					{
-						var x = data.ResidualAmount / data.InitialAmount;
-						var y = 1.0m / n;
-						rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);
-					}
-
-					var amortization = data.InitialAmount * rate;
-					var value = data.InitialAmount - amortization;
-					value = data.Round (value);
-					return data.Residual (value);
-				}
-			}
-		}
+			"//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland",
+			"//	Author: Daniel ROUX, Maintainer: Daniel ROUX",
+			"",
+			"using Epsitec.Cresus.Assets.Data;",
+			"using Epsitec.Cresus.Assets.Server.Expression;",
+			"",
+			"public static class Calculator",
+			"{",
+			"	public static object Evaluate(AmortizedAmount amount)",
+			"	{",
+			"		var calculator = new InternalCalculator(amount);",
+			"		return calculator.Evaluate();",
+			"	}",
+			"}",
+			"",
+			"public class InternalCalculator : AbstractCalculator",
+			"{",
+			"	public InternalCalculator(AmortizedAmount amount)",
+			"		: base (amount)",
+			"	{",
+			"	}",
+			"",
+			"	public override object Evaluate()",
+			"	{",
+			"		decimal value = this.InitialAmount;",
+			"",
+			"//----------------------------------------------",
+			"$",
+			"//----------------------------------------------",
+			"",
+			"		return value;",
+			"	}",
+			"}",
+		};
 		#endregion
 
 
@@ -237,14 +152,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(Data data)
+		public decimal? Evaluate(AmortizedAmount amount)
 		{
 			if (this.compiledAssembly != null)
 			{
 				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
 				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
 
-				object[] parameters = { data };
+				object[] parameters = { amount };
 
 				object answer = evaluate.Invoke (null, parameters);
 				return AmortizationExpression.CastResult (answer);

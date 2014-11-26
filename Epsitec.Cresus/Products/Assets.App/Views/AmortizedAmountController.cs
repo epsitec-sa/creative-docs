@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Parent           = parent,
 				Dock             = DockStyle.Fill,
 				PreferredHeight  = AbstractFieldController.lineHeight - 1,
-				Text             = "<i>(" + text + ")</i>",
+				Text             = "<i>(data." + text + ")</i>",
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (10, 0, 1, 0),

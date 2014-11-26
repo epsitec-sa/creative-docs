@@ -132,25 +132,35 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Calcule la valeur de sortie d'un amortissement.
 			if (aa.HasValue)
 			{
-				object result;
-
 				switch (aa.Value.AmortizationMethod)
 				{
 					case AmortizationMethod.RateLinear:
-						result = AmortizationExpression.Calculator_RateLinear.Evaluate (new Expression.Data(aa.Value));
-						return AmortizationExpression.CastResult (result);
+						{
+							var calculator = new RateLinearCalculator (aa.Value);
+							var result = calculator.Evaluate ();
+							return AmortizationExpression.CastResult (result);
+						}
 
 					case AmortizationMethod.RateDegressive:
-						result = AmortizationExpression.Calculator_RateDegressive.Evaluate (new Expression.Data(aa.Value));
-						return AmortizationExpression.CastResult (result);
+						{
+							var calculator = new RateDegressiveCalculator (aa.Value);
+							var result = calculator.Evaluate ();
+							return AmortizationExpression.CastResult (result);
+						}
 
 					case AmortizationMethod.YearsLinear:
-						result = AmortizationExpression.Calculator_YearsLinear.Evaluate (new Expression.Data(aa.Value));
-						return AmortizationExpression.CastResult (result);
+						{
+							var calculator = new YearsLinearCalculator (aa.Value);
+							var result = calculator.Evaluate ();
+							return AmortizationExpression.CastResult (result);
+						}
 
 					case AmortizationMethod.YearsDegressive:
-						result = AmortizationExpression.Calculator_YearsDegressive.Evaluate (new Expression.Data(aa.Value));
-						return AmortizationExpression.CastResult (result);
+						{
+							var calculator = new YearsDegressiveCalculator (aa.Value);
+							var result = calculator.Evaluate ();
+							return AmortizationExpression.CastResult (result);
+						}
 				}
 
 				if (string.IsNullOrEmpty (aa.Value.Expression))
@@ -159,7 +169,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				}
 				else
 				{
-					return this.amortizationExpressions.Evaluate (aa.Value.Expression, new Expression.Data(aa.Value));
+					return this.amortizationExpressions.Evaluate (aa.Value.Expression, aa.Value);
 				}
 			}
 			else
