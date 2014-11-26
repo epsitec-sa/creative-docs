@@ -17,6 +17,9 @@ namespace Epsitec.Aider.Enumerations
 		Remplaçant			= 5,
 		Auxiliaire			= 6,
 
+		UtilisateurAIDER    = 20,
+		GestionnaireAIDER   = 21,
+		SuppléantAIDER      = 22,
 
 		[Hidden]
 		PublicJob			= 99,

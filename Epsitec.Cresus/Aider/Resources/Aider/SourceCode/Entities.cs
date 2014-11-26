@@ -10336,6 +10336,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>User</c> field.
+		///	designer:fld/LVA2J/LVOA43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOA43]")]
+		public global::Epsitec.Aider.Entities.AiderUserEntity User
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOA43]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.User;
+				if (oldValue != value || !this.IsFieldDefined("[LVOA43]"))
+				{
+					this.OnUserChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVOA43]", oldValue, value);
+					this.OnUserChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Navs13</c> field.
 		///	designer:fld/LVA2J/LVAPK
 		///	</summary>
@@ -10456,6 +10478,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
+		partial void OnUserChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnUserChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
 		partial void OnNavs13Changing(string oldValue, string newValue);
 		partial void OnNavs13Changed(string oldValue, string newValue);
 		partial void OnEmployeeTypeChanging(global::Epsitec.Aider.Enumerations.EmployeeType oldValue, global::Epsitec.Aider.Enumerations.EmployeeType newValue);

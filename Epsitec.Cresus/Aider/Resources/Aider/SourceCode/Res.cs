@@ -635,6 +635,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 644));
 						}
 					}
+					//	designer:cap/LVOD43
+					public static global::Epsitec.Common.Types.Caption GestionnaireAIDER
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 141));
+						}
+					}
 					//	designer:cap/LVAUJ
 					public static global::Epsitec.Common.Types.Caption Other
 					{
@@ -667,12 +675,28 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 640));
 						}
 					}
+					//	designer:cap/LVOE43
+					public static global::Epsitec.Common.Types.Caption SuppléantAIDER
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 142));
+						}
+					}
 					//	designer:cap/LVAVJ
 					public static global::Epsitec.Common.Types.Caption Titulaire
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 639));
+						}
+					}
+					//	designer:cap/LVOC43
+					public static global::Epsitec.Common.Types.Caption UtilisateurAIDER
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 140));
 						}
 					}
 					//	designer:cap/LVA2K
@@ -761,6 +785,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 659));
+						}
+					}
+					//	designer:cap/LVOB43
+					public static global::Epsitec.Common.Types.Caption BenevoleAIDER
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 139));
 						}
 					}
 					//	designer:cap/LVAGK
@@ -2246,6 +2278,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 661);
 				//	designer:cap/LVAHJ
 				public static readonly global::Epsitec.Common.Support.Druid RefereeEntries = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 625);
+				//	designer:cap/LVOA43
+				public static readonly global::Epsitec.Common.Support.Druid User = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 138);
 			}
 			
 			public static class AiderEmployeeJob

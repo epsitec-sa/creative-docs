@@ -17,6 +17,7 @@ namespace Epsitec.Aider.Enumerations
 		AnimateurEglise		= 4,
 		AnimateurParoisse	= 5,
 
+		BenevoleAIDER       = 90,
 		Other				= 99,
 		
 		[Hidden]
