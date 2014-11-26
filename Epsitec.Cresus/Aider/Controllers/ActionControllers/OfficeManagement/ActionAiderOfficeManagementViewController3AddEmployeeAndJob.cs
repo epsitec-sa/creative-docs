@@ -40,6 +40,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 										 string,
 										 EmployeeActivity,
 										 string,
+										 AiderUserEntity,
 										 string,
 										 EmployeeJobFunction,
 										 EmployeeEmployer> (this.Execute);
@@ -67,6 +68,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Numéro AVS")
 					.InitialValue ("756.")
 				.End ()
+				.Field<AiderUserEntity> ()
+					.Title ("Utilisateur associé")
+				.End ()
 				.Text("<b>Détails du poste</b>")
 				.Text("Lieu d'église: " + this.Entity.OfficeShortName)
 				.Field<string> ()
@@ -87,6 +91,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 							 string function,
 							 EmployeeActivity employeeActivity,
 							 string navs13, 
+							 AiderUserEntity user,
 							 string detail, 
 							 EmployeeJobFunction jobFunction, 
 					         EmployeeEmployer employer)
@@ -98,7 +103,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Cette personne est déjà définie comme employée, ajouter un poste depuis le contact");
 			}
 	
-			var employee = AiderEmployeeEntity.Create (this.BusinessContext, person, employeeType, function, employeeActivity, navs13);
+			var employee = AiderEmployeeEntity.Create (this.BusinessContext, person, user, employeeType, function, employeeActivity, navs13);
 			
 			var job = this.BusinessContext.CreateAndRegisterEntity<AiderEmployeeJobEntity> ();
 			job.Employee = employee;

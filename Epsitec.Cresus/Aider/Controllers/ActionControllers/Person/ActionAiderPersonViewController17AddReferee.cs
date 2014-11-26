@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Le groupe ne fait pas référence à une région");
 			}
 
-			var employee = AiderEmployeeEntity.Create (this.BusinessContext, this.Entity, EmployeeType.None, "", EmployeeActivity.None, "");
+			var employee = AiderEmployeeEntity.Create (this.BusinessContext, this.Entity, null, EmployeeType.None, "", EmployeeActivity.None, "");
 			
 			var referee  = this.BusinessContext.CreateAndRegisterEntity<AiderRefereeEntity> ();
 

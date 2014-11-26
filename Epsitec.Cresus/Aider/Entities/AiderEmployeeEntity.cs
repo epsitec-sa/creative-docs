@@ -45,7 +45,7 @@ namespace Epsitec.Aider.Entities
 			value = this.GetVirtualCollection (ref this.refereeEntries, x => x.Employee = this).AsReadOnlyCollection ();
 		}
 
-		public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
+		public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderUserEntity user, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
 		{
 			var employee    = businessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
 
@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Entities
 			employee.EmployeeActivity = employeeActivity;
 			employee.Description      = function;
 			employee.Navs13           = navs13;
-
+			employee.User             = user;
 			return employee;
 		}
 
