@@ -6,10 +6,8 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Settings;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
-using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -23,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private AmountExpressionSimulationPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Paramètres initiaux de la simulation";
+			this.title = Res.Strings.Popup.AmountExpressionSimulation.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 

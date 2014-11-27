@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			this.CreateTitle ("Résultat de la simulation");
+			this.CreateTitle (Res.Strings.Popup.ShowExpressionSimulation.Title.ToString ());
 			this.CreateCloseButton ();
 
 			this.CreateController ();

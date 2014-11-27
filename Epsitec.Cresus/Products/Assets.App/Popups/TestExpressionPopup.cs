@@ -346,7 +346,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				controller.SetLabel ("Result = Error");
+				controller.SetLabel ("Result = Error");  // anglais, ne pas traduire
 			}
 		}
 

@@ -1653,6 +1653,50 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
+				public static class ExpressionSimulationTreeTable
+				{
+					//	designer:str/JUKUJ01
+					public static global::Epsitec.Common.Types.FormattedText Amortization
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544958));
+						}
+					}
+					//	designer:str/JUKSJ01
+					public static global::Epsitec.Common.Types.FormattedText Date
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544956));
+						}
+					}
+					//	designer:str/JUKVJ01
+					public static global::Epsitec.Common.Types.FormattedText Final
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544959));
+						}
+					}
+					//	designer:str/JUKTJ01
+					public static global::Epsitec.Common.Types.FormattedText Initial
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544957));
+						}
+					}
+					//	designer:str/JUKRJ01
+					public static global::Epsitec.Common.Types.FormattedText Rank
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544955));
+						}
+					}
+				}
+				
 				public static class MessagesTreeTable
 				{
 					//	designer:str/JUKI501
@@ -3628,6 +3672,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class AmountExpressionSimulation
+				{
+					//	designer:str/JUKPJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544953));
+						}
+					}
+				}
+				
 				public static class AssetCopy
 				{
 					//	designer:str/JUK7101
@@ -5052,6 +5108,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class ShowExpressionSimulation
+				{
+					//	designer:str/JUKQJ01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544954));
+						}
+					}
+				}
+				
 				public static class TestExpression
 				{
 					//	designer:str/JUKFJ01
@@ -6237,6 +6305,50 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
+				public static class ExpressionSimulationTreeTable
+				{
+					//	designer:str/JUKUJ01
+					public static global::Epsitec.Common.Support.Druid Amortization
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544958);
+						}
+					}
+					//	designer:str/JUKSJ01
+					public static global::Epsitec.Common.Support.Druid Date
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544956);
+						}
+					}
+					//	designer:str/JUKVJ01
+					public static global::Epsitec.Common.Support.Druid Final
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544959);
+						}
+					}
+					//	designer:str/JUKTJ01
+					public static global::Epsitec.Common.Support.Druid Initial
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544957);
+						}
+					}
+					//	designer:str/JUKRJ01
+					public static global::Epsitec.Common.Support.Druid Rank
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544955);
+						}
+					}
+				}
+				
 				public static class MessagesTreeTable
 				{
 					//	designer:str/JUKI501
@@ -8212,6 +8324,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class AmountExpressionSimulation
+				{
+					//	designer:str/JUKPJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544953);
+						}
+					}
+				}
+				
 				public static class AssetCopy
 				{
 					//	designer:str/JUK7101
@@ -9632,6 +9756,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544942);
+						}
+					}
+				}
+				
+				public static class ShowExpressionSimulation
+				{
+					//	designer:str/JUKQJ01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544954);
 						}
 					}
 				}

@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public ExpressionSimulationTreeTableFiller(DataAccessor accessor, INodeGetter<ExpressionSimulationNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
-			this.Title = "Simulation";
+			this.Title = "Simulation";  // anglais, ne pas traduire
 		}
 
 
@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			{
 				var list = new List<TreeTableColumnDescription> ();
 
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationRank,         TreeTableColumnType.Int,    ExpressionSimulationTreeTableFiller.rankWidth,   "Rang"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDate,         TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "Date"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "Montant initial"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "Amortissement"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "Montant final"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationRank,         TreeTableColumnType.Int,    ExpressionSimulationTreeTableFiller.rankWidth,   Res.Strings.DataFillers.ExpressionSimulationTreeTable.Rank.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDate,         TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   Res.Strings.DataFillers.ExpressionSimulationTreeTable.Date.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Initial.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
 
 				return list.ToArray ();
 			}

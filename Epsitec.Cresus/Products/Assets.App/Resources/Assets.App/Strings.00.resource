@@ -479,4 +479,11 @@
   <data name="EditorPages.Method.YearsLinear.Tooltip" id="KMJ">Insère une expression qui calcule un amortissement&lt;br/&gt;linéaire selon une durée en années</data>
   <data name="EditorPages.Method.YearsDegressive.Button" id="KNJ">Années dég.</data>
   <data name="EditorPages.Method.YearsDegressive.Tooltip" id="KOJ">Insère une expression qui calcule un amortissement&lt;br/&gt;dégressif selon une durée en années</data>
+  <data name="Popup.AmountExpressionSimulation.Title" id="KPJ">Paramètres initiaux de la simulation</data>
+  <data name="Popup.ShowExpressionSimulation.Title" id="KQJ">Résultat de la simulation</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Rank" id="KRJ">Rang</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Date" id="KSJ">Date</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Initial" id="KTJ">Montant initial</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Amortization" id="KUJ">Amortissement</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Final" id="KVJ">Montant final</data>
 </bundle>
