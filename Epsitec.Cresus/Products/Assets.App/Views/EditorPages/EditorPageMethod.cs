@@ -213,12 +213,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.outputConsole.Text = null;  // efface le message précédent
 		}
 
-		private void Compile()
+		private string Compile()
 		{
 			this.outputConsole.Text = "Compile started";
 			this.outputConsole.Window.ForceLayout ();
 
 			var startTime = System.DateTime.Now;
+			string err;
 
 			using (var e = new AmortizationExpression (this.expressionController.Value))
 			{
@@ -229,15 +230,21 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				{
 					message += "<br/>";
 					message += "Compile succeeded";  // anglais, ne pas traduire
+
+					err = null;  // ok
 				}
 				else
 				{
 					message += "<br/>";
 					message += e.Error;
+
+					err = e.Error;
 				}
 
 				this.outputConsole.Text = message;  // affiche le nouveau message
 			}
+
+			return err;
 		}
 
 		private void Show()
@@ -248,8 +255,17 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void Test()
 		{
-			var expression = new AmortizationExpression (this.expressionController.Value);
-			TestExpressionPopup.Show (this.testButton, this.accessor, expression);
+			var err = this.Compile ();
+
+			if (string.IsNullOrEmpty (err))  // ok ?
+			{
+				var expression = new AmortizationExpression (this.expressionController.Value);
+				TestExpressionPopup.Show (this.testButton, this.accessor, expression);
+			}
+			else  // erreur ?
+			{
+				MessagePopup.ShowError (this.testButton, err);
+			}
 		}
 
 		private AmortizationMethod CurrentMethod
