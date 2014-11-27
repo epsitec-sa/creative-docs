@@ -332,7 +332,8 @@ namespace Epsitec.Common.Support
 		private static void Record(Assembly assembly)
 		{
 			if ((assembly.ReflectionOnly) ||
-				(assembly.IsDynamic))
+				(assembly.IsDynamic) ||
+				(string.IsNullOrEmpty (assembly.Location)))
 			{
 				return;
 			}
