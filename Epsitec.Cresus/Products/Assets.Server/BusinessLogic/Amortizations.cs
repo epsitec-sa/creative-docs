@@ -271,12 +271,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var r = (ProrataType) prorata;
 
 				//	Calcule le rang de l'amortissement, égal au nombre d'amortissements antérieurs.
-				var rank = obj.Events
+				decimal rank = obj.Events
 					.Where (x => x.Timestamp < timestamp && (
 						x.Type == EventType.AmortizationPreview ||
 						x.Type == EventType.AmortizationAuto ||
 						x.Type == EventType.AmortizationExtra))
 					.Count ();
+
+				rank *= 12.0m / AmortizedAmount.GetPeriodMonthCount (p);
 
 				return new AmortizationDefinition (exp, taux.GetValueOrDefault (0.0m), rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}

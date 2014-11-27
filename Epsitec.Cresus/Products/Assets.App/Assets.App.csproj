@@ -72,6 +72,7 @@
     </Compile>
     <Compile Include="AssetsApplication.cs" />
     <Compile Include="AssetsUI.cs" />
+    <Compile Include="DataFillers\ExpressionSimulationTreeTableFiller.cs" />
     <Compile Include="DataFillers\ReportsTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
@@ -96,12 +97,16 @@
     <Compile Include="Import\AccountsImportReport.cs" />
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
+    <Compile Include="NodeGetters\ExpressionSimulationNode.cs" />
     <Compile Include="NodeGetters\ReportNode.cs" />
+    <Compile Include="NodeGetters\ExpressionSimulationNodeGetter.cs" />
     <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
+    <Compile Include="Popups\ShowExpressionSimulationPopup.cs" />
+    <Compile Include="Popups\AmountExpressionSimulationPopup.cs" />
     <Compile Include="Popups\TestExpressionPopup.cs" />
     <Compile Include="Popups\ShowExpressionPopup.cs" />
     <Compile Include="Popups\CreateMethodPopup.cs" />

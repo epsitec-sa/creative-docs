@@ -83,6 +83,20 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				1.0m,
 				EntryScenario.None, System.DateTime.MinValue,
 				Guid.Empty, Guid.Empty, Guid.Empty, 0);
+
+			LocalSettings.ExpressionSimulationAmount = new AmortizedAmount (AmortizationMethod.Unknown, null,
+				0.10m,
+				0, 10.0m,
+				Periodicity.Annual,
+				null,
+				10000.0m,
+				10000.0m,
+				10000.0m,
+				null, null,
+				1.0m,
+				1.0m,
+				EntryScenario.None, System.DateTime.MinValue,
+				Guid.Empty, Guid.Empty, Guid.Empty, 0);
 		}
 
 
@@ -515,6 +529,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static AccountCategory				AccountCategories;
 
 		public static AmortizedAmount				TestExpressionAmount;
+		public static AmortizedAmount				ExpressionSimulationAmount;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 		private static readonly Dictionary<SearchKind, SearchInfo> searchInfos;

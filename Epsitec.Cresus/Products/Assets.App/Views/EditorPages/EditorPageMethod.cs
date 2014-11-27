@@ -6,7 +6,9 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -152,6 +154,17 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Margins         = new Margins (0, 5, 0, 0),
 			};
 
+			this.simulButton = new Button
+			{
+				Parent          = frame,
+				PreferredWidth  = 90,
+				Text            = "Simulation",  // anglais, ne pas traduire
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 5, 0, 0),
+			};
+
 			this.compileButton.Clicked += delegate
 			{
 				this.Compile ();
@@ -165,6 +178,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.testButton.Clicked += delegate
 			{
 				this.Test ();
+			};
+
+			this.simulButton.Clicked += delegate
+			{
+				this.Simulation ();
 			};
 		}
 
@@ -191,6 +209,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.compileButton       .Visibility =  expressionEnable;
 			this.showButton          .Visibility =  expressionEnable;
 			this.testButton          .Visibility =  expressionEnable;
+			this.simulButton         .Visibility =  expressionEnable;
 			this.outputConsole       .Visibility =  expressionEnable;
 
 			foreach (var button in this.sampleButtons)
@@ -268,6 +287,60 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
+		private void Simulation()
+		{
+			var err = this.Compile ();
+
+			if (string.IsNullOrEmpty (err))  // ok ?
+			{
+				AmountExpressionSimulationPopup.Show (this.simulButton, this.accessor, delegate
+				{
+					var expression = new AmortizationExpression (this.expressionController.Value);
+					var amount = LocalSettings.ExpressionSimulationAmount;
+
+					var nodes = EditorPageMethod.ComputeSimulation (expression, amount);
+
+					ShowExpressionSimulationPopup.Show (this.simulButton, this.accessor, nodes);
+				});
+			}
+			else  // erreur ?
+			{
+				MessagePopup.ShowError (this.testButton, err);
+			}
+		}
+
+		private static List<ExpressionSimulationNode> ComputeSimulation(AmortizationExpression expression, AmortizedAmount amount)
+		{
+			var nodes = new List<ExpressionSimulationNode> ();
+			var date = new System.DateTime (2000-1, 12, 31);
+
+			var baseAmount        = amount.BaseAmount;
+			var monthCount        = amount.PeriodMonthCount;
+			var periodicityFactor = amount.PeriodicityFactor;
+
+			amount = AmortizedAmount.SetAmortizedAmount    (amount, baseAmount, baseAmount);
+			amount = AmortizedAmount.SetRank               (amount, 0.0m);
+			amount = AmortizedAmount.SetProrataNumerator   (amount, null);
+			amount = AmortizedAmount.SetProrataDenominator (amount, null);
+
+			for (int i=0; i<100; i++)  // nombre d'itérations arbitraire
+			{
+				date = date.AddMonths (monthCount);
+
+				var initial = amount.InitialAmount.GetValueOrDefault ();
+				var final = expression.Evaluate (amount).GetValueOrDefault ();
+
+				var node = new ExpressionSimulationNode (i, date, initial, final);
+				nodes.Add (node);
+
+				amount = AmortizedAmount.SetAmortizedAmount (amount, final, baseAmount);
+				amount = AmortizedAmount.SetRank (amount, (i+1)*periodicityFactor);
+			}
+
+			return nodes;
+		}
+
+
 		private AmortizationMethod CurrentMethod
 		{
 			get
@@ -336,6 +409,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private Button							compileButton;
 		private Button							showButton;
 		private Button							testButton;
+		private Button							simulButton;
 		private TextFieldMulti					outputConsole;
 	}
 }

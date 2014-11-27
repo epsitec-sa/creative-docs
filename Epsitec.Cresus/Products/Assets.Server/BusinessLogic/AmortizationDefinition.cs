@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(Guid expressionGuid, decimal rate, int yearRank, decimal yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
+		public AmortizationDefinition(Guid expressionGuid, decimal rate, decimal yearRank, decimal yearCount, Periodicity periodicity, ProrataType prorataType, decimal round, decimal residual)
 		{
 			this.ExpressionGuid  = expressionGuid;
 			this.Rate            = rate;
@@ -75,11 +75,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (Guid.Empty, 0.0m, 0, 0.0m, 0, 0.0m, 0.0m, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (Guid.Empty, 0.0m, 0.0m, 0.0m, 0, 0.0m, 0.0m, 0.0m);
 
 		public readonly Guid					ExpressionGuid;
 		public readonly decimal					Rate;
-		public readonly int						YearRank;
+		public readonly decimal					YearRank;
 		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly ProrataType				ProrataType;

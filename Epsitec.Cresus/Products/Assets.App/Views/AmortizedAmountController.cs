@@ -812,15 +812,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private int? YearRank
+		private decimal? YearRank
 		{
 			get
 			{
-				return AmortizedAmountController.GetInt (this.yearRankTextField);
+				return AmortizedAmountController.GetDecimal (this.yearRankTextField);
 			}
 			set
 			{
-				AmortizedAmountController.SetInt (this.yearRankTextField, value);
+				AmortizedAmountController.SetDecimal (this.yearRankTextField, value);
 			}
 		}
 

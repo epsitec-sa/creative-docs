@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsLinear =
 		{
-			"decimal rate = 1;",
+			"decimal rate = 1;  // 100%",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
 			"if (n > 0)",
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsDegressive =
 		{
-			"decimal rate = 1;",
+			"decimal rate = 1;  // 100%",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
 			"if (n > 0 &&",

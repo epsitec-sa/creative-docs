@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 10
 			{
-				StackedControllerType = StackedControllerType.Int,
+				StackedControllerType = StackedControllerType.Decimal,
 				Label                 = "YearRank",
 				BottomMargin          = 10,
 			});
@@ -280,17 +280,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private int YearRank
+		private decimal YearRank
 		{
 			get
 			{
-				var controller = this.GetController (10) as IntStackedController;
+				var controller = this.GetController (10) as DecimalStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value.GetValueOrDefault ();
 			}
 			set
 			{
-				var controller = this.GetController (10) as IntStackedController;
+				var controller = this.GetController (10) as DecimalStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}

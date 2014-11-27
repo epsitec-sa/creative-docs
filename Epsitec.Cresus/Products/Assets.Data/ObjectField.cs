@@ -112,6 +112,12 @@ namespace Epsitec.Cresus.Assets.Data
 		WarningField,
 		WarningDescription,
 
+		ExpressionSimulationRank,
+		ExpressionSimulationDate,
+		ExpressionSimulationInitial,
+		ExpressionSimulationAmortization,
+		ExpressionSimulationFinal,
+
 		GroupGuidRatioFirst = 10000,
 		GroupGuidRatioLast  = 10099,
 

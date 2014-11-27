@@ -147,6 +147,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly decimal					ProrataNumerator;	// numérateur du prorata
 		public readonly decimal					ProrataDenominator;	// dénominateur du prorata
 		public readonly decimal					YearCount;			// nombre total d'années
-		public readonly int						YearRank;			// rang de l'année (0..YearCount-1)
+		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
 	}
 }

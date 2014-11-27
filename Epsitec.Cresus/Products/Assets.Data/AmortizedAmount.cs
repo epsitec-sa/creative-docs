@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Data
 			AmortizationMethod	amortizationMethod,
 			string				expression,
 			decimal?			rate,
-			int					yearRank,
+			decimal				yearRank,
 			decimal				yearCount,
 			Periodicity			periodicity,
 			decimal?			forcedAmount,
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.AmortizationMethod = (AmortizationMethod) IOHelpers.ReadTypeAttribute (reader, "AmortizationMethod", typeof (AmortizationMethod));
 			this.Expression         = IOHelpers.ReadStringAttribute (reader, "Expression");
 			this.Rate               = IOHelpers.ReadDecimalAttribute (reader, "Rate");
-			this.YearRank           = IOHelpers.ReadIntAttribute (reader, "YearRank").GetValueOrDefault ();
+			this.YearRank           = IOHelpers.ReadDecimalAttribute (reader, "YearRank").GetValueOrDefault ();
 			this.YearCount          = IOHelpers.ReadDecimalAttribute (reader, "YearCount").GetValueOrDefault (1.0m);
 			this.Periodicity        = (Periodicity) IOHelpers.ReadTypeAttribute (reader, "Periodicity", typeof (Periodicity));
 			this.ForcedAmount       = IOHelpers.ReadDecimalAttribute (reader, "ForcedAmount");
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly AmortizationMethod		AmortizationMethod;
 		public readonly string					Expression;
 		public readonly decimal?				Rate;
-		public readonly int						YearRank;
+		public readonly decimal					YearRank;
 		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
 		public readonly decimal?				ForcedAmount;
@@ -137,6 +137,14 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				return this.PeriodMonthCount / 12.0m;
+			}
+		}
+
+		public int								PeriodMonthCount
+		{
+			get
+			{
+				return AmortizedAmount.GetPeriodMonthCount (this.Periodicity);
 			}
 		}
 
@@ -568,6 +576,33 @@ namespace Epsitec.Cresus.Assets.Data
 				model.EntrySeed
 			);
 		}
+
+		public static AmortizedAmount SetRank(AmortizedAmount model, decimal rank)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationMethod,
+				model.Expression,
+				model.Rate,
+				rank,
+				model.YearCount,
+				model.Periodicity,
+				model.ForcedAmount,
+				model.PreviousAmount,
+				model.InitialAmount,
+				model.BaseAmount,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
 		#endregion
 
 
@@ -578,7 +613,7 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteTypeAttribute    (writer, "AmortizationMethod", this.AmortizationMethod);
 			IOHelpers.WriteStringAttribute  (writer, "Expression",         this.Expression);
 			IOHelpers.WriteDecimalAttribute (writer, "Rate",               this.Rate);
-			IOHelpers.WriteIntAttribute     (writer, "YearRank",           this.YearRank);
+			IOHelpers.WriteDecimalAttribute (writer, "YearRank",           this.YearRank);
 			IOHelpers.WriteDecimalAttribute (writer, "YearCount",          this.YearCount);
 			IOHelpers.WriteTypeAttribute    (writer, "Periodicity",        this.Periodicity);
 
@@ -603,14 +638,6 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		private int PeriodMonthCount
-		{
-			get
-			{
-				return AmortizedAmount.GetPeriodMonthCount (this.Periodicity);
-			}
-		}
-
 		public static int GetPeriodMonthCount(Periodicity period)
 		{
 			switch (period)
@@ -629,28 +656,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 				default:
 					return -1;
-			}
-		}
-
-		private static decimal Round(decimal value, decimal round)
-		{
-			//	Retourne un montant arrondi.
-			if (round > 0.0m)
-			{
-				if (value < 0)
-				{
-					value -= round/2;
-				}
-				else
-				{
-					value += round/2;
-				}
-
-				return value - (value % round);
-			}
-			else
-			{
-				return value;
 			}
 		}
 	}

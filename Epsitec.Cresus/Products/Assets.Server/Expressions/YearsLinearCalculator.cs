@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 			//----------------------------------------------
 			var rate = 1.0m;
-			decimal n = this.YearCount - this.YearRank;  // nb d'années restantes
+			decimal n = this.YearCount - this.YearRank;  // remaining years
 
 			if (n > 0)
 			{
