@@ -11,6 +11,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	{
 		public AbstractCalculator(AmortizedAmount amount)
 		{
+			this.traceBuilder = new System.Text.StringBuilder ();
+
 			this.ForcedAmount       = amount.ForcedAmount;
 			this.BaseAmount         = amount.BaseAmount.GetValueOrDefault ();
 			this.InitialAmount      = amount.InitialAmount.GetValueOrDefault ();
@@ -24,7 +26,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.YearRank           = amount.YearRank;
 		}
 
+
 		public abstract decimal Evaluate();
+
+		public string GetTraces()
+		{
+			return this.traceBuilder.ToString ();
+		}
 
 
 		#region Math facade
@@ -140,6 +148,60 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return this.ForcedAmount.GetValueOrDefault (value);
 		}
 
+		protected void Trace(params object[] args)
+		{
+			foreach (var arg in args)
+			{
+				if (arg is decimal)
+				{
+					var value = (decimal) arg;
+					this.traceBuilder.Append (value.ToString ("0.00"));
+				}
+				else
+				{
+					this.traceBuilder.Append (arg.ToString ());
+				}
+
+				this.traceBuilder.Append (" ");
+			}
+
+			this.traceBuilder.Append ("<br/>");
+		}
+
+
+		public struct Result
+		{
+			public Result(decimal value, string trace)
+			{
+				this.Value = value;
+				this.Trace = trace;
+				this.isEmpty = false;
+			}
+
+			private Result(bool isEmpty, decimal value, string trace)
+			{
+				this.Value = value;
+				this.Trace = trace;
+				this.isEmpty = isEmpty;
+			}
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.isEmpty;
+				}
+			}
+
+			public static Result Empty = new Result (true, 0, null);
+
+			public readonly decimal				Value;
+			public readonly string				Trace;
+			private readonly bool				isEmpty;
+		}
+
+
+		public readonly System.Text.StringBuilder traceBuilder;
 
 		public readonly decimal?				ForcedAmount;		// valeur forcée facultative
 		public readonly decimal					BaseAmount;			// valeur d'achat

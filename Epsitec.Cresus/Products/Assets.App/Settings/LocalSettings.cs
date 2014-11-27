@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			LocalSettings.TestExpressionAmount = new AmortizedAmount (AmortizationMethod.Unknown, null,
 				0.10m,
-				0, 10.0m,
+				0.0m, 10.0m,
 				Periodicity.Annual,
 				null,
 				4000.0m,
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			LocalSettings.ExpressionSimulationAmount = new AmortizedAmount (AmortizationMethod.Unknown, null,
 				0.10m,
-				0, 10.0m,
+				0.0m, 10.0m,
 				Periodicity.Annual,
 				null,
 				10000.0m,

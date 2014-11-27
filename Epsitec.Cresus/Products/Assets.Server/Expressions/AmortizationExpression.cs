@@ -129,6 +129,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesRateLinear =
 		{
+			"Trace (\"Linear Rate\");",
+			"",
 			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
 			"var amortization = BaseAmount * rate;",
 			"",
@@ -140,6 +142,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesRateDegressive =
 		{
+			"Trace (\"Degressive Rate\");",
+			"",
 			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
 			"var amortization = InitialAmount * rate;",
 			"",
@@ -151,6 +155,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsLinear =
 		{
+			"Trace (\"Linear Years\");",
+			"",
 			"decimal rate = 1;  // 100%",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
@@ -168,6 +174,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsDegressive =
 		{
+			"Trace (\"Degressive Years\");",
+			"",
 			"decimal rate = 1;  // 100%",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
@@ -202,10 +210,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"public static class Calculator",
 			"{",
-			"	public static object Evaluate(AmortizedAmount amount)",
+			"	public static AbstractCalculator.Result Evaluate(AmortizedAmount amount)",
 			"	{",
 			"		var calculator = new InternalCalculator(amount);",
-			"		return calculator.Evaluate();",
+			"		var value = calculator.Evaluate();",
+			"		var trace = calculator.GetTraces();",
+			"		return new AbstractCalculator.Result (value, trace);",
 			"	}",
 			"",
 			"	private class InternalCalculator : AbstractCalculator",
@@ -240,7 +250,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(AmortizedAmount amount)
+		public AbstractCalculator.Result Evaluate(AmortizedAmount amount)
 		{
 			if (this.compiledAssembly != null)
 			{
@@ -249,10 +259,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 				object[] parameters = { amount };
 
-				return (decimal) evaluate.Invoke (null, parameters);
+				return (AbstractCalculator.Result) evaluate.Invoke (null, parameters);
 			}
 
-			return null;
+			return AbstractCalculator.Result.Empty;
 		}
 
 

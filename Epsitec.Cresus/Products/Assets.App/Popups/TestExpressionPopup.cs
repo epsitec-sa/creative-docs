@@ -102,14 +102,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Decimal,
 				Label                 = "YearRank",
+				DecimalFormat         = DecimalFormat.Real,
 				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 11
 			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = 200,
-				Height                = 15*1,  // place pour 1 ligne
+				Width                 = 230,
+				Height                = 15*5,  // place pour 5 lignes (arbitrairement)
 			});
 
 			this.SetDescriptions (list);
@@ -335,19 +336,29 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Name = "NoClose";
 		}
 
-		private void SetResult(decimal? result)
+		private void SetResult(AbstractCalculator.Result result)
 		{
 			var controller = this.GetController (11) as LabelStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
 
-			if (result.HasValue)
+			var builder = new System.Text.StringBuilder ();
+
+			if (!string.IsNullOrEmpty (result.Trace))
 			{
-				controller.SetLabel ("Result = " + TypeConverters.AmountToString (result));
+				builder.Append (result.Trace);
+			}
+
+			if (result.IsEmpty)
+			{
+				builder.Append ("Result = Error");  // anglais, ne pas traduire
 			}
 			else
 			{
-				controller.SetLabel ("Result = Error");  // anglais, ne pas traduire
+				builder.Append ("Result = ");
+				builder.Append (TypeConverters.AmountToString (result.Value));
 			}
+
+			controller.SetLabel (builder.ToString ());
 		}
 
 

@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				date = date.AddMonths (monthCount);
 
 				var initial = amount.InitialAmount.GetValueOrDefault ();
-				var final = expression.Evaluate (amount).GetValueOrDefault ();
+				var final = expression.Evaluate (amount).Value;
 
 				var node = new ExpressionSimulationNode (i, date, initial, final);
 				nodes.Add (node);

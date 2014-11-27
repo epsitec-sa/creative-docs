@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				this.expressions.Add (expression, ae);  // on l'ajoute dans le dico
 			}
 
-			return ae.Evaluate (amount);
+			return ae.Evaluate (amount).Value;
 		}
 
 
