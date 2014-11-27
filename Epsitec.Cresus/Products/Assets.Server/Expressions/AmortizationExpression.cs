@@ -130,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
+		//	Voir (*)
 		private static string[] defaultLinesRateLinear =
 		{
 			"Trace (\"Linear Rate\");",
@@ -202,6 +203,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			"value = 0;",
 		};
+		//	Voir (*)
+
+		//	(*) Le code entre ces 2 bornes ne doit pas contenir de tabulateurs. Il faut
+		//		les remplacer systématiquement par 4 espaces. En effet, lorsque l'utilisateur
+		//		édite le code, il ne peut pas insérer de tabulateur, car la touche Tab
+		//		passe au champ suivant !
 
 		private static string[] skeletonLines =
 		{
