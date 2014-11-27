@@ -151,12 +151,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsLinear =
 		{
-			"var rate = 1.0m;",
+			"decimal rate = 1;",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
 			"if (n > 0)",
 			"{",
-			"	rate = 1.0m / n;",
+			"    rate = 1 / n;",
 			"}",
 			"",
 			"var amortization = InitialAmount * rate;",
@@ -168,14 +168,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] defaultLinesYearsDegressive =
 		{
-			"var rate = 1.0m;",
+			"decimal rate = 1;",
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
-			"if (n > 0 && ResidualAmount != 0 && InitialAmount != 0)",
+			"if (n > 0 &&",
+			"    ResidualAmount != 0 &&",
+			"    InitialAmount != 0)",
 			"{",
-			"	var x = ResidualAmount / InitialAmount;",
-			"	var y = 1.0m / n;",
-			"	rate = 1.0m - (decimal) System.Math.Pow ((double) x, (double) y);",
+			"    var x = ResidualAmount / InitialAmount;",
+			"    var y = 1 / n;",
+			"    rate = 1 - Pow (x, y);",
 			"}",
 			"",
 			"var amortization = InitialAmount * rate;",

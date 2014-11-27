@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void Compile()
 		{
-			this.outputConsole.Text = null;  // efface le message précédent
+			this.outputConsole.Text = "Compile started";
 			this.outputConsole.Window.ForceLayout ();
 
 			var startTime = System.DateTime.Now;

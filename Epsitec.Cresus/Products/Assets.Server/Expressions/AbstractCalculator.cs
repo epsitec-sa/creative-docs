@@ -26,6 +26,73 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public abstract object Evaluate();
 
+
+		#region Math facade
+		//	Facade de System.Math pour les méthodes utiles dans le calcul d'un amortissement,
+		//	avec uniquement le type decimal en entrée/sortie.
+
+		protected decimal Abs(decimal x)
+		{
+			return System.Math.Abs (x);
+		}
+
+		protected decimal Truncate(decimal x)
+		{
+			return System.Math.Truncate (x);
+		}
+
+		protected decimal Min(decimal x, decimal y)
+		{
+			return System.Math.Min (x, y);
+		}
+
+		protected decimal Max(decimal x, decimal y)
+		{
+			return System.Math.Max (x, y);
+		}
+
+		protected decimal Floor(decimal x)
+		{
+			return System.Math.Floor (x);
+		}
+
+		protected decimal Ceiling(decimal x)
+		{
+			return System.Math.Ceiling (x);
+		}
+
+		protected decimal Pow(decimal x, decimal y)
+		{
+			return (decimal) System.Math.Pow ((double) x, (double) y);
+		}
+
+		protected decimal Exp(decimal x)
+		{
+			return (decimal) System.Math.Exp ((double) x);
+		}
+
+		protected decimal Log(decimal x, decimal y)
+		{
+			return (decimal) System.Math.Log ((double) x, (double) y);
+		}
+
+		protected decimal Log10(decimal x)
+		{
+			return (decimal) System.Math.Log10 ((double) x);
+		}
+
+		protected decimal Sqrt(decimal x)
+		{
+			return (decimal) System.Math.Sqrt ((double) x);
+		}
+
+		protected int Sign(decimal x)
+		{
+			return System.Math.Sign (x);
+		}
+		#endregion
+
+
 		protected decimal ProrataFactor
 		{
 			get
