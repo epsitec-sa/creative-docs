@@ -71,11 +71,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			var z = y.Split ('\n');
 
 			var list = new List<string> ();
-			int index = 1;
+			int index = 1;  // numérote les lignes à partir de 1 pour concorder avec les messages d'erreur
 
 			foreach (var line in z)
 			{
-				string s = string.Format ("{0}:\t{1}", TypeConverters.IntToString (index++), line);
+				string s = string.Format ("{0}:\t{1}",
+					TypeConverters.IntToString (index++),
+					line.Replace ("\t", "    "));  // indentation classique avec 4 espaces
+
 				list.Add (s);
 			}
 

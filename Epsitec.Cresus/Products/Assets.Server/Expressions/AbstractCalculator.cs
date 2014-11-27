@@ -31,6 +31,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public string GetTraces()
 		{
+			//	ATTENTION: Même si VS dit que ce n'est pas utilisé, cela l'est quand
+			//	même (AmortizationExpression.skeletonLines).
 			return this.traceBuilder.ToString ();
 		}
 
@@ -150,6 +152,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected void Trace(params object[] args)
 		{
+			//	Conserve les textes donnés, qui seront affichés lors du debug
+			//	de l'expression.
 			foreach (var arg in args)
 			{
 				if (arg is decimal)
@@ -173,6 +177,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			public Result(decimal value, string trace)
 			{
+				//	ATTENTION: Même si VS dit que ce n'est pas utilisé, cela l'est quand
+				//	même (AmortizationExpression.skeletonLines).
 				this.Value = value;
 				this.Trace = trace;
 				this.isEmpty = false;
