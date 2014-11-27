@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 		}
 
-		public override object Evaluate()
+		public override decimal Evaluate()
 		{
 			decimal value = this.InitialAmount;
 

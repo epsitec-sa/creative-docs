@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.YearRank           = amount.YearRank;
 		}
 
-		public abstract object Evaluate();
+		public abstract decimal Evaluate();
 
 
 		#region Math facade
@@ -110,6 +110,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected decimal Round(decimal value)
 		{
+			//	Retourne la valeur arrondie selon this.RoundAmount.
 			if (this.RoundAmount > 0.0m)
 			{
 				if (value < 0.0m)
@@ -129,13 +130,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected decimal Residual(decimal value)
 		{
+			//	Retourne la valeur bornée selon this.ResidualAmount.
 			return System.Math.Max (value, this.ResidualAmount);
 		}
 
 		protected decimal Override(decimal value)
 		{
+			//	Retourne la valeur imposée this.ForcedAmount si elle est définie.
 			return this.ForcedAmount.GetValueOrDefault (value);
 		}
+
 
 		public readonly decimal?				ForcedAmount;		// valeur forcée facultative
 		public readonly decimal					BaseAmount;			// valeur d'achat

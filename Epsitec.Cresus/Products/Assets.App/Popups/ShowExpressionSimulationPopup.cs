@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<ExpressionSimulationNode>.FillColumns (this.controller, this.dataFiller, "Popup.ExpressionSimulation");
+			TreeTableFiller<ExpressionSimulationNode>.FillColumns (this.controller, this.dataFiller, "Popup.ShowExpressionSimulation");
 		}
 
 

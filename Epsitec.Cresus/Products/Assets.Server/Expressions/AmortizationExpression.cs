@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"		{",
 			"		}",
 			"",
-			"		public override object Evaluate()",
+			"		public override decimal Evaluate()",
 			"		{",
 			"			decimal value = this.InitialAmount;",
 			"",
@@ -249,33 +249,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 				object[] parameters = { amount };
 
-				object answer = evaluate.Invoke (null, parameters);
-				return AmortizationExpression.CastResult (answer);
+				return (decimal) evaluate.Invoke (null, parameters);
 			}
 
 			return null;
-		}
-
-		public static decimal? CastResult(object answer)
-		{
-			if (answer is decimal)
-			{
-				return (decimal) answer;
-			}
-			else if (answer is double)
-			{
-				var a = (double) answer;
-				return (decimal) a;
-			}
-			else if (answer is int)
-			{
-				var a = (int) answer;
-				return (decimal) a;
-			}
-			else
-			{
-				return null;
-			}
 		}
 
 

@@ -132,35 +132,30 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Calcule la valeur de sortie d'un amortissement.
 			if (aa.HasValue)
 			{
+				AbstractCalculator calculator = null;
+
 				switch (aa.Value.AmortizationMethod)
 				{
 					case AmortizationMethod.RateLinear:
-						{
-							var calculator = new RateLinearCalculator (aa.Value);
-							var result = calculator.Evaluate ();
-							return AmortizationExpression.CastResult (result);
-						}
+						calculator = new RateLinearCalculator (aa.Value);
+						break;
 
 					case AmortizationMethod.RateDegressive:
-						{
-							var calculator = new RateDegressiveCalculator (aa.Value);
-							var result = calculator.Evaluate ();
-							return AmortizationExpression.CastResult (result);
-						}
+						calculator = new RateDegressiveCalculator (aa.Value);
+						break;
 
 					case AmortizationMethod.YearsLinear:
-						{
-							var calculator = new YearsLinearCalculator (aa.Value);
-							var result = calculator.Evaluate ();
-							return AmortizationExpression.CastResult (result);
-						}
+						calculator = new YearsLinearCalculator (aa.Value);
+						break;
 
 					case AmortizationMethod.YearsDegressive:
-						{
-							var calculator = new YearsDegressiveCalculator (aa.Value);
-							var result = calculator.Evaluate ();
-							return AmortizationExpression.CastResult (result);
-						}
+						calculator = new YearsDegressiveCalculator (aa.Value);
+						break;
+				}
+
+				if (calculator != null)
+				{
+					return calculator.Evaluate ();
 				}
 
 				if (string.IsNullOrEmpty (aa.Value.Expression))
