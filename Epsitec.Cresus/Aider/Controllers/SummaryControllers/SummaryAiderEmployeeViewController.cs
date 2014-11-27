@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (user.CanEditEmployee ())
-				.EnableActionMenu<ActionAiderEmployeeViewController01AddJob> ().IfTrue (user.CanEditEmployee ())
+				.EnableActionButton<ActionAiderEmployeeViewController01AddJob> ().IfTrue (user.CanEditEmployee ())
 				.EnableActionMenu<ActionAiderEmployeeViewController03RemoveJob> ().IfTrue (user.CanEditEmployee ())
 				.Template ()
 				.End ();
@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.DefaultToNoSubView).IfFalse (user.CanEditReferee ())
-				.EnableActionMenu<ActionAiderEmployeeViewController02AddReferee> ().IfTrue (canEditEmploye)
+				.EnableActionButton<ActionAiderEmployeeViewController02AddReferee> ().IfTrue (canEditEmploye)
 				.EnableActionMenu<ActionAiderEmployeeViewController04RemoveReferee> ().IfTrue (canEditEmploye)
 				.Template ()
 				.End ();

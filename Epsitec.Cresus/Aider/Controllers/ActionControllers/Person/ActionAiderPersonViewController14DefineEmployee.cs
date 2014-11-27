@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Définir en tant qu'employé...");
+			return Resources.Text ("Définir en tant que collaborateur...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,9 +41,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
 		{
 			form
-				.Title ("Définir en tant qu'employé")
+				.Title ("Définir en tant que collaborateur")
 				.Field<EmployeeType> ()
-					.Title ("Type d'employé")
+					.Title ("Type de collaborateur")
 					.InitialValue (EmployeeType.Pasteur)
 				.End ()
 				.Field<string> ()

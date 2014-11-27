@@ -30,7 +30,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Ajouter un employé");
+			return Resources.Text ("Ajouter un collaborateur");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -49,12 +49,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
 			form
-				.Title ("Ajouter un employé")
+				.Title ("Ajouter un collaborateur")
 				.Field<AiderContactEntity> ()
 					.Title ("Contact")
 				.End()
 				.Field<EmployeeType> ()
-					.Title ("Type d'employé")
+					.Title ("Type de collaborateur")
 					.InitialValue (EmployeeType.Pasteur)
 				.End ()
 				.Field<string> ()
@@ -100,7 +100,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if(person.Employee.IsNotNull ())
 			{
-				throw new BusinessRuleException ("Cette personne est déjà définie comme employée, ajouter un poste depuis le contact");
+				throw new BusinessRuleException ("Cette personne est déjà définie comme collaborateur, ajouter un poste depuis le contact");
 			}
 	
 			var employee = AiderEmployeeEntity.Create (this.BusinessContext, person, user, employeeType, function, employeeActivity, navs13);

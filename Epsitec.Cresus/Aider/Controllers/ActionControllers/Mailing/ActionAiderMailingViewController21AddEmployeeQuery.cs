@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Employés");
+			return Resources.FormattedText ("Collaborateurs");
 		}
 
 		public override ActionExecutor GetExecutor()

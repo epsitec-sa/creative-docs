@@ -30,12 +30,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer l'employé...");
+			return Resources.Text ("Supprimer le collaborateur...");
 		}
 
 		public FormattedText GetText()
 		{
-			return "Voulez-vous vraiment supprimer cet employé ?";
+			return "Voulez-vous vraiment supprimer ce collaborateur ?";
 		}
 
 		public override ActionExecutor GetExecutor()
