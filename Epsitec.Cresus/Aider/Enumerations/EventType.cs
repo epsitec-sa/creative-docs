@@ -10,5 +10,13 @@ namespace Epsitec.Aider.Enumerations
 	public enum EventType
 	{
 		None = 0,
+		Blessing = 1,
+		Baptism  = 2,
+		Confirmation = 3,
+		EndOfCatechism = 4,
+		Marriage = 5,
+		CelebrationRegisteredPartners = 6,
+		FuneralService = 7
+
 	}
 }
