@@ -85,24 +85,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", list));
 		}
 
-		public static string Format(params string[] lines)
-		{
-			if (lines == null)
-			{
-				return null;
-			}
-			else
-			{
-				return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines));
-			}
-		}
-
 		private static string ConvertToSimpleText(string expression)
 		{
 			return TextLayout.ConvertToSimpleText (expression);
 		}
 
-		private static string ConvertToTaggedText(string expression)
+		public static string ConvertToTaggedText(string expression)
 		{
 			return TextLayout.ConvertToTaggedText (expression);
 		}

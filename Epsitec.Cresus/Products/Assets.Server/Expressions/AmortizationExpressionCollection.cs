@@ -43,7 +43,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		//	Voir (*)
 		private static string[] zeroLines =
 		{
 			"value = 0;",
@@ -84,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"if (n > 0)",
 			"{",
-			"    rate = 1 / n;",
+			"	rate = 1 / n;",
 			"}",
 			"",
 			"var amortization = InitialAmount * rate;",
@@ -102,12 +101,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"decimal n = YearCount - YearRank;  // remaining years",
 			"",
 			"if (n > 0 &&",
-			"    ResidualAmount != 0 &&",
-			"    InitialAmount != 0)",
+			"	ResidualAmount != 0 &&",
+			"	InitialAmount != 0)",
 			"{",
-			"    var x = ResidualAmount / InitialAmount;",
-			"    var y = 1 / n;",
-			"    rate = 1 - Pow (x, y);",
+			"	var x = ResidualAmount / InitialAmount;",
+			"	var y = 1 / n;",
+			"	rate = 1 - Pow (x, y);",
 			"}",
 			"",
 			"var amortization = InitialAmount * rate;",
@@ -116,12 +115,5 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Residual (value);",
 			"value = Override (value);",
 		};
-		//	Voir (*)
-
-		//	(*) Le code entre ces 2 bornes ne doit pas contenir de tabulateurs. Il faut
-		//		les remplacer systématiquement par 4 espaces. En effet, lorsque l'utilisateur
-		//		édite le code, il ne peut pas insérer de tabulateur, car la touche Tab
-		//		passe au champ suivant !
-	
 	}
 }

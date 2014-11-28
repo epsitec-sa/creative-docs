@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			this.Type        = type;
 			this.Description = description;
-			this.Expression  = AmortizationExpression.Format (expressionLines);
+			this.Expression  = AmortizationExpressionItem.Format (expressionLines);
 		}
 
 		public bool IsEmpty
@@ -21,6 +21,24 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			get
 			{
 				return this.Type == AmortizationExpressionType.Unknown;
+			}
+		}
+
+		private static string Format(params string[] lines)
+		{
+			//	Le code ne doit pas contenir de tabulateurs. Il faut les remplacer
+			//	systématiquement par 4 espaces. En effet, lorsque l'utilisateur
+			//	édite le code, il ne peut pas insérer de tabulateur, car la touche
+			//	Tab passe au champ suivant !
+
+			if (lines == null)
+			{
+				return null;
+			}
+			else
+			{
+				return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines))
+					.Replace ("<tab/>", "    ");
 			}
 		}
 
