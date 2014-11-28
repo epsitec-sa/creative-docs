@@ -6,10 +6,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
+	/// <summary>
+	/// Gestion de la collection des expression d'amortissements prédéfinies.
+	/// </summary>
 	public static class AmortizationExpressionCollection
 	{
 		public static string GetExpression(AmortizationExpressionType type)
 		{
+			//	Retourne l'expression correspondant à un type donné.
 			return AmortizationExpressionCollection.Items
 				.Where (x => x.Type == type)
 				.Select (x => x.Expression)
@@ -18,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public static IEnumerable<AmortizationExpressionItem> Items
 		{
+			//	Enumère toutes les expressions prédéfinies.
 			get
 			{
 				yield return new AmortizationExpressionItem (
@@ -42,11 +47,15 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-
-		private static string[] zeroLines =
-		{
-			"value = 0;",
-		};
+		
+		//	Code C# des expressions d'amortissements prédéfinies. Les propriétés et méthodes
+		//	accessibles sont définies dans AbstractCalculator. Comme ces expressions sont
+		//	vues et modifiables par l'utilisateur, elles sont simplifiées à l'extrême,
+		//	quitte à déroger à certains règles d'écriture. Par exemple, "this." est ici
+		//	systématiquement omis. De même, l'opérateur "-=" n'est pas utilisé.
+		//	Ces expressions sont injectées dans un code C# plus complexe, qui est défini
+		//	dans AmortizationExpression.skeletonLines. Le tout est ensuite compilé à la
+		//	volée avec Roselyn (librairies Microsoft.CodeAnalysis).
 
 		private static string[] rateLinearLines =
 		{

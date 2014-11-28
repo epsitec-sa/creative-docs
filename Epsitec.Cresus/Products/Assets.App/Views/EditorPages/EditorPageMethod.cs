@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				var expression = AmortizationExpressionCollection.Items
 					.Select (x => x.Expression)
-					.ToArray ()[rank];
+					.ElementAt (rank);
 
 				this.SetExpression (expression);
 			};
