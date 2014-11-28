@@ -173,6 +173,44 @@ namespace Epsitec.Data.Platform.MatchSort
 			}
 		}
 
+		/// <summary>
+		/// new_str  str_id integer primary key,
+		///			 onrp integer,
+		///			 str_bez_k varchar(25),
+		///			 str_bez_l varchar(60),
+		///			 str_bez_2k varchar(25),
+		///			 str_bez_2l varchar(60),
+		///			 str_lok_typ integer,
+		///			 str_bez_spc integer,
+		///			 str_bez_coff varchar(1),
+		///			 str_ganzfach varchar(1),
+		///			 str_fach_onrp integer
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<ISwissPostStreetInformation> GetStreets()
+		{
+			var sql = "select str_bez_k from new_";
+
+			using (var command = new SQLiteCommand (this.connection))
+			{
+				command.CommandText = sql;
+				command.Prepare ();
+
+				using (var dr = command.ExecuteReader ())
+				{
+					while (dr.Read ())
+					{
+						var plz     = dr.GetValue (0).ToString ();
+						var plz_zz  = dr.GetValue (1).ToString ();
+						var gplz    = dr.GetValue (2).ToString ();
+						var plz_typ = dr.GetValue (3).ToString ();
+
+						yield return new MatchSortStreetInformation ();
+					}
+				}
+			}
+		}
+
 
 		#region IDisposable Members
 
@@ -636,6 +674,26 @@ namespace Epsitec.Data.Platform.MatchSort
 			command.Parameters.Add ("@zip_addon", System.Data.DbType.String);
 			command.Parameters.Add ("@street", System.Data.DbType.String);
 			command.Parameters.Add ("@house", System.Data.DbType.String);
+			command.Prepare ();
+			return command;
+		}
+
+		private SQLiteCommand BuildSreetsInformationCommand()
+		{
+			var sql = "select "
+			            + "s.str_id as streetcode, s.str_bez_spc as languagecode, "
+			            + "p.onrp as basicpostcode, p.plz as zipcode, p.plz_zz as zipcodeaddon, p.plz_typ as dividercode, "
+						+ "min(g.hnr) as housenumberfrom, max(g.hnr) as housenumberto, "
+						+ "min(g.hnr_a) as housenumberalpha, max(g.hnr_a) as housenumbertoalpha, "
+						+ "s.str_bez_k as streetname, s.str_lok_typ as streetnametype, "
+						+ "s.str_bez_2l as friendlystreetname "
+						+ "from new_str as s "
+						+ "join new_plz1 p on p.ornp = s.onrp "
+						+ "join new_geb as g on g.str_id = s.str_id "
+						+ "group by s.str_id";
+
+			var command = new SQLiteCommand (this.connection);
+			command.CommandText = sql;
 			command.Prepare ();
 			return command;
 		}

@@ -8,6 +8,7 @@ using Epsitec.Common.Types.Converters;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Epsitec.Data.Platform.MatchLight;
 
 namespace Epsitec.Data.Platform
 {
@@ -203,11 +204,11 @@ namespace Epsitec.Data.Platform
 			return SwissPostStreet.NormalizeHouseNumber (strippedNumber);
 		}
 	
-		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
+		internal static IEnumerable<ISwissPostStreetInformation> GetStreets()
 		{		
 			foreach (var l in SwissPostStreet.GetStreetFile ())
 			{
-				yield return new SwissPostStreetInformation (l);
+				yield return new MatchLightStreetInformation (l);
 			}
 		}
 
