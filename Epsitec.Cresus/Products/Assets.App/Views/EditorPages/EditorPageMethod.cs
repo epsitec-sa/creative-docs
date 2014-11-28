@@ -213,6 +213,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants.
 			var nodes = new List<ExpressionSimulationNode> ();
 			var date = new System.DateTime (2000-1, 12, 31);
+			int totalMonth = 0;
 
 			var baseAmount        = amount.BaseAmount;
 			var monthCount        = amount.PeriodMonthCount;
@@ -225,12 +226,12 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			for (int i=0; i<100; i++)  // nombre d'itérations arbitraire
 			{
-				date = date.AddMonths (monthCount);
+				totalMonth += monthCount;
 
 				var initial = amount.InitialAmount.GetValueOrDefault ();
 				var final = expression.Evaluate (amount).Value;
 
-				var node = new ExpressionSimulationNode (i, date, initial, final);
+				var node = new ExpressionSimulationNode (i, date.AddMonths (totalMonth), initial, final);
 				nodes.Add (node);
 
 				amount = AmortizedAmount.SetAmortizedAmount (amount, final, baseAmount);
