@@ -301,6 +301,42 @@ namespace Epsitec.Cresus.Assets.Server
 					}
 				}
 				
+				public static class AmortizationExpressionType
+				{
+					//	designer:str/IUK3301
+					public static global::Epsitec.Common.Types.FormattedText RateDegressive
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544419));
+						}
+					}
+					//	designer:str/IUK2301
+					public static global::Epsitec.Common.Types.FormattedText RateLinear
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544418));
+						}
+					}
+					//	designer:str/IUK4301
+					public static global::Epsitec.Common.Types.FormattedText YearsDegressive
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544420));
+						}
+					}
+					//	designer:str/IUK5301
+					public static global::Epsitec.Common.Types.FormattedText YearsLinear
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544421));
+						}
+					}
+				}
+				
 				public static class AmortizationMethod
 				{
 					public static class Custom
@@ -1194,6 +1230,42 @@ namespace Epsitec.Cresus.Assets.Server
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544361);
+						}
+					}
+				}
+				
+				public static class AmortizationExpressionType
+				{
+					//	designer:str/IUK3301
+					public static global::Epsitec.Common.Support.Druid RateDegressive
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544419);
+						}
+					}
+					//	designer:str/IUK2301
+					public static global::Epsitec.Common.Support.Druid RateLinear
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544418);
+						}
+					}
+					//	designer:str/IUK4301
+					public static global::Epsitec.Common.Support.Druid YearsDegressive
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544420);
+						}
+					}
+					//	designer:str/IUK5301
+					public static global::Epsitec.Common.Support.Druid YearsLinear
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544421);
 						}
 					}
 				}

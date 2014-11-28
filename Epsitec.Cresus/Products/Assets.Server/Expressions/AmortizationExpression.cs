@@ -85,31 +85,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", list));
 		}
 
-		public static string GetDefaultExpression(SampleType type)
-		{
-			switch (type)
-			{
-				case SampleType.RateLinear:
-					return AmortizationExpression.Format (AmortizationExpression.defaultLinesRateLinear);
-
-				case SampleType.RateDegressive:
-					return AmortizationExpression.Format (AmortizationExpression.defaultLinesRateDegressive);
-
-				case SampleType.YearsLinear:
-					return AmortizationExpression.Format (AmortizationExpression.defaultLinesYearsLinear);
-
-				case SampleType.YearsDegressive:
-					return AmortizationExpression.Format (AmortizationExpression.defaultLinesYearsDegressive);
-
-				default:
-					return AmortizationExpression.Format (AmortizationExpression.defaultLinesNull);
-
-			}
-		}
-
 		public static string Format(params string[] lines)
 		{
-			return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines));
+			if (lines == null)
+			{
+				return null;
+			}
+			else
+			{
+				return AmortizationExpression.ConvertToTaggedText (string.Join ("\n", lines));
+			}
 		}
 
 		private static string ConvertToSimpleText(string expression)
@@ -129,86 +114,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				return string.Join ("\n", AmortizationExpression.skeletonLines);
 			}
 		}
-
-		//	Voir (*)
-		private static string[] defaultLinesRateLinear =
-		{
-			"Trace (\"Linear Rate\");",
-			"",
-			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
-			"var amortization = BaseAmount * rate;",
-			"",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
-			"value = Override (value);",
-		};
-
-		private static string[] defaultLinesRateDegressive =
-		{
-			"Trace (\"Degressive Rate\");",
-			"",
-			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
-			"var amortization = InitialAmount * rate;",
-			"",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
-			"value = Override (value);",
-		};
-
-		private static string[] defaultLinesYearsLinear =
-		{
-			"Trace (\"Linear Years\");",
-			"",
-			"decimal rate = 1;  // 100%",
-			"decimal n = YearCount - YearRank;  // remaining years",
-			"",
-			"if (n > 0)",
-			"{",
-			"    rate = 1 / n;",
-			"}",
-			"",
-			"var amortization = InitialAmount * rate;",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
-			"value = Override (value);",
-		};
-
-		private static string[] defaultLinesYearsDegressive =
-		{
-			"Trace (\"Degressive Years\");",
-			"",
-			"decimal rate = 1;  // 100%",
-			"decimal n = YearCount - YearRank;  // remaining years",
-			"",
-			"if (n > 0 &&",
-			"    ResidualAmount != 0 &&",
-			"    InitialAmount != 0)",
-			"{",
-			"    var x = ResidualAmount / InitialAmount;",
-			"    var y = 1 / n;",
-			"    rate = 1 - Pow (x, y);",
-			"}",
-			"",
-			"var amortization = InitialAmount * rate;",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
-			"value = Override (value);",
-		};
-
-		private static string[] defaultLinesNull =
-		{
-			"value = 0;",
-		};
-		//	Voir (*)
-
-		//	(*) Le code entre ces 2 bornes ne doit pas contenir de tabulateurs. Il faut
-		//		les remplacer systématiquement par 4 espaces. En effet, lorsque l'utilisateur
-		//		édite le code, il ne peut pas insérer de tabulateur, car la touche Tab
-		//		passe au champ suivant !
 
 		private static string[] skeletonLines =
 		{

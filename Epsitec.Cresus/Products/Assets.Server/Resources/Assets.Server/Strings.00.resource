@@ -90,4 +90,8 @@
   <data name="Enum.AmortizationMethod.YearsDegressive.Name" id="KV2">Amortissement dégressif selon le nombre d'années</data>
   <data name="Enum.AmortizationMethod.YearsDegressive.Summary" id="K03">Années dégressives</data>
   <data name="MethodsLogic.ExpressionSummary" id="K13">{0} lignes C#</data>
+  <data name="Enum.AmortizationExpressionType.RateLinear" id="K23">Taux linéaire</data>
+  <data name="Enum.AmortizationExpressionType.RateDegressive" id="K33">Taux dégressif</data>
+  <data name="Enum.AmortizationExpressionType.YearsDegressive" id="K43">Années dégressives</data>
+  <data name="Enum.AmortizationExpressionType.YearsLinear" id="K53">Années linéaires</data>
 </bundle>

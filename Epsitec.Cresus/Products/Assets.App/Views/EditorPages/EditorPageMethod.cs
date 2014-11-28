@@ -104,17 +104,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//	Affiche le popup pour choisir une expression à "importer".
 			var popup = new SimplePopup ();
 
-			foreach (var sample in EditorPageMethod.Samples)
+			foreach (var item in AmortizationExpressionCollection.Items)
 			{
-				popup.Items.Add (sample.Description);
+				popup.Items.Add (item.Description);
 			}
 
 			popup.Create (target, leftOrRight: true);
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
-				var sample = EditorPageMethod.Samples.ToArray ()[rank];
-				var expression = AmortizationExpression.GetDefaultExpression (sample.Type);
+				var expression = AmortizationExpressionCollection.Items
+					.Select (x => x.Expression)
+					.ToArray ()[rank];
+
 				this.SetExpression (expression);
 			};
 		}
@@ -255,7 +257,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				if (string.IsNullOrEmpty (this.expressionController.Value))
 				{
-					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (SampleType.RateLinear);
+					this.expressionController.Value = AmortizationExpressionCollection.Items
+						.Where (x => x.Type == AmortizationExpressionType.RateLinear)
+						.Select (x => x.Expression)
+						.FirstOrDefault ();
 				}
 			}
 			else
@@ -297,45 +302,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				}
 			}
 		}
-
-
-		#region Samples
-		private static IEnumerable<Sample> Samples
-		{
-			get
-			{
-				yield return new Sample
-				{
-					Type        = SampleType.RateLinear,
-					Description = Res.Strings.EditorPages.Method.RateLinear.Description.ToString (),
-				};
-
-				yield return new Sample
-				{
-					Type        = SampleType.RateDegressive,
-					Description = Res.Strings.EditorPages.Method.RateDegressive.Description.ToString (),
-				};
-
-				yield return new Sample
-				{
-					Type        = SampleType.YearsLinear,
-					Description = Res.Strings.EditorPages.Method.YearsLinear.Description.ToString (),
-				};
-
-				yield return new Sample
-				{
-					Type        = SampleType.YearsDegressive,
-					Description = Res.Strings.EditorPages.Method.YearsDegressive.Description.ToString (),
-				};
-			}
-		}
-
-		private struct Sample
-		{
-			public SampleType					Type;
-			public string						Description;
-		}
-		#endregion
 
 
 		private readonly CommandDispatcher		commandDispatcher;
