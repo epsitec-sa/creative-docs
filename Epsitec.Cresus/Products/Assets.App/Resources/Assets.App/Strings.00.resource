@@ -471,14 +471,10 @@
   <data name="Popup.ShowExpression.Title" id="KEJ">Code C#</data>
   <data name="Popup.TestExpression.Title" id="KFJ">Test d'une expression</data>
   <data name="EditorPages.Method.Locked.Tooltip" id="KGJ">Déverrouille les boutons pour insérer une expression</data>
-  <data name="EditorPages.Method.RateLinear.Button" id="KHJ">Taux linéaire</data>
-  <data name="EditorPages.Method.RateLinear.Tooltip" id="KIJ">Insère une expression qui calcule un&lt;br/&gt;amortissement linéaire selon un taux</data>
-  <data name="EditorPages.Method.RateDegressive.Button" id="KJJ">Taux dégressif</data>
-  <data name="EditorPages.Method.RateDegressive.Tooltip" id="KKJ">Insère une expression qui calcule un&lt;br/&gt;amortissement dégressif selon un taux</data>
-  <data name="EditorPages.Method.YearsLinear.Button" id="KLJ">Années linéaires</data>
-  <data name="EditorPages.Method.YearsLinear.Tooltip" id="KMJ">Insère une expression qui calcule un amortissement&lt;br/&gt;linéaire selon une durée en années</data>
-  <data name="EditorPages.Method.YearsDegressive.Button" id="KNJ">Années dégressives</data>
-  <data name="EditorPages.Method.YearsDegressive.Tooltip" id="KOJ">Insère une expression qui calcule un amortissement&lt;br/&gt;dégressif selon une durée en années</data>
+  <data name="EditorPages.Method.RateLinear.Description" id="KHJ">Taux linéaire</data>
+  <data name="EditorPages.Method.RateDegressive.Description" id="KJJ">Taux dégressif</data>
+  <data name="EditorPages.Method.YearsLinear.Description" id="KLJ">Années linéaires</data>
+  <data name="EditorPages.Method.YearsDegressive.Description" id="KNJ">Années dégressives</data>
   <data name="Popup.AmountExpressionSimulation.Title" id="KPJ">Paramètres initiaux de la simulation</data>
   <data name="Popup.ShowExpressionSimulation.Title" id="KQJ">Résultat de la simulation</data>
   <data name="DataFillers.ExpressionSimulationTreeTable.Rank" id="KRJ">Rang</data>

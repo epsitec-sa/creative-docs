@@ -2082,19 +2082,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class RateDegressive
 					{
 						//	designer:str/JUKJJ01
-						public static global::Epsitec.Common.Types.FormattedText Button
+						public static global::Epsitec.Common.Types.FormattedText Description
 						{
 							get
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544947));
-							}
-						}
-						//	designer:str/JUKKJ01
-						public static global::Epsitec.Common.Types.FormattedText Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544948));
 							}
 						}
 					}
@@ -2102,19 +2094,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class RateLinear
 					{
 						//	designer:str/JUKHJ01
-						public static global::Epsitec.Common.Types.FormattedText Button
+						public static global::Epsitec.Common.Types.FormattedText Description
 						{
 							get
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544945));
-							}
-						}
-						//	designer:str/JUKIJ01
-						public static global::Epsitec.Common.Types.FormattedText Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544946));
 							}
 						}
 					}
@@ -2122,19 +2106,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class YearsDegressive
 					{
 						//	designer:str/JUKNJ01
-						public static global::Epsitec.Common.Types.FormattedText Button
+						public static global::Epsitec.Common.Types.FormattedText Description
 						{
 							get
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544951));
-							}
-						}
-						//	designer:str/JUKOJ01
-						public static global::Epsitec.Common.Types.FormattedText Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544952));
 							}
 						}
 					}
@@ -2142,19 +2118,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class YearsLinear
 					{
 						//	designer:str/JUKLJ01
-						public static global::Epsitec.Common.Types.FormattedText Button
+						public static global::Epsitec.Common.Types.FormattedText Description
 						{
 							get
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544949));
-							}
-						}
-						//	designer:str/JUKMJ01
-						public static global::Epsitec.Common.Types.FormattedText Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544950));
 							}
 						}
 					}
@@ -6734,19 +6702,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class RateDegressive
 					{
 						//	designer:str/JUKJJ01
-						public static global::Epsitec.Common.Support.Druid Button
+						public static global::Epsitec.Common.Support.Druid Description
 						{
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544947);
-							}
-						}
-						//	designer:str/JUKKJ01
-						public static global::Epsitec.Common.Support.Druid Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544948);
 							}
 						}
 					}
@@ -6754,19 +6714,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class RateLinear
 					{
 						//	designer:str/JUKHJ01
-						public static global::Epsitec.Common.Support.Druid Button
+						public static global::Epsitec.Common.Support.Druid Description
 						{
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544945);
-							}
-						}
-						//	designer:str/JUKIJ01
-						public static global::Epsitec.Common.Support.Druid Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544946);
 							}
 						}
 					}
@@ -6774,19 +6726,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class YearsDegressive
 					{
 						//	designer:str/JUKNJ01
-						public static global::Epsitec.Common.Support.Druid Button
+						public static global::Epsitec.Common.Support.Druid Description
 						{
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544951);
-							}
-						}
-						//	designer:str/JUKOJ01
-						public static global::Epsitec.Common.Support.Druid Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544952);
 							}
 						}
 					}
@@ -6794,19 +6738,11 @@ namespace Epsitec.Cresus.Assets.App
 					public static class YearsLinear
 					{
 						//	designer:str/JUKLJ01
-						public static global::Epsitec.Common.Support.Druid Button
+						public static global::Epsitec.Common.Support.Druid Description
 						{
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544949);
-							}
-						}
-						//	designer:str/JUKMJ01
-						public static global::Epsitec.Common.Support.Druid Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544950);
 							}
 						}
 					}

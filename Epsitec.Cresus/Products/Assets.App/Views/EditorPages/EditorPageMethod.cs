@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			foreach (var sample in EditorPageMethod.Samples)
 			{
-				popup.Items.Add (sample.Title);
+				popup.Items.Add (sample.Description);
 			}
 
 			popup.Create (target, leftOrRight: true);
@@ -297,30 +297,26 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				yield return new Sample
 				{
-					Type    = SampleType.RateLinear,
-					Title   = Res.Strings.EditorPages.Method.RateLinear.Button.ToString (),
-					Tooltip = Res.Strings.EditorPages.Method.RateLinear.Tooltip.ToString (),
+					Type        = SampleType.RateLinear,
+					Description = Res.Strings.EditorPages.Method.RateLinear.Description.ToString (),
 				};
 
 				yield return new Sample
 				{
-					Type    = SampleType.RateDegressive,
-					Title   = Res.Strings.EditorPages.Method.RateDegressive.Button.ToString (),
-					Tooltip = Res.Strings.EditorPages.Method.RateDegressive.Tooltip.ToString (),
+					Type        = SampleType.RateDegressive,
+					Description = Res.Strings.EditorPages.Method.RateDegressive.Description.ToString (),
 				};
 
 				yield return new Sample
 				{
-					Type    = SampleType.YearsLinear,
-					Title   = Res.Strings.EditorPages.Method.YearsLinear.Button.ToString (),
-					Tooltip = Res.Strings.EditorPages.Method.YearsLinear.Tooltip.ToString (),
+					Type        = SampleType.YearsLinear,
+					Description = Res.Strings.EditorPages.Method.YearsLinear.Description.ToString (),
 				};
 
 				yield return new Sample
 				{
-					Type    = SampleType.YearsDegressive,
-					Title   = Res.Strings.EditorPages.Method.YearsDegressive.Button.ToString (),
-					Tooltip = Res.Strings.EditorPages.Method.YearsDegressive.Tooltip.ToString (),
+					Type        = SampleType.YearsDegressive,
+					Description = Res.Strings.EditorPages.Method.YearsDegressive.Description.ToString (),
 				};
 			}
 		}
@@ -329,8 +325,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private struct Sample
 		{
 			public SampleType					Type;
-			public string						Title;
-			public string						Tooltip;
+			public string						Description;
 		}
 
 
