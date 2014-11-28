@@ -64,48 +64,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 		}
 
-		private void UpdateControllers()
-		{
-			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
-
-			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
-
-			this.expressionController.IsReadOnly = !expressionEnable;
-			this.outputConsole       .Visibility =  expressionEnable;
-
-			if (expressionEnable)
-			{
-				if (string.IsNullOrEmpty (this.expressionController.Value))
-				{
-					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (SampleType.RateLinear);
-				}
-			}
-			else
-			{
-				this.expressionController.Value = null;
-			}
-
-			this.outputConsole.Text = null;  // efface le message précédent
-
-			this.UpdateCommands ();
-		}
-
-		private void UpdateCommands()
-		{
-			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
-
-			this.SetEnable (Res.Commands.Methods.Library,    expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Compile,    expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Show,       expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Test,       expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Simulation, expressionEnable);
-		}
-
-		public void SetEnable(Command command, bool enable)
-		{
-			this.commandContext.GetCommandState (command).Enable = enable;
-		}
-
 
 		[Command (Res.CommandIds.Methods.Library)]
 		protected void OnLibrary(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -143,6 +101,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void ShowLibraryPopup(Widget target)
 		{
+			//	Affiche le popup pour choisir une expression à "importer".
 			var popup = new SimplePopup ();
 
 			foreach (var sample in EditorPageMethod.Samples)
@@ -162,12 +121,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void SetExpression(string expression)
 		{
+			//	Modifie l'expression actuellement sélectionnée.
 			this.accessor.EditionAccessor.SetField(ObjectField.Expression, expression);
 			this.expressionController.Value = expression;
 		}
 
 		private string Compile()
 		{
+			//	Compile l'expression actuellement sélectionnée.
 			this.outputConsole.Text = "Compile started";
 			this.outputConsole.Window.ForceLayout ();
 
@@ -202,12 +163,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void Show(Widget target)
 		{
+			//	Affiche le code C# de l'expression actuellement sélectionnée.
 			var expression = AmortizationExpression.GetDebugExpression (this.expressionController.Value);
 			ShowExpressionPopup.Show (target, this.accessor, expression);
 		}
 
 		private void Test(Widget target)
 		{
+			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
 			var err = this.Compile ();
 
 			if (string.IsNullOrEmpty (err))  // ok ?
@@ -223,6 +186,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void Simulation(Widget target)
 		{
+			//	Affiche le popup permettant de choisir les paramètres pour lancer la
+			//	simulation de l'expression actuellement sélectionnée.
 			var err = this.Compile ();
 
 			if (string.IsNullOrEmpty (err))  // ok ?
@@ -245,6 +210,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private static List<ExpressionSimulationNode> ComputeSimulation(AmortizationExpression expression, AmortizedAmount amount)
 		{
+			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants.
 			var nodes = new List<ExpressionSimulationNode> ();
 			var date = new System.DateTime (2000-1, 12, 31);
 
@@ -275,6 +241,47 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
+		private void UpdateControllers()
+		{
+			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
+
+			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
+
+			this.expressionController.IsReadOnly = !expressionEnable;
+			this.outputConsole.Visibility =  expressionEnable;
+
+			if (expressionEnable)
+			{
+				if (string.IsNullOrEmpty (this.expressionController.Value))
+				{
+					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (SampleType.RateLinear);
+				}
+			}
+			else
+			{
+				this.expressionController.Value = null;
+			}
+
+			this.outputConsole.Text = null;  // efface le message précédent
+
+			this.UpdateCommands (expressionEnable);
+		}
+
+		private void UpdateCommands(bool expressionEnable)
+		{
+			this.SetEnable (Res.Commands.Methods.Library, expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Compile, expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Show, expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Test, expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Simulation, expressionEnable);
+		}
+
+		private void SetEnable(Command command, bool enable)
+		{
+			this.commandContext.GetCommandState (command).Enable = enable;
+		}
+
+
 		private AmortizationMethod CurrentMethod
 		{
 			get
@@ -291,6 +298,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
+		#region Samples
 		private static IEnumerable<Sample> Samples
 		{
 			get
@@ -321,12 +329,12 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 		}
 
-
 		private struct Sample
 		{
 			public SampleType					Type;
 			public string						Description;
 		}
+		#endregion
 
 
 		private readonly CommandDispatcher		commandDispatcher;
