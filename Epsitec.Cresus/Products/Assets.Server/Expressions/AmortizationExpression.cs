@@ -62,6 +62,30 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
+		public string Error
+		{
+			get
+			{
+				return this.error;
+			}
+		}
+
+		public AbstractCalculator.Result Evaluate(AmortizedAmount amount)
+		{
+			if (this.compiledAssembly != null)
+			{
+				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
+				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
+
+				object[] parameters = { amount };
+
+				return (AbstractCalculator.Result) evaluate.Invoke (null, parameters);
+			}
+
+			return AbstractCalculator.Result.Empty;
+		}
+
+
 		#region Expression
 		public static string GetDebugExpression(string inside)
 		{
@@ -142,31 +166,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"}",
 		};
 		#endregion
-
-
-		public string Error
-		{
-			get
-			{
-				return this.error;
-			}
-		}
-
-
-		public AbstractCalculator.Result Evaluate(AmortizedAmount amount)
-		{
-			if (this.compiledAssembly != null)
-			{
-				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
-				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
-
-				object[] parameters = { amount };
-
-				return (AbstractCalculator.Result) evaluate.Invoke (null, parameters);
-			}
-
-			return AbstractCalculator.Result.Empty;
-		}
 
 
 		private readonly Assembly				compiledAssembly;

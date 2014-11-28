@@ -303,6 +303,14 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationExpressionType
 				{
+					//	designer:str/IUK6301
+					public static global::Epsitec.Common.Types.FormattedText Debug
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544422));
+						}
+					}
 					//	designer:str/IUK3301
 					public static global::Epsitec.Common.Types.FormattedText RateDegressive
 					{
@@ -1236,6 +1244,14 @@ namespace Epsitec.Cresus.Assets.Server
 				
 				public static class AmortizationExpressionType
 				{
+					//	designer:str/IUK6301
+					public static global::Epsitec.Common.Support.Druid Debug
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544422);
+						}
+					}
 					//	designer:str/IUK3301
 					public static global::Epsitec.Common.Support.Druid RateDegressive
 					{

@@ -103,10 +103,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				StackedControllerType = StackedControllerType.Decimal,
 				Label                 = "YearRank",
 				DecimalFormat         = DecimalFormat.Real,
-				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 11
+			{
+				StackedControllerType = StackedControllerType.Decimal,
+				Label                 = "PeriodCount",
+				DecimalFormat         = DecimalFormat.Real,
+			});
+
+			list.Add (new StackedControllerDescription  // 12
+			{
+				StackedControllerType = StackedControllerType.Decimal,
+				Label                 = "PeriodRank",
+				DecimalFormat         = DecimalFormat.Real,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 13
 			{
 				StackedControllerType = StackedControllerType.Label,
 				Width                 = 230,
@@ -297,6 +311,38 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private decimal PeriodCount
+		{
+			get
+			{
+				var controller = this.GetController (11) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value.GetValueOrDefault ();
+			}
+			set
+			{
+				var controller = this.GetController (11) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private decimal PeriodRank
+		{
+			get
+			{
+				var controller = this.GetController (12) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value.GetValueOrDefault ();
+			}
+			set
+			{
+				var controller = this.GetController (12) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 		private AmortizedAmount Amount
 		{
 			get
@@ -305,6 +351,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					AmortizationMethod.Custom, null,
 					this.Rate,
 					this.YearRank, this.YearCount,
+					this.PeriodRank, this.PeriodCount,
 					this.Periodicity,
 					this.ForcedAmount,
 					this.InitialAmount, this.InitialAmount,
@@ -328,6 +375,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					this.ProrataDenominator = value.ProrataDenominator.GetValueOrDefault ();
 					this.YearCount          = value.YearCount;
 					this.YearRank           = value.YearRank;
+					this.PeriodCount        = value.PeriodCount;
+					this.PeriodRank         = value.PeriodRank;
 			}
 		}
 
@@ -338,7 +387,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void SetResult(AbstractCalculator.Result result)
 		{
-			var controller = this.GetController (11) as LabelStackedController;
+			var controller = this.GetController (13) as LabelStackedController;
 			System.Diagnostics.Debug.Assert (controller != null);
 
 			var builder = new System.Text.StringBuilder ();

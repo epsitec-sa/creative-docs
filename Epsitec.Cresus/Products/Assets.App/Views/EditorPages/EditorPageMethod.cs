@@ -217,12 +217,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var date = new System.DateTime (2000-1, 12, 31);
 			int totalMonth = 0;
 
-			var baseAmount        = amount.BaseAmount;
-			var monthCount        = amount.PeriodMonthCount;
-			var periodicityFactor = amount.PeriodicityFactor;
+			var baseAmount = amount.BaseAmount;
+			var monthCount = amount.PeriodMonthCount;  // 12/6/3/1
+
+			decimal yearRank = 0;
+			decimal periodRank = 0;
+			decimal periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (amount.Periodicity);  // 1/2/4/12
 
 			amount = AmortizedAmount.SetAmortizedAmount    (amount, baseAmount, baseAmount);
-			amount = AmortizedAmount.SetRank               (amount, 0.0m);
+			amount = AmortizedAmount.SetRanks              (amount, yearRank, periodRank, periodCount);
 			amount = AmortizedAmount.SetProrataNumerator   (amount, null);
 			amount = AmortizedAmount.SetProrataDenominator (amount, null);
 
@@ -237,7 +240,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				nodes.Add (node);
 
 				amount = AmortizedAmount.SetAmortizedAmount (amount, final, baseAmount);
-				amount = AmortizedAmount.SetRank (amount, (i+1)*periodicityFactor);
+				amount = AmortizedAmount.SetRanks (amount, yearRank, periodRank, periodCount);
+
+				periodRank++;
+
+				if (periodRank >= periodCount)
+				{
+					periodRank = 0;
+					yearRank++;
+				}
 			}
 
 			return nodes;

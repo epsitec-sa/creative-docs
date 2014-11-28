@@ -270,17 +270,54 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = (Periodicity) period;
 				var r = (ProrataType) prorata;
 
-				//	Calcule le rang de l'amortissement, égal au nombre d'amortissements antérieurs.
-				decimal rank = obj.Events
-					.Where (x => x.Timestamp < timestamp && (
-						x.Type == EventType.AmortizationPreview ||
-						x.Type == EventType.AmortizationAuto ||
-						x.Type == EventType.AmortizationExtra))
-					.Count ();
+				//	Calcule le rang de l'année ainsi que le rang dans l'année.
+				//	Supposons, par exemple, qu'il existe les amortissements semestriels
+				//	aux dates suivantes :
+				//				yearRank periodRank
+				//	30.06.2000		0		0
+				//	31.12.2000		0		1
+				//	30.06.2001		1		0
+				//	31.12.2001		1		1
+				//	30.06.2002		2		0
+				//	31.12.2002		2		1
+				//
+				//	periodCount vaudra 2
 
-				rank *= 12.0m / AmortizedAmount.GetPeriodMonthCount (p);
+				int lastYear = -1;
+				int yearRank = 0;
+				int periodRank = 0;
 
-				return new AmortizationDefinition (exp, taux.GetValueOrDefault (0.0m), rank, years.Value, p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
+				foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp && (
+					x.Type == EventType.AmortizationPreview ||
+					x.Type == EventType.AmortizationAuto ||
+					x.Type == EventType.AmortizationExtra)))
+				{
+					if (lastYear != e.Timestamp.Date.Year)
+					{
+						if (lastYear != -1)
+						{
+							yearRank++;
+						}
+
+						lastYear = e.Timestamp.Date.Year;
+						periodRank = 0;
+					}
+					else
+					{
+						periodRank++;
+					}
+				}
+
+				//	periodCount vaut :
+				//	si annuel      -> 12 / 12 =  1
+				//	si semestriel  -> 12 /  6 =  2
+				//	si trimestriel -> 12 /  3 =  4
+				//	si mensuel     -> 12 /  1 = 12
+				var periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (p);
+
+				return new AmortizationDefinition (exp, taux.GetValueOrDefault (0.0m),
+					yearRank, years.Value, periodRank, periodCount,
+					p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
@@ -375,7 +412,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return new AmortizedAmount
 			(
-				method, exp, def.Rate, def.YearRank, def.YearCount, def.Periodicity,
+				method, exp, def.Rate,
+				def.YearRank, def.YearCount,
+				def.PeriodRank, def.PeriodCount,
+				def.Periodicity,
 				null, null, null, null,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual,
 				entryScenario, timestamp.Date,

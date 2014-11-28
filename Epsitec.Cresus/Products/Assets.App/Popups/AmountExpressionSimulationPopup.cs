@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					AmortizationMethod.Custom, null,
 					this.Rate,
 					0.0m, this.YearCount,
+					0.0m, 1.0m,
 					this.Periodicity,
 					null,
 					this.BaseAmount, this.BaseAmount,

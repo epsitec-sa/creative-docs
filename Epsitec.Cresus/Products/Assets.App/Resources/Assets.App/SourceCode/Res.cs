@@ -2065,21 +2065,6 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
-				public static class Method
-				{
-					public static class Locked
-					{
-						//	designer:str/JUKGJ01
-						public static global::Epsitec.Common.Types.FormattedText Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544944));
-							}
-						}
-					}
-				}
-				
 				public static class OneShot
 				{
 					//	designer:str/JUK7901
@@ -6632,21 +6617,6 @@ namespace Epsitec.Cresus.Assets.App
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544608);
-							}
-						}
-					}
-				}
-				
-				public static class Method
-				{
-					public static class Locked
-					{
-						//	designer:str/JUKGJ01
-						public static global::Epsitec.Common.Support.Druid Tooltip
-						{
-							get
-							{
-								return global::Epsitec.Common.Support.Druid.FromFieldId (335544944);
 							}
 						}
 					}

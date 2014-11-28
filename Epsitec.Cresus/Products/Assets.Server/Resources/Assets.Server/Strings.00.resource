@@ -94,4 +94,5 @@
   <data name="Enum.AmortizationExpressionType.RateDegressive" id="K33">Taux dégressif</data>
   <data name="Enum.AmortizationExpressionType.YearsDegressive" id="K43">Années dégressives</data>
   <data name="Enum.AmortizationExpressionType.YearsLinear" id="K53">Années linéaires</data>
+  <data name="Enum.AmortizationExpressionType.Debug" id="K63">Debug</data>
 </bundle>

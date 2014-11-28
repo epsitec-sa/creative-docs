@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.ProrataDenominator = amount.ProrataDenominator.GetValueOrDefault ();
 			this.YearCount          = amount.YearCount;
 			this.YearRank           = amount.YearRank;
+			this.PeriodCount        = amount.PeriodCount;
+			this.PeriodRank         = amount.PeriodRank;
 		}
 
 
@@ -220,5 +222,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly decimal					ProrataDenominator;	// dénominateur du prorata
 		public readonly decimal					YearCount;			// nombre total d'années
 		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
+		public readonly decimal					PeriodCount;		// nombre total de périodes
+		public readonly decimal					PeriodRank;			// rang de la période (0..PeriodCount-1)
 	}
 }

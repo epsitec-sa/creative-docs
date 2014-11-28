@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 			}
 
 			return this.ViewType     == o.ViewType
-				&& this.PageType     == o.PageType
 				&& this.SelectedGuid == o.SelectedGuid;
 		}
 
@@ -39,16 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 		{
 			if (!this.SelectedGuid.IsEmpty)
 			{
-				var list = new List<string> ();
-
-				list.Add (MethodsLogic.GetSummary (accessor, this.SelectedGuid));
-
-				if (this.PageType != Views.PageType.Unknown)
-				{
-					list.Add (StaticDescriptions.GetObjectPageDescription (this.PageType));
-				}
-
-				return UniversalLogic.NiceJoin (list.ToArray ());
+				return MethodsLogic.GetSummary (accessor, this.SelectedGuid);
 			}
 
 			return null;

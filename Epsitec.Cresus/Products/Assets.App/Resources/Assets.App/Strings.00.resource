@@ -470,7 +470,6 @@
   <data name="Popup.Methods.Title" id="KDJ">Choix de la méthode d'amortissement</data>
   <data name="Popup.ShowExpression.Title" id="KEJ">Code C#</data>
   <data name="Popup.TestExpression.Title" id="KFJ">Test d'une expression</data>
-  <data name="EditorPages.Method.Locked.Tooltip" id="KGJ">Déverrouille les boutons pour insérer une expression</data>
   <data name="Popup.AmountExpressionSimulation.Title" id="KPJ">Paramètres initiaux de la simulation</data>
   <data name="Popup.ShowExpressionSimulation.Title" id="KQJ">Résultat de la simulation</data>
   <data name="DataFillers.ExpressionSimulationTreeTable.Rank" id="KRJ">Rang</data>

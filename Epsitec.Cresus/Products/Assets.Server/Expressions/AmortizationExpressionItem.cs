@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			//	Le code ne doit pas contenir de tabulateurs. Il faut les remplacer
 			//	systématiquement par 4 espaces. En effet, lorsque l'utilisateur
-			//	édite le code, il ne peut pas insérer de tabulateur, car la touche
+			//	édite l'expression, il ne peut pas insérer de tabulateur, car la touche
 			//	Tab passe au champ suivant !
 
 			if (lines == null)

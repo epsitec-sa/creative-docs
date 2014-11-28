@@ -115,7 +115,6 @@
     <Compile Include="Expressions\AmortizationExpressionType.cs" />
     <Compile Include="Expressions\AmortizationExpressionItem.cs" />
     <Compile Include="Expressions\AmortizationExpressionCollection.cs" />
-    <Compile Include="Expressions\SampleType.cs" />
     <Compile Include="Expressions\RateDegressiveCalculator.cs" />
     <Compile Include="Expressions\YearsDegressiveCalculator.cs" />
     <Compile Include="Expressions\YearsLinearCalculator.cs" />
