@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 
 		public override bool IsReferenced(BaseType baseType, Guid guid)
 		{
-			return baseType == BaseType.Categories
+			return baseType == BaseType.Methods
 				&& guid == this.SelectedGuid;
 		}
 
 
 		public override bool StrictlyEquals(AbstractViewState other)
 		{
-			var o = other as CategoriesViewState;
+			var o = other as MethodsViewState;
 			if (o == null)
 			{
 				return false;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ViewStates
 			{
 				var list = new List<string> ();
 
-				list.Add (CategoriesLogic.GetSummary (accessor, this.SelectedGuid));
+				list.Add (MethodsLogic.GetSummary (accessor, this.SelectedGuid));
 
 				if (this.PageType != Views.PageType.Unknown)
 				{
