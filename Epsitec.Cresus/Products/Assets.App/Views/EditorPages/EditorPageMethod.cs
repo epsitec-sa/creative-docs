@@ -4,11 +4,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.NodeGetters;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
+using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -19,10 +20,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
 	public class EditorPageMethod : AbstractEditorPage
 	{
-		public EditorPageMethod(DataAccessor accessor, BaseType baseType, bool isTimeless)
-			: base (accessor, baseType, isTimeless)
+		public EditorPageMethod(DataAccessor accessor, CommandContext commandContext, BaseType baseType, bool isTimeless)
+			: base (accessor, commandContext, baseType, isTimeless)
 		{
-			this.sampleButtons = new List<Button> ();
+			this.commandDispatcher = new CommandDispatcher (this.GetType ().FullName, CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
+			this.commandDispatcher.RegisterController (this);  // nécesaire pour [Command (Res.CommandIds...)]
 		}
 
 
@@ -32,11 +34,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.nameController       = this.CreateStringController (parent, ObjectField.Name);
 			this.methodController     = this.CreateEnumController   (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods);
-			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 20, maxLength: 10000);
+			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 25, maxLength: 10000);
 
-			this.CreateSampleButtons (parent);
-			this.CreateActionButtons (parent);
 			this.CreateOutputConsole (parent);
+
+			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 
 			this.methodController.ValueEdited += delegate
 			{
@@ -48,142 +50,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			base.SetObject (objectGuid, timestamp);
 			this.UpdateControllers ();
-		}
-
-		private void CreateSampleButtons(Widget parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 21,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (110-21-5, 0, 5, 0),
-			};
-
-			bool locked = true;
-
-			this.lockButton = new IconButton
-			{
-				Parent          = frame,
-				PreferredWidth  = 21,
-				IconUri         = Misc.GetResourceIconUri ("Method.Locked"),
-				ButtonStyle     = ButtonStyle.ToolItem,
-				AutoFocus       = false,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.lockButton, Res.Strings.EditorPages.Method.Locked.Tooltip.ToString ());
-
-			this.lockButton.Clicked += delegate
-			{
-				locked = !locked;
-				this.lockButton.IconUri = Misc.GetResourceIconUri (locked ? "Method.Locked" : "Method.Unlocked");
-
-				foreach (var button in this.sampleButtons)
-				{
-					button.Enable = !locked;
-				}
-			};
-
-			foreach (var sample in EditorPageMethod.Samples)
-			{
-				var button = new Button
-				{
-					Parent          = frame,
-					PreferredWidth  = 90,
-					Text            = sample.Title,
-					ButtonStyle     = ButtonStyle.Icon,
-					AutoFocus       = false,
-					Enable          = !locked,
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (0, 5, 0, 0),
-				};
-
-				ToolTip.Default.SetToolTip (button, sample.Tooltip);
-
-				button.Clicked += delegate
-				{
-					this.expressionController.Value = AmortizationExpression.GetDefaultExpression (sample.Type);
-				};
-
-				this.sampleButtons.Add (button);
-			}
-		}
-
-		private void CreateActionButtons(Widget parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 21,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (110, 0, 5, 0),
-			};
-
-			this.compileButton = new Button
-			{
-				Parent          = frame,
-				PreferredWidth  = 90,
-				Text            = "Compile",  // anglais, ne pas traduire
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
-			};
-
-			this.showButton = new Button
-			{
-				Parent          = frame,
-				PreferredWidth  = 90,
-				Text            = "Show C#",  // anglais, ne pas traduire
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
-			};
-
-			this.testButton = new Button
-			{
-				Parent          = frame,
-				PreferredWidth  = 90,
-				Text            = "Test",  // anglais, ne pas traduire
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
-			};
-
-			this.simulButton = new Button
-			{
-				Parent          = frame,
-				PreferredWidth  = 90,
-				Text            = "Simulation",  // anglais, ne pas traduire
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
-			};
-
-			this.compileButton.Clicked += delegate
-			{
-				this.Compile ();
-			};
-
-			this.showButton.Clicked += delegate
-			{
-				this.Show ();
-			};
-
-			this.testButton.Clicked += delegate
-			{
-				this.Test ();
-			};
-
-			this.simulButton.Clicked += delegate
-			{
-				this.Simulation ();
-			};
 		}
 
 		private void CreateOutputConsole(Widget parent)
@@ -205,17 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
 
 			this.expressionController.IsReadOnly = !expressionEnable;
-			this.lockButton          .Visibility =  expressionEnable;
-			this.compileButton       .Visibility =  expressionEnable;
-			this.showButton          .Visibility =  expressionEnable;
-			this.testButton          .Visibility =  expressionEnable;
-			this.simulButton         .Visibility =  expressionEnable;
 			this.outputConsole       .Visibility =  expressionEnable;
-
-			foreach (var button in this.sampleButtons)
-			{
-				button.Visibility = expressionEnable;
-			}
 
 			if (expressionEnable)
 			{
@@ -230,6 +86,84 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			}
 
 			this.outputConsole.Text = null;  // efface le message précédent
+
+			this.UpdateCommands ();
+		}
+
+		private void UpdateCommands()
+		{
+			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
+
+			this.SetEnable (Res.Commands.Methods.Library,    expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Compile,    expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Show,       expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Test,       expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Simulation, expressionEnable);
+		}
+
+		public void SetEnable(Command command, bool enable)
+		{
+			this.commandContext.GetCommandState (command).Enable = enable;
+		}
+
+
+		[Command (Res.CommandIds.Methods.Library)]
+		protected void OnLibrary(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.ShowLibraryPopup (target);
+		}
+
+		[Command (Res.CommandIds.Methods.Compile)]
+		protected void OnCompile(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.Compile ();
+		}
+
+		[Command (Res.CommandIds.Methods.Show)]
+		protected void OnShow(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.Show (target);
+		}
+
+		[Command (Res.CommandIds.Methods.Test)]
+		protected void OnTest(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.Test (target);
+		}
+
+		[Command (Res.CommandIds.Methods.Simulation)]
+		protected void OnSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
+			this.Simulation (target);
+		}
+
+		private void ShowLibraryPopup(Widget target)
+		{
+			var popup = new SimplePopup ();
+
+			foreach (var sample in EditorPageMethod.Samples)
+			{
+				popup.Items.Add (sample.Title);
+			}
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				var sample = EditorPageMethod.Samples.ToArray ()[rank];
+				var expression = AmortizationExpression.GetDefaultExpression (sample.Type);
+				this.SetExpression (expression);
+			};
+		}
+
+		private void SetExpression(string expression)
+		{
+			this.accessor.EditionAccessor.SetField(ObjectField.Expression, expression);
+			this.expressionController.Value = expression;
 		}
 
 		private string Compile()
@@ -266,46 +200,46 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			return err;
 		}
 
-		private void Show()
+		private void Show(Widget target)
 		{
 			var expression = AmortizationExpression.GetDebugExpression (this.expressionController.Value);
-			ShowExpressionPopup.Show (this.showButton, this.accessor, expression);
+			ShowExpressionPopup.Show (target, this.accessor, expression);
 		}
 
-		private void Test()
+		private void Test(Widget target)
 		{
 			var err = this.Compile ();
 
 			if (string.IsNullOrEmpty (err))  // ok ?
 			{
 				var expression = new AmortizationExpression (this.expressionController.Value);
-				TestExpressionPopup.Show (this.testButton, this.accessor, expression);
+				TestExpressionPopup.Show (target, this.accessor, expression);
 			}
 			else  // erreur ?
 			{
-				MessagePopup.ShowError (this.testButton, err);
+				MessagePopup.ShowError (target, err);
 			}
 		}
 
-		private void Simulation()
+		private void Simulation(Widget target)
 		{
 			var err = this.Compile ();
 
 			if (string.IsNullOrEmpty (err))  // ok ?
 			{
-				AmountExpressionSimulationPopup.Show (this.simulButton, this.accessor, delegate
+				AmountExpressionSimulationPopup.Show (target, this.accessor, delegate
 				{
 					var expression = new AmortizationExpression (this.expressionController.Value);
 					var amount = LocalSettings.ExpressionSimulationAmount;
 
 					var nodes = EditorPageMethod.ComputeSimulation (expression, amount);
 
-					ShowExpressionSimulationPopup.Show (this.simulButton, this.accessor, nodes);
+					ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
 				});
 			}
 			else  // erreur ?
 			{
-				MessagePopup.ShowError (this.testButton, err);
+				MessagePopup.ShowError (target, err);
 			}
 		}
 
@@ -400,16 +334,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		private readonly List<Button>			sampleButtons;
+		private readonly CommandDispatcher		commandDispatcher;
 
 		private StringFieldController			nameController;
 		private EnumFieldController				methodController;
 		private StringFieldController			expressionController;
-		private IconButton						lockButton;
-		private Button							compileButton;
-		private Button							showButton;
-		private Button							testButton;
-		private Button							simulButton;
 		private TextFieldMulti					outputConsole;
 	}
 }

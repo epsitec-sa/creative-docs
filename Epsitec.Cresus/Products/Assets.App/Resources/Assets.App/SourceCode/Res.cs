@@ -307,9 +307,11 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Methods.Copy, null);
+					global::System.Object.Equals (Methods.Compile, null);
 				}
 				
+				//	designer:cap/JUKO601
+				public static readonly global::Epsitec.Common.Widgets.Command Compile = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 216));
 				//	designer:cap/JUKE601
 				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 206));
 				//	designer:cap/JUKF601
@@ -322,6 +324,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 210));
 				//	designer:cap/JUKJ601
 				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 211));
+				//	designer:cap/JUKS601
+				public static readonly global::Epsitec.Common.Widgets.Command Library = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 220));
 				//	designer:cap/JUKK601
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 212));
 				//	designer:cap/JUKL601
@@ -330,6 +334,12 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 214));
 				//	designer:cap/JUKN601
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 215));
+				//	designer:cap/JUKP601
+				public static readonly global::Epsitec.Common.Widgets.Command Show = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 217));
+				//	designer:cap/JUKR601
+				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 219));
+				//	designer:cap/JUKQ601
+				public static readonly global::Epsitec.Common.Widgets.Command Test = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218));
 			}
 			
 			public static class Persons
@@ -881,6 +891,8 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class Methods
 			{
+				//	designer:cap/JUKO601
+				public const long Compile = 0x7D3000140000D8L;
 				//	designer:cap/JUKE601
 				public const long Copy = 0x7D3000140000CEL;
 				//	designer:cap/JUKF601
@@ -893,6 +905,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long First = 0x7D3000140000D2L;
 				//	designer:cap/JUKJ601
 				public const long Last = 0x7D3000140000D3L;
+				//	designer:cap/JUKS601
+				public const long Library = 0x7D3000140000DCL;
 				//	designer:cap/JUKK601
 				public const long New = 0x7D3000140000D4L;
 				//	designer:cap/JUKL601
@@ -901,6 +915,12 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Paste = 0x7D3000140000D6L;
 				//	designer:cap/JUKN601
 				public const long Prev = 0x7D3000140000D7L;
+				//	designer:cap/JUKP601
+				public const long Show = 0x7D3000140000D9L;
+				//	designer:cap/JUKR601
+				public const long Simulation = 0x7D3000140000DBL;
+				//	designer:cap/JUKQ601
+				public const long Test = 0x7D3000140000DAL;
 			}
 			
 			public static class Persons

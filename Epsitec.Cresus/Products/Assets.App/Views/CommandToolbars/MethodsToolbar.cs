@@ -29,25 +29,33 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			base.CreateUI (parent);
 
-			this.CreateButton (Res.Commands.Methods.First, 2);
-			this.CreateButton (Res.Commands.Methods.Prev, 1);
-			this.CreateButton (Res.Commands.Methods.Next, 1);
-			this.CreateButton (Res.Commands.Methods.Last, 2);
+			this.CreateButton (Res.Commands.Methods.First, 3);
+			this.CreateButton (Res.Commands.Methods.Prev, 2);
+			this.CreateButton (Res.Commands.Methods.Next, 2);
+			this.CreateButton (Res.Commands.Methods.Last, 3);
 
-			this.CreateSeparator (1);
+			this.CreateSeparator (2);
 
 			this.helplineTargetButton =
 			this.CreateButton (Res.Commands.Methods.New, 0);
 			this.CreateButton (Res.Commands.Methods.Delete, 0);
-			this.CreateButton (Res.Commands.Methods.Deselect, 4);
+			this.CreateButton (Res.Commands.Methods.Deselect, 5);
 
-			this.CreateSeparator (3);
+			this.CreateSeparator (4);
 
-			this.CreateButton (Res.Commands.Methods.Copy, 3);
-			this.CreateButton (Res.Commands.Methods.Paste, 3);
-			this.CreateButton (Res.Commands.Methods.Export, 3);
+			this.CreateButton (Res.Commands.Methods.Copy, 4);
+			this.CreateButton (Res.Commands.Methods.Paste, 4);
+			this.CreateButton (Res.Commands.Methods.Export, 4);
 
-			this.CreateSearchController (SearchKind.Expressions, 5);
+			this.CreateSeparator (1);
+
+			this.CreateButton (Res.Commands.Methods.Library, 1);
+			this.CreateButton (Res.Commands.Methods.Compile, 1);
+			this.CreateButton (Res.Commands.Methods.Show, 1);
+			this.CreateButton (Res.Commands.Methods.Test, 1);
+			this.CreateButton (Res.Commands.Methods.Simulation, 1);
+
+			this.CreateSearchController (SearchKind.Expressions, 6);
 		}
 	}
 }

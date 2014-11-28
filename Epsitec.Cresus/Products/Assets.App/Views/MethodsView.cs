@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.baseType = BaseType.Methods;
 
 			this.listController = new MethodsToolbarTreeTableController (this.accessor, this.commandContext, BaseType.Methods);
-			this.objectEditor   = new ObjectEditor (this.accessor, this.baseType, isTimeless: true);
+			this.objectEditor   = new ObjectEditor (this.accessor, this.commandContext, this.baseType, isTimeless: true);
 		}
 
 

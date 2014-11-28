@@ -542,6 +542,11 @@
     <EmbeddedResource Include="Images\View.Methods.icon" />
     <EmbeddedResource Include="Images\Method.Locked.icon" />
     <EmbeddedResource Include="Images\Method.Unlocked.icon" />
+    <EmbeddedResource Include="Images\Methods.Library.icon" />
+    <EmbeddedResource Include="Images\Methods.Simulation.icon" />
+    <EmbeddedResource Include="Images\Methods.Compile.icon" />
+    <EmbeddedResource Include="Images\Methods.Show.icon" />
+    <EmbeddedResource Include="Images\Methods.Test.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

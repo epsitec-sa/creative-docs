@@ -11,8 +11,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 {
 	public class EditorPagePerson : AbstractEditorPage
 	{
-		public EditorPagePerson(DataAccessor accessor, BaseType baseType, bool isTimeless)
-			: base (accessor, baseType, isTimeless)
+		public EditorPagePerson(DataAccessor accessor, CommandContext commandContext, BaseType baseType, bool isTimeless)
+			: base (accessor, commandContext, baseType, isTimeless)
 		{
 		}
 
