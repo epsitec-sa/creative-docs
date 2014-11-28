@@ -320,22 +320,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddMethod ("Années linéaires",   AmortizationMethod.YearsLinear);
 			this.AddMethod ("Années dégressives", AmortizationMethod.YearsDegressive);
 
-			this.AddMethod ("Test", AmortizationMethod.Custom, "return 123;");
-			this.AddMethod ("Complexe", AmortizationMethod.Custom, AbstractMandatFactory.exp1);
+			this.AddMethod ("Sur mesure", AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear));
 		}
 
-		private static string[] exp1 =
-		{
-			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
-			"var amortization = BaseAmount * rate;",
-			"",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
-			"value = Override (value);",
-		};
-
-		protected void AddMethod(string name, AmortizationMethod method, params string[] lines)
+		protected void AddMethod(string name, AmortizationMethod method, string expression = null)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Methods);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -349,10 +337,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.AmortizationMethod, (int) method);
 
-			if (lines.Length > 0)
+			if (expression != null)
 			{
-				var exp = AmortizationExpression.Format (lines);
-				this.AddField (e, ObjectField.Expression, exp);
+				this.AddField (e, ObjectField.Expression, expression);
 			}
 		}
 

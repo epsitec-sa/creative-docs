@@ -8,6 +8,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public static class AmortizationExpressionCollection
 	{
+		public static string GetExpression(AmortizationExpressionType type)
+		{
+			return AmortizationExpressionCollection.Items
+				.Where (x => x.Type == type)
+				.Select (x => x.Expression)
+				.FirstOrDefault ();
+		}
+
 		public static IEnumerable<AmortizationExpressionItem> Items
 		{
 			get
@@ -15,39 +23,33 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.RateLinear,
 					Res.Strings.Enum.AmortizationExpressionType.RateLinear.ToString (),
-					AmortizationExpressionCollection.defaultLinesRateLinear);
+					AmortizationExpressionCollection.rateLinearLines);
 
 				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.RateDegressive,
 					Res.Strings.Enum.AmortizationExpressionType.RateDegressive.ToString (),
-					AmortizationExpressionCollection.defaultLinesRateDegressive);
+					AmortizationExpressionCollection.rateDegressiveLines);
 
 				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.YearsLinear,
 					Res.Strings.Enum.AmortizationExpressionType.YearsLinear.ToString (),
-					AmortizationExpressionCollection.defaultLinesYearsLinear);
+					AmortizationExpressionCollection.yearsLinearLines);
 
 				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.YearsDegressive,
 					Res.Strings.Enum.AmortizationExpressionType.YearsDegressive.ToString (),
-					AmortizationExpressionCollection.defaultLinesYearsDegressive);
-			}
-		}
-
-		public static IEnumerable<AmortizationExpressionType> Types
-		{
-			get
-			{
-				yield return AmortizationExpressionType.RateLinear;
-				yield return AmortizationExpressionType.RateDegressive;
-				yield return AmortizationExpressionType.YearsLinear;
-				yield return AmortizationExpressionType.YearsDegressive;
+					AmortizationExpressionCollection.yearsDegressiveLines);
 			}
 		}
 
 
 		//	Voir (*)
-		private static string[] defaultLinesRateLinear =
+		private static string[] zeroLines =
+		{
+			"value = 0;",
+		};
+
+		private static string[] rateLinearLines =
 		{
 			"Trace (\"Linear Rate\");",
 			"",
@@ -60,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Override (value);",
 		};
 
-		private static string[] defaultLinesRateDegressive =
+		private static string[] rateDegressiveLines =
 		{
 			"Trace (\"Degressive Rate\");",
 			"",
@@ -73,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Override (value);",
 		};
 
-		private static string[] defaultLinesYearsLinear =
+		private static string[] yearsLinearLines =
 		{
 			"Trace (\"Linear Years\");",
 			"",
@@ -92,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Override (value);",
 		};
 
-		private static string[] defaultLinesYearsDegressive =
+		private static string[] yearsDegressiveLines =
 		{
 			"Trace (\"Degressive Years\");",
 			"",
@@ -113,11 +115,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = Round (value);",
 			"value = Residual (value);",
 			"value = Override (value);",
-		};
-
-		private static string[] defaultLinesZero =
-		{
-			"value = 0;",
 		};
 		//	Voir (*)
 

@@ -257,10 +257,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				if (string.IsNullOrEmpty (this.expressionController.Value))
 				{
-					this.expressionController.Value = AmortizationExpressionCollection.Items
-						.Where (x => x.Type == AmortizationExpressionType.RateLinear)
-						.Select (x => x.Expression)
-						.FirstOrDefault ();
+					this.expressionController.Value = AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear);
 				}
 			}
 			else
