@@ -477,7 +477,6 @@ Mise à jour MAT[CH]sort et MAT[CH]street
 -uploadsubscriptions -input:export-2014-10-30.txt -publicationdate:2014-10-30 -response:tamedia-2014-10-30.log
 
 
-
 Lancé le 26.10.2014
 -------------------
 
@@ -507,3 +506,27 @@ Lancé le 14.11.2014
 SVN update > r23974
 
 -echupdate -newechfile:S:\eerv\eerv-2014-11-13.xml -oldechfile:S:\eerv\eerv-2014-11-06.xml -output:s:\eerv\ech-diff-2014-11-13.md
+
+
+Lancé le 20.11.2014
+-------------------
+
+-exportsubscriptions -output:export-2014-11-27.txt -error:error-2014-11-27.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2014-11-27.txt -publicationdate:2014-11-27 -response:tamedia-2014-11-27.log
+
+
+Lancé le 21.11.2014
+-------------------
+
+SVN update > 23998
+
+-echupdate -newechfile:S:\eerv\eerv-2014-11-20.xml -oldechfile:S:\eerv\eerv-2014-11-13.xml -output:s:\eerv\ech-diff-2014-11-20.md
+-clearwarnings -beforedate:2014-07-15 -killpersons:true -createsubscriptions:true
+
+
+Lancé le 28.11.2014
+-------------------
+
+SVN update > 24031
+
+-echupdate -newechfile:S:\eerv\eerv-2014-11-27.xml -oldechfile:S:\eerv\eerv-2014-11-20.xml -output:s:\eerv\ech-diff-2014-11-27.md

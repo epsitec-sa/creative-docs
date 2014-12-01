@@ -1,32 +1,19 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
 using System;
-
 using System.Collections.Generic;
-
 using System.Collections.ObjectModel;
-
 using System.Data;
-
 using System.Diagnostics;
-
 using System.Linq;
-
 using System.Threading;
-
 
 namespace Epsitec.Cresus.Database.Logging
 {
-
-
-	// TODO Comment this class.
-	// Marc
-	
-	
 	public abstract class AbstractLog
 	{
-
-
 		protected AbstractLog()
 		{
 			this.LogResult = false;
@@ -35,21 +22,19 @@ namespace Epsitec.Cresus.Database.Logging
 		}
 
 
-		public bool LogResult
+		public bool								LogResult
 		{
 			get;
 			set;
 		}
 
-
-		public bool LogStackTrace
+		public bool								LogStackTrace
 		{
 			get;
 			set;
 		}
 
-
-		public bool LogThreadName
+		public bool								LogThreadName
 		{
 			get;
 			set;
@@ -58,18 +43,14 @@ namespace Epsitec.Cresus.Database.Logging
 
 		public abstract void Clear();
 
-
 		public abstract int GetNbEntries();
-
 
 		public abstract Query GetEntry(int index);
 
-
 		public abstract ReadOnlyCollection<Query> GetEntries(int index, int count);
 
-
+		
 		protected abstract void AddEntry(Query query);
-
 
 		protected abstract int GetNextNumber();
 
@@ -84,7 +65,6 @@ namespace Epsitec.Cresus.Database.Logging
 			this.AddEntry (query);
 		}
 
-
 		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, object data)
 		{
 			command.ThrowIfNull ("command");
@@ -95,7 +75,6 @@ namespace Epsitec.Cresus.Database.Logging
 			this.AddEntry (query);
 		}
 
-
 		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, IList<object> data)
 		{
 			command.ThrowIfNull ("command");
@@ -105,7 +84,6 @@ namespace Epsitec.Cresus.Database.Logging
 
 			this.AddEntry (query);
 		}
-
 
 		internal void AddEntry(IDbCommand command, DateTime startTime, TimeSpan duration, string queryPlan, DataSet data)
 		{
@@ -129,12 +107,10 @@ namespace Epsitec.Cresus.Database.Logging
 			return new Query (number, startTime, duration, sourceCode, parameter, queryPlan, result, threadName, stackTrace);
 		}
 
-
 		private static String GetSourceCode(IDbCommand command)
 		{
 			return command.CommandText;
 		}
-
 
 		private static IEnumerable<Parameter> GetParameters(IDbCommand command)
 		{
@@ -145,7 +121,6 @@ namespace Epsitec.Cresus.Database.Logging
 				   select new Parameter (name, value);
 		}
 
-
 		private static Result GetResult(object data)
 		{
 			List<Column> columns = new List<Column> () { new Column ("result") };
@@ -154,7 +129,6 @@ namespace Epsitec.Cresus.Database.Logging
 
 			return new Result (tables);
 		}
-
 
 		private static Result GetResult(IDbCommand command, IList<object> data)
 		{
@@ -172,7 +146,6 @@ namespace Epsitec.Cresus.Database.Logging
 
 			return new Result (tables);
 		}
-
 
 		private static Result GetResult(DataSet dataSet)
 		{
@@ -193,9 +166,5 @@ namespace Epsitec.Cresus.Database.Logging
 
 			return new Result (tables);
 		}
-
-
 	}
-	
-
 }

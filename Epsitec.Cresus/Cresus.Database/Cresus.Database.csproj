@@ -115,6 +115,7 @@
     <Compile Include="Logging\AbstractLog.cs" />
     <Compile Include="Logging\Column.cs" />
     <Compile Include="Logging\ConsoleLog.cs" />
+    <Compile Include="Logging\ConsoleType.cs" />
     <Compile Include="Logging\MemoryLog.cs" />
     <Compile Include="Logging\Parameter.cs" />
     <Compile Include="Logging\Query.cs" />

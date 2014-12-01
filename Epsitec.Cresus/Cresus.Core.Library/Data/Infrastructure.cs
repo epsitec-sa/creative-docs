@@ -1,19 +1,19 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-
+using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Logging;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
-
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Dialogs;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -139,20 +139,34 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static DbInfrastructure CreateDatabase(DbAccess access)
 		{
-			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
+			var dbInfrastructure = new DbInfrastructure ();
 
 			dbInfrastructure.CreateDatabase (access);
+			Infrastructure.SetupDefaults (dbInfrastructure);
 
 			return dbInfrastructure;
 		}
 
 		private static DbInfrastructure ConnectToDatabase(DbAccess access)
 		{
-			DbInfrastructure dbInfrastructure = new DbInfrastructure ();
+			var dbInfrastructure = new DbInfrastructure ();
 
 			dbInfrastructure.AttachToDatabase (access);
+			Infrastructure.SetupDefaults (dbInfrastructure);
 
 			return dbInfrastructure;
+		}
+
+		private static void SetupDefaults(DbInfrastructure infrastructure)
+		{
+		}
+
+		private static void SetupDefaults(DataInfrastructure infrastructure)
+		{
+			foreach (var logger in Infrastructure.DefaultLoggers)
+			{
+				infrastructure.AddQueryLog (logger);
+			}
 		}
 
 		private static void CreateDatabaseSchemas(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
@@ -211,9 +225,12 @@ namespace Epsitec.Cresus.Core.Data
 
 		private static DataInfrastructure ConnectToDatabase(DbInfrastructure dbInfrastructure, IEnumerable<Druid> managedEntityTypeIds)
 		{
-			EntityEngine entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityTypeIds);
+			var entityEngine = EntityEngine.Connect (dbInfrastructure, managedEntityTypeIds);
+			var dataInfrastructure = new DataInfrastructure (dbInfrastructure, entityEngine);
 
-			return new DataInfrastructure (dbInfrastructure, entityEngine);
+			Infrastructure.SetupDefaults (dataInfrastructure);
+
+			return dataInfrastructure;
 		}
 
 		#region IDisposable Members
@@ -291,6 +308,8 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+
+		public static readonly ConcurrentBag<AbstractLog> DefaultLoggers = new ConcurrentBag<AbstractLog> ();
 
 		private readonly DataInfrastructure		dataInfrastructure;
 		private DbInfrastructure				dbInfrastructure;

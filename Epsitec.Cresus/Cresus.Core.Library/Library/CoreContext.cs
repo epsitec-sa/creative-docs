@@ -159,6 +159,19 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		public static void EnableDbConsoleLogger(string path)
+		{
+			var logger = new Epsitec.Cresus.Database.Logging.ConsoleLog (Database.Logging.ConsoleType.Console)
+			{
+				FilePath      = path,
+				LogThreadName = true,
+				LogResult     = true,
+				LogStackTrace = true,
+			};
+
+			Epsitec.Cresus.Core.Data.Infrastructure.DefaultLoggers.Add (logger);
+		}
+
 		public static void DefineBuildDate(string date)
 		{
 			CoreContext.SoftwareReleaseDate = System.DateTime.ParseExact (date, "yyyy-MM-dd HH:mm", System.Globalization.CultureInfo.InvariantCulture);
