@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.guid        = Guid.NewGuid ();
 
 			this.events = new GuidDictionary<DataEvent> (undoManager);
+			this.lastGenerationNumber = -1;
 		}
 
 		public DataObject(UndoManager undoManager, Guid guid)
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.guid        = guid;
 
 			this.events = new GuidDictionary<DataEvent> (undoManager);
+			this.lastGenerationNumber = -1;
 		}
 
 		public DataObject(UndoManager undoManager, System.Xml.XmlReader reader)
@@ -51,6 +53,8 @@ namespace Epsitec.Cresus.Assets.Data
 					break;
 				}
 			}
+
+			this.lastGenerationNumber = -1;
 		}
 
 
@@ -67,7 +71,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public int GetNewPosition(System.DateTime date)
 		{
-			var e = this.events.Where (x => x.Timestamp.Date == date).LastOrDefault ();
+			this.UpdateSortedList ();
+
+			var e = this.sortedEvents.Where (x => x.Timestamp.Date == date).LastOrDefault ();
 
 			if (e == null)
 			{
@@ -96,22 +102,30 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public IEnumerable<DataEvent> Events
+		public DataEvent[] Events
 		{
-			//	Enumère chronologiquement les événements.
+			//	Retourne tous les événements triés chronologiquement.
+			//	Le tableau ne doit être utilisé qu'en lecture.
 			get
 			{
-				return this.events.OrderBy (x => x.Timestamp);
+				this.UpdateSortedList ();
+				return this.sortedEvents;
 			}
 		}
 
-		public IEnumerable<DataEvent> UnsortedEvents
+		public int FindEventIndex(Timestamp timestamp)
 		{
-			//	Enumère non chronologiquement les événements.
-			get
+			this.UpdateSortedList ();
+
+			for (int i=0; i<this.sortedEvents.Length; i++)
 			{
-				return this.events;
+				if (this.sortedEvents[i].Timestamp == timestamp)
+				{
+					return i;
+				}
 			}
+
+			return -1;
 		}
 
 		public void ChangeEventTimestamp(DataEvent e, Timestamp timestamp)
@@ -140,9 +154,11 @@ namespace Epsitec.Cresus.Assets.Data
 		public DataEvent GetInputEvent()
 		{
 			//	Retourne le premier événement d'entrée d'un objet.
-			if (this.events.Any ())
+			this.UpdateSortedList ();
+
+			if (this.sortedEvents.Any ())
 			{
-				return this.Events.First ();
+				return this.sortedEvents.First ();
 			}
 			else
 			{
@@ -157,17 +173,16 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent GetEvent(Timestamp timestamp)
 		{
-			return this.events.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
+			this.UpdateSortedList ();
+			return this.sortedEvents.Where (x => x.Timestamp == timestamp).FirstOrDefault ();
 		}
 
 		public DataEvent GetPrevEvent(Timestamp timestamp)
 		{
-			var a = this.Events.ToList ();
-			int i = a.FindIndex (x => x.Timestamp == timestamp);
-
+			int i = this.FindEventIndex (timestamp);
 			if (i > 0)
 			{
-				return a[i-1];
+				return this.sortedEvents[i-1];
 			}
 			else
 			{
@@ -177,38 +192,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DataEvent GetNextEvent(Timestamp timestamp)
 		{
-			var a = this.Events.ToList ();
-			int i = a.FindIndex (x => x.Timestamp == timestamp);
-
-			if (i >= 0 && i < a.Count-1)
+			int i = this.FindEventIndex (timestamp);
+			if (i >= 0 && i < this.sortedEvents.Length-1)
 			{
-				return a[i+1];
+				return this.sortedEvents[i+1];
 			}
 			else
 			{
 				return null;
-			}
-		}
-
-		public void CheckEvents()
-		{
-			Timestamp? lastTimestamp = null;
-			int index = 0;
-
-			foreach (var e in this.events)
-			{
-				if (lastTimestamp.HasValue)
-				{
-					//?System.Diagnostics.Debug.Assert (lastTimestamp.Value < e.Timestamp);
-
-					if (lastTimestamp.Value >= e.Timestamp)
-					{
-						throw new System.InvalidOperationException (string.Format ("Event list corrupted, index={0} prev={1} current={2}", index, lastTimestamp.Value, e.Timestamp));
-					}
-				}
-
-				lastTimestamp = e.Timestamp;
-				index++;
 			}
 		}
 
@@ -234,7 +225,9 @@ namespace Epsitec.Cresus.Assets.Data
 		public AbstractDataProperty GetInputProperty(ObjectField field)
 		{
 			//	Retourne la propriété définie lors de l'événement d'entrée.
-			var e = this.events.FirstOrDefault ();  // événement d'entrée
+			this.UpdateSortedList ();
+
+			var e = this.sortedEvents.FirstOrDefault ();  // événement d'entrée
 			if (e != null)
 			{
 				var p = e.GetProperty (field);
@@ -262,7 +255,9 @@ namespace Epsitec.Cresus.Assets.Data
 			// On cherche depuis la date donnée en remontant dans le passé.
 			if (!DataObject.IsOneShotField (field))
 			{
-				var e = this.events
+				this.UpdateSortedList ();
+
+				var e = this.sortedEvents
 					.Where (x => x.Timestamp <= timestamp && x.GetProperty (field) != null)
 					.LastOrDefault ();
 
@@ -298,6 +293,18 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		private void UpdateSortedList()
+		{
+			//	Met à jour la liste des événements triée chronologiquement, mais
+			//	seulement si c'est nécessaire.
+			if (this.lastGenerationNumber != this.events.GenerationNumber)
+			{
+				this.sortedEvents = this.events.OrderBy (x => x.Timestamp).ToArray ();
+				this.lastGenerationNumber = this.events.GenerationNumber;
+			}
+		}
+
+
 		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
@@ -313,7 +320,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Events");
 
-			foreach (var e in this.events)
+			this.UpdateSortedList ();
+
+			foreach (var e in this.sortedEvents)
 			{
 				e.Serialize (writer);
 			}
@@ -344,6 +353,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
-		private readonly GuidDictionary<DataEvent>	events;
+		private readonly GuidDictionary<DataEvent> events;
+
+		public int								lastGenerationNumber;
+		private DataEvent[]						sortedEvents;
 	}
 }

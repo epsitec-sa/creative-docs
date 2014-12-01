@@ -17,11 +17,11 @@ namespace Epsitec.Cresus.Assets.Data
 			decimal				yearRank,
 			decimal				yearCount,
 			decimal				periodRank,
-			decimal				periodCount,
 			Periodicity			periodicity,
 			decimal?			forcedAmount,
 			decimal?			previousAmount,
 			decimal?			initialAmount,
+			decimal?			startYearAmount,
 			decimal?			baseAmount,
 			decimal?			prorataNumerator,
 			decimal?			prorataDenominator,
@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Assets.Data
 			this.YearRank           = yearRank;
 			this.YearCount          = yearCount;
 			this.PeriodRank         = periodRank;
-			this.PeriodCount        = periodCount;
 			this.Periodicity        = periodicity;
 			this.ForcedAmount       = forcedAmount;
 			this.PreviousAmount     = previousAmount;
 			this.InitialAmount      = initialAmount;
+			this.StartYearAmount    = startYearAmount;
 			this.BaseAmount         = baseAmount;
 			this.ProrataNumerator   = prorataNumerator;
 			this.ProrataDenominator = prorataDenominator;
@@ -59,6 +59,84 @@ namespace Epsitec.Cresus.Assets.Data
 			this.EntrySeed          = entrySeed;
 		}
 
+		public AmortizedAmount(decimal? initialAmount)
+		{
+			this.AmortizationMethod = AmortizationMethod.Unknown;
+			this.Expression         = null;
+			this.Rate               = 0;
+			this.YearRank           = 0;
+			this.YearCount          = 0;
+			this.PeriodRank         = 0;
+			this.Periodicity        = Periodicity.Unknown;
+			this.ForcedAmount       = null;
+			this.PreviousAmount     = null;
+			this.InitialAmount      = initialAmount;
+			this.StartYearAmount    = null;
+			this.BaseAmount         = null;
+			this.ProrataNumerator   = null;
+			this.ProrataDenominator = null;
+			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
+			this.EntryScenario      = EntryScenario.None;
+			this.Date               = System.DateTime.MinValue;
+			this.AssetGuid          = Guid.Empty;
+			this.EventGuid          = Guid.Empty;
+			this.EntryGuid          = Guid.Empty;
+			this.EntrySeed          = 0;
+		}
+
+		public AmortizedAmount(decimal? initialAmount, EntryScenario scenario, System.DateTime date, Guid objGuid, Guid eventGuid)
+		{
+			this.AmortizationMethod = AmortizationMethod.Unknown;
+			this.Expression         = null;
+			this.Rate               = 0;
+			this.YearRank           = 0;
+			this.YearCount          = 0;
+			this.PeriodRank         = 0;
+			this.Periodicity        = Periodicity.Unknown;
+			this.ForcedAmount       = null;
+			this.PreviousAmount     = null;
+			this.InitialAmount      = initialAmount;
+			this.StartYearAmount    = null;
+			this.BaseAmount         = null;
+			this.ProrataNumerator   = null;
+			this.ProrataDenominator = null;
+			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
+			this.EntryScenario      = scenario;
+			this.Date               = date;
+			this.AssetGuid          = objGuid;
+			this.EventGuid          = eventGuid;
+			this.EntryGuid          = Guid.Empty;
+			this.EntrySeed          = 0;
+		}
+
+		public AmortizedAmount(EntryScenario scenario)
+		{
+			this.AmortizationMethod = AmortizationMethod.Unknown;
+			this.Expression         = null;
+			this.Rate               = 0;
+			this.YearRank           = 0;
+			this.YearCount          = 0;
+			this.PeriodRank         = 0;
+			this.Periodicity        = Periodicity.Unknown;
+			this.ForcedAmount       = null;
+			this.PreviousAmount     = null;
+			this.InitialAmount      = null;
+			this.StartYearAmount    = null;
+			this.BaseAmount         = null;
+			this.ProrataNumerator   = null;
+			this.ProrataDenominator = null;
+			this.RoundAmount        = null;
+			this.ResidualAmount     = null;
+			this.EntryScenario      = scenario;
+			this.Date               = System.DateTime.MinValue;
+			this.AssetGuid          = Guid.Empty;
+			this.EventGuid          = Guid.Empty;
+			this.EntryGuid          = Guid.Empty;
+			this.EntrySeed          = 0;
+		}
+
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
 			this.AmortizationMethod = (AmortizationMethod) IOHelpers.ReadTypeAttribute (reader, "AmortizationMethod", typeof (AmortizationMethod));
@@ -67,11 +145,11 @@ namespace Epsitec.Cresus.Assets.Data
 			this.YearRank           = IOHelpers.ReadDecimalAttribute (reader, "YearRank").GetValueOrDefault ();
 			this.YearCount          = IOHelpers.ReadDecimalAttribute (reader, "YearCount").GetValueOrDefault (1.0m);
 			this.PeriodRank         = IOHelpers.ReadDecimalAttribute (reader, "PeriodRank").GetValueOrDefault ();
-			this.PeriodCount        = IOHelpers.ReadDecimalAttribute (reader, "PeriodCount").GetValueOrDefault (1.0m);
 			this.Periodicity        = (Periodicity) IOHelpers.ReadTypeAttribute (reader, "Periodicity", typeof (Periodicity));
 			this.ForcedAmount       = IOHelpers.ReadDecimalAttribute (reader, "ForcedAmount");
 			this.PreviousAmount     = IOHelpers.ReadDecimalAttribute (reader, "PreviousAmount");
 			this.InitialAmount      = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
+			this.StartYearAmount    = IOHelpers.ReadDecimalAttribute (reader, "StartYearAmount");
 			this.BaseAmount         = IOHelpers.ReadDecimalAttribute (reader, "BaseAmount");
 			this.ProrataNumerator   = IOHelpers.ReadDecimalAttribute (reader, "ProrataNumerator");
 			this.ProrataDenominator = IOHelpers.ReadDecimalAttribute (reader, "ProrataDenominator");
@@ -94,11 +172,11 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly decimal					YearRank;
 		public readonly decimal					YearCount;
 		public readonly decimal					PeriodRank;
-		public readonly decimal					PeriodCount;
 		public readonly Periodicity				Periodicity;
 		public readonly decimal?				ForcedAmount;
 		public readonly decimal?				PreviousAmount;
 		public readonly decimal?				InitialAmount;
+		public readonly decimal?				StartYearAmount;
 		public readonly decimal?				BaseAmount;
 		public readonly decimal?				ProrataNumerator;
 		public readonly decimal?				ProrataDenominator;
@@ -166,11 +244,11 @@ namespace Epsitec.Cresus.Assets.Data
 				&& this.YearRank           == other.YearRank
 				&& this.YearCount          == other.YearCount
 				&& this.PeriodRank         == other.PeriodRank
-				&& this.PeriodCount        == other.PeriodCount
 				&& this.Periodicity        == other.Periodicity
 				&& this.ForcedAmount       == other.ForcedAmount
 				&& this.PreviousAmount     == other.PreviousAmount
 				&& this.InitialAmount      == other.InitialAmount
+				&& this.StartYearAmount    == other.StartYearAmount
 				&& this.BaseAmount         == other.BaseAmount
 				&& this.ProrataNumerator   == other.ProrataNumerator
 				&& this.ProrataDenominator == other.ProrataDenominator
@@ -205,11 +283,11 @@ namespace Epsitec.Cresus.Assets.Data
 				 ^ this.YearRank          .GetHashCode ()
 				 ^ this.YearCount         .GetHashCode ()
 				 ^ this.PeriodRank        .GetHashCode ()
-				 ^ this.PeriodCount       .GetHashCode ()
 				 ^ this.Periodicity       .GetHashCode ()
 				 ^ this.ForcedAmount      .GetHashCode ()
 				 ^ this.PreviousAmount    .GetHashCode ()
 				 ^ this.InitialAmount     .GetHashCode ()
+				 ^ this.StartYearAmount   .GetHashCode ()
 				 ^ this.BaseAmount        .GetHashCode ()
 				 ^ this.ProrataNumerator  .GetHashCode ()
 				 ^ this.ProrataDenominator.GetHashCode ()
@@ -245,11 +323,40 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
+				model.BaseAmount,
+				model.ProrataNumerator,
+				model.ProrataDenominator,
+				model.RoundAmount,
+				model.ResidualAmount,
+				model.EntryScenario,
+				model.Date,
+				model.AssetGuid,
+				model.EventGuid,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
+		public static AmortizedAmount SetExpression(AmortizedAmount model, string expression)
+		{
+			return new AmortizedAmount
+			(
+				model.AmortizationMethod,
+				expression,
+				model.Rate,
+				model.YearRank,
+				model.YearCount,
+				model.PeriodRank,
+				model.Periodicity,
+				model.ForcedAmount,
+				model.PreviousAmount,
+				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -274,11 +381,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				value,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -303,11 +410,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -332,11 +439,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				forcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -361,11 +468,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				value,
 				model.ProrataDenominator,
@@ -390,11 +497,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				value,
@@ -419,11 +526,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -448,11 +555,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -477,11 +584,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -506,11 +613,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -538,11 +645,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				prorataNumerator,
 				prorataDenominator,
@@ -567,11 +674,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				previousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -586,7 +693,7 @@ namespace Epsitec.Cresus.Assets.Data
 			);
 		}
 
-		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model, decimal? initialAmount, decimal? baseAmount)
+		public static AmortizedAmount SetAmortizedAmount(AmortizedAmount model, decimal? initialAmount, decimal? startYearAmount, decimal? baseAmount)
 		{
 			return new AmortizedAmount
 			(
@@ -596,11 +703,11 @@ namespace Epsitec.Cresus.Assets.Data
 				model.YearRank,
 				model.YearCount,
 				model.PeriodRank,
-				model.PeriodCount,
 				model.Periodicity,
 				model.ForcedAmount,
 				initialAmount,
 				initialAmount,
+				startYearAmount,
 				baseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -615,7 +722,7 @@ namespace Epsitec.Cresus.Assets.Data
 			);
 		}
 
-		public static AmortizedAmount SetRanks(AmortizedAmount model, decimal yearRank, decimal periodRank, decimal periodCount)
+		public static AmortizedAmount SetRanks(AmortizedAmount model, decimal yearRank, decimal periodRank, Periodicity periodicity)
 		{
 			return new AmortizedAmount
 			(
@@ -625,11 +732,11 @@ namespace Epsitec.Cresus.Assets.Data
 				yearRank,
 				model.YearCount,
 				periodRank,
-				periodCount,
-				model.Periodicity,
+				periodicity,
 				model.ForcedAmount,
 				model.PreviousAmount,
 				model.InitialAmount,
+				model.StartYearAmount,
 				model.BaseAmount,
 				model.ProrataNumerator,
 				model.ProrataDenominator,
@@ -656,12 +763,12 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "YearRank",           this.YearRank);
 			IOHelpers.WriteDecimalAttribute (writer, "YearCount",          this.YearCount);
 			IOHelpers.WriteDecimalAttribute (writer, "PeriodRank",         this.PeriodRank);
-			IOHelpers.WriteDecimalAttribute (writer, "PeriodCount",        this.PeriodCount);
 			IOHelpers.WriteTypeAttribute    (writer, "Periodicity",        this.Periodicity);
 
 			IOHelpers.WriteDecimalAttribute (writer, "ForcedAmount",       this.ForcedAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "PreviousAmount",     this.PreviousAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",      this.InitialAmount);
+			IOHelpers.WriteDecimalAttribute (writer, "StartYearAmount",    this.StartYearAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "BaseAmount",         this.BaseAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "ProrataNumerator",   this.ProrataNumerator);
 			IOHelpers.WriteDecimalAttribute (writer, "ProrataDenominator", this.ProrataDenominator);

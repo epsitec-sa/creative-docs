@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.traceBuilder = new System.Text.StringBuilder ();
 
 			this.ForcedAmount       = amount.ForcedAmount;
+			this.StartYearAmount    = amount.StartYearAmount.GetValueOrDefault ();
 			this.BaseAmount         = amount.BaseAmount.GetValueOrDefault ();
 			this.InitialAmount      = amount.InitialAmount.GetValueOrDefault ();
 			this.ResidualAmount     = amount.ResidualAmount.GetValueOrDefault ();
@@ -24,8 +25,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.ProrataDenominator = amount.ProrataDenominator.GetValueOrDefault ();
 			this.YearCount          = amount.YearCount;
 			this.YearRank           = amount.YearRank;
-			this.PeriodCount        = amount.PeriodCount;
 			this.PeriodRank         = amount.PeriodRank;
+			this.Periodicity        = amount.Periodicity;
 		}
 
 
@@ -104,6 +105,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 		#endregion
 
+
+		protected decimal PeriodCount
+		{
+			get
+			{
+				return 12.0m / AmortizedAmount.GetPeriodMonthCount (this.Periodicity);
+			}
+		}
 
 		protected decimal ProrataFactor
 		{
@@ -212,6 +221,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly System.Text.StringBuilder traceBuilder;
 
 		public readonly decimal?				ForcedAmount;		// valeur forcée facultative
+		public readonly decimal					StartYearAmount;	// valeur au début de l'année
 		public readonly decimal					BaseAmount;			// valeur d'achat
 		public readonly decimal					InitialAmount;		// valeur avant amortissement
 		public readonly decimal					ResidualAmount;		// valeur résiduelle
@@ -222,7 +232,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly decimal					ProrataDenominator;	// dénominateur du prorata
 		public readonly decimal					YearCount;			// nombre total d'années
 		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
-		public readonly decimal					PeriodCount;		// nombre total de périodes
-		public readonly decimal					PeriodRank;			// rang de la période (0..PeriodCount-1)
+		public readonly decimal					PeriodRank;			// rang de la période (0..n)
+		public readonly Periodicity				Periodicity;
 	}
 }

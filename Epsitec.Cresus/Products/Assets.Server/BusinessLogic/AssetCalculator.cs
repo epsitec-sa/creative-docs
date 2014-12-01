@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (obj.EventsAny)
 			{
 				//	On sélectionnera le dernier événement.
-				return obj.UnsortedEvents.Max (x => x.Timestamp);
+				return obj.Events.Last ().Timestamp;
 			}
 
 			return null;
@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var start = Timestamp.MinValue;
 				bool isOutOfBounds = true;  // bloqué jusqu'au premier événement d'entrée
 
-				var a = obj.Events.ToArray ();
+				var a = obj.Events;
 
 				for (int i=0; i<a.Length; i++)
 				{
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				var a = obj.Events.ToArray ();
+				var a = obj.Events;
 				int i = a.Where (x => x.Timestamp <= timestamp).Count () - 1;
 
 				if (i >= 0 && i < a.Length)
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			if (obj != null)
 			{
-				var a = obj.Events.ToArray ();
+				var a = obj.Events;
 				int i = a.Where (x => x.Timestamp <= timestamp).Count ();
 
 				if (i >= 0 && i < a.Length)

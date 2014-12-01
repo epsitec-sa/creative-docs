@@ -19,13 +19,28 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			decimal value = this.InitialAmount;
 
 			//----------------------------------------------
-			var rate = this.Rate * this.PeriodicityFactor * this.ProrataFactor;
-			var amortization = this.BaseAmount * rate;
+			if (PeriodCount == 1 ||
+				PeriodRank % PeriodCount != PeriodCount-1)
+			{
+				var rate = Rate * PeriodicityFactor * ProrataFactor;
+				var amortization = BaseAmount * rate;
 
-			value = value - amortization;
-			value = this.Round (value);
-			value = this.Residual (value);
-			value = this.Override (value);
+				value = value - amortization;
+				value = Round (value);
+				value = Residual (value);
+			}
+			else
+			{
+				//	If last Period -> adjust.
+				var rate = Rate * ProrataFactor;
+				var amortization = BaseAmount * rate;
+
+				value = StartYearAmount - amortization;
+				value = Round (value);
+				value = Residual (value);
+			}
+
+			value = Override (value);
 			//----------------------------------------------
 
 			return value;

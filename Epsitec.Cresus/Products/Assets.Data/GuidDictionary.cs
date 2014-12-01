@@ -26,6 +26,14 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
+		public int								GenerationNumber
+		{
+			get
+			{
+				return this.generationNumber;
+			}
+		}
+
 
 		#region IEnumerable<T> Members
 		public IEnumerator<T> GetEnumerator()
@@ -56,6 +64,8 @@ namespace Epsitec.Cresus.Assets.Data
 					this.Remove (this.dict.First ().Value);
 				}
 			}
+
+			this.generationNumber++;
 		}
 
 
@@ -74,6 +84,7 @@ namespace Epsitec.Cresus.Assets.Data
 			//	Ajoute un item à la fin de la liste et retourne l'information permettant
 			//	de faire l'opération inverse.
 			this.dict[item.Guid] = item;
+			this.generationNumber++;
 
 			var undoData = new UndoData
 			{
@@ -109,6 +120,7 @@ namespace Epsitec.Cresus.Assets.Data
 			};
 
 			this.dict.Remove (item.Guid);
+			this.generationNumber++;
 
 			return new UndoItem (delegate (IUndoData d)
 			{
@@ -143,5 +155,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private readonly UndoManager			undoManager;
 		private readonly Dictionary<Guid, T>	dict;
+
+		private int								generationNumber;
 	}
 }

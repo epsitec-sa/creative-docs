@@ -252,7 +252,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			var timestamp = new Timestamp (date, position);
 			obj.ChangeEventTimestamp (e, timestamp);
-			obj.CheckEvents ();
 
 			return timestamp;
 		}
@@ -391,7 +390,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					//	supprimer proprement toutes les écritures liées.
 					while (obj.EventsAny)
 					{
-						var e = obj.UnsortedEvents.First ();
+						var e = obj.Events.First ();
 						this.RemoveObjectEvent (obj, e);
 					}
 				}

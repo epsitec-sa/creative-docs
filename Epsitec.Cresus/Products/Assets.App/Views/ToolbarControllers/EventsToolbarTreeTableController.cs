@@ -345,17 +345,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (timestamp.HasValue && this.obj != null)
 			{
-				var a = this.obj.Events.ToArray ();
-
-				for (int row = 0; row < a.Length; row++)
-				{
-					var e = a[row];
-
-					if (e.Timestamp == timestamp.Value)
-					{
-						return row;
-					}
-				}
+				return this.obj.FindEventIndex (timestamp.Value);
 			}
 
 			return -1;
@@ -365,11 +355,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			if (this.obj != null)
 			{
-				var a = this.obj.Events.ToArray ();
-
-				if (row >= 0 && row < a.Length)
+				if (row >= 0 && row < this.obj.EventsCount)
 				{
-					return a[row].Timestamp;
+					return this.obj.Events[row].Timestamp;
 				}
 			}
 

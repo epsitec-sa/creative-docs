@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			if (obj != null)
 			{
-				var a = obj.Events.ToArray ();
+				var a = obj.Events;
 
 				for (int i=0; i<a.Length; i++)
 				{

@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 			else
 			{
-				this.dataEvents = dataObject.Events.ToArray ();
+				this.dataEvents = dataObject.Events;
 			}
 		}
 

@@ -12,6 +12,7 @@ using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -173,85 +174,111 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void Test(Widget target)
 		{
 			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
-			var err = this.Compile ();
-
-			if (string.IsNullOrEmpty (err))  // ok ?
-			{
-				var expression = new AmortizationExpression (this.expressionController.Value);
-				TestExpressionPopup.Show (target, this.accessor, expression);
-			}
-			else  // erreur ?
-			{
-				MessagePopup.ShowError (target, err);
-			}
+			TestExpressionPopup.Show (target, this.accessor, this.CurrentMethod, this.expressionController.Value);
 		}
 
 		private void Simulation(Widget target)
 		{
 			//	Affiche le popup permettant de choisir les paramètres pour lancer la
 			//	simulation de l'expression actuellement sélectionnée.
-			var err = this.Compile ();
-
-			if (string.IsNullOrEmpty (err))  // ok ?
+			AmountExpressionSimulationPopup.Show (target, this.accessor, delegate
 			{
-				AmountExpressionSimulationPopup.Show (target, this.accessor, delegate
-				{
-					var expression = new AmortizationExpression (this.expressionController.Value);
-					var amount = LocalSettings.ExpressionSimulationAmount;
+				var amount = LocalSettings.ExpressionSimulationAmount;
+				amount = AmortizedAmount.SetAmortizationMethod (amount, this.CurrentMethod);
+				amount = AmortizedAmount.SetExpression (amount, this.expressionController.Value);
 
-					var nodes = EditorPageMethod.ComputeSimulation (expression, amount);
+				var nodes = this.ComputeSimulation (LocalSettings.ExpressionSimulationRange, amount);
 
-					ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
-				});
-			}
-			else  // erreur ?
-			{
-				MessagePopup.ShowError (target, err);
-			}
+				ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
+			});
 		}
 
-		private static List<ExpressionSimulationNode> ComputeSimulation(AmortizationExpression expression, AmortizedAmount amount)
+		private List<ExpressionSimulationNode> ComputeSimulation(DateRange range, AmortizedAmount amount)
 		{
-			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants.
+			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants,
+			//	qui pourrant être donnés à ExpressionSimulationTreeTableFiller.
 			var nodes = new List<ExpressionSimulationNode> ();
-			var date = new System.DateTime (2000-1, 12, 31);
-			int totalMonth = 0;
 
-			var baseAmount = amount.BaseAmount;
-			var monthCount = amount.PeriodMonthCount;  // 12/6/3/1
+			var p1 = new DataGuidProperty(ObjectField.MethodGuid, this.objectGuid);
+			var aa = new DataAmortizedAmountProperty (ObjectField.MainValue, amount);
+			//...
 
-			decimal yearRank = 0;
-			decimal periodRank = 0;
-			decimal periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (amount.Periodicity);  // 1/2/4/12
+			var guid = accessor.CreateObject (BaseType.Assets, range.IncludeFrom, Guid.Empty, p1, aa);
+			var obj = accessor.GetObject(BaseType.Assets, guid);
 
-			amount = AmortizedAmount.SetAmortizedAmount    (amount, baseAmount, baseAmount);
-			amount = AmortizedAmount.SetRanks              (amount, yearRank, periodRank, periodCount);
-			amount = AmortizedAmount.SetProrataNumerator   (amount, null);
-			amount = AmortizedAmount.SetProrataDenominator (amount, null);
+			var a = new Amortizations (accessor);
+			a.Preview (range, guid);
 
-			for (int i=0; i<100; i++)  // nombre d'itérations arbitraire
+			int i = 0;
+			foreach (var e in obj.Events.Where (x => x.Type == EventType.AmortizationAuto))
 			{
-				totalMonth += monthCount;
+				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
-				var initial = amount.InitialAmount.GetValueOrDefault ();
-				var final = expression.Evaluate (amount).Value;
+				var initial = p.Value.InitialAmount.GetValueOrDefault ();
+				var final = accessor.GetAmortizedAmount (p.Value).GetValueOrDefault ();
 
-				var node = new ExpressionSimulationNode (i, date.AddMonths (totalMonth), initial, final);
+				var node = new ExpressionSimulationNode (i++, e.Timestamp.Date, initial, final);
 				nodes.Add (node);
-
-				amount = AmortizedAmount.SetAmortizedAmount (amount, final, baseAmount);
-				amount = AmortizedAmount.SetRanks (amount, yearRank, periodRank, periodCount);
-
-				periodRank++;
-
-				if (periodRank >= periodCount)
-				{
-					periodRank = 0;
-					yearRank++;
-				}
 			}
 
+			accessor.RemoveObject (BaseType.Assets, obj);
+
 			return nodes;
+
+
+			//??var nodes = new List<ExpressionSimulationNode> ();
+			//??int totalMonth = 0;
+			//??
+			//??var baseAmount      = amount.BaseAmount;
+			//??var startYearAmount = amount.BaseAmount;
+			//??var monthCount      = amount.PeriodMonthCount;  // 12/6/3/1
+			//??
+			//??decimal yearRank    = 0;
+			//??decimal periodRank  = 0;
+			//??decimal periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (amount.Periodicity);  // 1/2/4/12
+			//??
+			//??amount = AmortizedAmount.SetAmortizedAmount    (amount, baseAmount, startYearAmount, baseAmount);
+			//??amount = AmortizedAmount.SetRanks              (amount, yearRank, periodRank, amount.Periodicity);
+			//??amount = AmortizedAmount.SetProrataNumerator   (amount, null);
+			//??amount = AmortizedAmount.SetProrataDenominator (amount, null);
+			//??amount = AmortizedAmount.SetExpression         (amount, expression);
+			//??
+			//??int i = 0;
+			//??
+			//??while (true)
+			//??{
+			//??	var date = startDate.AddMonths (totalMonth);
+			//??
+			//??	var initial = amount.InitialAmount.GetValueOrDefault ();
+			//??
+			//??	var final = accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
+			//??	//??var final = expression.Evaluate (amount).Value;
+			//??
+			//??	var node = new ExpressionSimulationNode (i, date, initial, final);
+			//??	nodes.Add (node);
+			//??
+			//??	periodRank++;
+			//??
+			//??	if (periodRank % periodCount == 0)
+			//??	{
+			//??		startYearAmount = final;
+			//??		yearRank++;
+			//??	}
+			//??
+			//??	amount = AmortizedAmount.SetAmortizedAmount (amount, final, startYearAmount, baseAmount);
+			//??	amount = AmortizedAmount.SetRanks (amount, yearRank, periodRank, amount.Periodicity);
+			//??
+			//??	totalMonth += monthCount;
+			//??	i++;
+			//??
+			//??	if (date >= toDate ||
+			//??		i >= 10000)  // garde-fou
+			//??	{
+			//??		break;
+			//??	}
+			//??}
+			//??
+			//??return nodes;
 		}
 
 
@@ -278,16 +305,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.outputConsole.Text = null;  // efface le message précédent
 
-			this.UpdateCommands (expressionEnable);
+			this.UpdateCommands ();
 		}
 
-		private void UpdateCommands(bool expressionEnable)
+		private void UpdateCommands()
 		{
-			this.SetEnable (Res.Commands.Methods.Library, expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Compile, expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Show, expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Test, expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Simulation, expressionEnable);
+			bool selection = this.methodController.Value.HasValue;
+			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
+
+			this.SetEnable (Res.Commands.Methods.Library,    expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Compile,    expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Show,       expressionEnable);
+			this.SetEnable (Res.Commands.Methods.Test,       selection);
+			this.SetEnable (Res.Commands.Methods.Simulation, selection);
 		}
 
 		private void SetEnable(Command command, bool enable)

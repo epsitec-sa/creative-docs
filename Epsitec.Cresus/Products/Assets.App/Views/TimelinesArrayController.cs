@@ -1032,7 +1032,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			else
 			{
-				this.amortizations.Create (processRange, this.SelectedGuid);
+				this.amortizations.Preview (processRange, this.SelectedGuid);
 			}
 
 			this.UpdateData ();

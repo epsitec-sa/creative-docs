@@ -14,110 +14,82 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public Amortizations(DataAccessor accessor)
 		{
 			this.accessor = accessor;
-
-			this.entries = new Entries (this.accessor);
 		}
 
 
-		public List<Error> Preview(DateRange processRange)
+		public void Preview(DateRange processRange)
 		{
-			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.GetNodes ())
 			{
-				errors.AddRange (this.Create (processRange, node.Guid));
+				this.Preview (processRange, node.Guid);
 			}
-
-			return errors;
 		}
 
-		public List<Error> Fix(System.DateTime endDate)
+		public void Fix(System.DateTime endDate)
 		{
-			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.GetNodes ())
 			{
-				errors.AddRange (this.Fix (endDate, node.Guid));
+				this.Fix (endDate, node.Guid);
 			}
-
-			return errors;
 		}
 
-		public List<Error> Unpreview()
+		public void Unpreview()
 		{
-			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.GetNodes ())
 			{
-				errors.AddRange (this.Unpreview (node.Guid));
+				this.Unpreview (node.Guid);
 			}
-
-			return errors;
 		}
 
-		public List<Error> Delete(System.DateTime startDate)
+		public void Delete(System.DateTime startDate)
 		{
-			var errors = new List<Error> ();
 			var getter = this.accessor.GetNodeGetter (BaseType.Assets);
 
 			foreach (var node in getter.GetNodes ())
 			{
-				errors.AddRange (this.Delete (startDate, node.Guid));
+				this.Delete (startDate, node.Guid);
 			}
-
-			return errors;
 		}
 
 
-		public List<Error> Create(DateRange processRange, Guid objectGuid)
+		public void Preview(DateRange processRange, Guid objectGuid)
 		{
-			var errors = new List<Error> ();
-
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			this.GeneratesAmortizationsPreview (errors, processRange, objectGuid);
+			this.GeneratesAmortizationsPreview (processRange, objectGuid);
 
 			this.accessor.WarningsDirty = true;
-
-			return errors;
 		}
 
-		public List<Error> Fix(System.DateTime endDate, Guid objectGuid)
+		public void Fix(System.DateTime endDate, Guid objectGuid)
 		{
-			var errors = new List<Error> ();
-
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = this.FixEvents (obj, new DateRange (System.DateTime.MinValue, endDate));
+			this.FixEvents (obj, new DateRange (System.DateTime.MinValue, endDate));
 
 			this.accessor.WarningsDirty = true;
-
-			return errors;
 		}
 
-		public List<Error> Unpreview(Guid objectGuid)
+		public void Unpreview(Guid objectGuid)
 		{
-			var errors = new List<Error> ();
-
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			int count = this.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
+			this.RemoveEvents (obj, EventType.AmortizationPreview, DateRange.Full);
 
 			this.accessor.WarningsDirty = true;
-
-			return errors;
 		}
 
-		public List<Error> Delete(System.DateTime startDate, Guid objectGuid)
+		public void Delete(System.DateTime startDate, Guid objectGuid)
 		{
-			var errors = new List<Error> ();
-
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
@@ -125,12 +97,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.RemoveEvents (obj, EventType.AmortizationAuto,    new DateRange (startDate, System.DateTime.MaxValue));
 
 			this.accessor.WarningsDirty = true;
-
-			return errors;
 		}
 
 
-		private void GeneratesAmortizationsPreview(List<Error> errors, DateRange processRange, Guid objectGuid)
+		private void GeneratesAmortizationsPreview(DateRange processRange, Guid objectGuid)
 		{
 			//	Génère les aperçus d'amortissement pour un objet donné.
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
@@ -276,15 +246,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				//				yearRank periodRank
 				//	30.06.2000		0		0
 				//	31.12.2000		0		1
-				//	30.06.2001		1		0
-				//	31.12.2001		1		1
-				//	30.06.2002		2		0
-				//	31.12.2002		2		1
-				//
-				//	periodCount vaudra 2
+				//	30.06.2001		1		2
+				//	31.12.2001		1		3
+				//	30.06.2002		2		4
+				//	31.12.2002		2		5
 
-				int lastYear = -1;
-				int yearRank = 0;
+				int lastYear   = -1;
+				int yearRank   = 0;
 				int periodRank = 0;
 
 				foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp && (
@@ -300,24 +268,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 
 						lastYear = e.Timestamp.Date.Year;
-						periodRank = 0;
 					}
-					else
-					{
-						periodRank++;
-					}
+
+					periodRank++;
 				}
 
-				//	periodCount vaut :
-				//	si annuel      -> 12 / 12 =  1
-				//	si semestriel  -> 12 /  6 =  2
-				//	si trimestriel -> 12 /  3 =  4
-				//	si mensuel     -> 12 /  1 = 12
-				var periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (p);
-
 				return new AmortizationDefinition (exp, taux.GetValueOrDefault (0.0m),
-					yearRank, years.Value, periodRank, periodCount,
-					p, r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
+					yearRank, years.Value, periodRank, p,
+					r, round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m));
 			}
 			else
 			{
@@ -414,9 +372,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			(
 				method, exp, def.Rate,
 				def.YearRank, def.YearCount,
-				def.PeriodRank, def.PeriodCount,
-				def.Periodicity,
-				null, null, null, null,
+				def.PeriodRank, def.Periodicity,
+				null, null, null, null, null,
 				prorata.Numerator, prorata.Denominator, def.Round, def.Residual,
 				entryScenario, timestamp.Date,
 				obj.Guid, e.Guid, Guid.Empty, 0
@@ -432,12 +389,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				.Any ();
 		}
 
-		private int RemoveEvents(DataObject obj, EventType type, DateRange range)
+		private void RemoveEvents(DataObject obj, EventType type, DateRange range)
 		{
 			//	Supprime tous les événements d'un objet d'un type donné compris dans
 			//	un intervalle de dates.
-			int count = 0;
-
 			if (obj != null)
 			{
 				var guids = obj.Events
@@ -449,19 +404,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var e = obj.GetEvent (guid);
 					this.accessor.RemoveObjectEvent (obj, e);
-					count++;
 				}
 			}
-
-			return count;
 		}
 
-		private int FixEvents(DataObject obj, DateRange range)
+		private void FixEvents(DataObject obj, DateRange range)
 		{
 			//	Transforme tous les événements d'un objet compris dans un intervalle de dates,
 			//	de AmortizationPreview en AmortizationAuto.
-			int count = 0;
-
 			if (obj != null)
 			{
 				var guids = obj.Events
@@ -477,12 +427,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var newEvent = new DataEvent (this.accessor.UndoManager, currentEvent.Guid, currentEvent.Timestamp, EventType.AmortizationAuto);
 					newEvent.SetProperties (currentEvent);
 					obj.AddEvent (newEvent);
-
-					count++;
 				}
 			}
-
-			return count;
 		}
 
 
@@ -495,14 +441,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				foreach (var field in accessor.AssetValueFields)
 				{
-					decimal? lastAmount = null;
-					decimal? lastBase   = null;
+					decimal? lastAmount      = null;
+					decimal? startYearAmount = null;
+					decimal? lastBase        = null;
+					int lastYear             = -1;
 
 					foreach (var e in obj.Events)
 					{
 						if (field == ObjectField.MainValue)
 						{
-							Amortizations.UpdateAmortizedAmount (accessor, e, ref lastAmount, ref lastBase);
+							bool startYear = false;
+
+							if (e.Type == EventType.AmortizationPreview ||
+								e.Type == EventType.AmortizationAuto    ||
+								e.Type == EventType.AmortizationExtra   )
+							{
+								if (lastYear != e.Timestamp.Date.Year)
+								{
+									lastYear = e.Timestamp.Date.Year;
+									startYear = true;
+								}
+							}
+
+							Amortizations.UpdateAmortizedAmount (accessor, e, startYear, ref lastAmount, ref startYearAmount, ref lastBase);
 						}
 						else
 						{
@@ -513,7 +474,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, ref decimal? lastAmount, ref decimal? lastBase)
+		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, bool startYear, ref decimal? lastAmount, ref decimal? startYearAmount, ref decimal? lastBase)
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
@@ -531,10 +492,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 				else  // amortissement ?
 				{
-					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, lastBase);
+					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, startYearAmount, lastBase);
 					Amortizations.SetAmortizedAmount (e, aa);
 
 					lastAmount = accessor.GetAmortizedAmount (aa);
+				}
+
+				if (startYear)
+				{
+					startYearAmount = lastAmount;
 				}
 
 				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
@@ -634,6 +600,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 	
 		private readonly DataAccessor			accessor;
-		private readonly Entries				entries;
 	}
 }

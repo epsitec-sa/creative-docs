@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			(
 				p.Value,
 				initialAmount,
+				initialAmount,
 				initialAmount
 			);
 			Amortizations.SetAmortizedAmount (e, aa);

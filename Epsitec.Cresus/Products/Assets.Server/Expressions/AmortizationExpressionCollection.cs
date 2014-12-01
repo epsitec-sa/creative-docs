@@ -50,9 +50,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		
 		//	Code C# des expressions d'amortissements prédéfinies. Les propriétés et méthodes
 		//	accessibles sont définies dans AbstractCalculator. Comme ces expressions sont
-		//	vues et modifiables par l'utilisateur, elles sont simplifiées à l'extrême,
-		//	quitte à déroger à certains règles d'écriture. Par exemple, "this." est ici
-		//	systématiquement omis. De même, l'opérateur "-=" n'est pas utilisé.
+		//	modifiables par l'utilisateur, elles sont simplifiées à l'extrême, quitte à
+		//	déroger à certains règles d'écriture. Par exemple, "this." est ici systématiquement
+		//	omis. De même, l'opérateur "-=" n'est pas utilisé.
 		//	Ces expressions sont injectées dans un code C# plus complexe, qui est défini
 		//	dans AmortizationExpression.skeletonLines. Le tout est ensuite compilé à la
 		//	volée avec Roselyn (librairies Microsoft.CodeAnalysis).
@@ -61,12 +61,27 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			"Trace (\"Linear Rate\");",
 			"",
-			"var rate = Rate * PeriodicityFactor * ProrataFactor;",
-			"var amortization = BaseAmount * rate;",
+			"if (PeriodCount == 1 ||",
+			"	PeriodRank % PeriodCount != PeriodCount-1)",
+			"{",
+			"	var rate = Rate * PeriodicityFactor * ProrataFactor;",
+			"	var amortization = BaseAmount * rate;",
 			"",
-			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
+			"	value = value - amortization;",
+			"	value = Round (value);",
+			"	value = Residual (value);",
+			"}",
+			"else",
+			"{",
+			"	//	If last Period -> adjust.",
+			"	var rate = Rate * ProrataFactor;",
+			"	var amortization = BaseAmount * rate;",
+			"",
+			"	value = StartYearAmount - amortization;",
+			"	value = Round (value);",
+			"	value = Residual (value);",
+			"}",
+			"",
 			"value = Override (value);",
 		};
 
