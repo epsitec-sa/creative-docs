@@ -721,20 +721,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
 		{
-			// Builds the SQL queries used to get the data of the entities matching the given
-			// request, executes them, and packs the result in an sequence of EntityData.
-			//
-			// We cannot make a single SQL query to get the data because of the collections. The
-			// problem with collections, is that a collection field of an entity can have several
-			// values, and would therefore require several rows to be returned. If we have several
-			// collections, for each entity, we would require the carthesian product of all their
-			// collection values to be returned, and that is a number that is exponential in the
-			// number of collections and items within the collections. Clearly, we do not want
-			// that.
-			//
-			// Therefore, we first make a query to return the value and the reference data of the
-			// entities. Then we make one query for each collection field to return their data
-			// separately. This way, we avoid the exponential explosion of redundant data.
+			//	Builds the SQL queries used to get the data of the entities matching the given
+			//	request, executes them, and packs the result in a sequence of EntityData.
+			//	
+			//	We cannot make a single SQL query to get the data because of the collections. The
+			//	problem with collections, is that a collection field of an entity can have several
+			//	values, and would therefore require several rows to be returned. If we have several
+			//	collections, for each entity, we would require the cartesian product of all their
+			//	collection values to be returned, and that is a number that is exponential in the
+			//	number of collections and items within the collections. Clearly, we do not want
+			//	that.
+			//	
+			//	Therefore, we first make a query to return the value and the reference data of the
+			//	entities. Then we make one query for each collection field to return their data
+			//	separately. This way, we avoid the exponential explosion of redundant data.
 
 			List<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData;
 			Dictionary<DbKey, CollectionData> collectionsData;
@@ -743,8 +743,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				valuesAndReferencesData = this.GetValueAndReferenceData (dbTransaction, request);
 
-				// We don't bother to make the SQL queries for the collection data if we have no
-				// result for the value and the reference data.
+				//	We don't bother to make the SQL queries for the collection data if we have no
+				//	result for the value and the reference data.
 				collectionsData = valuesAndReferencesData.Count > 0
 					? this.GetCollectionData (dbTransaction, request)
 					: new Dictionary<DbKey, CollectionData> ();

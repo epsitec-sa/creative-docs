@@ -1,16 +1,14 @@
-﻿//	Copyright © 2010-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2010-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Database;
-
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System;
 using System.Collections.Generic;
-
 using System.Linq.Expressions;
 
 
@@ -39,15 +37,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public class Request
 	{
-
-
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
 		public Request()
 		{
-			this.conditions = new List<DataExpression> ();
-			this.sortClauses = new List<SortClause> ();
+			this.conditions        = new List<DataExpression> ();
+			this.sortClauses       = new List<SortClause> ();
 			this.significantFields = new List<EntityField> ();
 		}
 
@@ -55,18 +51,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is at the root of the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RootEntity
+		public AbstractEntity					RootEntity
 		{
 			get;
 			set;
 		}
 
-
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RequestedEntity
+		public AbstractEntity					RequestedEntity
 		{
 			get
 			{
@@ -78,38 +73,34 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		/// <summary>
 		/// The number of entities that the request must skip from the result.
 		/// </summary>
-		public int? Skip
+		public int?								Skip
 		{
 			get;
 			set;
 		}
-
 
 		/// <summary>
 		/// The number of entities that the request must take from the result.
 		/// </summary>
-		public int? Take
+		public int?								Take
 		{
 			get;
 			set;
 		}
-
 
 		/// <summary>
 		/// Forces the use of the DISTINCT modifier on the SQL query.
 		/// </summary>
-		public bool Distinct
+		public bool								Distinct
 		{
 			get;
 			set;
 		}
 
-
-		public List<DataExpression> Conditions
+		public List<DataExpression>				Conditions
 		{
 			get
 			{
@@ -117,15 +108,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		public List<SortClause> SortClauses
+		public List<SortClause>					SortClauses
 		{
 			get
 			{
 				return this.sortClauses;
 			}
 		}
-
 
 		/// <summary>
 		/// The list of fields that are significant for the SQL query, even if they are not used
@@ -139,7 +128,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// With this, I am able to get the entities present in a collection field even if there are
 		/// duplicates within the collection.
 		/// </remarks>
-		internal List<EntityField> SignificantFields
+		internal List<EntityField>				SignificantFields
 		{
 			get
 			{
@@ -152,7 +141,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			this.sortClauses.Add (new SortClause (field, sortOrder));
 		}
-
 
 		public void AddIdSortClause(AbstractEntity example)
 		{
@@ -167,7 +155,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.sortClauses.Add (new SortClause (InternalField.CreateId (example), sortOrder));
 		}
 
-
 		public void AddCondition<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda)
 			where T : AbstractEntity
 		{
@@ -175,7 +162,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			this.conditions.Add (condition);
 		}
-
 
 		public static Request<TEntity> Create<TEntity>(TEntity rootEntity)
 			where TEntity : AbstractEntity
@@ -185,7 +171,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				RootEntity = rootEntity,
 			};
 		}
-
 
 		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
 		{
@@ -204,7 +189,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return request;
 		}
 
-
 		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey, AbstractEntity requestedEntity)
 		{
 			var request = Request.Create (rootEntity, rootEntityKey);
@@ -213,7 +197,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return request;
 		}
-
 
 		public Request Clone()
 		{
@@ -312,7 +295,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return entities;
 		}
 
-
+		
 		private void CheckForCycle(Dictionary<AbstractEntity, List<AbstractEntity>> parents, AbstractEntity entity)
 		{
 			var todo = new Stack<AbstractEntity> ();
@@ -342,7 +325,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		private void CheckRequestedEntity(HashSet<AbstractEntity> entities)
 		{
 			if (this.RequestedEntity != this.RootEntity)
@@ -354,7 +336,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		private void CheckForeignEntities(HashSet<AbstractEntity> entities, DataContext dataContext)
 		{
 			foreach (var entity in entities)
@@ -365,7 +346,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				}
 			}
 		}
-
 
 		private void CheckSkipAndTake()
 		{
@@ -380,14 +360,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		private FieldChecker BuildChecker(HashSet<AbstractEntity> entities, DataContext dataContext)
 		{
 			var typeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
 
 			return new FieldChecker (entities, typeEngine);
 		}
-
 
 		private void CheckConditions(FieldChecker checker)
 		{
@@ -402,7 +380,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		private void CheckSortClauses(FieldChecker checker)
 		{
 			foreach (var sortClause in this.SortClauses)
@@ -415,7 +392,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				sortClause.CheckField (checker);
 			}
 		}
-
 
 		private void CheckSignificantFields(FieldChecker checker)
 		{
@@ -431,19 +407,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private readonly List<DataExpression> conditions;
-
-
-		private readonly List<SortClause> sortClauses;
-
-
-		private readonly List<EntityField> significantFields;
-
-
-		private AbstractEntity requestedEntity;
-
-
+		private readonly List<DataExpression>	conditions;
+		private readonly List<SortClause>		sortClauses;
+		private readonly List<EntityField>		significantFields;
+		private AbstractEntity					requestedEntity;
 	}
-
-
 }
