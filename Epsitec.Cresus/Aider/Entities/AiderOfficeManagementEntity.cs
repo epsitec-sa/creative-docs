@@ -81,9 +81,6 @@ namespace Epsitec.Aider.Entities
 
 			if (currentOffice.IsNotNull ())
 			{
-				//Stop old usergroup participation
-				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
-				AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, contact, currentUserGroup));
 
 				//try to remap old sender settings
 				var oldSender = AiderOfficeSenderEntity.Find (businessContext, contact);
@@ -105,12 +102,6 @@ namespace Epsitec.Aider.Entities
 				user.OfficeSender = AiderOfficeSenderEntity.Create (businessContext, office, user.Contact);
 			}
 
-			//Create usergroup participation
-			var newUserGroup = office.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
-			var participationData = new List<ParticipationData> ();
-			participationData.Add (new ParticipationData (contact));
-			newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
-
 			//Join office
 			user.Office = office;
 		}
@@ -121,12 +112,6 @@ namespace Epsitec.Aider.Entities
 			var currentSender = user.OfficeSender;
 			var contact		  = user.Contact;
 
-			if (currentOffice.IsNotNull ())
-			{
-				//Stop old usergroup participation
-				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-				AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, contact, currentUserGroup));	
-			}
 			
 			if(currentSender.IsNotNull ())
 			{
@@ -171,7 +156,7 @@ namespace Epsitec.Aider.Entities
 			}
 			if(this.Employees.Any ())
 			{
-				throw new BusinessRuleException ("Des employés sont encore présent dans cette gestion. Suppresion annulée.");
+				throw new BusinessRuleException ("Des collaborateurs sont encore présent dans cette gestion. Suppresion annulée.");
 			}
 			if(this.OfficeSenders.Any ())
 			{

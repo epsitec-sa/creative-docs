@@ -839,6 +839,78 @@ namespace Epsitec.Aider
 				
 				public static class EventParticipantRole
 				{
+					//	designer:cap/LVOL43
+					public static global::Epsitec.Common.Types.Caption BlessedChild
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 149));
+						}
+					}
+					//	designer:cap/LVOM43
+					public static global::Epsitec.Common.Types.Caption ChildBatise
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 150));
+						}
+					}
+					//	designer:cap/LVOP43
+					public static global::Epsitec.Common.Types.Caption DeceasedPerson
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 153));
+						}
+					}
+					//	designer:cap/LVOG43
+					public static global::Epsitec.Common.Types.Caption Father
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 144));
+						}
+					}
+					//	designer:cap/LVOI43
+					public static global::Epsitec.Common.Types.Caption GodFather
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 146));
+						}
+					}
+					//	designer:cap/LVOJ43
+					public static global::Epsitec.Common.Types.Caption GodMother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 147));
+						}
+					}
+					//	designer:cap/LVON43
+					public static global::Epsitec.Common.Types.Caption Husband
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 151));
+						}
+					}
+					//	designer:cap/LVOF43
+					public static global::Epsitec.Common.Types.Caption Minister
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 143));
+						}
+					}
+					//	designer:cap/LVOH43
+					public static global::Epsitec.Common.Types.Caption Mother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 145));
+						}
+					}
 					//	designer:cap/LVAF3
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -847,10 +919,82 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 111));
 						}
 					}
+					//	designer:cap/LVOO43
+					public static global::Epsitec.Common.Types.Caption Spouse
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 152));
+						}
+					}
+					//	designer:cap/LVOK43
+					public static global::Epsitec.Common.Types.Caption Witness
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 148));
+						}
+					}
 				}
 				
 				public static class EventType
 				{
+					//	designer:cap/LVOR43
+					public static global::Epsitec.Common.Types.Caption Baptism
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 155));
+						}
+					}
+					//	designer:cap/LVOQ43
+					public static global::Epsitec.Common.Types.Caption Blessing
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 154));
+						}
+					}
+					//	designer:cap/LVOV43
+					public static global::Epsitec.Common.Types.Caption CelebrationRegisteredPartners
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 159));
+						}
+					}
+					//	designer:cap/LVOS43
+					public static global::Epsitec.Common.Types.Caption Confirmation
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 156));
+						}
+					}
+					//	designer:cap/LVOT43
+					public static global::Epsitec.Common.Types.Caption EndOfCatechism
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 157));
+						}
+					}
+					//	designer:cap/LVO053
+					public static global::Epsitec.Common.Types.Caption FuneralService
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 160));
+						}
+					}
+					//	designer:cap/LVOU43
+					public static global::Epsitec.Common.Types.Caption Marriage
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 158));
+						}
+					}
 					//	designer:cap/LVAU3
 					public static global::Epsitec.Common.Types.Caption None
 					{

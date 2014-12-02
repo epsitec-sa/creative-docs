@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			}
 
 			form
-				.Title ("Ajouter une requête sur les employés")
+				.Title ("Ajouter une requête sur les collaborateurs")
 				.Field<List<string>> ()
 					.Title ("Requête")
 					.WithStringCollection (queries)

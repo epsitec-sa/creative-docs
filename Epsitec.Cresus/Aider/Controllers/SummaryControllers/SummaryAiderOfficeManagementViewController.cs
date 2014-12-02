@@ -67,7 +67,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.IsParish)
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksAiderManagers (wall);
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksEmployeesReadOnly (wall);
@@ -85,7 +84,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
 				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksAiderManagers (wall);
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksEmployees (wall, user);
@@ -113,16 +111,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Icon ("Data.AiderGroup.People")
 				.Title ("Membres de la paroisse")
 				.Text ("Voir tous les paroissiens")
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
-		}
-		
-		private static void CreateBricksAiderManagers(BrickWall<AiderOfficeManagementEntity> wall)
-		{
-			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users))
-				.Icon ("Data.AiderGroup.People")
-				.Title ("Gestionnaires AIDER")
-				.Text (p => p.GetParticipantsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 		}
@@ -159,7 +147,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderOfficeManagementViewController3AddEmployeeAndJob> ().IfTrue (canAddEmployee)
 				.EnableActionMenu<ActionAiderOfficeManagementViewController4DeleteEmployee> ().IfTrue (canRemoveEmployee)
 				.Template ()
-					.Title ("Employés et ministres")
+					.Title ("Collaborateurs et ministres")
 					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
 				.End ();
 		}
@@ -173,7 +161,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderEmployeeViewController1ReadOnly))
 				.Template ()
-					.Title ("Employés et ministres")
+					.Title ("Collaborateurs et ministres")
 					.Text (x => TextFormatter.FormatText (x.Person.DisplayName, ":", x.EmployeeType))
 				.End ();
 		}
