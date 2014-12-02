@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
@@ -26,8 +26,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public decimal? Evaluate(string expression, AmortizedAmount amount)
+		public AbstractCalculator.Result Evaluate(AmortizationDetails details)
 		{
+			string expression = details.Def.Expression;
+
 			AmortizationExpression ae;
 			if (!this.expressions.TryGetValue (expression, out ae))  // pas encore dans le dico ?
 			{
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				this.expressions.Add (expression, ae);  // on l'ajoute dans le dico
 			}
 
-			return ae.Evaluate (amount).Value;
+			return ae.Evaluate (details);
 		}
 
 

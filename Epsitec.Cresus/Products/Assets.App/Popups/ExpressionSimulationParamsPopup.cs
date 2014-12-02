@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// Popup permettant de définir les paramètres d'une expression d'amortissement
 	/// pour lancer la simulation des amortissements.
 	/// </summary>
-	public class AmountExpressionSimulationPopup : AbstractStackedPopup
+	public class ExpressionSimulationParamsPopup : AbstractStackedPopup
 	{
-		private AmountExpressionSimulationPopup(DataAccessor accessor)
+		private ExpressionSimulationParamsPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.AmountExpressionSimulation.Title.ToString ();
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Combo,
 				Label                 = "Périodicité",
-				MultiLabels           = AmountExpressionSimulationPopup.PeriodicityLabels,
+				MultiLabels           = ExpressionSimulationParamsPopup.PeriodicityLabels,
 				Width                 = 240,
 			});
 
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private decimal BaseAmount
+		private decimal InitialAmount
 		{
 			get
 			{
@@ -239,42 +239,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				var controller = this.GetController (7) as ComboStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				return AmountExpressionSimulationPopup.RankToPeriodicity (controller.Value.GetValueOrDefault ());
+				return ExpressionSimulationParamsPopup.RankToPeriodicity (controller.Value.GetValueOrDefault ());
 			}
 			set
 			{
 				var controller = this.GetController (7) as ComboStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = AmountExpressionSimulationPopup.PeriodicityToRank (value);
+				controller.Value = ExpressionSimulationParamsPopup.PeriodicityToRank (value);
 			}
 		}
 
-		private AmortizedAmount Amount
+		private ExpressionSimulationParams Params
 		{
 			get
 			{
-				return new AmortizedAmount (
-					AmortizationMethod.Custom, null,
-					this.Rate,
-					0.0m, this.YearCount,
-					0.0m,
-					this.Periodicity,
-					null,
-					this.BaseAmount, this.BaseAmount,
-					this.BaseAmount,
-					this.BaseAmount,
-					null, null,
-					this.RoundAmount,
-					this.ResidualAmount,
-					EntryScenario.None, System.DateTime.Now,
-					Guid.Empty, Guid.Empty, Guid.Empty, 0);
+				return new ExpressionSimulationParams (
+					this.Range, this.InitialAmount, this.ResidualAmount,
+					this.RoundAmount, this.Rate, this.YearCount, this.Periodicity);
 			}
 			set
 			{
-					this.BaseAmount     = value.BaseAmount.GetValueOrDefault ();
-					this.ResidualAmount = value.ResidualAmount.GetValueOrDefault ();
-					this.RoundAmount    = value.RoundAmount.GetValueOrDefault ();
-					this.Rate           = value.Rate.GetValueOrDefault ();
+					this.Range          = value.Range;
+					this.InitialAmount  = value.InitialAmount;
+					this.ResidualAmount = value.ResidualAmount;
+					this.RoundAmount    = value.RoundAmount;
+					this.Rate           = value.Rate;
 					this.Periodicity    = value.Periodicity;
 					this.YearCount      = value.YearCount;
 			}
@@ -319,10 +308,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
-				var popup = new AmountExpressionSimulationPopup (accessor)
+				var popup = new ExpressionSimulationParamsPopup (accessor)
 				{
-					Range  = LocalSettings.ExpressionSimulationRange,
-					Amount = LocalSettings.ExpressionSimulationAmount,
+					Params = LocalSettings.ExpressionSimulationParams,
 				};
 
 				popup.Create (target, leftOrRight: true);
@@ -331,8 +319,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					if (name == "ok")
 					{
-						LocalSettings.ExpressionSimulationRange  = popup.Range;
-						LocalSettings.ExpressionSimulationAmount = popup.Amount;
+						LocalSettings.ExpressionSimulationParams = popup.Params;
 						action ();
 					}
 				};

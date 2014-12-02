@@ -3,14 +3,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public class RateLinearCalculator : AbstractCalculator
 	{
-		public RateLinearCalculator(AmortizedAmount amount)
-			: base (amount)
+		public RateLinearCalculator(AmortizationDetails details)
+			: base (details)
 		{
 		}
 
@@ -39,8 +39,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				value = Round (value);
 				value = Residual (value);
 			}
-
-			value = Override (value);
 			//----------------------------------------------
 
 			return value;

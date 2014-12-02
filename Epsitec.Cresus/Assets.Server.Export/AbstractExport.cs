@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			if (cell.Value.HasValue)
 			{
-				return this.AmountToString (this.accessor.GetAmortizedAmount (cell.Value));
+				return this.AmountToString (cell.Value.Value.FinalAmount);
 			}
 			else
 			{

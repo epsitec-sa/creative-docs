@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount(obj, null, field);
 						if (aa != null)
 						{
-							value = TreeGraphicValue.CreateAmount (this.accessor.GetAmortizedAmount (aa));
+							value = TreeGraphicValue.CreateAmount (aa.Value.FinalAmount);
 						}
 						break;
 

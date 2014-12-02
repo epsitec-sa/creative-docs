@@ -69,19 +69,22 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
-		public int GetNewPosition(System.DateTime date)
+		public Timestamp GetNewTimestamp(System.DateTime date)
 		{
+			//	Retourne le Timestamp à utiliser pour créer un nouvel événement à une
+			//	date donnée, en partant du principe que l'événement viendra toujours
+			//	après les événements existants.
 			this.UpdateSortedList ();
 
 			var e = this.sortedEvents.Where (x => x.Timestamp.Date == date).LastOrDefault ();
 
 			if (e == null)
 			{
-				return 0;
+				return new Timestamp (date, 0);
 			}
 			else
 			{
-				return e.Timestamp.Position+1;
+				return new Timestamp (date, e.Timestamp.Position + 1);
 			}
 		}
 

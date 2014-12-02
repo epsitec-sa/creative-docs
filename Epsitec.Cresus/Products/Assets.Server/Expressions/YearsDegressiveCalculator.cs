@@ -3,14 +3,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public class YearsDegressiveCalculator : AbstractCalculator
 	{
-		public YearsDegressiveCalculator(AmortizedAmount amount)
-			: base (amount)
+		public YearsDegressiveCalculator(AmortizationDetails details)
+			: base (details)
 		{
 		}
 
@@ -33,7 +33,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			value = value - amortization;
 			value = this.Round (value);
 			value = this.Residual (value);
-			value = this.Override (value);
 			//----------------------------------------------
 
 			return value;

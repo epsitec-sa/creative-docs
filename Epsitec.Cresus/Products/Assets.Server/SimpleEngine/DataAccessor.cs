@@ -127,53 +127,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		}
 
 
-		public decimal? GetAmortizedAmount(AmortizedAmount? aa)
-		{
-			//	Calcule la valeur de sortie d'un amortissement.
-			if (aa.HasValue)
-			{
-				AbstractCalculator calculator = null;
-
-				switch (aa.Value.AmortizationMethod)
-				{
-					case AmortizationMethod.RateLinear:
-						calculator = new RateLinearCalculator (aa.Value);
-						break;
-
-					case AmortizationMethod.RateDegressive:
-						calculator = new RateDegressiveCalculator (aa.Value);
-						break;
-
-					case AmortizationMethod.YearsLinear:
-						calculator = new YearsLinearCalculator (aa.Value);
-						break;
-
-					case AmortizationMethod.YearsDegressive:
-						calculator = new YearsDegressiveCalculator (aa.Value);
-						break;
-				}
-
-				if (calculator != null)
-				{
-					return calculator.Evaluate ();
-				}
-
-				if (string.IsNullOrEmpty (aa.Value.Expression))
-				{
-					return aa.Value.InitialAmount;
-				}
-				else
-				{
-					return this.amortizationExpressions.Evaluate (aa.Value.Expression, aa.Value);
-				}
-			}
-			else
-			{
-				return null;
-			}
-		}
-
-
 		#region Objects
 		public DataObject GetObject(BaseType baseType, Guid objectGuid)
 		{
@@ -266,8 +219,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					AssetCalculator.RemoveLockedEvent (obj);
 				}
 
-				var position = obj.GetNewPosition (date);
-				var ts = new Timestamp (date, position);
+				var ts = obj.GetNewTimestamp (date);
 				var e = new DataEvent (this.UndoManager, ts, type);
 				obj.AddEvent (e);
 
@@ -302,7 +254,29 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return;
 			}
 
-			bool fixAmount = true;
+			//	Cherche la valeur imposée à utiliser.
+			decimal? forcedAmount = null;
+
+			if (e.Type == EventType.Output)
+			{
+				//	Il est bien pratique de mettre tout de suite une valeur comptable nulle
+				//	lors de la création d'un événement de sortie.
+				forcedAmount = 0.0m;
+			}
+			else if (e.Type == EventType.Increase ||
+					 e.Type == EventType.Decrease ||
+					 e.Type == EventType.Adjust)
+			{
+				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
+				//	la création d'un événement qui modifie la valeur.
+				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
+				if (currentAmount.HasValue)
+				{
+					forcedAmount = currentAmount.Value.FinalAmount;
+				}
+			}
+
+			//	Cherche le scénario d'écriture à utiliser.
 			var entryScenario = EntryScenario.None;
 
 			switch (e.Type)
@@ -325,12 +299,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				case EventType.AmortizationAuto:
 				case EventType.AmortizationPreview:
-					fixAmount     = false;
 					entryScenario = EntryScenario.AmortizationAuto;
 					break;
 
 				case EventType.AmortizationExtra:
-					fixAmount     = false;
 					entryScenario = EntryScenario.AmortizationExtra;
 					break;
 
@@ -342,31 +314,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					throw new System.InvalidOperationException (string.Format ("Unknown EventType {0}", e.Type.ToString ()));
 			}
 
-			var aa = Amortizations.InitialiseAmortizedAmount (this, obj, e, timestamp, fixAmount, entryScenario);
-
-			if (e.Type == EventType.Output)
-			{
-				//	Il est bien pratique de mettre tout de suite une valeur comptable nulle
-				//	lors de la création d'un événement de sortie.
-				aa = AmortizedAmount.SetInitialAmount (aa, 0.0m);
-			}
-			else if (e.Type == EventType.Increase ||
-					 e.Type == EventType.Decrease ||
-					 e.Type == EventType.Adjust)
-			{
-				//	Il est bien pratique de mettre tout de suite la valeur actuelle lors de
-				//	la création d'un événement qui modifie la valeur.
-				var currentAmount = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
-				if (currentAmount.HasValue)
-				{
-					var init = this.GetAmortizedAmount (currentAmount);
-					if (init.HasValue)
-					{
-						aa = AmortizedAmount.SetInitialAmount (aa, init);
-					}
-				}
-			}
-
+			//	Crée la propriété.
+			var aa = new AmortizedAmount (null, null, entryScenario, System.DateTime.MinValue, Guid.Empty, Guid.Empty, Guid.Empty, 0);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 

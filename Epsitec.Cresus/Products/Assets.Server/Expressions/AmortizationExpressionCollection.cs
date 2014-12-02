@@ -61,8 +61,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			"Trace (\"Linear Rate\");",
 			"",
-			"if (PeriodCount == 1 ||",
-			"	PeriodRank % PeriodCount != PeriodCount-1)",
+			"if (PeriodCount == 1 || PeriodRank != PeriodCount-1)",
 			"{",
 			"	var rate = Rate * PeriodicityFactor * ProrataFactor;",
 			"	var amortization = BaseAmount * rate;",
@@ -81,8 +80,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"	value = Round (value);",
 			"	value = Residual (value);",
 			"}",
-			"",
-			"value = Override (value);",
 		};
 
 		private static string[] rateDegressiveLines =
@@ -95,7 +92,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = value - amortization;",
 			"value = Round (value);",
 			"value = Residual (value);",
-			"value = Override (value);",
 		};
 
 		private static string[] yearsLinearLines =
@@ -114,7 +110,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = value - amortization;",
 			"value = Round (value);",
 			"value = Residual (value);",
-			"value = Override (value);",
 		};
 
 		private static string[] yearsDegressiveLines =
@@ -137,7 +132,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"value = value - amortization;",
 			"value = Round (value);",
 			"value = Residual (value);",
-			"value = Override (value);",
 		};
 	}
 }

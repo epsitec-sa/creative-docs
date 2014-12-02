@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
-using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					MetadataReference.CreateFromAssembly (typeof (object).Assembly),
 					MetadataReference.CreateFromAssembly (typeof (AbstractCalculator).Assembly),
-					MetadataReference.CreateFromAssembly (typeof (AmortizedAmount).Assembly)
+					MetadataReference.CreateFromAssembly (typeof (AmortizationDetails).Assembly)
 				});
 
 			using (var stream = new MemoryStream ())
@@ -70,14 +70,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		public AbstractCalculator.Result Evaluate(AmortizedAmount amount)
+		public AbstractCalculator.Result Evaluate(AmortizationDetails details)
 		{
 			if (this.compiledAssembly != null)
 			{
 				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
 				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
 
-				object[] parameters = { amount };
+				object[] parameters = { details };
 
 				return (AbstractCalculator.Result) evaluate.Invoke (null, parameters);
 			}
@@ -132,14 +132,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland",
 			"//	Author: Daniel ROUX, Maintainer: Daniel ROUX",
 			"",
-			"using Epsitec.Cresus.Assets.Data;",
+			"using Epsitec.Cresus.Assets.Server.BusinessLogic;",
 			"using Epsitec.Cresus.Assets.Server.Expression;",
 			"",
 			"public static class Calculator",
 			"{",
-			"	public static AbstractCalculator.Result Evaluate(AmortizedAmount amount)",
+			"	public static AbstractCalculator.Result Evaluate(AmortizationDetails details)",
 			"	{",
-			"		var calculator = new InternalCalculator(amount);",
+			"		var calculator = new InternalCalculator(details);",
 			"		var value = calculator.Evaluate();",
 			"		var trace = calculator.GetTraces();",
 			"		return new AbstractCalculator.Result (value, trace);",
@@ -147,8 +147,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"	private class InternalCalculator : AbstractCalculator",
 			"	{",
-			"		public InternalCalculator(AmortizedAmount amount)",
-			"			: base (amount)",
+			"		public InternalCalculator(AmortizationDetails details)",
+			"			: base (details)",
 			"		{",
 			"		}",
 			"",

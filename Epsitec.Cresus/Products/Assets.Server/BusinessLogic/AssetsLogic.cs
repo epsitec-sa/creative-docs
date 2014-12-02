@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				var aa = p.Value;
 
-				aa = AmortizedAmount.SetInitialAmount (aa, value.Value);
+				aa = AmortizedAmount.SetFinalAmount (aa, value.Value);
 				aa = Entries.CreateEntry (accessor, aa);  // génère les écritures
 				Amortizations.SetAmortizedAmount (e, aa);
 			}

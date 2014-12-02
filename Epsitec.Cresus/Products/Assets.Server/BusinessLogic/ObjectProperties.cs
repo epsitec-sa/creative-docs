@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (property is DataAmortizedAmountProperty)
 				{
 					var aa = (property as DataAmortizedAmountProperty).Value;
-					return new ComparableData (accessor.GetAmortizedAmount (aa).GetValueOrDefault ());
+					return new ComparableData (aa.FinalAmount.GetValueOrDefault ());
 				}
 				else if (property is DataDateProperty)
 				{

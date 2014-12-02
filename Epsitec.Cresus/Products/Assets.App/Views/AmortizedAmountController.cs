@@ -132,16 +132,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.lines[i].Children.Clear ();
 			}
 
-			if (this.IsAmortization)
-			{
-				this.CreateMethodCombo (this.lines[0]);
-				this.CreateInitLines ();
-			}
-			else
-			{
-				this.CreateMethodCombo (this.lines[0]);
-				this.CreateInitLine ();
-			}
+			//??if (this.IsAmortization)
+			//??{
+			//??	this.CreateMethodCombo (this.lines[0]);
+			//??	this.CreateInitLines ();
+			//??}
+			//??else
+			//??{
+			//??	this.CreateMethodCombo (this.lines[0]);
+			//??	this.CreateInitLine ();
+			//??}
+			this.CreateInitLines ();
 
 			this.UpdateUI ();
 		}
@@ -177,94 +178,102 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void CreateMethodCombo(Widget parent)
-		{
-			this.CreateLabel (parent, 100, "");
+		//??private void CreateMethodCombo(Widget parent)
+		//??{
+		//??	this.CreateLabel (parent, 100, "");
+		//??
+		//??	this.methodTextFieldCombo = new TextFieldCombo
+		//??	{
+		//??		Parent           = parent,
+		//??		IsReadOnly       = true,
+		//??		Enable           = false,
+		//??		Dock             = DockStyle.Left,
+		//??		PreferredWidth   = AbstractFieldController.maxWidth,
+		//??		PreferredHeight  = AbstractFieldController.lineHeight,
+		//??		Margins          = new Margins (0, 10, 0, 0),
+		//??		TabIndex         = ++this.tabIndex,
+		//??	};
+		//??
+		//??	this.methodTextFieldCombo.ComboClosed += delegate
+		//??	{
+		//??		if (this.value.HasValue)
+		//??		{
+		//??			var method = AmortizedAmountController.GetMethod (this.methodTextFieldCombo);
+		//??			if (this.value.Value.AmortizationMethod != method)
+		//??			{
+		//??				this.value = AmortizedAmount.SetAmortizationMethod (this.value.Value, method);
+		//??				this.CreateLines ();
+		//??				this.UpdateUI ();
+		//??				this.OnValueEdited ();
+		//??			}
+		//??		}
+		//??	};
+		//??}
 
-			this.methodTextFieldCombo = new TextFieldCombo
-			{
-				Parent           = parent,
-				IsReadOnly       = true,
-				Enable           = false,
-				Dock             = DockStyle.Left,
-				PreferredWidth   = AbstractFieldController.maxWidth,
-				PreferredHeight  = AbstractFieldController.lineHeight,
-				Margins          = new Margins (0, 10, 0, 0),
-				TabIndex         = ++this.tabIndex,
-			};
-
-			this.methodTextFieldCombo.ComboClosed += delegate
-			{
-				if (this.value.HasValue)
-				{
-					var method = AmortizedAmountController.GetMethod (this.methodTextFieldCombo);
-					if (this.value.Value.AmortizationMethod != method)
-					{
-						this.value = AmortizedAmount.SetAmortizationMethod (this.value.Value, method);
-						this.CreateLines ();
-						this.UpdateUI ();
-						this.OnValueEdited ();
-					}
-				}
-			};
-		}
-
-		private void CreateInitLine()
-		{
-			this.CreateLabel (this.lines[1], 100, "Valeur comptable");
-			this.outputAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, "TODO");
-		}
+		//??private void CreateInitLine()
+		//??{
+		//??	this.CreateLabel (this.lines[1], 100, "Valeur comptable");
+		//??	this.outputAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, "TODO");
+		//??}
 
 		private void CreateInitLines()
 		{
 			int i = 0;
 
-			this.CreateLabel (this.lines[++i], 100, "Valeur comptable");
-			this.outputAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-
-			this.CreateLabel (this.lines[++i], 100, "Valeur imposée");
-			this.forcedAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateForcedAmount);
-			this.CreateArgument (this.lines[i], "ForcedAmount");
-
-			this.CreateLabel (this.lines[++i], 100, "Valeur de base");
-			this.baseAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-			this.CreateArgument (this.lines[i], "BaseAmount");
+			//??this.CreateLabel (this.lines[++i], 100, "Valeur comptable");
+			//??this.outputAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Valeur imposée");
+			//??this.forcedAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateForcedAmount);
+			//??this.CreateArgument (this.lines[i], "ForcedAmount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Valeur de base");
+			//??this.baseAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??this.CreateArgument (this.lines[i], "BaseAmount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Valeur initiale");
+			//??this.initialAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??this.CreateArgument (this.lines[i], "InitialAmount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Valeur résiduelle");
+			//??this.residualAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateResidualAmount);
+			//??this.CreateArgument (this.lines[i], "ResidualAmount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Arrondi");
+			//??this.roundAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRoundAmount);
+			//??this.CreateArgument (this.lines[i], "RoundAmount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Taux");
+			//??this.rateTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRate);
+			//??this.CreateArgument (this.lines[i], "Rate");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Périodicité");
+			//??this.periodicityFactorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??this.CreateArgument (this.lines[i], "PeriodicityFactor");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Prorata num.");
+			//??this.prorataNumeratorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataNumerator);
+			//??this.CreateArgument (this.lines[i], "ProrataNumerator");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Prorata dénom.");
+			//??this.prorataDenominatorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataDenominator);
+			//??this.CreateArgument (this.lines[i], "ProrataDenominator");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Total années");
+			//??this.yearCountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??this.CreateArgument (this.lines[i], "YearCount");
+			//??
+			//??this.CreateLabel (this.lines[++i], 100, "Rang année");
+			//??this.yearRankTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			//??this.CreateArgument (this.lines[i], "YearRank");
 
 			this.CreateLabel (this.lines[++i], 100, "Valeur initiale");
 			this.initialAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
 			this.CreateArgument (this.lines[i], "InitialAmount");
 
-			this.CreateLabel (this.lines[++i], 100, "Valeur résiduelle");
-			this.residualAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateResidualAmount);
-			this.CreateArgument (this.lines[i], "ResidualAmount");
-
-			this.CreateLabel (this.lines[++i], 100, "Arrondi");
-			this.roundAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRoundAmount);
-			this.CreateArgument (this.lines[i], "RoundAmount");
-
-			this.CreateLabel (this.lines[++i], 100, "Taux");
-			this.rateTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateRate);
-			this.CreateArgument (this.lines[i], "Rate");
-
-			this.CreateLabel (this.lines[++i], 100, "Périodicité");
-			this.periodicityFactorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-			this.CreateArgument (this.lines[i], "PeriodicityFactor");
-
-			this.CreateLabel (this.lines[++i], 100, "Prorata num.");
-			this.prorataNumeratorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataNumerator);
-			this.CreateArgument (this.lines[i], "ProrataNumerator");
-
-			this.CreateLabel (this.lines[++i], 100, "Prorata dénom.");
-			this.prorataDenominatorTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO", this.UpdateProrataDenominator);
-			this.CreateArgument (this.lines[i], "ProrataDenominator");
-
-			this.CreateLabel (this.lines[++i], 100, "Total années");
-			this.yearCountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-			this.CreateArgument (this.lines[i], "YearCount");
-
-			this.CreateLabel (this.lines[++i], 100, "Rang année");
-			this.yearRankTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
-			this.CreateArgument (this.lines[i], "YearRank");
+			this.CreateLabel (this.lines[++i], 100, "Valeur finale");
+			this.finalAmountTextField = this.CreateTextField (this.lines[i], AmortizedAmountController.AmountWidth, "TODO");
+			this.CreateArgument (this.lines[i], "FinalAmount");
 		}
 
 		private void CreateButtons(Widget parent)
@@ -486,7 +495,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void SetFocus()
 		{
-			this.SetFocus (this.outputAmountTextField);
+			//??this.SetFocus (this.outputAmountTextField);
+			this.SetFocus (this.finalAmountTextField);
 		}
 
 		private void SetFocus(TextField textField)
@@ -510,20 +520,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.value.HasValue)
 				{
-					this.methodTextFieldCombo.Visibility = this.IsAmortization;
-
-					this.OutputAmount       = this.accessor.GetAmortizedAmount (this.Value);
-					this.ForcedAmount       = this.value.Value.ForcedAmount;
-					this.BaseAmount         = this.value.Value.BaseAmount;
+					//??this.methodTextFieldCombo.Visibility = this.IsAmortization;
+					//??
+					//??this.OutputAmount       = this.accessor.GetAmortizedAmount (this.Value);
+					//??this.ForcedAmount       = this.value.Value.ForcedAmount;
+					//??this.BaseAmount         = this.value.Value.BaseAmount;
+					//??this.InitialAmount      = this.value.Value.InitialAmount;
+					//??this.ResidualAmount     = this.value.Value.ResidualAmount;
+					//??this.RoundAmount        = this.value.Value.RoundAmount;
+					//??this.Rate               = this.value.Value.Rate;
+					//??this.PeriodicityFactor  = this.value.Value.PeriodicityFactor;
+					//??this.ProrataNumerator   = this.value.Value.ProrataNumerator;
+					//??this.ProrataDenominator = this.value.Value.ProrataDenominator;
+					//??this.YearCount          = this.value.Value.YearCount;
+					//??this.YearRank           = this.value.Value.YearRank;
 					this.InitialAmount      = this.value.Value.InitialAmount;
-					this.ResidualAmount     = this.value.Value.ResidualAmount;
-					this.RoundAmount        = this.value.Value.RoundAmount;
-					this.Rate               = this.value.Value.Rate;
-					this.PeriodicityFactor  = this.value.Value.PeriodicityFactor;
-					this.ProrataNumerator   = this.value.Value.ProrataNumerator;
-					this.ProrataDenominator = this.value.Value.ProrataDenominator;
-					this.YearCount          = this.value.Value.YearCount;
-					this.YearRank           = this.value.Value.YearRank;
+					this.FinalAmount        = this.value.Value.FinalAmount;
 
 					bool hasEntry = Entries.HasEntry (this.accessor, this.value.Value);
 					this.deleteEntryButton.Enable = hasEntry && !this.isReadOnly;
@@ -531,25 +543,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					this.OutputAmount       = null;
-					this.ForcedAmount       = null;
-					this.BaseAmount         = null;
+					//??this.OutputAmount       = null;
+					//??this.ForcedAmount       = null;
+					//??this.BaseAmount         = null;
+					//??this.InitialAmount      = null;
+					//??this.ResidualAmount     = null;
+					//??this.RoundAmount        = null;
+					//??this.Rate               = null;
+					//??this.PeriodicityFactor  = null;
+					//??this.ProrataNumerator   = null;
+					//??this.ProrataDenominator = null;
+					//??this.YearCount          = null;
+					//??this.YearRank           = null;
 					this.InitialAmount      = null;
-					this.ResidualAmount     = null;
-					this.RoundAmount        = null;
-					this.Rate               = null;
-					this.PeriodicityFactor  = null;
-					this.ProrataNumerator   = null;
-					this.ProrataDenominator = null;
-					this.YearCount          = null;
-					this.YearRank           = null;
+					this.FinalAmount        = null;
 
 					this.deleteEntryButton.Enable = false;
 					this.showEntryButton  .Enable = false;
 				}
 
-				AmortizedAmountController.UpdateMethod (this.methodTextFieldCombo);
-				AmortizedAmountController.SetMethod (this.methodTextFieldCombo, this.AmortizationMethod);
+				//??AmortizedAmountController.UpdateMethod (this.methodTextFieldCombo);
+				//??AmortizedAmountController.SetMethod (this.methodTextFieldCombo, this.AmortizationMethod);
 
 				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
@@ -561,31 +575,33 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 				else
 				{
-					if (string.IsNullOrEmpty (this.outputAmountTextField.Text))
-					{
-						this.outputAmountTextField.Name = "Required";
-						this.fieldColorTypes.Add (FieldColorType.Error);
-					}
-					else
-					{
-						this.outputAmountTextField.Name = null;
-					}
+					//??if (string.IsNullOrEmpty (this.outputAmountTextField.Text))
+					//??{
+					//??	this.outputAmountTextField.Name = "Required";
+					//??	this.fieldColorTypes.Add (FieldColorType.Error);
+					//??}
+					//??else
+					//??{
+					//??	this.outputAmountTextField.Name = null;
+					//??}
 				}
 
-				this.UpdateBackColor (this.methodTextFieldCombo);
-				this.UpdateBackColor (this.outputAmountTextField);
-				this.UpdateBackColor (this.forcedAmountTextField);
-				this.UpdateBackColor (this.baseAmountTextField);
+				//??this.UpdateBackColor (this.methodTextFieldCombo);
+				//??this.UpdateBackColor (this.outputAmountTextField);
+				//??this.UpdateBackColor (this.forcedAmountTextField);
+				//??this.UpdateBackColor (this.baseAmountTextField);
+				//??this.UpdateBackColor (this.initialAmountTextField);
+				//??this.UpdateBackColor (this.residualAmountTextField);
+				//??this.UpdateBackColor (this.roundAmountTextField);
+				//??this.UpdateBackColor (this.rateTextField);
+				//??this.UpdateBackColor (this.periodicityFactorTextField);
+				//??this.UpdateBackColor (this.prorataNumeratorTextField);
+				//??this.UpdateBackColor (this.prorataDenominatorTextField);
+				//??this.UpdateBackColor (this.yearCountTextField);
+				//??this.UpdateBackColor (this.yearRankTextField);
+				//??this.UpdateBackColor (this.scenarioFieldCombo);
 				this.UpdateBackColor (this.initialAmountTextField);
-				this.UpdateBackColor (this.residualAmountTextField);
-				this.UpdateBackColor (this.roundAmountTextField);
-				this.UpdateBackColor (this.rateTextField);
-				this.UpdateBackColor (this.periodicityFactorTextField);
-				this.UpdateBackColor (this.prorataNumeratorTextField);
-				this.UpdateBackColor (this.prorataDenominatorTextField);
-				this.UpdateBackColor (this.yearCountTextField);
-				this.UpdateBackColor (this.yearRankTextField);
-				this.UpdateBackColor (this.scenarioFieldCombo);
+				this.UpdateBackColor (this.finalAmountTextField);
 
 				{
 					var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly);
@@ -619,102 +635,102 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateForcedAmount()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetForcedAmount (this.value.Value, this.ForcedAmount);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
+		//??private void UpdateForcedAmount()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetForcedAmount (this.value.Value, this.ForcedAmount);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
+		//??
+		//??private void UpdateRate()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetRate (this.value.Value, this.Rate);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
+		//??
+		//??private void UpdateResidualAmount()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetResidualAmount (this.value.Value, this.ResidualAmount);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
+		//??
+		//??private void UpdateRoundAmount()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetRoundAmount (this.value.Value, this.RoundAmount);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
+		//??
+		//??private void UpdateProrataNumerator()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetProrataNumerator (this.value.Value, this.ProrataNumerator);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
+		//??
+		//??private void UpdateProrataDenominator()
+		//??{
+		//??	if (this.ignoreChanges.IsZero)
+		//??	{
+		//??		this.value = AmortizedAmount.SetProrataDenominator (this.value.Value, this.ProrataDenominator);
+		//??		this.UpdateUI ();
+		//??		this.OnValueEdited ();
+		//??	}
+		//??}
 
-		private void UpdateRate()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetRate (this.value.Value, this.Rate);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
 
-		private void UpdateResidualAmount()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetResidualAmount (this.value.Value, this.ResidualAmount);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
-
-		private void UpdateRoundAmount()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetRoundAmount (this.value.Value, this.RoundAmount);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
-
-		private void UpdateProrataNumerator()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetProrataNumerator (this.value.Value, this.ProrataNumerator);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
-
-		private void UpdateProrataDenominator()
-		{
-			if (this.ignoreChanges.IsZero)
-			{
-				this.value = AmortizedAmount.SetProrataDenominator (this.value.Value, this.ProrataDenominator);
-				this.UpdateUI ();
-				this.OnValueEdited ();
-			}
-		}
-
-
-		private decimal? OutputAmount
-		{
-			get
-			{
-				return AmortizedAmountController.GetAmount (this.outputAmountTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetAmount (this.outputAmountTextField, value);
-			}
-		}
-
-		private decimal? ForcedAmount
-		{
-			get
-			{
-				return AmortizedAmountController.GetAmount (this.forcedAmountTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetAmount (this.forcedAmountTextField, value);
-			}
-		}
-
-		private decimal? BaseAmount
-		{
-			get
-			{
-				return AmortizedAmountController.GetAmount (this.baseAmountTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
-			}
-		}
+		//??private decimal? OutputAmount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetAmount (this.outputAmountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetAmount (this.outputAmountTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? ForcedAmount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetAmount (this.forcedAmountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetAmount (this.forcedAmountTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? BaseAmount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetAmount (this.baseAmountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetAmount (this.baseAmountTextField, value);
+		//??	}
+		//??}
 
 		private decimal? InitialAmount
 		{
@@ -728,101 +744,113 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
-		private decimal? ResidualAmount
+		private decimal? FinalAmount
 		{
 			get
 			{
-				return AmortizedAmountController.GetAmount (this.residualAmountTextField);
+				return AmortizedAmountController.GetAmount (this.finalAmountTextField);
 			}
 			set
 			{
-				AmortizedAmountController.SetAmount (this.residualAmountTextField, value);
+				AmortizedAmountController.SetAmount (this.finalAmountTextField, value);
 			}
 		}
 
-		private decimal? RoundAmount
-		{
-			get
-			{
-				return AmortizedAmountController.GetAmount (this.roundAmountTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetAmount (this.roundAmountTextField, value);
-			}
-		}
-
-		private decimal? Rate
-		{
-			get
-			{
-				return AmortizedAmountController.GetRate (this.rateTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetRate (this.rateTextField, value);
-			}
-		}
-
-		private decimal? PeriodicityFactor
-		{
-			get
-			{
-				return AmortizedAmountController.GetDecimal (this.periodicityFactorTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetDecimal (this.periodicityFactorTextField, value);
-			}
-		}
-
-		private decimal? ProrataNumerator
-		{
-			get
-			{
-				return AmortizedAmountController.GetDecimal (this.prorataNumeratorTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetDecimal (this.prorataNumeratorTextField, value);
-			}
-		}
-
-		private decimal? ProrataDenominator
-		{
-			get
-			{
-				return AmortizedAmountController.GetDecimal (this.prorataDenominatorTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetDecimal (this.prorataDenominatorTextField, value);
-			}
-		}
-
-		private decimal? YearCount
-		{
-			get
-			{
-				return AmortizedAmountController.GetDecimal (this.yearCountTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetDecimal (this.yearCountTextField, value);
-			}
-		}
-
-		private decimal? YearRank
-		{
-			get
-			{
-				return AmortizedAmountController.GetDecimal (this.yearRankTextField);
-			}
-			set
-			{
-				AmortizedAmountController.SetDecimal (this.yearRankTextField, value);
-			}
-		}
+		//??private decimal? ResidualAmount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetAmount (this.residualAmountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetAmount (this.residualAmountTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? RoundAmount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetAmount (this.roundAmountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetAmount (this.roundAmountTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? Rate
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetRate (this.rateTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetRate (this.rateTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? PeriodicityFactor
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetDecimal (this.periodicityFactorTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetDecimal (this.periodicityFactorTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? ProrataNumerator
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetDecimal (this.prorataNumeratorTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetDecimal (this.prorataNumeratorTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? ProrataDenominator
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetDecimal (this.prorataDenominatorTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetDecimal (this.prorataDenominatorTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? YearCount
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetDecimal (this.yearCountTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetDecimal (this.yearCountTextField, value);
+		//??	}
+		//??}
+		//??
+		//??private decimal? YearRank
+		//??{
+		//??	get
+		//??	{
+		//??		return AmortizedAmountController.GetDecimal (this.yearRankTextField);
+		//??	}
+		//??	set
+		//??	{
+		//??		AmortizedAmountController.SetDecimal (this.yearRankTextField, value);
+		//??	}
+		//??}
 
 
 		private static decimal? GetAmount(TextField textField)
@@ -1088,7 +1116,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (this.value.HasValue)
 				{
-					return this.value.Value.AmortizationMethod;
+					//??return this.value.Value.AmortizationMethod;
+					return AmortizationMethod.Unknown;
 				}
 				else
 				{
@@ -1187,20 +1216,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private PropertyState					propertyState;
 		private bool							isReadOnly;
 
-		private TextField						outputAmountTextField;
-		private TextField						forcedAmountTextField;
-		private TextField						baseAmountTextField;
+		//??private TextField						outputAmountTextField;
+		//??private TextField						forcedAmountTextField;
+		//??private TextField						baseAmountTextField;
 		private TextField						initialAmountTextField;
-		private TextField						residualAmountTextField;
-		private TextField						roundAmountTextField;
-		private TextField						rateTextField;
-		private TextField						periodicityFactorTextField;
-		private TextField						prorataNumeratorTextField;
-		private TextField						prorataDenominatorTextField;
-		private TextField						yearCountTextField;
-		private TextField						yearRankTextField;
+		private TextField						finalAmountTextField;
+		//??private TextField						residualAmountTextField;
+		//??private TextField						roundAmountTextField;
+		//??private TextField						rateTextField;
+		//??private TextField						periodicityFactorTextField;
+		//??private TextField						prorataNumeratorTextField;
+		//??private TextField						prorataDenominatorTextField;
+		//??private TextField						yearCountTextField;
+		//??private TextField						yearRankTextField;
 
-		private TextFieldCombo					methodTextFieldCombo;
+		//??private TextFieldCombo					methodTextFieldCombo;
 		private TextFieldCombo					scenarioFieldCombo;
 
 		private EntryController					entryController;

@@ -181,41 +181,36 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			//	Affiche le popup permettant de choisir les paramètres pour lancer la
 			//	simulation de l'expression actuellement sélectionnée.
-			AmountExpressionSimulationPopup.Show (target, this.accessor, delegate
+			ExpressionSimulationParamsPopup.Show (target, this.accessor, delegate
 			{
-				var amount = LocalSettings.ExpressionSimulationAmount;
-				amount = AmortizedAmount.SetAmortizationMethod (amount, this.CurrentMethod);
-				amount = AmortizedAmount.SetExpression (amount, this.expressionController.Value);
-
-				var nodes = this.ComputeSimulation (LocalSettings.ExpressionSimulationRange, amount);
-
+				var nodes = this.ComputeSimulation (LocalSettings.ExpressionSimulationParams);
 				ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
 			});
 		}
 
-		private List<ExpressionSimulationNode> ComputeSimulation(DateRange range, AmortizedAmount amount)
+		private List<ExpressionSimulationNode> ComputeSimulation(ExpressionSimulationParams p)
 		{
 			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants,
 			//	qui pourrant être donnés à ExpressionSimulationTreeTableFiller.
 			var nodes = new List<ExpressionSimulationNode> ();
 
 			var p1 = new DataGuidProperty(ObjectField.MethodGuid, this.objectGuid);
-			var aa = new DataAmortizedAmountProperty (ObjectField.MainValue, amount);
+			//??var aa = new DataAmortizedAmountProperty (ObjectField.MainValue, p.InitialAmount);
 			//...
 
-			var guid = accessor.CreateObject (BaseType.Assets, range.IncludeFrom, Guid.Empty, p1, aa);
+			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p1);
 			var obj = accessor.GetObject(BaseType.Assets, guid);
 
 			var a = new Amortizations (accessor);
-			a.Preview (range, guid);
+			a.Preview (p.Range, guid);
 
 			int i = 0;
 			foreach (var e in obj.Events.Where (x => x.Type == EventType.AmortizationAuto))
 			{
-				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+				var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
-				var initial = p.Value.InitialAmount.GetValueOrDefault ();
-				var final = accessor.GetAmortizedAmount (p.Value).GetValueOrDefault ();
+				var initial = property.Value.InitialAmount.GetValueOrDefault ();
+				var final   = property.Value.FinalAmount.GetValueOrDefault ();
 
 				var node = new ExpressionSimulationNode (i++, e.Timestamp.Date, initial, final);
 				nodes.Add (node);

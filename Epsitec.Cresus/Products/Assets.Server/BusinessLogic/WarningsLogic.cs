@@ -422,7 +422,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie les comptes d'une écriture d'un événement d'un objet d'immobilisation.
 			var p = ObjectProperties.GetObjectProperty (asset, e.Timestamp, ObjectField.MainValue, synthetic: false) as DataAmortizedAmountProperty;
 
-			if (p != null)
+			if (p != null && !p.Value.EntryGuid.IsEmpty)
 			{
 				var aa = p.Value;
 				var ep = Entries.GetEntryProperties (accessor, aa, Entries.GetEntryPropertiesType.Current);
@@ -584,8 +584,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				else if (p is DataAmortizedAmountProperty)
 				{
 					var pp  = p as DataAmortizedAmountProperty;
-					var aa = accessor.GetAmortizedAmount (pp.Value);
-					hasWarning = !aa.HasValue;
+					var a = pp.Value.FinalAmount;
+					hasWarning = !a.HasValue;
 				}
 			}
 

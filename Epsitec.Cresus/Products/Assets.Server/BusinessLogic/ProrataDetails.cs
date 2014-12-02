@@ -13,24 +13,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public struct ProrataDetails
 	{
-		private ProrataDetails(DateRange range, System.DateTime? valueDate, decimal? numerator, decimal? denominator, decimal? quotient)
+		public ProrataDetails(decimal? numerator, decimal? denominator)
 		{
-			this.Range       = range;
-			this.ValueDate   = valueDate;
 			this.Numerator   = numerator;
 			this.Denominator = denominator;
-			this.Quotient    = quotient;
 		}
 
 		public bool								IsEmpty
 		{
 			get
 			{
-				return this.Range.IsEmpty
-					&& !this.ValueDate.HasValue
-					&& !this.Numerator.HasValue
-					&& !this.Denominator.HasValue
-					&& !this.Quotient.HasValue;
+				return !this.Numerator.HasValue
+					&& !this.Denominator.HasValue;
 			}
 		}
 
@@ -88,8 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			n = d - n;
 			n = System.Math.Max (n, 0);
 			n = System.Math.Min (n, d);
-			var quotient = (decimal) n / (decimal) d;
-			return new ProrataDetails (range, valueDate, (decimal) n, (decimal) d, quotient);
+			return new ProrataDetails ((decimal) n, (decimal) d);
 		}
 
 
@@ -114,12 +107,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 	
-		public static ProrataDetails Empty = new ProrataDetails (DateRange.Empty, null, null, null, null);
+		public static ProrataDetails Empty = new ProrataDetails (null, null);
 
-		public readonly DateRange				Range;
-		public readonly System.DateTime?		ValueDate;
 		public readonly decimal?				Numerator;
 		public readonly decimal?				Denominator;
-		public readonly decimal?				Quotient;
 	}
 }

@@ -70,41 +70,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 											  AccountCategory.Depense |
 											  AccountCategory.Recette;
 
-			LocalSettings.TestExpressionAmount = new AmortizedAmount (AmortizationMethod.Unknown, null,
-				0.10m,
-				0.0m, 10.0m,
-				0.0m,
-				Periodicity.Annual,
-				null,
-				4000.0m,
-				4000.0m,
-				5000.0m,
-				5000.0m,
-				0.0m, 0.0m,
-				1.0m,
-				1.0m,
-				EntryScenario.None, System.DateTime.MinValue,
-				Guid.Empty, Guid.Empty, Guid.Empty, 0);
-
-			LocalSettings.ExpressionSimulationRange = new DateRange (
-				new System.DateTime (2000, 1, 1),
-				new System.DateTime (2100, 1, 1));
-
-			LocalSettings.ExpressionSimulationAmount = new AmortizedAmount (AmortizationMethod.Unknown, null,
-				0.10m,
-				0.0m, 10.0m,
-				0.0m,
-				Periodicity.Annual,
-				null,
-				10000.0m,
-				10000.0m,
-				10000.0m,
-				10000.0m,
-				null, null,
-				1.0m,
-				1.0m,
-				EntryScenario.None, System.DateTime.MinValue,
-				Guid.Empty, Guid.Empty, Guid.Empty, 0);
+			LocalSettings.TestExpressionDetails = AmortizationDetails.DefaultTest;
+			LocalSettings.ExpressionSimulationParams = ExpressionSimulationParams.Default;
 		}
 
 
@@ -536,9 +503,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		public static AccountCategory				AccountCategories;
 
-		public static AmortizedAmount				TestExpressionAmount;
-		public static DateRange						ExpressionSimulationRange;
-		public static AmortizedAmount				ExpressionSimulationAmount;
+		public static AmortizationDetails			TestExpressionDetails;
+		public static ExpressionSimulationParams	ExpressionSimulationParams;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;
 		private static readonly Dictionary<SearchKind, SearchInfo> searchInfos;

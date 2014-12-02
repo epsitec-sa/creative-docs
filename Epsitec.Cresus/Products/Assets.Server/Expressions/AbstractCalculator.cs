@@ -4,29 +4,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public abstract class AbstractCalculator
 	{
-		public AbstractCalculator(AmortizedAmount amount)
+		public AbstractCalculator(AmortizationDetails details)
 		{
 			this.traceBuilder = new System.Text.StringBuilder ();
 
-			this.ForcedAmount       = amount.ForcedAmount;
-			this.StartYearAmount    = amount.StartYearAmount.GetValueOrDefault ();
-			this.BaseAmount         = amount.BaseAmount.GetValueOrDefault ();
-			this.InitialAmount      = amount.InitialAmount.GetValueOrDefault ();
-			this.ResidualAmount     = amount.ResidualAmount.GetValueOrDefault ();
-			this.RoundAmount        = amount.RoundAmount.GetValueOrDefault ();
-			this.Rate               = amount.Rate.GetValueOrDefault ();
-			this.PeriodicityFactor  = amount.PeriodicityFactor;
-			this.ProrataNumerator   = amount.ProrataNumerator.GetValueOrDefault ();
-			this.ProrataDenominator = amount.ProrataDenominator.GetValueOrDefault ();
-			this.YearCount          = amount.YearCount;
-			this.YearRank           = amount.YearRank;
-			this.PeriodRank         = amount.PeriodRank;
-			this.Periodicity        = amount.Periodicity;
+			this.BaseAmount         = details.History.BaseAmount;
+			this.StartYearAmount    = details.Def.StartYearAmount;
+			this.InitialAmount      = details.History.InitialAmount;
+
+			this.Rate               = details.Def.Rate;
+			this.YearCount          = details.Def.YearCount;
+			this.Periodicity        = details.Def.Periodicity;
+			this.RoundAmount        = details.Def.Round;
+			this.ResidualAmount     = details.Def.Residual;
+			this.ProrataNumerator   = details.Prorata.Numerator.GetValueOrDefault (0.0m);
+			this.ProrataDenominator = details.Prorata.Denominator.GetValueOrDefault (0.0m);
+			this.YearRank           = details.History.YearRank;
+			this.PeriodRank         = details.History.PeriodRank;
 		}
 
 
@@ -108,9 +108,18 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected decimal PeriodCount
 		{
+			//	Retourne 1/2/4/12.
 			get
 			{
 				return 12.0m / AmortizedAmount.GetPeriodMonthCount (this.Periodicity);
+			}
+		}
+
+		protected decimal PeriodicityFactor
+		{
+			get
+			{
+				return AmortizedAmount.GetPeriodMonthCount (this.Periodicity) / 12.0m;
 			}
 		}
 
@@ -155,11 +164,11 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return System.Math.Max (value, this.ResidualAmount);
 		}
 
-		protected decimal Override(decimal value)
-		{
-			//	Retourne la valeur imposée this.ForcedAmount si elle est définie.
-			return this.ForcedAmount.GetValueOrDefault (value);
-		}
+		//??protected decimal Override(decimal value)
+		//??{
+		//??	//	Retourne la valeur imposée this.ForcedAmount si elle est définie.
+		//??	return this.ForcedAmount.GetValueOrDefault (value);
+		//??}
 
 		protected void Trace(params object[] args)
 		{
@@ -220,19 +229,18 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public readonly System.Text.StringBuilder traceBuilder;
 
-		public readonly decimal?				ForcedAmount;		// valeur forcée facultative
-		public readonly decimal					StartYearAmount;	// valeur au début de l'année
 		public readonly decimal					BaseAmount;			// valeur d'achat
+		public readonly decimal					StartYearAmount;	// valeur au début de l'année
 		public readonly decimal					InitialAmount;		// valeur avant amortissement
-		public readonly decimal					ResidualAmount;		// valeur résiduelle
-		public readonly decimal					RoundAmount;		// arrondi
+
 		public readonly decimal					Rate;				// taux d'amortissement
-		public readonly decimal					PeriodicityFactor;	// facteur lié à la périodicité (0.25 si trimestriel par exemple)
+		public readonly decimal					YearCount;			// nombre total d'années
+		public readonly Periodicity				Periodicity;
+		public readonly decimal					RoundAmount;		// arrondi
+		public readonly decimal					ResidualAmount;		// valeur résiduelle
 		public readonly decimal					ProrataNumerator;	// numérateur du prorata
 		public readonly decimal					ProrataDenominator;	// dénominateur du prorata
-		public readonly decimal					YearCount;			// nombre total d'années
 		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
 		public readonly decimal					PeriodRank;			// rang de la période (0..n)
-		public readonly Periodicity				Periodicity;
 	}
 }

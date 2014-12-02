@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					if (value.HasValue)
 					{
-						var aa = this.accessor.GetAmortizedAmount (value.Value);
+						var aa = value.Value.FinalAmount;
 						if (aa.HasValue)
 						{
 							m = aa.Value;
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (p != null)
 			{
-				return accessor.GetAmortizedAmount (p.Value);
+				return p.Value.FinalAmount;
 			}
 
 			return null;
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				if (p != null)
 				{
-					var aa = accessor.GetAmortizedAmount (p.Value);
+					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				if (p != null)
 				{
-					var aa = accessor.GetAmortizedAmount (p.Value);
+					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				if (p != null)
 				{
-					var aa = accessor.GetAmortizedAmount (p.Value);
+					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&

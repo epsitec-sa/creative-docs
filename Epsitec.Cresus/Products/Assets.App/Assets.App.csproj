@@ -106,7 +106,7 @@
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
     <Compile Include="Popups\ShowExpressionSimulationPopup.cs" />
-    <Compile Include="Popups\AmountExpressionSimulationPopup.cs" />
+    <Compile Include="Popups\ExpressionSimulationParamsPopup.cs" />
     <Compile Include="Popups\TestExpressionPopup.cs" />
     <Compile Include="Popups\ShowExpressionPopup.cs" />
     <Compile Include="Popups\CreateMethodPopup.cs" />
@@ -196,6 +196,7 @@
     <Compile Include="Reports\MCH2SummaryReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
     <Compile Include="Resources\Assets.App\SourceCode\Res.cs" />
+    <Compile Include="Settings\ExpressionSimulationParams.cs" />
     <Compile Include="Settings\SearchInfo.cs" />
     <Compile Include="Settings\SearchKind.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
