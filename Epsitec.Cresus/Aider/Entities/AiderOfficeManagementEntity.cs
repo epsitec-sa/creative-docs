@@ -72,6 +72,16 @@ namespace Epsitec.Aider.Entities
 					return TextFormatter.FormatText (this.OfficeSenders.Count, "expéditeurs");
 			}
 		}
+
+		public static void JoinOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		{
+			AiderEmployeeJobEntity.CreateOfficeUser (businessContext, user.Contact.Person.Employee, office, "");
+		}
+
+		public static void LeaveOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		{
+			office.DeleteOfficeUserJobsForUser (businessContext, user);
+		}
 		
 		public static void JoinOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
 		{
@@ -79,8 +89,9 @@ namespace Epsitec.Aider.Entities
 			var currentSender = user.OfficeSender;
 			var contact		  = user.Contact;
 
-			if (currentOffice.IsNotNull ())
+			if (currentOffice.IsNotNull () && currentOffice != office)
 			{
+				AiderOfficeManagementEntity.LeaveOfficeManagement (businessContext, currentOffice, user);
 
 				//try to remap old sender settings
 				var oldSender = AiderOfficeSenderEntity.Find (businessContext, contact);
@@ -102,6 +113,8 @@ namespace Epsitec.Aider.Entities
 				user.OfficeSender = AiderOfficeSenderEntity.Create (businessContext, office, user.Contact);
 			}
 
+			AiderEmployeeJobEntity.CreateOfficeManager (businessContext, user.Contact.Person.Employee, office, "");
+
 			//Join office
 			user.Office = office;
 		}
@@ -115,11 +128,12 @@ namespace Epsitec.Aider.Entities
 			
 			if(currentSender.IsNotNull ())
 			{
-				//Remove sender
 				office.RemoveSenderInternal (currentSender);
 				AiderOfficeSenderEntity.Delete (businessContext, currentSender);
 			}
-	
+
+			office.DeleteOfficeManagerJobsForUser (businessContext, user);
+			
 			//Leave parish
 			user.Office = null;
 		}
@@ -164,6 +178,33 @@ namespace Epsitec.Aider.Entities
 			}
 
 			businessContext.DeleteEntity (this);
+		}
+
+		public void DeleteOfficeManagerJobsForUser(BusinessContext businessContext, AiderUserEntity user)
+		{
+			this.DeleteOfficeJobs (businessContext, user.Contact.Person.Employee, EmployeeJobFunction.GestionnaireAIDER);
+		}
+
+		public void DeleteOfficeUserJobsForUser(BusinessContext businessContext, AiderUserEntity user)
+		{		
+			this.DeleteOfficeJobs (businessContext, user.Contact.Person.Employee, EmployeeJobFunction.UtilisateurAIDER);
+		}
+
+		private void DeleteOfficeJobs(BusinessContext businessContext, AiderEmployeeEntity employee, EmployeeJobFunction userFonction)
+		{
+			if(this.employeeJobs.Any())
+			{
+				var jobs = this
+						.employeeJobs
+						.Where (j => j.EmployeeJobFunction == userFonction
+						/**/	  && j.Employee == employee
+					    /**/   );
+
+				foreach (var job in jobs)
+				{
+					job.Delete (businessContext);
+				}
+			}	
 		}
 
 		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)

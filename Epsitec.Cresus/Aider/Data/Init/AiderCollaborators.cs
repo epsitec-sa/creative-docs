@@ -112,13 +112,11 @@ namespace Epsitec.Aider.Data.Groups
 							{
 								if (user.Office.IsNotNull ())
 								{
-									AiderEmployeeJobEntity.Create (
-									businessContext,
-									employee,
-									EmployeeJobFunction.GestionnaireAIDER,
-									EmployeeEmployer.None,
-									user.Office,
-									"assigné par le système, vérifier les information du poste");
+									AiderEmployeeJobEntity.CreateOfficeManager (
+												businessContext,
+												employee,
+												user.Office,
+												"");
 								}
 								else
 								{
@@ -132,13 +130,11 @@ namespace Epsitec.Aider.Data.Groups
 										var offices = businessContext.GetByExample<AiderOfficeManagementEntity> (officeExemple);
 										if (offices.Any ())
 										{
-											AiderEmployeeJobEntity.Create (
-											businessContext,
-											employee,
-											EmployeeJobFunction.UtilisateurAIDER,
-											EmployeeEmployer.None,
-											offices.First (),
-											"assigné par le système, vérifier les information du poste");
+											AiderEmployeeJobEntity.CreateOfficeUser (
+												businessContext,
+												employee,
+												offices.First (),
+												"");
 										}
 									}
 								}

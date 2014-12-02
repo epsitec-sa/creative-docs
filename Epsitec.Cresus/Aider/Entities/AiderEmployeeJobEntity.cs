@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Entities
 {
@@ -42,6 +43,40 @@ namespace Epsitec.Aider.Entities
 			job.Employee = employee;
 			job.EmployeeJobFunction = function;
 			job.Employer = employer;
+			job.Office = office;
+			job.Description = detail;
+
+			return job;
+		}
+
+		public static AiderEmployeeJobEntity CreateOfficeUser(
+			BusinessContext context, 
+			AiderEmployeeEntity employee, 
+			AiderOfficeManagementEntity office,
+			string detail)
+		{
+			var job = context.CreateAndRegisterEntity<AiderEmployeeJobEntity> ();
+
+			job.Employee = employee;
+			job.EmployeeJobFunction = EmployeeJobFunction.UtilisateurAIDER;
+			job.Employer = EmployeeEmployer.None;
+			job.Office = office;
+			job.Description = detail;
+
+			return job;
+		}
+
+		public static AiderEmployeeJobEntity CreateOfficeManager(
+			BusinessContext context,
+			AiderEmployeeEntity employee,
+			AiderOfficeManagementEntity office,
+			string detail)
+		{
+			var job = context.CreateAndRegisterEntity<AiderEmployeeJobEntity> ();
+
+			job.Employee = employee;
+			job.EmployeeJobFunction = EmployeeJobFunction.GestionnaireAIDER;
+			job.Employer = EmployeeEmployer.None;
 			job.Office = office;
 			job.Description = detail;
 

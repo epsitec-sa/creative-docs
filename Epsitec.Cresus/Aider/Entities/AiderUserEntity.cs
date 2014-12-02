@@ -137,30 +137,16 @@ namespace Epsitec.Aider.Entities
 
 			if (this.Contact.IsNotNull ())
 			{
-				if (this.Office.IsNotNull ())
+				var oldOffice = AiderOfficeManagementEntity.Find (businessContext, currentParish);
+				if(oldOffice.IsNotNull ())
 				{
-					var office = AiderOfficeManagementEntity.Find (businessContext,group);
-					if(office.IsNotNull ())
-					{
-						AiderOfficeManagementEntity.JoinOfficeManagement (businessContext, office, this);
-					}
+					AiderOfficeManagementEntity.LeaveOfficeUsers (businessContext, oldOffice, this);
 				}
-				else
+
+				var office = AiderOfficeManagementEntity.Find (businessContext, group);
+				if (office.IsNotNull ())
 				{
-					//Stop old usergroup participation
-					var currentUserGroup = currentParish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-					if (currentUserGroup.IsNotNull ())
-					{
-						AiderGroupEntity.RemoveParticipations (businessContext, currentUserGroup.FindParticipationsByGroup (businessContext, this.Contact, currentUserGroup));
-					}
-					//Create usergroup participation
-					var newUserGroup = group.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-					if (newUserGroup.IsNotNull ())
-					{
-						var participationData = new List<ParticipationData> ();
-						participationData.Add (new ParticipationData (this.Contact));
-						newUserGroup.AddParticipations (businessContext, participationData, Date.Today, FormattedText.Null);
-					}
+					AiderOfficeManagementEntity.JoinOfficeUsers (businessContext, office, this);
 				}
 			}
 
