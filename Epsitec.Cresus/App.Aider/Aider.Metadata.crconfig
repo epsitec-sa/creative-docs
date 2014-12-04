@@ -1616,6 +1616,10 @@ AiderReferee = [LVADJ]
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[LVAJI].[LVACE]" title="Contact" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderUser:[AVA9]" title="Nom d'utilisateur" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
