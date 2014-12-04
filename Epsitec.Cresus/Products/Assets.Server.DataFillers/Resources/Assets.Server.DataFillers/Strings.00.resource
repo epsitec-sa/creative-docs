@@ -84,4 +84,11 @@
   <data name="ExpressionsTreeTableFiller.Name" id="KO2">Nom</data>
   <data name="ExpressionsTreeTableFiller.Expression" id="KP2">Expression</data>
   <data name="ExpressionsTreeTableFiller.AmortizationMethod" id="KQ2">Type</data>
+  <data name="ArgumentsTreeTableFiller.Name" id="KR2">Nom</data>
+  <data name="ArgumentsTreeTableFiller.Description" id="KS2">Description</data>
+  <data name="ArgumentsTreeTableFiller.Type" id="KT2">Type C#</data>
+  <data name="ArgumentsTreeTableFiller.Variable" id="KU2">Variable C#</data>
+  <data name="ArgumentsTreeTableFiller.Nullable" id="KV2">Nullable</data>
+  <data name="ArgumentsTreeTableFiller.NullableTrue" id="K03">oui</data>
+  <data name="ArgumentsTreeTableFiller.NullableFalse" id="K13">non</data>
 </bundle>

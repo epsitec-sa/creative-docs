@@ -6,18 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Data
 {
-	public enum BaseTypeKind
+	public enum ArgumentType
 	{
 		Unknown,
-		Assets,
-		Categories,
-		Groups,
-		Persons,
-		AssetsUserFields,
-		PersonsUserFields,
-		Entries,
-		Accounts,
-		Methods,
-		Arguments,
+
+		String,
+		Int,
+		Decimal,
+		Date,
 	}
 }

@@ -47,6 +47,35 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172));
 			}
 			
+			public static class Arguments
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (Arguments.Copy, null);
+				}
+				
+				//	designer:cap/JUKT601
+				public static readonly global::Epsitec.Common.Widgets.Command Copy = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 221));
+				//	designer:cap/JUKU601
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 222));
+				//	designer:cap/JUKV601
+				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 223));
+				//	designer:cap/JUK0701
+				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 224));
+				//	designer:cap/JUK1701
+				public static readonly global::Epsitec.Common.Widgets.Command First = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 225));
+				//	designer:cap/JUK2701
+				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 226));
+				//	designer:cap/JUK3701
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 227));
+				//	designer:cap/JUK4701
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 228));
+				//	designer:cap/JUK5701
+				public static readonly global::Epsitec.Common.Widgets.Command Paste = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 229));
+				//	designer:cap/JUK6701
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 230));
+			}
+			
 			public static class Assets
 			{
 				internal static void _Initialize()
@@ -581,6 +610,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Accounts = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 				//	designer:cap/JUKE001
 				public static readonly global::Epsitec.Common.Widgets.Command Amortizations = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14));
+				//	designer:cap/JUK7701
+				public static readonly global::Epsitec.Common.Widgets.Command Arguments = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 231));
 				//	designer:cap/JUK0001
 				public static readonly global::Epsitec.Common.Widgets.Command Assets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/JUKD001
@@ -676,6 +707,30 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Next = 0x7D3000140000ABL;
 				//	designer:cap/JUKC501
 				public const long Prev = 0x7D3000140000ACL;
+			}
+			
+			public static class Arguments
+			{
+				//	designer:cap/JUKT601
+				public const long Copy = 0x7D3000140000DDL;
+				//	designer:cap/JUKU601
+				public const long Delete = 0x7D3000140000DEL;
+				//	designer:cap/JUKV601
+				public const long Deselect = 0x7D3000140000DFL;
+				//	designer:cap/JUK0701
+				public const long Export = 0x7D3000140000E0L;
+				//	designer:cap/JUK1701
+				public const long First = 0x7D3000140000E1L;
+				//	designer:cap/JUK2701
+				public const long Last = 0x7D3000140000E2L;
+				//	designer:cap/JUK3701
+				public const long New = 0x7D3000140000E3L;
+				//	designer:cap/JUK4701
+				public const long Next = 0x7D3000140000E4L;
+				//	designer:cap/JUK5701
+				public const long Paste = 0x7D3000140000E5L;
+				//	designer:cap/JUK6701
+				public const long Prev = 0x7D3000140000E6L;
 			}
 			
 			public static class Assets
@@ -1112,6 +1167,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Accounts = 0x7D30001400000BL;
 				//	designer:cap/JUKE001
 				public const long Amortizations = 0x7D30001400000EL;
+				//	designer:cap/JUK7701
+				public const long Arguments = 0x7D3000140000E7L;
 				//	designer:cap/JUK0001
 				public const long Assets = 0x7D300014000000L;
 				//	designer:cap/JUKD001
@@ -2606,6 +2663,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544840));
 						}
 					}
+					//	designer:str/JUK0K01
+					public static global::Epsitec.Common.Types.FormattedText Argument
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544960));
+						}
+					}
 					//	designer:str/JUK6G01
 					public static global::Epsitec.Common.Types.FormattedText Asset
 					{
@@ -2796,6 +2861,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544848));
+						}
+					}
+					//	designer:str/JUK1K01
+					public static global::Epsitec.Common.Types.FormattedText Arguments
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544961));
 						}
 					}
 					//	designer:str/JUKFG01
@@ -3085,6 +3158,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544626));
+						}
+					}
+				}
+				
+				public static class Argument
+				{
+					//	designer:str/JUK2K01
+					public static global::Epsitec.Common.Types.FormattedText Goto
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544962));
 						}
 					}
 				}
@@ -3837,6 +3922,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544367));
+						}
+					}
+				}
+				
+				public static class CreateArgument
+				{
+					//	designer:str/JUK3K01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544963));
 						}
 					}
 				}
@@ -5429,6 +5526,18 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class ToolbarControllers
 			{
+				public static class ArgumentsTreeTable
+				{
+					//	designer:str/JUK4K01
+					public static global::Epsitec.Common.Types.FormattedText DeleteQuestion
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544964));
+						}
+					}
+				}
+				
 				public static class AssetsTimeline
 				{
 					public static class Copy
@@ -7163,6 +7272,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544840);
 						}
 					}
+					//	designer:str/JUK0K01
+					public static global::Epsitec.Common.Support.Druid Argument
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544960);
+						}
+					}
 					//	designer:str/JUK6G01
 					public static global::Epsitec.Common.Support.Druid Asset
 					{
@@ -7353,6 +7470,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544848);
+						}
+					}
+					//	designer:str/JUK1K01
+					public static global::Epsitec.Common.Support.Druid Arguments
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544961);
 						}
 					}
 					//	designer:str/JUKFG01
@@ -7642,6 +7767,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544626);
+						}
+					}
+				}
+				
+				public static class Argument
+				{
+					//	designer:str/JUK2K01
+					public static global::Epsitec.Common.Support.Druid Goto
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544962);
 						}
 					}
 				}
@@ -8394,6 +8531,18 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544367);
+						}
+					}
+				}
+				
+				public static class CreateArgument
+				{
+					//	designer:str/JUK3K01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544963);
 						}
 					}
 				}
@@ -9986,6 +10135,18 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class ToolbarControllers
 			{
+				public static class ArgumentsTreeTable
+				{
+					//	designer:str/JUK4K01
+					public static global::Epsitec.Common.Support.Druid DeleteQuestion
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544964);
+						}
+					}
+				}
+				
 				public static class AssetsTimeline
 				{
 					public static class Copy
@@ -10255,6 +10416,7 @@ namespace Epsitec.Cresus.Assets.App
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Assets.App");
 			Commands.Accounts._Initialize ();
+			Commands.Arguments._Initialize ();
 			Commands.Assets._Initialize ();
 			Commands.AssetsLeft._Initialize ();
 			Commands.Categories._Initialize ();

@@ -339,6 +339,33 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		}
 
 
+		protected virtual void CreateArgumentsSamples()
+		{
+			this.AddArgument ("Taux", "Taux d'amortissement", ArgumentType.Decimal, false, "Rate");
+			this.AddArgument ("Nombre d'années", "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount");
+			this.AddArgument ("Arrondi", "Valeur de l'arrondi", ArgumentType.Decimal, false, "Round");
+			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle", ArgumentType.Decimal, false, "Residual");
+		}
+
+		protected void AddArgument(string name, string description, ArgumentType type, bool nullable, string variable)
+		{
+			var args = this.accessor.Mandat.GetData (BaseType.Arguments);
+			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
+
+			var o = new DataObject (this.accessor.UndoManager);
+			args.Add (o);
+
+			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
+			o.AddEvent (e);
+
+			this.AddField (e, ObjectField.Name,             name);
+			this.AddField (e, ObjectField.Description,      description);
+			this.AddField (e, ObjectField.ArgumentType,     (int) type);
+			this.AddField (e, ObjectField.ArgumentNullable, nullable ? 1:0);
+			this.AddField (e, ObjectField.ArgumentVariable, variable);
+		}
+
+
 		protected void AddField(DataEvent e, ObjectField field, string value)
 		{
 			if (!string.IsNullOrEmpty (value))

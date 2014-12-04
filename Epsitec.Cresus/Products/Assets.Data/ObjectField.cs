@@ -40,6 +40,11 @@ namespace Epsitec.Cresus.Assets.Data
 		AmortizationMethod,
 		Expression,
 
+		//	Définition d'un argument.
+		ArgumentType,
+		ArgumentNullable,
+		ArgumentVariable,
+
 		AccountPurchaseDebit,
 		AccountPurchaseCredit,
 		AccountSaleDebit,

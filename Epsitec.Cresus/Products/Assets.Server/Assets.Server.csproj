@@ -73,6 +73,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BusinessLogic\ArgumentsLogic.cs" />
     <Compile Include="BusinessLogic\MethodsLogic.cs" />
     <Compile Include="BusinessLogic\HistoryDetails.cs" />
     <Compile Include="BusinessLogic\SearchDefinition.cs" />

@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public static ViewType PersonsSettings = new ViewType (ViewTypeKind.PersonsSettings);
 		public static ViewType Accounts        = new ViewType (ViewTypeKind.Accounts);
 		public static ViewType Methods         = new ViewType (ViewTypeKind.Methods);
+		public static ViewType Arguments       = new ViewType (ViewTypeKind.Arguments);
 
 		public readonly ViewTypeKind			Kind;
 		public readonly DateRange				AccountsDateRange;

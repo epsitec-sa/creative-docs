@@ -545,6 +545,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.AmortizationMethod:
 				case ObjectField.Periodicity:
 				case ObjectField.Prorata:
+				case ObjectField.ArgumentType:
+				case ObjectField.ArgumentNullable:
 					return FieldType.Int;
 
 				case ObjectField.OneShotDateOperation:

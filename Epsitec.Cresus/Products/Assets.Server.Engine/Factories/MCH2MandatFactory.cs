@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				DummyAccounts.AddAccounts (this.accessor.Mandat, "monvillage 2014");
 			}
 
+			this.CreateArgumentsSamples ();
 			this.CreateMethodsSamples ();
 			this.CreateGroupsSamples ();
 			this.CreateCatsSamples ();

@@ -26,5 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		Account,
 
 		Method,
+
+		Argument,
 	}
 }

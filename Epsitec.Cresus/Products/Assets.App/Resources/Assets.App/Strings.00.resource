@@ -477,4 +477,9 @@
   <data name="DataFillers.ExpressionSimulationTreeTable.Initial" id="KTJ">Montant initial</data>
   <data name="DataFillers.ExpressionSimulationTreeTable.Amortization" id="KUJ">Amortissement</data>
   <data name="DataFillers.ExpressionSimulationTreeTable.Final" id="KVJ">Montant final</data>
+  <data name="Enum.PageType.Argument" id="K0K">Argument</data>
+  <data name="Enum.ViewTypeKind.Arguments" id="K1K">Arguments des méthodes d'amortissements</data>
+  <data name="FieldControllers.Argument.Goto" id="K2K">Aller sur l'argument</data>
+  <data name="Popup.CreateArgument.Title" id="K3K">Création d'un nouvel argument</data>
+  <data name="ToolbarControllers.ArgumentsTreeTable.DeleteQuestion" id="K4K">Voulez-vous supprimer l'argument "{0}" ?</data>
 </bundle>

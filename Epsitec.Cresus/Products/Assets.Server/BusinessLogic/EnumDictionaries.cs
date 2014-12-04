@@ -39,6 +39,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		public static string GetArgumentTypeName(int? type)
+		{
+			if (type.HasValue)
+			{
+				return EnumDictionaries.GetArgumentTypeName ((ArgumentType) type.Value);
+			}
+
+			return null;
+		}
+
 		public static string GetProrataTypeName(int? type)
 		{
 			if (type.HasValue)
@@ -224,6 +234,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static string GetArgumentTypeName(ArgumentType type)
+		{
+			//	Retourne le type exact tel qu'il s'écrit en C#.
+			switch (type)
+			{
+				case ArgumentType.String:
+					return "string";
+
+				case ArgumentType.Int:
+					return "int";
+
+				case ArgumentType.Decimal:
+					return "decimal";
+
+				case ArgumentType.Date:
+					return "System.DateTime";
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
 			switch (type)
@@ -349,6 +381,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return AmortizationMethod.YearsLinear;
 				yield return AmortizationMethod.YearsDegressive;
 				yield return AmortizationMethod.Custom;
+			}
+		}
+
+
+		public static Dictionary<int, string> DictArgumentTypes
+		{
+			get
+			{
+				var dict = new Dictionary<int, string> ();
+
+				foreach (var type in EnumDictionaries.EnumArgumentsTypes)
+				{
+					var text = EnumDictionaries.GetArgumentTypeName (type);
+					dict.Add ((int) type, text);
+				}
+
+				return dict;
+			}
+		}
+
+		private static IEnumerable<ArgumentType> EnumArgumentsTypes
+		{
+			get
+			{
+				yield return ArgumentType.String;
+				yield return ArgumentType.Int;
+				yield return ArgumentType.Decimal;
+				yield return ArgumentType.Date;
 			}
 		}
 

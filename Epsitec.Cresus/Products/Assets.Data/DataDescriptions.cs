@@ -75,6 +75,15 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AmortizationYearCount:
 					return Res.Strings.Enum.ObjectField.AmortizationYearCount.ToString ();
 
+				case ObjectField.ArgumentType:
+					return Res.Strings.Enum.ObjectField.ArgumentType.ToString ();
+
+				case ObjectField.ArgumentNullable:
+					return Res.Strings.Enum.ObjectField.ArgumentNullable.ToString ();
+
+				case ObjectField.ArgumentVariable:
+					return Res.Strings.Enum.ObjectField.ArgumentVariable.ToString ();
+
 				case ObjectField.CategoryName:
 					return Res.Strings.Enum.ObjectField.CategoryName.ToString ();
 

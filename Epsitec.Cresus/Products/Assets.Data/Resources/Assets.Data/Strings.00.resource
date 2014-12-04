@@ -71,4 +71,7 @@
   <data name="AmortizedAmount.BaseRateSummary.YearCount.Degressive" id="K52">1 − ((ValeurRésiduelle/ValeurPrécédente) ^ (1/(NbAnnées−RangAnnée)))&lt;br/&gt;1 − (({0}/{1}) ^ (1/({2}−{3})))</data>
   <data name="Enum.ObjectField.Expression" id="K62">Expression</data>
   <data name="Enum.ObjectField.Method" id="K72">Méthode</data>
+  <data name="Enum.ObjectField.ArgumentType" id="K82">Type C#</data>
+  <data name="Enum.ObjectField.ArgumentVariable" id="K92">Variable C#</data>
+  <data name="Enum.ObjectField.ArgumentNullable" id="KA2">Nullable</data>
 </bundle>

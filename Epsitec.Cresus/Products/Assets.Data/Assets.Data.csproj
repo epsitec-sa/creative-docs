@@ -54,6 +54,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ArgumentType.cs" />
     <Compile Include="AmortizedAmount.cs" />
     <Compile Include="ComputerSettings.cs" />
     <Compile Include="Helpers\IOHelpers.cs" />

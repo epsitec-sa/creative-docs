@@ -22,5 +22,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		PersonsSettings,
 		Accounts,
 		Methods,
+		Arguments,
 	}
 }

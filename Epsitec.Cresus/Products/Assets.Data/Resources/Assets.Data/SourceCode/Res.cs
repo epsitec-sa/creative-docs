@@ -293,6 +293,30 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386));
 						}
 					}
+					//	designer:str/HUKA201
+					public static global::Epsitec.Common.Types.FormattedText ArgumentNullable
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544394));
+						}
+					}
+					//	designer:str/HUK8201
+					public static global::Epsitec.Common.Types.FormattedText ArgumentType
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544392));
+						}
+					}
+					//	designer:str/HUK9201
+					public static global::Epsitec.Common.Types.FormattedText ArgumentVariable
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544393));
+						}
+					}
 					//	designer:str/HUKB001
 					public static global::Epsitec.Common.Types.FormattedText CategoryName
 					{
@@ -959,6 +983,30 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544386);
+						}
+					}
+					//	designer:str/HUKA201
+					public static global::Epsitec.Common.Support.Druid ArgumentNullable
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544394);
+						}
+					}
+					//	designer:str/HUK8201
+					public static global::Epsitec.Common.Support.Druid ArgumentType
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544392);
+						}
+					}
+					//	designer:str/HUK9201
+					public static global::Epsitec.Common.Support.Druid ArgumentVariable
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544393);
 						}
 					}
 					//	designer:str/HUKB001

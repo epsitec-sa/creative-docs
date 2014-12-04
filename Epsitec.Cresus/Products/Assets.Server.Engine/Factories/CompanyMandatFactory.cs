@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				DummyAccounts.AddAccounts (this.accessor.Mandat, "pme 2011");
 			}
 
+			this.CreateArgumentsSamples ();
 			this.CreateMethodsSamples ();
 			this.CreateGroupsSamples ();
 			this.CreateCatsSamples ();

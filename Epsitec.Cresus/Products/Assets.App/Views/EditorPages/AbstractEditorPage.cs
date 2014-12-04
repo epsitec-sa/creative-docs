@@ -1034,6 +1034,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				case PageType.Method:
 					return new EditorPageMethod (accessor, commandContext, baseType, isTimeless: true);
 
+				case PageType.Argument:
+					return new EditorPageArgument (accessor, commandContext, baseType, isTimeless: true);
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unsupported page type {0}", page.ToString ()));
 			}

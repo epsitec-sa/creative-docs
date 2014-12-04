@@ -273,6 +273,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case ViewTypeKind.Methods:
 					return new MethodsView (accessor, commandContext, toolbar, viewType);
 
+				case ViewTypeKind.Arguments:
+					return new ArgumentsView (accessor, commandContext, toolbar, viewType);
+
 				default:
 					return null;
 			}

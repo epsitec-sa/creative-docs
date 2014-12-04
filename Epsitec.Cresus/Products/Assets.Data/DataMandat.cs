@@ -27,7 +27,8 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
 			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
 			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods       = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
@@ -45,7 +46,8 @@ namespace Epsitec.Cresus.Assets.Data
 			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
 			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
 			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods       = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
@@ -193,6 +195,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case BaseTypeKind.Methods:
 					return this.methods;
+
+				case BaseTypeKind.Arguments:
+					return this.arguments;
 
 				default:
 					// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
@@ -567,6 +572,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidDictionary<DataObject>						persons;
 		private readonly GuidDictionary<DataObject>						entries;
 		private readonly GuidDictionary<DataObject>						methods;
+		private readonly GuidDictionary<DataObject>						arguments;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
 		private readonly GuidDictionary<AbstractReportParams>			reports;
 
