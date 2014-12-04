@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class ArgumentsTreeTableFiller
 			{
+				//	designer:str/KUK2301
+				public static global::Epsitec.Common.Types.FormattedText Default
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544418));
+					}
+				}
 				//	designer:str/KUKS201
 				public static global::Epsitec.Common.Types.FormattedText Description
 				{
@@ -935,6 +943,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class ArgumentsTreeTableFiller
 			{
+				//	designer:str/KUK2301
+				public static global::Epsitec.Common.Support.Druid Default
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544418);
+					}
+				}
 				//	designer:str/KUKS201
 				public static global::Epsitec.Common.Support.Druid Description
 				{

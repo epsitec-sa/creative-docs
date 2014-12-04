@@ -84,6 +84,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.ArgumentVariable:
 					return Res.Strings.Enum.ObjectField.ArgumentVariable.ToString ();
 
+				case ObjectField.ArgumentDefault:
+					return Res.Strings.Enum.ObjectField.ArgumentDefault.ToString ();
+
 				case ObjectField.CategoryName:
 					return Res.Strings.Enum.ObjectField.CategoryName.ToString ();
 

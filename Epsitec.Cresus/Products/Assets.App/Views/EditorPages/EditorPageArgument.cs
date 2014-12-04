@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.CreateEnumController   (parent, ObjectField.ArgumentType, EnumDictionaries.DictArgumentTypes);
 			this.CreateBoolController   (parent, ObjectField.ArgumentNullable);
 			this.CreateStringController (parent, ObjectField.ArgumentVariable);
+			this.CreateStringController (parent, ObjectField.ArgumentDefault);
 		}
 	}
 }

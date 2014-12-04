@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Assets.Data
 		ArgumentType,
 		ArgumentNullable,
 		ArgumentVariable,
+		ArgumentDefault,
 
 		AccountPurchaseDebit,
 		AccountPurchaseCredit,

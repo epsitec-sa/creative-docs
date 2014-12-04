@@ -341,13 +341,13 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument ("Taux", "Taux d'amortissement", ArgumentType.Decimal, false, "Rate");
-			this.AddArgument ("Nombre d'années", "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount");
-			this.AddArgument ("Arrondi", "Valeur de l'arrondi", ArgumentType.Decimal, false, "Round");
-			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle", ArgumentType.Decimal, false, "Residual");
+			this.AddArgument ("Taux", "Taux d'amortissement", ArgumentType.Decimal, false, "Rate", "0.1");
+			this.AddArgument ("Nombre d'années", "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
+			this.AddArgument ("Arrondi", "Valeur de l'arrondi", ArgumentType.Decimal, false, "Round", "1");
+			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle", ArgumentType.Decimal, false, "Residual", "1");
 		}
 
-		protected void AddArgument(string name, string description, ArgumentType type, bool nullable, string variable)
+		protected void AddArgument(string name, string description, ArgumentType type, bool nullable, string variable, string def)
 		{
 			var args = this.accessor.Mandat.GetData (BaseType.Arguments);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -363,6 +363,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.ArgumentType,     (int) type);
 			this.AddField (e, ObjectField.ArgumentNullable, nullable ? 1:0);
 			this.AddField (e, ObjectField.ArgumentVariable, variable);
+			this.AddField (e, ObjectField.ArgumentDefault,  def);
 		}
 
 

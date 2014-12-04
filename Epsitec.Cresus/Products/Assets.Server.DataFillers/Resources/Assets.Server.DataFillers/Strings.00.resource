@@ -91,4 +91,5 @@
   <data name="ArgumentsTreeTableFiller.Nullable" id="KV2">Nullable</data>
   <data name="ArgumentsTreeTableFiller.NullableTrue" id="K03">oui</data>
   <data name="ArgumentsTreeTableFiller.NullableFalse" id="K13">non</data>
+  <data name="ArgumentsTreeTableFiller.Default" id="K23">Valeur initiale</data>
 </bundle>

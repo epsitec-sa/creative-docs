@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.ArgumentType,     TreeTableColumnType.String, ArgumentsTreeTableFiller.typeWidth,     Res.Strings.ArgumentsTreeTableFiller.Type.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.ArgumentNullable, TreeTableColumnType.String, ArgumentsTreeTableFiller.nullWidth,     Res.Strings.ArgumentsTreeTableFiller.Nullable.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.ArgumentVariable, TreeTableColumnType.String, ArgumentsTreeTableFiller.variableWidth, Res.Strings.ArgumentsTreeTableFiller.Variable.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.ArgumentDefault,  TreeTableColumnType.String, ArgumentsTreeTableFiller.defaultWidth,  Res.Strings.ArgumentsTreeTableFiller.Default.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<5; i++)
+			for (int i=0; i<6; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -75,6 +76,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var type     = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.ArgumentType);
 				var nullable = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.ArgumentNullable);
 				var variable = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.ArgumentVariable);
+				var def      = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.ArgumentDefault);
 
 				var t = EnumDictionaries.GetArgumentTypeName (type);
 				var n = (nullable == 1) ?
@@ -88,6 +90,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell3 = new TreeTableCellString (t,        cellState);
 				var cell4 = new TreeTableCellString (n,        cellState);
 				var cell5 = new TreeTableCellString (variable, cellState);
+				var cell6 = new TreeTableCellString (def,      cellState);
 
 				int columnRank = 0;
 
@@ -96,6 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell3);
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
 			}
 
 			return content;
@@ -107,12 +111,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private const int typeWidth     = 120;
 		private const int nullWidth     =  80;
 		private const int variableWidth = 150;
+		private const int defaultWidth  = 100;
 
 		public const int totalWidth =
 			ArgumentsTreeTableFiller.nameWidth +
 			ArgumentsTreeTableFiller.descWidth +
 			ArgumentsTreeTableFiller.typeWidth +
 			ArgumentsTreeTableFiller.nullWidth +
-			ArgumentsTreeTableFiller.variableWidth;
+			ArgumentsTreeTableFiller.variableWidth +
+			ArgumentsTreeTableFiller.defaultWidth;
 	}
 }

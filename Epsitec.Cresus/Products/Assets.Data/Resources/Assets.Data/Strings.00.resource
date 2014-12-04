@@ -74,4 +74,5 @@
   <data name="Enum.ObjectField.ArgumentType" id="K82">Type C#</data>
   <data name="Enum.ObjectField.ArgumentVariable" id="K92">Variable C#</data>
   <data name="Enum.ObjectField.ArgumentNullable" id="KA2">Nullable</data>
+  <data name="Enum.ObjectField.ArgumentDefault" id="KB2">Valeur initiale</data>
 </bundle>
