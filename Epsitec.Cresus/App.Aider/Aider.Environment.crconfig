@@ -10,4 +10,4 @@ DefineFileDepot ("downloads", "S:\Epsitec.Cresus\App.Aider\Downloads")
 # ConfigureAsTestEnvironment ();
 # ConfigureAsReadOnly ();
 
-EnableDbConsoleLogger ("S:\db.log");
+# EnableDbConsoleLogger ("S:\db.log");

@@ -7,8 +7,8 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 
@@ -100,6 +100,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			set;
 		}
 
+		/// <summary>
+		/// Gets the cached source set (can be used directly in a SQL IN clause).
+		/// See also <seealso cref="SqlField.CreateSet"/>.
+		/// </summary>
+		/// <value>The cached source set.</value>
+		public SqlField							CachedSourceSet
+		{
+			get
+			{
+				return this.cachedSourceSet;
+			}
+		}
+
 		public List<DataExpression>				Conditions
 		{
 			get
@@ -155,7 +168,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.sortClauses.Add (new SortClause (InternalField.CreateId (example), sortOrder));
 		}
 
-		public void AddCondition<T>(DataContext dataContext, T entity, Expression<Func<T, bool>> lambda)
+		public void AddCondition<T>(DataContext dataContext, T entity, Expression<System.Func<T, bool>> lambda)
 			where T : AbstractEntity
 		{
 			var condition = LambdaConverter.Convert (dataContext, entity, lambda);
@@ -245,7 +258,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.CheckSignificantFields (checker);
 		}
 
+		/// <summary>
+		/// Caches the source set so that further operation using this object can reuse the
+		/// keys of the entities and don't need to rerun a SELECT.
+		/// </summary>
+		/// <param name="keys">The keys of the source set.</param>
+		/// <exception cref="System.InvalidOperationException">Source set cannot be defined multiple times.</exception>
+		internal void CacheSourceSet(IEnumerable<DbKey> keys)
+		{
+			if (this.cachedSourceSet != null)
+			{
+				throw new System.InvalidOperationException ("Source set cannot be defined multiple times.");
+			}
 
+			var ids = keys.Select (x => x.Id.Value);
+
+			this.cachedSourceSet = SqlField.CreateSet (new SqlSet (ids.Select (x => SqlField.CreateConstant (x, DbRawType.Int64))));
+		}
+
+		
 		public HashSet<AbstractEntity> GetNonPersistentEntities(DataContext dataContext)
 		{
 			var typeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
@@ -411,5 +442,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private readonly List<SortClause>		sortClauses;
 		private readonly List<EntityField>		significantFields;
 		private AbstractEntity					requestedEntity;
+		private SqlField						cachedSourceSet;
 	}
 }
