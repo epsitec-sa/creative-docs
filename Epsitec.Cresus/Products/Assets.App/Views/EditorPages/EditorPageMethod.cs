@@ -194,18 +194,26 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//	qui pourrant être donnés à ExpressionSimulationTreeTableFiller.
 			var nodes = new List<ExpressionSimulationNode> ();
 
-			var p1 = new DataGuidProperty(ObjectField.MethodGuid, this.objectGuid);
-			//??var aa = new DataAmortizedAmountProperty (ObjectField.MainValue, p.InitialAmount);
-			//...
+			var p1 = new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (p.InitialAmount));
+			var p2 = new DataGuidProperty (ObjectField.MethodGuid, this.objectGuid);
+			var p3 = new DataDecimalProperty (ObjectField.AmortizationYearCount, p.YearCount);
+			var p4 = new DataDecimalProperty (ObjectField.AmortizationRate, p.Rate);
+			var p5 = new DataIntProperty (ObjectField.Periodicity, (int) p.Periodicity);
+			var p6 = new DataIntProperty (ObjectField.Prorata, (int) ProrataType.None);
+			var p7 = new DataDecimalProperty (ObjectField.Round, p.RoundAmount);
+			var p8 = new DataDecimalProperty (ObjectField.ResidualValue, p.ResidualAmount);
 
-			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p1);
+			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p2, p3, p4, p5, p6, p7, p8);
 			var obj = accessor.GetObject(BaseType.Assets, guid);
 
+			var ie = obj.GetInputEvent ();
+			ie.AddProperty (p1);
+
 			var a = new Amortizations (accessor);
-			a.Preview (p.Range, guid);
+			a.Preview (p.Range, guid);  // génère tous les amortissements
 
 			int i = 0;
-			foreach (var e in obj.Events.Where (x => x.Type == EventType.AmortizationAuto))
+			foreach (var e in obj.Events.Where (x => x.Type == EventType.AmortizationPreview))
 			{
 				var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 

@@ -80,11 +80,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition SetMethod(AmortizationDefinition model, AmortizationMethod method)
+		public static AmortizationDefinition SetMethod(AmortizationDefinition model, AmortizationMethod method, string expression)
 		{
 			return new AmortizationDefinition (
 				method,
-				model.Expression,
+				expression,
 				model.Rate,
 				model.YearCount,
 				model.Periodicity,

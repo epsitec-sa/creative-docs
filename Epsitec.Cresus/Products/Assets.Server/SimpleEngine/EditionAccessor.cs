@@ -27,6 +27,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public DataEvent						EditedEvent
+		{
+			get
+			{
+				return this.dataEvent;
+			}
+		}
+
 		public Timestamp?						EditedTimestamp
 		{
 			get

@@ -112,9 +112,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					var c = controller as AmortizedAmountFieldController;
 
 					c.EventType     = this.eventType;
-					c.Value         = this.accessor.EditionAccessor.GetFieldAmortizedAmount (field);
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
+
+					c.SetValue (
+						this.accessor.EditionAccessor.EditedObject,
+						this.accessor.EditionAccessor.EditedEvent,
+						this.accessor.EditionAccessor.GetFieldAmortizedAmount (field));
 				}
 				else if (controller is IntFieldController)
 				{
@@ -714,7 +718,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldAmortizedAmount (of);
+				controller.SetValue (
+					this.accessor.EditionAccessor.EditedObject,
+					this.accessor.EditionAccessor.EditedEvent,
+					this.accessor.EditionAccessor.GetFieldAmortizedAmount (of));
+
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);

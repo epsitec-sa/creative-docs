@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	Crée la propriété.
-			var aa = new AmortizedAmount (null, null, entryScenario, System.DateTime.MinValue, Guid.Empty, Guid.Empty, Guid.Empty, 0);
+			var aa = new AmortizedAmount (null, null, entryScenario, Guid.Empty, 0);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 			if (p != null)
 			{
-				var aa = Entries.RemoveEntry(this, p.Value);
+				var aa = Entries.RemoveEntry(this, obj, e, p.Value);
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 

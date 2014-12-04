@@ -18,36 +18,40 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
+		public void SetValue(DataObject asset, DataEvent e, AmortizedAmount? value)
+		{
+			this.asset = asset;
+			this.e     = e;
+
+			if (this.value != value)
+			{
+				this.value = value;
+
+				if (this.controller != null)
+				{
+					if (this.ignoreChanges.IsZero)
+					{
+						using (this.ignoreChanges.Enter ())
+						{
+							this.controller.SetValue (this.asset, this.e, this.value);
+						}
+					}
+					else
+					{
+						using (this.ignoreChanges.Enter ())
+						{
+							this.controller.ValueNoEditing = this.value;
+						}
+					}
+				}
+			}
+		}
+
 		public AmortizedAmount?					Value
 		{
 			get
 			{
 				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-
-					if (this.controller != null)
-					{
-						if (this.ignoreChanges.IsZero)
-						{
-							using (this.ignoreChanges.Enter ())
-							{
-								this.controller.Value = this.value;
-							}
-						}
-						else
-						{
-							using (this.ignoreChanges.Enter ())
-							{
-								this.controller.ValueNoEditing = this.value;
-							}
-						}
-					}
-				}
 			}
 		}
 
@@ -70,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		protected override void ClearValue()
 		{
-			this.Value = null;
+			this.SetValue (this.asset, this.e, null);
 			this.OnValueEdited (this.Field);
 		}
 
@@ -96,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.controller = new AmortizedAmountController (this.accessor);
 			this.controller.CreateUI (this.frameBox);
 			this.controller.IsReadOnly = this.PropertyState == PropertyState.Readonly;
-			this.controller.Value = this.value;
+			this.controller.SetValue (this.asset, this.e, this.value);
 
 			this.UpdatePropertyState ();
 
@@ -106,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.Value = this.controller.Value;
+						this.controller.SetValue (this.asset, this.e, this.controller.Value);
 						this.OnValueEdited (this.Field);
 					}
 				}
@@ -136,7 +140,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private AmortizedAmountController			controller;
-		private AmortizedAmount?					value;
+		private AmortizedAmountController		controller;
+		private DataObject						asset;
+		private DataEvent						e;
+		private AmortizedAmount?				value;
 	}
 }

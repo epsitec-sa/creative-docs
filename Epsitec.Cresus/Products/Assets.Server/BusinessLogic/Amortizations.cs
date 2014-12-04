@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var timestamp = obj.GetNewTimestamp (period.ExcludeTo.AddDays (-1));
 				var history = Amortizations.GetHistoryDetails (obj, timestamp);
 
-				if (!def.IsEmpty && !prorata.IsEmpty && !history.IsEmpty)
+				if (!def.IsEmpty && !history.IsEmpty)
 				{
 					var details = new AmortizationDetails (def, prorata, history);
 
@@ -329,9 +329,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				System.Diagnostics.Debug.Assert (p != null);
 
-				var value = Amortizations.ComputeAmortization (this.accessor, details).Value;
+				var finalAmount = Amortizations.ComputeAmortization (this.accessor, details).Value;
 
-				var aa = AmortizedAmount.SetFinalAmount (p.Value, value);
+				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, finalAmount);
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (field == ObjectField.MainValue)
 						{
-							//??Amortizations.UpdateAmortizedAmount (accessor, e, startYear, ref lastAmount, ref startYearAmount, ref lastBase);
+							Amortizations.CreateEntry (accessor, obj, e);
 						}
 						else
 						{
@@ -519,8 +519,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-#if false
-		private static void UpdateAmortizedAmount(DataAccessor accessor, DataEvent e, bool startYear, ref decimal? lastAmount, ref decimal? startYearAmount, ref decimal? lastBase)
+		private static void CreateEntry(DataAccessor accessor, DataObject asset, DataEvent e)
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
@@ -528,32 +527,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var aa = p.Value;
 
-				if (aa.AmortizationMethod == AmortizationMethod.None)  // montant fixe ?
-				{
-					aa = AmortizedAmount.SetPreviousAmount (aa, lastAmount);
-					Amortizations.SetAmortizedAmount (e, aa);
-
-					lastAmount = accessor.GetAmortizedAmount (aa);
-					lastBase   = lastAmount;
-				}
-				else  // amortissement ?
-				{
-					aa = AmortizedAmount.SetAmortizedAmount (aa, lastAmount, startYearAmount, lastBase);
-					Amortizations.SetAmortizedAmount (e, aa);
-
-					lastAmount = accessor.GetAmortizedAmount (aa);
-				}
-
-				if (startYear)
-				{
-					startYearAmount = lastAmount;
-				}
-
-				aa = Entries.CreateEntry (accessor, aa);  // génère ou met à jour les écritures
+				aa = Entries.CreateEntry (accessor, asset, e, aa);  // génère ou met à jour les écritures
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
-#endif
 
 		private static void UpdateComputedAmount(DataEvent e, ObjectField field, ref decimal? lastAmount)
 		{

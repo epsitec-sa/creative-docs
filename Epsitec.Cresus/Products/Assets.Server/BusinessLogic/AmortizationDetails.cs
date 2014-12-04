@@ -28,9 +28,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDetails SetMethod(AmortizationDetails model, AmortizationMethod method)
+		public static AmortizationDetails SetMethod(AmortizationDetails model, AmortizationMethod method, string expression)
 		{
-			var m = AmortizationDefinition.SetMethod (model.Def, method);
+			var m = AmortizationDefinition.SetMethod (model.Def, method, expression);
 			return new AmortizationDetails (m, model.Prorata, model.History);
 		}
 

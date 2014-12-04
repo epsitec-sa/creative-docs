@@ -26,5 +26,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					&& this.Amount != 0.0m;                 // le montant ne doit pas être nul
 			}
 		}
+
+		public static EntryProperties Empty = new EntryProperties
+		{
+			Date   = System.DateTime.MinValue,
+			Debit  = null,
+			Credit = null,
+			Stamp  = null,
+			Title  = null,
+			Amount = 0.0m,
+		};
 	}
 }

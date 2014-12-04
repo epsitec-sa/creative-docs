@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (p != null && !p.Value.EntryGuid.IsEmpty)
 			{
 				var aa = p.Value;
-				var ep = Entries.GetEntryProperties (accessor, aa, Entries.GetEntryPropertiesType.Current);
+				var ep = Entries.GetEntryProperties (accessor, asset, e, aa, Entries.GetEntryPropertiesType.Current);
 
 				if (ep != null)
 				{

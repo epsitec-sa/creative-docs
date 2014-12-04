@@ -27,6 +27,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public void SetValue(DataObject asset, DataEvent e, AmortizedAmount? value)
+		{
+			this.asset = asset;
+			this.e     = e;
+
+			if (this.value != value)
+			{
+				this.value = value;
+				this.UpdateEventType ();
+				this.CreateLines ();
+			}
+		}
+
 		public AmortizedAmount?					Value
 		{
 			get
@@ -35,12 +48,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.UpdateEventType ();
-					this.CreateLines ();
-				}
 			}
 		}
 
@@ -537,7 +544,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.InitialAmount      = this.value.Value.InitialAmount;
 					this.FinalAmount        = this.value.Value.FinalAmount;
 
-					bool hasEntry = Entries.HasEntry (this.accessor, this.value.Value);
+					bool hasEntry = Entries.HasEntry (this.accessor, this.asset, this.e, this.value.Value);
 					this.deleteEntryButton.Enable = hasEntry && !this.isReadOnly;
 					this.showEntryButton  .Enable = hasEntry;
 				}
@@ -621,9 +628,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.value.HasValue)
 			{
-				this.value = Entries.CreateEntry (this.accessor, this.value.Value);
+				this.value = Entries.CreateEntry (this.accessor, this.asset, this.e, this.value.Value);
 			}
 
+			this.entryController.Asset         = this.asset;
+			this.entryController.Event         = this.e;
 			this.entryController.Value         = this.value;
 			this.entryController.PropertyState = this.propertyState;
 			this.entryController.IsReadOnly    = this.isReadOnly;
@@ -1154,15 +1163,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (this.value.HasValue)
 			{
-				var obj = this.accessor.GetObject (BaseType.Assets, this.value.Value.AssetGuid);
-				if (obj != null)
+				if (this.e != null)
 				{
-					var e = obj.GetEvent (this.value.Value.EventGuid);
-					if (e != null)
-					{
-						this.eventType = e.Type;
-						return;
-					}
+					this.eventType = this.e.Type;
+					return;
 				}
 			}
 
@@ -1211,6 +1215,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private readonly SafeCounter			ignoreChanges;
 		private readonly HashSet<FieldColorType> fieldColorTypes;
 
+		private DataObject						asset;
+		private DataEvent						e;
 		private AmortizedAmount?				value;
 		private EventType						eventType;
 		private PropertyState					propertyState;

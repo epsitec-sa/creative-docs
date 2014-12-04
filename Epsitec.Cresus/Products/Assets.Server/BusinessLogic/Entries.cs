@@ -21,46 +21,46 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private bool HasEntry(AmortizedAmount amount)
+		private bool HasEntry(DataObject asset, DataEvent e, AmortizedAmount amount)
 		{
-			var editedProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.EditedOrBase);
+			var editedProperties = this.GetEntryProperties (asset, e, amount, GetEntryPropertiesType.EditedOrBase);
 			return editedProperties.IsValid;
 		}
 
-		private AmortizedAmount CreateEntry(AmortizedAmount amount)
+		private AmortizedAmount CreateEntry(DataObject asset, DataEvent e, AmortizedAmount amount)
 		{
 			//	Crée l'écriture liée à un amortissement ordinaire.
-			System.Diagnostics.Debug.Assert (amount.Date.Year != 1);
+			System.Diagnostics.Debug.Assert (e.Timestamp.Date.Year != 1);
 
-			var editedProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.EditedOrBase);
+			var editedProperties = this.GetEntryProperties (asset, e, amount, GetEntryPropertiesType.EditedOrBase);
 
 			if (amount.EntryScenario == EntryScenario.None || !editedProperties.IsValid)
 			{
-				return this.RemoveEntry (amount);
+				return this.RemoveEntry (asset, e, amount);
 			}
 			else
 			{
 				var entryGuid = amount.EntryGuid;
 				var entrySeed = amount.EntrySeed;
 
-				var dataEntry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
+				var dataEntry = this.GetEntry (asset, e);
 
 				if (dataEntry == null)
 				{
-					dataEntry = this.CreateDataEntry (amount, ref entryGuid, ref entrySeed);
+					dataEntry = this.CreateDataEntry (asset, e, amount, ref entryGuid, ref entrySeed);
 				}
 
-				var entryProperties = this.GetEntryProperties (amount, GetEntryPropertiesType.Current);
+				var entryProperties = this.GetEntryProperties (asset, e, amount, GetEntryPropertiesType.Current);
 				this.UpdateEntry (dataEntry, entryProperties);
 
 				return AmortizedAmount.SetEntry (amount, entryGuid, entrySeed+1);
 			}
 		}
 
-		private AmortizedAmount RemoveEntry(AmortizedAmount amount)
+		private AmortizedAmount RemoveEntry(DataObject asset, DataEvent e, AmortizedAmount amount)
 		{
 			//	Supprime l'écriture liée à un AmortizedAmount.
-			var entry = this.GetEntry (amount.AssetGuid, amount.EventGuid);
+			var entry = this.GetEntry (asset, e);
 
 			if (entry == null)
 			{
@@ -93,15 +93,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (column)
 			{
 				case 0:
-					text = this.GetDebit (aa, null, ea, GetEntryPropertiesType.Sample, out tooltip);
+					text = this.GetDebit (null, null, aa, ea, GetEntryPropertiesType.Sample, out tooltip);
 					break;
 			
 				case 1:
-					text = this.GetCredit (aa, null, ea, GetEntryPropertiesType.Sample, out tooltip);
+					text = this.GetCredit (null, null, aa, ea, GetEntryPropertiesType.Sample, out tooltip);
 					break;
 			
 				case 2:
-					text = this.GetTitle (aa, null, GetEntryPropertiesType.Sample);
+					text = this.GetTitle (null, null, aa, GetEntryPropertiesType.Sample);
 					break;
 			}
 		}
@@ -115,62 +115,47 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			Sample,
 		}
 
-		public EntryProperties GetEntryProperties(AmortizedAmount amount, GetEntryPropertiesType type)
+		public EntryProperties GetEntryProperties(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
-			var asset = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
-			System.Diagnostics.Debug.Assert (asset != null);
-
-			var assetEvent = asset.GetEvent (amount.EventGuid);
-			System.Diagnostics.Debug.Assert (assetEvent != null);
-
-			var entryAccounts = this.GetEntryAccounts (amount);
+			var entryAccounts = this.GetEntryAccounts (asset, e, amount);
 
 			string tooltip;
 
 			return new EntryProperties
 			{
-				Date   = this.GetDate   (amount, assetEvent,                type),
-				Debit  = this.GetDebit  (amount, assetEvent, entryAccounts, type, out tooltip),
-				Credit = this.GetCredit (amount, assetEvent, entryAccounts, type, out tooltip),
-				Stamp  = this.GetStamp  (amount, assetEvent,                type),
-				Title  = this.GetTitle  (amount, assetEvent,                type),
-				Amount = this.GetValue  (amount, assetEvent,                type),
+				Date   = this.GetDate   (asset, e, amount,                type),
+				Debit  = this.GetDebit  (asset, e, amount, entryAccounts, type, out tooltip),
+				Credit = this.GetCredit (asset, e, amount, entryAccounts, type, out tooltip),
+				Stamp  = this.GetStamp  (asset, e, amount,                type),
+				Title  = this.GetTitle  (asset, e, amount,                type),
+				Amount = this.GetValue  (asset, e, amount,                type),
 			};
 		}
 
 
-		private EntryAccounts GetEntryAccounts(AmortizedAmount amount)
+		private EntryAccounts GetEntryAccounts(DataObject asset, DataEvent e, AmortizedAmount amount)
 		{
 			//	Retourne la liste des comptes à utiliser pour passer une écriture liée
 			//	à l'événement contenant ce montant.
 			var ea = new EntryAccounts ();
 
-			if (this.accessor != null)
+			foreach (var field in DataAccessor.AccountFields)
 			{
-				var obj = this.accessor.GetObject (BaseType.Assets, amount.AssetGuid);
-				if (obj != null)
-				{
-					var timestamp = new Timestamp (amount.Date, 0);
-
-					foreach (var field in DataAccessor.AccountFields)
-					{
-						ea[field] = ObjectProperties.GetObjectPropertyString (obj, timestamp, field);
-					}
-				}
+				ea[field] = ObjectProperties.GetObjectPropertyString (asset, e.Timestamp, field);
 			}
 
 			return ea;
 		}
 
 
-		private DataObject GetEntry(Guid assetGuid, Guid eventGuid)
+		private DataObject GetEntry(DataObject asset, DataEvent e)
 		{
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 
 			foreach (var entry in entries)
 			{
-				if (assetGuid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid) &&
-					eventGuid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid))
+				if (asset.Guid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryAssetGuid) &&
+					    e.Guid == ObjectProperties.GetObjectPropertyGuid (entry, null, ObjectField.EntryEventGuid))
 				{
 					return entry;
 				}
@@ -180,12 +165,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private System.DateTime GetDate(AmortizedAmount amount, DataEvent assetEvent, GetEntryPropertiesType type)
+		private System.DateTime GetDate(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			//	Retourne la date à utiliser pour l'écriture.
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedDate) as DataDateProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedDate) as DataDateProperty;
 				if (p != null)
 				{
 					return p.Value;
@@ -201,17 +186,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			return amount.Date;
+			return e.Timestamp.Date;
 		}
 
-		private string GetDebit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
+		private string GetDebit(DataObject asset, DataEvent e, AmortizedAmount amount, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
 		{
 			//	Retourne le compte à utiliser au débit de l'écriture.
 			tooltip = null;
 
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedDebit) as DataStringProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedDebit) as DataStringProperty;
 				if (p != null && !string.IsNullOrEmpty (p.Value))
 				{
 					return p.Value;
@@ -262,14 +247,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetCredit(AmortizedAmount amount, DataEvent assetEvent, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
+		private string GetCredit(DataObject asset, DataEvent e, AmortizedAmount amount, EntryAccounts entryAccouts, GetEntryPropertiesType type, out string tooltip)
 		{
 			//	Retourne le compte à utiliser au crédit de l'écriture.
 			tooltip = null;
 
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedCredit) as DataStringProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedCredit) as DataStringProperty;
 				if (p != null && !string.IsNullOrEmpty (p.Value))
 				{
 					return p.Value;
@@ -320,12 +305,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetStamp(AmortizedAmount amount, DataEvent assetEvent, GetEntryPropertiesType type)
+		private string GetStamp(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			//	Retourne la pièce de l'écriture.
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedStamp) as DataStringProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedStamp) as DataStringProperty;
 				if (p != null)
 				{
 					return p.Value;
@@ -344,12 +329,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		private string GetTitle(AmortizedAmount amount, DataEvent assetEvent, GetEntryPropertiesType type)
+		private string GetTitle(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			//	Retourne le libellé de l'écriture.
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedTitle) as DataStringProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedTitle) as DataStringProperty;
 				if (p != null)
 				{
 					return p.Value;
@@ -373,10 +358,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				var guid = amount.AssetGuid;
-				var timestamp = new Timestamp (amount.Date, 0);
-
-				name = AssetsLogic.GetSummary (this.accessor, guid, timestamp);
+				name = AssetsLogic.GetSummary (this.accessor, asset, e.Timestamp);
 			}
 
 			var title = EnumDictionaries.GetEntryScenarioTitle (amount.EntryScenario);
@@ -391,12 +373,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private decimal GetValue(AmortizedAmount amount, DataEvent assetEvent, GetEntryPropertiesType type)
+		private decimal GetValue(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			//	Retourne le montant de l'écriture.
 			if (type == GetEntryPropertiesType.Current)
 			{
-				var p = assetEvent.GetProperty (ObjectField.AssetEntryForcedAmount) as DataDecimalProperty;
+				var p = e.GetProperty (ObjectField.AssetEntryForcedAmount) as DataDecimalProperty;
 				if (p != null)
 				{
 					return p.Value;
@@ -441,7 +423,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private DataObject CreateDataEntry(AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
+		private DataObject CreateDataEntry(DataObject asset, DataEvent e, AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
 		{
 			var entry = new DataObject (this.accessor.UndoManager);
 
@@ -452,11 +434,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			entries.Add (entry);
 
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
-			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
-			entry.AddEvent (e);
+			var ee = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
+			entry.AddEvent (ee);
 
-			e.AddProperty (new DataGuidProperty (ObjectField.EntryAssetGuid, amount.AssetGuid));
-			e.AddProperty (new DataGuidProperty (ObjectField.EntryEventGuid, amount.EventGuid));
+			ee.AddProperty (new DataGuidProperty (ObjectField.EntryAssetGuid, asset.Guid));
+			ee.AddProperty (new DataGuidProperty (ObjectField.EntryEventGuid, e.Guid));
 
 			return entry;
 		}
@@ -477,7 +459,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region Static helpers
-		public static EntryProperties GetEntryProperties(DataAccessor accessor, AmortizedAmount amount, GetEntryPropertiesType type)
+		public static EntryProperties GetEntryProperties(DataAccessor accessor, DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
 		{
 			if (accessor == null)
 			{
@@ -486,11 +468,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			using (var entries = new Entries (accessor))
 			{
-				return entries.GetEntryProperties (amount, type);
+				return entries.GetEntryProperties (asset, e, amount, type);
 			}
 		}
 
-		public static bool HasEntry(DataAccessor accessor, AmortizedAmount aa)
+		public static bool HasEntry(DataAccessor accessor, DataObject asset, DataEvent e, AmortizedAmount aa)
 		{
 			if (accessor == null)
 			{
@@ -499,11 +481,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			using (var entries = new Entries (accessor))
 			{
-				return entries.HasEntry (aa);
+				return entries.HasEntry (asset, e, aa);
 			}
 		}
 
-		public static AmortizedAmount CreateEntry(DataAccessor accessor, AmortizedAmount aa)
+		public static AmortizedAmount CreateEntry(DataAccessor accessor, DataObject asset, DataEvent e, AmortizedAmount aa)
 		{
 			if (accessor == null)
 			{
@@ -512,11 +494,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			using (var entries = new Entries (accessor))
 			{
-				return entries.CreateEntry (aa);
+				return entries.CreateEntry (asset, e, aa);
 			}
 		}
 
-		public static AmortizedAmount RemoveEntry(DataAccessor accessor, AmortizedAmount aa)
+		public static AmortizedAmount RemoveEntry(DataAccessor accessor, DataObject asset, DataEvent e, AmortizedAmount aa)
 		{
 			if (accessor == null)
 			{
@@ -525,7 +507,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			using (var entries = new Entries (accessor))
 			{
-				return entries.RemoveEntry (aa);
+				return entries.RemoveEntry (asset, e, aa);
 			}
 		}
 

@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var aa = p.Value;
 
 				aa = AmortizedAmount.SetFinalAmount (aa, value.Value);
-				aa = Entries.CreateEntry (accessor, aa);  // génère les écritures
+				aa = Entries.CreateEntry (accessor, asset, e, aa);  // génère les écritures
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 
@@ -139,24 +139,29 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				//	On prend les champs de type texte ayant un SummaryOrder.
-				var list = new List<string> ();
-
-				foreach (var field in accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
-					.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
-					.OrderBy (x => x.SummaryOrder)
-					.Select (x => x.Field))
-				{
-					var text = ObjectProperties.GetObjectPropertyString (obj, timestamp, field);
-
-					if (!string.IsNullOrEmpty (text))
-					{
-						list.Add (text);
-					}
-				}
-
-				return string.Join (" ", list).Trim ();
+				return AssetsLogic.GetSummary (accessor, obj, timestamp);
 			}
+		}
+
+		public static string GetSummary(DataAccessor accessor, DataObject obj, Timestamp? timestamp = null)
+		{
+			//	On prend les champs de type texte ayant un SummaryOrder.
+			var list = new List<string> ();
+
+			foreach (var field in accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
+				.Where (x => x.Type == FieldType.String && x.SummaryOrder.HasValue)
+				.OrderBy (x => x.SummaryOrder)
+				.Select (x => x.Field))
+			{
+				var text = ObjectProperties.GetObjectPropertyString (obj, timestamp, field);
+
+				if (!string.IsNullOrEmpty (text))
+				{
+					list.Add (text);
+				}
+			}
+
+			return string.Join (" ", list).Trim ();
 		}
 	}
 }

@@ -29,6 +29,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		public DataObject						Asset;
+		public DataEvent						Event;
+
 		public AmortizedAmount?					Value
 		{
 			get
@@ -331,8 +334,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				using (var entries = new Entries (this.accessor))
 				{
-					baseProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.Base);
-					editProperties = entries.GetEntryProperties (this.value.Value, Entries.GetEntryPropertiesType.EditedOrBase);
+					baseProperties = entries.GetEntryProperties (this.Asset, this.Event, this.value.Value, Entries.GetEntryPropertiesType.Base);
+					editProperties = entries.GetEntryProperties (this.Asset, this.Event, this.value.Value, Entries.GetEntryPropertiesType.EditedOrBase);
 				}
 
 				this.UpdatePropertyState (this.dateController,   baseProperties.Date   == editProperties.Date);

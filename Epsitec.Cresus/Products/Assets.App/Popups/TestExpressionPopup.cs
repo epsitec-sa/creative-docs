@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					{
 						LocalSettings.TestExpressionDetails = popup.Details;
 
-						var details = AmortizationDetails.SetMethod (LocalSettings.TestExpressionDetails, method);
+						var details = AmortizationDetails.SetMethod (LocalSettings.TestExpressionDetails, method, expression);
 						var result = Amortizations.ComputeAmortization (accessor, details);
 						popup.SetResult (result);
 					}

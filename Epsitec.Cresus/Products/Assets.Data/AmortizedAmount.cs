@@ -10,16 +10,12 @@ namespace Epsitec.Cresus.Assets.Data
 	public struct AmortizedAmount : System.IEquatable<AmortizedAmount>
 	{
 		public AmortizedAmount(decimal? initialAmount, decimal? finalAmount,
-			EntryScenario entryScenario, System.DateTime date,
-			Guid assetGuid, Guid eventGuid, Guid entryGuid, int entrySeed)
+			EntryScenario entryScenario, Guid entryGuid, int entrySeed)
 		{
 			this.InitialAmount = initialAmount;
 			this.FinalAmount   = finalAmount;
 
 			this.EntryScenario = entryScenario;
-			this.Date          = date;
-			this.AssetGuid     = assetGuid;
-			this.EventGuid     = eventGuid;
 			this.EntryGuid     = entryGuid;
 			this.EntrySeed     = entrySeed;
 		}
@@ -30,9 +26,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.FinalAmount   = finalValue;
 
 			this.EntryScenario = EntryScenario.None;
-			this.Date          = System.DateTime.MinValue;
-			this.AssetGuid     = Guid.Empty;
-			this.EventGuid     = Guid.Empty;
 			this.EntryGuid     = Guid.Empty;
 			this.EntrySeed     = 0;
 		}
@@ -43,9 +36,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.FinalAmount   = null;
 
 			this.EntryScenario = entryScenario;
-			this.Date          = System.DateTime.MinValue;
-			this.AssetGuid     = Guid.Empty;
-			this.EventGuid     = Guid.Empty;
 			this.EntryGuid     = Guid.Empty;
 			this.EntrySeed     = 0;
 		}
@@ -56,9 +46,6 @@ namespace Epsitec.Cresus.Assets.Data
 			this.FinalAmount   = IOHelpers.ReadDecimalAttribute (reader, "FinalAmount");
 
 			this.EntryScenario = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
-			this.Date          = IOHelpers.ReadDateAttribute (reader, "Date").GetValueOrDefault ();
-			this.AssetGuid     = IOHelpers.ReadGuidAttribute (reader, "AssetGuid");
-			this.EventGuid     = IOHelpers.ReadGuidAttribute (reader, "EventGuid");
 			this.EntryGuid     = IOHelpers.ReadGuidAttribute (reader, "EntryGuid");
 			this.EntrySeed     = IOHelpers.ReadIntAttribute  (reader, "EntrySeed").GetValueOrDefault ();
 
@@ -70,9 +57,6 @@ namespace Epsitec.Cresus.Assets.Data
 		public readonly decimal?				FinalAmount;
 
 		public readonly EntryScenario			EntryScenario;
-		public readonly System.DateTime			Date;
-		public readonly Guid					AssetGuid;
-		public readonly Guid					EventGuid;
 		public readonly Guid					EntryGuid;
 		public readonly int						EntrySeed;
 
@@ -85,9 +69,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.InitialAmount,
 				finalAmount,
 				model.EntryScenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
 				model.EntryGuid,
 				model.EntrySeed
 			);
@@ -100,9 +81,6 @@ namespace Epsitec.Cresus.Assets.Data
 				initialAmount,
 				finalAmount,
 				model.EntryScenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
 				model.EntryGuid,
 				model.EntrySeed
 			);
@@ -115,9 +93,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.InitialAmount,
 				model.FinalAmount,
 				scenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
 				model.EntryGuid,
 				model.EntrySeed
 			);
@@ -130,9 +105,6 @@ namespace Epsitec.Cresus.Assets.Data
 				model.InitialAmount,
 				model.FinalAmount,
 				model.EntryScenario,
-				model.Date,
-				model.AssetGuid,
-				model.EventGuid,
 				entryGuid,
 				entrySeed
 			);
@@ -146,9 +118,6 @@ namespace Epsitec.Cresus.Assets.Data
 			return this.InitialAmount == other.InitialAmount
 				&& this.FinalAmount   == other.FinalAmount
 				&& this.EntryScenario == other.EntryScenario
-				&& this.Date          == other.Date
-				&& this.AssetGuid     == other.AssetGuid
-				&& this.EventGuid     == other.EventGuid
 				&& this.EntryGuid     == other.EntryGuid
 				&& this.EntrySeed     == other.EntrySeed;
 		}
@@ -171,9 +140,6 @@ namespace Epsitec.Cresus.Assets.Data
 			return this.InitialAmount.GetHashCode ()
 				 ^ this.FinalAmount  .GetHashCode ()
 				 ^ this.EntryScenario.GetHashCode ()
-				 ^ this.Date         .GetHashCode ()
-				 ^ this.AssetGuid    .GetHashCode ()
-				 ^ this.EventGuid    .GetHashCode ()
 				 ^ this.EntryGuid    .GetHashCode ()
 				 ^ this.EntrySeed    .GetHashCode ();
 		}
@@ -197,9 +163,6 @@ namespace Epsitec.Cresus.Assets.Data
 			IOHelpers.WriteDecimalAttribute (writer, "FinalAmount",   this.FinalAmount);
 
 			IOHelpers.WriteTypeAttribute    (writer, "EntryScenario", this.EntryScenario);
-			IOHelpers.WriteDateAttribute    (writer, "Date",          this.Date);
-			IOHelpers.WriteGuidAttribute    (writer, "AssetGuid",     this.AssetGuid);
-			IOHelpers.WriteGuidAttribute    (writer, "EventGuid",     this.EventGuid);
 			IOHelpers.WriteGuidAttribute    (writer, "EntryGuid",     this.EntryGuid);
 			IOHelpers.WriteIntAttribute     (writer, "EntrySeed",     this.EntrySeed);
 
