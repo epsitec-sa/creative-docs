@@ -75,7 +75,10 @@ namespace Epsitec.Aider.Entities
 
 		public static void JoinOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
 		{
-			AiderEmployeeJobEntity.CreateOfficeUser (businessContext, user.Contact.Person.Employee, office, "");
+			if(office.IsUserJobRequiredFor(user))
+			{
+				AiderEmployeeJobEntity.CreateOfficeUser (businessContext, user.Contact.Person.Employee, office, "");
+			}		
 		}
 
 		public static void LeaveOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
@@ -113,8 +116,16 @@ namespace Epsitec.Aider.Entities
 				user.OfficeSender = AiderOfficeSenderEntity.Create (businessContext, office, user.Contact);
 			}
 
-			AiderEmployeeJobEntity.CreateOfficeManager (businessContext, user.Contact.Person.Employee, office, "");
+			if (office.UserJobExistFor (user))
+			{
+				office.DeleteOfficeUserJobsForUser (businessContext, user);
+			}
 
+			if(!office.ManagerJobExistFor (user))
+			{
+				AiderEmployeeJobEntity.CreateOfficeManager (businessContext, user.Contact.Person.Employee, office, "");
+			}
+			
 			//Join office
 			user.Office = office;
 		}
@@ -192,19 +203,17 @@ namespace Epsitec.Aider.Entities
 
 		private void DeleteOfficeJobs(BusinessContext businessContext, AiderEmployeeEntity employee, EmployeeJobFunction userFonction)
 		{
-			if(this.employeeJobs.Any())
+			var example = new AiderEmployeeJobEntity ()
 			{
-				var jobs = this
-						.employeeJobs
-						.Where (j => j.EmployeeJobFunction == userFonction
-						/**/	  && j.Employee == employee
-					    /**/   );
+				EmployeeJobFunction = userFonction,
+				Employee = employee
+			};
+			var jobs = businessContext.DataContext.GetByExample<AiderEmployeeJobEntity> (example);
 
-				foreach (var job in jobs)
-				{
-					job.Delete (businessContext);
-				}
-			}	
+			foreach (var job in jobs)
+			{
+				businessContext.DataContext.DeleteEntity (job);
+			}
 		}
 
 		partial void GetOfficeSenders(ref IList<AiderOfficeSenderEntity> value)
@@ -220,6 +229,31 @@ namespace Epsitec.Aider.Entities
 		partial void GetEmployeeJobs(ref IList<AiderEmployeeJobEntity> value)
 		{
 			value = this.GetVirtualCollection (ref this.employeeJobs, x => x.Office = this).AsReadOnlyCollection ();
+		}
+
+		public bool IsUserJobRequiredFor(AiderUserEntity user)
+		{
+			return !this.EmployeeJobs.Any (j =>
+				/**/j.Employee == user.Contact.Person.Employee &&
+				/**/(j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER 
+				/**/|| j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER
+				/**/|| j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER
+					/**/)
+				/**/);
+		}
+
+		public bool UserJobExistFor(AiderUserEntity user)
+		{
+			return this.EmployeeJobs.Any (j =>
+				/**/j.Employee == user.Contact.Person.Employee &&
+									  /**/j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
+		}
+
+		public bool ManagerJobExistFor(AiderUserEntity user)
+		{
+			return this.EmployeeJobs.Any (j =>
+				/**/j.Employee == user.Contact.Person.Employee &&
+									  /**/j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER);
 		}
 
 		public void RefreshOfficeShortName()
@@ -266,6 +300,7 @@ namespace Epsitec.Aider.Entities
 			yield return System.Tuple.Create ("coordination - information", "CI ", OfficeType.RegionCI);
 		}
 
+		
 
 		internal void AddSenderInternal(AiderOfficeSenderEntity settings)
 		{
