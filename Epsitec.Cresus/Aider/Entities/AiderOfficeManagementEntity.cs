@@ -168,7 +168,6 @@ namespace Epsitec.Aider.Entities
 			office.ParishGroupPathCache = managementGroup.Path;
 			office.RefreshOfficeShortName ();
 			office.Region = managementGroup.GetRootRegionCode ();
-			AiderUsersGroups.CreateForGroup (businessContext, managementGroup);
 
 			return office;
 		}
