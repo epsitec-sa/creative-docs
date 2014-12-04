@@ -81,9 +81,11 @@ namespace Epsitec.Aider.Data.Groups
 					{
 						System.Console.WriteLine ("contact missing... nothing to do");
 					}
+
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				}
 
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				
 			}
 		}
 
@@ -112,11 +114,15 @@ namespace Epsitec.Aider.Data.Groups
 							{
 								if (user.Office.IsNotNull ())
 								{
-									AiderEmployeeJobEntity.CreateOfficeManager (
+									if(!user.Office.ManagerJobExistFor (user))
+									{
+										AiderEmployeeJobEntity.CreateOfficeManager (
 												businessContext,
 												employee,
 												user.Office,
 												"");
+									}
+									
 								}
 								else
 								{
@@ -130,11 +136,15 @@ namespace Epsitec.Aider.Data.Groups
 										var offices = businessContext.GetByExample<AiderOfficeManagementEntity> (officeExemple);
 										if (offices.Any ())
 										{
-											AiderEmployeeJobEntity.CreateOfficeUser (
+											if(!offices.First().UserJobExistFor(user))
+											{
+												AiderEmployeeJobEntity.CreateOfficeUser (
 												businessContext,
 												employee,
 												offices.First (),
 												"");
+											}
+											
 										}
 									}
 								}
@@ -150,9 +160,9 @@ namespace Epsitec.Aider.Data.Groups
 					{
 						System.Console.WriteLine ("contact missing... nothing to do");
 					}
-				}
 
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				}
 			}
 		}
 	}
