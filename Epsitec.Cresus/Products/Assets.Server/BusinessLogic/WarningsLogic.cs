@@ -282,7 +282,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var exp      = (pExp      == null) ? Guid.Empty : pExp.Value;
 
 			var eventGuid = (baseType == BaseType.Assets) ? e.Guid : Guid.Empty;
-			var method = MethodsLogic.GetMethod (accessor, exp);
 
 			if (round < 0.0m)
 			{
@@ -298,35 +297,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				warnings.Add (warning);
 			}
 
-			if (method == AmortizationMethod.RateLinear ||
-				method == AmortizationMethod.RateDegressive)
-			{
-				if (rate < 0.0m)
-				{
-					var description = Res.Strings.WarningsLogic.Value.GreaterOrEqualToZero.ToString ();
-					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationRate, description);
-					warnings.Add (warning);
-				}
-			}
-			else if (method == AmortizationMethod.YearsLinear ||
-					 method == AmortizationMethod.YearsDegressive)
-			{
-				if (years <= 0.0m)
-				{
-					var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
-					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationYearCount, description);
-					warnings.Add (warning);
-				}
-			}
-			else if (method == AmortizationMethod.Custom)
-			{
-				if (exp.IsEmpty)
-				{
-					var description = Res.Strings.WarningsLogic.Value.Expression.ToString ();
-					var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.Expression, description);
-					warnings.Add (warning);
-				}
-			}
+			//??if (method == AmortizationMethod.RateLinear ||
+			//??	method == AmortizationMethod.RateDegressive)
+			//??{
+			//??	if (rate < 0.0m)
+			//??	{
+			//??		var description = Res.Strings.WarningsLogic.Value.GreaterOrEqualToZero.ToString ();
+			//??		var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationRate, description);
+			//??		warnings.Add (warning);
+			//??	}
+			//??}
+			//??else if (method == AmortizationMethod.YearsLinear ||
+			//??		 method == AmortizationMethod.YearsDegressive)
+			//??{
+			//??	if (years <= 0.0m)
+			//??	{
+			//??		var description = Res.Strings.WarningsLogic.Value.GreaterThanZero.ToString ();
+			//??		var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.AmortizationYearCount, description);
+			//??		warnings.Add (warning);
+			//??	}
+			//??}
+			//??else if (method == AmortizationMethod.Custom)
+			//??{
+			//??	if (exp.IsEmpty)
+			//??	{
+			//??		var description = Res.Strings.WarningsLogic.Value.Expression.ToString ();
+			//??		var warning = new Warning (baseType, obj.Guid, eventGuid, ObjectField.Expression, description);
+			//??		warnings.Add (warning);
+			//??	}
+			//??}
 		}
 
 
@@ -498,18 +497,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			foreach (var obj in accessor.Mandat.GetData (baseType))
 			{
-				var method = AmortizationMethod.Unknown;
-
-				if (baseType.Kind == BaseTypeKind.Categories)
-				{
-					var e = obj.GetInputEvent ();
-					var p = e.GetProperty (ObjectField.MethodGuid) as DataGuidProperty;
-					if (p != null && !p.Value.IsEmpty)
-					{
-						method = MethodsLogic.GetMethod (accessor, p.Value);
-					}
-				}
-
 				//	Dans la base des groupes, la première ligne n'a jamais de numéro
 				//	(c'est l'objet "Groupes", père de tous les groupes).
 				//	Il faut donc l'ignorer.
@@ -521,7 +508,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						//	champs qui n'ont pas de sens, selon la méthode d'amortissement.
 						if (baseType.Kind == BaseTypeKind.Categories)
 						{
-							if (Amortizations.IsHidden (method, field))
+							if (Amortizations.IsHidden (field))
 							{
 								continue;  // ce champ n'a pas de sens
 							}
@@ -545,18 +532,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static void CheckEmpty(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e, params ObjectField[] fields)
 		{
 			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
-			var method = AmortizationMethod.Unknown;
-			{
-				var p = asset.GetSyntheticProperty (e.Timestamp, ObjectField.MethodGuid) as DataGuidProperty;
-				if (p != null && !p.Value.IsEmpty)
-				{
-					method = MethodsLogic.GetMethod (accessor, p.Value);
-				}
-			}
-
 			foreach (var field in fields)
 			{
-				if (Amortizations.IsHidden (method, field))
+				if (Amortizations.IsHidden (field))
 				{
 					continue;
 				}

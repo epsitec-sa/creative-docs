@@ -40,9 +40,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,               TreeTableColumnType.String, MethodsTreeTableFiller.nameWidth,   Res.Strings.ExpressionsTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.AmortizationMethod, TreeTableColumnType.String, MethodsTreeTableFiller.methodWidth, Res.Strings.ExpressionsTreeTableFiller.AmortizationMethod.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Expression,         TreeTableColumnType.String, MethodsTreeTableFiller.expWidth,    Res.Strings.ExpressionsTreeTableFiller.Expression.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,       TreeTableColumnType.String, MethodsTreeTableFiller.nameWidth, Res.Strings.ExpressionsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Expression, TreeTableColumnType.String, MethodsTreeTableFiller.expWidth,  Res.Strings.ExpressionsTreeTableFiller.Expression.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -52,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<3; i++)
+			for (int i=0; i<2; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -68,33 +67,29 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Methods, guid);
 
-				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var method = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.AmortizationMethod);
-				var exp    = MethodsLogic.GetExpressionSummary (this.accessor, guid);
-
-				var m = EnumDictionaries.GetAmortizationMethodSummary (method);
+				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var exp  = MethodsLogic.GetExpressionSummary (this.accessor, guid);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
 				var cell1 = new TreeTableCellString (name, cellState);
-				var cell2 = new TreeTableCellString (m,    cellState);
-				var cell3 = new TreeTableCellString (exp,  cellState);
+				var cell2 = new TreeTableCellString (exp,  cellState);
 
 				int columnRank = 0;
 
 				content.Columns[columnRank++].AddRow (cell1);
 				content.Columns[columnRank++].AddRow (cell2);
-				content.Columns[columnRank++].AddRow (cell3);
 			}
 
 			return content;
 		}
 
 
-		private const int nameWidth   = 180;
-		private const int methodWidth = 120;
-		private const int expWidth    = 120;
+		private const int nameWidth = 250;
+		private const int expWidth  = 120;
 
-		public const int totalWidth  = MethodsTreeTableFiller.nameWidth + MethodsTreeTableFiller.methodWidth + MethodsTreeTableFiller.expWidth;
+		public const int totalWidth  =
+			MethodsTreeTableFiller.nameWidth +
+			MethodsTreeTableFiller.expWidth;
 	}
 }

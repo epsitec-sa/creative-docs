@@ -73,11 +73,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var rate   = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationRate);
 				var years  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.AmortizationYearCount);
 
-				var method = MethodsLogic.GetMethod (this.accessor, mg);
-
-				SingleCategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationRate,      ref rate);
-				SingleCategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationYearCount, ref years);
-
 				var m = MethodsLogic.GetSummary (this.accessor, mg);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
@@ -96,14 +91,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 
 			return content;
-		}
-
-		private static void Hide(AmortizationMethod method, ObjectField field, ref decimal? value)
-		{
-			if (Amortizations.IsHidden (method, field))
-			{
-				value = null;
-			}
 		}
 	}
 }

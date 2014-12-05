@@ -86,8 +86,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.isOutOfBounds = true;
 			this.eventType     = EventType.Unknown;
 
-			var method = AmortizationMethod.Unknown;
-
 			this.fieldColorTypes.Clear ();
 
 			if (!objectGuid.IsEmpty && this.obj != null)
@@ -103,12 +101,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.eventType      = e.Type;
 					this.hasEvent       = true;
 					this.isOutOfBounds  = false;
-
-					var p = this.obj.GetSyntheticProperty (e.Timestamp, ObjectField.MethodGuid) as DataGuidProperty;
-					if (p != null && !p.Value.IsEmpty)
-					{
-						method = MethodsLogic.GetMethod (this.accessor, p.Value);
-					}
 				}
 			}
 
@@ -142,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					for (int row = 0; row < rowsCount; row++)
 					{
 						var tile = this.GetTile (column, row);
-						bool hidden = Amortizations.IsHidden (method, tile.Field);
+						bool hidden = Amortizations.IsHidden (tile.Field);
 						var cell = this.GetCell (tile, hidden);
 						columns.Add (cell);
 

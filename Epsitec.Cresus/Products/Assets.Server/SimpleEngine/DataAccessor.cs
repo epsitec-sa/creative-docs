@@ -559,7 +559,6 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.EntryAmount:
 					return FieldType.Decimal;
 
-				case ObjectField.AmortizationMethod:
 				case ObjectField.Periodicity:
 				case ObjectField.Prorata:
 				case ObjectField.ArgumentType:

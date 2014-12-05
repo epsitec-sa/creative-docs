@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
 			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
-			TestExpressionPopup.Show (target, this.accessor, AmortizationMethod.Custom, arguments, this.expressionController.Value);
+			TestExpressionPopup.Show (target, this.accessor, arguments, this.expressionController.Value);
 		}
 
 		private void Simulation(Widget target)

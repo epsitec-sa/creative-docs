@@ -61,7 +61,6 @@
     <Compile Include="MandatStatistics.cs" />
     <Compile Include="MandatInfo.cs" />
     <Compile Include="IViewState.cs" />
-    <Compile Include="AmortizationMethod.cs" />
     <Compile Include="Periodicity.cs" />
     <Compile Include="SaveMandatMode.cs" />
     <Compile Include="UndoableDictionary.cs" />
@@ -71,7 +70,6 @@
     <Compile Include="UndoGroup.cs" />
     <Compile Include="UndoManager.cs" />
     <Compile Include="Reports\AbstractReportParams.cs" />
-    <Compile Include="AmortizedAmount2.cs" />
     <Compile Include="BaseTypeKind.cs" />
     <Compile Include="BaseType.cs" />
     <Compile Include="ComparableData.cs" />

@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Assets.Data
 		GroupSuggestedDuringCreation,
 
 		//	Définition d'une méthode.
-		AmortizationMethod,
 		Expression,
 
 		//	Définition d'un argument.

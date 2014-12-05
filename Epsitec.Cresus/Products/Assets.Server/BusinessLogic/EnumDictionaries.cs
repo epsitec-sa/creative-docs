@@ -19,26 +19,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		public static string GetAmortizationMethodName(int? method)
-		{
-			if (method.HasValue)
-			{
-				return EnumDictionaries.GetAmortizationMethodName ((AmortizationMethod) method.Value);
-			}
-
-			return null;
-		}
-
-		public static string GetAmortizationMethodSummary(int? method)
-		{
-			if (method.HasValue)
-			{
-				return EnumDictionaries.GetAmortizationMethodSummary ((AmortizationMethod) method.Value);
-			}
-
-			return null;
-		}
-
 		public static string GetArgumentTypeName(int? type)
 		{
 			if (type.HasValue)
@@ -180,60 +160,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetAmortizationMethodName(AmortizationMethod method)
-		{
-			switch (method)
-			{
-				case AmortizationMethod.None:
-					return Res.Strings.Enum.AmortizationMethod.None.Name.ToString ();
-
-				case AmortizationMethod.RateLinear:
-					return Res.Strings.Enum.AmortizationMethod.RateLinear.Name.ToString ();
-
-				case AmortizationMethod.RateDegressive:
-					return Res.Strings.Enum.AmortizationMethod.RateDegressive.Name.ToString ();
-
-				case AmortizationMethod.YearsLinear:
-					return Res.Strings.Enum.AmortizationMethod.YearsLinear.Name.ToString ();
-
-				case AmortizationMethod.YearsDegressive:
-					return Res.Strings.Enum.AmortizationMethod.YearsDegressive.Name.ToString ();
-
-				case AmortizationMethod.Custom:
-					return Res.Strings.Enum.AmortizationMethod.Custom.Name.ToString ();
-
-				default:
-					return null;
-			}
-		}
-
-		public static string GetAmortizationMethodSummary(AmortizationMethod method)
-		{
-			switch (method)
-			{
-				case AmortizationMethod.None:
-					return Res.Strings.Enum.AmortizationMethod.None.Summary.ToString ();
-
-				case AmortizationMethod.RateLinear:
-					return Res.Strings.Enum.AmortizationMethod.RateLinear.Summary.ToString ();
-
-				case AmortizationMethod.RateDegressive:
-					return Res.Strings.Enum.AmortizationMethod.RateDegressive.Summary.ToString ();
-
-				case AmortizationMethod.YearsLinear:
-					return Res.Strings.Enum.AmortizationMethod.YearsLinear.Summary.ToString ();
-
-				case AmortizationMethod.YearsDegressive:
-					return Res.Strings.Enum.AmortizationMethod.YearsDegressive.Summary.ToString ();
-
-				case AmortizationMethod.Custom:
-					return Res.Strings.Enum.AmortizationMethod.Custom.Summary.ToString ();
-
-				default:
-					return null;
-			}
-		}
-
 		public static string GetArgumentTypeName(ArgumentType type)
 		{
 			//	Retourne le type exact tel qu'il s'écrit en C#.
@@ -351,36 +277,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return Periodicity.Semestrial;
 				yield return Periodicity.Trimestrial;
 				yield return Periodicity.Mensual;
-			}
-		}
-
-
-		public static Dictionary<int, string> DictAmortizationMethods
-		{
-			get
-			{
-				var dict = new Dictionary<int, string> ();
-
-				foreach (var method in EnumDictionaries.EnumAmortizationMethods)
-				{
-					var text = EnumDictionaries.GetAmortizationMethodName (method);
-					dict.Add ((int) method, text);
-				}
-
-				return dict;
-			}
-		}
-
-		private static IEnumerable<AmortizationMethod> EnumAmortizationMethods
-		{
-			get
-			{
-				yield return AmortizationMethod.None;
-				yield return AmortizationMethod.RateLinear;
-				yield return AmortizationMethod.RateDegressive;
-				yield return AmortizationMethod.YearsLinear;
-				yield return AmortizationMethod.YearsDegressive;
-				yield return AmortizationMethod.Custom;
 			}
 		}
 

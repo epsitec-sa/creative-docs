@@ -955,44 +955,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private static AmortizationMethod GetMethod(TextFieldCombo combo)
-		{
-			if (combo != null)
-			{
-				foreach (var e in EnumDictionaries.DictAmortizationMethods)
-				{
-					if (combo.Text == e.Value)
-					{
-						return (AmortizationMethod) e.Key;
-					}
-				}
-			}
-
-			return AmortizationMethod.Unknown;
-		}
-
-		private static void SetMethod(TextFieldCombo combo, AmortizationMethod value)
-		{
-			if (combo != null)
-			{
-				combo.Text = EnumDictionaries.GetAmortizationMethodName (value);
-			}
-		}
-
-		private static void UpdateMethod(TextFieldCombo combo)
-		{
-			if (combo != null)
-			{
-				combo.Items.Clear ();
-
-				foreach (var e in EnumDictionaries.DictAmortizationMethods)
-				{
-					combo.Items.Add (e.Value);
-				}
-			}
-		}
-
-
 		//??private string GetPeriodicity()
 		//??{
 		//??	if (this.value.HasValue)
@@ -1115,23 +1077,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.AmortizationMethod != AmortizationMethod.None;
-			}
-		}
-
-		private AmortizationMethod AmortizationMethod
-		{
-			get
-			{
-				if (this.value.HasValue)
-				{
-					//??return this.value.Value.AmortizationMethod;
-					return AmortizationMethod.Unknown;
-				}
-				else
-				{
-					return AmortizationMethod.Unknown;
-				}
+				return true;
 			}
 		}
 

@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var def = new AmortizationDefinition (AmortizationMethod.Unknown, null, null,
+				var def = new AmortizationDefinition (null, null,
 					this.Rate, this.YearCount, this.Periodicity, ProrataType.None,
 					this.RoundAmount, this.ResidualAmount, this.StartYearAmount);
 
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, AmortizationMethod method, string arguments, string expression)
+		public static void Show(Widget target, DataAccessor accessor, string arguments, string expression)
 		{
 			if (target != null)
 			{
@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					{
 						LocalSettings.TestExpressionDetails = popup.Details;
 
-						var details = AmortizationDetails.SetMethod (LocalSettings.TestExpressionDetails, method, arguments, expression);
+						var details = AmortizationDetails.SetMethod (LocalSettings.TestExpressionDetails, arguments, expression);
 						var result = Amortizations.ComputeAmortization (accessor, details);
 						popup.SetResult (result);
 					}

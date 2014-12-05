@@ -305,11 +305,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (methodObj != null)
 				{
-					var method = (AmortizationMethod) ObjectProperties.GetObjectPropertyInt (methodObj, null, ObjectField.AmortizationMethod);
 					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
 
-					return new AmortizationDefinition (method, arguments, expression, taux.GetValueOrDefault (0.0m),
+					return new AmortizationDefinition (arguments, expression, taux.GetValueOrDefault (0.0m),
 						years.GetValueOrDefault (0.0m),
 						(Periodicity) period, (ProrataType) prorata,
 						round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m),
@@ -339,35 +338,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static AbstractCalculator.Result ComputeAmortization(DataAccessor accessor, AmortizationDetails details)
 		{
-			//	Calcule un amortissement, soit à partir d'une méthode 'built-in',
-			//	soit à partir d'une expression.
-			AbstractCalculator calculator = null;
-
-			switch (details.Def.Method)
-			{
-				case AmortizationMethod.RateLinear:
-					calculator = new RateLinearCalculator (details);
-					break;
-
-				case AmortizationMethod.RateDegressive:
-					calculator = new RateDegressiveCalculator (details);
-					break;
-
-				case AmortizationMethod.YearsLinear:
-					calculator = new YearsLinearCalculator (details);
-					break;
-
-				case AmortizationMethod.YearsDegressive:
-					calculator = new YearsDegressiveCalculator (details);
-					break;
-			}
-
-			if (calculator != null)  // à partir d'une méthode 'built-in' ?
-			{
-				var value = calculator.Evaluate ();
-				return new AbstractCalculator.Result (value, null);
-			}
-
+			//	Calcule un amortissement à partir d'une expression.
 			if (!string.IsNullOrEmpty (details.Def.Expression))  // à partir d'une expression ?
 			{
 				return accessor.AmortizationExpressions.Evaluate (details);
@@ -586,41 +557,42 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
-		public static bool IsHidden(AmortizationMethod method, ObjectField field)
+		public static bool IsHidden(ObjectField field)
 		{
 			//	Indique si un champ n'a pas de sens pour une méthode d'amortissement donnée.
 			//	Par défaut, un champ est visible. On teste spécifiquement les champs à cacher.
 			//	Ainsi, les champs ajoutés lors de développments futurs seront visibles par défaut.
 			//	false -> champ utile à montrer normalement
 			//	true  -> champ inutile à cacher
-			switch (method)
-			{
-				case AmortizationMethod.RateLinear:
-				case AmortizationMethod.RateDegressive:
-					//	Si l'amortissement est calculé selon le taux, le nombre d'années
-					//	ne sert à rien.
-					return field == ObjectField.AmortizationYearCount;
-
-				case AmortizationMethod.YearsLinear:
-				case AmortizationMethod.YearsDegressive:
-					//	Si l'amortissement est calculé selon le nombre d'années, le taux
-					//	ne sert à rien.
-					return field == ObjectField.AmortizationRate
-						|| field == ObjectField.Prorata;
-
-				case AmortizationMethod.Custom:
-					return false;
-
-				default:
-					//	S'il n'y a pas d'amortissement généré automatiquement, tous les
-					//	champs suivants ne servent à rien.
-					return field == ObjectField.AmortizationYearCount
-						|| field == ObjectField.AmortizationRate
-						|| field == ObjectField.Periodicity
-						|| field == ObjectField.Prorata
-						|| field == ObjectField.Round
-						|| field == ObjectField.ResidualValue;
-			}
+			//??switch (method)
+			//??{
+			//??	case AmortizationMethod.RateLinear:
+			//??	case AmortizationMethod.RateDegressive:
+			//??		//	Si l'amortissement est calculé selon le taux, le nombre d'années
+			//??		//	ne sert à rien.
+			//??		return field == ObjectField.AmortizationYearCount;
+			//??
+			//??	case AmortizationMethod.YearsLinear:
+			//??	case AmortizationMethod.YearsDegressive:
+			//??		//	Si l'amortissement est calculé selon le nombre d'années, le taux
+			//??		//	ne sert à rien.
+			//??		return field == ObjectField.AmortizationRate
+			//??			|| field == ObjectField.Prorata;
+			//??
+			//??	case AmortizationMethod.Custom:
+			//??		return false;
+			//??
+			//??	default:
+			//??		//	S'il n'y a pas d'amortissement généré automatiquement, tous les
+			//??		//	champs suivants ne servent à rien.
+			//??		return field == ObjectField.AmortizationYearCount
+			//??			|| field == ObjectField.AmortizationRate
+			//??			|| field == ObjectField.Periodicity
+			//??			|| field == ObjectField.Prorata
+			//??			|| field == ObjectField.Round
+			//??			|| field == ObjectField.ResidualValue;
+			//??}
+			return false;
 		}
 
 	

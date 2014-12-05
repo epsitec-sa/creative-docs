@@ -29,28 +29,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 		}
 
-		public static AmortizationMethod GetMethod(DataAccessor accessor, Guid guid)
-		{
-			//	Retourne la méthode d'une méthode d'amortissement.
-			var obj = accessor.GetObject (BaseType.Methods, guid);
-			return MethodsLogic.GetMethod (obj);
-		}
-
-		public static AmortizationMethod GetMethod(DataObject obj)
-		{
-			//	Retourne la méthode d'une méthode d'amortissement.
-			if (obj != null)
-			{
-				int? i = ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.AmortizationMethod);
-				if (i.HasValue)
-				{
-					return (AmortizationMethod) i.Value;
-				}
-			}
-
-			return AmortizationMethod.Unknown;
-		}
-
 		public static string GetExpressionSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le résumé du code C# d'une méthode d'amortissement.

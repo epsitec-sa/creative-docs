@@ -309,14 +309,14 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void CreateMethodsSamples()
 		{
-			this.AddMethod ("Aucun",            AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");  // TODO
-			this.AddMethod ("Taux linéaire",    AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");
-			this.AddMethod ("Taux dégressif",   AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "Round", "Residual");
-			this.AddMethod ("Durée linéaire",   AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "Round", "Residual");
-			this.AddMethod ("Durée dégressive", AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "Round", "Residual");
+			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");  // TODO
+			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");
+			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "Round", "Residual");
+			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "Round", "Residual");
+			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "Round", "Residual");
 		}
 
-		protected void AddMethod(string name, AmortizationMethod method, string expression, params string[] arguments)
+		protected void AddMethod(string name, string expression, params string[] arguments)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Methods);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -328,7 +328,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			o.AddEvent (e);
 
 			this.AddField (e, ObjectField.Name, name);
-			this.AddField (e, ObjectField.AmortizationMethod, (int) method);
 			this.AddField (e, ObjectField.Expression, expression);
 
 			var field = ObjectField.ArgumentFirst;

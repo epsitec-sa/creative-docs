@@ -58,26 +58,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void UpdateControllers()
 		{
-			AmortizationMethod method;
-
-			if (this.methodController.Value.IsEmpty)
-			{
-				method = AmortizationMethod.Unknown;
-			}
-			else
-			{
-				method = MethodsLogic.GetMethod(this.accessor, this.methodController.Value);
-			}
-
-			this.methodController     .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.MethodGuid);
-			this.rateController       .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationRate);
-			this.rateCalculatorButton     .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationRate);
-			this.yearsController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
-			this.yearsCalculatorButton    .Enable = !Amortizations.IsHidden (method, ObjectField.AmortizationYearCount);
-			this.periodicityController.IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Periodicity);
-			this.prorataController    .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Prorata);
-			this.roundController      .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.Round);
-			this.residualController   .IsReadOnly =  Amortizations.IsHidden (method, ObjectField.ResidualValue);
+			this.methodController     .IsReadOnly =  Amortizations.IsHidden (ObjectField.MethodGuid);
+			this.rateController       .IsReadOnly =  Amortizations.IsHidden (ObjectField.AmortizationRate);
+			this.rateCalculatorButton     .Enable = !Amortizations.IsHidden (ObjectField.AmortizationRate);
+			this.yearsController      .IsReadOnly =  Amortizations.IsHidden (ObjectField.AmortizationYearCount);
+			this.yearsCalculatorButton    .Enable = !Amortizations.IsHidden (ObjectField.AmortizationYearCount);
+			this.periodicityController.IsReadOnly =  Amortizations.IsHidden (ObjectField.Periodicity);
+			this.prorataController    .IsReadOnly =  Amortizations.IsHidden (ObjectField.Prorata);
+			this.roundController      .IsReadOnly =  Amortizations.IsHidden (ObjectField.Round);
+			this.residualController   .IsReadOnly =  Amortizations.IsHidden (ObjectField.ResidualValue);
 		}
 
 

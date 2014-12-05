@@ -90,15 +90,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var round  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.Round);
 				var resid  = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, ObjectField.ResidualValue);
 
-				var method = MethodsLogic.GetMethod (this.accessor, mg);
-
-				CategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationRate,      ref rate);
-				CategoriesTreeTableFiller.Hide (method, ObjectField.AmortizationYearCount, ref years);
-				CategoriesTreeTableFiller.Hide (method, ObjectField.Periodicity,           ref period);
-				CategoriesTreeTableFiller.Hide (method, ObjectField.Prorata,               ref prorat);
-				CategoriesTreeTableFiller.Hide (method, ObjectField.Round,                 ref round);
-				CategoriesTreeTableFiller.Hide (method, ObjectField.ResidualValue,         ref resid);
-
 				var m = MethodsLogic.GetSummary (this.accessor, mg);
 				var c = EnumDictionaries.GetPeriodicityName (period);
 				var r = EnumDictionaries.GetProrataTypeName (prorat);
@@ -140,23 +131,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private string GetAccount(DataObject obj, ObjectField field)
 		{
 			return ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, field);
-		}
-
-
-		private static void Hide(AmortizationMethod method, ObjectField field, ref decimal? value)
-		{
-			if (Amortizations.IsHidden (method, field))
-			{
-				value = null;
-			}
-		}
-
-		private static void Hide(AmortizationMethod method, ObjectField field, ref int? value)
-		{
-			if (Amortizations.IsHidden (method, field))
-			{
-				value = null;
-			}
 		}
 	}
 }
