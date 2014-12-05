@@ -743,7 +743,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			//	us to rewrite the request to SELECT ... WHERE (x IN (<set>)) which can be 100
 			//	times faster than the sub-SELECT.
 
-			request.CacheSourceSet (keys);
+			var list = keys.ToList ();
+
+			if (list.Count < 200)
+			{
+				request.CacheSourceSet (list);
+			}
 
 			return this.GetCollectionData (dbTransaction, request);
 		}

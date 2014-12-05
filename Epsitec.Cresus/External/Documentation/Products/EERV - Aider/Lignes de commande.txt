@@ -530,3 +530,11 @@ Lancé le 28.11.2014
 SVN update > 24031
 
 -echupdate -newechfile:S:\eerv\eerv-2014-11-27.xml -oldechfile:S:\eerv\eerv-2014-11-20.xml -output:s:\eerv\ech-diff-2014-11-27.md
+
+Lancé le 04.12.2014
+-------------------
+
+SVN update > 24058
+
+-initdefaultemployee
+-echupdate -newechfile:S:\eerv\eerv-2014-12-04.xml -oldechfile:S:\eerv\eerv-2014-11-27.xml -output:s:\eerv\ech-diff-2014-12-04.md
