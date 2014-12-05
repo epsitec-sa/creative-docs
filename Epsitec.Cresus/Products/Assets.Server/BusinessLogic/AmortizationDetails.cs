@@ -39,9 +39,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				var def = new AmortizationDefinition (null, null,
-					0.1m, 10, Periodicity.Annual, ProrataType.None,
-					1.0m, 1.0m, 4000.0m);
+				var def = new AmortizationDefinition (null, null, Periodicity.Annual, 4000.0m);
 
 				var prorata = new ProrataDetails (null, null);
 

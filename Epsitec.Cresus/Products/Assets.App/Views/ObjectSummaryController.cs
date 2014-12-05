@@ -270,11 +270,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 							text = EnumDictionaries.GetPeriodicityName (i);
 							alignment = ContentAlignment.MiddleLeft;
 						}
-						else if (tile.Field == ObjectField.Prorata)
-						{
-							text = EnumDictionaries.GetProrataTypeName (i);
-							alignment = ContentAlignment.MiddleLeft;
-						}
 						else
 						{
 							text = TypeConverters.IntToString (i);

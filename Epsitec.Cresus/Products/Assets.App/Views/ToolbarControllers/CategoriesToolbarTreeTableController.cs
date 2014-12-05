@@ -218,13 +218,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			var date = this.accessor.Mandat.StartDate;
 
-			var p1 = new DataStringProperty  (ObjectField.Name,          name);
-			var p2 = new DataIntProperty     (ObjectField.Periodicity,   (int) Periodicity.Annual);
-			var p3 = new DataIntProperty     (ObjectField.Prorata,       (int) ProrataType.None);
-			var p4 = new DataDecimalProperty (ObjectField.Round,         1.0m);
-			var p5 = new DataDecimalProperty (ObjectField.ResidualValue, 1.0m);
+			var p1 = new DataStringProperty  (ObjectField.Name,        name);
+			var p2 = new DataIntProperty     (ObjectField.Periodicity, (int) Periodicity.Annual);
 
-			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, p1, p2, p3, p4, p5);
+			var guid = this.accessor.CreateObject (BaseType.Categories, date, Guid.Empty, p1, p2);
 
 			var obj = this.accessor.GetObject (BaseType.Categories, guid);
 			System.Diagnostics.Debug.Assert (obj != null);

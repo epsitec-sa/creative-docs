@@ -33,6 +33,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public static ObjectField GetUnusedField(DataAccessor accessor)
+		{
+			//	Retourne un champ ObjectField.ArgumentFirst+n pas encore utilisé.
+			var field = ObjectField.ArgumentFirst;
+
+			foreach (var obj in accessor.Mandat.GetData (BaseType.Arguments))
+			{
+				var f = ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField).GetValueOrDefault ();
+				field = (ObjectField) System.Math.Max ((int) field, f+1);
+			}
+
+			return field;
+		}
+
+
 		#region DotNet code generation
 		public static string GetArgumentsDotNetCode(DataAccessor accessor, DataObject methodObj)
 		{
@@ -46,12 +61,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var argumentGuid = ObjectProperties.GetObjectPropertyGuid (methodObj, null, field);
 
-				if (argumentGuid.IsEmpty)
+				if (!argumentGuid.IsEmpty)
 				{
-					break;
+					yield return argumentGuid;
 				}
-
-				yield return argumentGuid;
 			}
 		}
 
@@ -156,32 +169,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region Sorted fields
+		public static IEnumerable<DataObject> GetSortedArguments(DataAccessor accessor)
+		{
+			var dico = new Dictionary<DataObject, string> ();
+
+			foreach (var obj in accessor.Mandat.GetData (BaseType.Arguments))
+			{
+				var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+
+				dico.Add (obj, name);
+			}
+
+			return dico.OrderBy (x => x.Value).Select (x => x.Key);
+		}
+
 		public static IEnumerable<ObjectField> GetSortedFields(DataAccessor accessor)
 		{
 			//	Retourne la liste des champs, triés par ordre alphabétique des noms
-			//	complets des groupes.
-			return ArgumentsLogic.GetUsedFields (accessor)
-				.OrderBy (x => ArgumentsLogic.GetSortingValue (accessor, x));
-		}
+			//	des arguments en édition.
+			var dico = new Dictionary<ObjectField, string> ();
 
-		private static string GetSortingValue(DataAccessor accessor, ObjectField field)
-		{
-			//	Retourne le numéro d'un groupe, en vue du tri.
-			var guid = accessor.EditionAccessor.GetFieldGuid (field);
-			return ArgumentsLogic.GetSummary (accessor, guid);
-		}
-
-		private static IEnumerable<ObjectField> GetUsedFields(DataAccessor accessor)
-		{
-			//	Retourne la liste des champs utilisés par l'objet en édition, non triée.
-			foreach (var field in DataAccessor.ArgumentFields)
+			foreach (var obj in accessor.Mandat.GetData (BaseType.Arguments))
 			{
-				var guid = accessor.EditionAccessor.GetFieldGuid (field);
-				if (!guid.IsEmpty)
-				{
-					yield return field;
-				}
+				var field = (ObjectField) ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField);
+				var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+
+				dico.Add (field, name);
 			}
+
+			return dico.OrderBy (x => x.Value).Select (x => x.Key);
 		}
 		#endregion
 	}

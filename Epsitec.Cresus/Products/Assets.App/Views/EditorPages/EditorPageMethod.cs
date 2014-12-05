@@ -203,14 +203,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			var p1 = new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (p.InitialAmount));
 			var p2 = new DataGuidProperty (ObjectField.MethodGuid, this.objectGuid);
-			var p3 = new DataDecimalProperty (ObjectField.AmortizationYearCount, p.YearCount);
-			var p4 = new DataDecimalProperty (ObjectField.AmortizationRate, p.Rate);
-			var p5 = new DataIntProperty (ObjectField.Periodicity, (int) p.Periodicity);
-			var p6 = new DataIntProperty (ObjectField.Prorata, (int) ProrataType.None);
-			var p7 = new DataDecimalProperty (ObjectField.Round, p.RoundAmount);
-			var p8 = new DataDecimalProperty (ObjectField.ResidualValue, p.ResidualAmount);
+			var p3 = new DataIntProperty (ObjectField.Periodicity, (int) p.Periodicity);
 
-			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p2, p3, p4, p5, p6, p7, p8);
+			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p2, p3);
 			var obj = accessor.GetObject(BaseType.Assets, guid);
 
 			var ie = obj.GetInputEvent ();

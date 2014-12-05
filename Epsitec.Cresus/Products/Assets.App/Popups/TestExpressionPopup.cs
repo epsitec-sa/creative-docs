@@ -324,9 +324,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var def = new AmortizationDefinition (null, null,
-					this.Rate, this.YearCount, this.Periodicity, ProrataType.None,
-					this.RoundAmount, this.ResidualAmount, this.StartYearAmount);
+				var def = new AmortizationDefinition (null, null, this.Periodicity, this.StartYearAmount);
 
 				var prorata = new ProrataDetails (this.ProrataNumerator, this.ProrataDenominator);
 
@@ -339,10 +337,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.BaseAmount         = value.History.BaseAmount;
 				this.StartYearAmount    = value.Def.StartYearAmount;
 				this.InitialAmount      = value.History.InitialAmount;
-				this.ResidualAmount     = value.Def.Residual;
-				this.RoundAmount        = value.Def.Round;
-				this.Rate               = value.Def.Rate;
-				this.YearCount          = value.Def.YearCount;
 				this.Periodicity        = value.Def.Periodicity;
 				this.YearRank           = value.History.YearRank;
 				this.PeriodRank         = value.History.PeriodRank;

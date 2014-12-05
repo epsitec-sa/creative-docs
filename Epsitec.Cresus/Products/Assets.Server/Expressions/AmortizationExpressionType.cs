@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	{
 		Unknown,
 
+		None,
 		RateLinear,
 		RateDegressive,
 		YearsLinear,

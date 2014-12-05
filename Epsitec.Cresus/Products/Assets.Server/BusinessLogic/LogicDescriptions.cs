@@ -207,12 +207,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			yield return ObjectField.CategoryName;
 			yield return ObjectField.MethodGuid;
-			yield return ObjectField.AmortizationRate;
-			yield return ObjectField.AmortizationYearCount;
 			yield return ObjectField.Periodicity;
-			yield return ObjectField.Prorata;
-			yield return ObjectField.Round;
-			yield return ObjectField.ResidualValue;
 
 			foreach (var field in DataAccessor.AccountFields)
 			{

@@ -66,12 +66,6 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountType:
 					return Res.Strings.Enum.ObjectField.AccountType.ToString ();
 
-				case ObjectField.AmortizationRate:
-					return Res.Strings.Enum.ObjectField.AmortizationRate.ToString ();
-
-				case ObjectField.AmortizationYearCount:
-					return Res.Strings.Enum.ObjectField.AmortizationYearCount.ToString ();
-
 				case ObjectField.ArgumentType:
 					return Res.Strings.Enum.ObjectField.ArgumentType.ToString ();
 
@@ -140,15 +134,6 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.Periodicity:
 					return Res.Strings.Enum.ObjectField.Periodicity.ToString ();
-
-				case ObjectField.Prorata:
-					return Res.Strings.Enum.ObjectField.Prorata.ToString ();
-
-				case ObjectField.ResidualValue:
-					return Res.Strings.Enum.ObjectField.ResidualValue.ToString ();
-
-				case ObjectField.Round:
-					return Res.Strings.Enum.ObjectField.Round.ToString ();
 
 				case ObjectField.MethodGuid:
 					return Res.Strings.Enum.ObjectField.Method.ToString ();

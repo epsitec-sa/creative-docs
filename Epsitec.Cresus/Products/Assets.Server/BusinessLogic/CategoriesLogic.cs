@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -26,14 +25,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var catObj = accessor.GetObject (BaseType.Categories, catGuid);
 
 			//	Copie les champs nécessaires.
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,                  ObjectField.CategoryName);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.MethodGuid,            ObjectField.MethodGuid);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationRate,      ObjectField.AmortizationRate);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.AmortizationYearCount, ObjectField.AmortizationYearCount);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity,           ObjectField.Periodicity);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Prorata,               ObjectField.Prorata);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Round,                 ObjectField.Round);
-			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.ResidualValue,         ObjectField.ResidualValue);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Name,        ObjectField.CategoryName);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.MethodGuid,  ObjectField.MethodGuid);
+			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity, ObjectField.Periodicity);
 
 			foreach (var field in DataAccessor.AccountFields)
 			{

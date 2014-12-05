@@ -10,40 +10,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	public struct AmortizationDefinition
 	{
 		public AmortizationDefinition(string arguments, string expression,
-			decimal rate, decimal yearCount,
-			Periodicity periodicity, ProrataType prorataType,
-			decimal round, decimal residual, decimal startYearAmount)
+			Periodicity periodicity, decimal startYearAmount)
 		{
 			this.Arguments       = arguments;
 			this.Expression      = expression;
-			this.Rate            = rate;
-			this.YearCount       = yearCount;
 			this.Periodicity     = periodicity;
-			this.ProrataType     = prorataType;
-			this.Round           = round;
-			this.Residual        = residual;
 			this.StartYearAmount = startYearAmount;
-		}
-
-		public bool								None
-		{
-			//	Retourne true s'il ne faut pas générer d'amortissement.
-			get
-			{
-				return this.Rate == 0.0m;
-			}
 		}
 
 		public bool								IsEmpty
 		{
 			get
 			{
-				return this.Rate            == 0.0m
-					&& this.YearCount       == 0.0m
-					&& this.Periodicity     == 0
-					&& this.ProrataType     == 0
-					&& this.Round           == 0.0m
-					&& this.Residual        == 0.0m
+				return this.Periodicity     == 0
 					&& this.StartYearAmount == 0.0m;
 			}
 		}
@@ -84,26 +63,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return new AmortizationDefinition (
 				arguments,
 				expression,
-				model.Rate,
-				model.YearCount,
 				model.Periodicity,
-				model.ProrataType,
-				model.Round,
-				model.Residual,
 				model.StartYearAmount);
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (null, null, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (null, null, Periodicity.Unknown, 0.0m);
 
 		public readonly string					Arguments;
 		public readonly string					Expression;
-		public readonly decimal					Rate;
-		public readonly decimal					YearCount;
 		public readonly Periodicity				Periodicity;
-		public readonly ProrataType				ProrataType;
-		public readonly decimal					Round;
-		public readonly decimal					Residual;
 		public readonly decimal					StartYearAmount;
 	}
 }

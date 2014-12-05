@@ -18,11 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.StartYearAmount    = details.Def.StartYearAmount;
 			this.InitialAmount      = details.History.InitialAmount;
 
-			this.Rate               = details.Def.Rate;
-			this.YearCount          = details.Def.YearCount;
 			this.Periodicity        = details.Def.Periodicity;
-			this.RoundAmount        = details.Def.Round;
-			this.ResidualAmount     = details.Def.Residual;
 			this.ProrataNumerator   = details.Prorata.Numerator.GetValueOrDefault (0.0m);
 			this.ProrataDenominator = details.Prorata.Denominator.GetValueOrDefault (0.0m);
 			this.YearRank           = details.History.YearRank;

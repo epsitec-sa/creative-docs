@@ -168,22 +168,12 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			if (cat != null)
 			{
-				var method = ObjectProperties.GetObjectPropertyGuid    (cat, null, ObjectField.MethodGuid);
-				var rate   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationRate);
-				var years  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.AmortizationYearCount);
-				var period = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Periodicity);
-				var prorat = ObjectProperties.GetObjectPropertyInt     (cat, null, ObjectField.Prorata);
-				var round  = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.Round);
-				var rest   = ObjectProperties.GetObjectPropertyDecimal (cat, null, ObjectField.ResidualValue);
+				var method = ObjectProperties.GetObjectPropertyGuid (cat, null, ObjectField.MethodGuid);
+				var period = ObjectProperties.GetObjectPropertyInt  (cat, null, ObjectField.Periodicity);
 
-				e.AddProperty (new DataStringProperty  (ObjectField.CategoryName,          catNane));
-				e.AddProperty (new DataGuidProperty    (ObjectField.MethodGuid,            method));
-				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationRate,      rate.GetValueOrDefault (0.0m)));
-				e.AddProperty (new DataDecimalProperty (ObjectField.AmortizationYearCount, years.GetValueOrDefault (1.0m)));
-				e.AddProperty (new DataIntProperty     (ObjectField.Periodicity,           period.GetValueOrDefault (12)));
-				e.AddProperty (new DataIntProperty     (ObjectField.Prorata,               prorat.GetValueOrDefault ()));
-				e.AddProperty (new DataDecimalProperty (ObjectField.Round,                 round.GetValueOrDefault ()));
-				e.AddProperty (new DataDecimalProperty (ObjectField.ResidualValue,         rest.GetValueOrDefault ()));
+				e.AddProperty (new DataStringProperty (ObjectField.CategoryName, catNane));
+				e.AddProperty (new DataGuidProperty   (ObjectField.MethodGuid,   method));
+				e.AddProperty (new DataIntProperty    (ObjectField.Periodicity,  period.GetValueOrDefault (12)));
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -257,20 +247,18 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		}
 
 		protected void AddCat(string name, string desc, string number,
-			string methodName,
-			decimal rate, decimal yearCount,
-			Periodicity periodicity, ProrataType prorata,
-			decimal round, decimal residual,
+			string methodName, Periodicity periodicity,
 			string accountPurchaseDebit = null, string accountPurchaseCredit = null,
 			string accountSaleDebit = null, string accountSaleCredit = null,
 			string accountAmortizationAutoDebit = null, string accountAmortizationAutoCredit = null,
 			string accountAmortizationExtraDebit = null, string accountAmortizationExtraCredit = null,
 			string accountIncreaseDebit = null, string accountIncreaseCredit = null,
 			string accountDecreaseDebit = null, string accountDecreaseCredit = null,
-			string accountAdjustDebit = null, string accountAdjustCredit = null)
+			string accountAdjustDebit = null, string accountAdjustCredit = null,
+			params decimal?[] arguments)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Categories);
-			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
+			var start = new Timestamp (this.accessor.Mandat.StartDate, 0);
 
 			var o = new DataObject (this.accessor.UndoManager);
 			cats.Add (o);
@@ -278,19 +266,14 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
-			var exp = this.GetMethod (methodName);
+			var method = this.GetMethod (methodName);
 
 			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.Description,                    desc);
 			this.AddField (e, ObjectField.Number,                         number);
-			this.AddField (e, ObjectField.MethodGuid,                     exp.Guid);
-			this.AddField (e, ObjectField.AmortizationRate,               rate);
-			this.AddField (e, ObjectField.AmortizationYearCount,          yearCount);
+			this.AddField (e, ObjectField.MethodGuid,                     method.Guid);
 			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
-			this.AddField (e, ObjectField.Prorata,                        (int) prorata);
-			this.AddField (e, ObjectField.Round,                          round);
-			this.AddField (e, ObjectField.ResidualValue,                  residual);
-			this.AddField (e, ObjectField.AccountPurchaseDebit, accountPurchaseDebit);
+			this.AddField (e, ObjectField.AccountPurchaseDebit,           accountPurchaseDebit);
 			this.AddField (e, ObjectField.AccountPurchaseCredit,	      accountPurchaseCredit);
 			this.AddField (e, ObjectField.AccountSaleDebit,	              accountSaleDebit);
 			this.AddField (e, ObjectField.AccountSaleCredit,	          accountSaleCredit);
@@ -304,12 +287,23 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.AccountDecreaseCredit,          accountDecreaseCredit);
 			this.AddField (e, ObjectField.AccountAdjustDebit,             accountAdjustDebit);
 			this.AddField (e, ObjectField.AccountAdjustCredit,            accountAdjustCredit);
+
+			var field = ObjectField.ArgumentFirst;
+			foreach (var argument in arguments)
+			{
+				if (argument.HasValue)
+				{
+					this.AddField (e, field, argument.Value);
+				}
+
+				field++;
+			}
 		}
 
 
 		protected virtual void CreateMethodsSamples()
 		{
-			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");  // TODO
+			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.None           ));
 			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");
 			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "Round", "Residual");
 			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "Round", "Residual");
@@ -340,15 +334,15 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		}
 
 
-		protected virtual void CreateArgumentsSamples()
+		public virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument ("Taux",              "Taux d'amortissement",               ArgumentType.Decimal, false, "Rate",      "0.1");
-			this.AddArgument ("Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
-			this.AddArgument ("Arrondi",           "Valeur de l'arrondi",                ArgumentType.Decimal, false, "Round",     "1");
-			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Decimal, false, "Residual",  "1");
+			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Decimal, false, "Rate",      "0.1");
+			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
+			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Decimal, false, "Round",     "1");
+			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Decimal, false, "Residual",  "1");
 		}
 
-		protected void AddArgument(string name, string description, ArgumentType type, bool nullable, string variable, string def)
+		protected void AddArgument(ObjectField field, string name, string description, ArgumentType type, bool nullable, string variable, string def)
 		{
 			var args = this.accessor.Mandat.GetData (BaseType.Arguments);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -359,6 +353,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var e = new DataEvent (this.accessor.UndoManager, start, EventType.Input);
 			o.AddEvent (e);
 
+			this.AddField (e, ObjectField.ArgumentField,    (int) field);
 			this.AddField (e, ObjectField.Name,             name);
 			this.AddField (e, ObjectField.Description,      description);
 			this.AddField (e, ObjectField.ArgumentType,     (int) type);

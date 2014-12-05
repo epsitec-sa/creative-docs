@@ -197,31 +197,28 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected override void CreateCatsSamples()
 		{
 			this.AddCat ("Amortissements manuels", 
-				"Un objet de cette catégorie ne sera jamais amorti automatiquement, car le taux défini est nul.",
-				"0", "Aucun", 0.0m, 10.0m,
-				Periodicity.Annual, ProrataType.Prorata12, 1.0m, 1.0m);
+				"Un objet de cette catégorie ne sera jamais amorti automatiquement.",
+				"0", "Aucun", Periodicity.Annual);
 
-			this.AddCat ("Immobilier", null, "10", "Taux linéaire", 0.10m, 10.0m,
-				Periodicity.Annual, ProrataType.Prorata12, 1000.0m, 1.0m,
+			this.AddCat ("Immobilier", null, "10", "Taux linéaire", Periodicity.Annual,
 				"1600", "1000",
 				"1010", "1600",
 				"6930", "1600",
 				"6930", "1600",
 				"6900", "1600",
 				"6900", "1600",
-				"6900", "1600");
-//				"1000", "1010", "1600", "1600", "6930", "6900", "6900");
+				"6900", "1600",
+				0.1m, null, 1.0m, 1.0m);
 
-			this.AddCat ("Véhicules", null, "20", "Taux linéaire", 0.20m, 10.0m,
-				Periodicity.Annual, ProrataType.Prorata12, 100.0m, 1.0m,
+			this.AddCat ("Véhicules", null, "20", "Taux linéaire", Periodicity.Annual,
 				"1600", "1000",
 				"1010", "1530",
 				"6920", "1530",
 				"6920", "1530",
 				"6900", "1530",
 				"6900", "1530",
-				"6900", "1530");
-//				"1000", "1010", "1530", "1530", "6920", "6900", "6900");
+				"6900", "1530",
+				0.2m, null, 1.0m, 1.0m);
 		}
 	}
 }

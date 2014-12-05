@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
 	/// <summary>
 	/// Contrôleur permettant de choisir l'ensemble des arguments de
-	/// l'objet en édition.
+	/// l'objet en édition (qui est une méthode d'amortissement).
 	/// On peut en créer de nouveaux, en supprimer et en modifier.
 	/// </summary>
 	public class ArgumentToUseFieldsController : AbstractFieldController
@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.accessor = accessor;
 
 			this.controllers = new List<ArgumentToUseFieldController> ();
-			this.lines = new Dictionary<ObjectField, Line> ();
 		}
 
 
@@ -33,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		{
 			get
 			{
-				foreach (var field in ArgumentsLogic.GetSortedFields (this.accessor))
+				foreach (var field in ArgumentToUseFieldsController.GetSortedFields (this.accessor))
 				{
 					var guid = this.accessor.EditionAccessor.GetFieldGuid (field);
 
@@ -63,34 +62,34 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		public override void CreateUI(Widget parent)
 		{
-			var controllersFrame = new FrameBox
+			this.controllersFrame = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Top,
 			};
-
-			this.CreateControllers (controllersFrame);
-			this.UpdatePropertyState ();
 		}
 
 
 		public void Update()
 		{
 			//	Met à jour les contrôleurs, en fonction de l'objet en édition.
-			this.UpdateControllers ();
+			this.CreateControllers ();
+			this.UpdatePropertyState ();
 		}
 
 
-		private void CreateControllers(Widget parent)
+		private void CreateControllers()
 		{
 			//	On crée un contrôleur par ObjectField.ArgumentFirst, toujours.
 			this.controllers.Clear ();
-			this.lines.Clear ();
+			this.controllersFrame.Children.Clear ();
 
-			foreach (var field in DataAccessor.ArgumentFields)
+			foreach (var field in ArgumentToUseFieldsController.GetSortedFields (this.accessor))
 			{
-				this.CreateController (parent, field);
+				this.CreateController (this.controllersFrame, field);
 			}
+
+			this.CreateController (this.controllersFrame, ObjectField.Unknown);
 		}
 
 		private void CreateController(Widget parent, ObjectField field)
@@ -98,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var frame = new FrameBox
 			{
 				Parent          = parent,
-				Anchor          = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
@@ -106,6 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var label = new StaticText
 			{
 				Parent           = frame,
+				Text             = (field == ObjectField.Unknown) ? "Nouvel argument" : "Argument",
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = 100,
@@ -127,6 +127,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				EditWidth     = AbstractFieldController.maxWidth + 15,
 			};
 
+			if (field != ObjectField.Unknown)
+			{
+				controller.Value = this.accessor.EditionAccessor.GetFieldGuid (field);
+			}
+
 			controller.CreateUI (controllerFrame);
 
 			controller.ValueEdited += delegate (object sender, ObjectField of)
@@ -138,7 +143,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (of);
 
 				this.OnValueEdited (of);
-				this.UpdateControllers ();
+				this.Update ();
 			};
 
 			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
@@ -152,69 +157,66 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 
 			this.controllers.Add (controller);
-
-			var line = new Line (frame, label, controller);
-			this.lines.Add (field, line);
 		}
 
 
-		private void UpdateControllers()
-		{
-			//	Montre les contrôleurs utilisés par l'objet en édition, dans l'ordre
-			//	alphabétique des noms, et cache les autres. Ainsi, il est possible qu'un
-			//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
-			//	sur l'édition en cours.
-			//	On met à jour le TabIndex de la ligne parente, afin d'avoir un ordre de
-			//	parcourt de haut en bas logique avec la touche Tab.
-
-			foreach (var controller in this.controllers)
-			{
-				controller.IsReadOnly = this.isReadOnly;
-			}
-
-			//	Cache toutes les lignes.
-			foreach (var field in DataAccessor.ArgumentFields)
-			{
-				var line = this.lines[field];
-				line.Frame.Visibility = false;
-			}
-
-			//	Montre les bonnes lignes existantes.
-			int y = 0;
-			int tabIndex = 0;
-
-			foreach (var field in ArgumentsLogic.GetSortedFields (this.accessor))
-			{
-				var label = (y == 0) ? "Arguments" : "";  // légende uniquement pour le premier
-				this.UpdateController (field, y, ref tabIndex, label);
-				y += AbstractFieldController.lineHeight + 4;  // en dessous
-			}
-
-			//	Montre une dernière ligne "nouveau".
-			var ff = this.FreeField;
-			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
-			{
-				this.UpdateController (ff, y, ref tabIndex, "Nouvel argument");
-			}
-		}
-
-		private void UpdateController(ObjectField field, int y, ref int tabIndex, string label)
-		{
-			//	Met à jour un contrôleur. On le rend visible et on met à jour les
-			//	données qu'il représente.
-			var line = this.lines[field];
-
-			line.Frame.Visibility = true;
-			line.Frame.Margins    = new Margins (0, 0, y, 0);
-			line.Frame.BackColor  = (field == this.selectedField) ? ColorManager.WindowBackgroundColor : Color.Empty;
-			line.Frame.TabIndex   = ++tabIndex;
-
-			line.Label.Text = label;
-
-			line.Controller.Field         = field;
-			line.Controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
-			line.Controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
-		}
+		//??private void UpdateControllers()
+		//??{
+		//??	//	Montre les contrôleurs utilisés par l'objet en édition, dans l'ordre
+		//??	//	alphabétique des noms, et cache les autres. Ainsi, il est possible qu'un
+		//??	//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
+		//??	//	sur l'édition en cours.
+		//??	//	On met à jour le TabIndex de la ligne parente, afin d'avoir un ordre de
+		//??	//	parcourt de haut en bas logique avec la touche Tab.
+		//??
+		//??	foreach (var controller in this.controllers)
+		//??	{
+		//??		controller.IsReadOnly = this.isReadOnly;
+		//??	}
+		//??
+		//??	//	Cache toutes les lignes.
+		//??	foreach (var field in DataAccessor.ArgumentFields)
+		//??	{
+		//??		var line = this.lines[field];
+		//??		line.Frame.Visibility = false;
+		//??	}
+		//??
+		//??	//	Montre les bonnes lignes existantes.
+		//??	int y = 0;
+		//??	int tabIndex = 0;
+		//??
+		//??	foreach (var field in ArgumentToUseFieldsController.GetSortedFields (this.accessor))
+		//??	{
+		//??		var label = (y == 0) ? "Arguments" : "";  // légende uniquement pour le premier
+		//??		this.UpdateController (field, y, ref tabIndex, label);
+		//??		y += AbstractFieldController.lineHeight + 4;  // en dessous
+		//??	}
+		//??
+		//??	//	Montre une dernière ligne "nouveau".
+		//??	var ff = this.FreeField;
+		//??	if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
+		//??	{
+		//??		this.UpdateController (ff, y, ref tabIndex, "Nouvel argument");
+		//??	}
+		//??}
+		//??
+		//??private void UpdateController(ObjectField field, int y, ref int tabIndex, string label)
+		//??{
+		//??	//	Met à jour un contrôleur. On le rend visible et on met à jour les
+		//??	//	données qu'il représente.
+		//??	var line = this.lines[field];
+		//??
+		//??	line.Frame.Visibility = true;
+		//??	line.Frame.Margins    = new Margins (0, 0, y, 0);
+		//??	line.Frame.BackColor  = (field == this.selectedField) ? ColorManager.WindowBackgroundColor : Color.Empty;
+		//??	line.Frame.TabIndex   = ++tabIndex;
+		//??
+		//??	line.Label.Text = label;
+		//??
+		//??	line.Controller.Field         = field;
+		//??	line.Controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+		//??	line.Controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
+		//??}
 
 
 
@@ -237,24 +239,40 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private struct Line
+		#region Sorted fields
+		public static IEnumerable<ObjectField> GetSortedFields(DataAccessor accessor)
 		{
-			public Line(FrameBox frame, StaticText label, ArgumentToUseFieldController controller)
-			{
-				this.Frame      = frame;
-				this.Label      = label;
-				this.Controller = controller;
-			}
-
-			public readonly FrameBox					Frame;
-			public readonly StaticText					Label;
-			public readonly ArgumentToUseFieldController		Controller;
+			//	Retourne la liste des champs, triés par ordre alphabétique des noms
+			//	des arguments en édition.
+			return ArgumentToUseFieldsController.GetUsedFields (accessor)
+				.OrderBy (x => ArgumentToUseFieldsController.GetSortingValue (accessor, x));
 		}
+
+		private static string GetSortingValue(DataAccessor accessor, ObjectField field)
+		{
+			//	Retourne le nom d'un argument, en vue du tri.
+			var guid = accessor.EditionAccessor.GetFieldGuid (field);
+			return ArgumentsLogic.GetSummary (accessor, guid);
+		}
+
+		private static IEnumerable<ObjectField> GetUsedFields(DataAccessor accessor)
+		{
+			//	Retourne la liste des arguments utilisés par l'objet en édition, non triée.
+			foreach (var field in DataAccessor.ArgumentFields)
+			{
+				var guid = accessor.EditionAccessor.GetFieldGuid (field);
+				if (!guid.IsEmpty)
+				{
+					yield return field;
+				}
+			}
+		}
+		#endregion
 
 
 		private readonly List<ArgumentToUseFieldController>	controllers;
-		private readonly Dictionary<ObjectField, Line>	lines;
 
+		private FrameBox								controllersFrame;
 		private ObjectField								selectedField;
 	}
 }

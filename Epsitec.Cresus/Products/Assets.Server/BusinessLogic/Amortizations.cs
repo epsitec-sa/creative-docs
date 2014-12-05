@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				valueDate = lastToDate.Value;
 			}
 
-			return ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
+			return ProrataDetails.ComputeProrata (range, valueDate, ProrataType.None);
 		}
 
 		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp)
@@ -290,15 +290,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
 			var exp       = ObjectProperties.GetObjectPropertyGuid            (obj, timestamp, ObjectField.MethodGuid);
-			var taux      = ObjectProperties.GetObjectPropertyDecimal         (obj, timestamp, ObjectField.AmortizationRate);
-			var years     = ObjectProperties.GetObjectPropertyDecimal         (obj, timestamp, ObjectField.AmortizationYearCount);
 			var period    = ObjectProperties.GetObjectPropertyInt             (obj, timestamp, ObjectField.Periodicity);
-			var prorata   = ObjectProperties.GetObjectPropertyInt             (obj, timestamp, ObjectField.Prorata);
-			var round     = ObjectProperties.GetObjectPropertyDecimal         (obj, timestamp, ObjectField.Round);
-			var residual  = ObjectProperties.GetObjectPropertyDecimal         (obj, timestamp, ObjectField.ResidualValue);
 			var mainValue = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
 
-			if (!exp.IsEmpty && taux.HasValue && years.HasValue && period.HasValue &&
+			if (!exp.IsEmpty && period.HasValue &&
 				mainValue.HasValue && mainValue.Value.FinalAmount.HasValue)
 			{
 				var methodObj = this.accessor.GetObject (BaseType.Methods, exp);
@@ -308,10 +303,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
 
-					return new AmortizationDefinition (arguments, expression, taux.GetValueOrDefault (0.0m),
-						years.GetValueOrDefault (0.0m),
-						(Periodicity) period, (ProrataType) prorata,
-						round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m),
+					return new AmortizationDefinition (arguments, expression, (Periodicity) period,
 						mainValue.Value.FinalAmount.GetValueOrDefault (0.0m));
 				}
 			}

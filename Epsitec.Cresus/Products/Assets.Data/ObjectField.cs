@@ -26,12 +26,7 @@ namespace Epsitec.Cresus.Assets.Data
 		//	Définitions d'une catégorie.
 		CategoryName,
 		MethodGuid,
-		AmortizationYearCount,
-		AmortizationRate,
 		Periodicity,
-		Prorata,
-		Round,
-		ResidualValue,
 
 		//	Définition d'un groupe.
 		GroupSuggestedDuringCreation,
@@ -40,6 +35,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Expression,
 
 		//	Définition d'un argument.
+		ArgumentField,
 		ArgumentType,
 		ArgumentNullable,
 		ArgumentVariable,

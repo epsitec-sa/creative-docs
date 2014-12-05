@@ -210,13 +210,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private bool Filter(Guid guid)
 		{
-			var exp = this.accessor.GetObject (BaseType.Arguments, guid);
+			var arg = this.accessor.GetObject (BaseType.Arguments, guid);
 
 			if (this.filterController.HasFilter)
 			{
 				foreach (var field in DataAccessor.ArgumentFields)
 				{
-					var text = ObjectProperties.GetObjectPropertyString (exp, null, field);
+					var text = ObjectProperties.GetObjectPropertyString (arg, null, field);
 					if (this.filterController.IsMatching (text))
 					{
 						return true;  // visible

@@ -13,15 +13,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (objectField)
 			{
-				case ObjectField.AmortizationRate:
-					return DecimalFormat.Rate;
-
-				case ObjectField.Round:
-				case ObjectField.ResidualValue:
-					return DecimalFormat.Amount;
-
-				case ObjectField.AmortizationYearCount:
-					return DecimalFormat.Real;
+				//??case ObjectField.AmortizationRate:
+				//??	return DecimalFormat.Rate;
+				//??
+				//??case ObjectField.Round:
+				//??case ObjectField.ResidualValue:
+				//??	return DecimalFormat.Amount;
+				//??
+				//??case ObjectField.AmortizationYearCount:
+				//??	return DecimalFormat.Real;
 
 				default:
 					return DecimalFormat.Unknown;

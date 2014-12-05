@@ -26,6 +26,11 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			get
 			{
 				yield return new AmortizationExpressionItem (
+					AmortizationExpressionType.None,
+					"Aucun amortissement",
+					AmortizationExpressionCollection.noneLines);
+
+				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.RateLinear,
 					Res.Strings.Enum.AmortizationExpressionType.RateLinear.ToString (),
 					AmortizationExpressionCollection.rateLinearLines);
@@ -56,6 +61,11 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		//	Ces expressions sont injectées dans un code C# plus complexe, qui est défini
 		//	dans AmortizationExpression.skeletonLines. Le tout est ensuite compilé à la
 		//	volée avec Roselyn (librairies Microsoft.CodeAnalysis).
+
+		private static string[] noneLines =
+		{
+			"Trace (\"None\");",
+		};
 
 		private static string[] rateLinearLines =
 		{

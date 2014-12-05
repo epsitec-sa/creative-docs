@@ -451,12 +451,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				yield return ObjectField.CategoryName;
 				yield return ObjectField.MethodGuid;
-				yield return ObjectField.AmortizationRate;
-				yield return ObjectField.AmortizationYearCount;
 				yield return ObjectField.Periodicity;
-				yield return ObjectField.Prorata;
-				yield return ObjectField.Round;
-				yield return ObjectField.ResidualValue;
 
 				foreach (var field in DataAccessor.AccountFields)
 				{
@@ -552,15 +547,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.MainValue:
 					return FieldType.AmortizedAmount;
 
-				case ObjectField.AmortizationYearCount:
-				case ObjectField.AmortizationRate:
-				case ObjectField.ResidualValue:
-				case ObjectField.Round:
 				case ObjectField.EntryAmount:
 					return FieldType.Decimal;
 
 				case ObjectField.Periodicity:
-				case ObjectField.Prorata:
 				case ObjectField.ArgumentType:
 				case ObjectField.ArgumentNullable:
 					return FieldType.Int;
