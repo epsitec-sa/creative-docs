@@ -202,18 +202,18 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.IsReadOnly    = this.isLocked;
 					c.Update ();
 				}
-				else if (controller is ArgumentFieldController)
+				else if (controller is ArgumentToUseFieldController)
 				{
-					var c = controller as ArgumentFieldController;
+					var c = controller as ArgumentToUseFieldController;
 
 					c.EventType     = this.eventType;
 					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
-				else if (controller is ArgumentFieldsController)
+				else if (controller is ArgumentToUseFieldsController)
 				{
-					var c = controller as ArgumentFieldsController;
+					var c = controller as ArgumentToUseFieldsController;
 
 					c.IsReadOnly    = this.isLocked;
 					c.Update ();
@@ -537,9 +537,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			return controller;
 		}
 
-		protected ArgumentFieldsController CreateArgumentsController(Widget parent)
+		protected ArgumentToUseFieldsController CreateArgumentsController(Widget parent)
 		{
-			var controller = new ArgumentFieldsController (this.accessor);
+			var controller = new ArgumentToUseFieldsController (this.accessor);
 
 			controller.CreateUI (parent);
 

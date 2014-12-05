@@ -14,9 +14,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
-	public class ArgumentFieldController : AbstractFieldController
+	public class ArgumentToUseFieldController : AbstractFieldController
 	{
-		public ArgumentFieldController(DataAccessor accessor)
+		public ArgumentToUseFieldController(DataAccessor accessor)
 			: base (accessor)
 		{
 		}

@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private readonly CommandDispatcher		commandDispatcher;
 
-		private ArgumentFieldsController		argumentsController;
+		private ArgumentToUseFieldsController		argumentsController;
 		private StringFieldController			expressionController;
 		private TextFieldMulti					outputConsole;
 	}

@@ -17,14 +17,14 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 	/// l'objet en édition.
 	/// On peut en créer de nouveaux, en supprimer et en modifier.
 	/// </summary>
-	public class ArgumentFieldsController : AbstractFieldController
+	public class ArgumentToUseFieldsController : AbstractFieldController
 	{
-		public ArgumentFieldsController(DataAccessor accessor)
+		public ArgumentToUseFieldsController(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.accessor = accessor;
 
-			this.controllers = new List<ArgumentFieldController> ();
+			this.controllers = new List<ArgumentToUseFieldController> ();
 			this.lines = new Dictionary<ObjectField, Line> ();
 		}
 
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredHeight = AbstractFieldController.lineHeight,
 			};
 
-			var controller = new ArgumentFieldController (this.accessor)
+			var controller = new ArgumentToUseFieldController (this.accessor)
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var ff = this.FreeField;
 			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
 			{
-				this.UpdateController (ff, y, ref tabIndex, "Nouveau");
+				this.UpdateController (ff, y, ref tabIndex, "Nouvel argument");
 			}
 		}
 
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private struct Line
 		{
-			public Line(FrameBox frame, StaticText label, ArgumentFieldController controller)
+			public Line(FrameBox frame, StaticText label, ArgumentToUseFieldController controller)
 			{
 				this.Frame      = frame;
 				this.Label      = label;
@@ -248,11 +248,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			public readonly FrameBox					Frame;
 			public readonly StaticText					Label;
-			public readonly ArgumentFieldController		Controller;
+			public readonly ArgumentToUseFieldController		Controller;
 		}
 
 
-		private readonly List<ArgumentFieldController>	controllers;
+		private readonly List<ArgumentToUseFieldController>	controllers;
 		private readonly Dictionary<ObjectField, Line>	lines;
 
 		private ObjectField								selectedField;
