@@ -29,15 +29,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		public IEnumerable<Guid> Guids
+		public IEnumerable<Guid> ArgumentGuids
 		{
 			get
 			{
-				var obj = this.accessor.EditionAccessor.EditedObject;
-
 				foreach (var field in ArgumentsLogic.GetSortedFields (this.accessor))
 				{
-					var guid = ObjectProperties.GetObjectPropertyGuid (obj, null, field);
+					var guid = this.accessor.EditionAccessor.GetFieldGuid (field);
 
 					if (!guid.IsEmpty)
 					{
@@ -126,7 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
-				EditWidth     = 395,
+				EditWidth     = AbstractFieldController.maxWidth + 15,
 			};
 
 			controller.CreateUI (controllerFrame);

@@ -106,6 +106,7 @@
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
     <Compile Include="Popups\ArgumentsPopup.cs" />
+    <Compile Include="Popups\CreateArgumentPopup.cs" />
     <Compile Include="Popups\ShowExpressionSimulationPopup.cs" />
     <Compile Include="Popups\ExpressionSimulationParamsPopup.cs" />
     <Compile Include="Popups\TestExpressionPopup.cs" />

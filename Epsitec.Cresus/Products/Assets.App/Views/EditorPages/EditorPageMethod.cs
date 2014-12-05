@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Parent          = parent,
 				IsReadOnly      = true,
-				PreferredHeight = 80,
+				PreferredHeight = 100,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (110, 40, 5, 0),
 			};
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var startTime = System.DateTime.Now;
 			string err;
 
-			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
 
 			using (var e = new AmortizationExpression (arguments, this.expressionController.Value))
 			{
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void Show(Widget target)
 		{
 			//	Affiche le code C# de l'expression actuellement sélectionnée.
-			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
 			var expression = AmortizationExpression.GetDebugExpression (arguments, this.expressionController.Value);
 			ShowExpressionPopup.Show (target, this.accessor, expression);
 		}
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void Test(Widget target)
 		{
 			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
-			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
 			TestExpressionPopup.Show (target, this.accessor, AmortizationMethod.Custom, arguments, this.expressionController.Value);
 		}
 

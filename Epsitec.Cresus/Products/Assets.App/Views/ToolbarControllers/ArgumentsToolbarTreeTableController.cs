@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateMethodPopup (this.accessor);
+			var popup = new CreateArgumentPopup (this.accessor);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -215,7 +215,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			var date = this.accessor.Mandat.StartDate;
 			var p1 = new DataStringProperty (ObjectField.Name, name);
-			var guid = this.accessor.CreateObject (BaseType.Arguments, date, Guid.Empty, p1);
+			var p2 = new DataIntProperty (ObjectField.ArgumentType, (int) ArgumentType.Decimal);
+			var guid = this.accessor.CreateObject (BaseType.Arguments, date, Guid.Empty, p1, p2);
 
 			var obj = this.accessor.GetObject (BaseType.Arguments, guid);
 			System.Diagnostics.Debug.Assert (obj != null);

@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Parent           = frame,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 85,
+				PreferredWidth   = 100,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
-				EditWidth     = 395,
+				EditWidth     = AbstractFieldController.maxWidth + 15,
 			};
 
 			controller.CreateUI (controllerFrame);
