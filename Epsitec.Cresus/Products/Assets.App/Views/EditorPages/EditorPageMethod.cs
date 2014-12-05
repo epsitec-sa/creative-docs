@@ -33,18 +33,21 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			parent = this.CreateScrollable (parent, hasColorsExplanation: false);
 
-			this.nameController       = this.CreateStringController (parent, ObjectField.Name);
-			this.methodController     = this.CreateEnumController   (parent, ObjectField.AmortizationMethod, EnumDictionaries.DictAmortizationMethods);
-			this.expressionController = this.CreateStringController (parent, ObjectField.Expression, lineCount: 25, maxLength: 10000);
+			this.CreateStringController (parent, ObjectField.Name);
+
+			this.CreateSepartor (parent);
+			
+			this.argumentsController =
+				this.CreateArgumentsController (parent);
+			
+			this.CreateSepartor (parent);
+			
+			this.expressionController =
+				this.CreateStringController (parent, ObjectField.Expression, lineCount: 20, maxLength: 10000);
 
 			this.CreateOutputConsole (parent);
 
 			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
-
-			this.methodController.ValueEdited += delegate
-			{
-				this.UpdateControllers ();
-			};
 		}
 
 		public override void SetObject(Guid objectGuid, Timestamp timestamp)
@@ -59,7 +62,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				Parent          = parent,
 				IsReadOnly      = true,
-				PreferredHeight = 100,
+				PreferredHeight = 80,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (110, 40, 5, 0),
 			};
@@ -138,7 +141,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			var startTime = System.DateTime.Now;
 			string err;
 
-			using (var e = new AmortizationExpression (this.expressionController.Value))
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+
+			using (var e = new AmortizationExpression (arguments, this.expressionController.Value))
 			{
 				var elapsedTime = System.DateTime.Now - startTime;
 				var message = string.Format ("Time elapsed {0}", elapsedTime.ToString ());
@@ -167,14 +172,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void Show(Widget target)
 		{
 			//	Affiche le code C# de l'expression actuellement sélectionnée.
-			var expression = AmortizationExpression.GetDebugExpression (this.expressionController.Value);
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+			var expression = AmortizationExpression.GetDebugExpression (arguments, this.expressionController.Value);
 			ShowExpressionPopup.Show (target, this.accessor, expression);
 		}
 
 		private void Test(Widget target)
 		{
 			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
-			TestExpressionPopup.Show (target, this.accessor, this.CurrentMethod, this.expressionController.Value);
+			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.Guids);
+			TestExpressionPopup.Show (target, this.accessor, AmortizationMethod.Custom, arguments, this.expressionController.Value);
 		}
 
 		private void Simulation(Widget target)
@@ -287,23 +294,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void UpdateControllers()
 		{
-			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
-
 			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
 
-			this.expressionController.IsReadOnly = !expressionEnable;
-			this.outputConsole.Visibility =  expressionEnable;
-
-			if (expressionEnable)
+			if (string.IsNullOrEmpty (this.expressionController.Value))
 			{
-				if (string.IsNullOrEmpty (this.expressionController.Value))
-				{
-					this.expressionController.Value = AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear);
-				}
-			}
-			else
-			{
-				this.expressionController.Value = null;
+				this.expressionController.Value = AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear);
 			}
 
 			this.outputConsole.Text = null;  // efface le message précédent
@@ -313,14 +308,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void UpdateCommands()
 		{
-			bool selection = this.methodController.Value.HasValue;
-			bool expressionEnable = (this.CurrentMethod == AmortizationMethod.Custom);
-
-			this.SetEnable (Res.Commands.Methods.Library,    expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Compile,    expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Show,       expressionEnable);
-			this.SetEnable (Res.Commands.Methods.Test,       selection);
-			this.SetEnable (Res.Commands.Methods.Simulation, selection);
+			this.SetEnable (Res.Commands.Methods.Library,    true);
+			this.SetEnable (Res.Commands.Methods.Compile,    true);
+			this.SetEnable (Res.Commands.Methods.Show,       true);
+			this.SetEnable (Res.Commands.Methods.Test,       true);
+			this.SetEnable (Res.Commands.Methods.Simulation, true);
 		}
 
 		private void SetEnable(Command command, bool enable)
@@ -329,26 +321,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 
-		private AmortizationMethod CurrentMethod
-		{
-			get
-			{
-				if (this.methodController.Value.HasValue)
-				{
-					return (AmortizationMethod) this.methodController.Value.Value;
-				}
-				else
-				{
-					return AmortizationMethod.Unknown;
-				}
-			}
-		}
-
-
 		private readonly CommandDispatcher		commandDispatcher;
 
-		private StringFieldController			nameController;
-		private EnumFieldController				methodController;
+		private ArgumentFieldsController		argumentsController;
 		private StringFieldController			expressionController;
 		private TextFieldMulti					outputConsole;
 	}

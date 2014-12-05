@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.CreateStringController (parent, ObjectField.Name);
 			this.CreateStringController (parent, ObjectField.Description);
-			this.CreateSepartor         (parent);
+			this.CreateSepartor         (parent, 30);
 			this.CreateEnumController   (parent, ObjectField.ArgumentType, EnumDictionaries.DictArgumentTypes);
 			this.CreateBoolController   (parent, ObjectField.ArgumentNullable);
 			this.CreateStringController (parent, ObjectField.ArgumentVariable);

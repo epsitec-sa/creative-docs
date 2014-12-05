@@ -28,13 +28,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public AbstractCalculator.Result Evaluate(AmortizationDetails details)
 		{
+			string arguments  = details.Def.Arguments;
 			string expression = details.Def.Expression;
 
+			var key = arguments + expression;
+
 			AmortizationExpression ae;
-			if (!this.expressions.TryGetValue (expression, out ae))  // pas encore dans le dico ?
+			if (!this.expressions.TryGetValue (key, out ae))  // pas encore dans le dico ?
 			{
-				ae = new AmortizationExpression (expression);
-				this.expressions.Add (expression, ae);  // on l'ajoute dans le dico
+				ae = new AmortizationExpression (arguments, expression);
+				this.expressions.Add (key, ae);  // on l'ajoute dans le dico
 			}
 
 			return ae.Evaluate (details);

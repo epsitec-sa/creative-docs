@@ -127,6 +127,9 @@ namespace Epsitec.Cresus.Assets.Data
 		GroupGuidRatioFirst = 10000,
 		GroupGuidRatioLast  = 10099,
 
+		ArgumentFirst = 10100,
+		ArgumentLast  = 10199,
+
 		UserFieldFirst = 20000,
 		UserFieldLast  = 29999,
 

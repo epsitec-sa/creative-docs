@@ -16,17 +16,17 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class MethodsPopup : AbstractPopup
+	public class ArgumentsPopup : AbstractPopup
 	{
-		private MethodsPopup(DataAccessor accessor, Guid selectedGuid)
+		private ArgumentsPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 
 			this.controller = new NavigationTreeTableController (this.accessor);
 			this.filterController = new SimpleFilterController ();
 
-			var primary     = this.accessor.GetNodeGetter (BaseType.Methods);
-			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Methods);
+			var primary     = this.accessor.GetNodeGetter (BaseType.Arguments);
+			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Arguments);
 			this.nodeGetter = new SorterNodeGetter (secondary);
 
 			secondary.SetParams (null, this.SortingInstructions);
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => x.Guid == selectedGuid);
 
-			this.dataFiller = new MethodsTreeTableFiller (this.accessor, this.nodeGetter);
+			this.dataFiller = new ArgumentsTreeTableFiller (this.accessor, this.nodeGetter);
 		}
 
 
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			this.CreateTitle (Res.Strings.Popup.Methods.Title.ToString ());
+			this.CreateTitle ("Choix d'un argument");
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Dock   = DockStyle.Fill,
 			};
 
-			this.controller.CreateUI (frame, headerHeight: MethodsPopup.headerHeight, footerHeight: 0);
+			this.controller.CreateUI (frame, headerHeight: ArgumentsPopup.headerHeight, footerHeight: 0);
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
@@ -181,21 +181,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	On calcule une hauteur adaptée au contenu, mais qui ne dépasse
 			//	évidement pas la hauteur de la fenêtre principale.
 			double h = parent.ActualHeight
-					 - MethodsPopup.headerHeight
+					 - ArgumentsPopup.headerHeight
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 4/10 de la hauteur.
-			int max = (int) (h*0.4) / MethodsPopup.rowHeight;
+			int max = (int) (h*0.4) / ArgumentsPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
 
-			int dx = MethodsPopup.popupWidth
+			int dx = ArgumentsPopup.popupWidth
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + MethodsPopup.headerHeight
-				   + rows * MethodsPopup.rowHeight
+				   + ArgumentsPopup.headerHeight
+				   + rows * ArgumentsPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth
 				   + AbstractFilterController.height;
 
@@ -210,11 +210,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private bool Filter(Guid guid)
 		{
-			var exp = this.accessor.GetObject (BaseType.Methods, guid);
+			var exp = this.accessor.GetObject (BaseType.Arguments, guid);
 
 			if (this.filterController.HasFilter)
 			{
-				foreach (var field in DataAccessor.MethodFields)
+				foreach (var field in DataAccessor.ArgumentFields)
 				{
 					var text = ObjectProperties.GetObjectPropertyString (exp, null, field);
 					if (this.filterController.IsMatching (text))
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				var field = this.accessor.GetMainStringField (BaseType.Methods);
+				var field = this.accessor.GetMainStringField (BaseType.Arguments);
 				return new SortingInstructions (field, SortedType.Ascending, ObjectField.Unknown, SortedType.None);
 			}
 		}
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static void Show(Widget target, DataAccessor accessor, Guid selectedGuid, System.Action<Guid> action)
 		{
 			//	Affiche le popup pour choisir une expression.
-			var popup = new MethodsPopup (accessor, selectedGuid);
+			var popup = new ArgumentsPopup (accessor, selectedGuid);
 
 			popup.Create (target, leftOrRight: true);
 
@@ -280,13 +280,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int headerHeight  = 22;
 		private const int rowHeight     = 18;
-		private const int popupWidth    = MethodsTreeTableFiller.totalWidth;
+		private const int popupWidth    = ArgumentsTreeTableFiller.essentialWidth;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
 		private readonly SimpleFilterController			filterController;
 		private readonly SorterNodeGetter				nodeGetter;
-		private readonly MethodsTreeTableFiller			dataFiller;
+		private readonly ArgumentsTreeTableFiller		dataFiller;
 
 		private int										visibleSelectedRow;
 	}

@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	/// </summary>
 	public class AmortizationExpression : System.IDisposable
 	{
-		public AmortizationExpression(string taggedExpression)
+		public AmortizationExpression(string taggedArguments, string taggedExpression)
 		{
 			if (string.IsNullOrEmpty (taggedExpression))
 			{
@@ -28,7 +28,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 
 			var expression = AmortizationExpression.Skeleton
-				.Replace ("$", AmortizationExpression.ConvertToSimpleText (taggedExpression));
+				.Replace ("$args$", AmortizationExpression.ConvertToSimpleText (taggedArguments))
+				.Replace ("$exp$",  AmortizationExpression.ConvertToSimpleText (taggedExpression));
 
 			var tree = SyntaxFactory.ParseSyntaxTree (expression);
 
@@ -87,17 +88,19 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 
 		#region Expression
-		public static string GetDebugExpression(string inside)
+		public static string GetDebugExpression(string arguments, string inside)
 		{
 			//	Retourne le code C# complet avec les lignes numérotées.
-			var x = AmortizationExpression.ConvertToSimpleText (inside);
-			var y = AmortizationExpression.Skeleton.Replace ("$", x);
-			var z = y.Split ('\n');
+			var a = AmortizationExpression.ConvertToSimpleText (arguments);
+			var b = AmortizationExpression.ConvertToSimpleText (inside);
+
+			var exp = AmortizationExpression.Skeleton.Replace ("$args$", a).Replace ("$exp$", b);
+			var lines = exp.Split ('\n');
 
 			var list = new List<string> ();
 			int index = 1;  // numérote les lignes à partir de 1 pour concorder avec les messages d'erreur
 
-			foreach (var line in z)
+			foreach (var line in lines)
 			{
 				string s = string.Format ("{0}:\t{1}",
 					TypeConverters.IntToString (index++),
@@ -157,7 +160,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"			decimal value = this.InitialAmount;",
 			"",
 			"//----------------------------------------------",
-			"$",
+			"$args$",
+			"//----------------------------------------------",
+			"$exp$",
 			"//----------------------------------------------",
 			"",
 			"			return value;",

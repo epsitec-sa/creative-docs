@@ -309,16 +309,14 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void CreateMethodsSamples()
 		{
-			this.AddMethod ("Aucun",              AmortizationMethod.None);
-			this.AddMethod ("Taux linéaire",      AmortizationMethod.RateLinear);
-			this.AddMethod ("Taux dégressif",     AmortizationMethod.RateDegressive);
-			this.AddMethod ("Années linéaires",   AmortizationMethod.YearsLinear);
-			this.AddMethod ("Années dégressives", AmortizationMethod.YearsDegressive);
-
-			this.AddMethod ("Sur mesure", AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear));
+			this.AddMethod ("Aucun",            AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");  // TODO
+			this.AddMethod ("Taux linéaire",    AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");
+			this.AddMethod ("Taux dégressif",   AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "Round", "Residual");
+			this.AddMethod ("Durée linéaire",   AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "Round", "Residual");
+			this.AddMethod ("Durée dégressive", AmortizationMethod.Custom, AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "Round", "Residual");
 		}
 
-		protected void AddMethod(string name, AmortizationMethod method, string expression = null)
+		protected void AddMethod(string name, AmortizationMethod method, string expression, params string[] arguments)
 		{
 			var cats = this.accessor.Mandat.GetData (BaseType.Methods);
 			var start  = new Timestamp (this.accessor.Mandat.StartDate, 0);
@@ -331,20 +329,24 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.AmortizationMethod, (int) method);
+			this.AddField (e, ObjectField.Expression, expression);
 
-			if (expression != null)
+			var field = ObjectField.ArgumentFirst;
+			foreach (var argument in arguments)
 			{
-				this.AddField (e, ObjectField.Expression, expression);
+				var a = this.GetArgument (argument);
+				this.AddField (e, field, a.Guid);
+				field++;
 			}
 		}
 
 
 		protected virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument ("Taux", "Taux d'amortissement", ArgumentType.Decimal, false, "Rate", "0.1");
-			this.AddArgument ("Nombre d'années", "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
-			this.AddArgument ("Arrondi", "Valeur de l'arrondi", ArgumentType.Decimal, false, "Round", "1");
-			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle", ArgumentType.Decimal, false, "Residual", "1");
+			this.AddArgument ("Taux",              "Taux d'amortissement",               ArgumentType.Decimal, false, "Rate",      "0.1");
+			this.AddArgument ("Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
+			this.AddArgument ("Arrondi",           "Valeur de l'arrondi",                ArgumentType.Decimal, false, "Round",     "1");
+			this.AddArgument ("Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Decimal, false, "Residual",  "1");
 		}
 
 		protected void AddArgument(string name, string description, ArgumentType type, bool nullable, string variable, string def)
@@ -453,6 +455,23 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			}
 
 			System.Diagnostics.Debug.Fail (string.Format ("La catégorie {0} n'existe pas !", text));
+			return null;
+		}
+
+		protected DataObject GetArgument(string variable)
+		{
+			var list = this.accessor.Mandat.GetData (BaseType.Arguments);
+
+			foreach (var exp in list)
+			{
+				var v = ObjectProperties.GetObjectPropertyString (exp, null, ObjectField.ArgumentVariable);
+				if (v == variable)
+				{
+					return exp;
+				}
+			}
+
+			System.Diagnostics.Debug.Fail (string.Format ("L'argument {0} n'existe pas !", variable));
 			return null;
 		}
 

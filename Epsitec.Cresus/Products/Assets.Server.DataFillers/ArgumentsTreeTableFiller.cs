@@ -120,5 +120,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			ArgumentsTreeTableFiller.nullWidth +
 			ArgumentsTreeTableFiller.variableWidth +
 			ArgumentsTreeTableFiller.defaultWidth;
+
+		public const int essentialWidth =
+			ArgumentsTreeTableFiller.nameWidth +
+			ArgumentsTreeTableFiller.descWidth;
 	}
 }

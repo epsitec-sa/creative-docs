@@ -13,19 +13,38 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 {
 	/// <summary>
-	/// Contrôleur permettant de choisir l'ensemble des groupes-ratio de
+	/// Contrôleur permettant de choisir l'ensemble des arguments de
 	/// l'objet en édition.
 	/// On peut en créer de nouveaux, en supprimer et en modifier.
 	/// </summary>
-	public class GuidRatioFieldsController : AbstractFieldController
+	public class ArgumentFieldsController : AbstractFieldController
 	{
-		public GuidRatioFieldsController(DataAccessor accessor)
+		public ArgumentFieldsController(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.accessor = accessor;
 
-			this.controllers = new List<GuidRatioFieldController> ();
+			this.controllers = new List<ArgumentFieldController> ();
 			this.lines = new Dictionary<ObjectField, Line> ();
+		}
+
+
+		public IEnumerable<Guid> Guids
+		{
+			get
+			{
+				var obj = this.accessor.EditionAccessor.EditedObject;
+
+				foreach (var field in ArgumentsLogic.GetSortedFields (this.accessor))
+				{
+					var guid = ObjectProperties.GetObjectPropertyGuid (obj, null, field);
+
+					if (!guid.IsEmpty)
+					{
+						yield return guid;
+					}
+				}
+			}
 		}
 
 
@@ -46,12 +65,10 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		public override void CreateUI(Widget parent)
 		{
-			this.CreateTitle (parent);
-
 			var controllersFrame = new FrameBox
 			{
 				Parent = parent,
-				Dock   = DockStyle.Fill,
+				Dock   = DockStyle.Top,
 			};
 
 			this.CreateControllers (controllersFrame);
@@ -66,40 +83,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
-		private void CreateTitle(Widget parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-				PreferredHeight = AbstractFieldController.lineHeight,
-			};
-
-			new StaticText
-			{
-				Parent         = frame,
-				Text           = "Groupe",
-				Dock           = DockStyle.Left,
-				PreferredWidth = AbstractFieldController.maxWidth - 45,
-				Margins        = new Margins (85+10, 0, 0, 0),
-			};
-
-			new StaticText
-			{
-				Parent         = frame,
-				Text           = "Ratio",
-				Dock           = DockStyle.Left,
-				PreferredWidth = 45,
-			};
-		}
-
 		private void CreateControllers(Widget parent)
 		{
-			//	On crée un contrôleur par ObjectField.GroupGuidRatio, toujours.
+			//	On crée un contrôleur par ObjectField.ArgumentFirst, toujours.
 			this.controllers.Clear ();
 			this.lines.Clear ();
 
-			foreach (var field in DataAccessor.GroupGuidRatioFields)
+			foreach (var field in DataAccessor.ArgumentFields)
 			{
 				this.CreateController (parent, field);
 			}
@@ -120,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Parent           = frame,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
-				PreferredWidth   = 85,
+				PreferredWidth   = 100,
 				PreferredHeight  = AbstractFieldController.lineHeight,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
@@ -132,7 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredHeight = AbstractFieldController.lineHeight,
 			};
 
-			var controller = new GuidRatioFieldController (this.accessor)
+			var controller = new ArgumentFieldController (this.accessor)
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
@@ -146,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				this.selectedField = of;
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (of);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (of);
 				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (of);
 
 				this.OnValueEdited (of);
@@ -185,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 
 			//	Cache toutes les lignes.
-			foreach (var field in DataAccessor.GroupGuidRatioFields)
+			foreach (var field in DataAccessor.ArgumentFields)
 			{
 				var line = this.lines[field];
 				line.Frame.Visibility = false;
@@ -195,9 +185,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			int y = 0;
 			int tabIndex = 0;
 
-			foreach (var field in GroupsGuidRatioLogic.GetSortedFields (this.accessor))
+			foreach (var field in ArgumentsLogic.GetSortedFields (this.accessor))
 			{
-				var label = (y == 0) ? Res.Strings.FieldControllers.GuidRatio.List.ToString () : "";  // légende uniquement pour le premier
+				var label = (y == 0) ? "Arguments" : "";  // légende uniquement pour le premier
 				this.UpdateController (field, y, ref tabIndex, label);
 				y += AbstractFieldController.lineHeight + 4;  // en dessous
 			}
@@ -206,7 +196,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			var ff = this.FreeField;
 			if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
 			{
-				this.UpdateController (ff, y, ref tabIndex, Res.Strings.FieldControllers.GuidRatio.New.ToString ());
+				this.UpdateController (ff, y, ref tabIndex, "Nouveau");
 			}
 		}
 
@@ -224,7 +214,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			line.Label.Text = label;
 
 			line.Controller.Field         = field;
-			line.Controller.Value         = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
+			line.Controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
 			line.Controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
 		}
 
@@ -235,9 +225,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			//	Retourne le premier champ libre, qui sera créé s'il est rempli par l'utilisateur.
 			get
 			{
-				foreach (var field in DataAccessor.GroupGuidRatioFields)
+				foreach (var field in DataAccessor.ArgumentFields)
 				{
-					var gr = this.accessor.EditionAccessor.GetFieldGuidRatio (field);
+					var gr = this.accessor.EditionAccessor.GetFieldGuid (field);
 					if (gr.IsEmpty)
 					{
 						return field;
@@ -251,7 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private struct Line
 		{
-			public Line(FrameBox frame, StaticText label, GuidRatioFieldController controller)
+			public Line(FrameBox frame, StaticText label, ArgumentFieldController controller)
 			{
 				this.Frame      = frame;
 				this.Label      = label;
@@ -260,11 +250,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			public readonly FrameBox					Frame;
 			public readonly StaticText					Label;
-			public readonly GuidRatioFieldController	Controller;
+			public readonly ArgumentFieldController		Controller;
 		}
 
 
-		private readonly List<GuidRatioFieldController>	controllers;
+		private readonly List<ArgumentFieldController>	controllers;
 		private readonly Dictionary<ObjectField, Line>	lines;
 
 		private ObjectField								selectedField;

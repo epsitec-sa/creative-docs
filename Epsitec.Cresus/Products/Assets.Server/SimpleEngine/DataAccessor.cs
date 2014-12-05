@@ -421,6 +421,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 		}
 
+		public static IEnumerable<ObjectField> ArgumentFields
+		{
+			get
+			{
+				for (int i=0; i<=ObjectField.ArgumentLast-ObjectField.ArgumentFirst; i++)
+				{
+					yield return ObjectField.ArgumentFirst+i;
+				}
+			}
+		}
+
 		public IEnumerable<ObjectField> AssetFields
 		{
 			//	Retourne tous les champs pouvant potentiellement faire partie d'un objet d'immobilisation.
@@ -521,6 +532,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			if (objectField >= ObjectField.GroupGuidRatioFirst &&
 				objectField <= ObjectField.GroupGuidRatioLast)
+			{
+				return FieldType.GuidRatio;
+			}
+
+			if (objectField >= ObjectField.ArgumentFirst &&
+				objectField <= ObjectField.ArgumentLast)
 			{
 				return FieldType.GuidRatio;
 			}

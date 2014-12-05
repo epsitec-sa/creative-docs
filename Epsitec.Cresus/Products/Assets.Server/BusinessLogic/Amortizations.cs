@@ -306,9 +306,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (methodObj != null)
 				{
 					var method = (AmortizationMethod) ObjectProperties.GetObjectPropertyInt (methodObj, null, ObjectField.AmortizationMethod);
+					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
 
-					return new AmortizationDefinition (method, expression, taux.GetValueOrDefault (0.0m),
+					return new AmortizationDefinition (method, arguments, expression, taux.GetValueOrDefault (0.0m),
 						years.GetValueOrDefault (0.0m),
 						(Periodicity) period, (ProrataType) prorata,
 						round.GetValueOrDefault (0.0m), residual.GetValueOrDefault (0.0m),

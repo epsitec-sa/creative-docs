@@ -202,6 +202,22 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.IsReadOnly    = this.isLocked;
 					c.Update ();
 				}
+				else if (controller is ArgumentFieldController)
+				{
+					var c = controller as ArgumentFieldController;
+
+					c.EventType     = this.eventType;
+					c.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
+					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
+				}
+				else if (controller is ArgumentFieldsController)
+				{
+					var c = controller as ArgumentFieldsController;
+
+					c.IsReadOnly    = this.isLocked;
+					c.Update ();
+				}
 			}
 
 			this.UpdateColorsExplanation ();
@@ -517,6 +533,37 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 
 			this.fieldControllers.Add (ObjectField.GroupGuidRatioFirst, controller);
+
+			return controller;
+		}
+
+		protected ArgumentFieldsController CreateArgumentsController(Widget parent)
+		{
+			var controller = new ArgumentFieldsController (this.accessor);
+
+			controller.CreateUI (parent);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.OnValueEdited (of);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (ObjectField.ArgumentFirst, controller);
 
 			return controller;
 		}

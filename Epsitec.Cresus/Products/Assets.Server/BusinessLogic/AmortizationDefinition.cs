@@ -9,12 +9,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(AmortizationMethod method, string expression,
+		public AmortizationDefinition(AmortizationMethod method, string arguments, string expression,
 			decimal rate, decimal yearCount,
 			Periodicity periodicity, ProrataType prorataType,
 			decimal round, decimal residual, decimal startYearAmount)
 		{
 			this.Method          = method;
+			this.Arguments       = arguments;
 			this.Expression      = expression;
 			this.Rate            = rate;
 			this.YearCount       = yearCount;
@@ -80,10 +81,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition SetMethod(AmortizationDefinition model, AmortizationMethod method, string expression)
+		public static AmortizationDefinition SetMethod(AmortizationDefinition model, AmortizationMethod method, string arguments, string expression)
 		{
 			return new AmortizationDefinition (
 				method,
+				arguments,
 				expression,
 				model.Rate,
 				model.YearCount,
@@ -95,9 +97,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, null, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (AmortizationMethod.Unknown, null, null, 0.0m, 0.0m, 0.0m, 0.0m, 0.0m, 0, 0.0m);
 
 		public readonly AmortizationMethod		Method;
+		public readonly string					Arguments;
 		public readonly string					Expression;
 		public readonly decimal					Rate;
 		public readonly decimal					YearCount;
