@@ -514,6 +514,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return this.UserFieldsAccessor.GetUserFieldName (objectField);
 			}
 
+			if (objectField >= ObjectField.ArgumentFirst &&
+				objectField <= ObjectField.ArgumentLast)
+			{
+				var arg = ArgumentsLogic.GetArgument (this, objectField);
+				if (arg == null)
+				{
+					return null;
+				}
+				else
+				{
+					return ArgumentsLogic.GetShortName (arg);
+				}
+			}
+
 			return DataDescriptions.GetObjectFieldDescription (objectField);
 		}
 

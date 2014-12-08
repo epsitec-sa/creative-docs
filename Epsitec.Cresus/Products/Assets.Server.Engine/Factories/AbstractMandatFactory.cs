@@ -324,22 +324,22 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Name, name);
 			this.AddField (e, ObjectField.Expression, expression);
 
-			var field = ObjectField.ArgumentFirst;
 			foreach (var argument in arguments)
 			{
 				var a = this.GetArgument (argument);
+				var field = (ObjectField) ObjectProperties.GetObjectPropertyInt (a, null, ObjectField.ArgumentField);
+
 				this.AddField (e, field, a.Guid);
-				field++;
 			}
 		}
 
 
 		public virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Decimal, false, "Rate",      "0.1");
+			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,    false, "Rate",      "0.1");
 			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
-			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Decimal, false, "Round",     "1");
-			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Decimal, false, "Residual",  "1");
+			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount,  false, "Round",     "1");
+			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount,  false, "Residual",  "1");
 		}
 
 		protected void AddArgument(ObjectField field, string name, string description, ArgumentType type, bool nullable, string variable, string def)

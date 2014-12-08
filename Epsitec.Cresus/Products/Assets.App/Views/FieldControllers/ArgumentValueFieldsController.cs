@@ -90,15 +90,69 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			switch (type)
 			{
 				case ArgumentType.Decimal:
-					this.CreateControllerDecimal (controllerFrame, field);
+					this.CreateControllerDecimal (controllerFrame, field, DecimalFormat.Real);
 					break;
 
+				case ArgumentType.Amount:
+					this.CreateControllerDecimal (controllerFrame, field, DecimalFormat.Amount);
+					break;
+
+				case ArgumentType.Rate:
+					this.CreateControllerDecimal (controllerFrame, field, DecimalFormat.Rate);
+					break;
+
+				case ArgumentType.Int:
+					this.CreateControllerInt (controllerFrame, field);
+					break;
+
+				case ArgumentType.Date:
+					this.CreateControllerDate(controllerFrame, field);
+					break;
+
+				case ArgumentType.String:
+					this.CreateControllerString (controllerFrame, field);
+					break;
 			}
 		}
 
-		private void CreateControllerDecimal(Widget parent, ObjectField field)
+		private void CreateControllerDecimal(Widget parent, ObjectField field, DecimalFormat format)
 		{
 			var controller = new DecimalFieldController (this.accessor)
+			{
+				LabelWidth    = 0,
+				EditWidth     = 100,
+				Field         = field,
+				DecimalFormat = format,
+			};
+
+			controller.CreateUI (parent);
+
+			this.controllers.Add (controller);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
+				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.OnShowHistory (target, field);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.OnSetFieldFocus (field);
+			};
+		}
+
+		private void CreateControllerInt(Widget parent, ObjectField field)
+		{
+			var controller = new IntFieldController (this.accessor)
 			{
 				LabelWidth    = 0,
 				EditWidth     = 100,
@@ -113,7 +167,75 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
-				controller.Value         = this.accessor.EditionAccessor.GetFieldDecimal (field);
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
+				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.OnShowHistory (target, field);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.OnSetFieldFocus (field);
+			};
+		}
+
+		private void CreateControllerDate(Widget parent, ObjectField field)
+		{
+			var controller = new DateFieldController (this.accessor)
+			{
+				LabelWidth    = 0,
+				EditWidth     = 100,
+				Field         = field,
+			};
+
+			controller.CreateUI (parent);
+
+			this.controllers.Add (controller);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldDate (field);
+				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.OnShowHistory (target, field);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.OnSetFieldFocus (field);
+			};
+		}
+
+		private void CreateControllerString(Widget parent, ObjectField field)
+		{
+			var controller = new StringFieldController (this.accessor)
+			{
+				LabelWidth    = 0,
+				EditWidth     = 100,
+				Field         = field,
+			};
+
+			controller.CreateUI (parent);
+
+			this.controllers.Add (controller);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldString (field);
 				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
 
 				this.OnValueEdited (field);

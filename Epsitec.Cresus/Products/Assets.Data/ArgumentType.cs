@@ -13,6 +13,8 @@ namespace Epsitec.Cresus.Assets.Data
 		String,
 		Int,
 		Decimal,
+		Amount,
+		Rate,
 		Date,
 	}
 }

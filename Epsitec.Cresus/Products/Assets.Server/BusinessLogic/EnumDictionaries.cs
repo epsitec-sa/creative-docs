@@ -162,6 +162,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetArgumentTypeName(ArgumentType type)
 		{
+			switch (type)
+			{
+				case ArgumentType.String:
+					return "Chaîne (string)";
+
+				case ArgumentType.Int:
+					return "Nombre entier (int)";
+
+				case ArgumentType.Decimal:
+					return "Nombre réel (decimal)";
+
+				case ArgumentType.Amount:
+					return "Montant (decimal)";
+
+				case ArgumentType.Rate:
+					return "Pour-cent (decimal)";
+
+				case ArgumentType.Date:
+					return "Date (System.DateTime)";
+
+				default:
+					return null;
+			}
+		}
+
+		public static string GetArgumentTypeDotNet(ArgumentType type)
+		{
 			//	Retourne le type exact tel qu'il s'écrit en C#.
 			switch (type)
 			{
@@ -172,6 +199,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return "int";
 
 				case ArgumentType.Decimal:
+				case ArgumentType.Amount:
+				case ArgumentType.Rate:
 					return "decimal";
 
 				case ArgumentType.Date:
@@ -301,10 +330,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				yield return ArgumentType.String;
-				yield return ArgumentType.Int;
+				yield return ArgumentType.Amount;
+				yield return ArgumentType.Rate;
 				yield return ArgumentType.Decimal;
+				yield return ArgumentType.Int;
 				yield return ArgumentType.Date;
+				yield return ArgumentType.String;
 			}
 		}
 

@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private const int nameWidth     = 150;
 		private const int descWidth     = 250;
-		private const int typeWidth     = 120;
+		private const int typeWidth     = 150;
 		private const int nullWidth     =  80;
 		private const int variableWidth = 150;
 		private const int defaultWidth  = 100;

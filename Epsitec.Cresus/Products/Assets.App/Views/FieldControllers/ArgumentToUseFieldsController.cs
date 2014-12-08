@@ -80,32 +80,43 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void CreateControllers()
 		{
-			//	On crée un contrôleur par ObjectField.ArgumentFirst, toujours.
 			this.controllers.Clear ();
 			this.controllersFrame.Children.Clear ();
 
+			int rank = 0;
 			foreach (var field in ArgumentToUseFieldsController.GetSortedFields (this.accessor))
 			{
-				this.CreateController (this.controllersFrame, field);
+				this.CreateController (this.controllersFrame, rank++, field);
 			}
 
-			this.CreateController (this.controllersFrame, ObjectField.Unknown);
+			this.CreateController (this.controllersFrame, rank++, ObjectField.Unknown);
 		}
 
-		private void CreateController(Widget parent, ObjectField field)
+		private void CreateController(Widget parent, int rank, ObjectField field)
 		{
 			var frame = new FrameBox
 			{
 				Parent          = parent,
 				Dock            = DockStyle.Top,
 				PreferredHeight = AbstractFieldController.lineHeight,
-				Margins         = new Margins (0, 10, 0, 0),
+				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			var label = new StaticText
+			string s = null;
+
+			if (field == ObjectField.Unknown)
+			{
+				s = "Nouvel argument";
+			}
+			else if (rank == 0)
+			{
+				s = "Arguments";
+			}
+
+			new StaticText
 			{
 				Parent           = frame,
-				Text             = (field == ObjectField.Unknown) ? "Nouvel argument" : "Argument",
+				Text             = s,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Left,
 				PreferredWidth   = 100,
@@ -124,8 +135,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				Accessor      = this.accessor,
 				LabelWidth    = 0,
-				EditWidth     = AbstractFieldController.maxWidth + 15,
+				EditWidth     = AbstractFieldController.maxWidth,
+				Field         = field,
 			};
+
+			if (field != ObjectField.Unknown)
+			{
+				//	Bouton "poubelle" pour toutes les lignes, sauf la dernière "nouvel argument".
+				controller.PropertyState = PropertyState.Deletable;
+			}
 
 			if (field != ObjectField.Unknown)
 			{

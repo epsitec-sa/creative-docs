@@ -18,5 +18,6 @@ namespace Epsitec.Cresus.Assets.Data
 		Timeless,		// propriété intemporelle
 		Readonly,		// pas d'événement à la date choisie
 		Automatic,		// propriété définie automatiquement
+		Deletable,		// comme Single, dans Deletable en plus
 	}
 }

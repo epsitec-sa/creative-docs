@@ -13,14 +13,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	{
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
-			//	Retourne le nom court d'une argument d'une méthode d'amortissement.
+			//	Retourne le nom complet d'une argument d'une méthode d'amortissement.
 			var obj = accessor.GetObject (BaseType.Arguments, guid);
 			return ArgumentsLogic.GetSummary (obj);
 		}
 
 		public static string GetSummary(DataObject obj)
 		{
-			//	Retourne le nom court d'une argument d'une méthode d'amortissement.
+			//	Retourne le nom complet d'une argument d'une méthode d'amortissement.
 			if (obj == null)
 			{
 				return null;
@@ -32,6 +32,44 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return string.Format ("{0} ({1})", name, variable);
 		}
 
+		public static string GetShortName(DataObject obj)
+		{
+			//	Retourne le nom court d'une argument d'une méthode d'amortissement.
+			if (obj == null)
+			{
+				return null;
+			}
+
+			return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+		}
+
+
+		public static ObjectField GetObjectField(DataAccessor accessor, Guid guid)
+		{
+			var obj = accessor.GetObject (BaseType.Arguments, guid);
+
+			if (obj == null)
+			{
+				return ObjectField.Unknown;
+			}
+
+			return (ObjectField) ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField).GetValueOrDefault ();
+		}
+
+		public static DataObject GetArgument(DataAccessor accessor, ObjectField field)
+		{
+			foreach (var obj in accessor.Mandat.GetData (BaseType.Arguments))
+			{
+				var f = (ObjectField) ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField).GetValueOrDefault ();
+
+				if (f == field)
+				{
+					return obj;
+				}
+			}
+
+			return null;
+		}
 
 		public static ObjectField GetUnusedField(DataAccessor accessor)
 		{
@@ -107,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var def      = ObjectProperties.GetObjectPropertyString (argumentObj, null, ObjectField.ArgumentDefault);
 			var desc     = ObjectProperties.GetObjectPropertyString (argumentObj, null, ObjectField.Description);
 
-			builder.Append (EnumDictionaries.GetArgumentTypeName (type));
+			builder.Append (EnumDictionaries.GetArgumentTypeDotNet (type));
 
 			if (nullable && type != ArgumentType.String)
 			{
@@ -124,9 +162,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				switch (type)
 				{
 					case ArgumentType.Decimal:
-						builder.Append (def.Replace (",", "."));
+					case ArgumentType.Amount:
+					case ArgumentType.Rate:
+						if (def.Last () == '%')
+						{
+							var n = TypeConverters.ParseRate (def);
+							def = TypeConverters.DecimalToString (n);
+						}
+						else
+						{
+							var n = TypeConverters.ParseAmount (def);
+							def = TypeConverters.DecimalToString (n);
+						}
+						builder.Append (def);
 
-						if (def.Last () != '!')
+						if (def.Last () != 'm')
 						{
 							builder.Append ("m");
 						}

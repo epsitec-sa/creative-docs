@@ -62,6 +62,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Decimal, 100, name));
 							break;
 
+						case ArgumentType.Amount:
+							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Amount, 100, name));
+							break;
+
+						case ArgumentType.Rate:
+							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Rate, 100, name));
+							break;
+
 						case ArgumentType.Int:
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Int, 100, name));
 							break;
@@ -136,6 +144,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					switch (this.argumentTypes[a])
 					{
 						case ArgumentType.Decimal:
+						case ArgumentType.Amount:
+						case ArgumentType.Rate:
 							{
 								var value = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, this.argumentFields[a]);
 								var cell = new TreeTableCellDecimal (value, cellState);

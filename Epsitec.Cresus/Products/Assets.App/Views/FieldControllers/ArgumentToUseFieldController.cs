@@ -128,7 +128,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			ArgumentsPopup.Show (this.button, this.accessor, this.value, delegate (Guid guid)
 			{
 				this.Value = guid;
-				this.OnValueEdited (this.Field);
+
+				var field = ArgumentsLogic.GetObjectField (this.accessor, guid);
+				this.OnValueEdited (field);
 			});
 		}
 

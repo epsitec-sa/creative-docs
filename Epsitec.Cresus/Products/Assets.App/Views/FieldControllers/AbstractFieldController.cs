@@ -225,12 +225,14 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			if (this.historyButton != null)
 			{
 				this.historyButton.Visibility = (this.PropertyState != PropertyState.OneShot &&
-												 this.PropertyState != PropertyState.Timeless);
+												 this.PropertyState != PropertyState.Timeless &&
+												 this.PropertyState != PropertyState.Deletable);
 			}
 
 			if (this.clearButton != null)
 			{
-				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single);
+				this.clearButton.Visibility = (this.PropertyState == PropertyState.Single ||
+											   this.PropertyState == PropertyState.Deletable);
 				this.clearButton.Enable     = !this.isReadOnly;
 			}
 		}

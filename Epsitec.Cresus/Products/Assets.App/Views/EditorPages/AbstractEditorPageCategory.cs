@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -36,7 +35,15 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				switch (type)
 				{
 					case ArgumentType.Decimal:
+						this.CreateDecimalController (parent, field, DecimalFormat.Real);
+						break;
+
+					case ArgumentType.Amount:
 						this.CreateDecimalController (parent, field, DecimalFormat.Amount);
+						break;
+
+					case ArgumentType.Rate:
+						this.CreateDecimalController (parent, field, DecimalFormat.Rate);
 						break;
 
 					case ArgumentType.Int:

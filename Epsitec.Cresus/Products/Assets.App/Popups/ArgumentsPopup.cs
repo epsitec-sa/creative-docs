@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController ();
 
 				var node = this.nodeGetter[this.visibleSelectedRow];
+				this.ClosePopup ();  // impérativement avant l'envoi de l'événement, car la UI sera modifiée
 				this.OnNavigate (node.Guid);
-				this.ClosePopup ();
 			};
 		}
 
