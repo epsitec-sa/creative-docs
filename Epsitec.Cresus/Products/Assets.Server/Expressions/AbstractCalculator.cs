@@ -14,13 +14,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			this.traceBuilder = new System.Text.StringBuilder ();
 
+			this.Range              = details.Def.Range;
+			this.Date               = details.Def.Date;
 			this.BaseAmount         = details.History.BaseAmount;
 			this.StartYearAmount    = details.Def.StartYearAmount;
 			this.InitialAmount      = details.History.InitialAmount;
 
 			this.Periodicity        = details.Def.Periodicity;
-			this.ProrataNumerator   = details.Prorata.Numerator.GetValueOrDefault (0.0m);
-			this.ProrataDenominator = details.Prorata.Denominator.GetValueOrDefault (0.0m);
 			this.YearRank           = details.History.YearRank;
 			this.PeriodRank         = details.History.PeriodRank;
 		}
@@ -119,21 +119,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		protected decimal ProrataFactor
-		{
-			get
-			{
-				if (this.ProrataDenominator != 0)
-				{
-					return this.ProrataNumerator / this.ProrataDenominator;
-				}
-				else
-				{
-					return 1;
-				}
-			}
-		}
-
 		protected decimal Round(decimal value)
 		{
 			//	Retourne la valeur arrondie selon this.RoundAmount.
@@ -189,6 +174,92 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
+		#region Prorata
+		//	Retourne le facteur pour le prorata, compris entre 0.0 et 1.0.
+		//	Pour une dateValue en début d'année, on retourne 1.0.
+		//	Pour une dateValue en milieu d'année, on retourne 0.5.
+		//	Pour une dateValue en fin d'année, on retourne 0.0.
+
+		protected decimal ProrataFactor12
+		{
+			//	Retourne le facteur pour le prorata au mois.
+			get
+			{
+				System.DateTime v;
+
+				if (this.Date == this.Range.IncludeFrom)
+				{
+					v = this.Date;
+				}
+				else
+				{
+					//	Le mois en cours est amorti intégralement. Ainsi, un objet entré le 31 mars
+					//	sera amorti tout le mois de mars.
+					v = new System.DateTime (this.Date.Year, this.Date.Month, 1);
+				}
+
+				int n = AbstractCalculator.GetMonthsCount (v)                    - AbstractCalculator.GetMonthsCount (this.Range.IncludeFrom);
+				int d = AbstractCalculator.GetMonthsCount (this.Range.ExcludeTo) - AbstractCalculator.GetMonthsCount (this.Range.IncludeFrom);
+
+				n = d - n;
+				n = System.Math.Max (n, 0);
+				n = System.Math.Min (n, d);
+				return (decimal) n / (decimal) d;
+			}
+		}
+
+		protected decimal ProrataFactor360
+		{
+			get
+			{
+				//	Retourne le facteur pour le prorata au jour, sur la base d'une année de 360 jours.
+				int n = AbstractCalculator.GetDaysCount (this.Date)            - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
+				int d = AbstractCalculator.GetDaysCount (this.Range.ExcludeTo) - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
+
+				n = d - n;
+				n = System.Math.Max (n, 0);
+				n = System.Math.Min (n, d);
+				return (decimal) n / (decimal) d;
+			}
+		}
+
+		protected decimal ProrataFactor365
+		{
+			//	Retourne le facteur pour le prorata au jour effectif.
+			get
+			{
+				int n = this.Date.Subtract (this.Range.IncludeFrom).Days;
+				int d = this.Range.ExcludeTo.Subtract (this.Range.IncludeFrom).Days;
+
+				n = d - n;
+				n = System.Math.Max (n, 0);
+				n = System.Math.Min (n, d);
+				return (decimal) n / (decimal) d;
+			}
+		}
+
+		private static int GetMonthsCount(System.DateTime date)
+		{
+			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
+			//	L'origine est sans importance, car le résultat est utilisé pour
+			//	calculer une différence entre 2 dates !
+			return date.Year*12
+				+ (date.Month-1);
+		}
+
+		private static int GetDaysCount(System.DateTime date)
+		{
+			//	Retourne le nombre de jours écoulés depuis le 01.01.0000,
+			//	en se basant sur 12 mois à 30 jours par année.
+			//	L'origine est sans importance, car le résultat est utilisé pour
+			//	calculer une différence entre 2 dates !
+			return date.Year*12*30
+				+ (date.Month-1)*30
+				+ System.Math.Min ((date.Day-1), 30-1);
+		}
+		#endregion
+	
+
 		public struct Result
 		{
 			public Result(decimal value, string trace)
@@ -225,6 +296,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public readonly System.Text.StringBuilder traceBuilder;
 
+		public readonly DateRange				Range;
+		public readonly System.DateTime			Date;
 		public readonly decimal					BaseAmount;			// valeur d'achat
 		public readonly decimal					StartYearAmount;	// valeur au début de l'année
 		public readonly decimal					InitialAmount;		// valeur avant amortissement
@@ -234,8 +307,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly Periodicity				Periodicity;
 		public readonly decimal					RoundAmount;		// arrondi
 		public readonly decimal					ResidualAmount;		// valeur résiduelle
-		public readonly decimal					ProrataNumerator;	// numérateur du prorata
-		public readonly decimal					ProrataDenominator;	// dénominateur du prorata
 		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
 		public readonly decimal					PeriodRank;			// rang de la période (0..n)
 	}

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var d = ObjectProperties.GetObjectPropertyDecimal (obj, timestamp, field, false);
 						if (d.HasValue)
 						{
-							switch (Format.GetFieldFormat (field))
+							switch (accessor.GetFieldFormat (field))
 							{
 								case DecimalFormat.Rate:
 									line = TypeConverters.RateToString (d);

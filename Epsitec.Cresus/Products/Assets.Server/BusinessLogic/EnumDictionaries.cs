@@ -29,16 +29,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
-		public static string GetProrataTypeName(int? type)
-		{
-			if (type.HasValue)
-			{
-				return EnumDictionaries.GetProrataTypeName ((ProrataType) type.Value);
-			}
-
-			return null;
-		}
-
 
 		public static string GetPeriodicityName(Periodicity type)
 		{
@@ -55,27 +45,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case Periodicity.Mensual:
 					return Res.Strings.Enum.Periodicity.Mensual.ToString ();
-
-				default:
-					return null;
-			}
-		}
-
-		public static string GetProrataTypeName(ProrataType type)
-		{
-			switch (type)
-			{
-				case ProrataType.None:
-					return Res.Strings.Enum.ProrataType.None.ToString ();
-
-				case ProrataType.Prorata365:
-					return Res.Strings.Enum.ProrataType.Prorata365.ToString ();
-
-				case ProrataType.Prorata360:
-					return Res.Strings.Enum.ProrataType.Prorata360.ToString ();
-
-				case ProrataType.Prorata12:
-					return Res.Strings.Enum.ProrataType.Prorata12.ToString ();
 
 				default:
 					return null;
@@ -336,34 +305,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ArgumentType.Int;
 				yield return ArgumentType.Date;
 				yield return ArgumentType.String;
-			}
-		}
-
-
-		public static Dictionary<int, string> DictProrataTypes
-		{
-			get
-			{
-				var dict = new Dictionary<int, string> ();
-
-				foreach (var type in EnumDictionaries.EnumProrataTypes)
-				{
-					var text = EnumDictionaries.GetProrataTypeName (type);
-					dict.Add ((int) type, text);
-				}
-
-				return dict;
-			}
-		}
-
-		private static IEnumerable<ProrataType> EnumProrataTypes
-		{
-			get
-			{
-				yield return ProrataType.None;
-				yield return ProrataType.Prorata365;
-				yield return ProrataType.Prorata360;
-				yield return ProrataType.Prorata12;
 			}
 		}
 

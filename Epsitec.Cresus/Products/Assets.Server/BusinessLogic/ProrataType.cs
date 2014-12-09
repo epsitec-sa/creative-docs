@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public enum ProrataType
+	public enum ProrataType2
 	{
 		None,
 

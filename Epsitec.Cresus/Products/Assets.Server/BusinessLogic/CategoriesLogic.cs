@@ -29,6 +29,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.MethodGuid,  ObjectField.MethodGuid);
 			CategoriesLogic.ImportField (accessor, asset, e, catObj, ObjectField.Periodicity, ObjectField.Periodicity);
 
+			foreach (var field in DataAccessor.ArgumentFields)
+			{
+				CategoriesLogic.ImportArgument (accessor, asset, e, catObj, field);
+			}
+
 			foreach (var field in DataAccessor.AccountFields)
 			{
 				CategoriesLogic.ImportField (accessor, asset, e, catObj, field, field);
@@ -117,6 +122,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		private static void ImportFieldDate(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
+		{
+			var d = ObjectProperties.GetObjectPropertyDate (catObj, null, fieldSrc);
+			if (d.HasValue)
+			{
+				if (asset == null)
+				{
+					accessor.EditionAccessor.SetField (fieldDst, d);
+				}
+				else
+				{
+					var newProperty = new DataDateProperty (fieldDst, d.Value);
+					e.AddProperty (newProperty);
+				}
+			}
+		}
+
 		private static void ImportFieldGuid(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
 			var d = ObjectProperties.GetObjectPropertyGuid (catObj, null, fieldSrc);
@@ -130,6 +152,37 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var newProperty = new DataGuidProperty (fieldDst, d);
 					e.AddProperty (newProperty);
+				}
+			}
+		}
+
+		private static void ImportArgument(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField field)
+		{
+			var argument = ArgumentsLogic.GetArgument (accessor, field);
+			if (argument != null)
+			{
+				var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
+
+				switch (type)
+				{
+					case ArgumentType.Decimal:
+					case ArgumentType.Amount:
+					case ArgumentType.Rate:
+						CategoriesLogic.ImportFieldDecimal (accessor, asset, e, catObj, field, field);
+						break;
+
+					case ArgumentType.Int:
+						CategoriesLogic.ImportFieldInt (accessor, asset, e, catObj, field, field);
+						break;
+
+					case ArgumentType.Date:
+						CategoriesLogic.ImportFieldDate (accessor, asset, e, catObj, field, field);
+						break;
+
+					case ArgumentType.String:
+						CategoriesLogic.ImportFieldString (accessor, asset, e, catObj, field, field);
+						break;
+
 				}
 			}
 		}

@@ -115,15 +115,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			foreach (var period in this.GetPeriods (processRange, obj))
 			{
-				var def     = this.GetAmortizationDefinition (obj, new Timestamp (period.IncludeFrom, 0));
-				var prorata = Amortizations.GetProrataDetails (obj, def, period.IncludeFrom, lastToDate);
+				var def = this.GetAmortizationDefinition (obj, new Timestamp (period.IncludeFrom, 0), lastToDate);
 
 				var timestamp = obj.GetNewTimestamp (period.ExcludeTo.AddDays (-1));
 				var history = Amortizations.GetHistoryDetails (obj, timestamp);
 
 				if (!def.IsEmpty && !history.IsEmpty)
 				{
-					var details = new AmortizationDetails (def, prorata, history);
+					var details = new AmortizationDetails (def, history);
 
 					this.CreateAmortizationPreview (obj, period.ExcludeTo.AddDays (-1), details);
 					lastToDate = period.ExcludeTo;
@@ -154,9 +153,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						beginDate = inputDate;
 					}
 
+					System.DateTime? lastToDate = null;
+
 					while (beginDate < processRange.ExcludeTo)
 					{
-						var def = this.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0));
+						var def = this.GetAmortizationDefinition (obj, new Timestamp (beginDate, 0), lastToDate);
 						System.DateTime endDate;
 
 						if (def.IsEmpty)
@@ -174,26 +175,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 
 						beginDate = endDate;
+						lastToDate = endDate;
 					}
 				}
 			}
 		}
 
-		private static ProrataDetails GetProrataDetails(DataObject obj, AmortizationDefinition def, System.DateTime date, System.DateTime? lastToDate)
+		private static System.DateTime? GetProrataDetails(DataObject obj, DateRange range, System.DateTime? lastToDate)
 		{
 			//	Retourne tous les détails sur un amortissement ordinaire.
-			if (def.IsEmpty)
-			{
-				return ProrataDetails.Empty;
-			}
-
-			var beginDate = def.GetBeginRangeDate (date);
-			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
-			var range = new DateRange (beginDate, endDate);
-
 			if (AssetCalculator.IsOutOfBoundsEvent (obj, new Timestamp (range.ExcludeTo.AddSeconds (-1), 0)))
 			{
-				return ProrataDetails.Empty;
+				return null;
 			}
 
 			//	S'il y a déjà un (ou plusieurs) amortissement (extra)ordinaire dans la période,
@@ -201,7 +194,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			if (Amortizations.HasAmortizations (obj, EventType.AmortizationExtra, range) ||
 				Amortizations.HasAmortizations (obj, EventType.AmortizationAuto,  range))
 			{
-				return ProrataDetails.Empty;
+				return null;
 			}
 
 			//	Génère l'aperçu d'amortissement.
@@ -223,7 +216,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				valueDate = lastToDate.Value;
 			}
 
-			return ProrataDetails.ComputeProrata (range, valueDate, ProrataType.None);
+			return valueDate;
 		}
 
 		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp)
@@ -285,7 +278,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private AmortizationDefinition GetAmortizationDefinition(DataObject obj, Timestamp timestamp)
+		private AmortizationDefinition GetAmortizationDefinition(DataObject obj, Timestamp timestamp, System.DateTime? lastToDate)
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
@@ -302,9 +295,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
+					var periodicity = (Periodicity) period;
 
-					return new AmortizationDefinition (arguments, expression, (Periodicity) period,
-						mainValue.Value.FinalAmount.GetValueOrDefault (0.0m));
+					int pmc = AmortizedAmount.GetPeriodMonthCount (periodicity);
+
+					var beginDate = AmortizationDefinition.GetBeginRangeDate (timestamp.Date, pmc);
+					var endDate = beginDate.AddMonths (pmc);
+					var range = new DateRange (beginDate, endDate);
+					var date = Amortizations.GetProrataDetails (obj, range, lastToDate);
+
+					if (date.HasValue)
+					{
+						return new AmortizationDefinition (range, date.Value, arguments, expression, periodicity,
+							mainValue.Value.FinalAmount.GetValueOrDefault (0.0m));
+					}
 				}
 			}
 
@@ -338,72 +342,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return AbstractCalculator.Result.Empty;  // impossible de calculer quoi que ce soit
 		}
-
-#if false
-		public static AmortizedAmount InitialiseAmortizedAmount(DataAccessor accessor,
-			DataObject obj, DataEvent e, Timestamp timestamp,
-			bool fixAmount, EntryScenario entryScenario)
-		{
-			//	Initialise une fois pour toutes le AmortizedAmount d'un objet.
-			//	Collecte tous les champs qui définissent comment générer l'écriture.
-			//	Ils peuvent provenir de plusieurs événements différents.
-			var inputDate = AssetCalculator.GetFirstTimestamp (obj).Value.Date;
-			var defTimestamp = timestamp;
-
-			//	On doit parcourir toutes les périodes, pour trouver la définition
-			//	initiatrice de la période.
-			var period = Amortizations.GetPeriods (new DateRange (inputDate, inputDate.AddYears (100)), obj)
-				.Where (x => defTimestamp.Date >= x.IncludeFrom && defTimestamp.Date < x.ExcludeTo)
-				.FirstOrDefault ();
-
-			if (period.AtLeastOneTime)
-			{
-				defTimestamp = new Timestamp (period.IncludeFrom, 0);
-			}
-
-			var def = Amortizations.GetAmortizationDefinition (obj, defTimestamp);
-
-			var beginDate = def.GetBeginRangeDate (defTimestamp.Date);
-			var endDate = beginDate.AddMonths (def.PeriodMonthCount);
-			var range = new DateRange (beginDate, endDate);
-
-			var valueDate = range.IncludeFrom;
-
-			if (range.IsInside (inputDate))
-			{
-				//	Si l'objet est entré durant la période, on utilise sa date d'entrée
-				//	pour calculer l'amortissement "au prorata".
-				valueDate = inputDate;
-			}
-
-			AmortizationMethod method;
-			string exp;
-
-			if (fixAmount)
-			{
-				method = AmortizationMethod.None;
-				exp = null;
-			}
-			else
-			{
-				method = MethodsLogic.GetMethod (accessor, def.ExpressionGuid);
-				exp = MethodsLogic.GetExpression (accessor, def.ExpressionGuid);
-			}
-
-			var prorata = ProrataDetails.ComputeProrata (range, valueDate, def.ProrataType);
-
-			return new AmortizedAmount
-			(
-				method, exp, def.Rate,
-				def.YearRank, def.YearCount,
-				def.PeriodRank, def.Periodicity,
-				null, null, null, null, null,
-				prorata.Numerator, prorata.Denominator, def.Round, def.Residual,
-				entryScenario, timestamp.Date,
-				obj.Guid, e.Guid, Guid.Empty, 0
-			);
-		}
-#endif
 
 
 		private static bool HasAmortizations(DataObject obj, EventType type, DateRange range)

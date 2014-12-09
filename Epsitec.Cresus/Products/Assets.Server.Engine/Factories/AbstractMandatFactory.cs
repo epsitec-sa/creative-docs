@@ -175,6 +175,15 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				e.AddProperty (new DataGuidProperty   (ObjectField.MethodGuid,   method));
 				e.AddProperty (new DataIntProperty    (ObjectField.Periodicity,  period.GetValueOrDefault (12)));
 
+				foreach (var field in DataAccessor.ArgumentFields)
+				{
+					var c = ObjectProperties.GetObjectPropertyDecimal (cat, null, field);
+					if (c.HasValue)
+					{
+						e.AddProperty (new DataDecimalProperty (field, c.Value));
+					}
+				}
+
 				foreach (var field in DataAccessor.AccountFields)
 				{
 					var c = ObjectProperties.GetObjectPropertyString  (cat, null, field);
@@ -304,10 +313,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected virtual void CreateMethodsSamples()
 		{
 			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.None           ));
-			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "Round", "Residual");
-			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "Round", "Residual");
-			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "Round", "Residual");
-			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "Round", "Residual");
+			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "RoundAmount", "ResidualAmount");
+			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "RoundAmount", "ResidualAmount");
+			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "RoundAmount", "ResidualAmount");
+			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "RoundAmount", "ResidualAmount");
 		}
 
 		protected void AddMethod(string name, string expression, params string[] arguments)
@@ -336,10 +345,10 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		public virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,    false, "Rate",      "0.1");
-			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount", "10");
-			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount,  false, "Round",     "1");
-			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount,  false, "Residual",  "1");
+			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,    false, "Rate",           "0.1");
+			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount",      "10");
+			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount,  false, "RoundAmount",    "1");
+			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount,  false, "ResidualAmount", "1");
 		}
 
 		protected void AddArgument(ObjectField field, string name, string description, ArgumentType type, bool nullable, string variable, string def)

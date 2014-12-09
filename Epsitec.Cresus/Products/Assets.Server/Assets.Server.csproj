@@ -101,11 +101,9 @@
     <Compile Include="BusinessLogic\EnumDictionaries.cs" />
     <Compile Include="BusinessLogic\Error.cs" />
     <Compile Include="BusinessLogic\ErrorType.cs" />
-    <Compile Include="BusinessLogic\Format.cs" />
     <Compile Include="BusinessLogic\GroupsGuidRatioLogic.cs" />
     <Compile Include="BusinessLogic\ObjectProperties.cs" />
     <Compile Include="BusinessLogic\PersonsLogic.cs" />
-    <Compile Include="BusinessLogic\ProrataDetails.cs" />
     <Compile Include="BusinessLogic\ProrataType.cs" />
     <Compile Include="BusinessLogic\TimelineData.cs" />
     <Compile Include="BusinessLogic\TimelineGlyph.cs" />
@@ -117,10 +115,6 @@
     <Compile Include="Expressions\AmortizationExpressionType.cs" />
     <Compile Include="Expressions\AmortizationExpressionItem.cs" />
     <Compile Include="Expressions\AmortizationExpressionCollection.cs" />
-    <Compile Include="Expressions\RateDegressiveCalculator.cs" />
-    <Compile Include="Expressions\YearsDegressiveCalculator.cs" />
-    <Compile Include="Expressions\YearsLinearCalculator.cs" />
-    <Compile Include="Expressions\RateLinearCalculator.cs" />
     <Compile Include="Expressions\AbstractCalculator.cs" />
     <Compile Include="Expressions\AmortizationExpressions.cs" />
     <Compile Include="Expressions\AmortizationExpression.cs" />

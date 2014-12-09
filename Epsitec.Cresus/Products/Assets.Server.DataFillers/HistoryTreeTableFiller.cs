@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				switch (this.accessor.GetFieldType (this.field))
 				{
 					case FieldType.Decimal:
-						switch (Format.GetFieldFormat (this.field))
+						switch (this.accessor.GetFieldFormat (this.field))
 						{
 							case DecimalFormat.Rate:
 								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Rate, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					break;
 
 				case FieldType.GuidMethod:
-					this.PutGuidExpression (content, firstRow, count, selection);
+					this.PutGuidMethod (content, firstRow, count, selection);
 					break;
 
 				case FieldType.GuidRatio:
@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private void PutGuidExpression(TreeTableContentItem content, int firstRow, int count, int selection)
+		private void PutGuidMethod(TreeTableContentItem content, int firstRow, int count, int selection)
 		{
 			int i = 0;
 			foreach (var e in this.GetEvents (firstRow, count))

@@ -9,9 +9,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(string arguments, string expression,
+		public AmortizationDefinition(DateRange range, System.DateTime date,
+			string arguments, string expression,
 			Periodicity periodicity, decimal startYearAmount)
 		{
+			this.Range           = range;
+			this.Date            = date;
 			this.Arguments       = arguments;
 			this.Expression      = expression;
 			this.Periodicity     = periodicity;
@@ -22,7 +25,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Periodicity     == 0
+				return this.Range.IsEmpty
+					&& this.Periodicity     == 0
 					&& this.StartYearAmount == 0.0m;
 			}
 		}
@@ -57,10 +61,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		public static System.DateTime GetBeginRangeDate(System.DateTime date, int periodMonthCount)
+		{
+			//	Retourne la date de début d'une période d'amortissement.
+			//	Avec une périodicité Annual (12), c'est le 1er janvier.
+			//	Avec une périodicité Semestrial (6), c'est le 1er janvier ou le 1er juillet.
+			//	Etc.
+			int c = periodMonthCount;
+			if (c > 0)
+			{
+				int m = date.Year*12 + date.Month-1;
+
+				m = (m/c)*c;
+
+				return new System.DateTime (m/12, m%12+1, 1);
+			}
+			else
+			{
+				return date;
+			}
+		}
+
 
 		public static AmortizationDefinition SetMethod(AmortizationDefinition model, string arguments, string expression)
 		{
 			return new AmortizationDefinition (
+				model.Range,
+				model.Date,
 				arguments,
 				expression,
 				model.Periodicity,
@@ -68,8 +95,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (null, null, Periodicity.Unknown, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (DateRange.Empty, System.DateTime.MinValue, null, null, Periodicity.Unknown, 0.0m);
 
+		public readonly DateRange				Range;
+		public readonly System.DateTime			Date;
 		public readonly string					Arguments;
 		public readonly string					Expression;
 		public readonly Periodicity				Periodicity;

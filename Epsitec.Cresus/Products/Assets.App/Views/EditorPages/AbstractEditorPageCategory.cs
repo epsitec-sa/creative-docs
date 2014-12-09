@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		public AbstractEditorPageCategory(DataAccessor accessor, CommandContext commandContext, BaseType baseType, bool isTimeless)
 			: base (accessor, commandContext, baseType, isTimeless)
 		{
+			this.controllers = new Dictionary<ObjectField, AbstractFieldController> ();
 		}
 
 
@@ -27,36 +28,45 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			//??this.argumentsController = new ArgumentValueFieldsController (this.accessor);
 			//??this.argumentsController.CreateUI (parent);
 
+			this.controllers.Clear ();
+
 			foreach (var argument in ArgumentsLogic.GetSortedArguments (this.accessor))
 			{
 				var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
 				var field = (ObjectField) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentField);
 
+				AbstractFieldController c = null;
+
 				switch (type)
 				{
 					case ArgumentType.Decimal:
-						this.CreateDecimalController (parent, field, DecimalFormat.Real);
+						c = this.CreateDecimalController (parent, field, DecimalFormat.Real);
 						break;
 
 					case ArgumentType.Amount:
-						this.CreateDecimalController (parent, field, DecimalFormat.Amount);
+						c = this.CreateDecimalController (parent, field, DecimalFormat.Amount);
 						break;
 
 					case ArgumentType.Rate:
-						this.CreateDecimalController (parent, field, DecimalFormat.Rate);
+						c = this.CreateDecimalController (parent, field, DecimalFormat.Rate);
 						break;
 
 					case ArgumentType.Int:
-						this.CreateIntController (parent, field);
+						c = this.CreateIntController (parent, field);
 						break;
 
 					case ArgumentType.Date:
-						this.CreateDateController (parent, field);
+						c = this.CreateDateController (parent, field);
 						break;
 
 					case ArgumentType.String:
-						this.CreateStringController (parent, field);
+						c = this.CreateStringController (parent, field);
 						break;
+				}
+
+				if (c != null)
+				{
+					this.controllers.Add (field, c);
 				}
 			}
 
@@ -88,10 +98,21 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void UpdateControllers()
 		{
-			this.methodController     .IsReadOnly =  Amortizations.IsHidden (ObjectField.MethodGuid);
-			this.periodicityController.IsReadOnly =  Amortizations.IsHidden (ObjectField.Periodicity);
+			//??this.methodController     .IsReadOnly =  Amortizations.IsHidden (ObjectField.MethodGuid);
+			//??this.periodicityController.IsReadOnly =  Amortizations.IsHidden (ObjectField.Periodicity);
 
 			//??this.argumentsController.SetMethod (this.methodController.Value);
+
+			var methodGuid = this.accessor.EditionAccessor.GetFieldGuid (ObjectField.MethodGuid);
+
+			foreach (var pair in this.controllers)
+			{
+				var field      = pair.Key;
+				var controller = pair.Value;
+
+				var hidden = MethodsLogic.IsHidden (this.accessor, methodGuid, field);
+				controller.IsReadOnly = hidden;
+			}
 		}
 
 
@@ -191,6 +212,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		//??	this.OnValueEdited (ObjectField.AmortizationYearCount);
 		//??}
 
+
+		private readonly Dictionary<ObjectField, AbstractFieldController> controllers;
 
 		private MethodGuidFieldController		methodController;
 		private EnumFieldController				periodicityController;

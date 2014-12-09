@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 		}
 
+
 		public static string GetExpressionSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le résumé du code C# d'une méthode d'amortissement.
@@ -53,6 +54,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Expression);
+		}
+
+
+		public static bool IsHidden(DataAccessor accessor, Guid methodGuid, ObjectField field)
+		{
+			var method = accessor.GetObject (BaseType.Methods, methodGuid);
+
+			if (method != null)
+			{
+				return ObjectProperties.GetObjectPropertyGuid (method, null, field).IsEmpty;
+			}
+
+			return true;
 		}
 	}
 }

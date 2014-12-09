@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var d = ObjectProperties.GetObjectPropertyDecimal (this.obj, this.timestamp, tile.Field);
 					if (d.HasValue)
 					{
-						switch (Format.GetFieldFormat (tile.Field))
+						switch (this.accessor.GetFieldFormat (tile.Field))
 						{
 							case DecimalFormat.Rate:
 								text = TypeConverters.RateToString (d);

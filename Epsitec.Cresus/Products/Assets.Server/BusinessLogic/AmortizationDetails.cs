@@ -12,10 +12,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	/// </summary>
 	public struct AmortizationDetails
 	{
-		public AmortizationDetails(AmortizationDefinition def, ProrataDetails prorata, HistoryDetails history)
+		public AmortizationDetails(AmortizationDefinition def, HistoryDetails history)
 		{
 			this.Def     = def;
-			this.Prorata = prorata;
 			this.History = history;
 		}
 
@@ -31,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static AmortizationDetails SetMethod(AmortizationDetails model, string arguments, string expression)
 		{
 			var m = AmortizationDefinition.SetMethod (model.Def, arguments, expression);
-			return new AmortizationDetails (m, model.Prorata, model.History);
+			return new AmortizationDetails (m, model.History);
 		}
 
 
@@ -39,21 +38,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				var def = new AmortizationDefinition (null, null, Periodicity.Annual, 4000.0m);
-
-				var prorata = new ProrataDetails (null, null);
-
+				var def = new AmortizationDefinition (DateRange.Empty, System.DateTime.MinValue, null, null, Periodicity.Annual, 4000.0m);
 				var history = new HistoryDetails (5000.0m, 4000.0m, 0, 0);
 
-				return new AmortizationDetails (def, prorata, history);
+				return new AmortizationDetails (def, history);
 			}
 		}
 
-		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, ProrataDetails.Empty, HistoryDetails.Empty);
+		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, HistoryDetails.Empty);
 
 
 		public readonly AmortizationDefinition	Def;
-		public readonly ProrataDetails			Prorata;
 		public readonly HistoryDetails			History;
 	}
 }

@@ -548,7 +548,30 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.ArgumentFirst &&
 				objectField <= ObjectField.ArgumentLast)
 			{
-				return FieldType.GuidRatio;
+				var argument = ArgumentsLogic.GetArgument (this, objectField);
+				if (argument != null)
+				{
+					var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
+					switch (type)
+					{
+						case ArgumentType.Decimal:
+						case ArgumentType.Amount:
+						case ArgumentType.Rate:
+							return FieldType.Decimal;
+
+						case ArgumentType.Int:
+							return FieldType.Int;
+
+						case ArgumentType.Date:
+							return FieldType.Date;
+
+						case ArgumentType.String:
+							return FieldType.String;
+
+						default:
+							throw new System.InvalidOperationException (string.Format ("Unknown ArgumentType {0}", type.ToString ()));
+					}
+				}
 			}
 
 			if (DataAccessor.AccountFields.Where (x => x == objectField).Any ())
@@ -586,6 +609,40 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 				default:
 					return FieldType.String;
+			}
+		}
+
+		public DecimalFormat GetFieldFormat(ObjectField objectField)
+		{
+			if (objectField >= ObjectField.ArgumentFirst &&
+				objectField <= ObjectField.ArgumentLast)
+			{
+				var argument = ArgumentsLogic.GetArgument (this, objectField);
+				if (argument != null)
+				{
+					var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
+					switch (type)
+					{
+						case ArgumentType.Decimal:
+							return DecimalFormat.Real;
+
+						case ArgumentType.Amount:
+							return DecimalFormat.Amount;
+
+						case ArgumentType.Rate:
+							return DecimalFormat.Rate;
+					}
+				}
+			}
+
+			switch (objectField)
+			{
+				case ObjectField.MainValue:
+				case ObjectField.EntryAmount:
+					return DecimalFormat.Amount;
+
+				default:
+					return DecimalFormat.Real;
 			}
 		}
 
