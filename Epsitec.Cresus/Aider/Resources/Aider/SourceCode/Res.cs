@@ -2456,10 +2456,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 122);
 				//	designer:cap/LVAR3
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
-				//	designer:cap/LVABA
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 331);
-				//	designer:cap/LVA1G
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 513);
+				//	designer:cap/LVO253
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 162);
 				//	designer:cap/LVA14
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 129);
 				//	designer:cap/LVA04
@@ -3046,10 +3044,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 132);
 				//	designer:cap/LVA34
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 131);
-				//	designer:cap/LVA0G
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroup = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 512);
-				//	designer:cap/LVAVF
-				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 511);
+				//	designer:cap/LVO153
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 161);
 			}
 			
 			public static class AiderPlacePerson

@@ -333,12 +333,15 @@
     <Compile Include="Data\Subscription\SubscriptionUploader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderEmployeeJobEntity.cs" />
+    <Compile Include="Entities\AiderEventParticipantEntity.cs" />
+    <Compile Include="Entities\AiderPlaceEntity.cs" />
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderMailingQueryEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
     <Compile Include="Entities\AiderPlaParishGroupEntity.cs" />
+    <Compile Include="Entities\AiderEventEntity.cs" />
     <Compile Include="Entities\AiderRefereeEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionEntity.cs" />
     <Compile Include="Entities\AiderSubscriptionRefusalEntity.cs" />
