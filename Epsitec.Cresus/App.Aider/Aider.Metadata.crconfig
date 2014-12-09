@@ -32,6 +32,7 @@ AiderOfficeSender = [LVOA13]
 AiderEmployee = [LVA2J]
 AiderEmployeeJob = [LVA7J]
 AiderReferee = [LVADJ]
+AiderEventParticipant = [LVAA3]
 
 <meta>
   <T>
@@ -430,6 +431,17 @@ AiderReferee = [LVADJ]
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
+      </col>
+    </t>
+
+    <t eid="@AiderEventParticipant" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAC3].[LVAEH].[LVACE]" title="Intitulé" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAD3]" title="Rôle" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
 
@@ -2306,6 +2318,11 @@ AiderReferee = [LVADJ]
         <l t="Adresse normale" f="0"/>
         <l t="Adresse aux parents de..." f="1"/>
       </L>
+    </d>
+
+    <d cid="[LVOI53]" teid="@AiderEventParticipant" tn="default" df="false" d="false" ec="false" ed="false" dg="">
+      <R><r>@user</r></R>
+      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEventParticipant:[LVAC3].[LVAEH]" /></M>
     </d>
 
     <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">

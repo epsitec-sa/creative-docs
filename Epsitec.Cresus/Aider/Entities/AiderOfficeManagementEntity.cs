@@ -41,6 +41,16 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText ("Documents");
 		}
 
+		public FormattedText GetEventsInPreparationTitleSummary()
+		{
+			return TextFormatter.FormatText ("Actes en préparations");
+		}
+
+		public FormattedText GetEventsToValidateTitleSummary()
+		{
+			return TextFormatter.FormatText ("Actes à valider");
+		}
+
 		public FormattedText GetDocumentsSummary()
 		{
 			switch (this.Documents.Count)
@@ -52,6 +62,34 @@ namespace Epsitec.Aider.Entities
 
 				default:
 					return TextFormatter.FormatText (this.Documents.Count, "documents");
+			}
+		}
+
+		public FormattedText GetEventsInPreparationSummary()
+		{
+			switch (this.EventsInPreparation.Count)
+			{
+				case 0:
+					return TextFormatter.FormatText ("Aucun");
+				case 1:
+					return TextFormatter.FormatText ("Un acte en préparation");
+
+				default:
+					return TextFormatter.FormatText (this.EventsInPreparation.Count, "actes en préparations");
+			}
+		}
+
+		public FormattedText GetEventsToValidateSummary()
+		{
+			switch (this.EventsToValidate.Count)
+			{
+				case 0:
+					return TextFormatter.FormatText ("Aucun");
+				case 1:
+					return TextFormatter.FormatText ("Un acte à valider");
+
+				default:
+					return TextFormatter.FormatText (this.EventsToValidate.Count, "actes à valider");
 			}
 		}
 
@@ -352,6 +390,16 @@ namespace Epsitec.Aider.Entities
 			value = this.GetDocuments ().AsReadOnlyCollection ();
 		}
 
+		partial void GetEventsInPreparation(ref IList<AiderEventEntity> value)
+		{
+			value = this.GetEventsInPreparation ().AsReadOnlyCollection ();
+		}
+
+		partial void GetEventsToValidate(ref IList<AiderEventEntity> value)
+		{
+			value = this.GetEventsToValidate ().AsReadOnlyCollection ();
+		}
+
 		partial void GetRegionalReferees(ref IList<AiderRefereeEntity> value)
 		{
 			value = this.GetVirtualCollection (ref this.regionalReferees, x => x.Group = this.ParishGroup).AsReadOnlyCollection ();
@@ -419,10 +467,58 @@ namespace Epsitec.Aider.Entities
 							  .OrderBy (x => x.Name)
 							  .ToList ();
 		}
+
+		private IList<AiderEventEntity> GetEventsToValidate()
+		{
+			if (this.eventsToValidate == null)
+			{
+				this.eventsToValidate = this.ExecuteWithDataContext (d => this.FindEventsToValidate (d), () => new List<AiderEventEntity> ());
+			}
+
+			return this.eventsToValidate;
+		}
+
+		private IList<AiderEventEntity> FindEventsToValidate(DataContext dataContext)
+		{
+			var example = new AiderEventEntity
+			{
+				Office = this,
+				State = EventState.ToValidate
+			};
+
+			return dataContext.GetByExample (example)
+							  .OrderBy (x => x.Date)
+							  .ToList ();
+		}
+
+		private IList<AiderEventEntity> GetEventsInPreparation()
+		{
+			if (this.eventsInPreparation == null)
+			{
+				this.eventsInPreparation = this.ExecuteWithDataContext (d => this.FindEventsInPreparation (d), () => new List<AiderEventEntity> ());
+			}
+
+			return this.eventsInPreparation;
+		}
+
+		private IList<AiderEventEntity> FindEventsInPreparation(DataContext dataContext)
+		{
+			var example = new AiderEventEntity
+			{
+				Office = this,
+				State = EventState.InPreparation
+			};
+
+			return dataContext.GetByExample (example)
+							  .OrderBy (x => x.Date)
+							  .ToList ();
+		}
 		
 		
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
+		private IList<AiderEventEntity>			eventsInPreparation;
+		private IList<AiderEventEntity>			eventsToValidate;
 		private IList<AiderEmployeeJobEntity>	employeeJobs;
 		private IList<AiderRefereeEntity>		regionalReferees;
 		private IList<AiderGroupEntity>			associatedGroups;

@@ -24,12 +24,25 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Type);
 		}
 		
-		public AiderEventEntity Create(BusinessContext context, Enumerations.EventType type, AiderOfficeManagementEntity office, AiderPlaceEntity place)
+		public static AiderEventEntity Create(
+			BusinessContext context,
+			Enumerations.EventType type,
+			AiderOfficeManagementEntity office,
+			AiderTownEntity town,
+			Enumerations.EventPlaceType placeType,
+			string placeDescription,
+			Date celebrationDate)
 		{
 			var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
 			newEvent.Type = type;
+			newEvent.State = Enumerations.EventState.InPreparation;
+					
 			newEvent.Office = office;
-			newEvent.Place = place;
+			newEvent.Town = town;
+			newEvent.PlaceType = placeType;
+			newEvent.PlaceName = placeDescription;
+
+			newEvent.Date = celebrationDate;
 			return newEvent;
 		}
 

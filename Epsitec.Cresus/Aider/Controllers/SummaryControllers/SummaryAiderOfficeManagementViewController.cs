@@ -84,24 +84,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
 				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksEmployees (wall, user);
 			SummaryAiderOfficeManagementViewController.CreateBricksAssociatedGroups (wall, this.Entity);
-			
-			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
-				.Title (p => p.GetSettingsTitleSummary ())
-				.Text (p => p.GetSettingsSummary ())
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings));
-
-			wall.AddBrick ()
-				.Icon ("Base.AiderGoup.Parish")
-				.Title (p => p.GetDocumentTitleSummary ())
-				.Text (p => p.GetDocumentsSummary ())
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
+			SummaryAiderOfficeManagementViewController.CreateBricksSettings (wall);
+			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);	
 		}
 		
 		
@@ -114,7 +103,46 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderGroupViewController0GroupParticipant));
 		}
+
+		private static void CreateBricksSettings(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title (p => p.GetSettingsTitleSummary ())
+				.Text (p => p.GetSettingsSummary ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController1Settings));
+		}
+
+		private static void CreateBricksDocuments(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title (p => p.GetDocumentTitleSummary ())
+				.Text (p => p.GetDocumentsSummary ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
+		}
 		
+
+		private static void CreateBricksEventsManagement(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title (p => p.GetEventsInPreparationTitleSummary ())
+				.Text (p => p.GetEventsInPreparationSummary ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.EnableActionButton<ActionAiderOfficeManagementViewController5PrepareEvent> ()
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController3EventsInPreparation));
+
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title (p => p.GetEventsToValidateTitleSummary ())
+				.Text (p => p.GetEventsToValidateSummary ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController4EventsToValidate));
+		}
+
 		private static void CreateBricksDerogations(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick (p => p.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.DerogationIn))
