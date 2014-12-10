@@ -109,7 +109,6 @@
     <Compile Include="Popups\CreateArgumentPopup.cs" />
     <Compile Include="Popups\ShowExpressionSimulationPopup.cs" />
     <Compile Include="Popups\ExpressionSimulationParamsPopup.cs" />
-    <Compile Include="Popups\TestExpressionPopup.cs" />
     <Compile Include="Popups\ShowExpressionPopup.cs" />
     <Compile Include="Popups\CreateMethodPopup.cs" />
     <Compile Include="Popups\FilterControllers\AccountsFilterController.cs" />

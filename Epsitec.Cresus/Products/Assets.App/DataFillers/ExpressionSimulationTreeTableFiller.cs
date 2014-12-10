@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Initial.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace,        TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth,  "Trace"));
 
 				return list.ToArray ();
 			}
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<5; i++)
+			for (int i=0; i<6; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -74,6 +75,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var initial = node.InitialAmount;
 				var amort   = node.InitialAmount - node.FinalAmount;
 				var final   = node.FinalAmount;
+				var trace   = ExpressionSimulationTreeTableFiller.ConvertToSingleLine (node.Trace);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -82,6 +84,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var cell3 = new TreeTableCellDecimal (initial, cellState);
 				var cell4 = new TreeTableCellDecimal (amort,   cellState);
 				var cell5 = new TreeTableCellDecimal (final,   cellState);
+				var cell6 = new TreeTableCellString  (trace,   cellState);
 
 				int columnRank = 0;
 
@@ -90,19 +93,41 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				content.Columns[columnRank++].AddRow (cell3);
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
+				content.Columns[columnRank++].AddRow (cell6);
 			}
 
 			return content;
 		}
 
 
-		public const int Width =
+		private static string ConvertToSingleLine(string trace)
+		{
+			//	Converti "toto<br/>titi<br/>" en "toto / titi".
+			if (!string.IsNullOrEmpty (trace))
+			{
+				const string sep = " / ";
+
+				trace = trace.Replace ("<br/>", sep);
+
+				if (trace.EndsWith (sep))
+				{
+					trace = trace.Substring (0, trace.Length-sep.Length);
+				}
+			}
+
+			return trace;
+		}
+
+
+		public const int Width =  // largeur totale, avec un bout de la colonne 'Trace'
 			ExpressionSimulationTreeTableFiller.rankWidth +
 			ExpressionSimulationTreeTableFiller.dateWidth +
-			ExpressionSimulationTreeTableFiller.amountWidth * 3;
+			ExpressionSimulationTreeTableFiller.amountWidth * 3 +
+			100;
 
 		private const int rankWidth   = 50;
 		private const int dateWidth   = 80;
 		private const int amountWidth = 100;
+		private const int traceWidth  = 600;
 	}
 }

@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return string.Format ("{0} ({1})", name, variable);
 		}
 
+
 		public static string GetShortName(DataObject obj)
 		{
 			//	Retourne le nom court d'une argument d'une méthode d'amortissement.
@@ -54,6 +55,27 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return (ObjectField) ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField).GetValueOrDefault ();
+		}
+
+		public static ArgumentType GetArgumentType(DataAccessor accessor, ObjectField field)
+		{
+			var argument = ArgumentsLogic.GetArgument (accessor, field);
+			return ArgumentsLogic.GetArgumentType (argument);
+		}
+
+		public static ArgumentType GetArgumentType(DataObject argument)
+		{
+			if (argument != null)
+			{
+				var i = ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
+
+				if (i.HasValue)
+				{
+					return (ArgumentType) i.Value;
+				}
+			}
+
+			return ArgumentType.Unknown;
 		}
 
 		public static DataObject GetArgument(DataAccessor accessor, ObjectField field)
@@ -87,13 +109,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region DotNet code generation
-		public static string GetArgumentsDotNetCode(DataAccessor accessor, DataObject methodObj)
+		public static string GetArgumentsDotNetCode(DataAccessor accessor, DataObject asset, Timestamp timestamp,
+			DataObject methodObj)
 		{
 			return ArgumentsLogic.GetArgumentsDotNetCode (accessor,
-				ArgumentsLogic.GetArgumentGuids (accessor, methodObj));
+				ArgumentsLogic.GetArgumentGuids (methodObj), asset, timestamp);
 		}
 
-		private static IEnumerable<Guid> GetArgumentGuids(DataAccessor accessor, DataObject methodObj)
+		private static IEnumerable<Guid> GetArgumentGuids(DataObject methodObj)
 		{
 			foreach (var field in DataAccessor.ArgumentFields)
 			{
@@ -106,29 +129,33 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetArgumentsDotNetCode(DataAccessor accessor, IEnumerable<Guid> argumentGuids)
+		public static string GetArgumentsDotNetCode(DataAccessor accessor, IEnumerable<Guid> argumentGuids,
+			DataObject asset = null, Timestamp timestamp = new Timestamp ())
 		{
 			var list = new List<string> ();
 
 			foreach (var argumentGuid in argumentGuids)
 			{
-				list.Add (ArgumentsLogic.GetDotNetCode (accessor, argumentGuid));
+				list.Add (ArgumentsLogic.GetDotNetCode (accessor, argumentGuid, asset, timestamp));
 			}
 
 			return string.Join ("<br/>", list);
 		}
 
-		private static string GetDotNetCode(DataAccessor accessor, Guid argumentGuid)
+		private static string GetDotNetCode(DataAccessor accessor, Guid argumentGuid, DataObject asset, Timestamp timestamp)
 		{
 			var argumentObj = accessor.GetObject (BaseType.Arguments, argumentGuid);
 			System.Diagnostics.Debug.Assert (argumentObj != null);
-			return ArgumentsLogic.GetDotNetCode (argumentObj);
+
+			return ArgumentsLogic.GetDotNetCode (argumentObj, asset, timestamp);
 		}
 
-		private static string GetDotNetCode(DataObject argumentObj)
+		private static string GetDotNetCode(DataObject argumentObj, DataObject asset, Timestamp timestamp)
 		{
 			//	Retourne une ligne de code C# permettant de déclarer la variable
-			//	correspondant à l'argument. Par exemple:
+			//	correspondant à l'argument.
+			//	asset/timestamp déterminent où piocher la valeur de l'argument.
+			//	Par exemple:
 			//	"decimal Rate = 0.1m; // Taux d'amortissement"
 			//	"string Name = "coucou"; // Message"
 			//	"System.DateTime Date = new System.DateTime (2014, 12, 31); // Début"
@@ -139,11 +166,52 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			var builder = new System.Text.StringBuilder ();
 
-			var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argumentObj, null, ObjectField.ArgumentType);
+			var type     = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argumentObj, null, ObjectField.ArgumentType);
+			var field    = (ObjectField)  ObjectProperties.GetObjectPropertyInt (argumentObj, null, ObjectField.ArgumentField);
 			var nullable = ObjectProperties.GetObjectPropertyInt    (argumentObj, null, ObjectField.ArgumentNullable) == 1;
 			var variable = ObjectProperties.GetObjectPropertyString (argumentObj, null, ObjectField.ArgumentVariable);
 			var def      = ObjectProperties.GetObjectPropertyString (argumentObj, null, ObjectField.ArgumentDefault);
 			var desc     = ObjectProperties.GetObjectPropertyString (argumentObj, null, ObjectField.Description);
+
+			switch (type)
+			{
+				case ArgumentType.Decimal:
+				case ArgumentType.Amount:
+				case ArgumentType.Rate:
+					var d = ObjectProperties.GetObjectPropertyDecimal (asset, timestamp, field);
+					if (d.HasValue)
+					{
+						def = TypeConverters.DecimalToString (d);
+					}
+					break;
+
+				case ArgumentType.Int:
+					var i = ObjectProperties.GetObjectPropertyInt (asset, timestamp, field);
+					if (i.HasValue)
+					{
+						def = TypeConverters.IntToString (i);
+					}
+					break;
+
+				case ArgumentType.Date:
+					var date = ObjectProperties.GetObjectPropertyDate (asset, timestamp, field);
+					if (date.HasValue)
+					{
+						def = TypeConverters.DateToString (date);
+					}
+					break;
+
+				case ArgumentType.String:
+					var s = ObjectProperties.GetObjectPropertyString (asset, timestamp, field);
+					if (!string.IsNullOrEmpty (s))
+					{
+						def = s;
+					}
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType \"{0}\"", type));
+			}
 
 			builder.Append (EnumDictionaries.GetArgumentTypeDotNet (type));
 

@@ -9,16 +9,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct AmortizationDefinition
 	{
-		public AmortizationDefinition(DateRange range, System.DateTime date,
+		public AmortizationDefinition(DateRange range, System.DateTime currentDate,
 			string arguments, string expression,
-			Periodicity periodicity, decimal startYearAmount)
+			Periodicity periodicity)
 		{
 			this.Range           = range;
-			this.Date            = date;
+			this.CurrentDate     = currentDate;
 			this.Arguments       = arguments;
 			this.Expression      = expression;
 			this.Periodicity     = periodicity;
-			this.StartYearAmount = startYearAmount;
 		}
 
 		public bool								IsEmpty
@@ -26,8 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.Range.IsEmpty
-					&& this.Periodicity     == 0
-					&& this.StartYearAmount == 0.0m;
+					&& this.Periodicity     == 0;
 			}
 		}
 
@@ -87,21 +85,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			return new AmortizationDefinition (
 				model.Range,
-				model.Date,
+				model.CurrentDate,
 				arguments,
 				expression,
-				model.Periodicity,
-				model.StartYearAmount);
+				model.Periodicity);
 		}
 
 
-		public static AmortizationDefinition Empty = new AmortizationDefinition (DateRange.Empty, System.DateTime.MinValue, null, null, Periodicity.Unknown, 0.0m);
+		public static AmortizationDefinition Empty = new AmortizationDefinition (DateRange.Empty, System.DateTime.MinValue, null, null, Periodicity.Unknown);
 
 		public readonly DateRange				Range;
-		public readonly System.DateTime			Date;
+		public readonly System.DateTime			CurrentDate;
 		public readonly string					Arguments;
 		public readonly string					Expression;
 		public readonly Periodicity				Periodicity;
-		public readonly decimal					StartYearAmount;
 	}
 }

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -40,7 +41,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					MetadataReference.CreateFromAssembly (typeof (object).Assembly),
 					MetadataReference.CreateFromAssembly (typeof (AbstractCalculator).Assembly),
-					MetadataReference.CreateFromAssembly (typeof (AmortizationDetails).Assembly)
+					MetadataReference.CreateFromAssembly (typeof (AmortizationDetails).Assembly),
+					MetadataReference.CreateFromAssembly (typeof (DateRange).Assembly)
 				});
 
 			using (var stream = new MemoryStream ())

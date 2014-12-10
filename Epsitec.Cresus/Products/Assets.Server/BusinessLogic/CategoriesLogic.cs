@@ -158,11 +158,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void ImportArgument(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField field)
 		{
-			var argument = ArgumentsLogic.GetArgument (accessor, field);
-			if (argument != null)
+			var type = ArgumentsLogic.GetArgumentType (accessor, field);
+			if (type != ArgumentType.Unknown)
 			{
-				var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
-
 				switch (type)
 				{
 					case ArgumentType.Decimal:
@@ -183,6 +181,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						CategoriesLogic.ImportFieldString (accessor, asset, e, catObj, field, field);
 						break;
 
+					default:
+						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 				}
 			}
 		}

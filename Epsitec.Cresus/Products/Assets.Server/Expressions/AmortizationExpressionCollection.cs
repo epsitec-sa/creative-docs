@@ -69,47 +69,27 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] rateLinearLines =
 		{
-			"Trace (\"Linear Rate\");",
-			"",
-			"if (PeriodCount == 1 || PeriodRank != PeriodCount-1)",
-			"{",
-			"	var rate = Rate * PeriodicityFactor * ProrataFactor365;",
-			"	var amortization = BaseAmount * rate;",
-			"",
-			"	value = value - amortization;",
-			"	value = Round (value);",
-			"	value = Residual (value);",
-			"}",
-			"else",
-			"{",
-			"	//	If last Period -> adjust.",
-			"	var rate = Rate * ProrataFactor365;",
-			"	var amortization = BaseAmount * rate;",
-			"",
-			"	value = StartYearAmount - amortization;",
-			"	value = Round (value);",
-			"	value = Residual (value);",
-			"}",
+			"var m = Months (BaseDate, EndDate);",
+			"value = BaseAmount * (1-(Rate*m/12));",
+			"value = Round (value, RoundAmount);",
+			"value = Residual (value, ResidualAmount);",
 		};
 
 		private static string[] rateDegressiveLines =
 		{
-			"Trace (\"Degressive Rate\");",
-			"",
 			"var rate = Rate * PeriodicityFactor * ProrataFactor365;",
 			"var amortization = InitialAmount * rate;",
 			"",
 			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
+			"value = Round (value, RoundAmount);",
+			"value = Residual (value, ResidualAmount);",
 		};
 
 		private static string[] yearsLinearLines =
 		{
-			"Trace (\"Linear Years\");",
-			"",
 			"decimal rate = 1;  // 100%",
-			"decimal n = YearCount - YearRank;  // remaining years",
+			"var yearRank = StartDate.Year - BaseDate.Year;",
+			"decimal n = YearCount - yearRank;  // remaining years",
 			"",
 			"if (n > 0)",
 			"{",
@@ -118,16 +98,15 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"var amortization = InitialAmount * rate;",
 			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
+			"value = Round (value, RoundAmount);",
+			"value = Residual (value, ResidualAmount);",
 		};
 
 		private static string[] yearsDegressiveLines =
 		{
-			"Trace (\"Degressive Years\");",
-			"",
 			"decimal rate = 1;  // 100%",
-			"decimal n = YearCount - YearRank;  // remaining years",
+			"var yearRank = StartDate.Year - BaseDate.Year;",
+			"decimal n = YearCount - yearRank;  // remaining years",
 			"",
 			"if (n > 0 &&",
 			"	ResidualAmount != 0 &&",
@@ -140,8 +119,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"var amortization = InitialAmount * rate;",
 			"value = value - amortization;",
-			"value = Round (value);",
-			"value = Residual (value);",
+			"value = Round (value, RoundAmount);",
+			"value = Residual (value, ResidualAmount);",
 		};
 	}
 }

@@ -52,7 +52,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.Methods.Library, 1);
 			this.CreateButton (Res.Commands.Methods.Compile, 1);
 			this.CreateButton (Res.Commands.Methods.Show, 1);
-			this.CreateButton (Res.Commands.Methods.Test, 1);
 			this.CreateButton (Res.Commands.Methods.Simulation, 1);
 
 			this.CreateSearchController (SearchKind.Expressions, 6);

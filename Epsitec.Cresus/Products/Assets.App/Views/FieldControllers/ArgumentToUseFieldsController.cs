@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -175,85 +174,6 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			};
 
 			this.controllers.Add (controller);
-		}
-
-
-		//??private void UpdateControllers()
-		//??{
-		//??	//	Montre les contrôleurs utilisés par l'objet en édition, dans l'ordre
-		//??	//	alphabétique des noms, et cache les autres. Ainsi, il est possible qu'un
-		//??	//	contrôleur en édition soit déplacé, sans que cela n'interfère en rien
-		//??	//	sur l'édition en cours.
-		//??	//	On met à jour le TabIndex de la ligne parente, afin d'avoir un ordre de
-		//??	//	parcourt de haut en bas logique avec la touche Tab.
-		//??
-		//??	foreach (var controller in this.controllers)
-		//??	{
-		//??		controller.IsReadOnly = this.isReadOnly;
-		//??	}
-		//??
-		//??	//	Cache toutes les lignes.
-		//??	foreach (var field in DataAccessor.ArgumentFields)
-		//??	{
-		//??		var line = this.lines[field];
-		//??		line.Frame.Visibility = false;
-		//??	}
-		//??
-		//??	//	Montre les bonnes lignes existantes.
-		//??	int y = 0;
-		//??	int tabIndex = 0;
-		//??
-		//??	foreach (var field in ArgumentToUseFieldsController.GetSortedFields (this.accessor))
-		//??	{
-		//??		var label = (y == 0) ? "Arguments" : "";  // légende uniquement pour le premier
-		//??		this.UpdateController (field, y, ref tabIndex, label);
-		//??		y += AbstractFieldController.lineHeight + 4;  // en dessous
-		//??	}
-		//??
-		//??	//	Montre une dernière ligne "nouveau".
-		//??	var ff = this.FreeField;
-		//??	if (ff != ObjectField.Unknown)  // limite pas encore attenite ?
-		//??	{
-		//??		this.UpdateController (ff, y, ref tabIndex, "Nouvel argument");
-		//??	}
-		//??}
-		//??
-		//??private void UpdateController(ObjectField field, int y, ref int tabIndex, string label)
-		//??{
-		//??	//	Met à jour un contrôleur. On le rend visible et on met à jour les
-		//??	//	données qu'il représente.
-		//??	var line = this.lines[field];
-		//??
-		//??	line.Frame.Visibility = true;
-		//??	line.Frame.Margins    = new Margins (0, 0, y, 0);
-		//??	line.Frame.BackColor  = (field == this.selectedField) ? ColorManager.WindowBackgroundColor : Color.Empty;
-		//??	line.Frame.TabIndex   = ++tabIndex;
-		//??
-		//??	line.Label.Text = label;
-		//??
-		//??	line.Controller.Field         = field;
-		//??	line.Controller.Value         = this.accessor.EditionAccessor.GetFieldGuid (field);
-		//??	line.Controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
-		//??}
-
-
-
-		private ObjectField FreeField
-		{
-			//	Retourne le premier champ libre, qui sera créé s'il est rempli par l'utilisateur.
-			get
-			{
-				foreach (var field in DataAccessor.ArgumentFields)
-				{
-					var gr = this.accessor.EditionAccessor.GetFieldGuid (field);
-					if (gr.IsEmpty)
-					{
-						return field;
-					}
-				}
-
-				return ObjectField.Unknown;
-			}
 		}
 
 

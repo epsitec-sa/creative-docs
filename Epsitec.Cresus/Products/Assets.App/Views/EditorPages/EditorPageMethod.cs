@@ -89,13 +89,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.Show (target);
 		}
 
-		[Command (Res.CommandIds.Methods.Test)]
-		protected void OnTest(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			var target = AbstractCommandToolbar.GetTarget (this.commandDispatcher, e);
-			this.Test (target);
-		}
-
 		[Command (Res.CommandIds.Methods.Simulation)]
 		protected void OnSimulation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -177,18 +170,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			ShowExpressionPopup.Show (target, this.accessor, expression);
 		}
 
-		private void Test(Widget target)
-		{
-			//	Affiche le popup permettant de tester l'expression actuellement sélectionnée.
-			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
-			TestExpressionPopup.Show (target, this.accessor, arguments, this.expressionController.Value);
-		}
-
 		private void Simulation(Widget target)
 		{
 			//	Affiche le popup permettant de choisir les paramètres pour lancer la
 			//	simulation de l'expression actuellement sélectionnée.
-			ExpressionSimulationParamsPopup.Show (target, this.accessor, delegate
+			ExpressionSimulationParamsPopup.Show (target, this.accessor, this.objectGuid, delegate
 			{
 				var nodes = this.ComputeSimulation (LocalSettings.ExpressionSimulationParams);
 				ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
@@ -198,92 +184,96 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private List<ExpressionSimulationNode> ComputeSimulation(ExpressionSimulationParams p)
 		{
 			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants,
-			//	qui pourrant être donnés à ExpressionSimulationTreeTableFiller.
+			//	qui pourront être donnés à ExpressionSimulationTreeTableFiller.
+			var properties = new List<AbstractDataProperty> ();
+
+			//	Crée une méthode bidon, pour refléter les modifications effectuées dans EditorPageMethod,
+			//	sans qu'il soit nécessaire de valider.
+			properties.Add (new DataStringProperty (ObjectField.Expression, this.expressionController.Value));
+
+			foreach (var guid in this.argumentsController.ArgumentGuids)
+			{
+				var field = ArgumentsLogic.GetObjectField(this.accessor, guid);
+				properties.Add (new DataGuidProperty (field, guid));
+			}
+
+			var methodGuid = accessor.CreateObject (BaseType.Methods, this.accessor.Mandat.StartDate, Guid.Empty, properties.ToArray ());
+			var method = accessor.GetObject (BaseType.Methods, methodGuid);
+
+			//	Crée un objet bidon.
+			properties.Clear();
+			var mainProperty = new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (p.InitialAmount));
+			properties.Add (new DataGuidProperty (ObjectField.MethodGuid, methodGuid));
+			properties.Add (new DataIntProperty (ObjectField.Periodicity, (int) p.Periodicity));
+
+			foreach (var pair in p.Arguments)
+			{
+				if (pair.Value == null)
+				{
+					continue;
+				}
+
+				var field = pair.Key;
+				var value = pair.Value;
+
+				var type = ArgumentsLogic.GetArgumentType (this.accessor, field);
+
+				switch (type)
+				{
+					case ArgumentType.Decimal:
+					case ArgumentType.Amount:
+					case ArgumentType.Rate:
+						properties.Add (new DataDecimalProperty (field, (decimal) value));
+						break;
+
+					case ArgumentType.Int:
+						properties.Add (new DataIntProperty (field, (int) value));
+						break;
+
+					case ArgumentType.Date:
+						properties.Add (new DataDateProperty (field, (System.DateTime) value));
+						break;
+
+					case ArgumentType.String:
+						properties.Add (new DataStringProperty (field, (string) value));
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
+				}
+			}
+
+			var assetGuid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, properties.ToArray ());
+			var asset = accessor.GetObject(BaseType.Assets, assetGuid);
+
+			var ie = asset.GetInputEvent ();
+			ie.AddProperty (mainProperty);
+
+			//	Génère tous les amortissements.
+			var a = new Amortizations (accessor);
+			a.Preview (p.Range, assetGuid);
+
+			//	Récupère tous les événements d'amortissement dans les noeuds.
 			var nodes = new List<ExpressionSimulationNode> ();
 
-			var p1 = new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (p.InitialAmount));
-			var p2 = new DataGuidProperty (ObjectField.MethodGuid, this.objectGuid);
-			var p3 = new DataIntProperty (ObjectField.Periodicity, (int) p.Periodicity);
-
-			var guid = accessor.CreateObject (BaseType.Assets, p.Range.IncludeFrom, Guid.Empty, p2, p3);
-			var obj = accessor.GetObject(BaseType.Assets, guid);
-
-			var ie = obj.GetInputEvent ();
-			ie.AddProperty (p1);
-
-			var a = new Amortizations (accessor);
-			a.Preview (p.Range, guid);  // génère tous les amortissements
-
 			int i = 0;
-			foreach (var e in obj.Events.Where (x => x.Type == EventType.AmortizationPreview))
+			foreach (var e in asset.Events.Where (x => x.Type == EventType.AmortizationPreview))
 			{
 				var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 				var initial = property.Value.InitialAmount.GetValueOrDefault ();
 				var final   = property.Value.FinalAmount.GetValueOrDefault ();
+				var trace   = property.Value.Trace;
 
-				var node = new ExpressionSimulationNode (i++, e.Timestamp.Date, initial, final);
+				var node = new ExpressionSimulationNode (i++, e.Timestamp.Date, initial, final, trace);
 				nodes.Add (node);
 			}
 
-			accessor.RemoveObject (BaseType.Assets, obj);
+			//	Supprime les objets bidons.
+			accessor.RemoveObject (BaseType.Methods, method);
+			accessor.RemoveObject (BaseType.Assets, asset);
 
 			return nodes;
-
-
-			//??var nodes = new List<ExpressionSimulationNode> ();
-			//??int totalMonth = 0;
-			//??
-			//??var baseAmount      = amount.BaseAmount;
-			//??var startYearAmount = amount.BaseAmount;
-			//??var monthCount      = amount.PeriodMonthCount;  // 12/6/3/1
-			//??
-			//??decimal yearRank    = 0;
-			//??decimal periodRank  = 0;
-			//??decimal periodCount = 12.0m / AmortizedAmount.GetPeriodMonthCount (amount.Periodicity);  // 1/2/4/12
-			//??
-			//??amount = AmortizedAmount.SetAmortizedAmount    (amount, baseAmount, startYearAmount, baseAmount);
-			//??amount = AmortizedAmount.SetRanks              (amount, yearRank, periodRank, amount.Periodicity);
-			//??amount = AmortizedAmount.SetProrataNumerator   (amount, null);
-			//??amount = AmortizedAmount.SetProrataDenominator (amount, null);
-			//??amount = AmortizedAmount.SetExpression         (amount, expression);
-			//??
-			//??int i = 0;
-			//??
-			//??while (true)
-			//??{
-			//??	var date = startDate.AddMonths (totalMonth);
-			//??
-			//??	var initial = amount.InitialAmount.GetValueOrDefault ();
-			//??
-			//??	var final = accessor.GetAmortizedAmount (amount).GetValueOrDefault ();
-			//??	//??var final = expression.Evaluate (amount).Value;
-			//??
-			//??	var node = new ExpressionSimulationNode (i, date, initial, final);
-			//??	nodes.Add (node);
-			//??
-			//??	periodRank++;
-			//??
-			//??	if (periodRank % periodCount == 0)
-			//??	{
-			//??		startYearAmount = final;
-			//??		yearRank++;
-			//??	}
-			//??
-			//??	amount = AmortizedAmount.SetAmortizedAmount (amount, final, startYearAmount, baseAmount);
-			//??	amount = AmortizedAmount.SetRanks (amount, yearRank, periodRank, amount.Periodicity);
-			//??
-			//??	totalMonth += monthCount;
-			//??	i++;
-			//??
-			//??	if (date >= toDate ||
-			//??		i >= 10000)  // garde-fou
-			//??	{
-			//??		break;
-			//??	}
-			//??}
-			//??
-			//??return nodes;
 		}
 
 
@@ -303,11 +293,12 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void UpdateCommands()
 		{
-			this.SetEnable (Res.Commands.Methods.Library,    true);
-			this.SetEnable (Res.Commands.Methods.Compile,    true);
-			this.SetEnable (Res.Commands.Methods.Show,       true);
-			this.SetEnable (Res.Commands.Methods.Test,       true);
-			this.SetEnable (Res.Commands.Methods.Simulation, true);
+			bool enable = (this.accessor.EditionAccessor.EditedObject != null);
+
+			this.SetEnable (Res.Commands.Methods.Library,    enable);
+			this.SetEnable (Res.Commands.Methods.Compile,    enable);
+			this.SetEnable (Res.Commands.Methods.Show,       enable);
+			this.SetEnable (Res.Commands.Methods.Simulation, enable);
 		}
 
 		private void SetEnable(Command command, bool enable)
@@ -318,7 +309,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private readonly CommandDispatcher		commandDispatcher;
 
-		private ArgumentToUseFieldsController		argumentsController;
+		private ArgumentToUseFieldsController	argumentsController;
 		private StringFieldController			expressionController;
 		private TextFieldMulti					outputConsole;
 	}

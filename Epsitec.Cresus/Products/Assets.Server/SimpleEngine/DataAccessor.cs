@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	Crée la propriété.
-			var aa = new AmortizedAmount (null, null, entryScenario, Guid.Empty, 0);
+			var aa = new AmortizedAmount (null, null, null, entryScenario, Guid.Empty, 0);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 
@@ -517,15 +517,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.ArgumentFirst &&
 				objectField <= ObjectField.ArgumentLast)
 			{
-				var arg = ArgumentsLogic.GetArgument (this, objectField);
-				if (arg == null)
-				{
-					return null;
-				}
-				else
-				{
-					return ArgumentsLogic.GetShortName (arg);
-				}
+				var argument = ArgumentsLogic.GetArgument (this, objectField);
+				return ArgumentsLogic.GetShortName (argument);
 			}
 
 			return DataDescriptions.GetObjectFieldDescription (objectField);
@@ -548,29 +541,25 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.ArgumentFirst &&
 				objectField <= ObjectField.ArgumentLast)
 			{
-				var argument = ArgumentsLogic.GetArgument (this, objectField);
-				if (argument != null)
+				var type = ArgumentsLogic.GetArgumentType (this, objectField);
+				switch (type)
 				{
-					var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
-					switch (type)
-					{
-						case ArgumentType.Decimal:
-						case ArgumentType.Amount:
-						case ArgumentType.Rate:
-							return FieldType.Decimal;
+					case ArgumentType.Decimal:
+					case ArgumentType.Amount:
+					case ArgumentType.Rate:
+						return FieldType.Decimal;
 
-						case ArgumentType.Int:
-							return FieldType.Int;
+					case ArgumentType.Int:
+						return FieldType.Int;
 
-						case ArgumentType.Date:
-							return FieldType.Date;
+					case ArgumentType.Date:
+						return FieldType.Date;
 
-						case ArgumentType.String:
-							return FieldType.String;
+					case ArgumentType.String:
+						return FieldType.String;
 
-						default:
-							throw new System.InvalidOperationException (string.Format ("Unknown ArgumentType {0}", type.ToString ()));
-					}
+					default:
+						throw new System.InvalidOperationException (string.Format ("Unknown ArgumentType {0}", type.ToString ()));
 				}
 			}
 
@@ -617,21 +606,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (objectField >= ObjectField.ArgumentFirst &&
 				objectField <= ObjectField.ArgumentLast)
 			{
-				var argument = ArgumentsLogic.GetArgument (this, objectField);
-				if (argument != null)
+				var type = ArgumentsLogic.GetArgumentType (this, objectField);
+				switch (type)
 				{
-					var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
-					switch (type)
-					{
-						case ArgumentType.Decimal:
-							return DecimalFormat.Real;
+					case ArgumentType.Decimal:
+						return DecimalFormat.Real;
 
-						case ArgumentType.Amount:
-							return DecimalFormat.Amount;
+					case ArgumentType.Amount:
+						return DecimalFormat.Amount;
 
-						case ArgumentType.Rate:
-							return DecimalFormat.Rate;
-					}
+					case ArgumentType.Rate:
+						return DecimalFormat.Rate;
+
+					default:
+						return DecimalFormat.Real;
 				}
 			}
 

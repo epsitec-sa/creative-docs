@@ -60,7 +60,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static bool IsHidden(DataAccessor accessor, Guid methodGuid, ObjectField field)
 		{
 			var method = accessor.GetObject (BaseType.Methods, methodGuid);
+			return MethodsLogic.IsHidden (method, field);
+		}
 
+		public static bool IsHidden(DataObject method, ObjectField field)
+		{
 			if (method != null)
 			{
 				return ObjectProperties.GetObjectPropertyGuid (method, null, field).IsEmpty;

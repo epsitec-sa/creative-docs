@@ -221,23 +221,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp)
 		{
-			decimal  baseAmount    = 0.0m;
-			decimal  initialAmount = 0.0m;
-			int      yearRank      = 0;
-			int      periodRank    = 0;
-
-			//	Calcule le rang de l'année ainsi que le rang dans l'année.
-			//	Supposons, par exemple, qu'il existe les amortissements semestriels
-			//	aux dates suivantes :
-			//				yearRank periodRank
-			//	30.06.2000		0		0
-			//	31.12.2000		0		1
-			//	30.06.2001		1		0
-			//	31.12.2001		1		1
-			//	30.06.2002		2		0
-			//	31.12.2002		2		1
-
-			int lastYear   = -1;
+			var baseDate = timestamp.Date;
+			decimal baseAmount    = 0.0m;
+			decimal initialAmount = 0.0m;
 
 			foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp))
 			{
@@ -248,33 +234,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					initialAmount = aa.Value.FinalAmount.Value;
 				}
 
-				if (e.Type == EventType.AmortizationPreview ||
-					e.Type == EventType.AmortizationAuto    ||
-					e.Type == EventType.AmortizationExtra   )
-				{
-					if (lastYear != e.Timestamp.Date.Year)
-					{
-						if (lastYear != -1)
-						{
-							yearRank++;
-							periodRank = 0;
-						}
-
-						lastYear = e.Timestamp.Date.Year;
-					}
-
-					periodRank++;
-				}
-				else
+				if (e.Type != EventType.AmortizationPreview &&
+					e.Type != EventType.AmortizationAuto    &&
+					e.Type != EventType.AmortizationExtra   )
 				{
 					if (aa != null && aa.Value.FinalAmount.HasValue)
 					{
+						baseDate   = e.Timestamp.Date;
 						baseAmount = aa.Value.FinalAmount.Value;
 					}
 				}
 			}
 
-			return new HistoryDetails (baseAmount, initialAmount, (decimal) yearRank, (decimal) periodRank);
+			return new HistoryDetails (baseDate, baseAmount, initialAmount);
 		}
 
 
@@ -282,18 +254,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Collecte tous les champs qui définissent comment amortir. Ils peuvent provenir
 			//	de plusieurs événements différents.
-			var exp       = ObjectProperties.GetObjectPropertyGuid            (obj, timestamp, ObjectField.MethodGuid);
-			var period    = ObjectProperties.GetObjectPropertyInt             (obj, timestamp, ObjectField.Periodicity);
-			var mainValue = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, ObjectField.MainValue);
+			var exp    = ObjectProperties.GetObjectPropertyGuid (obj, timestamp, ObjectField.MethodGuid);
+			var period = ObjectProperties.GetObjectPropertyInt  (obj, timestamp, ObjectField.Periodicity);
 
-			if (!exp.IsEmpty && period.HasValue &&
-				mainValue.HasValue && mainValue.Value.FinalAmount.HasValue)
+			if (!exp.IsEmpty && period.HasValue)
 			{
 				var methodObj = this.accessor.GetObject (BaseType.Methods, exp);
 
 				if (methodObj != null)
 				{
-					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj);
+					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, obj, timestamp, methodObj);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
 					var periodicity = (Periodicity) period;
 
@@ -306,8 +276,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (date.HasValue)
 					{
-						return new AmortizationDefinition (range, date.Value, arguments, expression, periodicity,
-							mainValue.Value.FinalAmount.GetValueOrDefault (0.0m));
+						return new AmortizationDefinition (range, date.Value, arguments, expression, periodicity);
 					}
 				}
 			}
@@ -325,9 +294,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 				System.Diagnostics.Debug.Assert (p != null);
 
-				var finalAmount = Amortizations.ComputeAmortization (this.accessor, details).Value;
+				var result = Amortizations.ComputeAmortization (this.accessor, details);
 
-				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, finalAmount);
+				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, result.Value, result.Trace);
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}

@@ -34,17 +34,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static AmortizationDetails DefaultTest
-		{
-			get
-			{
-				var def = new AmortizationDefinition (DateRange.Empty, System.DateTime.MinValue, null, null, Periodicity.Annual, 4000.0m);
-				var history = new HistoryDetails (5000.0m, 4000.0m, 0, 0);
-
-				return new AmortizationDetails (def, history);
-			}
-		}
-
 		public static AmortizationDetails Empty = new AmortizationDetails (AmortizationDefinition.Empty, HistoryDetails.Empty);
 
 

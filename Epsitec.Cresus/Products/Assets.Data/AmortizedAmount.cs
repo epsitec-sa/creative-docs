@@ -9,11 +9,12 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public struct AmortizedAmount : System.IEquatable<AmortizedAmount>
 	{
-		public AmortizedAmount(decimal? initialAmount, decimal? finalAmount,
+		public AmortizedAmount(decimal? initialAmount, decimal? finalAmount, string trace,
 			EntryScenario entryScenario, Guid entryGuid, int entrySeed)
 		{
 			this.InitialAmount = initialAmount;
 			this.FinalAmount   = finalAmount;
+			this.Trace         = trace;
 
 			this.EntryScenario = entryScenario;
 			this.EntryGuid     = entryGuid;
@@ -24,6 +25,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.InitialAmount = null;
 			this.FinalAmount   = finalValue;
+			this.Trace         = null;
 
 			this.EntryScenario = EntryScenario.None;
 			this.EntryGuid     = Guid.Empty;
@@ -34,6 +36,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.InitialAmount = null;
 			this.FinalAmount   = null;
+			this.Trace         = null;
 
 			this.EntryScenario = entryScenario;
 			this.EntryGuid     = Guid.Empty;
@@ -44,6 +47,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.InitialAmount = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
 			this.FinalAmount   = IOHelpers.ReadDecimalAttribute (reader, "FinalAmount");
+			this.Trace         = IOHelpers.ReadStringAttribute  (reader, "Trace");
 
 			this.EntryScenario = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
 			this.EntryGuid     = IOHelpers.ReadGuidAttribute (reader, "EntryGuid");
@@ -55,6 +59,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				FinalAmount;
+		public readonly string					Trace;
 
 		public readonly EntryScenario			EntryScenario;
 		public readonly Guid					EntryGuid;
@@ -68,18 +73,20 @@ namespace Epsitec.Cresus.Assets.Data
 			(
 				model.InitialAmount,
 				finalAmount,
+				model.Trace,
 				model.EntryScenario,
 				model.EntryGuid,
 				model.EntrySeed
 			);
 		}
 
-		public static AmortizedAmount SetAmounts(AmortizedAmount model, decimal? initialAmount, decimal? finalAmount)
+		public static AmortizedAmount SetAmounts(AmortizedAmount model, decimal? initialAmount, decimal? finalAmount, string trace)
 		{
 			return new AmortizedAmount
 			(
 				initialAmount,
 				finalAmount,
+				trace,
 				model.EntryScenario,
 				model.EntryGuid,
 				model.EntrySeed
@@ -92,6 +99,7 @@ namespace Epsitec.Cresus.Assets.Data
 			(
 				model.InitialAmount,
 				model.FinalAmount,
+				model.Trace,
 				scenario,
 				model.EntryGuid,
 				model.EntrySeed
@@ -104,6 +112,7 @@ namespace Epsitec.Cresus.Assets.Data
 			(
 				model.InitialAmount,
 				model.FinalAmount,
+				model.Trace,
 				model.EntryScenario,
 				entryGuid,
 				entrySeed
@@ -117,6 +126,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return this.InitialAmount == other.InitialAmount
 				&& this.FinalAmount   == other.FinalAmount
+				&& this.Trace         == other.Trace
 				&& this.EntryScenario == other.EntryScenario
 				&& this.EntryGuid     == other.EntryGuid
 				&& this.EntrySeed     == other.EntrySeed;
@@ -139,6 +149,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			return this.InitialAmount.GetHashCode ()
 				 ^ this.FinalAmount  .GetHashCode ()
+				 ^ this.Trace        .GetHashCode ()
 				 ^ this.EntryScenario.GetHashCode ()
 				 ^ this.EntryGuid    .GetHashCode ()
 				 ^ this.EntrySeed    .GetHashCode ();
@@ -161,6 +172,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount", this.InitialAmount);
 			IOHelpers.WriteDecimalAttribute (writer, "FinalAmount",   this.FinalAmount);
+			IOHelpers.WriteStringAttribute  (writer, "Trace",         this.Trace);
 
 			IOHelpers.WriteTypeAttribute    (writer, "EntryScenario", this.EntryScenario);
 			IOHelpers.WriteGuidAttribute    (writer, "EntryGuid",     this.EntryGuid);

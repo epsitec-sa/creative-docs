@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
@@ -14,15 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			this.traceBuilder = new System.Text.StringBuilder ();
 
-			this.Range              = details.Def.Range;
-			this.Date               = details.Def.Date;
-			this.BaseAmount         = details.History.BaseAmount;
-			this.StartYearAmount    = details.Def.StartYearAmount;
-			this.InitialAmount      = details.History.InitialAmount;
-
-			this.Periodicity        = details.Def.Periodicity;
-			this.YearRank           = details.History.YearRank;
-			this.PeriodRank         = details.History.PeriodRank;
+			this.Range         = details.Def.Range;
+			this.CurrentDate   = details.Def.CurrentDate;
+			this.BaseDate      = details.History.BaseDate;
+			this.BaseAmount    = details.History.BaseAmount;
+			this.InitialAmount = details.History.InitialAmount;
+			this.Periodicity   = details.Def.Periodicity;
 		}
 
 
@@ -119,30 +117,30 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		protected decimal Round(decimal value)
+		protected decimal Round(decimal value, decimal round)
 		{
-			//	Retourne la valeur arrondie selon this.RoundAmount.
-			if (this.RoundAmount > 0.0m)
+			//	Retourne la valeur arrondie.
+			if (round > 0.0m)
 			{
 				if (value < 0.0m)
 				{
-					value -= this.RoundAmount/2.0m;
+					value -= round/2.0m;
 				}
 				else
 				{
-					value += this.RoundAmount/2.0m;
+					value += round/2.0m;
 				}
 
-				value -= (value % this.RoundAmount);
+				value -= (value % round);
 			}
 
 			return value;
 		}
 
-		protected decimal Residual(decimal value)
+		protected decimal Residual(decimal value, decimal residual)
 		{
 			//	Retourne la valeur bornée selon this.ResidualAmount.
-			return System.Math.Max (value, this.ResidualAmount);
+			return System.Math.Max (value, residual);
 		}
 
 		//??protected decimal Override(decimal value)
@@ -153,24 +151,68 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected void Trace(params object[] args)
 		{
-			//	Conserve les textes donnés, qui seront affichés lors du debug
+			//	Conserve les objets donnés, qui seront affichés lors du debug
 			//	de l'expression.
+			bool first = true;
+
 			foreach (var arg in args)
 			{
-				if (arg is decimal)
+				if (!first)
+				{
+					this.traceBuilder.Append (" ");
+				}
+
+				if (arg is decimal)  // il peut s'agir d'un montant, d'un taux, d'un réel, etc.
 				{
 					var value = (decimal) arg;
-					this.traceBuilder.Append (value.ToString ("0.00"));
+					var s = TypeConverters.DecimalToString (value, 5);
+					this.traceBuilder.Append (s);
+				}
+				else if (arg is int)
+				{
+					var i = (int) arg;
+					var s = TypeConverters.IntToString (i);
+					this.traceBuilder.Append (s);
+				}
+				else if (arg is System.DateTime)
+				{
+					var date = (System.DateTime) arg;
+					var s = TypeConverters.DateToString (date);
+					this.traceBuilder.Append (s);
+				}
+				else if (arg is DateRange)
+				{
+					var range = (DateRange) arg;
+					var s1 = TypeConverters.DateToString (range.IncludeFrom);
+					var s2 = TypeConverters.DateToString (range.ExcludeTo.AddTicks (-1));
+					this.traceBuilder.Append (string.Concat (s1, "..", s2));
 				}
 				else
 				{
 					this.traceBuilder.Append (arg.ToString ());
 				}
 
-				this.traceBuilder.Append (" ");
+				first = false;
 			}
 
 			this.traceBuilder.Append ("<br/>");
+		}
+
+
+		protected System.DateTime StartDate
+		{
+			get
+			{
+				return this.Range.IncludeFrom;
+			}
+		}
+
+		protected System.DateTime EndDate
+		{
+			get
+			{
+				return this.Range.ExcludeTo;
+			}
 		}
 
 
@@ -187,15 +229,15 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			{
 				System.DateTime v;
 
-				if (this.Date == this.Range.IncludeFrom)
+				if (this.CurrentDate == this.Range.IncludeFrom)
 				{
-					v = this.Date;
+					v = this.CurrentDate;
 				}
 				else
 				{
 					//	Le mois en cours est amorti intégralement. Ainsi, un objet entré le 31 mars
 					//	sera amorti tout le mois de mars.
-					v = new System.DateTime (this.Date.Year, this.Date.Month, 1);
+					v = new System.DateTime (this.CurrentDate.Year, this.CurrentDate.Month, 1);
 				}
 
 				int n = AbstractCalculator.GetMonthsCount (v)                    - AbstractCalculator.GetMonthsCount (this.Range.IncludeFrom);
@@ -213,7 +255,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			get
 			{
 				//	Retourne le facteur pour le prorata au jour, sur la base d'une année de 360 jours.
-				int n = AbstractCalculator.GetDaysCount (this.Date)            - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
+				int n = AbstractCalculator.GetDaysCount (this.CurrentDate)     - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
 				int d = AbstractCalculator.GetDaysCount (this.Range.ExcludeTo) - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
 
 				n = d - n;
@@ -228,7 +270,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			//	Retourne le facteur pour le prorata au jour effectif.
 			get
 			{
-				int n = this.Date.Subtract (this.Range.IncludeFrom).Days;
+				int n = this.CurrentDate.Subtract (this.Range.IncludeFrom).Days;
 				int d = this.Range.ExcludeTo.Subtract (this.Range.IncludeFrom).Days;
 
 				n = d - n;
@@ -236,6 +278,27 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				n = System.Math.Min (n, d);
 				return (decimal) n / (decimal) d;
 			}
+		}
+
+		protected static int Days(System.DateTime a, System.DateTime b)
+		{
+			return System.Math.Abs (a.Subtract (b).Days);
+		}
+
+		protected static int Days30(System.DateTime a, System.DateTime b)
+		{
+			var aa = AbstractCalculator.GetDaysCount (a);
+			var bb = AbstractCalculator.GetDaysCount (b);
+
+			return System.Math.Abs (aa - bb);
+		}
+
+		protected static int Months(System.DateTime a, System.DateTime b)
+		{
+			var aa = AbstractCalculator.GetMonthsCount (a);
+			var bb = AbstractCalculator.GetMonthsCount (b);
+
+			return System.Math.Abs (aa - bb);
 		}
 
 		private static int GetMonthsCount(System.DateTime date)
@@ -297,17 +360,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly System.Text.StringBuilder traceBuilder;
 
 		public readonly DateRange				Range;
-		public readonly System.DateTime			Date;
+		public readonly System.DateTime			CurrentDate;
+		public readonly System.DateTime			BaseDate;
 		public readonly decimal					BaseAmount;			// valeur d'achat
-		public readonly decimal					StartYearAmount;	// valeur au début de l'année
 		public readonly decimal					InitialAmount;		// valeur avant amortissement
-
-		public readonly decimal					Rate;				// taux d'amortissement
-		public readonly decimal					YearCount;			// nombre total d'années
 		public readonly Periodicity				Periodicity;
-		public readonly decimal					RoundAmount;		// arrondi
-		public readonly decimal					ResidualAmount;		// valeur résiduelle
-		public readonly decimal					YearRank;			// rang de l'année (0..YearCount-1)
-		public readonly decimal					PeriodRank;			// rang de la période (0..n)
 	}
 }

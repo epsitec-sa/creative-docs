@@ -70,7 +70,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 											  AccountCategory.Depense |
 											  AccountCategory.Recette;
 
-			LocalSettings.TestExpressionDetails = AmortizationDetails.DefaultTest;
 			LocalSettings.ExpressionSimulationParams = ExpressionSimulationParams.Default;
 		}
 
@@ -503,7 +502,6 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		public static AccountCategory				AccountCategories;
 
-		public static AmortizationDetails			TestExpressionDetails;
 		public static ExpressionSimulationParams	ExpressionSimulationParams;
 
 		private static readonly Dictionary<string, ColumnsState> columnsStates;

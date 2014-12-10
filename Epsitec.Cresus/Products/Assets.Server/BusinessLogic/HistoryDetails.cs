@@ -8,13 +8,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct HistoryDetails
 	{
-		public HistoryDetails(decimal baseAmount, decimal initialAmout,
-			decimal yearRank, decimal periodRank)
+		public HistoryDetails(System.DateTime baseDate, decimal baseAmount, decimal initialAmout)
 		{
+			this.BaseDate      = baseDate;
 			this.BaseAmount    = baseAmount;
 			this.InitialAmount = initialAmout;
-			this.YearRank      = yearRank;
-			this.PeriodRank    = periodRank;
 		}
 
 		public bool								IsEmpty
@@ -22,17 +20,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.BaseAmount    == 0.0m
-					&& this.InitialAmount == 0.0m
-					&& this.YearRank      == 0.0m
-					&& this.PeriodRank    == 0.0m;
+					&& this.InitialAmount == 0.0m;
 			}
 		}
 
-		public static HistoryDetails Empty = new HistoryDetails (0.0m, 0.0m, 0.0m, 0.0m);
+		public static HistoryDetails Empty = new HistoryDetails (System.DateTime.MinValue, 0.0m, 0.0m);
 
+		public readonly System.DateTime			BaseDate;
 		public readonly decimal					BaseAmount;
 		public readonly decimal					InitialAmount;
-		public readonly decimal					YearRank;
-		public readonly decimal					PeriodRank;
 	}
 }
