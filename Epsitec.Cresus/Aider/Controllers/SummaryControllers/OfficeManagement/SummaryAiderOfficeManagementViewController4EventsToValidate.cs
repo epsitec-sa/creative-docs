@@ -29,7 +29,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick (p => p.EventsToValidate)
-								.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
+								.Attribute (BrickMode.DefaultToSummarySubView)
 								.Attribute (BrickMode.AutoGroup)
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)

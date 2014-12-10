@@ -31,6 +31,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			FormattedText personTitle;
 
+			wall.AddBrick ()
+					.EnableActionButton<ActionAiderContactViewController1AddToBag> ();
+
 			if ((contact.Person.IsNotNull ()) &&
 				(contact.Person.eCH_Person.DataSource == Enumerations.DataSource.Government))
 			{

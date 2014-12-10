@@ -873,6 +873,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 144));
 						}
 					}
+					//	designer:cap/LVOO53
+					public static global::Epsitec.Common.Types.Caption FirstWitness
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 184));
+						}
+					}
 					//	designer:cap/LVOI43
 					public static global::Epsitec.Common.Types.Caption GodFather
 					{
@@ -895,6 +903,22 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 151));
+						}
+					}
+					//	designer:cap/LVOK53
+					public static global::Epsitec.Common.Types.Caption HusbandFather
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 180));
+						}
+					}
+					//	designer:cap/LVOL53
+					public static global::Epsitec.Common.Types.Caption HusbandMother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 181));
 						}
 					}
 					//	designer:cap/LVOF43
@@ -921,12 +945,36 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 111));
 						}
 					}
+					//	designer:cap/LVOP53
+					public static global::Epsitec.Common.Types.Caption SecondWitness
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 185));
+						}
+					}
 					//	designer:cap/LVOO43
 					public static global::Epsitec.Common.Types.Caption Spouse
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 152));
+						}
+					}
+					//	designer:cap/LVOM53
+					public static global::Epsitec.Common.Types.Caption SpouseFather
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 182));
+						}
+					}
+					//	designer:cap/LVON53
+					public static global::Epsitec.Common.Types.Caption SpouseMother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 183));
 						}
 					}
 					//	designer:cap/LVOK43
@@ -2524,6 +2572,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
 				//	designer:cap/LVO253
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 162);
+				//	designer:cap/LVOJ53
+				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 179);
 				//	designer:cap/LVO953
 				public static readonly global::Epsitec.Common.Support.Druid PlaceName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 169);
 				//	designer:cap/LVO853

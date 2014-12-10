@@ -1,5 +1,5 @@
 //	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
@@ -21,15 +21,44 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var currentEvent = this.Entity;
 
-			wall.AddBrick ()
-				.Icon ("Data.AiderEvent")
-				.Title ("Acte")
-				.Text ( x => x.GetSummary ())
-				.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
-
 			if(currentEvent.State == Enumerations.EventState.InPreparation)
 			{
-				CreateBricksForSetup (wall, currentEvent);
+				wall.AddBrick ()
+				.Icon ("Data.AiderEvent")
+				.Title ("Acte en préparation")
+				.Text (x => x.GetSummary ())
+				.EnableActionButton<ActionAiderEventViewController1SetToValidate> ()
+				.EnableActionButton<ActionAiderEventViewController4Delete> ()
+				.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+
+				wall.AddBrick (x => x.Participants)
+					.Title ("Gérer les participations")
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
+					.EnableActionButton<ActionAiderEventViewController0AddParticipantsFromBag> ()
+					.Template ()
+					.End ();
+			}
+
+			if (currentEvent.State == Enumerations.EventState.ToValidate)
+			{
+				wall.AddBrick ()
+				.Icon ("Data.AiderEvent")
+				.Title ("Acte à valider")
+				.Text (x => x.GetSummary ())
+				.EnableActionButton<ActionAiderEventViewController2Rollback> ()
+				.EnableActionButton<ActionAiderEventViewController3Validate> ()
+				.Attribute (BrickMode.DefaultToNoSubView);
+
+				wall.AddBrick (x => x.Participants)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Template ()
+					.End ();
 			}
 			
 		}
@@ -58,30 +87,30 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 				.Icon ("Data.AiderEvent")
-				.Title ("Participants")
+				.Title ("Préparation")
 				.Text ("")
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderEventViewController0Participants));
+				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
+				.Attribute (BrickMode.DefaultToSetSubView);
 		}
 
 		private static void CreateBricksForBaptismSetup(BrickWall<AiderEventEntity> wall)
 		{
 			wall.AddBrick ()
 				.Icon ("Data.AiderEvent")
-				.Title ("Participants")
+				.Title ("Préparation")
 				.Text ("")
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderEventViewController0Participants));
+				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
+				.Attribute (BrickMode.DefaultToSetSubView);
 		}
 
 		private static void CreateBricksForMarriageSetup(BrickWall<AiderEventEntity> wall)
 		{
 			wall.AddBrick ()
 				.Icon ("Data.AiderEvent")
-				.Title ("Mariage")
-				.Text ("Participants")
-				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderEventViewController0Participants));
+				.Title ("Préparation")
+				.Text ("")
+				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
+				.Attribute (BrickMode.DefaultToSetSubView);
 		}
 	}
 }

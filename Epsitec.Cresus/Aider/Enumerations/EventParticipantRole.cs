@@ -18,9 +18,14 @@ namespace Epsitec.Aider.Enumerations
 		Witness			= 6,
 		BlessedChild	= 7,
 		ChildBatise		= 8,
-		Husband			= 9,
-		Spouse			= 10,
-		DeceasedPerson	= 11
-
+		Husband			= 9,	
+		Spouse			= 10,	
+		DeceasedPerson	= 11,
+		HusbandFather	= 12,
+		HusbandMother   = 13,
+		SpouseFather	= 14,
+		SpouseMother	= 15,
+		SecondWitness   = 16,
+		FirstWitness	= 17
 	}
 }

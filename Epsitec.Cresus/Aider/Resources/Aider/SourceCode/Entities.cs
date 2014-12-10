@@ -3339,6 +3339,20 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Participants</c> field.
+		///	designer:fld/LVA93/LVOJ53
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOJ53]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> Participants
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity>);
+				this.GetParticipants (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
@@ -3357,6 +3371,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPlaceNameChanging(string oldValue, string newValue);
 		partial void OnPlaceNameChanged(string oldValue, string newValue);
 		
+		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

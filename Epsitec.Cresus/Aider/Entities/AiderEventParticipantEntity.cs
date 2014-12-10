@@ -16,17 +16,20 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Person.GetSummary ());
+			var role = this.GetRoleCaption ();
+			return TextFormatter.FormatText (role + ": " + this.Person.GetSummary ());
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Person.GetCompactSummary ());
+			var role = this.GetRoleCaption ();
+			return TextFormatter.FormatText (role + ": " + this.Person.GetCompactSummary ());
 		}
 
-		public AiderEventParticipantEntity Create(BusinessContext context, AiderPersonEntity person, Enumerations.EventParticipantRole role)
+		public static AiderEventParticipantEntity Create(BusinessContext context, AiderEventEntity targetEvent, AiderPersonEntity person, Enumerations.EventParticipantRole role)
 		{
 			var newParticipant = context.CreateAndRegisterEntity<AiderEventParticipantEntity> ();
+			newParticipant.Event = targetEvent;
 			newParticipant.Role = role;
 			newParticipant.Person = person;
 			return newParticipant;
@@ -35,6 +38,11 @@ namespace Epsitec.Aider.Entities
 		public void Delete(BusinessContext context)
 		{
 			context.DeleteEntity (this);
+		}
+
+		private string GetRoleCaption()
+		{
+			return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (this.Role).Caption.DefaultLabel;
 		}
 	}
 }
