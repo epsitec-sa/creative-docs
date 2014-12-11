@@ -25,6 +25,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.PlaceName)
 					.Field (x => x.Date)
 					.Field (x => x.Office)
+					.Field (x => x.Kind)
 					.Field (x => x.Description)
 				.End ();
 		}

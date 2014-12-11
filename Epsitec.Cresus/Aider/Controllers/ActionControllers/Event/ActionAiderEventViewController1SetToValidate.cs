@@ -43,6 +43,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
+			//TODO IMPLEMENT BUSINESS RULES
 			this.Entity.State = Enumerations.EventState.ToValidate;
 		}
 	}

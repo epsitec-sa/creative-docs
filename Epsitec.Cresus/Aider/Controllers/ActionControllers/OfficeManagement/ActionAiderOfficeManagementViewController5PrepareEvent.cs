@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.InitialValue (this.Entity)
 				.End ()
 				.Field<EventType> ()
-					.Title ("Type de célébration")
+					.Title ("Registre")
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Lieu de la célébration")

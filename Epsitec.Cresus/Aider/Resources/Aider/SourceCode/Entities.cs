@@ -49,6 +49,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVADJ]", typeof (Epsitec.Aider.Entities.AiderRefereeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7L]", typeof (Epsitec.Aider.Entities.AiderPlaParishGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO543]", typeof (Epsitec.Aider.Entities.AiderMailingQueryEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOB63]", typeof (Epsitec.Aider.Entities.AiderEventOfficeReportEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -3353,6 +3354,28 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>Kind</c> field.
+		///	designer:fld/LVA93/LVO163
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO163]")]
+		public global::Epsitec.Aider.Enumerations.EventKind? Kind
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.EventKind?> ("[LVO163]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.EventKind? oldValue = this.Kind;
+				if (oldValue != value || !this.IsFieldDefined("[LVO163]"))
+				{
+					this.OnKindChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.EventKind?> ("[LVO163]", oldValue, value);
+					this.OnKindChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
@@ -3370,6 +3393,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPlaceTypeChanged(global::Epsitec.Aider.Enumerations.EventPlaceType oldValue, global::Epsitec.Aider.Enumerations.EventPlaceType newValue);
 		partial void OnPlaceNameChanging(string oldValue, string newValue);
 		partial void OnPlaceNameChanged(string oldValue, string newValue);
+		partial void OnKindChanging(global::Epsitec.Aider.Enumerations.EventKind? oldValue, global::Epsitec.Aider.Enumerations.EventKind? newValue);
+		partial void OnKindChanged(global::Epsitec.Aider.Enumerations.EventKind? oldValue, global::Epsitec.Aider.Enumerations.EventKind? newValue);
 		
 		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		
@@ -10646,6 +10671,89 @@ namespace Epsitec.Aider.Entities
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderMailingQueryEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderEventOfficeReport Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderEventOfficeReport</c> entity.
+	///	designer:cap/LVOB63
+	///	</summary>
+	public partial class AiderEventOfficeReportEntity : global::Epsitec.Aider.Entities.AiderOfficeReportEntity
+	{
+		///	<summary>
+		///	The <c>EventNumber</c> field.
+		///	designer:fld/LVOB63/LVOD63
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOD63]")]
+		public string EventNumber
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOD63]");
+			}
+			set
+			{
+				string oldValue = this.EventNumber;
+				if (oldValue != value || !this.IsFieldDefined("[LVOD63]"))
+				{
+					this.OnEventNumberChanging (oldValue, value);
+					this.SetField<string> ("[LVOD63]", oldValue, value);
+					this.OnEventNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Event</c> field.
+		///	designer:fld/LVOB63/LVOC63
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOC63]")]
+		public global::Epsitec.Aider.Entities.AiderEventEntity Event
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVOC63]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEventEntity oldValue = this.Event;
+				if (oldValue != value || !this.IsFieldDefined("[LVOC63]"))
+				{
+					this.OnEventChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVOC63]", oldValue, value);
+					this.OnEventChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnEventNumberChanging(string oldValue, string newValue);
+		partial void OnEventNumberChanged(string oldValue, string newValue);
+		partial void OnEventChanging(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
+		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity.EntityStructuredTypeKey;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 203);	// [LVOB63]
+		public static readonly new string EntityStructuredTypeKey = "[LVOB63]";
+		
+		#region Repository Class
+		public new partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderEventOfficeReportEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{
 			}
 		}
