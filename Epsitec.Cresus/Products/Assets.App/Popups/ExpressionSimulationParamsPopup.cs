@@ -307,19 +307,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private ExpressionSimulationParams Params
 		{
+			//	Spécifie tous les paramètres pour la simulation. Le dictionnaire pour
+			//	les arguments peut contenir des arguments qui n'ont pas de sens ici.
+			//	Ils sont alors simplement conservés (set), pour être redonnés tels quels
+			//	en sortie (get).
 			get
 			{
 				var p = new ExpressionSimulationParams (this.Range, this.Periodicity, this.InitialAmount);
 
+				//	Arguments édités -> this.lastArguments.
 				foreach (var pair in this.controllerRanks)
 				{
-					var value = this.GetArgument (pair.Value);
-					this.lastArguments[pair.Key] = value;
+					var field = pair.Key;
+					var rank  = pair.Value;
+
+					var val = this.GetArgument (rank);
+					this.lastArguments[field] = val;
 				}
 
+				//	this.lastArguments -> output.
 				foreach (var pair in this.lastArguments)
 				{
-					p.Arguments.Add (pair.Key, pair.Value);
+					var field = pair.Key;
+					var val   = pair.Value;
+
+					p.Arguments.Add (field, val);
 				}
 
 				return p;
@@ -330,17 +342,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.Periodicity   = value.Periodicity;
 				this.InitialAmount = value.InitialAmount;
 
+				//	Input -> this.lastArguments.
 				foreach (var pair in value.Arguments)
 				{
-					this.lastArguments[pair.Key] = pair.Value;
+					var field = pair.Key;
+					var val   = pair.Value;
+
+					this.lastArguments[field] = val;
 				}
 
+				//	this.lastArguments -> arguments en édition.
 				foreach (var pair in this.lastArguments)
 				{
+					var field = pair.Key;
+					var val   = pair.Value;
+
 					int rank;
-					if (this.controllerRanks.TryGetValue (pair.Key, out rank))
+					if (this.controllerRanks.TryGetValue (field, out rank))
 					{
-						this.SetArgument (rank, pair.Value);
+						this.SetArgument (rank, val);
 					}
 				}
 			}
