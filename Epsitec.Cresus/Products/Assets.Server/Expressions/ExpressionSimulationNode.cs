@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Assets.App.NodeGetters
+namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public struct ExpressionSimulationNode
 	{

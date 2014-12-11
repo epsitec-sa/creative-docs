@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.Expression;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {

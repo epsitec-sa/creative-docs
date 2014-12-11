@@ -97,7 +97,6 @@
     <Compile Include="Import\AccountsImportReport.cs" />
     <Compile Include="Import\AccountsImportMode.cs" />
     <Compile Include="Import\AccountsImportHelpers.cs" />
-    <Compile Include="NodeGetters\ExpressionSimulationNode.cs" />
     <Compile Include="NodeGetters\ReportNode.cs" />
     <Compile Include="NodeGetters\ExpressionSimulationNodeGetter.cs" />
     <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
@@ -197,7 +196,6 @@
     <Compile Include="Reports\MCH2SummaryReport.cs" />
     <Compile Include="Reports\PersonsReport.cs" />
     <Compile Include="Resources\Assets.App\SourceCode\Res.cs" />
-    <Compile Include="Settings\ExpressionSimulationParams.cs" />
     <Compile Include="Settings\SearchInfo.cs" />
     <Compile Include="Settings\SearchKind.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
