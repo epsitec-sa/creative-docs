@@ -170,6 +170,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						break;
 
 					case ArgumentType.Int:
+					case ArgumentType.Bool:
 						CategoriesLogic.ImportFieldInt (accessor, asset, e, catObj, field, field);
 						break;
 

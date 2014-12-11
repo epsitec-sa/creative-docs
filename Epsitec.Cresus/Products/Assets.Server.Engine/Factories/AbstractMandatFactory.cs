@@ -313,8 +313,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected virtual void CreateMethodsSamples()
 		{
 			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.None           ));
-			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "RoundAmount", "ResidualAmount");
-			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "RoundAmount", "ResidualAmount");
+			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "RoundAmount", "ResidualAmount", "Prorata");
 			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "RoundAmount", "ResidualAmount");
 			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "RoundAmount", "ResidualAmount");
 		}
@@ -349,6 +349,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount",      "10");
 			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount,  false, "RoundAmount",    "1");
 			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount,  false, "ResidualAmount", "1");
+			this.AddArgument (ObjectField.ArgumentFirst+4, "Prorata",           "Amortissement au prorata",           ArgumentType.Bool,    false, "Prorata",        "false");
 		}
 
 		protected void AddArgument(ObjectField field, string name, string description, ArgumentType type, bool nullable, string variable, string def)

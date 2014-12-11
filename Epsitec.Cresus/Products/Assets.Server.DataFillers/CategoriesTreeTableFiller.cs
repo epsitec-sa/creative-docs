@@ -74,6 +74,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Int, 100, name));
 							break;
 
+						case ArgumentType.Bool:
+							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.String, 100, name));
+							break;
+
 						case ArgumentType.Date:
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Date, 100, name));
 							break;
@@ -81,6 +85,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						case ArgumentType.String:
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.String, 100, name));
 							break;
+
+						default:
+							throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 					}
 
 					this.argumentFields.Add (field);
@@ -117,20 +124,20 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Categories, guid);
 
-				var name   = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var number = ObjectProperties.GetObjectPropertyString  (obj, this.Timestamp, ObjectField.Number);
-				var mg     = ObjectProperties.GetObjectPropertyGuid    (obj, this.Timestamp, ObjectField.MethodGuid);
-				var period = ObjectProperties.GetObjectPropertyInt     (obj, this.Timestamp, ObjectField.Periodicity);
+				var name   = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var number = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Number);
+				var mg     = ObjectProperties.GetObjectPropertyGuid   (obj, this.Timestamp, ObjectField.MethodGuid);
+				var period = ObjectProperties.GetObjectPropertyInt    (obj, this.Timestamp, ObjectField.Periodicity);
 
 				var m = MethodsLogic.GetSummary (this.accessor, mg);
-				var c = EnumDictionaries.GetPeriodicityName (period);
+				var p = EnumDictionaries.GetPeriodicityName (period);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell11 = new TreeTableCellString  (name,   cellState);
-				var cell12 = new TreeTableCellString  (number, cellState);
-				var cell13 = new TreeTableCellString  (m,      cellState);
-				var cell14 = new TreeTableCellString  (c,      cellState);
+				var cell11 = new TreeTableCellString (name,   cellState);
+				var cell12 = new TreeTableCellString (number, cellState);
+				var cell13 = new TreeTableCellString (m,      cellState);
+				var cell14 = new TreeTableCellString (p,      cellState);
 
 				int columnRank = 0;
 
@@ -141,7 +148,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				for (int a=0; a<this.argumentFields.Count; a++)
 				{
-					switch (this.argumentTypes[a])
+					var type = this.argumentTypes[a];
+					switch (type)
 					{
 						case ArgumentType.Decimal:
 						case ArgumentType.Amount:
@@ -161,6 +169,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								break;
 							}
 
+						case ArgumentType.Bool:
+							{
+								var value = ObjectProperties.GetObjectPropertyInt (obj, this.Timestamp, this.argumentFields[a]);
+								var cell = new TreeTableCellString (value.GetValueOrDefault () == 1 ? "oui":"non", cellState);
+								content.Columns[columnRank++].AddRow (cell);
+								break;
+							}
+
 						case ArgumentType.Date:
 							{
 								var value = ObjectProperties.GetObjectPropertyDate (obj, this.Timestamp, this.argumentFields[a]);
@@ -176,6 +192,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								content.Columns[columnRank++].AddRow (cell);
 								break;
 							}
+
+						default:
+							throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 					}
 				}
 

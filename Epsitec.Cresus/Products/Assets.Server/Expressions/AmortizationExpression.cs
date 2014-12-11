@@ -269,6 +269,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				case ArgumentType.Int:
 					return "int";
 
+				case ArgumentType.Bool:
+					return "bool";
+
 				case ArgumentType.Decimal:
 				case ArgumentType.Amount:
 				case ArgumentType.Rate:

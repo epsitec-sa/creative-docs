@@ -550,6 +550,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 						return FieldType.Decimal;
 
 					case ArgumentType.Int:
+					case ArgumentType.Bool:
 						return FieldType.Int;
 
 					case ArgumentType.Date:

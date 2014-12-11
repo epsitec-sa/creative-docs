@@ -187,6 +187,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 					break;
 
+				case ArgumentType.Bool:
+					var b = ObjectProperties.GetObjectPropertyInt (asset, timestamp, field);
+					if (b.HasValue)
+					{
+						def = b == 1 ? "true" : "false";
+					}
+					break;
+
 				case ArgumentType.Date:
 					var date = ObjectProperties.GetObjectPropertyDate (asset, timestamp, field);
 					if (date.HasValue)
@@ -204,7 +212,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					break;
 
 				default:
-					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType \"{0}\"", type));
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 			}
 
 			return AmortizationExpression.GetArgumentCode (type, nullable, variable, def, desc);

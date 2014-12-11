@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 
-				var rank    = node.Rank;
+				var rank    = node.Rank + 1;  // 1..n
 				var date    = node.Date;
 				var initial = node.InitialAmount;
 				var amort   = node.InitialAmount - node.FinalAmount;

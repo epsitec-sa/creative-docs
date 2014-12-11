@@ -107,6 +107,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						});
 						break;
 
+					case ArgumentType.Bool:
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Bool,
+							Label                 = name,
+						});
+						break;
+
 					case ArgumentType.Date:
 						list.Add (new StackedControllerDescription
 						{
@@ -243,6 +251,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				return (controller as IntStackedController).Value;
 			}
+			else if (controller is BoolStackedController)
+			{
+				return (controller as BoolStackedController).Value;
+			}
 			else if (controller is DateStackedController)
 			{
 				return (controller as DateStackedController).Value;
@@ -273,6 +285,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			else if (controller is IntStackedController)
 			{
 				(controller as IntStackedController).Value = (int) value;
+			}
+			else if (controller is BoolStackedController)
+			{
+				(controller as BoolStackedController).Value = (bool) value;
 			}
 			else if (controller is DateStackedController)
 			{

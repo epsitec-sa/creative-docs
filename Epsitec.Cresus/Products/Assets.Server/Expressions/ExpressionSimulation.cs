@@ -62,6 +62,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 						properties.Add (new DataIntProperty (field, (int) value));
 						break;
 
+					case ArgumentType.Bool:
+						properties.Add (new DataIntProperty (field, (bool) value ? 1:0));
+						break;
+
 					case ArgumentType.Date:
 						properties.Add (new DataDateProperty (field, (System.DateTime) value));
 						break;

@@ -55,6 +55,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 						c = this.CreateIntController (parent, field);
 						break;
 
+					case ArgumentType.Bool:
+						c = this.CreateBoolController (parent, field);
+						break;
+
 					case ArgumentType.Date:
 						c = this.CreateDateController (parent, field);
 						break;
@@ -62,6 +66,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					case ArgumentType.String:
 						c = this.CreateStringController (parent, field);
 						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 				}
 
 				if (c != null)

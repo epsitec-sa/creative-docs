@@ -105,6 +105,10 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					this.CreateControllerInt (controllerFrame, field);
 					break;
 
+				case ArgumentType.Bool:
+					this.CreateControllerBool (controllerFrame, field);
+					break;
+
 				case ArgumentType.Date:
 					this.CreateControllerDate(controllerFrame, field);
 					break;
@@ -112,6 +116,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				case ArgumentType.String:
 					this.CreateControllerString (controllerFrame, field);
 					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 			}
 		}
 
@@ -168,6 +175,40 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				this.accessor.EditionAccessor.SetField (of, controller.Value);
 
 				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (field);
+				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
+
+				this.OnValueEdited (field);
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.OnShowHistory (target, field);
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.OnSetFieldFocus (field);
+			};
+		}
+
+		private void CreateControllerBool(Widget parent, ObjectField field)
+		{
+			var controller = new BoolFieldController (this.accessor)
+			{
+				LabelWidth    = 0,
+				EditWidth     = 100,
+				Field         = field,
+			};
+
+			controller.CreateUI (parent);
+
+			this.controllers.Add (controller);
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value ? 1:0);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldInt (field) == 1;
 				controller.PropertyState = this.accessor.EditionAccessor.GetEditionPropertyState (field);
 
 				this.OnValueEdited (field);

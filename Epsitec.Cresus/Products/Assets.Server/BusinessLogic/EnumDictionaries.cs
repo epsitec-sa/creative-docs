@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetArgumentTypeName(ArgumentType type)
 		{
+			//	Retourne le type sous la forme "nom commun (type C#)".
 			string s;
 
 			switch (type)
@@ -142,6 +143,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case ArgumentType.Int:
 					s = "Nombre entier";
+					break;
+
+				case ArgumentType.Bool:
+					s = "Booléen";
 					break;
 
 				case ArgumentType.Decimal:
@@ -291,6 +296,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				yield return ArgumentType.Rate;
 				yield return ArgumentType.Decimal;
 				yield return ArgumentType.Int;
+				yield return ArgumentType.Bool;
 				yield return ArgumentType.Date;
 				yield return ArgumentType.String;
 			}

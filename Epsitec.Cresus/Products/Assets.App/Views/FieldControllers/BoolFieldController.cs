@@ -46,6 +46,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected override void UpdatePropertyState()
 		{
 			base.UpdatePropertyState ();
+
+			if (this.button != null)
+			{
+				this.button.Enable = !this.isReadOnly;
+			}
 		}
 
 

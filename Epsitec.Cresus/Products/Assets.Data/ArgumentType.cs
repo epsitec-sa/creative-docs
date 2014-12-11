@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		String,
 		Int,
+		Bool,
 		Decimal,
 		Amount,
 		Rate,

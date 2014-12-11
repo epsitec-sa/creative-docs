@@ -69,7 +69,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] rateLinearLines =
 		{
-			"var m = Months (BaseDate, EndDate);",
+			"var start = BaseDate;",
+			"",
+			"if (!Prorata)",
+			"{",
+			"    start = new System.DateTime (start.Year, 1, 1);",
+			"}",
+			"",
+			"var m = Months (start, EndDate);",
 			"value = BaseAmount * (1-(Rate*m/12));",
 			"value = Round (value, RoundAmount);",
 			"value = Residual (value, ResidualAmount);",
@@ -77,10 +84,15 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] rateDegressiveLines =
 		{
-			"var rate = Rate * PeriodicityFactor * ProrataFactor365;",
-			"var amortization = InitialAmount * rate;",
+			"var start = BaseDate;",
 			"",
-			"value = value - amortization;",
+			"if (!Prorata)",
+			"{",
+			"    start = new System.DateTime (start.Year, 1, 1);",
+			"}",
+			"",
+			"var m = Months (start, EndDate);",
+			"value = BaseAmount * Pow (1-Rate, m/12);",
 			"value = Round (value, RoundAmount);",
 			"value = Residual (value, ResidualAmount);",
 		};
