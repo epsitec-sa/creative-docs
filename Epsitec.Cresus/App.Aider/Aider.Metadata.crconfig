@@ -8,6 +8,7 @@ user = [AVAK]
 submenuBonneNouvelle = [LVG732]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
+submenuMailing = [LVOQ53]
 AiderContact = [LVARD]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
@@ -32,6 +33,7 @@ AiderOfficeSender = [LVOA13]
 AiderEmployee = [LVA2J]
 AiderEmployeeJob = [LVA7J]
 AiderReferee = [LVADJ]
+AiderEvent = [LVA93]
 AiderEventParticipant = [LVAA3]
 
 <meta>
@@ -2166,8 +2168,8 @@ AiderEventParticipant = [LVAA3]
     </t>
 
   </T>
-  <!-- DataSets -->
 
+  <!-- DATASETS COMMANDS (MENU ENTRY) -->
   <D>
     <d cid="[LVO433]" teid="@AiderContact" tn="default" df="true" d="true" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
@@ -2277,12 +2279,12 @@ AiderEventParticipant = [LVAA3]
       </L>
     </d>
 
-    <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc">
+    <d cid="[LVG302]" teid="@AiderTown" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
       <M><m t="Voir le pays" d="[LVG402]" p="@AiderTown:[LVAA5]" /></M>
     </d>
 
-    <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuMisc">
+    <d cid="[LVG402]" teid="@AiderCountry" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
     </d>
 
@@ -2347,49 +2349,49 @@ AiderEventParticipant = [LVAA3]
       </f>
     </d>
 
-#[Feature:Warnings]    <d cid="[LVGK32]" teid="@AiderPersonWarning" tn="default" df="true" d="true" ec="false" ed="false" dg="">
-#[Feature:Warnings]      <R><r>@user</r></R>
-#[Feature:Warnings]    </d>
+    <d cid="[LVGK32]" teid="@AiderPersonWarning" tn="default" df="true" d="true" ec="false" ed="false" dg="">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:Mailing]    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="">
-#[Feature:Mailing]      <R><r>@user</r></R>
-#[Feature:Mailing]    </d>
+    <d cid="[LVOJ03]" teid="@AiderMailing" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuMailing">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:Mailing]    <d cid="[LVOK03]" teid="@AiderMailingParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
-#[Feature:Mailing]      <R><r>@user</r></R>
-#[Feature:Mailing]   	  <L>
-#[Feature:Mailing]	     <l t="Adresse normale" f="0"/>
-#[Feature:Mailing]   	     <l t="Adresse aux parents de..." f="1"/>
-#[Feature:Mailing]   	  </L>
-#[Feature:Mailing]	 <M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
-#[Feature:Mailing]	 <!-- Filter -->
-#[Feature:Mailing]	 <f id="@AiderMailingParticipant">
-#[Feature:Mailing]	    <!-- Column id=IsExcluded (Valeur) (Comparaison) c=(1=equals) v="false" -->
-#[Feature:Mailing]	    <C><c id="[LVATH]"><v><comp c="1" v="Bfalse" /></v></c></C>
-#[Feature:Mailing]	</f>
-#[Feature:Mailing]    </d>
+    <d cid="[LVOK03]" teid="@AiderMailingParticipant" tn="default" df="false" d="false" ec="true" ed="true" dg="">
+	<R><r>@user</r></R>
+	<L>
+	    <l t="Adresse normale" f="0"/>
+	    <l t="Adresse aux parents de..." f="1"/>
+	</L>
+	<M><m t="Voir le contact" d="[LVAFE]" p="@AiderMailingParticipant:[LVON03]" /></M>
+	<!-- Filter -->
+	<f id="@AiderMailingParticipant">
+	<!-- Column id=IsExcluded (Valeur) (Comparaison) c=(1=equals) v="false" -->
+	    <C><c id="[LVATH]"><v><comp c="1" v="Bfalse" /></v></c></C>
+	</f>
+    </d>
 
-#[Feature:Mailing]    <d cid="[LVO413]" teid="@AiderMailingCategory" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuDefs">
-#[Feature:Mailing]      <R><r>@user</r></R>
-#[Feature:Mailing]    </d>
+    <d cid="[LVO413]" teid="@AiderMailingCategory" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuMailing">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:Mailing]    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
-#[Feature:Mailing]      <R><r>@user</r></R>
-#[Feature:Mailing]    </d>
+    <d cid="[LVO003]" teid="@AiderContact" tn="default" df="false" d="false" ec="true" ed="true" dg="">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:OfficeManagement]    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="">
-#[Feature:OfficeManagement]      <R><r>@user</r></R>
-#[Feature:OfficeManagement]    </d>
+    <d cid="[LVOG13]" teid="@AiderOfficeManagement" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:OfficeManagement]    <d cid="[LVON13]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
-#[Feature:OfficeManagement]      <R><r>@user</r></R>
-#[Feature:OfficeManagement]    </d>
+    <d cid="[LVON13]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
+	<R><r>@user</r></R>
+    </d>
 
-#[Feature:OfficeManagement]    <d cid="[LVO823]" teid="@AiderOfficeSender" tn="default" df="true" d="false" ec="false" ed="false"  dg="">
-#[Feature:OfficeManagement]      <R><r>@user</r></R>
-#[Feature:OfficeManagement]    </d>
+    <d cid="[LVO823]" teid="@AiderOfficeSender" tn="default" df="true" d="false" ec="false" ed="false"  dg="">
+	<R><r>@user</r></R>
+    </d>
   </D>
-  <G/>
+<G/>
 </meta>
 
 
