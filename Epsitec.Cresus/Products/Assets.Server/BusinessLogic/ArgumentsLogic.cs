@@ -153,13 +153,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static string GetDotNetCode(DataObject argumentObj, DataObject asset, Timestamp timestamp)
 		{
-			//	Retourne une ligne de code C# permettant de déclarer la variable
-			//	correspondant à l'argument.
+			//	Retourne une ligne de code C# permettant de déclarer la variable correspondant à l'argument.
 			//	asset/timestamp déterminent où piocher la valeur de l'argument.
-			//	Par exemple:
-			//	"decimal Rate = 0.1m; // Taux d'amortissement"
-			//	"string Name = "coucou"; // Message"
-			//	"System.DateTime Date = new System.DateTime (2014, 12, 31); // Début"
 			if (argumentObj == null)
 			{
 				return null;

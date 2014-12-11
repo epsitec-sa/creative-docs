@@ -175,7 +175,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		#endregion
 
 
-		public static string GetArgumentCode(ArgumentType type, bool nullable, string variable, string def, string desc)
+		public static string GetArgumentCode(ArgumentType type, bool nullable,
+			string variable, string def, string desc)
 		{
 			//	Retourne une ligne de code C# permettant de déclarer la variable
 			//	correspondant à l'argument.
@@ -183,9 +184,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			//	"decimal Rate = 0.1m; // Taux d'amortissement"
 			//	"string Name = "coucou"; // Message"
 			//	"System.DateTime Date = new System.DateTime (2014, 12, 31); // Début"
+
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append (EnumDictionaries.GetArgumentTypeDotNet (type));
+			builder.Append (AmortizationExpression.GetArgumentType (type));
 
 			if (nullable && type != ArgumentType.String)
 			{
@@ -254,6 +256,30 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 
 			return builder.ToString ();
+		}
+
+		private static string GetArgumentType(ArgumentType type)
+		{
+			//	Retourne le type exact tel qu'il s'écrit en C#.
+			switch (type)
+			{
+				case ArgumentType.String:
+					return "string";
+
+				case ArgumentType.Int:
+					return "int";
+
+				case ArgumentType.Decimal:
+				case ArgumentType.Amount:
+				case ArgumentType.Rate:
+					return "decimal";
+
+				case ArgumentType.Date:
+					return "System.DateTime";
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
+			}
 		}
 
 

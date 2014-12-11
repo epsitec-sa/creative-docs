@@ -156,30 +156,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static string GetArgumentTypeDotNet(ArgumentType type)
-		{
-			//	Retourne le type exact tel qu'il s'écrit en C#.
-			switch (type)
-			{
-				case ArgumentType.String:
-					return "string";
-
-				case ArgumentType.Int:
-					return "int";
-
-				case ArgumentType.Decimal:
-				case ArgumentType.Amount:
-				case ArgumentType.Rate:
-					return "decimal";
-
-				case ArgumentType.Date:
-					return "System.DateTime";
-
-				default:
-					return null;
-			}
-		}
-
 		public static string GetEntryScenarioName(EntryScenario type)
 		{
 			switch (type)
