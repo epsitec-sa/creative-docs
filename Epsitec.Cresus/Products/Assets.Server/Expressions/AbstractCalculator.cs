@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 			this.Range         = details.Def.Range;
 			this.CurrentDate   = details.Def.CurrentDate;
+			this.InputDate     = details.History.InputDate;
+			this.InputAmount   = details.History.InputAmount;
 			this.BaseDate      = details.History.BaseDate;
 			this.BaseAmount    = details.History.BaseAmount;
 			this.InitialAmount = details.History.InitialAmount;
@@ -361,8 +363,10 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public readonly DateRange				Range;
 		public readonly System.DateTime			CurrentDate;
+		public readonly System.DateTime			InputDate;
+		public readonly decimal					InputAmount;		// valeur d'achat
 		public readonly System.DateTime			BaseDate;
-		public readonly decimal					BaseAmount;			// valeur d'achat
+		public readonly decimal					BaseAmount;			// dernière valeur modifiée
 		public readonly decimal					InitialAmount;		// valeur avant amortissement
 		public readonly Periodicity				Periodicity;
 	}

@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsLinearLines =
 		{
-			"var start = BaseDate;",
+			"var start = InputDate;",
 			"",
 			"if (!Prorata)",
 			"{",

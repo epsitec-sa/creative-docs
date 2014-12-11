@@ -221,9 +221,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp)
 		{
-			var baseDate = timestamp.Date;
-			decimal baseAmount    = 0.0m;
-			decimal initialAmount = 0.0m;
+			var      inputDate     = timestamp.Date;
+			decimal? inputAmount   = null;
+			var      baseDate      = timestamp.Date;
+			decimal  baseAmount    = 0.0m;
+			decimal  initialAmount = 0.0m;
 
 			foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp))
 			{
@@ -231,14 +233,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (aa != null && aa.Value.FinalAmount.HasValue)
 				{
-					initialAmount = aa.Value.FinalAmount.Value;
-				}
+					if (!inputAmount.HasValue)
+					{
+						inputDate   = e.Timestamp.Date;
+						inputAmount = aa.Value.FinalAmount.Value;
+					}
 
-				if (e.Type != EventType.AmortizationPreview &&
-					e.Type != EventType.AmortizationAuto    &&
-					e.Type != EventType.AmortizationExtra   )
-				{
-					if (aa != null && aa.Value.FinalAmount.HasValue)
+					initialAmount = aa.Value.FinalAmount.Value;
+
+					if (e.Type != EventType.AmortizationPreview &&
+						e.Type != EventType.AmortizationAuto    &&
+						e.Type != EventType.AmortizationExtra)
 					{
 						baseDate   = e.Timestamp.Date;
 						baseAmount = aa.Value.FinalAmount.Value;
@@ -246,7 +251,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			return new HistoryDetails (baseDate, baseAmount, initialAmount);
+			return new HistoryDetails (inputDate, inputAmount.GetValueOrDefault (), baseDate, baseAmount, initialAmount);
 		}
 
 

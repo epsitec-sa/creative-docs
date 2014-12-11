@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 			//	Crée un objet bidon.
 			properties.Clear ();
+
 			var mainProperty = new DataAmortizedAmountProperty (ObjectField.MainValue, new AmortizedAmount (simulationParams.InitialAmount));
 			properties.Add (new DataGuidProperty (ObjectField.MethodGuid, methodGuid));
 			properties.Add (new DataIntProperty (ObjectField.Periodicity, (int) simulationParams.Periodicity));
@@ -48,35 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				var field = pair.Key;
 				var value = pair.Value;
 
-				var type = ArgumentsLogic.GetArgumentType (accessor, field);
-
-				switch (type)
-				{
-					case ArgumentType.Decimal:
-					case ArgumentType.Amount:
-					case ArgumentType.Rate:
-						properties.Add (new DataDecimalProperty (field, (decimal) value));
-						break;
-
-					case ArgumentType.Int:
-						properties.Add (new DataIntProperty (field, (int) value));
-						break;
-
-					case ArgumentType.Bool:
-						properties.Add (new DataIntProperty (field, (bool) value ? 1:0));
-						break;
-
-					case ArgumentType.Date:
-						properties.Add (new DataDateProperty (field, (System.DateTime) value));
-						break;
-
-					case ArgumentType.String:
-						properties.Add (new DataStringProperty (field, (string) value));
-						break;
-
-					default:
-						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
-				}
+				ExpressionSimulation.AddArgument (properties, accessor, field, value);
 			}
 
 			var assetGuid = accessor.CreateObject (BaseType.Assets, simulationParams.Range.IncludeFrom, Guid.Empty, properties.ToArray ());
@@ -110,6 +83,39 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			accessor.RemoveObject (BaseType.Assets, asset);
 
 			return nodes;
+		}
+
+		private static void AddArgument(List<AbstractDataProperty> properties, DataAccessor accessor, ObjectField field, object value)
+		{
+			var type = ArgumentsLogic.GetArgumentType (accessor, field);
+
+			switch (type)
+			{
+				case ArgumentType.Decimal:
+				case ArgumentType.Amount:
+				case ArgumentType.Rate:
+					properties.Add (new DataDecimalProperty (field, (decimal) value));
+					break;
+
+				case ArgumentType.Int:
+					properties.Add (new DataIntProperty (field, (int) value));
+					break;
+
+				case ArgumentType.Bool:
+					properties.Add (new DataIntProperty (field, (bool) value ? 1:0));
+					break;
+
+				case ArgumentType.Date:
+					properties.Add (new DataDateProperty (field, (System.DateTime) value));
+					break;
+
+				case ArgumentType.String:
+					properties.Add (new DataStringProperty (field, (string) value));
+					break;
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
+			}
 		}
 	}
 }
