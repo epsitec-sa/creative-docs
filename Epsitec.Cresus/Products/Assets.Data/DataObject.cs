@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.guid        = Guid.NewGuid ();
 
 			this.events = new GuidDictionary<DataEvent> (undoManager);
+			this.sortedEvents = new List<DataEvent> ();
 			this.lastGenerationNumber = -1;
 		}
 
@@ -24,6 +25,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.guid        = guid;
 
 			this.events = new GuidDictionary<DataEvent> (undoManager);
+			this.sortedEvents = new List<DataEvent> ();
 			this.lastGenerationNumber = -1;
 		}
 
@@ -32,6 +34,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager = undoManager;
 
 			this.events = new GuidDictionary<DataEvent> (undoManager);
+			this.sortedEvents = new List<DataEvent> ();
 
 			while (reader.Read ())
 			{
@@ -112,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Data
 			get
 			{
 				this.UpdateSortedList ();
-				return this.sortedEvents;
+				return this.sortedEvents.ToArray ();
 			}
 		}
 
@@ -120,15 +123,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			this.UpdateSortedList ();
 
-			for (int i=0; i<this.sortedEvents.Length; i++)
-			{
-				if (this.sortedEvents[i].Timestamp == timestamp)
-				{
-					return i;
-				}
-			}
-
-			return -1;
+			return this.sortedEvents.FindIndex (x => x.Timestamp == timestamp);
 		}
 
 		public void ChangeEventTimestamp(DataEvent e, Timestamp timestamp)
@@ -147,11 +142,19 @@ namespace Epsitec.Cresus.Assets.Data
 		public void AddEvent(DataEvent e)
 		{
 			this.events.Add (e);
+
+			int i = this.sortedEvents.Where (x => x.Timestamp < e.Timestamp).Count ();
+			this.sortedEvents.Insert (i, e);
+
+			this.SortedListUpdated ();
 		}
 
 		public void RemoveEvent(DataEvent e)
 		{
 			this.events.Remove (e);
+			this.sortedEvents.Remove (e);
+
+			this.SortedListUpdated ();
 		}
 
 		public DataEvent GetInputEvent()
@@ -196,7 +199,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public DataEvent GetNextEvent(Timestamp timestamp)
 		{
 			int i = this.FindEventIndex (timestamp);
-			if (i >= 0 && i < this.sortedEvents.Length-1)
+			if (i >= 0 && i < this.sortedEvents.Count-1)
 			{
 				return this.sortedEvents[i+1];
 			}
@@ -302,9 +305,16 @@ namespace Epsitec.Cresus.Assets.Data
 			//	seulement si c'est nécessaire.
 			if (this.lastGenerationNumber != this.events.GenerationNumber)
 			{
-				this.sortedEvents = this.events.OrderBy (x => x.Timestamp).ToArray ();
-				this.lastGenerationNumber = this.events.GenerationNumber;
+				this.sortedEvents.Clear ();
+				this.sortedEvents.AddRange (this.events.OrderBy (x => x.Timestamp));
+
+				this.SortedListUpdated ();
 			}
+		}
+
+		private void SortedListUpdated()
+		{
+			this.lastGenerationNumber = this.events.GenerationNumber;
 		}
 
 
@@ -357,8 +367,8 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
 		private readonly GuidDictionary<DataEvent> events;
+		private readonly List<DataEvent>		sortedEvents;
 
 		public int								lastGenerationNumber;
-		private DataEvent[]						sortedEvents;
 	}
 }
