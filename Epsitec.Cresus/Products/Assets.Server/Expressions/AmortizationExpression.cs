@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return builder.ToString ();
 		}
 
-		private static string GetArgumentType(ArgumentType type)
+		public static string GetArgumentType(ArgumentType type)
 		{
 			//	Retourne le type exact tel qu'il s'écrit en C#.
 			switch (type)

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.Expression;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -131,29 +132,40 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetArgumentTypeName(ArgumentType type)
 		{
+			string s;
+
 			switch (type)
 			{
 				case ArgumentType.String:
-					return "Chaîne (string)";
+					s = "Chaîne";
+					break;
 
 				case ArgumentType.Int:
-					return "Nombre entier (int)";
+					s = "Nombre entier";
+					break;
 
 				case ArgumentType.Decimal:
-					return "Nombre réel (decimal)";
+					s = "Nombre réel";
+					break;
 
 				case ArgumentType.Amount:
-					return "Montant (decimal)";
+					s = "Montant";
+					break;
 
 				case ArgumentType.Rate:
-					return "Pour-cent (decimal)";
+					s = "Pour-cent";
+					break;
 
 				case ArgumentType.Date:
-					return "Date (System.DateTime)";
+					s = "Date";
+					break;
 
 				default:
-					return null;
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 			}
+
+			var t = AmortizationExpression.GetArgumentType (type);
+			return string.Format ("{0} ({1})", s, t);
 		}
 
 		public static string GetEntryScenarioName(EntryScenario type)
