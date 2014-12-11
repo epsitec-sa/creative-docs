@@ -276,6 +276,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.cachedSourceSet = SqlField.CreateSet (new SqlSet (ids.Select (x => SqlField.CreateConstant (x, DbRawType.Int64))));
 		}
 
+		internal void ClearSourceSet()
+		{
+			this.cachedSourceSet = null;
+		}
+
 		
 		public HashSet<AbstractEntity> GetNonPersistentEntities(DataContext dataContext)
 		{

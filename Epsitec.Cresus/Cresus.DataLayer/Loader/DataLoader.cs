@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2010-2014, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -119,6 +122,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
+
+			request.ClearSourceSet ();
 
 			using (DbTransaction dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
