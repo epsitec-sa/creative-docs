@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				return this.Range.IsEmpty
-					&& this.Periodicity     == 0;
+					|| string.IsNullOrEmpty (this.Expression)
+					|| this.Periodicity == Periodicity.Unknown;
 			}
 		}
 

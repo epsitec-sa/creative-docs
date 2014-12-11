@@ -199,12 +199,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void UpdateControllers()
 		{
 			this.expressionController.SetFont (Font.GetFont ("Courier New", "Regular"));  // bof
-
-			if (string.IsNullOrEmpty (this.expressionController.Value))
-			{
-				this.expressionController.Value = AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear);
-			}
-
 			this.outputConsole.Text = null;  // efface le message précédent
 
 			this.UpdateCommands ();
