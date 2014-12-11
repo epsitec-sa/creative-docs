@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var a = obj.Events;
 
-				for (int i=0; i<a.Length; i++)
+				for (int i=0; i<a.Count; i++)
 				{
 					var e = a[i];
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var a = obj.Events;
 				int i = a.Where (x => x.Timestamp <= timestamp).Count () - 1;
 
-				if (i >= 0 && i < a.Length)
+				if (i >= 0 && i < a.Count)
 				{
 					return AssetCalculator.GetTerminalEvent (a[i].Type);
 				}
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var a = obj.Events;
 				int i = a.Where (x => x.Timestamp <= timestamp).Count ();
 
-				if (i >= 0 && i < a.Length)
+				if (i >= 0 && i < a.Count)
 				{
 					return AssetCalculator.GetTerminalEvent (a[i].Type);
 				}

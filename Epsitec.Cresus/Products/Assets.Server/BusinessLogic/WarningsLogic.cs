@@ -622,8 +622,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static Timestamp? GetLastAmortization(DataObject asset)
 		{
 			//	Retourne la date de l'armortissement le plus récent d'un objet.
-			foreach (var e in asset.Events.Reverse ())
+			for (var i=asset.Events.Count-1; i>=0; i--)
 			{
+				var e = asset.Events[i];
+
 				if (e.Type == EventType.AmortizationAuto ||
 					e.Type == EventType.AmortizationExtra)
 				{

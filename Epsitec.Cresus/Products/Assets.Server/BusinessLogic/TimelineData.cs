@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var a = obj.Events;
 
-				for (int i=0; i<a.Length; i++)
+				for (int i=0; i<a.Count; i++)
 				{
 					var e = a[i];
 					var t = e.Timestamp;

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 				else
 				{
-					return this.dataEvents.Length;
+					return this.dataEvents.Count;
 				}
 			}
 		}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (this.dataEvents == null || index < 0 || index >= this.dataEvents.Length)
+				if (this.dataEvents == null || index < 0 || index >= this.dataEvents.Count)
 				{
 					return SortableNode.Empty;
 				}
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly DataAccessor			accessor;
 
 		private DataObject						dataObject;
-		private DataEvent[]						dataEvents;
+		private List<DataEvent>					dataEvents;
 		private SortingInstructions				sortingInstructions;
 	}
 }

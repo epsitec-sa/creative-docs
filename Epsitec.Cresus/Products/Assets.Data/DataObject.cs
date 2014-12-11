@@ -108,14 +108,14 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public DataEvent[] Events
+		public List<DataEvent> Events
 		{
 			//	Retourne tous les événements triés chronologiquement.
 			//	Le tableau ne doit être utilisé qu'en lecture.
 			get
 			{
 				this.UpdateSortedList ();
-				return this.sortedEvents.ToArray ();
+				return this.sortedEvents;
 			}
 		}
 
