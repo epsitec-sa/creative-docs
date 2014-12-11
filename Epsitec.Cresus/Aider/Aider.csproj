@@ -350,6 +350,7 @@
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderMailingQueryEntity.cs" />
+    <Compile Include="Entities\AiderEventOfficeReportEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
     <Compile Include="Entities\AiderPlaParishGroupEntity.cs" />
