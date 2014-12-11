@@ -315,8 +315,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddMethod ("Aucun",            AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.None           ));
 			this.AddMethod ("Taux linéaire",    AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateLinear     ), "Rate",      "RoundAmount", "ResidualAmount", "Prorata");
 			this.AddMethod ("Taux dégressif",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.RateDegressive ), "Rate",      "RoundAmount", "ResidualAmount", "Prorata");
-			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "RoundAmount", "ResidualAmount");
-			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "RoundAmount", "ResidualAmount");
+			this.AddMethod ("Durée linéaire",   AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsLinear    ), "YearCount", "RoundAmount", "ResidualAmount", "Prorata");
+			this.AddMethod ("Durée dégressive", AmortizationExpressionCollection.GetExpression (AmortizationExpressionType.YearsDegressive), "YearCount", "RoundAmount", "ResidualAmount", "Prorata");
 		}
 
 		protected void AddMethod(string name, string expression, params string[] arguments)

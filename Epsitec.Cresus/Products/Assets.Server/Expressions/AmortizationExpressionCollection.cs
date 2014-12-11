@@ -99,17 +99,17 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsLinearLines =
 		{
-			"decimal rate = 1;  // 100%",
-			"var yearRank = StartDate.Year - BaseDate.Year;",
-			"decimal n = YearCount - yearRank;  // remaining years",
+			"var start = BaseDate;",
 			"",
-			"if (n > 0)",
+			"if (!Prorata)",
 			"{",
-			"	rate = 1 / n;",
+			"    start = new System.DateTime (start.Year, 1, 1);",
 			"}",
 			"",
-			"var amortization = InitialAmount * rate;",
-			"value = value - amortization;",
+			"var m = Months (start, EndDate);",
+			"var rate = (m/12) / YearCount;",
+			"",
+			"value = BaseAmount * (1-rate);",
 			"value = Round (value, RoundAmount);",
 			"value = Residual (value, ResidualAmount);",
 		};

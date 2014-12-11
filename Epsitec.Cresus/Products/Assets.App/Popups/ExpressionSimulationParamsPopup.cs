@@ -20,11 +20,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class ExpressionSimulationParamsPopup : AbstractStackedPopup
 	{
-		private ExpressionSimulationParamsPopup(DataAccessor accessor, Guid methodGuid)
+		private ExpressionSimulationParamsPopup(DataAccessor accessor, IEnumerable<Guid> argumentGuids)
 			: base (accessor)
 		{
-			this.method = this.accessor.GetObject (BaseType.Methods, methodGuid);
+			this.argumentGuids = argumentGuids.ToArray ();
 			this.fields = this.ArgumentFields.ToArray ();
+
 			this.controllerRanks = new Dictionary<ObjectField, int> ();
 			this.lastArguments = new Dictionary<ObjectField, object> ();
 
@@ -354,7 +355,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return DataAccessor.ArgumentFields.Where (x => !MethodsLogic.IsHidden (this.method, x));
+				foreach (var guid in this.argumentGuids)
+				{
+					yield return ArgumentsLogic.GetObjectField (this.accessor, guid);
+				}
 			}
 		}
 
@@ -391,11 +395,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, Guid methodGuid, System.Action action)
+		public static void Show(Widget target, DataAccessor accessor, IEnumerable<Guid> argumentGuids, System.Action action)
 		{
 			if (target != null)
 			{
-				var popup = new ExpressionSimulationParamsPopup (accessor, methodGuid)
+				var popup = new ExpressionSimulationParamsPopup (accessor, argumentGuids)
 				{
 					Params = LocalSettings.ExpressionSimulationParams,
 				};
@@ -415,7 +419,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private readonly DataObject				method;
+		private readonly Guid[]					argumentGuids;
 		private readonly ObjectField[]			fields;
 		private readonly Dictionary<ObjectField, int> controllerRanks;
 		private readonly Dictionary<ObjectField, object> lastArguments;
