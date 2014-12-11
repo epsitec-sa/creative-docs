@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
@@ -164,8 +165,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return null;
 			}
 
-			var builder = new System.Text.StringBuilder ();
-
 			var type     = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argumentObj, null, ObjectField.ArgumentType);
 			var field    = (ObjectField)  ObjectProperties.GetObjectPropertyInt (argumentObj, null, ObjectField.ArgumentField);
 			var nullable = ObjectProperties.GetObjectPropertyInt    (argumentObj, null, ObjectField.ArgumentNullable) == 1;
@@ -213,75 +212,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType \"{0}\"", type));
 			}
 
-			builder.Append (EnumDictionaries.GetArgumentTypeDotNet (type));
-
-			if (nullable && type != ArgumentType.String)
-			{
-				builder.Append ("?");
-			}
-
-			builder.Append (" ");
-			builder.Append (variable);
-
-			if (!string.IsNullOrEmpty (def))
-			{
-				builder.Append (" = ");
-
-				switch (type)
-				{
-					case ArgumentType.Decimal:
-					case ArgumentType.Amount:
-					case ArgumentType.Rate:
-						if (def.Last () == '%')
-						{
-							var n = TypeConverters.ParseRate (def);
-							def = TypeConverters.DecimalToString (n);
-						}
-						else
-						{
-							var n = TypeConverters.ParseAmount (def);
-							def = TypeConverters.DecimalToString (n);
-						}
-						builder.Append (def);
-
-						if (def.Last () != 'm')
-						{
-							builder.Append ("m");
-						}
-						break;
-
-					case ArgumentType.Date:
-						var date = TypeConverters.ParseDate (def, System.DateTime.Now, System.DateTime.MinValue, System.DateTime.MaxValue).GetValueOrDefault ();
-						builder.Append ("new System.DateTime (");
-						builder.Append (date.Year);
-						builder.Append (", ");
-						builder.Append (date.Month);
-						builder.Append (", ");
-						builder.Append (date.Day);
-						builder.Append (")");
-						break;
-
-					case ArgumentType.String:
-						builder.Append ("\"");
-						builder.Append (def.Replace ("\"", "\\\""));
-						builder.Append ("\"");
-						break;
-
-					default:
-						builder.Append (def);
-						break;
-				}
-			}
-
-			builder.Append (";");
-
-			if (!string.IsNullOrEmpty (desc))
-			{
-				builder.Append (" // ");
-				builder.Append (desc);
-			}
-
-			return builder.ToString ();
+			return AmortizationExpression.GetArgumentCode (type, nullable, variable, def, desc);
 		}
 		#endregion
 

@@ -175,6 +175,88 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		#endregion
 
 
+		public static string GetArgumentCode(ArgumentType type, bool nullable, string variable, string def, string desc)
+		{
+			//	Retourne une ligne de code C# permettant de déclarer la variable
+			//	correspondant à l'argument.
+			//	Par exemple:
+			//	"decimal Rate = 0.1m; // Taux d'amortissement"
+			//	"string Name = "coucou"; // Message"
+			//	"System.DateTime Date = new System.DateTime (2014, 12, 31); // Début"
+			var builder = new System.Text.StringBuilder ();
+
+			builder.Append (EnumDictionaries.GetArgumentTypeDotNet (type));
+
+			if (nullable && type != ArgumentType.String)
+			{
+				builder.Append ("?");
+			}
+
+			builder.Append (" ");
+			builder.Append (variable);
+
+			if (!string.IsNullOrEmpty (def))
+			{
+				builder.Append (" = ");
+
+				switch (type)
+				{
+					case ArgumentType.Decimal:
+					case ArgumentType.Amount:
+					case ArgumentType.Rate:
+						if (def.Last () == '%')
+						{
+							var n = TypeConverters.ParseRate (def);
+							def = TypeConverters.DecimalToString (n);
+						}
+						else
+						{
+							var n = TypeConverters.ParseAmount (def);
+							def = TypeConverters.DecimalToString (n);
+						}
+						builder.Append (def);
+
+						if (def.Last () != 'm')
+						{
+							builder.Append ("m");
+						}
+						break;
+
+					case ArgumentType.Date:
+						var date = TypeConverters.ParseDate (def, System.DateTime.Now, System.DateTime.MinValue, System.DateTime.MaxValue).GetValueOrDefault ();
+						builder.Append ("new System.DateTime (");
+						builder.Append (date.Year);
+						builder.Append (", ");
+						builder.Append (date.Month);
+						builder.Append (", ");
+						builder.Append (date.Day);
+						builder.Append (")");
+						break;
+
+					case ArgumentType.String:
+						builder.Append ("\"");
+						builder.Append (def.Replace ("\"", "\\\""));
+						builder.Append ("\"");
+						break;
+
+					default:
+						builder.Append (def);
+						break;
+				}
+			}
+
+			builder.Append (";");
+
+			if (!string.IsNullOrEmpty (desc))
+			{
+				builder.Append (" // ");
+				builder.Append (desc);
+			}
+
+			return builder.ToString ();
+		}
+
+
 		private readonly Assembly				compiledAssembly;
 		private readonly string					error;
 	}
