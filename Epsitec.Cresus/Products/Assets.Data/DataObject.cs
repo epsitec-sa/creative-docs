@@ -9,8 +9,9 @@ namespace Epsitec.Cresus.Assets.Data
 {
 	public class DataObject : IGuid
 	{
-		public DataObject(UndoManager undoManager)
+		public DataObject(UndoManager undoManager, bool simulation = false)
 		{
+			this.simulation  = simulation;
 			this.undoManager = undoManager;
 			this.guid        = Guid.NewGuid ();
 
@@ -58,6 +59,15 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			this.lastGenerationNumber = -1;
+		}
+
+
+		public bool								Simulation
+		{
+			get
+			{
+				return this.simulation;
+			}
 		}
 
 
@@ -364,6 +374,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
+		private readonly bool					simulation;
 		private readonly UndoManager			undoManager;
 		private readonly Guid					guid;
 		private readonly GuidDictionary<DataEvent> events;

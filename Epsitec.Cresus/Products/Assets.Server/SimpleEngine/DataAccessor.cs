@@ -144,7 +144,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
 		{
-			var obj = new DataObject (this.UndoManager);
+			return this.CreateObject (baseType, date, parent, false, requiredProperties);
+		}
+
+		public Guid CreateSimulationObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
+		{
+			return this.CreateObject (baseType, date, parent, true, requiredProperties);
+		}
+
+		private Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool simulation, params AbstractDataProperty[] requiredProperties)
+		{
+			var obj = new DataObject (simulation ? null : this.UndoManager, simulation);
 			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
@@ -340,8 +350,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					while (obj.EventsAny)
 					{
 						var e = obj.Events.First ();
-						this.RemoveObjectEvent (obj, e);
+						this.RemoveObjectEvent (obj, e, quick: true);
 					}
+
+					Amortizations.UpdateAmounts (this, obj);
 				}
 
 				var list = this.mandat.GetData (baseType);
@@ -358,12 +370,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				var e = obj.GetEvent (timestamp.Value);
 				if (e != null)
 				{
-					this.RemoveObjectEvent (obj, e);
+					this.RemoveObjectEvent (obj, e, quick: false);
 				}
 			}
 		}
 
-		public void RemoveObjectEvent(DataObject obj, DataEvent e)
+		public void RemoveObjectEvent(DataObject obj, DataEvent e, bool quick = false)
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 			if (p != null)
@@ -373,7 +385,11 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			obj.RemoveEvent (e);
-			Amortizations.UpdateAmounts (this, obj);
+
+			if (!quick)
+			{
+				Amortizations.UpdateAmounts (this, obj);
+			}
 		}
 
 

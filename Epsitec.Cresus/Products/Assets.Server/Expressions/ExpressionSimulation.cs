@@ -29,7 +29,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				properties.Add (new DataGuidProperty (field, guid));
 			}
 
-			var methodGuid = accessor.CreateObject (BaseType.Methods, accessor.Mandat.StartDate, Guid.Empty, properties.ToArray ());
+			var methodGuid = accessor.CreateSimulationObject (BaseType.Methods,
+				simulationParams.Range.IncludeFrom, Guid.Empty, properties.ToArray ());
+
 			var method = accessor.GetObject (BaseType.Methods, methodGuid);
 
 			//	Crée un objet bidon.
@@ -52,7 +54,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				ExpressionSimulation.AddArgument (properties, accessor, field, value);
 			}
 
-			var assetGuid = accessor.CreateObject (BaseType.Assets, simulationParams.Range.IncludeFrom, Guid.Empty, properties.ToArray ());
+			var assetGuid = accessor.CreateSimulationObject (BaseType.Assets,
+				simulationParams.Range.IncludeFrom, Guid.Empty, properties.ToArray ());
+
 			var asset = accessor.GetObject (BaseType.Assets, assetGuid);
 
 			var ie = asset.GetInputEvent ();

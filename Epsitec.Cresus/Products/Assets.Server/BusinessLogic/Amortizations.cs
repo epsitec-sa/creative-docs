@@ -340,8 +340,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				foreach (var guid in guids)
 				{
 					var e = obj.GetEvent (guid);
-					this.accessor.RemoveObjectEvent (obj, e);
+					this.accessor.RemoveObjectEvent (obj, e, quick: true);
 				}
+
+				Amortizations.UpdateAmounts (this.accessor, obj);
 			}
 		}
 
@@ -374,7 +376,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Répercute les valeurs des montants selon la chronologie des événements.
 			//	Les montants des écritures sont également mis à jour.
-			if (obj != null)
+			if (obj != null && !obj.Simulation)
 			{
 				foreach (var field in accessor.AssetValueFields)
 				{
