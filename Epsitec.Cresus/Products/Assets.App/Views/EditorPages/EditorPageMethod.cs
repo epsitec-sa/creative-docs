@@ -172,6 +172,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			//	Affiche le popup permettant de choisir les paramètres pour lancer la
 			//	simulation de l'expression actuellement sélectionnée.
+			var err = this.Compile ();
+
+			if (!string.IsNullOrEmpty(err))
+			{
+				MessagePopup.ShowError (target, err);
+				return;
+			}
+
 			ExpressionSimulationParamsPopup.Show (target, this.accessor, this.argumentsController.ArgumentGuids, delegate
 			{
 				var nodes = this.ComputeSimulation ();
