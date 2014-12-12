@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var initial = node.InitialAmount;
 				var amort   = node.InitialAmount - node.FinalAmount;
 				var final   = node.FinalAmount;
-				var trace   = ExpressionSimulationTreeTableFiller.ConvertToSingleLine (node.Trace);
+				var trace   = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (node.Trace);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		}
 
 
-		private static string ConvertToSingleLine(string trace)
+		public static string ConvertTraceToSingleLine(string trace)
 		{
 			//	Converti "toto<br/>titi<br/>" en "toto / titi".
 			if (!string.IsNullOrEmpty (trace))

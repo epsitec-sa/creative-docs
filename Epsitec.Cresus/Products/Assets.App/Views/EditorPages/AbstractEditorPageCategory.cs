@@ -32,50 +32,47 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				var type  = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
 				var field = (ObjectField)  ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentField);
 
-				AbstractFieldController c = null;
+				AbstractFieldController controller;
 
 				switch (type)
 				{
 					case ArgumentType.Decimal:
-						c = this.CreateDecimalController (parent, field, DecimalFormat.Real);
+						controller = this.CreateDecimalController (parent, field, DecimalFormat.Real);
 						break;
 
 					case ArgumentType.Amount:
-						c = this.CreateDecimalController (parent, field, DecimalFormat.Amount);
+						controller = this.CreateDecimalController (parent, field, DecimalFormat.Amount);
 						break;
 
 					case ArgumentType.Rate:
-						c = this.CreateDecimalController (parent, field, DecimalFormat.Rate);
+						controller = this.CreateDecimalController (parent, field, DecimalFormat.Rate);
 						break;
 
 					case ArgumentType.Years:
-						c = this.CreateDecimalController (parent, field, DecimalFormat.Years);
+						controller = this.CreateDecimalController (parent, field, DecimalFormat.Years);
 						break;
 
 					case ArgumentType.Int:
-						c = this.CreateIntController (parent, field);
+						controller = this.CreateIntController (parent, field);
 						break;
 
 					case ArgumentType.Bool:
-						c = this.CreateBoolController (parent, field);
+						controller = this.CreateBoolController (parent, field);
 						break;
 
 					case ArgumentType.Date:
-						c = this.CreateDateController (parent, field);
+						controller = this.CreateDateController (parent, field);
 						break;
 
 					case ArgumentType.String:
-						c = this.CreateStringController (parent, field);
+						controller = this.CreateStringController (parent, field);
 						break;
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 				}
 
-				if (c != null)
-				{
-					this.controllers.Add (field, c);
-				}
+				this.controllers.Add (field, controller);
 			}
 
 			this.methodController.ValueEdited += delegate

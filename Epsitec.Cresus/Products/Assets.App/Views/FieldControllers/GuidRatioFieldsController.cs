@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				Text           = "Groupe",
 				Dock           = DockStyle.Left,
 				PreferredWidth = AbstractFieldController.maxWidth - 45,
-				Margins        = new Margins (85+10, 0, 0, 0),
+				Margins        = new Margins (100+10, 0, 0, 0),
 			};
 
 			new StaticText

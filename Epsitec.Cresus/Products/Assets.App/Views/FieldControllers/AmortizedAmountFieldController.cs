@@ -110,7 +110,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					using (this.ignoreChanges.Enter ())
 					{
-						this.controller.SetValue (this.asset, this.e, this.controller.Value);
+						//??this.controller.SetValue (this.asset, this.e, this.controller.Value);
+						this.value = this.controller.Value;
 						this.OnValueEdited (this.Field);
 					}
 				}
