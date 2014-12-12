@@ -25,9 +25,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.methodController      = this.CreateMethodGuidController (parent, ObjectField.MethodGuid);
 			this.periodicityController = this.CreateEnumController       (parent, ObjectField.Periodicity, EnumDictionaries.DictPeriodicities, editWidth: 90);
 
-			//??this.argumentsController = new ArgumentValueFieldsController (this.accessor);
-			//??this.argumentsController.CreateUI (parent);
-
 			this.controllers.Clear ();
 
 			foreach (var argument in ArgumentsLogic.GetSortedArguments (this.accessor))
@@ -224,6 +221,5 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private MethodGuidFieldController		methodController;
 		private EnumFieldController				periodicityController;
-		private ArgumentValueFieldsController	argumentsController;
 	}
 }

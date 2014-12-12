@@ -220,7 +220,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
-		#region Sorted fields
 		public static IEnumerable<DataObject> GetSortedArguments(DataAccessor accessor)
 		{
 			var dico = new Dictionary<DataObject, string> ();
@@ -234,23 +233,5 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return dico.OrderBy (x => x.Value).Select (x => x.Key);
 		}
-
-		public static IEnumerable<ObjectField> GetSortedFields(DataAccessor accessor)
-		{
-			//	Retourne la liste des champs, triés par ordre alphabétique des noms
-			//	des arguments en édition.
-			var dico = new Dictionary<ObjectField, string> ();
-
-			foreach (var obj in accessor.Mandat.GetData (BaseType.Arguments))
-			{
-				var field = (ObjectField) ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.ArgumentField);
-				var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-
-				dico.Add (field, name);
-			}
-
-			return dico.OrderBy (x => x.Value).Select (x => x.Key);
-		}
-		#endregion
 	}
 }

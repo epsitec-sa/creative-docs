@@ -206,7 +206,6 @@
     <Compile Include="Views\EditorPages\EditorPageMethod.cs" />
     <Compile Include="Views\Arguments.cs" />
     <Compile Include="Views\FieldControllers\ArgumentToUseFieldController.cs" />
-    <Compile Include="Views\FieldControllers\ArgumentValueFieldsController.cs" />
     <Compile Include="Views\FieldControllers\ArgumentToUseFieldsController.cs" />
     <Compile Include="Views\MethodsView.cs" />
     <Compile Include="Views\CommandToolbars\AbstractCommandToolbar.cs" />
