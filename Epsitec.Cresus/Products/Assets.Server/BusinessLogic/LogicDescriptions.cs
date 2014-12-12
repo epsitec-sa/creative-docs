@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 									break;
 
 								case DecimalFormat.Real:
+								case DecimalFormat.Years:
 									line = TypeConverters.DecimalToString (d);
 									break;
 							}

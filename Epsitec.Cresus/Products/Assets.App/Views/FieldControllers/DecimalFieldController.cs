@@ -6,6 +6,8 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -87,6 +89,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly, isError: this.hasError);
 			AbstractFieldController.UpdateTextField (this.textField, type, this.isReadOnly);
+
+			if (this.button != null)
+			{
+				this.button.Enable = !this.isReadOnly;
+			}
 		}
 
 
@@ -110,12 +117,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				{
 					Parent           = this.frameBox,
 					Dock             = DockStyle.Left,
-					PreferredWidth   = 50,
+					PreferredWidth   = this.Unit.GetTextWidth () + 10,
 					PreferredHeight  = AbstractFieldController.lineHeight - 1,
 					Margins          = new Margins (10, 0, 1, 0),
 					Text             = this.Unit,
 					ContentAlignment = ContentAlignment.TopLeft,
 				};
+			}
+
+			if (this.DecimalFormat == DecimalFormat.Rate)
+			{
+				this.CreateRateCalculatorButton (this.frameBox);
+			}
+			else if (this.DecimalFormat == DecimalFormat.Years)
+			{
+				this.CreateYearsCalculatorButton (this.frameBox);
 			}
 
 			this.UpdateError ();
@@ -158,6 +174,98 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		}
 
 
+		protected void CreateRateCalculatorButton(Widget parent)
+		{
+			//	Crée le bouton qui ouvre le Popup de calculation du taux.
+			var text = "Calculer";
+			var width = text.GetTextWidth () + 20;
+
+			this.button = new Button
+			{
+				Parent          = parent,
+				Text            = text,
+				PreferredWidth  = width,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+			};
+
+			ToolTip.Default.SetToolTip (this.button, Res.Strings.EditorPages.Category.RateCalculatorButton.ToString ());
+
+			this.button.Clicked += delegate
+			{
+				this.ShowRateCalculatorPopup (this.button);
+			};
+		}
+
+		protected void CreateYearsCalculatorButton(Widget parent)
+		{
+			//	Crée le bouton qui ouvre le Popup de calculation du nombre d'années.
+			var text = "Calculer";
+			var width = text.GetTextWidth () + 20;
+
+			this.button = new Button
+			{
+				Parent          = parent,
+				Text            = text,
+				PreferredWidth  = width,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				Dock            = DockStyle.Left,
+			};
+
+			ToolTip.Default.SetToolTip (this.button, Res.Strings.EditorPages.Category.YearsCalculatorButton.ToString ());
+
+			this.button.Clicked += delegate
+			{
+				this.ShowYearsCalculatorPopup (this.button);
+			};
+		}
+
+
+		private void ShowRateCalculatorPopup(Widget target)
+		{
+			//	Affiche le Popup de calculation du taux.
+			var popup = new RateCalculatorPopup (accessor)
+			{
+				Rate = this.Value,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					this.Value = popup.Rate;
+					this.OnValueEdited (this.Field);
+				}
+			};
+		}
+
+		private void ShowYearsCalculatorPopup(Widget target)
+		{
+			//	Affiche le Popup de calculation du nombre d'années.
+			var popup = new YearsCalculatorPopup (accessor)
+			{
+				Years = this.Value,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					this.Value = popup.Years;
+					this.OnValueEdited (this.Field);
+				}
+			};
+		}
+
+
 		private int Width
 		{
 			get
@@ -192,6 +300,9 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					case DecimalFormat.Millimeters:
 						return "mm";
 
+					case DecimalFormat.Years:
+						return "années";
+
 					default:
 						return "";
 				}
@@ -210,6 +321,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					return TypeConverters.AmountToString (value);
 
 				case DecimalFormat.Real:
+				case DecimalFormat.Years:
 				case DecimalFormat.Millimeters:
 					return TypeConverters.DecimalToString (value);
 
@@ -229,6 +341,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 					return TypeConverters.ParseAmount (text);
 
 				case DecimalFormat.Real:
+				case DecimalFormat.Years:
 				case DecimalFormat.Millimeters:
 					return TypeConverters.ParseDecimal (text);
 
@@ -239,6 +352,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 
 		private TextField						textField;
+		private Button							button;
 		private decimal?						value;
 	}
 }

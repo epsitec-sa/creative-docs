@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 						break;
 
 					case DecimalFormat.Real:
+					case DecimalFormat.Years:
 						text = TypeConverters.DecimalToString (cell.Value);
 						break;
 				}

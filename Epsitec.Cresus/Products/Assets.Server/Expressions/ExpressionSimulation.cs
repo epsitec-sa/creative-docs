@@ -98,6 +98,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				case ArgumentType.Decimal:
 				case ArgumentType.Amount:
 				case ArgumentType.Rate:
+				case ArgumentType.Years:
 					properties.Add (new DataDecimalProperty (field, (decimal) value));
 					break;
 

@@ -166,6 +166,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					case ArgumentType.Decimal:
 					case ArgumentType.Amount:
 					case ArgumentType.Rate:
+					case ArgumentType.Years:
 						CategoriesLogic.ImportFieldDecimal (accessor, asset, e, catObj, field, field);
 						break;
 

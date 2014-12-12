@@ -9,6 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		String,
 		Decimal,
 		Rate,
+		Years,
 		Amount,
 		ComputedAmount,
 		AmortizedAmount,

@@ -29,8 +29,8 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			foreach (var argument in ArgumentsLogic.GetSortedArguments (this.accessor))
 			{
-				var type = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
-				var field = (ObjectField) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentField);
+				var type  = (ArgumentType) ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentType);
+				var field = (ObjectField)  ObjectProperties.GetObjectPropertyInt (argument, null, ObjectField.ArgumentField);
 
 				AbstractFieldController c = null;
 
@@ -46,6 +46,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 					case ArgumentType.Rate:
 						c = this.CreateDecimalController (parent, field, DecimalFormat.Rate);
+						break;
+
+					case ArgumentType.Years:
+						c = this.CreateDecimalController (parent, field, DecimalFormat.Years);
 						break;
 
 					case ArgumentType.Int:
@@ -66,11 +70,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
-				}
-
-				if (c != null)
-				{
-					this.controllers.Add (field, c);
 				}
 			}
 
@@ -102,11 +101,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void UpdateControllers()
 		{
-			//??this.methodController     .IsReadOnly =  Amortizations.IsHidden (ObjectField.MethodGuid);
-			//??this.periodicityController.IsReadOnly =  Amortizations.IsHidden (ObjectField.Periodicity);
-
-			//??this.argumentsController.SetMethod (this.methodController.Value);
-
 			var methodGuid = this.accessor.EditionAccessor.GetFieldGuid (ObjectField.MethodGuid);
 
 			foreach (var pair in this.controllers)
@@ -118,103 +112,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.IsReadOnly = hidden;
 			}
 		}
-
-
-		//??protected void CreateRateCalculatorButton()
-		//??{
-		//??	//	Crée le bouton qui ouvre le Popup de calculation du taux.
-		//??	this.rateCalculatorButton = new Button
-		//??	{
-		//??		Parent          = this.rateController.FrameBox,
-		//??		Text            = Res.Strings.EditorPages.Category.RateCalculatorButton.ToString (),
-		//??		PreferredWidth  = AbstractFieldController.maxWidth - 90,
-		//??		PreferredHeight = AbstractFieldController.lineHeight,
-		//??		ButtonStyle     = ButtonStyle.Icon,
-		//??		AutoFocus       = false,
-		//??		Dock            = DockStyle.Left,
-		//??	};
-		//??
-		//??	this.rateCalculatorButton.Clicked += delegate
-		//??	{
-		//??		this.ShowRateCalculatorPopup (this.rateCalculatorButton);
-		//??	};
-		//??}
-		//??
-		//??protected void CreateYearsCalculatorButton()
-		//??{
-		//??	//	Crée le bouton qui ouvre le Popup de calculation du nombre d'années.
-		//??	this.yearsCalculatorButton = new Button
-		//??	{
-		//??		Parent          = this.yearsController.FrameBox,
-		//??		Text            = Res.Strings.EditorPages.Category.YearsCalculatorButton.ToString (),
-		//??		PreferredWidth  = AbstractFieldController.maxWidth - 90,
-		//??		PreferredHeight = AbstractFieldController.lineHeight,
-		//??		ButtonStyle     = ButtonStyle.Icon,
-		//??		AutoFocus       = false,
-		//??		Dock            = DockStyle.Left,
-		//??	};
-		//??
-		//??	this.yearsCalculatorButton.Clicked += delegate
-		//??	{
-		//??		this.ShowYearsCalculatorPopup (this.yearsCalculatorButton);
-		//??	};
-		//??}
-
-
-		//??private void ShowRateCalculatorPopup(Widget target)
-		//??{
-		//??	//	Affiche le Popup de calculation du taux.
-		//??	var popup = new RateCalculatorPopup (accessor)
-		//??	{
-		//??		Rate = this.accessor.EditionAccessor.GetFieldDecimal (ObjectField.AmortizationRate),
-		//??	};
-		//??
-		//??	popup.Create (target, leftOrRight: false);
-		//??
-		//??	popup.ButtonClicked += delegate (object sender, string name)
-		//??	{
-		//??		if (name == "ok")
-		//??		{
-		//??			this.SetRate (popup.Rate);
-		//??		}
-		//??	};
-		//??}
-		//??
-		//??private void ShowYearsCalculatorPopup(Widget target)
-		//??{
-		//??	//	Affiche le Popup de calculation du nombre d'années.
-		//??	var popup = new YearsCalculatorPopup (accessor)
-		//??	{
-		//??		Years = this.accessor.EditionAccessor.GetFieldDecimal (ObjectField.AmortizationYearCount),
-		//??	};
-		//??
-		//??	popup.Create (target, leftOrRight: false);
-		//??
-		//??	popup.ButtonClicked += delegate (object sender, string name)
-		//??	{
-		//??		if (name == "ok")
-		//??		{
-		//??			this.SetYears (popup.Years);
-		//??		}
-		//??	};
-		//??}
-
-
-		//??private void SetRate(decimal? value)
-		//??{
-		//??	this.accessor.EditionAccessor.SetField (ObjectField.AmortizationRate, value);
-		//??	this.rateController.Value = value;
-		//??
-		//??	this.OnValueEdited (ObjectField.AmortizationRate);
-		//??}
-		//??
-		//??private void SetYears(decimal? value)
-		//??{
-		//??	this.accessor.EditionAccessor.SetField (ObjectField.AmortizationYearCount, value);
-		//??	this.yearsController.Value = value;
-		//??
-		//??	this.OnValueEdited (ObjectField.AmortizationYearCount);
-		//??}
 
 
 		private readonly Dictionary<ObjectField, AbstractFieldController> controllers;

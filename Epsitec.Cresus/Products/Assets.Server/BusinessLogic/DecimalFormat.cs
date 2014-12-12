@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		Real,
 		Amount,
 		Rate,
+		Years,
 		Millimeters,
 	}
 }

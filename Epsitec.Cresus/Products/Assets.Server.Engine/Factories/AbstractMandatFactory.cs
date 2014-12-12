@@ -345,11 +345,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		public virtual void CreateArgumentsSamples()
 		{
-			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,    false, "Rate",           "0.1");
-			this.AddArgument (ObjectField.ArgumentFirst+1, "Nombre d'années",   "Nombre d'années de l'amortissement", ArgumentType.Decimal, false, "YearCount",      "10");
-			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount,  false, "RoundAmount",    "1");
-			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount,  false, "ResidualAmount", "1");
-			this.AddArgument (ObjectField.ArgumentFirst+4, "Prorata",           "Amortissement au prorata",           ArgumentType.Bool,    false, "Prorata",        "false");
+			this.AddArgument (ObjectField.ArgumentFirst+0, "Taux",              "Taux d'amortissement",               ArgumentType.Rate,   false, "Rate",           "0.1");
+			this.AddArgument (ObjectField.ArgumentFirst+1, "Durée",             "Nombre d'années de l'amortissement", ArgumentType.Years,  false, "YearCount",      "10");
+			this.AddArgument (ObjectField.ArgumentFirst+2, "Arrondi",           "Valeur de l'arrondi",                ArgumentType.Amount, false, "RoundAmount",    "1");
+			this.AddArgument (ObjectField.ArgumentFirst+3, "Valeur résiduelle", "Valeur résiduelle",                  ArgumentType.Amount, false, "ResidualAmount", "1");
+			this.AddArgument (ObjectField.ArgumentFirst+4, "Prorata",           "Amortissement au prorata",           ArgumentType.Bool,   false, "Prorata",        "false");
 		}
 
 		protected void AddArgument(ObjectField field, string name, string description, ArgumentType type, bool nullable, string variable, string def)

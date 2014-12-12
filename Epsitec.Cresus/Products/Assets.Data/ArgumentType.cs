@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Decimal,
 		Amount,
 		Rate,
+		Years,
 		Date,
 	}
 }

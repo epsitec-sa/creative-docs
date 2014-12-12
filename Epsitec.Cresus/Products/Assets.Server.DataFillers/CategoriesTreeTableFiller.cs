@@ -70,6 +70,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Rate, 100, name));
 							break;
 
+						case ArgumentType.Years:
+							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Years, 100, name));
+							break;
+
 						case ArgumentType.Int:
 							columns.Add (new TreeTableColumnDescription (field, TreeTableColumnType.Int, 100, name));
 							break;
@@ -154,6 +158,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						case ArgumentType.Decimal:
 						case ArgumentType.Amount:
 						case ArgumentType.Rate:
+						case ArgumentType.Years:
 							{
 								var value = ObjectProperties.GetObjectPropertyDecimal (obj, this.Timestamp, this.argumentFields[a]);
 								var cell = new TreeTableCellDecimal (value, cellState);

@@ -172,6 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case ArgumentType.Decimal:
 				case ArgumentType.Amount:
 				case ArgumentType.Rate:
+				case ArgumentType.Years:
 					var d = ObjectProperties.GetObjectPropertyDecimal (asset, timestamp, field);
 					if (d.HasValue)
 					{

@@ -253,6 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 								break;
 
 							case DecimalFormat.Real:
+							case DecimalFormat.Years:
 								text = TypeConverters.DecimalToString (d);
 								alignment = ContentAlignment.MiddleRight;
 								break;

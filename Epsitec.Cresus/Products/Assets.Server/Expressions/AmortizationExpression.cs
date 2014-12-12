@@ -213,6 +213,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					case ArgumentType.Decimal:
 					case ArgumentType.Amount:
 					case ArgumentType.Rate:
+					case ArgumentType.Years:
 						if (def.Last () == '%')
 						{
 							var n = TypeConverters.ParseRate (def);
@@ -282,6 +283,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				case ArgumentType.Decimal:
 				case ArgumentType.Amount:
 				case ArgumentType.Rate:
+				case ArgumentType.Years:
 					return "decimal";
 
 				case ArgumentType.Date:

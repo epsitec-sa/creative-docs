@@ -57,6 +57,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Rate, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 								break;
 
+							case DecimalFormat.Years:
+								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Years, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
+								break;
+
 							case DecimalFormat.Amount:
 								columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.Amount, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 								break;

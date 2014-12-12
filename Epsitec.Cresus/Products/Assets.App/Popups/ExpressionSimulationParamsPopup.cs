@@ -100,6 +100,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						});
 						break;
 
+					case ArgumentType.Years:
+						list.Add (new StackedControllerDescription
+						{
+							StackedControllerType = StackedControllerType.Decimal,
+							Label                 = name,
+							DecimalFormat         = DecimalFormat.Years,
+						});
+						break;
+
 					case ArgumentType.Int:
 						list.Add (new StackedControllerDescription
 						{

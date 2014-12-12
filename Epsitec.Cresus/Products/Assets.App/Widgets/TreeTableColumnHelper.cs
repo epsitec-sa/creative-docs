@@ -34,6 +34,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					column = new TreeTableColumnDecimal (DecimalFormat.Rate);
 					break;
 
+				case TreeTableColumnType.Years:
+					column = new TreeTableColumnDecimal (DecimalFormat.Years);
+					break;
+
 				case TreeTableColumnType.Amount:
 					column = new TreeTableColumnDecimal (DecimalFormat.Amount);
 					break;

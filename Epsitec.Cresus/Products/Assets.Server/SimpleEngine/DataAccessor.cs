@@ -565,6 +565,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					case ArgumentType.Decimal:
 					case ArgumentType.Amount:
 					case ArgumentType.Rate:
+					case ArgumentType.Years:
 						return FieldType.Decimal;
 
 					case ArgumentType.Int:
@@ -636,6 +637,9 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 					case ArgumentType.Rate:
 						return DecimalFormat.Rate;
+
+					case ArgumentType.Years:
+						return DecimalFormat.Years;
 
 					default:
 						return DecimalFormat.Real;

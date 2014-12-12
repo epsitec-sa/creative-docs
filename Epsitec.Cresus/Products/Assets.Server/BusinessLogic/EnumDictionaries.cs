@@ -161,6 +161,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					s = "Pour-cent";
 					break;
 
+				case ArgumentType.Years:
+					s = "Années";
+					break;
+
 				case ArgumentType.Date:
 					s = "Date";
 					break;
@@ -294,6 +298,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				yield return ArgumentType.Amount;
 				yield return ArgumentType.Rate;
+				yield return ArgumentType.Years;
 				yield return ArgumentType.Decimal;
 				yield return ArgumentType.Int;
 				yield return ArgumentType.Bool;
