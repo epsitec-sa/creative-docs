@@ -71,6 +71,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					default:
 						throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", type));
 				}
+
+				if (c != null)
+				{
+					this.controllers.Add (field, c);
+				}
 			}
 
 			this.methodController.ValueEdited += delegate

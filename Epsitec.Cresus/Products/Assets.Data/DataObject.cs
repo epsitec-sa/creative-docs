@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public List<DataEvent> Events
 		{
 			//	Retourne tous les événements triés chronologiquement.
-			//	Le tableau ne doit être utilisé qu'en lecture.
+			//	La liste ne doit être utilisée qu'en lecture.
 			get
 			{
 				this.UpdateSortedList ();

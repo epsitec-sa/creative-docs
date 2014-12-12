@@ -9,6 +9,10 @@ using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
+	/// <summary>
+	/// Tout ce qui est défini ici est accessible par l'utilisateur dans les expressions
+	/// qui déterminent le calcul de l'amortissement.
+	/// </summary>
 	public abstract class AbstractCalculator
 	{
 		public AbstractCalculator(AmortizationDetails details)

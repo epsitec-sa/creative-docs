@@ -125,13 +125,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				};
 			}
 
-			if (this.DecimalFormat == DecimalFormat.Rate)
+			switch (this.DecimalFormat)
 			{
-				this.CreateRateCalculatorButton (this.frameBox);
-			}
-			else if (this.DecimalFormat == DecimalFormat.Years)
-			{
-				this.CreateYearsCalculatorButton (this.frameBox);
+				case DecimalFormat.Rate:
+					this.CreateRateCalculatorButton (this.frameBox);
+					break;
+
+				case DecimalFormat.Years:
+					this.CreateYearsCalculatorButton (this.frameBox);
+					break;
 			}
 
 			this.UpdateError ();
