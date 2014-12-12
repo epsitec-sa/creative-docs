@@ -149,12 +149,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return System.Math.Max (value, residual);
 		}
 
-		//??protected decimal Override(decimal value)
-		//??{
-		//??	//	Retourne la valeur imposée this.ForcedAmount si elle est définie.
-		//??	return this.ForcedAmount.GetValueOrDefault (value);
-		//??}
-
 		protected void Trace(params object[] args)
 		{
 			//	Conserve les objets donnés, qui seront affichés lors du debug

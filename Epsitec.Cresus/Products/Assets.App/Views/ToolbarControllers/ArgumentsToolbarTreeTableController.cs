@@ -140,6 +140,15 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
+			var assetsCount = ArgumentsLogic.GetReferencedMethods (this.accessor, this.SelectedGuid).Count ();
+			if (assetsCount > 0)
+			{
+				//?string message = string.Format (Res.Strings.ToolbarControllers.PersonsTreeTable.DeleteError.ToString (), assetsCount);
+				string message = string.Format ("Il y a {0} méthodes qui référencent cet argument. Il ne peut pas être supprimé", assetsCount);
+				MessagePopup.ShowError (target, message);
+				return;
+			}
+
 			var name = ArgumentsLogic.GetSummary (this.accessor, this.SelectedGuid);
 			var question = string.Format (Res.Strings.ToolbarControllers.ArgumentsTreeTable.DeleteQuestion.ToString (), name);
 

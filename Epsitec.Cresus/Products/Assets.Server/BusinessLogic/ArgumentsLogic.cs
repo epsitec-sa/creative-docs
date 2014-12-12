@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -12,6 +13,32 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class ArgumentsLogic
 	{
+		public static IEnumerable<Guid> GetReferencedMethods(DataAccessor accessor, Guid argumentGuid)
+		{
+			//	Vérifie quels sont les méthodes d'amortissement qui référencent un
+			//	argument donné. Retourne les Guid des méthodes concernées, ou aucun
+			//	si l'argument n'est pas référencé.
+			var hash = new HashSet<Guid> ();
+
+			foreach (var method in accessor.Mandat.GetData (BaseType.Methods))
+			{
+				foreach (var e in method.Events)
+				{
+					foreach (var field in DataAccessor.ArgumentFields)
+					{
+						var p = e.GetProperty (field) as DataGuidProperty;
+						if (p != null && p.Value == argumentGuid)
+						{
+							hash.Add (method.Guid);
+						}
+					}
+				}
+			}
+
+			return hash;
+		}
+
+
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom complet d'une argument d'une méthode d'amortissement.

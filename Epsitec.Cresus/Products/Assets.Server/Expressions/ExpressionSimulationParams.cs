@@ -26,14 +26,21 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		//??public ExpressionSimulationParams(System.Xml.XmlReader reader)
-		//??{
-		//??}
+		public ExpressionSimulationParams(System.Xml.XmlReader reader)
+		{
+			// Todo...
+			this.Range         = DateRange.Empty;
+			this.Periodicity   = Periodicity.Unknown;
+			this.InitialAmount = 0.0m;
+
+			this.arguments = new Dictionary<ObjectField, object> ();
+		}
 
 
-		//??public void Serialize(System.Xml.XmlWriter writer, string name)
-		//??{
-		//??}
+		public void Serialize(System.Xml.XmlWriter writer, string name)
+		{
+			// Todo...
+		}
 
 
 		public static ExpressionSimulationParams Default = new ExpressionSimulationParams (
