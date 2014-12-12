@@ -154,11 +154,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool simulation, params AbstractDataProperty[] requiredProperties)
 		{
-			var obj = new DataObject (simulation ? null : this.UndoManager, simulation);
+			var undoManager = simulation ? null : this.UndoManager;
+
+			var obj = new DataObject (undoManager, simulation);
 			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
-			var e = new DataEvent (this.UndoManager, timestamp, EventType.Input);
+			var e = new DataEvent (undoManager, timestamp, EventType.Input);
 			obj.AddEvent (e);
 
 			//	Ajoute la date de l'opération.

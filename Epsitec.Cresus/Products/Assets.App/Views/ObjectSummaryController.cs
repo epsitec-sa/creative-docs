@@ -134,8 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					for (int row = 0; row < rowsCount; row++)
 					{
 						var tile = this.GetTile (column, row);
-						bool hidden = Amortizations.IsHidden (tile.Field);
-						var cell = this.GetCell (tile, hidden);
+						var cell = this.GetCell (tile, hidden: false);
 						columns.Add (cell);
 
 						if (cell.HasValue && !cell.Value.Label)

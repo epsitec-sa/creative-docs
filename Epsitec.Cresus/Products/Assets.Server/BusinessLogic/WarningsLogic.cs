@@ -484,15 +484,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					foreach (var field in fields)
 					{
-						//	Pour les catégories d'amortissements, on ne vérifie pas les
-						//	champs qui n'ont pas de sens, selon la méthode d'amortissement.
-						if (baseType.Kind == BaseTypeKind.Categories)
-						{
-							if (Amortizations.IsHidden (field))
-							{
-								continue;  // ce champ n'a pas de sens
-							}
-						}
+						//??//	Pour les catégories d'amortissements, on ne vérifie pas les
+						//??//	champs qui n'ont pas de sens, selon la méthode d'amortissement.
+						//??if (baseType.Kind == BaseTypeKind.Categories)
+						//??{
+						//??	if (Amortizations.IsHidden (field))
+						//??	{
+						//??		continue;  // ce champ n'a pas de sens
+						//??	}
+						//??}
 
 						WarningsLogic.CheckEmpty (warnings, accessor, baseType, obj, field);
 					}
@@ -514,10 +514,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie les champs de l'événement d'un objet d'immobilisation.
 			foreach (var field in fields)
 			{
-				if (Amortizations.IsHidden (field))
-				{
-					continue;
-				}
+				//??if (Amortizations.IsHidden (field))
+				//??{
+				//??	continue;
+				//??}
 
 				var p = ObjectProperties.GetObjectProperty (asset, e.Timestamp, field, synthetic: true);
 				WarningsLogic.CheckEmpty (warnings, accessor, BaseType.Assets, asset, e.Guid, field, p);

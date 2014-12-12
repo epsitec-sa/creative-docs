@@ -463,45 +463,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
-		public static bool IsHidden(ObjectField field)
-		{
-			//	Indique si un champ n'a pas de sens pour une méthode d'amortissement donnée.
-			//	Par défaut, un champ est visible. On teste spécifiquement les champs à cacher.
-			//	Ainsi, les champs ajoutés lors de développments futurs seront visibles par défaut.
-			//	false -> champ utile à montrer normalement
-			//	true  -> champ inutile à cacher
-			//??switch (method)
-			//??{
-			//??	case AmortizationMethod.RateLinear:
-			//??	case AmortizationMethod.RateDegressive:
-			//??		//	Si l'amortissement est calculé selon le taux, le nombre d'années
-			//??		//	ne sert à rien.
-			//??		return field == ObjectField.AmortizationYearCount;
-			//??
-			//??	case AmortizationMethod.YearsLinear:
-			//??	case AmortizationMethod.YearsDegressive:
-			//??		//	Si l'amortissement est calculé selon le nombre d'années, le taux
-			//??		//	ne sert à rien.
-			//??		return field == ObjectField.AmortizationRate
-			//??			|| field == ObjectField.Prorata;
-			//??
-			//??	case AmortizationMethod.Custom:
-			//??		return false;
-			//??
-			//??	default:
-			//??		//	S'il n'y a pas d'amortissement généré automatiquement, tous les
-			//??		//	champs suivants ne servent à rien.
-			//??		return field == ObjectField.AmortizationYearCount
-			//??			|| field == ObjectField.AmortizationRate
-			//??			|| field == ObjectField.Periodicity
-			//??			|| field == ObjectField.Prorata
-			//??			|| field == ObjectField.Round
-			//??			|| field == ObjectField.ResidualValue;
-			//??}
-			return false;
-		}
-
-	
 		private readonly DataAccessor			accessor;
 	}
 }
