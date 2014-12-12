@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						if (field == ObjectField.MainValue)
 						{
-							Amortizations.CreateEntry (accessor, obj, e);
+							Amortizations.UpdateAmortizedAmount (accessor, obj, e, field, ref lastAmount);
 						}
 						else
 						{
@@ -395,6 +395,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					}
 				}
 			}
+		}
+
+		private static void UpdateAmortizedAmount(DataAccessor accessor, DataObject asset, DataEvent e, ObjectField field, ref decimal? lastAmount)
+		{
+			var current = Amortizations.GetAmortizedAmount (e, field);
+
+			if (current.HasValue)
+			{
+				if (lastAmount.HasValue)
+				{
+					current = AmortizedAmount.SetInitialAmount (current.Value, lastAmount);
+					Amortizations.SetAmortizedAmount (e, current);
+				}
+
+				lastAmount = current.Value.FinalAmount;
+			}
+
+			Amortizations.CreateEntry (accessor, asset, e);
 		}
 
 		private static void CreateEntry(DataAccessor accessor, DataObject asset, DataEvent e)
@@ -445,6 +463,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			else
 			{
 				e.RemoveProperty (field);
+			}
+		}
+
+		private static AmortizedAmount? GetAmortizedAmount(DataEvent e, ObjectField field)
+		{
+			var p = e.GetProperty (field) as DataAmortizedAmountProperty;
+			if (p == null)
+			{
+				return null;
+			}
+			else
+			{
+				return p.Value;
 			}
 		}
 

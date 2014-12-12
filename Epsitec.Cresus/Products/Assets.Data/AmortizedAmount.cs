@@ -67,6 +67,19 @@ namespace Epsitec.Cresus.Assets.Data
 
 
 		#region Constructors helpers
+		public static AmortizedAmount SetInitialAmount(AmortizedAmount model, decimal? initialAmount)
+		{
+			return new AmortizedAmount
+			(
+				initialAmount,
+				model.FinalAmount,
+				model.Trace,
+				model.EntryScenario,
+				model.EntryGuid,
+				model.EntrySeed
+			);
+		}
+
 		public static AmortizedAmount SetFinalAmount(AmortizedAmount model, decimal? finalAmount)
 		{
 			return new AmortizedAmount
