@@ -384,11 +384,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
 				this.UpdateField (this.initialAmountTextField, true);
-				this.UpdateField (this.finalAmountTextField, this.IsAmortization);
+				this.UpdateField (this.finalAmountTextField, !this.IsFinalEnable);
 				this.UpdateField (this.traceTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
-				this.lines[2].Visibility = this.IsAmortization;
+				this.lines[2].Visibility = !this.IsFinalEnable;
 
 				this.UpdateEntry ();
 			}
@@ -502,18 +502,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				foreach (var scenario in EnumDictionaries.EnumEntryScenarios)
 				{
-					if (this.IsAmortization)
+					if (this.IsFinalEnable)
 					{
-						if (scenario != EntryScenario.AmortizationAuto &&
-							scenario != EntryScenario.AmortizationExtra)
+						if (scenario == EntryScenario.AmortizationAuto ||
+							scenario == EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
 					}
 					else
 					{
-						if (scenario == EntryScenario.AmortizationAuto ||
-							scenario == EntryScenario.AmortizationExtra)
+						if (scenario != EntryScenario.AmortizationAuto &&
+							scenario != EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
@@ -544,13 +544,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private bool IsAmortization
+		private bool IsFinalEnable
 		{
 			get
 			{
-				return this.eventType == EventType.AmortizationExtra
-					|| this.eventType == EventType.AmortizationPreview
-					|| this.eventType == EventType.AmortizationAuto;
+				return this.eventType != EventType.AmortizationPreview
+					&& this.eventType != EventType.AmortizationAuto;
 			}
 		}
 
