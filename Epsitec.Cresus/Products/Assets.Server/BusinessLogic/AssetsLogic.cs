@@ -78,6 +78,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public static bool HasFuturAmortizations(DataObject asset, Timestamp timestamp)
+		{
+			//	Retourne true s'il existe des amortissements dans le futur.
+			return asset.Events
+				.Where (x => x.Timestamp > timestamp &&
+					(x.Type == EventType.AmortizationAuto   ||
+					 x.Type == EventType.AmortizationExtra  ||
+					 x.Type == EventType.AmortizationPreview))
+				.Any ();
+		}
+
+
 		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.

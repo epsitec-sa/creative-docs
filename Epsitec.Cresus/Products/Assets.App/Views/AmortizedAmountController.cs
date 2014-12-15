@@ -14,6 +14,7 @@ using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.DataFillers;
+using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
@@ -131,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.CreateLabel (this.lines[1], 100, "Valeur finale");
 			this.finalAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, this.ChangeFinalAmount);
+			this.CreateUnlockButton (this.lines[1]);
 
 			this.CreateLabel (this.lines[2], 100, "Trace");
 			this.traceTextField = this.CreateTextField (this.lines[2], AbstractFieldController.maxWidth, null);
@@ -174,6 +176,27 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var line = this.CreateFrame (parent);
 				this.CreateButtons (line);
 			}
+		}
+
+		private void CreateUnlockButton(Widget parent)
+		{
+			this.unlockButton = new Button
+			{
+				Parent          = parent,
+				Text            = "Déverrouiller",
+				ButtonStyle     = ButtonStyle.Icon,
+				PreferredWidth  = 90,
+				PreferredHeight = AbstractFieldController.lineHeight,
+				Dock            = DockStyle.Left,
+			};
+
+			this.unlockButton.Clicked += delegate
+			{
+				var question = "Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?";
+				YesNoPopup.Show (this.unlockButton, question, delegate
+				{
+				});
+			};
 		}
 
 		private void CreateScenarioCombo(Widget parent)
@@ -293,9 +316,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			new StaticText
 			{
 				Parent           = parent,
-				Dock             = DockStyle.Fill,
-				PreferredHeight  = AbstractFieldController.lineHeight - 1,
 				Text             = "CHF",
+				PreferredWidth   = 40,
+				PreferredHeight  = AbstractFieldController.lineHeight - 1,
+				Dock             = DockStyle.Left,
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Margins          = new Margins (10, 0, 1, 0),
@@ -383,8 +407,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
+				bool isFinalEnable = this.IsFinalEnable;
+				bool unlockEnable = false;
+				if (isFinalEnable)
+				{
+					var asset = this.accessor.EditionAccessor.EditedObject;
+					var timestamp = this.accessor.EditionAccessor.EditedTimestamp.GetValueOrDefault ();
+					if (AssetsLogic.HasFuturAmortizations (asset, timestamp))
+					{
+						unlockEnable = true;
+						isFinalEnable = false;
+					}
+				}
+
 				this.UpdateField (this.initialAmountTextField, true);
-				this.UpdateField (this.finalAmountTextField, !this.IsFinalEnable);
+				this.UpdateField (this.finalAmountTextField, !isFinalEnable);
+				this.unlockButton.Visibility = unlockEnable;
 				this.UpdateField (this.traceTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
@@ -641,6 +679,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextField						initialAmountTextField;
 		private TextField						finalAmountTextField;
+		private Button							unlockButton;
 		private TextField						traceTextField;
 
 		private TextFieldCombo					scenarioFieldCombo;
