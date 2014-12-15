@@ -150,6 +150,16 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 				this.ValueEdited (field);
 			};
 
+			this.currentPage.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			this.currentPage.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			this.currentPage.Navigate += delegate (object sender, Timestamp timestamp)
 			{
 				this.OnNavigate (timestamp);

@@ -78,12 +78,20 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 		public event EventHandler<ObjectField> ValueChanged;
 
 
-		private void OnDataChanged()
+		protected void OnDataChanged()
 		{
 			this.DataChanged.Raise (this);
 		}
 
 		public event EventHandler DataChanged;
+
+
+		protected void OnDeepUpdate()
+		{
+			this.DeepUpdate.Raise (this);
+		}
+
+		public event EventHandler DeepUpdate;
 		#endregion
 
 

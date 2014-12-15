@@ -114,6 +114,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.DataChanged ();
 				};
+
+				this.objectEditor.DeepUpdate += delegate
+				{
+					this.DeepUpdateUI ();
+				};
 			}
 		}
 

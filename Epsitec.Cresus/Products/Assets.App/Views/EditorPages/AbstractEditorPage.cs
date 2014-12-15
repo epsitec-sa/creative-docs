@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
@@ -350,6 +351,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -395,6 +406,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -438,6 +459,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -486,6 +517,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -517,6 +558,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -546,6 +597,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			controller.ValueEdited += delegate (object sender, ObjectField of)
 			{
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -594,6 +655,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -637,6 +708,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -684,6 +765,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -725,6 +816,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -775,6 +876,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -818,6 +929,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				this.OnValueEdited (of);
 			};
 
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
 			{
 				this.fieldFocus = of;
@@ -859,6 +980,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -905,6 +1036,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				controller.PropertyState = this.GetPropertyState (of);
 
 				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
 			};
 
 			controller.SetFieldFocus += delegate (object sender, ObjectField of)
@@ -1124,6 +1265,22 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		}
 
 		public event EventHandler<ObjectField> ValueEdited;
+
+
+		protected void OnDataChanged()
+		{
+			this.DataChanged.Raise (this);
+		}
+
+		public event EventHandler DataChanged;
+
+
+		protected void OnDeepUpdate()
+		{
+			this.DeepUpdate.Raise (this);
+		}
+
+		public event EventHandler DeepUpdate;
 		#endregion
 
 

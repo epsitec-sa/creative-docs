@@ -195,6 +195,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var question = "Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?";
 				YesNoPopup.Show (this.unlockButton, question, delegate
 				{
+					var a = new Amortizations (this.accessor);
+					var guid = this.accessor.EditionAccessor.EditedObject.Guid;
+					var date = this.accessor.EditionAccessor.EditedTimestamp.GetValueOrDefault ().Date.AddDays (1);
+					a.Delete (date, guid);
+
+					this.OnDataChanged ();
+					this.OnDeepUpdate ();
+					//mettre à jour la timeline!!!
+					//??this.UpdateUI ();
 				});
 			};
 		}
@@ -636,6 +645,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 		public event EventHandler ValueEdited;
+
+
+		private void OnDataChanged()
+		{
+			this.DataChanged.Raise (this);
+		}
+
+		public event EventHandler DataChanged;
+
+
+		private void OnDeepUpdate()
+		{
+			this.DeepUpdate.Raise (this);
+		}
+
+		public event EventHandler DeepUpdate;
 
 
 		protected void OnFocusEngage()

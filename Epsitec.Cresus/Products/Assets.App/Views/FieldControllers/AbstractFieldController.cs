@@ -395,6 +395,22 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		public event EventHandler<ObjectField> ValueEdited;
 
 
+		protected void OnDataChanged()
+		{
+			this.DataChanged.Raise (this);
+		}
+
+		public event EventHandler DataChanged;
+
+
+		protected void OnDeepUpdate()
+		{
+			this.DeepUpdate.Raise (this);
+		}
+
+		public event EventHandler DeepUpdate;
+
+
 		protected void OnSetFieldFocus(ObjectField field)
 		{
 			this.SetFieldFocus.Raise (this, field);
