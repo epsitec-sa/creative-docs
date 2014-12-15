@@ -195,15 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var question = "Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?";
 				YesNoPopup.Show (this.unlockButton, question, delegate
 				{
-					var a = new Amortizations (this.accessor);
-					var guid = this.accessor.EditionAccessor.EditedObject.Guid;
-					var date = this.accessor.EditionAccessor.EditedTimestamp.GetValueOrDefault ().Date.AddDays (1);
-					a.Delete (date, guid);
-
-					this.OnDataChanged ();
-					this.OnDeepUpdate ();
-					//mettre à jour la timeline!!!
-					//??this.UpdateUI ();
+					this.DeleteFuturAmortizations ();
 				});
 			};
 		}
@@ -416,7 +408,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateScenario (this.scenarioFieldCombo);
 				AmortizedAmountController.SetScenario (this.scenarioFieldCombo, this.EntryScenario);
 
-				bool isFinalEnable = this.IsFinalEnable;
+				bool isFinalEnable = !this.IsAmortizationAuto;
 				bool unlockEnable = false;
 				if (isFinalEnable)
 				{
@@ -435,7 +427,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateField (this.traceTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
-				this.lines[2].Visibility = !this.IsFinalEnable;
+				this.lines[2].Visibility = this.IsAmortizationAuto;
 
 				this.UpdateEntry ();
 			}
@@ -549,18 +541,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				foreach (var scenario in EnumDictionaries.EnumEntryScenarios)
 				{
-					if (this.IsFinalEnable)
+					if (this.IsAmortizationAuto)
 					{
-						if (scenario == EntryScenario.AmortizationAuto ||
-							scenario == EntryScenario.AmortizationExtra)
+						if (scenario != EntryScenario.AmortizationAuto &&
+							scenario != EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
 					}
 					else
 					{
-						if (scenario != EntryScenario.AmortizationAuto &&
-							scenario != EntryScenario.AmortizationExtra)
+						if (scenario == EntryScenario.AmortizationAuto ||
+							scenario == EntryScenario.AmortizationExtra)
 						{
 							continue;
 						}
@@ -591,12 +583,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private bool IsFinalEnable
+		private void DeleteFuturAmortizations()
+		{
+			this.accessor.UndoManager.Start ();
+			this.accessor.UndoManager.SetDescription ("Suppression des amortissements postérieurs");
+
+			var a = new Amortizations (this.accessor);
+			var guid = this.accessor.EditionAccessor.EditedObject.Guid;
+			var date = this.accessor.EditionAccessor.EditedTimestamp.GetValueOrDefault ().Date.AddDays (1);
+			a.Delete (date, guid);
+
+			this.OnDataChanged ();
+			this.OnDeepUpdate ();
+
+			this.accessor.UndoManager.SetAfterViewState ();
+		}
+
+
+		private bool IsAmortizationAuto
 		{
 			get
 			{
-				return this.eventType != EventType.AmortizationPreview
-					&& this.eventType != EventType.AmortizationAuto;
+				return this.eventType == EventType.AmortizationPreview
+					|| this.eventType == EventType.AmortizationAuto;
 			}
 		}
 
