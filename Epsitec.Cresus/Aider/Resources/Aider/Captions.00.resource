@@ -732,7 +732,7 @@
   <data name="Fld.AiderOfficeManagement.EventsInPreparation" id="OG53">&lt;s:data id="_0" f:Name="EventsInPreparation" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.EventsToValidate" id="OH53">&lt;s:data id="_0" f:Name="EventsToValidate" /&gt;</data>
   <data name="Cmd.Base.ShowAiderEventParticipants" id="OI53">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderEventParticipants" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderEvent.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Participants'}}" /&gt;</data>
-  <data name="Fld.AiderEvent.Participants" id="OJ53">&lt;s:data id="_0" f:Name="Participants" /&gt;</data>
+  <data name="Fld.AiderEvent.Participants" id="OJ53">&lt;s:data id="_0" f:Name="Participants" f:Labels="{Collection {Text 'Participants'}}" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.HusbandFather" id="OK53">&lt;s:data id="_0" f:Name="HusbandFather" f:Labels="{Collection {Text 'Père de l\'époux'}}" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.HusbandMother" id="OL53">&lt;s:data id="_0" f:Name="HusbandMother" f:Labels="{Collection {Text 'Mère de l\'époux'}}" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.SpouseFather" id="OM53">&lt;s:data id="_0" f:Name="SpouseFather" f:Labels="{Collection {Text 'Père de l\'épouse'}}" /&gt;</data>
@@ -746,7 +746,7 @@
   <data name="Val.Enum.EventKind.CultOfTheAlliance" id="OV53">&lt;s:data id="_0" f:Name="CultOfTheAlliance" f:Labels="{Collection {Text 'Culte de l’Alliance '}}" /&gt;</data>
   <data name="Val.Enum.EventKind.Other" id="O063">&lt;s:data id="_0" f:Name="Other" f:Labels="{Collection {Text 'Autre'}}" /&gt;</data>
   <data name="Typ.Enum.EventKind" id="OS53">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.EventKind" f:_1.SystemType="E:Epsitec.Aider.Enumerations.EventKind, Aider" f:_2.EnumValues="{Collection {Text '0 [LVOT53]'}, {Text '1 [LVOU53]'}, {Text '2 [LVOV53]'}, {Text '3 [LVO063]'}}" f:Labels="{Collection {Text 'Type de célébration'}}" /&gt;</data>
-  <data name="Fld.AiderEvent.Kind" id="O163">&lt;s:data id="_0" f:Name="Kind" /&gt;</data>
+  <data name="Fld.AiderEvent.Kind" id="O163">&lt;s:data id="_0" f:Name="Kind" f:Labels="{Collection {Text 'Type d\'événement'}}" /&gt;</data>
   <data name="Fld.AiderEventReport.DataFormat" id="O363">&lt;s:data id="_0" f:Name="DataFormat" /&gt;</data>
   <data name="Fld.AiderEventReport.ProcessorUrl" id="O463">&lt;s:data id="_0" f:Name="ProcessorUrl" /&gt;</data>
   <data name="Fld.AiderEventReport.Event" id="O563">&lt;s:data id="_0" f:Name="Event" /&gt;</data>
