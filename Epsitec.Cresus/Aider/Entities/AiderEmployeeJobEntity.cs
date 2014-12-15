@@ -24,6 +24,11 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (this.Office.OfficeName, "(~", this.Description, "~)");
 		}
+
+		public FormattedText GetAddressLabelText(PostalAddressType type = PostalAddressType.Default)
+		{
+			return this.Employee.PersonContact.GetAddressLabelText (type);
+		}
 		
 		public void Delete(BusinessContext context)
 		{

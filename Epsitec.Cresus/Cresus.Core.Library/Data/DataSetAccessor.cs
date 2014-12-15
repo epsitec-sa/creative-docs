@@ -211,7 +211,12 @@ namespace Epsitec.Cresus.Core.Data
 			var dataSetSettings = session.GetDataSetSettings (this.dataSetMetadata);
 			
 			request.AddCondition (this.IsolatedDataContext, example, dataSetSettings.Filter);
-			request.AddCondition (this.IsolatedDataContext, example, dataSetSettings.ActiveQuery);
+			
+			if(dataSetSettings.ActiveQuery != null)
+			{
+				request.AddCondition (this.IsolatedDataContext, example, dataSetSettings.ActiveQuery);
+			}
+			
 
 			var additionalFilter = session.GetAdditionalFilter (this.dataSetMetadata, example);
 			request.AddCondition (this.IsolatedDataContext, example, additionalFilter);

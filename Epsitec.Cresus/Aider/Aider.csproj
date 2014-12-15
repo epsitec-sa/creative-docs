@@ -405,6 +405,7 @@
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderLegalPersonTextFactory0.cs" />
+    <Compile Include="Labels\AiderEmployeeJobLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderSubscriptionLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderSubscriptionRefusalLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderHouseholdLabelTextFactory0.cs" />
