@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		{
 			var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
-			var aa = AmortizedAmount.SetAmounts(p.Value, initialAmount, finalAmount, null);
+			var aa = AmortizedAmount.SetAmounts(p.Value, initialAmount, finalAmount, null, null);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 

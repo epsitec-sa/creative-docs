@@ -112,6 +112,7 @@
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />
     <Compile Include="BusinessLogic\AccountCategory.cs" />
     <Compile Include="BusinessLogic\AccountType.cs" />
+    <Compile Include="Expressions\ExpressionResult.cs" />
     <Compile Include="Expressions\ExpressionSimulationNode.cs" />
     <Compile Include="Expressions\ExpressionSimulationParams.cs" />
     <Compile Include="Expressions\ExpressionSimulation.cs" />

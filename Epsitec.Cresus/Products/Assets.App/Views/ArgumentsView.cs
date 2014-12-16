@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return new ArgumentsViewState
 				{
 					ViewType     = ViewType.Arguments,
-					PageType     = PageType.Method,  // pour éditer directement
+					PageType     = PageType.Argument,  // pour éditer directement
 					Field        = field,
 					SelectedGuid = expressionGuid,
 				};

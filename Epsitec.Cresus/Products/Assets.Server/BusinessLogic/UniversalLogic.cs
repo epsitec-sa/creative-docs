@@ -41,6 +41,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					case BaseTypeKind.Persons:
 						return PersonsLogic.GetSummary (accessor, guid);
+
+					case BaseTypeKind.Methods:
+						return MethodsLogic.GetSummary (accessor, guid);
+
+					case BaseTypeKind.Arguments:
+						return ArgumentsLogic.GetSummary (accessor, guid);
 				}
 			}
 

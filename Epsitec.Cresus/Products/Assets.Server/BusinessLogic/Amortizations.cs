@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (methodObj != null)
 				{
-					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, obj, timestamp, methodObj);
+					var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, methodObj, obj, timestamp);
 					var expression = ObjectProperties.GetObjectPropertyString (methodObj, null, ObjectField.Expression);
 					var periodicity = (Periodicity) period;
 
@@ -301,12 +301,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var result = Amortizations.ComputeAmortization (this.accessor, details);
 
-				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, result.Value, result.Trace);
+				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, result.Value, result.Trace, result.Error);
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
 
-		public static AbstractCalculator.Result ComputeAmortization(DataAccessor accessor, AmortizationDetails details)
+		public static ExpressionResult ComputeAmortization(DataAccessor accessor, AmortizationDetails details)
 		{
 			//	Calcule un amortissement à partir d'une expression.
 			if (!string.IsNullOrEmpty (details.Def.Expression))  // à partir d'une expression ?
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				return accessor.AmortizationExpressions.Evaluate (details);
 			}
 
-			return AbstractCalculator.Result.Empty;  // impossible de calculer quoi que ce soit
+			return ExpressionResult.Empty;  // impossible de calculer quoi que ce soit
 		}
 
 
@@ -492,6 +492,19 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 		#endregion
+
+
+		public static AmortizationDetails GetDefaultDetails(string arguments, string expression)
+		{
+			var startDate = new System.DateTime (2000, 1, 1);
+			var endDate = startDate.AddYears (1);
+			var range = new DateRange (startDate, endDate);
+
+			var def = new AmortizationDefinition (range, startDate, arguments, expression, Periodicity.Annual);
+			var history = new HistoryDetails (startDate, 100.0m, startDate, 100.0m, 100.0m);
+
+			return new AmortizationDetails (def, history);
+		}
 
 
 		private readonly DataAccessor			accessor;

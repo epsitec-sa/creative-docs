@@ -905,6 +905,18 @@ namespace Epsitec.Cresus.Assets.Server
 					}
 				}
 				
+				public static class Expression
+				{
+					//	designer:str/IUKG301
+					public static global::Epsitec.Common.Types.FormattedText CompileError
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544432));
+						}
+					}
+				}
+				
 				public static class Ratio
 				{
 					//	designer:str/IUKV101
@@ -1918,6 +1930,18 @@ namespace Epsitec.Cresus.Assets.Server
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544385);
+						}
+					}
+				}
+				
+				public static class Expression
+				{
+					//	designer:str/IUKG301
+					public static global::Epsitec.Common.Support.Druid CompileError
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544432);
 						}
 					}
 				}

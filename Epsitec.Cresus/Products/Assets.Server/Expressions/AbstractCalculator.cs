@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return this.traceBuilder.ToString ();
 		}
 
+		public string Error;
+
 
 		#region Math facade
 		//	Facade de System.Math pour les méthodes utiles dans le calcul d'un amortissement,
@@ -322,40 +324,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 		#endregion
 	
-
-		public struct Result
-		{
-			public Result(decimal value, string trace)
-			{
-				//	ATTENTION: Même si VS dit que ce n'est pas utilisé, cela l'est quand
-				//	même (AmortizationExpression.skeletonLines).
-				this.Value = value;
-				this.Trace = trace;
-				this.isEmpty = false;
-			}
-
-			private Result(bool isEmpty, decimal value, string trace)
-			{
-				this.Value = value;
-				this.Trace = trace;
-				this.isEmpty = isEmpty;
-			}
-
-			public bool IsEmpty
-			{
-				get
-				{
-					return this.isEmpty;
-				}
-			}
-
-			public static Result Empty = new Result (true, 0, null);
-
-			public readonly decimal				Value;
-			public readonly string				Trace;
-			private readonly bool				isEmpty;
-		}
-
 
 		public readonly System.Text.StringBuilder traceBuilder;
 

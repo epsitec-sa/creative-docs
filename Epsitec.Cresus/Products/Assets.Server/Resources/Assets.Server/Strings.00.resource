@@ -104,4 +104,5 @@
   <data name="Enum.ArgumentType.Years" id="KD3">Années</data>
   <data name="Enum.ArgumentType.Date" id="KE3">Date</data>
   <data name="Enum.AmortizationExpressionType.None" id="KF3">Aucun amortissement</data>
+  <data name="WarningsLogic.Expression.CompileError" id="KG3">L'expression contient des erreurs de compilation</data>
 </bundle>

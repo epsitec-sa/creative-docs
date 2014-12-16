@@ -26,8 +26,17 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
-		public AbstractCalculator.Result Evaluate(AmortizationDetails details)
+		public bool Check(string arguments, string expression)
 		{
+			//	Indique si une expression est correcte et si elle a déjà été compilée.
+			var details = Amortizations.GetDefaultDetails (arguments, expression);
+			var result = this.Evaluate (details);
+			return !result.HasError;
+		}
+
+		public ExpressionResult Evaluate(AmortizationDetails details)
+		{
+			//	Evalue une expression.
 			string arguments  = details.Def.Arguments;
 			string expression = details.Def.Expression;
 
@@ -40,7 +49,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				this.expressions.Add (key, ae);  // on l'ajoute dans le dico
 			}
 
-			return ae.Evaluate (details);
+			if (ae.HasError)
+			{
+				return new ExpressionResult (null, null, ae.Error);
+			}
+			else
+			{
+				return ae.Evaluate (details);
+			}
 		}
 
 

@@ -137,9 +137,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		#region DotNet code generation
-		public static string GetArgumentsDotNetCode(DataAccessor accessor, DataObject asset, Timestamp timestamp,
-			DataObject methodObj)
+		public static string GetArgumentsDotNetCode(DataAccessor accessor, DataObject methodObj,
+			DataObject asset = null, Timestamp timestamp = new Timestamp ())
 		{
+			//	Retourne le code C# des arguments pour calculer l'amortissement d'un objet
+			//	d'immobilisation à un instant donné.
 			return ArgumentsLogic.GetArgumentsDotNetCode (accessor,
 				ArgumentsLogic.GetArgumentGuids (methodObj), asset, timestamp);
 		}
@@ -160,6 +162,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetArgumentsDotNetCode(DataAccessor accessor, IEnumerable<Guid> argumentGuids,
 			DataObject asset = null, Timestamp timestamp = new Timestamp ())
 		{
+			//	Retourne le code C# des arguments. S'il n'y a pas d'objet d'immobilisation,
+			//	on utilise les valeurs par défaut définies dans les arguments.
 			var list = new List<string> ();
 
 			foreach (var argumentGuid in argumentGuids)

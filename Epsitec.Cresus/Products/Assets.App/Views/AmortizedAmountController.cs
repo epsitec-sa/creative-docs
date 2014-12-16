@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.lines = new FrameBox[4];
+			this.lines = new FrameBox[5];
 
 			for (int i=0; i<this.lines.Length; i++)
 			{
@@ -128,14 +128,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			this.CreateLabel (this.lines[0], 100, Res.Strings.AmortizedAmountController.InitialValue.ToString ());
-			this.initialAmountTextField = this.CreateTextField (this.lines[0], AmortizedAmountController.AmountWidth, null);
+			this.initialAmountTextField = this.CreateTextField (this.lines[0], AmortizedAmountController.AmountWidth, null, "CHF");
 
 			this.CreateLabel (this.lines[1], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
-			this.finalAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, this.ChangeFinalAmount);
+			this.finalAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
 			this.CreateUnlockButton (this.lines[1]);
 
 			this.CreateLabel (this.lines[2], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
-			this.traceTextField = this.CreateTextField (this.lines[2], AbstractFieldController.maxWidth, null);
+			this.traceTextField = this.CreateTextField (this.lines[2], AbstractFieldController.maxWidth, null, null);
+
+			this.CreateLabel (this.lines[3], 100, Res.Strings.AmortizedAmountController.Error.ToString ());
+			this.errorTextField = this.CreateTextField (this.lines[3], AbstractFieldController.maxWidth, null, null);
 
 			this.CreateEntryController (parent);
 			this.UpdateUI ();
@@ -301,7 +304,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private TextField CreateTextField(Widget parent, int width, string tooltip, System.Action action = null)
+		private TextField CreateTextField(Widget parent, int width, string tooltip, string unit, System.Action action = null)
 		{
 			var field = new TextField
 			{
@@ -313,17 +316,20 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TabIndex         = ++this.tabIndex,
 			};
 
-			new StaticText
+			if (!string.IsNullOrEmpty (unit))
 			{
-				Parent           = parent,
-				Text             = "CHF",
-				PreferredWidth   = 40,
-				PreferredHeight  = AbstractFieldController.lineHeight - 1,
-				Dock             = DockStyle.Left,
-				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Margins          = new Margins (10, 0, 1, 0),
-			};
+				new StaticText
+				{
+					Parent           = parent,
+					Text             = unit,
+					PreferredWidth   = 40,
+					PreferredHeight  = AbstractFieldController.lineHeight - 1,
+					Dock             = DockStyle.Left,
+					ContentAlignment = ContentAlignment.TopLeft,
+					TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					Margins          = new Margins (10, 0, 1, 0),
+				};
+			}
 
 			if (!string.IsNullOrEmpty (tooltip))
 			{
@@ -389,6 +395,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.InitialAmount = this.value.Value.InitialAmount;
 					this.FinalAmount   = this.value.Value.FinalAmount;
 					this.traceTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Trace);
+					this.errorTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Error);
 
 					bool hasEntry = Entries.HasEntry (this.accessor, this.asset, this.e, this.value.Value);
 					this.deleteEntryButton.Enable = hasEntry && !this.isReadOnly;
@@ -399,6 +406,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 					this.InitialAmount = null;
 					this.FinalAmount   = null;
 					this.traceTextField.Text = null;
+					this.errorTextField.Text = null;
 
 					this.deleteEntryButton.Enable = false;
 					this.showEntryButton  .Enable = false;
@@ -424,9 +432,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateField (this.finalAmountTextField, !isFinalEnable);
 				this.unlockButton.Visibility = unlockEnable;
 				this.UpdateField (this.traceTextField, true);
+				this.UpdateField (this.errorTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
 				this.lines[2].Visibility = this.IsAmortizationAuto;
+				this.lines[3].Visibility = this.IsAmortizationAuto;
 
 				this.UpdateEntry ();
 			}
@@ -714,6 +724,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private TextField						finalAmountTextField;
 		private Button							unlockButton;
 		private TextField						traceTextField;
+		private TextField						errorTextField;
 
 		private TextFieldCombo					scenarioFieldCombo;
 		private EntryController					entryController;

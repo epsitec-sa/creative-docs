@@ -129,35 +129,30 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			this.outputConsole.Text = "Compile started";
 			this.outputConsole.Window.ForceLayout ();
 
-			var startTime = System.DateTime.Now;
-			string err;
-
 			var arguments = ArgumentsLogic.GetArgumentsDotNetCode (this.accessor, this.argumentsController.ArgumentGuids);
+			var details = Amortizations.GetDefaultDetails (arguments, this.expressionController.Value);
+			var startTime = System.DateTime.Now;
 
-			using (var e = new AmortizationExpression (arguments, this.expressionController.Value))
+			var result = this.accessor.AmortizationExpressions.Evaluate (details);
+
+			var elapsedTime = System.DateTime.Now - startTime;
+			var builder = new System.Text.StringBuilder ();
+			builder.Append (string.Format ("Time elapsed {0}", elapsedTime.ToString ()));
+
+			if (result.HasError)
 			{
-				var elapsedTime = System.DateTime.Now - startTime;
-				var message = string.Format ("Time elapsed {0}", elapsedTime.ToString ());
-
-				if (string.IsNullOrEmpty (e.Error))
-				{
-					message += "<br/>";
-					message += "Compile succeeded";  // anglais, ne pas traduire
-
-					err = null;  // ok
-				}
-				else
-				{
-					message += "<br/>";
-					message += e.Error;
-
-					err = e.Error;
-				}
-
-				this.outputConsole.Text = message;  // affiche le nouveau message
+				builder.Append ("<br/>");
+				builder.Append (result.Error);
+			}
+			else
+			{
+				builder.Append ("<br/>");
+				builder.Append ("Compile succeeded");  // anglais, ne pas traduire
 			}
 
-			return err;
+			this.outputConsole.Text = builder.ToString ();  // affiche le nouveau message
+
+			return result.Error;
 		}
 
 		private void Show(Widget target)

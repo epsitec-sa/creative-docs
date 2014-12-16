@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			}
 
 			//	Crée la propriété.
-			var aa = new AmortizedAmount (null, null, null, entryScenario, Guid.Empty, 0);
+			var aa = new AmortizedAmount (null, null, null, null, entryScenario, Guid.Empty, 0);
 			Amortizations.SetAmortizedAmount (e, aa);
 		}
 

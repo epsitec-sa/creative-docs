@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			if (string.IsNullOrEmpty (taggedExpression))
 			{
-				this.error = "Empty expression";  // anglais, ne pas traduire
 				return;
 			}
 
@@ -65,6 +64,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		}
 
 
+		public bool HasError
+		{
+			get
+			{
+				return !string.IsNullOrEmpty (this.error);
+			}
+		}
+
 		public string Error
 		{
 			get
@@ -73,19 +80,21 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		public AbstractCalculator.Result Evaluate(AmortizationDetails details)
+		public ExpressionResult Evaluate(AmortizationDetails details)
 		{
-			if (this.compiledAssembly != null)
+			if (this.compiledAssembly == null)
+			{
+				return ExpressionResult.Empty;
+			}
+			else
 			{
 				System.Type calculator = this.compiledAssembly.GetType ("Calculator");
 				MethodInfo evaluate = calculator.GetMethod ("Evaluate");
 
 				object[] parameters = { details };
 
-				return (AbstractCalculator.Result) evaluate.Invoke (null, parameters);
+				return (ExpressionResult) evaluate.Invoke (null, parameters);
 			}
-
-			return AbstractCalculator.Result.Empty;
 		}
 
 
@@ -142,12 +151,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"public static class Calculator",
 			"{",
-			"	public static AbstractCalculator.Result Evaluate(AmortizationDetails details)",
+			"	public static ExpressionResult Evaluate(AmortizationDetails details)",
 			"	{",
 			"		var calculator = new InternalCalculator(details);",
 			"		var value = calculator.Evaluate();",
 			"		var trace = calculator.GetTraces();",
-			"		return new AbstractCalculator.Result (value, trace);",
+			"		var error = calculator.Error;",
+			"		return new ExpressionResult (value, trace, error);",
 			"	}",
 			"",
 			"	private class InternalCalculator : AbstractCalculator",
@@ -171,7 +181,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"			}",
 			"			catch (System.Exception ex)",
 			"			{",
-			"				Trace (ex.Message);",
+			"				Error = ex.Message;",
 			"			}",
 			"",
 			"			return value;",
