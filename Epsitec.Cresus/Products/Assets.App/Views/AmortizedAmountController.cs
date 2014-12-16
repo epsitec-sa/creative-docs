@@ -127,14 +127,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.lines[i] = this.CreateFrame (parent);
 			}
 
-			this.CreateLabel (this.lines[0], 100, "Valeur initiale");
+			this.CreateLabel (this.lines[0], 100, Res.Strings.AmortizedAmountController.InitialValue.ToString ());
 			this.initialAmountTextField = this.CreateTextField (this.lines[0], AmortizedAmountController.AmountWidth, null);
 
-			this.CreateLabel (this.lines[1], 100, "Valeur finale");
+			this.CreateLabel (this.lines[1], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
 			this.finalAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, this.ChangeFinalAmount);
 			this.CreateUnlockButton (this.lines[1]);
 
-			this.CreateLabel (this.lines[2], 100, "Trace");
+			this.CreateLabel (this.lines[2], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
 			this.traceTextField = this.CreateTextField (this.lines[2], AbstractFieldController.maxWidth, null);
 
 			this.CreateEntryController (parent);
@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.unlockButton = new Button
 			{
 				Parent          = parent,
-				Text            = "Déverrouiller",
+				Text            = Res.Strings.AmortizedAmountController.Button.Unlock.ToString (),
 				ButtonStyle     = ButtonStyle.Icon,
 				PreferredWidth  = 90,
 				PreferredHeight = AbstractFieldController.lineHeight,
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.unlockButton.Clicked += delegate
 			{
-				var question = "Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?";
+				var question = Res.Strings.AmortizedAmountController.Unlock.Question.ToString ();
 				YesNoPopup.Show (this.unlockButton, question, delegate
 				{
 					this.DeleteFuturAmortizations ();
@@ -309,7 +309,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				Dock             = DockStyle.Left,
 				PreferredWidth   = width,
 				PreferredHeight  = AbstractFieldController.lineHeight,
-				Name             = (action == null) ? "IsReadOnly" : "",
 				Margins          = new Margins (0, 0, 0, 0),
 				TabIndex         = ++this.tabIndex,
 			};
@@ -586,7 +585,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void DeleteFuturAmortizations()
 		{
 			this.accessor.UndoManager.Start ();
-			this.accessor.UndoManager.SetDescription ("Suppression des amortissements postérieurs");
+			this.accessor.UndoManager.SetDescription (Res.Strings.AmortizedAmountController.Undo.DeleteAmortizations.ToString ());
 
 			var a = new Amortizations (this.accessor);
 			var guid = this.accessor.EditionAccessor.EditedObject.Guid;

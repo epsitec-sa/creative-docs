@@ -250,30 +250,7 @@
   <data name="ToolbarControllers.UserFieldsTreeTable.NewName" id="K1C">Nouveau</data>
   <data name="ToolbarControllers.UserFieldsTreeTable.DeleteQuestion" id="K2C">Voulez-vous supprimer le champ "{0}" ?</data>
   <data name="ViewStates.Accounts.Description" id="K6C">Période {0}</data>
-  <data name="AmortizedAmountController.Init.Title" id="K7C">Valeur calculée</data>
-  <data name="AmortizedAmountController.Init.Value" id="K8C">Valeur initiale</data>
-  <data name="AmortizedAmountController.Max.Title" id="K9C">Valeur calculée</data>
-  <data name="AmortizedAmountController.Max.Final" id="KAC">Valeur finale amortie</data>
-  <data name="AmortizedAmountController.Max.Rounded" id="KBC">Valeur arrondie</data>
-  <data name="AmortizedAmountController.Max.Residual" id="KCC">Valeur résiduelle</data>
-  <data name="AmortizedAmountController.Round.Title" id="KDC">Valeur arrondie</data>
-  <data name="AmortizedAmountController.Round.Rounded" id="KEC">Valeur amortie arrondie</data>
-  <data name="AmortizedAmountController.Round.Brut" id="KFC">Valeur brute</data>
-  <data name="AmortizedAmountController.Round.Result" id="KGC">Arrondi</data>
-  <data name="AmortizedAmountController.Line1.Title" id="KHC">Valeur brute</data>
-  <data name="AmortizedAmountController.Line1.Brut" id="KIC">Valeur amortie non arrondie</data>
-  <data name="AmortizedAmountController.Line1.Initial" id="KJC">Valeur précédente</data>
-  <data name="AmortizedAmountController.Line1.Result" id="KKC">Amortissement</data>
-  <data name="AmortizedAmountController.Line2.Title" id="KLC">Amortissement</data>
-  <data name="AmortizedAmountController.Line2.Amortizatiion" id="KMC">Amortissement</data>
-  <data name="AmortizedAmountController.Line2.BaseLinear" id="KNC">Valeur de base</data>
-  <data name="AmortizedAmountController.Line2.BaseExp" id="KOC">Valeur précédente</data>
-  <data name="AmortizedAmountController.Rate.Prorata" id="KPC">Prorata</data>
-  <data name="AmortizedAmountController.Prorata.Title" id="KQC">Prorata</data>
-  <data name="AmortizedAmountController.Prorata.Rate" id="KRC">Facteur correctif si "au prorata"</data>
-  <data name="AmortizedAmountController.Prorata.Numerator" id="KSC">Prorata, nombre effectif</data>
-  <data name="AmortizedAmountController.Prorata.Denominator" id="KTC">Prorata, nombre total</data>
-  <data name="AmortizedAmountController.Line2.Rate" id="KUC">Taux</data>
+  <data name="AmortizedAmountController.InitialValue" id="KKC">Valeur initiale</data>
   <data name="AmortizedAmountController.Entry.Delete.Text" id="KVC">Supprimer l'écriture</data>
   <data name="AmortizedAmountController.Entry.Show.Text" id="K0D">Voir l'écriture</data>
   <data name="AmortizedAmountController.Entry.Delete.Tooltip" id="K1D">Supprime l'écriture en mettant un montant nul</data>
@@ -444,9 +421,6 @@
   <data name="Popup.Quit.Question" id="KJI">Voulez-vous quitter le logiciel ?</data>
   <data name="Popup.Quit.Radios" id="KKI">Enregistrer avant de quitter&lt;br/&gt;Quitter sans enregistrer</data>
   <data name="Popup.Quit.MainButton" id="KLI">Quitter</data>
-  <data name="AmortizedAmountController.Rate.Title" id="KMI">Taux</data>
-  <data name="AmortizedAmountController.Rate.EffectiveRate" id="KNI">Taux effectif, adapté selon le prorata et la périodicité</data>
-  <data name="AmortizedAmountController.Rate.BaseRate" id="KOI">Taux de base</data>
   <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
   <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
   <data name="WarningView.Hidden" id="KRI">Aucun avertissement visible.&lt;br/&gt;Il y a {0} avertissements cachés.</data>
@@ -454,10 +428,6 @@
   <data name="SearchController.Next.Tooltip" id="KTI">Chercher en avant</data>
   <data name="SearchController.Prev.Tooltip" id="KUI">Chercher en arrière</data>
   <data name="SearchController.Clear.Tooltip" id="KVI">Commencer une nouvelle recherche</data>
-  <data name="AmortizedAmountController.Forced.Title" id="K0J">Valeur finale</data>
-  <data name="AmortizedAmountController.Forced.Output" id="K1J">Valeur calculée ou valeur imposée</data>
-  <data name="AmortizedAmountController.Forced.Or" id="K2J">ou</data>
-  <data name="AmortizedAmountController.Forced.Value" id="K3J">Vous pouvez imposer ici une valeur qui prime&lt;br/&gt;sur tous les calculs d'amortissement ci-dessous</data>
   <data name="EditorPages.Category.YearsCalculatorButton" id="K4J">Calculer d'après le nombre d'années et de mois</data>
   <data name="Popup.YearsCalculator.Title" id="K5J">Calcul du nombre d'années</data>
   <data name="Popup.YearsCalculator.TotalYears" id="K6J">Nombre d'années</data>
@@ -482,4 +452,9 @@
   <data name="FieldControllers.Argument.Goto" id="K2K">Aller sur l'argument</data>
   <data name="Popup.CreateArgument.Title" id="K3K">Création d'un nouvel argument</data>
   <data name="ToolbarControllers.ArgumentsTreeTable.DeleteQuestion" id="K4K">Voulez-vous supprimer l'argument "{0}" ?</data>
+  <data name="AmortizedAmountController.FinalValue" id="K5K">Valeur finale</data>
+  <data name="AmortizedAmountController.Trace" id="K6K">Trace</data>
+  <data name="AmortizedAmountController.Button.Unlock" id="K7K">Déverrouiller</data>
+  <data name="AmortizedAmountController.Unlock.Question" id="K8K">Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?</data>
+  <data name="AmortizedAmountController.Undo.DeleteAmortizations" id="K9K">Suppression des amortissements postérieurs</data>
 </bundle>
