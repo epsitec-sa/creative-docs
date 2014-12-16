@@ -3,11 +3,7 @@
   <data name="Copyright" id="K">Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland</data>
   <data name="CategoriesTreeTableFiller.Name" id="K1">Catégorie</data>
   <data name="CategoriesTreeTableFiller.Number" id="K2">N°</data>
-  <data name="CategoriesTreeTableFiller.AmortizationRate" id="K3">Taux</data>
   <data name="CategoriesTreeTableFiller.Periodicity" id="K5">Périodicité</data>
-  <data name="CategoriesTreeTableFiller.Prorata" id="K6">Prorata</data>
-  <data name="CategoriesTreeTableFiller.Round" id="K7">Arrondi</data>
-  <data name="CategoriesTreeTableFiller.ResidualValue" id="K8">Valeur résiduelle</data>
   <data name="EntriesTreeTableFiller.Date" id="KF">Date</data>
   <data name="EntriesTreeTableFiller.Debit" id="KG">Débit</data>
   <data name="EntriesTreeTableFiller.Credit" id="KH">Crédit</data>
@@ -75,8 +71,6 @@
   <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
   <data name="Enum.MCH2Summary.Column.Adjust.Tooltip" id="KG2">Valeurs après corrections</data>
   <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
-  <data name="CategoriesTreeTableFiller.AmortizationMethod" id="KI2">Méthode</data>
-  <data name="CategoriesTreeTableFiller.AmortizationYearCount" id="KJ2">Années</data>
   <data name="SingleCategoriesTreeTableFiller.Method" id="KK2">Méthode</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
   <data name="UserFieldsTreeTableFiller.Order" id="KM2">Ordre</data>
@@ -92,4 +86,6 @@
   <data name="ArgumentsTreeTableFiller.NullableTrue" id="K03">oui</data>
   <data name="ArgumentsTreeTableFiller.NullableFalse" id="K13">non</data>
   <data name="ArgumentsTreeTableFiller.Default" id="K23">Valeur initiale</data>
+  <data name="CategoriesTreeTableFiller.Bool.True" id="K33">oui</data>
+  <data name="CategoriesTreeTableFiller.Bool.False" id="K43">non</data>
 </bundle>

@@ -1510,6 +1510,18 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
+				public static class ExpressionSimulation
+				{
+					//	designer:str/JUKAK01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544970));
+						}
+					}
+				}
+				
 				public static class ExpressionSimulationTreeTable
 				{
 					//	designer:str/JUKUJ01
@@ -1550,6 +1562,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544955));
+						}
+					}
+					//	designer:str/JUKBK01
+					public static global::Epsitec.Common.Types.FormattedText Trace
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544971));
 						}
 					}
 				}
@@ -2950,6 +2970,26 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544962));
+						}
+					}
+				}
+				
+				public static class ArgumentToUse
+				{
+					//	designer:str/JUKDK01
+					public static global::Epsitec.Common.Types.FormattedText FirstArgument
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544973));
+						}
+					}
+					//	designer:str/JUKCK01
+					public static global::Epsitec.Common.Types.FormattedText NewArgument
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544972));
 						}
 					}
 				}
@@ -5308,6 +5348,14 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				public static class ArgumentsTreeTable
 				{
+					//	designer:str/JUKEK01
+					public static global::Epsitec.Common.Types.FormattedText DeleteError
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544974));
+						}
+					}
 					//	designer:str/JUK4K01
 					public static global::Epsitec.Common.Types.FormattedText DeleteQuestion
 					{
@@ -5899,6 +5947,18 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class DataFillers
 			{
+				public static class ExpressionSimulation
+				{
+					//	designer:str/JUKAK01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544970);
+						}
+					}
+				}
+				
 				public static class ExpressionSimulationTreeTable
 				{
 					//	designer:str/JUKUJ01
@@ -5939,6 +5999,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544955);
+						}
+					}
+					//	designer:str/JUKBK01
+					public static global::Epsitec.Common.Support.Druid Trace
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544971);
 						}
 					}
 				}
@@ -7339,6 +7407,26 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544962);
+						}
+					}
+				}
+				
+				public static class ArgumentToUse
+				{
+					//	designer:str/JUKDK01
+					public static global::Epsitec.Common.Support.Druid FirstArgument
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544973);
+						}
+					}
+					//	designer:str/JUKCK01
+					public static global::Epsitec.Common.Support.Druid NewArgument
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544972);
 						}
 					}
 				}
@@ -9697,6 +9785,14 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				public static class ArgumentsTreeTable
 				{
+					//	designer:str/JUKEK01
+					public static global::Epsitec.Common.Support.Druid DeleteError
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544974);
+						}
+					}
 					//	designer:str/JUK4K01
 					public static global::Epsitec.Common.Support.Druid DeleteQuestion
 					{

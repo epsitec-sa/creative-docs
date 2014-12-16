@@ -125,30 +125,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class CategoriesTreeTableFiller
 			{
-				//	designer:str/KUKI201
-				public static global::Epsitec.Common.Types.FormattedText AmortizationMethod
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544402));
-					}
-				}
-				//	designer:str/KUK3001
-				public static global::Epsitec.Common.Types.FormattedText AmortizationRate
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544323));
-					}
-				}
-				//	designer:str/KUKJ201
-				public static global::Epsitec.Common.Types.FormattedText AmortizationYearCount
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544403));
-					}
-				}
 				//	designer:str/KUKN201
 				public static global::Epsitec.Common.Types.FormattedText Method
 				{
@@ -181,28 +157,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544325));
 					}
 				}
-				//	designer:str/KUK6001
-				public static global::Epsitec.Common.Types.FormattedText Prorata
+				public static class Bool
 				{
-					get
+					//	designer:str/KUK4301
+					public static global::Epsitec.Common.Types.FormattedText False
 					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544326));
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544420));
+						}
 					}
-				}
-				//	designer:str/KUK8001
-				public static global::Epsitec.Common.Types.FormattedText ResidualValue
-				{
-					get
+					//	designer:str/KUK3301
+					public static global::Epsitec.Common.Types.FormattedText True
 					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544328));
-					}
-				}
-				//	designer:str/KUK7001
-				public static global::Epsitec.Common.Types.FormattedText Round
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544327));
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544419));
+						}
 					}
 				}
 			}
@@ -1011,30 +982,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			
 			public static class CategoriesTreeTableFiller
 			{
-				//	designer:str/KUKI201
-				public static global::Epsitec.Common.Support.Druid AmortizationMethod
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544402);
-					}
-				}
-				//	designer:str/KUK3001
-				public static global::Epsitec.Common.Support.Druid AmortizationRate
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544323);
-					}
-				}
-				//	designer:str/KUKJ201
-				public static global::Epsitec.Common.Support.Druid AmortizationYearCount
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544403);
-					}
-				}
 				//	designer:str/KUKN201
 				public static global::Epsitec.Common.Support.Druid Method
 				{
@@ -1067,28 +1014,23 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544325);
 					}
 				}
-				//	designer:str/KUK6001
-				public static global::Epsitec.Common.Support.Druid Prorata
+				public static class Bool
 				{
-					get
+					//	designer:str/KUK4301
+					public static global::Epsitec.Common.Support.Druid False
 					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544326);
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544420);
+						}
 					}
-				}
-				//	designer:str/KUK8001
-				public static global::Epsitec.Common.Support.Druid ResidualValue
-				{
-					get
+					//	designer:str/KUK3301
+					public static global::Epsitec.Common.Support.Druid True
 					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544328);
-					}
-				}
-				//	designer:str/KUK7001
-				public static global::Epsitec.Common.Support.Druid Round
-				{
-					get
-					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544327);
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544419);
+						}
 					}
 				}
 			}

@@ -177,7 +177,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						case ArgumentType.Bool:
 							{
 								var value = ObjectProperties.GetObjectPropertyInt (obj, this.Timestamp, this.argumentFields[a]);
-								var cell = new TreeTableCellString (value.GetValueOrDefault () == 1 ? "oui":"non", cellState);
+								var cell = new TreeTableCellString (value.GetValueOrDefault () == 1 ?
+									Res.Strings.CategoriesTreeTableFiller.Bool.True.ToString () :
+									Res.Strings.CategoriesTreeTableFiller.Bool.False.ToString (), cellState);
 								content.Columns[columnRank++].AddRow (cell);
 								break;
 							}

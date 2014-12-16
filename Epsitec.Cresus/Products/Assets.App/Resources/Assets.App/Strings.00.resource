@@ -457,4 +457,9 @@
   <data name="AmortizedAmountController.Button.Unlock" id="K7K">Déverrouiller</data>
   <data name="AmortizedAmountController.Unlock.Question" id="K8K">Il existe des amortissements postérieurs. Pour modifier la valeur finale, ils doivent être supprimés. Voulez-vous les supprimer ?</data>
   <data name="AmortizedAmountController.Undo.DeleteAmortizations" id="K9K">Suppression des amortissements postérieurs</data>
+  <data name="DataFillers.ExpressionSimulation.Title" id="KAK">Simulation</data>
+  <data name="DataFillers.ExpressionSimulationTreeTable.Trace" id="KBK">Trace</data>
+  <data name="FieldControllers.ArgumentToUse.NewArgument" id="KCK">Nouvel argument</data>
+  <data name="FieldControllers.ArgumentToUse.FirstArgument" id="KDK">Arguments</data>
+  <data name="ToolbarControllers.ArgumentsTreeTable.DeleteError" id="KEK">Il y a {0} méthodes qui référencent cet argument. Par conséquent, il ne peut pas être supprimé.</data>
 </bundle>

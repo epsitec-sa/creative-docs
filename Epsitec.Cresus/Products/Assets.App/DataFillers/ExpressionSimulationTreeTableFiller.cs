@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public ExpressionSimulationTreeTableFiller(DataAccessor accessor, INodeGetter<ExpressionSimulationNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
-			this.Title = "Simulation";  // anglais, ne pas traduire
+			this.Title = Res.Strings.DataFillers.ExpressionSimulation.Title.ToString ();
 		}
 
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Initial.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace,        TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth,  "Trace"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace,        TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth,  Res.Strings.DataFillers.ExpressionSimulationTreeTable.Trace.ToString ()));
 
 				return list.ToArray ();
 			}

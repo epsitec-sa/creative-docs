@@ -105,11 +105,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			if (field == ObjectField.Unknown)
 			{
-				s = "Nouvel argument";
+				s = Res.Strings.FieldControllers.ArgumentToUse.NewArgument.ToString ();
 			}
 			else if (rank == 0)
 			{
-				s = "Arguments";
+				s = Res.Strings.FieldControllers.ArgumentToUse.FirstArgument.ToString ();
 			}
 
 			new StaticText
