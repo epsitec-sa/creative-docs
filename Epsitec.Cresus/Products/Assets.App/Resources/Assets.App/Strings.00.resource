@@ -462,4 +462,5 @@
   <data name="FieldControllers.ArgumentToUse.NewArgument" id="KCK">Nouvel argument</data>
   <data name="FieldControllers.ArgumentToUse.FirstArgument" id="KDK">Arguments</data>
   <data name="ToolbarControllers.ArgumentsTreeTable.DeleteError" id="KEK">Il y a {0} méthodes qui référencent cet argument. Par conséquent, il ne peut pas être supprimé.</data>
+  <data name="ToolbarControllers.MethodsTreeTable.DeleteError" id="KFK">Il y a {0} catégories d'immobilisation qui référencent cette méthode. Par conséquent, elle ne peut pas être supprimée.</data>
 </bundle>

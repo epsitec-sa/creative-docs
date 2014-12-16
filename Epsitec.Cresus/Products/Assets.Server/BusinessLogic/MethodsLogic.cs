@@ -5,12 +5,37 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class MethodsLogic
 	{
+		public static IEnumerable<Guid> GetReferencedCategories(DataAccessor accessor, Guid methodGuid)
+		{
+			//	Vérifie quels sont les catégories d'amortissement qui référencent une
+			//	méthode donnée. Retourne les Guid des catégories concernées, ou aucun
+			//	si la méthode n'est pas référencée.
+			var hash = new HashSet<Guid> ();
+
+			foreach (var category in accessor.Mandat.GetData (BaseType.Categories))
+			{
+				var e = category.Events.FirstOrDefault ();
+				if (e != null)
+				{
+					var p = e.GetProperty (ObjectField.MethodGuid) as DataGuidProperty;
+					if (p != null && p.Value == methodGuid)
+					{
+						hash.Add (category.Guid);
+					}
+				}
+			}
+
+			return hash;
+		}
+
+
 		public static string GetSummary(DataAccessor accessor, Guid guid)
 		{
 			//	Retourne le nom court d'une méthode d'amortissement.

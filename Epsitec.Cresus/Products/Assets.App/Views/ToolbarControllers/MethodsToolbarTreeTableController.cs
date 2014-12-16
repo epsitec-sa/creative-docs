@@ -140,6 +140,14 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			var target = this.toolbar.GetTarget (e);
 
+			var assetsCount = MethodsLogic.GetReferencedCategories (this.accessor, this.SelectedGuid).Count ();
+			if (assetsCount > 0)
+			{
+				string message = string.Format (Res.Strings.ToolbarControllers.MethodsTreeTable.DeleteError.ToString (), assetsCount);
+				MessagePopup.ShowError (target, message);
+				return;
+			}
+
 			var name = MethodsLogic.GetSummary (this.accessor, this.SelectedGuid);
 			var question = string.Format (Res.Strings.ToolbarControllers.MethodsTreeTable.DeleteQuestion.ToString (), name);
 
