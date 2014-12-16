@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			{
 				yield return new AmortizationExpressionItem (
 					AmortizationExpressionType.None,
-					"Aucun amortissement",
+					Res.Strings.Enum.AmortizationExpressionType.None.ToString (),
 					null);
 
 				yield return new AmortizationExpressionItem (

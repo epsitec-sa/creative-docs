@@ -12,7 +12,6 @@
   <data name="Enum.ObjectField.Number" id="K9">Numéro</data>
   <data name="Enum.ObjectField.MainValue" id="KA">Valeur comptable</data>
   <data name="Enum.ObjectField.CategoryName" id="KB">Catégorie d'immob.</data>
-  <data name="Enum.ObjectField.AmortizationRate" id="KC">Taux</data>
   <data name="Enum.ObjectField.Periodicity" id="KE">Périodicité</data>
   <data name="Enum.ObjectField.Prorata" id="KF">Prorata</data>
   <data name="Enum.ObjectField.Round" id="KG">Arrondi</data>
@@ -64,8 +63,6 @@
   <data name="Enum.ObjectField.AccountDecreaseCredit" id="KU1">Crédit rééval.</data>
   <data name="Enum.ObjectField.AccountAdjustCredit" id="KV1">Crédit correction</data>
   <data name="Enum.ObjectField.AccountAdjustDebit" id="K02">Débit correction</data>
-  <data name="Enum.ObjectField.AmortizationMethod" id="K12">Type</data>
-  <data name="Enum.ObjectField.AmortizationYearCount" id="K22">Nombre d'années</data>
   <data name="AmortizedAmount.BaseRateSummary.Rate" id="K32">Taux de base</data>
   <data name="AmortizedAmount.BaseRateSummary.YearCount.Linear" id="K42">1 / (NbAnnées − RangAnnée)&lt;br/&gt;1 / ({0} − {1})</data>
   <data name="AmortizedAmount.BaseRateSummary.YearCount.Degressive" id="K52">1 − ((ValeurRésiduelle/ValeurPrécédente) ^ (1/(NbAnnées−RangAnnée)))&lt;br/&gt;1 − (({0}/{1}) ^ (1/({2}−{3})))</data>

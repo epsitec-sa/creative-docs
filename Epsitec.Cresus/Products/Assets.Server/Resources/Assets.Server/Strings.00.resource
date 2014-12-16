@@ -95,4 +95,13 @@
   <data name="Enum.AmortizationExpressionType.YearsDegressive" id="K43">Années dégressives</data>
   <data name="Enum.AmortizationExpressionType.YearsLinear" id="K53">Années linéaires</data>
   <data name="Enum.AmortizationExpressionType.Debug" id="K63">Debug</data>
+  <data name="Enum.ArgumentType.String" id="K73">Chaîne</data>
+  <data name="Enum.ArgumentType.Int" id="K83">Nombre entier</data>
+  <data name="Enum.ArgumentType.Bool" id="K93">Booléen</data>
+  <data name="Enum.ArgumentType.Decimal" id="KA3">Nombre réel</data>
+  <data name="Enum.ArgumentType.Amount" id="KB3">Montant</data>
+  <data name="Enum.ArgumentType.Rate" id="KC3">Pour-cent</data>
+  <data name="Enum.ArgumentType.Years" id="KD3">Années</data>
+  <data name="Enum.ArgumentType.Date" id="KE3">Date</data>
+  <data name="Enum.AmortizationExpressionType.None" id="KF3">Aucun amortissement</data>
 </bundle>

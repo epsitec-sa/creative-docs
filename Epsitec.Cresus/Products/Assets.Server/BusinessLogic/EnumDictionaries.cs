@@ -138,35 +138,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			switch (type)
 			{
 				case ArgumentType.String:
-					s = "Chaîne";
+					s = Res.Strings.Enum.ArgumentType.String.ToString ();
 					break;
 
 				case ArgumentType.Int:
-					s = "Nombre entier";
+					s = Res.Strings.Enum.ArgumentType.Int.ToString ();
 					break;
 
 				case ArgumentType.Bool:
-					s = "Booléen";
+					s = Res.Strings.Enum.ArgumentType.Bool.ToString ();
 					break;
 
 				case ArgumentType.Decimal:
-					s = "Nombre réel";
+					s = Res.Strings.Enum.ArgumentType.Decimal.ToString ();
 					break;
 
 				case ArgumentType.Amount:
-					s = "Montant";
+					s = Res.Strings.Enum.ArgumentType.Amount.ToString ();
 					break;
 
 				case ArgumentType.Rate:
-					s = "Pour-cent";
+					s = Res.Strings.Enum.ArgumentType.Rate.ToString ();
 					break;
 
 				case ArgumentType.Years:
-					s = "Années";
+					s = Res.Strings.Enum.ArgumentType.Years.ToString ();
 					break;
 
 				case ArgumentType.Date:
-					s = "Date";
+					s = Res.Strings.Enum.ArgumentType.Date.ToString ();
 					break;
 
 				default:

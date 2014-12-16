@@ -311,6 +311,14 @@ namespace Epsitec.Cresus.Assets.Server
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544422));
 						}
 					}
+					//	designer:str/IUKF301
+					public static global::Epsitec.Common.Types.FormattedText None
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544431));
+						}
+					}
 					//	designer:str/IUK3301
 					public static global::Epsitec.Common.Types.FormattedText RateDegressive
 					{
@@ -464,6 +472,74 @@ namespace Epsitec.Cresus.Assets.Server
 							{
 								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
 							}
+						}
+					}
+				}
+				
+				public static class ArgumentType
+				{
+					//	designer:str/IUKB301
+					public static global::Epsitec.Common.Types.FormattedText Amount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544427));
+						}
+					}
+					//	designer:str/IUK9301
+					public static global::Epsitec.Common.Types.FormattedText Bool
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544425));
+						}
+					}
+					//	designer:str/IUKE301
+					public static global::Epsitec.Common.Types.FormattedText Date
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544430));
+						}
+					}
+					//	designer:str/IUKA301
+					public static global::Epsitec.Common.Types.FormattedText Decimal
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544426));
+						}
+					}
+					//	designer:str/IUK8301
+					public static global::Epsitec.Common.Types.FormattedText Int
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544424));
+						}
+					}
+					//	designer:str/IUKC301
+					public static global::Epsitec.Common.Types.FormattedText Rate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544428));
+						}
+					}
+					//	designer:str/IUK7301
+					public static global::Epsitec.Common.Types.FormattedText String
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544423));
+						}
+					}
+					//	designer:str/IUKD301
+					public static global::Epsitec.Common.Types.FormattedText Years
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544429));
 						}
 					}
 				}
@@ -1252,6 +1328,14 @@ namespace Epsitec.Cresus.Assets.Server
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544422);
 						}
 					}
+					//	designer:str/IUKF301
+					public static global::Epsitec.Common.Support.Druid None
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544431);
+						}
+					}
 					//	designer:str/IUK3301
 					public static global::Epsitec.Common.Support.Druid RateDegressive
 					{
@@ -1405,6 +1489,74 @@ namespace Epsitec.Cresus.Assets.Server
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
 							}
+						}
+					}
+				}
+				
+				public static class ArgumentType
+				{
+					//	designer:str/IUKB301
+					public static global::Epsitec.Common.Support.Druid Amount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544427);
+						}
+					}
+					//	designer:str/IUK9301
+					public static global::Epsitec.Common.Support.Druid Bool
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544425);
+						}
+					}
+					//	designer:str/IUKE301
+					public static global::Epsitec.Common.Support.Druid Date
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544430);
+						}
+					}
+					//	designer:str/IUKA301
+					public static global::Epsitec.Common.Support.Druid Decimal
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544426);
+						}
+					}
+					//	designer:str/IUK8301
+					public static global::Epsitec.Common.Support.Druid Int
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544424);
+						}
+					}
+					//	designer:str/IUKC301
+					public static global::Epsitec.Common.Support.Druid Rate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544428);
+						}
+					}
+					//	designer:str/IUK7301
+					public static global::Epsitec.Common.Support.Druid String
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544423);
+						}
+					}
+					//	designer:str/IUKD301
+					public static global::Epsitec.Common.Support.Druid Years
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544429);
 						}
 					}
 				}

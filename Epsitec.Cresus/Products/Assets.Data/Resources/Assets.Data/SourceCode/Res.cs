@@ -269,30 +269,6 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544347));
 						}
 					}
-					//	designer:str/HUK1201
-					public static global::Epsitec.Common.Types.FormattedText AmortizationMethod
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544385));
-						}
-					}
-					//	designer:str/HUKC001
-					public static global::Epsitec.Common.Types.FormattedText AmortizationRate
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544332));
-						}
-					}
-					//	designer:str/HUK2201
-					public static global::Epsitec.Common.Types.FormattedText AmortizationYearCount
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386));
-						}
-					}
 					//	designer:str/HUKB201
 					public static global::Epsitec.Common.Types.FormattedText ArgumentDefault
 					{
@@ -967,30 +943,6 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544347);
-						}
-					}
-					//	designer:str/HUK1201
-					public static global::Epsitec.Common.Support.Druid AmortizationMethod
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544385);
-						}
-					}
-					//	designer:str/HUKC001
-					public static global::Epsitec.Common.Support.Druid AmortizationRate
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544332);
-						}
-					}
-					//	designer:str/HUK2201
-					public static global::Epsitec.Common.Support.Druid AmortizationYearCount
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544386);
 						}
 					}
 					//	designer:str/HUKB201
