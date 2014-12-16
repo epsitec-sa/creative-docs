@@ -477,30 +477,6 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544334));
 						}
 					}
-					//	designer:str/HUKF001
-					public static global::Epsitec.Common.Types.FormattedText Prorata
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544335));
-						}
-					}
-					//	designer:str/HUKH001
-					public static global::Epsitec.Common.Types.FormattedText ResidualValue
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544337));
-						}
-					}
-					//	designer:str/HUKG001
-					public static global::Epsitec.Common.Types.FormattedText Round
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544336));
-						}
-					}
 					//	designer:str/HUK3101
 					public static global::Epsitec.Common.Types.FormattedText UserFieldColumnWidth
 					{
@@ -1151,30 +1127,6 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544334);
-						}
-					}
-					//	designer:str/HUKF001
-					public static global::Epsitec.Common.Support.Druid Prorata
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544335);
-						}
-					}
-					//	designer:str/HUKH001
-					public static global::Epsitec.Common.Support.Druid ResidualValue
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544337);
-						}
-					}
-					//	designer:str/HUKG001
-					public static global::Epsitec.Common.Support.Druid Round
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544336);
 						}
 					}
 					//	designer:str/HUK3101

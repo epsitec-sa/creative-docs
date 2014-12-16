@@ -13,9 +13,6 @@
   <data name="Enum.ObjectField.MainValue" id="KA">Valeur comptable</data>
   <data name="Enum.ObjectField.CategoryName" id="KB">Catégorie d'immob.</data>
   <data name="Enum.ObjectField.Periodicity" id="KE">Périodicité</data>
-  <data name="Enum.ObjectField.Prorata" id="KF">Prorata</data>
-  <data name="Enum.ObjectField.Round" id="KG">Arrondi</data>
-  <data name="Enum.ObjectField.ResidualValue" id="KH">Valeur résiduelle</data>
   <data name="Enum.ObjectField.AccountPurchaseCredit" id="KI">Crédit achat</data>
   <data name="Enum.ObjectField.AccountPurchaseDebit" id="KJ">Débit achat</data>
   <data name="Enum.ObjectField.AccountSaleDebit" id="KK">Débit vente</data>
