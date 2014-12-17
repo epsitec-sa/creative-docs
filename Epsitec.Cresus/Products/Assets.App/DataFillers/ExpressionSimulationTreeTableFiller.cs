@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		private const int dateWidth   = 80;
 		private const int typeWidth   = 20;
 		private const int amountWidth = 100;
-		private const int traceWidth  = 600;
+		private const int traceWidth  = 400;
 		private const int errorWidth  = 200;
 	}
 }

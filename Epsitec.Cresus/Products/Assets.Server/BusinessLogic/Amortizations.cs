@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var def = this.GetAmortizationDefinition (obj, new Timestamp (period.IncludeFrom, 0), lastToDate);
 
 				var timestamp = obj.GetNewTimestamp (period.ExcludeTo.AddDays (-1));
-				var history = Amortizations.GetHistoryDetails (obj, timestamp);
+				var history = Amortizations.GetHistoryDetails (obj, timestamp, def);
 
 				if (!def.IsEmpty && !history.IsEmpty)
 				{
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return valueDate;
 		}
 
-		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp)
+		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp, AmortizationDefinition def)
 		{
 			var      inputDate     = timestamp.Date;
 			decimal? inputAmount   = null;
@@ -249,16 +249,38 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					initialAmount = aa.Value.FinalAmount.Value;
 
 					if (e.Type != EventType.AmortizationPreview &&
-						e.Type != EventType.AmortizationAuto    &&
-						e.Type != EventType.AmortizationExtra)
+						e.Type != EventType.AmortizationAuto    )
 					{
-						baseDate   = e.Timestamp.Date;
+						if (e.Type == EventType.AmortizationExtra)
+						{
+							//	Un amortissement extraordinaire dans l'année est considéré
+							//	comme une modification au début de l'année suivante.
+							baseDate = Amortizations.GetFloorDate (e.Timestamp.Date, def.PeriodMonthCount)
+								.AddYears (1);
+						}
+						else
+						{
+							//	Une modification de valeur dans l'année est considérée
+							//	comme une modification au début de l'année.
+							baseDate = Amortizations.GetFloorDate (e.Timestamp.Date, def.PeriodMonthCount);
+						}
+
 						baseAmount = aa.Value.FinalAmount.Value;
 					}
 				}
 			}
 
 			return new HistoryDetails (inputDate, inputAmount.GetValueOrDefault (), baseDate, baseAmount, initialAmount);
+		}
+
+		private static System.DateTime GetFloorDate(System.DateTime date, int monthCount)
+		{
+			//	Retourne une date arrondie au début d'une période annuelle, semestrielle,
+			//	trimestrielle ou mensuelle.
+			int mounths = (date.Year*12) + (date.Month-1);
+			mounths = mounths - mounths%monthCount;
+
+			return new System.DateTime (mounths/12, (mounths%12)+1, 1);
 		}
 
 
