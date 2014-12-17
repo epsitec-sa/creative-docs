@@ -496,6 +496,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static AmortizationDetails GetDefaultDetails(string arguments, string expression)
 		{
+			//	Retourne les arguments par défaut, pour permettre de compiler une
+			//	expression "à la main" (bouton "Compiler" dans la vue des méthodes),
+			//	ou pour vérifier sa syntaxe (vue des Warnings).
 			var startDate = new System.DateTime (2000, 1, 1);
 			var endDate = startDate.AddYears (1);
 			var range = new DateRange (startDate, endDate);
