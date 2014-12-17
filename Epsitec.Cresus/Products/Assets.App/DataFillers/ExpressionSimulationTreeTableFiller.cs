@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationRank,         TreeTableColumnType.Int,    ExpressionSimulationTreeTableFiller.rankWidth,   Res.Strings.DataFillers.ExpressionSimulationTreeTable.Rank.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDate,         TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   Res.Strings.DataFillers.ExpressionSimulationTreeTable.Date.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationType,         TreeTableColumnType.Glyph,  ExpressionSimulationTreeTableFiller.typeWidth,   null));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Initial.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
@@ -56,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<6; i++)
+			for (int i=0; i<7; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -70,10 +72,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 
-				var rank    = node.Rank + 1;  // 1..n
+				var rank    = node.Rank.HasValue ? node.Rank+1 : null;  // 1..n
 				var date    = node.Date;
+				var type    = TimelineData.TypeToGlyph (node.EventType);
 				var initial = node.InitialAmount;
-				var amort   = node.InitialAmount - node.FinalAmount;
+				var amort   = node.Amortization;
 				var final   = node.FinalAmount;
 				var trace   = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (node.Trace);
 
@@ -81,10 +84,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var cell1 = new TreeTableCellInt     (rank,    cellState);
 				var cell2 = new TreeTableCellDate    (date,    cellState);
-				var cell3 = new TreeTableCellDecimal (initial, cellState);
-				var cell4 = new TreeTableCellDecimal (amort,   cellState);
-				var cell5 = new TreeTableCellDecimal (final,   cellState);
-				var cell6 = new TreeTableCellString  (trace,   cellState);
+				var cell3 = new TreeTableCellGlyph   (type,    cellState);
+				var cell4 = new TreeTableCellDecimal (initial, cellState);
+				var cell5 = new TreeTableCellDecimal (amort,   cellState);
+				var cell6 = new TreeTableCellDecimal (final,   cellState);
+				var cell7 = new TreeTableCellString  (trace,   cellState);
 
 				int columnRank = 0;
 
@@ -94,6 +98,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				content.Columns[columnRank++].AddRow (cell4);
 				content.Columns[columnRank++].AddRow (cell5);
 				content.Columns[columnRank++].AddRow (cell6);
+				content.Columns[columnRank++].AddRow (cell7);
 			}
 
 			return content;
@@ -122,11 +127,13 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		public const int Width =  // largeur totale, avec un bout de la colonne 'Trace'
 			ExpressionSimulationTreeTableFiller.rankWidth +
 			ExpressionSimulationTreeTableFiller.dateWidth +
+			ExpressionSimulationTreeTableFiller.typeWidth +
 			ExpressionSimulationTreeTableFiller.amountWidth * 3 +
 			100;
 
 		private const int rankWidth   = 50;
 		private const int dateWidth   = 80;
+		private const int typeWidth   = 20;
 		private const int amountWidth = 100;
 		private const int traceWidth  = 600;
 	}

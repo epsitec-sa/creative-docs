@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	/// seule fois, afin d'éviter de compiler des tonnes d'expressions identiques, ce qui
 	/// ne manquerait pas d'arriver avec les amortissements successifs sans changement des
 	/// arguments (taux, valeur résiduelle et arrondi identiques par exemple).
-	/// Comme les arguments sont injectés dans le source. Il suffit que le taux d'amortissement
+	/// Comme les arguments sont injectés dans le source, il suffit que le taux d'amortissement
 	/// change pour qu'il soit nécessaire de compiler une nouvelle expression. D'où la
 	/// nécessité d'un cache.
 	/// </summary>

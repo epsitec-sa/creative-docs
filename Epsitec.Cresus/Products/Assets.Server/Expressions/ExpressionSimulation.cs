@@ -62,6 +62,29 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			var ie = asset.GetInputEvent ();
 			ie.AddProperty (mainProperty);
 
+			//	Crée les éventuels événements exceptionnels.
+			if (simulationParams.ExtraDate.HasValue && simulationParams.ExtraAmount.HasValue)
+			{
+				var timestamp = new Timestamp (simulationParams.ExtraDate.Value, 0);
+				var e = new DataEvent(null, timestamp, EventType.AmortizationExtra);
+				asset.AddEvent (e);
+
+				var aa = new AmortizedAmount (simulationParams.ExtraAmount);
+				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
+				e.AddProperty (p);
+			}
+
+			if (simulationParams.AdjustDate.HasValue && simulationParams.AdjustAmount.HasValue)
+			{
+				var timestamp = new Timestamp (simulationParams.AdjustDate.Value, 0);
+				var e = new DataEvent (null, timestamp, EventType.Adjust);
+				asset.AddEvent (e);
+
+				var aa = new AmortizedAmount (simulationParams.AdjustAmount);
+				var p = new DataAmortizedAmountProperty (ObjectField.MainValue, aa);
+				e.AddProperty (p);
+			}
+
 			//	Génère tous les amortissements.
 			var a = new Amortizations (accessor);
 			a.Preview (simulationParams.Range, assetGuid);
@@ -70,15 +93,22 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			var nodes = new List<ExpressionSimulationNode> ();
 
 			int i = 0;
-			foreach (var e in asset.Events.Where (x => x.Type == EventType.AmortizationPreview))
+			foreach (var e in asset.Events)
 			{
 				var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
 
-				var initial = property.Value.InitialAmount.GetValueOrDefault ();
-				var final   = property.Value.FinalAmount.GetValueOrDefault ();
+				var initial = property.Value.InitialAmount;
+				var final   = property.Value.FinalAmount;
 				var trace   = property.Value.Trace;
 
-				var node = new ExpressionSimulationNode (i++, e.Timestamp.Date, initial, final, trace);
+				int? rank = null;
+				if (e.Type == EventType.AmortizationPreview ||
+					e.Type == EventType.AmortizationExtra)
+				{
+					rank = i++;
+				}
+
+				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace);
 				nodes.Add (node);
 			}
 

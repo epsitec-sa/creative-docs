@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		ExpressionSimulationRank,
 		ExpressionSimulationDate,
+		ExpressionSimulationType,
 		ExpressionSimulationInitial,
 		ExpressionSimulationAmortization,
 		ExpressionSimulationFinal,

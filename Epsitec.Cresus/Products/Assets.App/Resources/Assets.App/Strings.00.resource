@@ -464,4 +464,12 @@
   <data name="ToolbarControllers.ArgumentsTreeTable.DeleteError" id="KEK">Il y a {0} méthodes qui référencent cet argument. Par conséquent, il ne peut pas être supprimé.</data>
   <data name="ToolbarControllers.MethodsTreeTable.DeleteError" id="KFK">Il y a {0} catégories d'immobilisation qui référencent cette méthode. Par conséquent, elle ne peut pas être supprimée.</data>
   <data name="AmortizedAmountController.Error" id="KGK">Erreur</data>
+  <data name="Popup.AmountExpressionSimulation.StartDate" id="KHK">Depuis le</data>
+  <data name="Popup.AmountExpressionSimulation.EndDate" id="KIK">Jusqu'au</data>
+  <data name="Popup.AmountExpressionSimulation.Periodicity" id="KJK">Périodicité</data>
+  <data name="Popup.AmountExpressionSimulation.InitialAmount" id="KKK">Montant initial</data>
+  <data name="Popup.AmountExpressionSimulation.ExtraDate" id="KLK">Date extra</data>
+  <data name="Popup.AmountExpressionSimulation.ExtraAmount" id="KMK">Montant extra</data>
+  <data name="Popup.AmountExpressionSimulation.AdjustDate" id="KNK">Date correction</data>
+  <data name="Popup.AmountExpressionSimulation.AdjustAmount" id="KOK">Montant correction</data>
 </bundle>

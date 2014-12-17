@@ -3512,6 +3512,70 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class AmountExpressionSimulation
 				{
+					//	designer:str/JUKOK01
+					public static global::Epsitec.Common.Types.FormattedText AdjustAmount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544984));
+						}
+					}
+					//	designer:str/JUKNK01
+					public static global::Epsitec.Common.Types.FormattedText AdjustDate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544983));
+						}
+					}
+					//	designer:str/JUKIK01
+					public static global::Epsitec.Common.Types.FormattedText EndDate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544978));
+						}
+					}
+					//	designer:str/JUKMK01
+					public static global::Epsitec.Common.Types.FormattedText ExtraAmount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544982));
+						}
+					}
+					//	designer:str/JUKLK01
+					public static global::Epsitec.Common.Types.FormattedText ExtraDate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544981));
+						}
+					}
+					//	designer:str/JUKKK01
+					public static global::Epsitec.Common.Types.FormattedText InitialAmount
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544980));
+						}
+					}
+					//	designer:str/JUKJK01
+					public static global::Epsitec.Common.Types.FormattedText Periodicity
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544979));
+						}
+					}
+					//	designer:str/JUKHK01
+					public static global::Epsitec.Common.Types.FormattedText StartDate
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544977));
+						}
+					}
 					//	designer:str/JUKPJ01
 					public static global::Epsitec.Common.Types.FormattedText Title
 					{
@@ -7965,6 +8029,70 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class AmountExpressionSimulation
 				{
+					//	designer:str/JUKOK01
+					public static global::Epsitec.Common.Support.Druid AdjustAmount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544984);
+						}
+					}
+					//	designer:str/JUKNK01
+					public static global::Epsitec.Common.Support.Druid AdjustDate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544983);
+						}
+					}
+					//	designer:str/JUKIK01
+					public static global::Epsitec.Common.Support.Druid EndDate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544978);
+						}
+					}
+					//	designer:str/JUKMK01
+					public static global::Epsitec.Common.Support.Druid ExtraAmount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544982);
+						}
+					}
+					//	designer:str/JUKLK01
+					public static global::Epsitec.Common.Support.Druid ExtraDate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544981);
+						}
+					}
+					//	designer:str/JUKKK01
+					public static global::Epsitec.Common.Support.Druid InitialAmount
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544980);
+						}
+					}
+					//	designer:str/JUKJK01
+					public static global::Epsitec.Common.Support.Druid Periodicity
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544979);
+						}
+					}
+					//	designer:str/JUKHK01
+					public static global::Epsitec.Common.Support.Druid StartDate
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544977);
+						}
+					}
 					//	designer:str/JUKPJ01
 					public static global::Epsitec.Common.Support.Druid Title
 					{

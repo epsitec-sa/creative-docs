@@ -36,14 +36,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = "Depuis le",
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.StartDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = "Jusqu'au",
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.EndDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 				BottomMargin          = 20,
 			});
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = "Périodicité",
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.Periodicity.ToString (),
 				MultiLabels           = ExpressionSimulationParamsPopup.PeriodicityLabels,
 				Width                 = 240,
 			});
@@ -59,12 +59,41 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Decimal,
-				Label                 = "Montant initial",
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.InitialAmount.ToString (),
 				DecimalFormat         = DecimalFormat.Amount,
 				BottomMargin          = 10,
 			});
 
-			int rank = 4;
+			list.Add (new StackedControllerDescription  // 4
+			{
+				StackedControllerType = StackedControllerType.Date,
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.ExtraDate.ToString (),
+				DecimalFormat         = DecimalFormat.Amount,
+			});
+
+			list.Add (new StackedControllerDescription  // 5
+			{
+				StackedControllerType = StackedControllerType.Decimal,
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.ExtraAmount.ToString (),
+				DecimalFormat         = DecimalFormat.Amount,
+			});
+
+			list.Add (new StackedControllerDescription  // 6
+			{
+				StackedControllerType = StackedControllerType.Date,
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.AdjustDate.ToString (),
+				DecimalFormat         = DecimalFormat.Amount,
+			});
+
+			list.Add (new StackedControllerDescription  // 7
+			{
+				StackedControllerType = StackedControllerType.Decimal,
+				Label                 = Res.Strings.Popup.AmountExpressionSimulation.AdjustAmount.ToString (),
+				DecimalFormat         = DecimalFormat.Amount,
+				BottomMargin          = 20,
+			});
+
+			int rank = list.Count;
 			foreach (var field in this.fields)
 			{
 				var argument = ArgumentsLogic.GetArgument (this.accessor, field);
@@ -249,6 +278,70 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private System.DateTime? ExtraDate
+		{
+			get
+			{
+				var controller = this.GetController (4) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (4) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private decimal? ExtraAmount
+		{
+			get
+			{
+				var controller = this.GetController (5) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (5) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private System.DateTime? AdjustDate
+		{
+			get
+			{
+				var controller = this.GetController (6) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (6) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private decimal? AdjustAmount
+		{
+			get
+			{
+				var controller = this.GetController (7) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (7) as DecimalStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
 		private object GetArgument(int rank)
 		{
 			var controller = this.GetController (rank);
@@ -314,7 +407,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private ExpressionSimulationParams Params
+		public ExpressionSimulationParams Params
 		{
 			//	Spécifie tous les paramètres pour la simulation. Le dictionnaire pour
 			//	les arguments peut contenir des arguments qui n'ont pas de sens ici.
@@ -322,7 +415,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	en sortie (get).
 			get
 			{
-				var p = new ExpressionSimulationParams (this.Range, this.Periodicity, this.InitialAmount);
+				var p = new ExpressionSimulationParams (this.Range, this.Periodicity, this.InitialAmount,
+					this.ExtraDate, this.ExtraAmount, this.AdjustDate, this.AdjustAmount);
 
 				//	Arguments édités -> this.lastArguments.
 				foreach (var pair in this.controllerRanks)
@@ -350,6 +444,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.Range         = value.Range;
 				this.Periodicity   = value.Periodicity;
 				this.InitialAmount = value.InitialAmount;
+				this.ExtraDate     = value.ExtraDate;
+				this.ExtraAmount   = value.ExtraAmount;
+				this.AdjustDate    = value.AdjustDate;
+				this.AdjustAmount  = value.AdjustAmount;
 
 				//	Input -> this.lastArguments.
 				foreach (var pair in value.Arguments)

@@ -10,8 +10,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 	{
 		public ExpressionResult(decimal? value, string trace, string error)
 		{
-			//	ATTENTION: Même si VS dit que ce n'est pas utilisé, cela l'est quand
-			//	même (AmortizationExpression.skeletonLines).
 			this.Value = value;
 			this.Trace = trace;
 			this.Error = error;
