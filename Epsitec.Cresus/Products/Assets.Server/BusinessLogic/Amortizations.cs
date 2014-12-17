@@ -59,14 +59,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public void Preview(DateRange processRange, Guid objectGuid)
+		public List<AmortizationDetails> Preview(DateRange processRange, Guid objectGuid)
 		{
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
 			System.Diagnostics.Debug.Assert (obj != null);
 
-			this.GeneratesAmortizationsPreview (processRange, objectGuid);
+			var list = this.GeneratesAmortizationsPreview (processRange, objectGuid);
 
 			this.accessor.WarningsDirty = true;
+			return list;
 		}
 
 		public void Fix(System.DateTime endDate, Guid objectGuid)
@@ -101,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		private void GeneratesAmortizationsPreview(DateRange processRange, Guid objectGuid)
+		private List<AmortizationDetails> GeneratesAmortizationsPreview(DateRange processRange, Guid objectGuid)
 		{
 			//	Génère les aperçus d'amortissement pour un objet donné.
 			var obj = this.accessor.GetObject (BaseType.Assets, objectGuid);
@@ -112,6 +113,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	Passe en revue les périodes.
 			System.DateTime? lastToDate = null;
+
+			var list = new List<AmortizationDetails> ();
 
 			foreach (var period in this.GetPeriods (processRange, obj))
 			{
@@ -126,6 +129,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					this.CreateAmortizationPreview (obj, period.ExcludeTo.AddDays (-1), details);
 					lastToDate = period.ExcludeTo;
+
+					list.Add (details);
 				}	
 			}
 
@@ -134,6 +139,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			//	Pour mettre à jour les éventuels amortissements extraordinaires suivants.
 			Amortizations.UpdateAmounts (this.accessor, obj);
+
+			return list;
 		}
 
 		private IEnumerable<DateRange> GetPeriods(DateRange processRange, DataObject obj)

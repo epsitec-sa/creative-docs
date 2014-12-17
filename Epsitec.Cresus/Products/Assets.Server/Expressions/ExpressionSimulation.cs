@@ -87,12 +87,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 			//	Génère tous les amortissements.
 			var a = new Amortizations (accessor);
-			a.Preview (simulationParams.Range, assetGuid);
+			var list = a.Preview (simulationParams.Range, assetGuid);
 
 			//	Récupère tous les événements d'amortissement dans les noeuds.
 			var nodes = new List<ExpressionSimulationNode> ();
 
 			int i = 0;
+			int j = 0;
 			foreach (var e in asset.Events)
 			{
 				var property = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
@@ -108,7 +109,13 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					rank = i++;
 				}
 
-				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace);
+				var details = AmortizationDetails.Empty;
+				if (e.Type == EventType.AmortizationPreview)
+				{
+					details = list[j++];
+				}
+
+				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace, details);
 				nodes.Add (node);
 			}
 

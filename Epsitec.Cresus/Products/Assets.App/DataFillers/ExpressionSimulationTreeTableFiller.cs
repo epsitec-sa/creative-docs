@@ -50,6 +50,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace,        TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth,  Res.Strings.DataFillers.ExpressionSimulationTreeTable.Trace.ToString ()));
 
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+0, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "InputDate"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+1, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InputAmount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+2, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "BaseDate"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+3, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "BaseAmount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+4, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InitialAmount"));
+
 				return list.ToArray ();
 			}
 		}
@@ -58,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<7; i++)
+			for (int i=0; i<7+5; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -82,23 +88,50 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellInt     (rank,    cellState);
-				var cell2 = new TreeTableCellDate    (date,    cellState);
-				var cell3 = new TreeTableCellGlyph   (type,    cellState);
-				var cell4 = new TreeTableCellDecimal (initial, cellState);
-				var cell5 = new TreeTableCellDecimal (amort,   cellState);
-				var cell6 = new TreeTableCellDecimal (final,   cellState);
-				var cell7 = new TreeTableCellString  (trace,   cellState);
+				var cell11 = new TreeTableCellInt     (rank,    cellState);
+				var cell12 = new TreeTableCellDate    (date,    cellState);
+				var cell13 = new TreeTableCellGlyph   (type,    cellState);
+				var cell14 = new TreeTableCellDecimal (initial, cellState);
+				var cell15 = new TreeTableCellDecimal (amort,   cellState);
+				var cell16 = new TreeTableCellDecimal (final,   cellState);
+				var cell17 = new TreeTableCellString  (trace,   cellState);
+
+				System.DateTime? inputDate     = null;
+				decimal?         inputAmount   = null;
+				System.DateTime? baseDate      = null;
+				decimal?         baseAmount    = null;
+				decimal?         initialAmount = null;
+
+				if (!node.Details.IsEmpty)
+				{
+					inputDate     = node.Details.History.InputDate;
+					inputAmount   = node.Details.History.InputAmount;
+					baseDate      = node.Details.History.BaseDate;
+					baseAmount    = node.Details.History.BaseAmount;
+					initialAmount = node.Details.History.InitialAmount;
+				}
+
+				var cell21 = new TreeTableCellDate    (inputDate,     cellState);
+				var cell22 = new TreeTableCellDecimal (inputAmount,   cellState);
+				var cell23 = new TreeTableCellDate    (baseDate,      cellState);
+				var cell24 = new TreeTableCellDecimal (baseAmount,    cellState);
+				var cell25 = new TreeTableCellDecimal (initialAmount, cellState);
 
 				int columnRank = 0;
 
-				content.Columns[columnRank++].AddRow (cell1);
-				content.Columns[columnRank++].AddRow (cell2);
-				content.Columns[columnRank++].AddRow (cell3);
-				content.Columns[columnRank++].AddRow (cell4);
-				content.Columns[columnRank++].AddRow (cell5);
-				content.Columns[columnRank++].AddRow (cell6);
-				content.Columns[columnRank++].AddRow (cell7);
+				content.Columns[columnRank++].AddRow (cell11);
+				content.Columns[columnRank++].AddRow (cell12);
+				content.Columns[columnRank++].AddRow (cell13);
+				content.Columns[columnRank++].AddRow (cell14);
+				content.Columns[columnRank++].AddRow (cell15);
+				content.Columns[columnRank++].AddRow (cell16);
+				content.Columns[columnRank++].AddRow (cell17);
+
+				content.Columns[columnRank++].AddRow (cell21);
+				content.Columns[columnRank++].AddRow (cell22);
+				content.Columns[columnRank++].AddRow (cell23);
+				content.Columns[columnRank++].AddRow (cell24);
+				content.Columns[columnRank++].AddRow (cell25);
 			}
 
 			return content;

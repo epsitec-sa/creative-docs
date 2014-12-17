@@ -4,13 +4,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
 	public struct ExpressionSimulationNode
 	{
 		public ExpressionSimulationNode(int? rank, System.DateTime date, EventType eventType,
-			decimal? initialAmount, decimal? finalAmount, string trace)
+			decimal? initialAmount, decimal? finalAmount, string trace, AmortizationDetails details)
 		{
 			this.Rank          = rank;
 			this.Date          = date;
@@ -18,6 +19,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			this.InitialAmount = initialAmount;
 			this.FinalAmount   = finalAmount;
 			this.Trace         = trace;
+			this.Details       = details;
 		}
 
 		public decimal? Amortization
@@ -55,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		public static ExpressionSimulationNode Empty = new ExpressionSimulationNode (null, System.DateTime.MinValue, EventType.Unknown, null, null, null);
+		public static ExpressionSimulationNode Empty = new ExpressionSimulationNode (null, System.DateTime.MinValue, EventType.Unknown, null, null, null, AmortizationDetails.Empty);
 
 		public readonly int?					Rank;
 		public readonly System.DateTime			Date;
@@ -63,5 +65,6 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				FinalAmount;
 		public readonly string					Trace;
+		public readonly AmortizationDetails		Details;
 	}
 }
