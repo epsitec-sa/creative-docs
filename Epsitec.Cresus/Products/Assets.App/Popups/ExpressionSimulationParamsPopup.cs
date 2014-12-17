@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label                 = Res.Strings.Popup.AmountExpressionSimulation.ExtraDate.ToString (),
-				DecimalFormat         = DecimalFormat.Amount,
+				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Date,
 				Label                 = Res.Strings.Popup.AmountExpressionSimulation.AdjustDate.ToString (),
-				DecimalFormat         = DecimalFormat.Amount,
+				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 7
