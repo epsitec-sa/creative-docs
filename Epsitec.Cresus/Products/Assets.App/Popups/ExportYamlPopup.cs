@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportYamlPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format YAML";
+			this.title = Res.Strings.Popup.ExportYamlTitle.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 

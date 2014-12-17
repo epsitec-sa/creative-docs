@@ -97,8 +97,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			foreach (var field in this.fields)
 			{
 				var argument = ArgumentsLogic.GetArgument (this.accessor, field);
-				var type = ArgumentsLogic.GetArgumentType (argument);
-				var name = ArgumentsLogic.GetShortName (argument);
+				var type     = ArgumentsLogic.GetArgumentType (argument);
+				var name     = ArgumentsLogic.GetShortName (argument);
 
 				switch (type)
 				{

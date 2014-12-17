@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public ExportXmlPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Exportation des données au format XML";
+			this.title = Res.Strings.Popup.ExportXml.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
