@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Répercute les valeurs des montants selon la chronologie des événements.
 			//	Les montants des écritures sont également mis à jour.
-			if (obj != null && !obj.Simulation)
+			if (obj != null)
 			{
 				foreach (var field in accessor.AssetValueFields)
 				{
@@ -412,7 +412,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				lastAmount = current.Value.FinalAmount;
 			}
 
-			Amortizations.CreateEntry (accessor, asset, e);
+			if (!asset.Simulation)
+			{
+				Amortizations.CreateEntry (accessor, asset, e);
+			}
 		}
 
 		private static void CreateEntry(DataAccessor accessor, DataObject asset, DataEvent e)

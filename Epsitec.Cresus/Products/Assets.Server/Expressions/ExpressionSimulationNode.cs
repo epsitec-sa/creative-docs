@@ -24,7 +24,9 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			get
 			{
-				if (this.InitialAmount.HasValue && this.FinalAmount.HasValue)
+				if (this.IsAmortization &&
+					this.InitialAmount.HasValue &&
+					this.FinalAmount.HasValue)
 				{
 					return this.InitialAmount.Value - this.FinalAmount.Value;
 				}
@@ -32,6 +34,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					return null;
 				}
+			}
+		}
+
+		private bool IsAmortization
+		{
+			get
+			{
+				return this.EventType == Data.EventType.AmortizationExtra
+					|| this.EventType == Data.EventType.AmortizationPreview
+					|| this.EventType == Data.EventType.AmortizationAuto;
 			}
 		}
 
