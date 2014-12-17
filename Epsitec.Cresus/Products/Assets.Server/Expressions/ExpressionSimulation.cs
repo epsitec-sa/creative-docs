@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				var initial = property.Value.InitialAmount;
 				var final   = property.Value.FinalAmount;
 				var trace   = property.Value.Trace;
+				var error   = property.Value.Error;
 
 				int? rank = null;
 				if (e.Type == EventType.AmortizationPreview ||
@@ -115,7 +116,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					details = list[j++];
 				}
 
-				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace, details);
+				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace, error, details);
 				nodes.Add (node);
 			}
 

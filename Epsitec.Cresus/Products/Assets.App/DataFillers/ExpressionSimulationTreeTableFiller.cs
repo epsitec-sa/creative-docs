@@ -48,13 +48,15 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationInitial,      TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Initial.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace,        TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth,  Res.Strings.DataFillers.ExpressionSimulationTreeTable.Trace.ToString ()));
 
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+0, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "InputDate"));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+1, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InputAmount"));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+2, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "BaseDate"));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+3, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "BaseAmount"));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+4, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InitialAmount"));
+
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace, TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Trace.ToString ()));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationError, TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.errorWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Error.ToString ()));
 
 				return list.ToArray ();
 			}
@@ -64,7 +66,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<7+5; i++)
+			for (int i=0; i<6+5+2; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -85,6 +87,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var amort   = node.Amortization;
 				var final   = node.FinalAmount;
 				var trace   = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (node.Trace);
+				var error   = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (node.Error);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -94,7 +97,6 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var cell14 = new TreeTableCellDecimal (initial, cellState);
 				var cell15 = new TreeTableCellDecimal (amort,   cellState);
 				var cell16 = new TreeTableCellDecimal (final,   cellState);
-				var cell17 = new TreeTableCellString  (trace,   cellState);
 
 				System.DateTime? inputDate     = null;
 				decimal?         inputAmount   = null;
@@ -117,6 +119,9 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var cell24 = new TreeTableCellDecimal (baseAmount,    cellState);
 				var cell25 = new TreeTableCellDecimal (initialAmount, cellState);
 
+				var cell31 = new TreeTableCellString (trace, cellState);
+				var cell32 = new TreeTableCellString (trace, cellState);
+
 				int columnRank = 0;
 
 				content.Columns[columnRank++].AddRow (cell11);
@@ -125,13 +130,15 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				content.Columns[columnRank++].AddRow (cell14);
 				content.Columns[columnRank++].AddRow (cell15);
 				content.Columns[columnRank++].AddRow (cell16);
-				content.Columns[columnRank++].AddRow (cell17);
 
 				content.Columns[columnRank++].AddRow (cell21);
 				content.Columns[columnRank++].AddRow (cell22);
 				content.Columns[columnRank++].AddRow (cell23);
 				content.Columns[columnRank++].AddRow (cell24);
 				content.Columns[columnRank++].AddRow (cell25);
+
+				content.Columns[columnRank++].AddRow (cell31);
+				content.Columns[columnRank++].AddRow (cell32);
 			}
 
 			return content;
@@ -161,13 +168,13 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 			ExpressionSimulationTreeTableFiller.rankWidth +
 			ExpressionSimulationTreeTableFiller.dateWidth +
 			ExpressionSimulationTreeTableFiller.typeWidth +
-			ExpressionSimulationTreeTableFiller.amountWidth * 3 +
-			100;
+			ExpressionSimulationTreeTableFiller.amountWidth * 3;
 
 		private const int rankWidth   = 50;
 		private const int dateWidth   = 80;
 		private const int typeWidth   = 20;
 		private const int amountWidth = 100;
 		private const int traceWidth  = 600;
+		private const int errorWidth  = 200;
 	}
 }

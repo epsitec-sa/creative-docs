@@ -119,8 +119,9 @@ namespace Epsitec.Cresus.Assets.Data
 		ExpressionSimulationInitial,
 		ExpressionSimulationAmortization,
 		ExpressionSimulationFinal,
-		ExpressionSimulationTrace,
 		ExpressionSimulationDebug,
+		ExpressionSimulationTrace = ExpressionSimulationDebug+10,
+		ExpressionSimulationError,
 
 		GroupGuidRatioFirst = 10000,
 		GroupGuidRatioLast  = 10099,
