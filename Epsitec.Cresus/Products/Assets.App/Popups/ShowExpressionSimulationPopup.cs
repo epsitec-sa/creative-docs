@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 
+			this.visibleSelectedRow = -1;
 			this.controller = new NavigationTreeTableController (this.accessor);
 
 			this.nodeGetter = new ExpressionSimulationNodeGetter (nodes);
@@ -65,13 +66,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
+			this.controller.RowClicked += delegate (object sender, int row, int column)
+			{
+				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
+				this.UpdateController ();
+			};
+
 			TreeTableFiller<ExpressionSimulationNode>.FillColumns (this.controller, this.dataFiller, "Popup.ShowExpressionSimulation");
 		}
 
 
 		private void UpdateController(bool crop = true)
 		{
-			TreeTableFiller<ExpressionSimulationNode>.FillContent (this.controller, this.dataFiller, -1, crop);
+			TreeTableFiller<ExpressionSimulationNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
 		}
 
 
@@ -91,5 +98,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly NavigationTreeTableController			controller;
 		private readonly ExpressionSimulationNodeGetter			nodeGetter;
 		private readonly ExpressionSimulationTreeTableFiller	dataFiller;
+
+		private int visibleSelectedRow;
 	}
 }
