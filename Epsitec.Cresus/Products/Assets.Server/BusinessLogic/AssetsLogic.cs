@@ -95,6 +95,50 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
+		public static bool IsAmortizationEnded(DataObject asset, DataEvent e)
+		{
+			//	Vérifie si un événement d'amortissement ordinaire a le même montant que l'amortissement
+			//	ordinaire précédent. C'est le signe qu'on a atteint la valeur résiduelle, et donc que
+			//	l'amortissement est terminé.
+			if (e.Type == EventType.AmortizationAuto   ||
+				e.Type == EventType.AmortizationPreview)
+			{
+				var v = AssetsLogic.GetMainValue (e);
+
+				int i = asset.FindEventIndex (e.Timestamp) - 1;
+				while (i >= 0)
+				{
+					var ee = asset.Events[i--];
+
+					if (ee.Type == EventType.AmortizationAuto   ||
+						ee.Type == EventType.AmortizationPreview)
+					{
+						if (AssetsLogic.GetMainValue (ee) == v)
+						{
+							return true;  // amortissement terminé
+						}
+					}
+				}
+			}
+
+			return false;
+		}
+
+		private static decimal? GetMainValue(DataEvent e)
+		{
+			var aa = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
+
+			if (aa == null)
+			{
+				return null;
+			}
+			else
+			{
+				return aa.Value.FinalAmount;
+			}
+		}
+
+
 		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.

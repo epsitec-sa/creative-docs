@@ -144,7 +144,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 						var index = this.cells.FindIndex (x => x.Timestamp == t);
 						var type = e.Type;
-						var glyph = TimelineData.TypeToGlyph (type);
+						var isAmortizationEnded = AssetsLogic.IsAmortizationEnded (obj, e);
+						var glyph = TimelineData.TypeToGlyph (type, isAmortizationEnded);
 
 						if (index == -1)
 						{
@@ -279,42 +280,44 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static TimelineGlyph TypeToGlyph(EventType? type)
+		public static TimelineGlyph TypeToGlyph(EventType? type, bool isAmortizationEnded = false)
 		{
+			var mode = isAmortizationEnded ? TimelineGlyphMode.Dimmed : TimelineGlyphMode.Full;
+
 			switch (type.GetValueOrDefault (EventType.Unknown))
 			{
 				case EventType.Unknown:
 					return TimelineGlyph.Empty;
 
 				case EventType.Input:
-					return new TimelineGlyph (TimelineGlyphShape.FilledSquare);
+					return new TimelineGlyph (TimelineGlyphShape.FilledSquare, mode);
 
 				case EventType.Output:
-					return new TimelineGlyph (TimelineGlyphShape.OutlinedSquare);
+					return new TimelineGlyph (TimelineGlyphShape.OutlinedSquare, mode);
 
 				case EventType.Modification:
-					return new TimelineGlyph (TimelineGlyphShape.FilledCircle);
+					return new TimelineGlyph (TimelineGlyphShape.FilledCircle, mode);
 
 				case EventType.Increase:
-					return new TimelineGlyph (TimelineGlyphShape.FilledUp);
+					return new TimelineGlyph (TimelineGlyphShape.FilledUp, mode);
 
 				case EventType.Decrease:
-					return new TimelineGlyph (TimelineGlyphShape.FilledDown);
+					return new TimelineGlyph (TimelineGlyphShape.FilledDown, mode);
 
 				case EventType.Adjust:
-					return new TimelineGlyph (TimelineGlyphShape.FilledStar);
+					return new TimelineGlyph (TimelineGlyphShape.FilledStar, mode);
 
 				case EventType.AmortizationAuto:
-					return new TimelineGlyph (TimelineGlyphShape.PinnedDiamond);
+					return new TimelineGlyph (TimelineGlyphShape.PinnedDiamond, mode);
 
 				case EventType.AmortizationPreview:
-					return new TimelineGlyph (TimelineGlyphShape.OutlinedDiamond);
+					return new TimelineGlyph (TimelineGlyphShape.OutlinedDiamond, mode);
 
 				case EventType.AmortizationExtra:
-					return new TimelineGlyph (TimelineGlyphShape.FilledDiamond);
+					return new TimelineGlyph (TimelineGlyphShape.FilledDiamond, mode);
 
 				case EventType.Locked:
-					return new TimelineGlyph (TimelineGlyphShape.Locked);
+					return new TimelineGlyph (TimelineGlyphShape.Locked, mode);
 
 				default:
 					return TimelineGlyph.Undefined;

@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public struct TimelineGlyph
 	{
-		public TimelineGlyph(TimelineGlyphShape shape, TimelineGlyphMode mode = TimelineGlyphMode.Full)
+		public TimelineGlyph(TimelineGlyphShape shape, TimelineGlyphMode mode = TimelineGlyphMode.Undefined)
 		{
 			this.Shape = shape;
 			this.Mode  = mode;
