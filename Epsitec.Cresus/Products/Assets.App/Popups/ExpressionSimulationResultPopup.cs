@@ -14,9 +14,9 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
-	public class ShowExpressionSimulationPopup : AbstractPopup
+	public class ExpressionSimulationResultPopup : AbstractPopup
 	{
-		public ShowExpressionSimulationPopup(DataAccessor accessor, List<ExpressionSimulationNode> nodes)
+		public ExpressionSimulationResultPopup(DataAccessor accessor, List<ExpressionSimulationNode> nodes)
 		{
 			this.accessor = accessor;
 
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			if (target != null)
 			{
-				var popup = new ShowExpressionSimulationPopup (accessor, nodes);
+				var popup = new ExpressionSimulationResultPopup (accessor, nodes);
 				popup.Create (target, leftOrRight: true);
 			}
 		}

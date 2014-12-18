@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			ExpressionSimulationParamsPopup.Show (target, this.accessor, this.argumentsController.ArgumentGuids, delegate
 			{
 				var nodes = this.ComputeSimulation ();
-				ShowExpressionSimulationPopup.Show (target, this.accessor, nodes);
+				ExpressionSimulationResultPopup.Show (target, this.accessor, nodes);
 			});
 		}
 
