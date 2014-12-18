@@ -3,31 +3,26 @@
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
-	public enum TimelineGlyph
+	public struct TimelineGlyph
 	{
-		Undefined,
+		public TimelineGlyph(TimelineGlyphShape shape, TimelineGlyphMode mode = TimelineGlyphMode.Full)
+		{
+			this.Shape = shape;
+			this.Mode  = mode;
+		}
 
-		Empty,
-		
-		FilledCircle,
-		OutlinedCircle,
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.Shape == TimelineGlyphShape.Empty;
+			}
+		}
 
-		FilledSquare,
-		OutlinedSquare,
+		public static TimelineGlyph Empty     = new TimelineGlyph (TimelineGlyphShape.Empty);
+		public static TimelineGlyph Undefined = new TimelineGlyph (TimelineGlyphShape.Undefined);
 
-		FilledDiamond,
-		OutlinedDiamond,
-		PinnedDiamond,
-
-		FilledDown,
-		OutlinedDown,
-
-		FilledUp,
-		OutlinedUp,
-
-		FilledStar,
-		OutlinedStar,
-
-		Locked,
+		public readonly TimelineGlyphShape		Shape;
+		public readonly TimelineGlyphMode		Mode;
 	};
 }

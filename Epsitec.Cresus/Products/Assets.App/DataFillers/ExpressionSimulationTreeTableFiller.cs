@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var cell25 = new TreeTableCellDecimal (initialAmount, cellState);
 
 				var cell31 = new TreeTableCellString (trace, cellState);
-				var cell32 = new TreeTableCellString (trace, cellState);
+				var cell32 = new TreeTableCellString (error, cellState);
 
 				int columnRank = 0;
 

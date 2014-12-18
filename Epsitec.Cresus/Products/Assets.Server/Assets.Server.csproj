@@ -79,6 +79,8 @@
     <Compile Include="BusinessLogic\SearchDefinition.cs" />
     <Compile Include="BusinessLogic\SearchOptions.cs" />
     <Compile Include="BusinessLogic\SearchEngine.cs" />
+    <Compile Include="BusinessLogic\TimelineGlyphMode.cs" />
+    <Compile Include="BusinessLogic\TimelineGlyph.cs" />
     <Compile Include="BusinessLogic\Warning.cs" />
     <Compile Include="BusinessLogic\UniversalLogic.cs" />
     <Compile Include="BusinessLogic\WarningsLogic.cs" />
@@ -106,7 +108,7 @@
     <Compile Include="BusinessLogic\PersonsLogic.cs" />
     <Compile Include="BusinessLogic\ProrataType.cs" />
     <Compile Include="BusinessLogic\TimelineData.cs" />
-    <Compile Include="BusinessLogic\TimelineGlyph.cs" />
+    <Compile Include="BusinessLogic\TimelineGlyphShape.cs" />
     <Compile Include="BusinessLogic\TimelineMode.cs" />
     <Compile Include="BusinessLogic\TimelinesMode.cs" />
     <Compile Include="BusinessLogic\UserFieldsLogic.cs" />

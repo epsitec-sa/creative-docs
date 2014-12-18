@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			get
 			{
 				var cell = this.timelineData[this.selectedTimestamp];
-				return (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty);
+				return (cell.HasValue && !cell.Value.Glyph.IsEmpty);
 			}
 		}
 
@@ -829,7 +829,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					{
 						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
+						if (cell.HasValue && !cell.Value.Glyph.IsEmpty)
 						{
 							return i;
 						}
@@ -851,7 +851,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					{
 						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
+						if (cell.HasValue && !cell.Value.Glyph.IsEmpty)
 						{
 							return i;
 						}
@@ -876,7 +876,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					{
 						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
+						if (cell.HasValue && !cell.Value.Glyph.IsEmpty)
 						{
 							return i;
 						}
@@ -900,7 +900,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					{
 						var cell = this.timelineData[i];
 
-						if (cell.HasValue && cell.Value.Glyph != TimelineGlyph.Empty)
+						if (cell.HasValue && !cell.Value.Glyph.IsEmpty)
 						{
 							return i;
 						}

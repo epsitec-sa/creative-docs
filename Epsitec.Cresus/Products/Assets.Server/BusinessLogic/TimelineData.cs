@@ -287,34 +287,34 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					return TimelineGlyph.Empty;
 
 				case EventType.Input:
-					return TimelineGlyph.FilledSquare;
+					return new TimelineGlyph (TimelineGlyphShape.FilledSquare);
 
 				case EventType.Output:
-					return TimelineGlyph.OutlinedSquare;
+					return new TimelineGlyph (TimelineGlyphShape.OutlinedSquare);
 
 				case EventType.Modification:
-					return TimelineGlyph.FilledCircle;
+					return new TimelineGlyph (TimelineGlyphShape.FilledCircle);
 
 				case EventType.Increase:
-					return TimelineGlyph.FilledUp;
+					return new TimelineGlyph (TimelineGlyphShape.FilledUp);
 
 				case EventType.Decrease:
-					return TimelineGlyph.FilledDown;
+					return new TimelineGlyph (TimelineGlyphShape.FilledDown);
 
 				case EventType.Adjust:
-					return TimelineGlyph.FilledStar;
+					return new TimelineGlyph (TimelineGlyphShape.FilledStar);
 
 				case EventType.AmortizationAuto:
-					return TimelineGlyph.PinnedDiamond;
+					return new TimelineGlyph (TimelineGlyphShape.PinnedDiamond);
 
 				case EventType.AmortizationPreview:
-					return TimelineGlyph.OutlinedDiamond;
+					return new TimelineGlyph (TimelineGlyphShape.OutlinedDiamond);
 
 				case EventType.AmortizationExtra:
-					return TimelineGlyph.FilledDiamond;
+					return new TimelineGlyph (TimelineGlyphShape.FilledDiamond);
 
 				case EventType.Locked:
-					return TimelineGlyph.Locked;
+					return new TimelineGlyph (TimelineGlyphShape.Locked);
 
 				default:
 					return TimelineGlyph.Undefined;

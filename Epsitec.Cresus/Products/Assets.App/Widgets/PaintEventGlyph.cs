@@ -16,29 +16,29 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			Rectangle r;
 			Path path;
 
-			switch (glyph)
+			switch (glyph.Shape)
 			{
-				case TimelineGlyph.FilledCircle:
+				case TimelineGlyphShape.FilledCircle:
 					graphics.AddFilledCircle (rect.Center, rect.Height*0.28);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedCircle:
+				case TimelineGlyphShape.OutlinedCircle:
 					graphics.AddFilledCircle (rect.Center, rect.Height*0.25);
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddCircle (rect.Center, rect.Height*0.25);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.FilledSquare:
+				case TimelineGlyphShape.FilledSquare:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 
 					graphics.AddFilledRectangle (r);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedSquare:
+				case TimelineGlyphShape.OutlinedSquare:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 					r.Deflate (0.5);
 
@@ -46,18 +46,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddRectangle (r);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.FilledDiamond:
+				case TimelineGlyphShape.FilledDiamond:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					path = PaintEventGlyph.GetDiamondPath (r);
 
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.PinnedDiamond:
+				case TimelineGlyphShape.PinnedDiamond:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					r.Deflate (0.5);
 					path = PaintEventGlyph.GetDiamondPath (r);
@@ -66,14 +66,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 
 					path = PaintEventGlyph.GetPinnedPath (r);
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedDiamond:
+				case TimelineGlyphShape.OutlinedDiamond:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					r.Deflate (0.5);
 					path = PaintEventGlyph.GetDiamondPath (r);
@@ -82,18 +82,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.FilledDown:
+				case TimelineGlyphShape.FilledDown:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					path = PaintEventGlyph.GetDownPath (r);
 
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedDown:
+				case TimelineGlyphShape.OutlinedDown:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					r.Deflate (0.5);
 					path = PaintEventGlyph.GetDownPath (r);
@@ -102,18 +102,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.FilledUp:
+				case TimelineGlyphShape.FilledUp:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					path = PaintEventGlyph.GetUpPath (r);
 
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedUp:
+				case TimelineGlyphShape.OutlinedUp:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					r.Deflate (0.5);
 					path = PaintEventGlyph.GetUpPath (r);
@@ -122,18 +122,18 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.FilledStar:
+				case TimelineGlyphShape.FilledStar:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					path = PaintEventGlyph.GetStarPath (r);
 
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.OutlinedStar:
+				case TimelineGlyphShape.OutlinedStar:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					r.Deflate (0.5);
 					path = PaintEventGlyph.GetStarPath (r);
@@ -142,15 +142,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
 
 					graphics.AddPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
-				case TimelineGlyph.Locked:
+				case TimelineGlyphShape.Locked:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.3);
 					path = PaintEventGlyph.GetLockedPath (r);
 
 					graphics.AddFilledPath (path);
-					graphics.RenderSolid (ColorManager.TextColor);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 			}
 		}
@@ -283,6 +283,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			path.AppendCircle (rect.Center, rect.Width*0.15);
 
 			return path;
+		}
+
+
+		private static Color MainColor(TimelineGlyph glyph)
+		{
+			switch (glyph.Mode)
+			{
+				case TimelineGlyphMode.Dimmed:
+					return ColorManager.DisableTextColor;
+
+				default:
+					return ColorManager.TextColor;
+			}
 		}
 	}
 }

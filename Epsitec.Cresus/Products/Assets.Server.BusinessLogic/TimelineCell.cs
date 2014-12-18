@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			get
 			{
-				return this.Glyphs.Count == 1 && this.Glyphs[0] == TimelineGlyph.Empty;
+				return this.Glyphs.Count == 1 && this.Glyphs[0].IsEmpty;
 			}
 		}
 
