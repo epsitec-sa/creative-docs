@@ -29,21 +29,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controllerRanks = new Dictionary<ObjectField, int> ();
 			this.lastArguments = new Dictionary<ObjectField, object> ();
 
-			this.title = Res.Strings.Popup.AmountExpressionSimulation.Title.ToString ();
+			this.title = Res.Strings.Popup.ExpressionSimulationParams.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.StartDate.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.StartDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 1
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.EndDate.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.EndDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 				BottomMargin          = 20,
 			});
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Combo,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.Periodicity.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.Periodicity.ToString (),
 				MultiLabels           = ExpressionSimulationParamsPopup.PeriodicityLabels,
 				Width                 = 240,
 			});
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 3
 			{
 				StackedControllerType = StackedControllerType.Decimal,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.InitialAmount.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.InitialAmount.ToString (),
 				DecimalFormat         = DecimalFormat.Amount,
 				BottomMargin          = 10,
 			});
@@ -67,28 +67,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 4
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.ExtraDate.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.ExtraDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 5
 			{
 				StackedControllerType = StackedControllerType.Decimal,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.ExtraAmount.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.ExtraAmount.ToString (),
 				DecimalFormat         = DecimalFormat.Amount,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
 			{
 				StackedControllerType = StackedControllerType.Date,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.AdjustDate.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.AdjustDate.ToString (),
 				DateRangeCategory     = DateRangeCategory.Free,
 			});
 
 			list.Add (new StackedControllerDescription  // 7
 			{
 				StackedControllerType = StackedControllerType.Decimal,
-				Label                 = Res.Strings.Popup.AmountExpressionSimulation.AdjustAmount.ToString (),
+				Label                 = Res.Strings.Popup.ExpressionSimulationParams.AdjustAmount.ToString (),
 				DecimalFormat         = DecimalFormat.Amount,
 				BottomMargin          = 20,
 			});

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			this.CreateTitle (Res.Strings.Popup.ShowExpressionSimulation.Title.ToString ());
+			this.CreateTitle (Res.Strings.Popup.ExpressionSimulationResult.Title.ToString ());
 			this.CreateCloseButton ();
 
 			this.toolbar.CreateUI (this.mainFrameBox);
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.UpdateController ();
 			};
 
-			TreeTableFiller<ExpressionSimulationNode>.FillColumns (this.controller, this.dataFiller, "Popup.ShowExpressionSimulation");
+			TreeTableFiller<ExpressionSimulationNode>.FillColumns (this.controller, this.dataFiller, "Popup.ExpressionSimulationResult");
 		}
 
 

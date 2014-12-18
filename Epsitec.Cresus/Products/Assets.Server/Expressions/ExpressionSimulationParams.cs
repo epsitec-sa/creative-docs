@@ -32,6 +32,22 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
+		public bool HasExtra
+		{
+			get
+			{
+				return this.ExtraDate.HasValue && this.ExtraAmount.HasValue;
+			}
+		}
+
+		public bool HasAdjust
+		{
+			get
+			{
+				return this.AdjustDate.HasValue && this.AdjustAmount.HasValue;
+			}
+		}
+
 		public ExpressionSimulationParams(System.Xml.XmlReader reader)
 		{
 			// Todo...
