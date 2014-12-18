@@ -252,6 +252,17 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 70));
 			}
 			
+			public static class ExpressionSimulationResultToolbar
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (ExpressionSimulationResultToolbar.Export, null);
+				}
+				
+				//	designer:cap/JUK8701
+				public static readonly global::Epsitec.Common.Widgets.Command Export = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 232));
+			}
+			
 			public static class Groups
 			{
 				internal static void _Initialize()
@@ -877,6 +888,12 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Paste = 0x7D300014000082L;
 				//	designer:cap/JUK6201
 				public const long Prev = 0x7D300014000046L;
+			}
+			
+			public static class ExpressionSimulationResultToolbar
+			{
+				//	designer:cap/JUK8701
+				public const long Export = 0x7D3000140000E8L;
 			}
 			
 			public static class Groups
@@ -10287,6 +10304,7 @@ namespace Epsitec.Cresus.Assets.App
 			Commands.Edit._Initialize ();
 			Commands.Entries._Initialize ();
 			Commands.Events._Initialize ();
+			Commands.ExpressionSimulationResultToolbar._Initialize ();
 			Commands.Groups._Initialize ();
 			Commands.Main._Initialize ();
 			Commands.Main.Navigate._Initialize ();

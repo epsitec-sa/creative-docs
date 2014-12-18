@@ -5,20 +5,27 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.App.DataFillers;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.NodeGetters;
+using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
+using Epsitec.Cresus.Assets.App.Export;
+using Epsitec.Cresus.Assets.Server.BusinessLogic;
+using Epsitec.Cresus.Assets.Server.DataFillers;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class ExpressionSimulationResultPopup : AbstractPopup
 	{
-		public ExpressionSimulationResultPopup(DataAccessor accessor, List<ExpressionSimulationNode> nodes)
+		private ExpressionSimulationResultPopup(DataAccessor accessor, CommandContext commandContext, List<ExpressionSimulationNode> nodes)
 		{
 			this.accessor = accessor;
+
+			this.toolbar = new ExpressionSimulationResultToolbar (this.accessor, commandContext);
 
 			this.visibleSelectedRow = -1;
 			this.controller = new NavigationTreeTableController (this.accessor);
@@ -51,6 +58,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateTitle (Res.Strings.Popup.ShowExpressionSimulation.Title.ToString ());
 			this.CreateCloseButton ();
 
+			this.toolbar.CreateUI (this.mainFrameBox);
+			this.ConnectSearch ();
+
 			this.CreateController ();
 		}
 
@@ -76,6 +86,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private void ConnectSearch()
+		{
+			this.toolbar.Search += delegate (object sender, SearchDefinition definition, int direction)
+			{
+				this.Search (definition, direction);
+			};
+		}
+
+		private void Search(SearchDefinition definition, int direction)
+		{
+			var row = FillerSearchEngine<ExpressionSimulationNode>.Search (this.accessor, this.nodeGetter, this.dataFiller, definition, this.visibleSelectedRow, direction);
+
+			if (row != -1)
+			{
+				this.visibleSelectedRow = row;
+				this.UpdateController ();
+			}
+		}
+
+
+		[Command (Res.CommandIds.ExpressionSimulationResultToolbar.Export)]
+		protected void OnExport(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+
+			ExportHelpers<ExpressionSimulationNode>.StartExportProcess (target, this.accessor, this.dataFiller, this.controller.ColumnsState);
+		}
+
+
 		private void UpdateController(bool crop = true)
 		{
 			TreeTableFiller<ExpressionSimulationNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
@@ -83,11 +122,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, List<ExpressionSimulationNode> nodes)
+		public static void Show(Widget target, DataAccessor accessor, CommandContext commandContext, List<ExpressionSimulationNode> nodes)
 		{
 			if (target != null)
 			{
-				var popup = new ExpressionSimulationResultPopup (accessor, nodes);
+				var popup = new ExpressionSimulationResultPopup (accessor, commandContext, nodes);
 				popup.Create (target, leftOrRight: true);
 			}
 		}
@@ -95,6 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private readonly DataAccessor							accessor;
+		private readonly ExpressionSimulationResultToolbar		toolbar;
 		private readonly NavigationTreeTableController			controller;
 		private readonly ExpressionSimulationNodeGetter			nodeGetter;
 		private readonly ExpressionSimulationTreeTableFiller	dataFiller;

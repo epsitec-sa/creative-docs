@@ -106,7 +106,7 @@
     <Compile Include="Popups\AddFavoritePopup.cs" />
     <Compile Include="Popups\ArgumentsPopup.cs" />
     <Compile Include="Popups\CreateArgumentPopup.cs" />
-    <Compile Include="Popups\ShowExpressionSimulationPopup.cs" />
+    <Compile Include="Popups\ExpressionSimulationResultPopup.cs" />
     <Compile Include="Popups\ExpressionSimulationParamsPopup.cs" />
     <Compile Include="Popups\ShowExpressionPopup.cs" />
     <Compile Include="Popups\CreateMethodPopup.cs" />
@@ -201,6 +201,7 @@
     <Compile Include="Settings\LocalSettings.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\ArguemntsToolbar.cs" />
+    <Compile Include="Views\CommandToolbars\ExpressionSimulationResultToolbar.cs" />
     <Compile Include="Views\CommandToolbars\MethodsToolbar.cs" />
     <Compile Include="Views\EditorPages\EditorPageArgument.cs" />
     <Compile Include="Views\EditorPages\EditorPageMethod.cs" />

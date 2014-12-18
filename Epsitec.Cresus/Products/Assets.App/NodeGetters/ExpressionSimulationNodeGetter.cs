@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Server.Expression;
 
 namespace Epsitec.Cresus.Assets.App.NodeGetters
 {
-	public class ExpressionSimulationNodeGetter : INodeGetter<ExpressionSimulationNode>  // outputNodes
+	public struct ExpressionSimulationNodeGetter : INodeGetter<ExpressionSimulationNode>  // outputNodes
 	{
 		public ExpressionSimulationNodeGetter(List<ExpressionSimulationNode> inputNodes)
 		{

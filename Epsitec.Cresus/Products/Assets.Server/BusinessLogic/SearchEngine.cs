@@ -41,7 +41,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					this.stringPattern  = this.ProcessString (this.definition.Pattern);
 					this.decimalPattern = TypeConverters.ParseAmount (this.definition.Pattern);
 					this.intPattern     = TypeConverters.ParseInt (this.definition.Pattern);
-					this.datePattern    = TypeConverters.ParseDate (this.definition.Pattern, Timestamp.Now.Date, null, null);
+
+					if (!this.decimalPattern.HasValue && !this.intPattern.HasValue)
+					{
+						//	On cherche s'il s'agit d'une date seulement si on n'a pas trouvé un simple int ou decimal.
+						this.datePattern = TypeConverters.ParseDate (this.definition.Pattern, Timestamp.Now.Date, null, null);
+					}
 				}
 			}
 		}
