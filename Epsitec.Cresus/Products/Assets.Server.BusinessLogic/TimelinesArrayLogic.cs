@@ -118,7 +118,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private TimelineCell EventToCell(DataObject obj, DataEvent e)
 		{
-			var glyph      = TimelineData.TypeToGlyph (e.Type);
+			var isAmortizationEnded = AssetsLogic.IsAmortizationEnded (obj, e);
+			var glyph      = TimelineData.TypeToGlyph (e.Type, isAmortizationEnded);
 			string tooltip = LogicDescriptions.GetTooltip (this.accessor, obj, e.Timestamp, e.Type, 8);
 
 			return new TimelineCell (glyph, DataCellFlags.None, tooltip);
