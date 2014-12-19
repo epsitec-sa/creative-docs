@@ -100,22 +100,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Vérifie si un événement d'amortissement ordinaire a le même montant que l'amortissement
 			//	ordinaire précédent. C'est le signe qu'on a atteint la valeur résiduelle, et donc que
 			//	l'amortissement est terminé.
-			if (e.Type == EventType.AmortizationAuto   ||
-				e.Type == EventType.AmortizationPreview)
+			if (asset != null)
 			{
-				var v = AssetsLogic.GetMainValue (e);
-
-				int i = asset.FindEventIndex (e.Timestamp) - 1;
-				while (i >= 0)
+				if (e.Type == EventType.AmortizationAuto   ||
+					e.Type == EventType.AmortizationPreview)
 				{
-					var ee = asset.Events[i--];
+					var v = AssetsLogic.GetMainValue (e);
 
-					if (ee.Type == EventType.AmortizationAuto   ||
-						ee.Type == EventType.AmortizationPreview)
+					int i = asset.FindEventIndex (e.Timestamp) - 1;
+					while (i >= 0)
 					{
-						if (AssetsLogic.GetMainValue (ee) == v)
+						var ee = asset.Events[i--];
+
+						if (ee.Type == EventType.AmortizationAuto   ||
+						ee.Type == EventType.AmortizationPreview)
 						{
-							return true;  // amortissement terminé
+							if (AssetsLogic.GetMainValue (ee) == v)
+							{
+								return true;  // amortissement terminé
+							}
 						}
 					}
 				}
