@@ -209,7 +209,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					details = amortizationDetails[j++];
 				}
 
-				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, initial, final, trace, error, details);
+				var isAmortizationEnded = AssetsLogic.IsAmortizationEnded (asset, e);
+				var node = new ExpressionSimulationNode (rank, e.Timestamp.Date, e.Type, isAmortizationEnded, initial, final, trace, error, details);
 				nodes.Add (node);
 			}
 
