@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				var node = this.nodeGetter[firstRow+i];
 
-				var rank    = node.Rank.HasValue ? node.Rank+1 : null;  // 1..n
+				var rank    = node.Rank.HasValue && !node.IsAmortizartionEnded ? node.Rank+1 : null;  // 1..n
 				var date    = node.Date;
 				var type    = TimelineData.TypeToGlyph (node.EventType, node.IsAmortizartionEnded);
 				var initial = node.InitialAmount;
