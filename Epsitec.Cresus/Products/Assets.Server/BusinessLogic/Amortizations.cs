@@ -255,7 +255,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (e.Type != EventType.AmortizationPreview &&
 						e.Type != EventType.AmortizationAuto    )
 					{
-						if (e.Type == EventType.AmortizationExtra)
+						if (e.Type == EventType.Input)
+						{
+							//	On utilise la date exacte lors de l'entrée d'un objet, pour
+							//	permettre le calcul au prorata. Si on ne souhaite pas calculer
+							//	au prorata, c'est l'expression qui effectue l'arrondi sur la
+							//	date.
+							baseDate = e.Timestamp.Date;
+						}
+						else if (e.Type == EventType.AmortizationExtra)
 						{
 							//	Un amortissement extraordinaire dans l'année est considéré
 							//	comme une modification au début de l'année suivante.
@@ -269,7 +277,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 
 						baseAmount = aa.Value.FinalAmount.Value;
-						baseYearCount = (DateTime.Months (lastDate,baseDate)) / 12.0m;
+						baseYearCount = DateTime.Months (lastDate, baseDate) / 12.0m;
 					}
 				}
 			}
