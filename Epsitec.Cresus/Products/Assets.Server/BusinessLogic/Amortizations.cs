@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						firstDate   = e.Timestamp.Date;
 						firstAmount = aa.Value.FinalAmount.Value;
-						lastDate    = firstDate.AddMonths ((int) (baseYearCount * 12.0m));
+						lastDate    = new System.DateTime (firstDate.Year, 1, 1).AddMonths ((int) (baseYearCount * 12.0m));
 					}
 
 					inputAmount = aa.Value.FinalAmount.Value;
