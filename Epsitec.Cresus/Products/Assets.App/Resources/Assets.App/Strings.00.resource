@@ -475,4 +475,5 @@
   <data name="DataFillers.ExpressionSimulationTreeTable.Error" id="KPK">Erreur</data>
   <data name="Popup.ExportXml.Title" id="KQK">Exportation des données au format XML</data>
   <data name="Popup.ExportYamlTitle" id="KRK">Exportation des données au format YAML</data>
+  <data name="AmortizedAmountController.Amortization" id="KSK">Amortissement</data>
 </bundle>

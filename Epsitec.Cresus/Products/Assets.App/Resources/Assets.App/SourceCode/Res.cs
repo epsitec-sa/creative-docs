@@ -1311,6 +1311,14 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class AmortizedAmountController
 			{
+				//	designer:str/JUKSK01
+				public static global::Epsitec.Common.Types.FormattedText Amortization
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544988));
+					}
+				}
 				//	designer:str/JUKQI01
 				public static global::Epsitec.Common.Types.FormattedText Combos
 				{
@@ -5852,6 +5860,14 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class AmortizedAmountController
 			{
+				//	designer:str/JUKSK01
+				public static global::Epsitec.Common.Support.Druid Amortization
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544988);
+					}
+				}
 				//	designer:str/JUKQI01
 				public static global::Epsitec.Common.Support.Druid Combos
 				{

@@ -54,7 +54,5 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 				+ System.Math.Min ((date.Day-1), 30-1);
 		}
 
-
-
 	}
 }

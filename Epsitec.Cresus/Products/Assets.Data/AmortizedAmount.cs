@@ -61,6 +61,22 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
+		public decimal?							Amortization
+		{
+			get
+			{
+				if (this.InitialAmount.HasValue && this.FinalAmount.HasValue)
+				{
+					return this.InitialAmount.Value - this.FinalAmount.Value;
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
+
 		public readonly decimal?				InitialAmount;
 		public readonly decimal?				FinalAmount;
 		public readonly string					Trace;

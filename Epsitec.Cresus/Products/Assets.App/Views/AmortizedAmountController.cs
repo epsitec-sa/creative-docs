@@ -120,7 +120,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			this.lines = new FrameBox[5];
+			//	On crée 6 lignes pour:
+			//	0: InitialValue
+			//	1: Amortization
+			//	2: FinalValue
+			//	3: Trace
+			//	4: Error
+			//	5: espace libre
+
+			this.lines = new FrameBox[6];
 
 			for (int i=0; i<this.lines.Length; i++)
 			{
@@ -130,15 +138,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateLabel (this.lines[0], 100, Res.Strings.AmortizedAmountController.InitialValue.ToString ());
 			this.initialAmountTextField = this.CreateTextField (this.lines[0], AmortizedAmountController.AmountWidth, null, "CHF");
 
-			this.CreateLabel (this.lines[1], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
-			this.finalAmountTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
-			this.CreateUnlockButton (this.lines[1]);
+			this.CreateLabel (this.lines[1], 100, Res.Strings.AmortizedAmountController.Amortization.ToString ());
+			this.amortizationTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, "CHF");
 
-			this.CreateLabel (this.lines[2], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
-			this.traceTextField = this.CreateTextField (this.lines[2], AbstractFieldController.maxWidth, null, null);
+			this.CreateLabel (this.lines[2], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
+			this.finalAmountTextField = this.CreateTextField (this.lines[2], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
+			this.CreateUnlockButton (this.lines[2]);
 
-			this.CreateLabel (this.lines[3], 100, Res.Strings.AmortizedAmountController.Error.ToString ());
-			this.errorTextField = this.CreateTextField (this.lines[3], AbstractFieldController.maxWidth, null, null);
+			this.CreateLabel (this.lines[3], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
+			this.traceTextField = this.CreateTextField (this.lines[3], AbstractFieldController.maxWidth, null, null);
+
+			this.CreateLabel (this.lines[4], 100, Res.Strings.AmortizedAmountController.Error.ToString ());
+			this.errorTextField = this.CreateTextField (this.lines[4], AbstractFieldController.maxWidth, null, null);
 
 			this.CreateEntryController (parent);
 			this.UpdateUI ();
@@ -393,6 +404,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				if (this.value.HasValue)
 				{
 					this.InitialAmount = this.value.Value.InitialAmount;
+					this.Amortization  = this.value.Value.Amortization;
 					this.FinalAmount   = this.value.Value.FinalAmount;
 					this.traceTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Trace);
 					this.errorTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Error);
@@ -404,6 +416,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				else
 				{
 					this.InitialAmount = null;
+					this.Amortization  = null;
 					this.FinalAmount   = null;
 					this.traceTextField.Text = null;
 					this.errorTextField.Text = null;
@@ -429,14 +442,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.UpdateField (this.initialAmountTextField, true);
+				this.UpdateField (this.amortizationTextField, true);
 				this.UpdateField (this.finalAmountTextField, !isFinalEnable);
 				this.unlockButton.Visibility = unlockEnable;
 				this.UpdateField (this.traceTextField, true);
 				this.UpdateField (this.errorTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
-				this.lines[2].Visibility = this.IsAmortizationAuto;
-				this.lines[3].Visibility = this.IsAmortizationAuto;
+				this.lines[1].Visibility = this.IsAmortization;      // ligne Amortissement
+				this.lines[3].Visibility = this.IsAmortizationAuto;  // ligne Trace
+				this.lines[4].Visibility = this.IsAmortizationAuto;  // ligne Error
 
 				this.UpdateEntry ();
 			}
@@ -478,6 +493,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			set
 			{
 				AmortizedAmountController.SetAmount (this.initialAmountTextField, value);
+			}
+		}
+
+		private decimal? Amortization
+		{
+			get
+			{
+				return AmortizedAmountController.GetAmount (this.amortizationTextField);
+			}
+			set
+			{
+				AmortizedAmountController.SetAmount (this.amortizationTextField, value);
 			}
 		}
 
@@ -609,6 +636,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
+		private bool IsAmortization
+		{
+			get
+			{
+				return this.eventType == EventType.AmortizationPreview
+					|| this.eventType == EventType.AmortizationAuto
+					|| this.eventType == EventType.AmortizationExtra;
+			}
+		}
+
 		private bool IsAmortizationAuto
 		{
 			get
@@ -721,6 +758,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private bool							isReadOnly;
 
 		private TextField						initialAmountTextField;
+		private TextField						amortizationTextField;
 		private TextField						finalAmountTextField;
 		private Button							unlockButton;
 		private TextField						traceTextField;
