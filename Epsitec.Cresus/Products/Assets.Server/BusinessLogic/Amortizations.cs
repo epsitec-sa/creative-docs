@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var      lastDate      = timestamp.Date;
 			var      baseDate      = timestamp.Date;
 			decimal  baseAmount    = 0.0m;
-			decimal  baseYearCount = AssetsLogic.GetYearCount (accessor, obj, timestamp).GetValueOrDefault (10.0m);
+			decimal  baseYearCount = AssetsLogic.GetFirstYearCount (accessor, obj, timestamp).GetValueOrDefault (10.0m);
 			decimal  inputAmount   = 0.0m;
 
 			foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp))

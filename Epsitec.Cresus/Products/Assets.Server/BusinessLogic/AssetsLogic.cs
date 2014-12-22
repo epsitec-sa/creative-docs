@@ -94,9 +94,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				.Any ();
 		}
 
-		public static decimal? GetYearCount(DataAccessor accessor, DataObject asset, Timestamp timestamp)
+		public static decimal? GetFirstYearCount(DataAccessor accessor, DataObject asset, Timestamp timestamp)
 		{
-			return AssetsLogic.GetVariable (accessor, asset, timestamp, "YearCount");
+			return AssetsLogic.GetVariable (accessor, asset, timestamp, "FirstYearCount");
 		}
 
 		private static decimal? GetVariable(DataAccessor accessor, DataObject asset, Timestamp timestamp, string variable)
