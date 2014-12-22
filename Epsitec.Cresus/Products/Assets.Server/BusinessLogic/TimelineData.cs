@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 						var index = this.cells.FindIndex (x => x.Timestamp == t);
 						var type = e.Type;
-						var isAmortizationEnded = AssetsLogic.IsAmortizationEnded (obj, e);
-						var glyph = TimelineData.TypeToGlyph (type, isAmortizationEnded);
+						var mode  = AssetsLogic.IsAmortizationEnded (obj, e);
+						var glyph = TimelineData.TypeToGlyph (type, mode);
 
 						if (index == -1)
 						{
@@ -280,10 +280,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static TimelineGlyph TypeToGlyph(EventType? type, bool isAmortizationEnded = false)
+		public static TimelineGlyph TypeToGlyph(EventType? type, TimelineGlyphMode mode = TimelineGlyphMode.Full)
 		{
-			var mode = isAmortizationEnded ? TimelineGlyphMode.Dimmed : TimelineGlyphMode.Full;
-
 			switch (type.GetValueOrDefault (EventType.Unknown))
 			{
 				case EventType.Unknown:

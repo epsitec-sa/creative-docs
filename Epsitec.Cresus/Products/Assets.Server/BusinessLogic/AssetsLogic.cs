@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static bool IsAmortizationEnded(DataObject asset, DataEvent e)
+		public static TimelineGlyphMode IsAmortizationEnded(DataObject asset, DataEvent e)
 		{
 			//	Vérifie si un événement d'amortissement ordinaire a le même montant que l'amortissement
 			//	ordinaire précédent. C'est le signe qu'on a atteint la valeur résiduelle, et donc que
@@ -113,18 +113,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var ee = asset.Events[i--];
 
 						if (ee.Type == EventType.AmortizationAuto   ||
-						ee.Type == EventType.AmortizationPreview)
+							ee.Type == EventType.AmortizationPreview)
 						{
 							if (AssetsLogic.GetMainValue (ee) == v)
 							{
-								return true;  // amortissement terminé
+								return TimelineGlyphMode.Dimmed;  // amortissement terminé
 							}
 						}
 					}
 				}
+
+				return TimelineGlyphMode.Full;
 			}
 
-			return false;
+			return TimelineGlyphMode.Undefined;
 		}
 
 		private static decimal? GetMainValue(DataEvent e)
