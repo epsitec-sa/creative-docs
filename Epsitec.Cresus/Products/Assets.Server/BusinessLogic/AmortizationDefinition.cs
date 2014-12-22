@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			string arguments, string expression,
 			Periodicity periodicity)
 		{
-			this.Range           = range;
-			this.CurrentDate     = currentDate;
-			this.Arguments       = arguments;
-			this.Expression      = expression;
-			this.Periodicity     = periodicity;
+			this.Range       = range;
+			this.CurrentDate = currentDate;
+			this.Arguments   = arguments;
+			this.Expression  = expression;
+			this.Periodicity = periodicity;
 		}
 
 		public bool								IsEmpty

@@ -49,11 +49,12 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationAmortization, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Amortization.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationFinal,        TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Final.ToString ()));
 
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+0, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "InputDate"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+1, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InputAmount"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+2, TreeTableColumnType.Date,   ExpressionSimulationTreeTableFiller.dateWidth,   "BaseDate"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+3, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "BaseAmount"));
-				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+4, TreeTableColumnType.Amount, ExpressionSimulationTreeTableFiller.amountWidth, "InitialAmount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+0, TreeTableColumnType.Date,    ExpressionSimulationTreeTableFiller.dateWidth,   "InputDate"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+1, TreeTableColumnType.Amount,  ExpressionSimulationTreeTableFiller.amountWidth, "InputAmount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+2, TreeTableColumnType.Date,    ExpressionSimulationTreeTableFiller.dateWidth,   "BaseDate"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+3, TreeTableColumnType.Amount,  ExpressionSimulationTreeTableFiller.amountWidth, "BaseAmount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+4, TreeTableColumnType.Decimal, ExpressionSimulationTreeTableFiller.amountWidth, "BaseYearCount"));
+				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationDebug+5, TreeTableColumnType.Amount,  ExpressionSimulationTreeTableFiller.amountWidth, "InitialAmount"));
 
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationTrace, TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.traceWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Trace.ToString ()));
 				list.Add (new TreeTableColumnDescription (ObjectField.ExpressionSimulationError, TreeTableColumnType.String, ExpressionSimulationTreeTableFiller.errorWidth, Res.Strings.DataFillers.ExpressionSimulationTreeTable.Error.ToString ()));
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<6+5+2; i++)
+			for (int i=0; i<6+6+2; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -102,6 +103,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				decimal?         inputAmount   = null;
 				System.DateTime? baseDate      = null;
 				decimal?         baseAmount    = null;
+				decimal?         baseYearCount = null;
 				decimal?         initialAmount = null;
 
 				if (!node.Details.IsEmpty)
@@ -110,6 +112,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 					inputAmount   = node.Details.History.FirstAmount;
 					baseDate      = node.Details.History.BaseDate;
 					baseAmount    = node.Details.History.BaseAmount;
+					baseYearCount = node.Details.History.BaseYearCount;
 					initialAmount = node.Details.History.InputAmount;
 				}
 
@@ -117,7 +120,8 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				var cell22 = new TreeTableCellDecimal (inputAmount,   cellState);
 				var cell23 = new TreeTableCellDate    (baseDate,      cellState);
 				var cell24 = new TreeTableCellDecimal (baseAmount,    cellState);
-				var cell25 = new TreeTableCellDecimal (initialAmount, cellState);
+				var cell25 = new TreeTableCellDecimal (baseYearCount, cellState);
+				var cell26 = new TreeTableCellDecimal (initialAmount, cellState);
 
 				var cell31 = new TreeTableCellString (trace, cellState);
 				var cell32 = new TreeTableCellString (error, cellState);
@@ -136,6 +140,7 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 				content.Columns[columnRank++].AddRow (cell23);
 				content.Columns[columnRank++].AddRow (cell24);
 				content.Columns[columnRank++].AddRow (cell25);
+				content.Columns[columnRank++].AddRow (cell26);
 
 				content.Columns[columnRank++].AddRow (cell31);
 				content.Columns[columnRank++].AddRow (cell32);

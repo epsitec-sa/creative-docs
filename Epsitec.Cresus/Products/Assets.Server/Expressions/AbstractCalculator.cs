@@ -19,14 +19,15 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			this.traceBuilder = new System.Text.StringBuilder ();
 
-			this.Range       = details.Def.Range;
-			this.CurrentDate = details.Def.CurrentDate;
-			this.FirstDate   = details.History.FirstDate;
-			this.FirstAmount = details.History.FirstAmount;
-			this.BaseDate    = details.History.BaseDate;
-			this.BaseAmount  = details.History.BaseAmount;
-			this.InputAmount = details.History.InputAmount;
-			this.Periodicity = details.Def.Periodicity;
+			this.Range         = details.Def.Range;
+			this.CurrentDate   = details.Def.CurrentDate;
+			this.FirstDate     = details.History.FirstDate;
+			this.FirstAmount   = details.History.FirstAmount;
+			this.BaseDate      = details.History.BaseDate;
+			this.BaseAmount    = details.History.BaseAmount;
+			this.BaseYearCount = details.History.BaseYearCount;
+			this.InputAmount   = details.History.InputAmount;
+			this.Periodicity   = details.Def.Periodicity;
 		}
 
 
@@ -303,7 +304,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			return System.Math.Abs (aa - bb);
 		}
 
-		private static decimal GetMonthsCount(System.DateTime date)
+		public static decimal GetMonthsCount(System.DateTime date)
 		{
 			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
 			//	L'origine est sans importance, car le résultat est utilisé pour
@@ -333,6 +334,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		public readonly decimal					FirstAmount;		// valeur d'achat
 		public readonly System.DateTime			BaseDate;
 		public readonly decimal					BaseAmount;			// dernière valeur modifiée
+		public readonly decimal					BaseYearCount;
 		public readonly decimal					InputAmount;		// valeur avant amortissement
 		public readonly Periodicity				Periodicity;
 	}

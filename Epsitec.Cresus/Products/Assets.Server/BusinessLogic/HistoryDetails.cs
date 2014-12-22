@@ -9,13 +9,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 	public struct HistoryDetails
 	{
 		public HistoryDetails(System.DateTime firstDate, decimal firstAmount,
-			System.DateTime baseDate, decimal baseAmount, decimal inputAmout)
+			System.DateTime baseDate, decimal baseAmount, decimal baseYearCount, decimal inputAmout)
 		{
-			this.FirstDate   = firstDate;
-			this.FirstAmount = firstAmount;
-			this.BaseDate    = baseDate;
-			this.BaseAmount  = baseAmount;
-			this.InputAmount = inputAmout;
+			this.FirstDate     = firstDate;
+			this.FirstAmount   = firstAmount;
+			this.BaseDate      = baseDate;
+			this.BaseAmount    = baseAmount;
+			this.BaseYearCount = baseYearCount;
+			this.InputAmount   = inputAmout;
 		}
 
 		public bool								IsEmpty
@@ -28,12 +29,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		public static HistoryDetails Empty = new HistoryDetails (System.DateTime.MinValue, 0.0m, System.DateTime.MinValue, 0.0m, 0.0m);
+		public static HistoryDetails Empty = new HistoryDetails (System.DateTime.MinValue, 0.0m, System.DateTime.MinValue, 0.0m, 0.0m, 0.0m);
 
 		public readonly System.DateTime			FirstDate;
 		public readonly decimal					FirstAmount;
 		public readonly System.DateTime			BaseDate;
 		public readonly decimal					BaseAmount;
+		public readonly decimal					BaseYearCount;
 		public readonly decimal					InputAmount;
 	}
 }

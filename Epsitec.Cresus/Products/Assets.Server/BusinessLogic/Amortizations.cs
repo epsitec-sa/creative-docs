@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var def = this.GetAmortizationDefinition (obj, new Timestamp (period.IncludeFrom, 0), lastToDate);
 
 				var timestamp = obj.GetNewTimestamp (period.ExcludeTo.AddDays (-1));
-				var history = Amortizations.GetHistoryDetails (obj, timestamp, def);
+				var history = Amortizations.GetHistoryDetails (this.accessor, obj, timestamp, def);
 
 				if (!def.IsEmpty && !history.IsEmpty)
 				{
@@ -226,13 +226,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return valueDate;
 		}
 
-		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp, AmortizationDefinition def)
+		private static HistoryDetails GetHistoryDetails(DataAccessor accessor, DataObject obj, Timestamp timestamp, AmortizationDefinition def)
 		{
-			var      firstDate   = timestamp.Date;
-			decimal? firstAmount = null;
-			var      baseDate    = timestamp.Date;
-			decimal  baseAmount  = 0.0m;
-			decimal  inputAmount = 0.0m;
+			var      firstDate     = timestamp.Date;
+			decimal? firstAmount   = null;
+			var      lastDate      = timestamp.Date;
+			var      baseDate      = timestamp.Date;
+			decimal  baseAmount    = 0.0m;
+			decimal  baseYearCount = AssetsLogic.GetYearCount (accessor, obj, timestamp).GetValueOrDefault (10.0m);
+			decimal  inputAmount   = 0.0m;
 
 			foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp))
 			{
@@ -244,6 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						firstDate   = e.Timestamp.Date;
 						firstAmount = aa.Value.FinalAmount.Value;
+						lastDate    = firstDate.AddMonths ((int) (baseYearCount * 12.0m));
 					}
 
 					inputAmount = aa.Value.FinalAmount.Value;
@@ -255,8 +258,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						{
 							//	Un amortissement extraordinaire dans l'année est considéré
 							//	comme une modification au début de l'année suivante.
-							baseDate = Amortizations.GetFloorDate (e.Timestamp.Date, def.PeriodMonthCount)
-								.AddYears (1);
+							baseDate = Amortizations.GetFloorDate (e.Timestamp.Date, def.PeriodMonthCount).AddYears (1);
 						}
 						else
 						{
@@ -266,11 +268,14 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 
 						baseAmount = aa.Value.FinalAmount.Value;
+
+						baseYearCount = (AbstractCalculator.GetMonthsCount (lastDate) -
+										 AbstractCalculator.GetMonthsCount (baseDate)) / 12.0m;
 					}
 				}
 			}
 
-			return new HistoryDetails (firstDate, firstAmount.GetValueOrDefault (), baseDate, baseAmount, inputAmount);
+			return new HistoryDetails (firstDate, firstAmount.GetValueOrDefault (), baseDate, baseAmount, baseYearCount, inputAmount);
 		}
 
 		private static System.DateTime GetFloorDate(System.DateTime date, int monthCount)
@@ -536,7 +541,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var range = new DateRange (startDate, endDate);
 
 			var def = new AmortizationDefinition (range, startDate, arguments, expression, Periodicity.Annual);
-			var history = new HistoryDetails (startDate, 100.0m, startDate, 100.0m, 100.0m);
+			var history = new HistoryDetails (startDate, 100.0m, startDate, 10.0m, 100.0m, 100.0m);
 
 			return new AmortizationDetails (def, history);
 		}

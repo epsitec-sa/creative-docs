@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsLinearLines =
 		{
-			"var start = FirstDate;",
+			"var start = BaseDate;",
 			"",
 			"if (!Prorata)",
 			"{",
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"}",
 			"",
 			"var m = Months (start, EndDate);",
-			"var rate = (m/12) / YearCount;",
+			"var rate = (m/12) / BaseYearCount;",
 			"",
 			"value = BaseAmount * (1-rate);",
 			"value = Round (value, RoundAmount);",
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsDegressiveLines =
 		{
-			"var start = FirstDate;",
+			"var start = BaseDate;",
 			"",
 			"if (!Prorata)",
 			"{",
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"}",
 			"",
 			"var m = Months (start, EndDate);",
-			"var x = Pow (ResidualAmount/BaseAmount, 1/YearCount);",
+			"var x = Pow (ResidualAmount/BaseAmount, 1/BaseYearCount);",
 			"var rate = Pow (x, m/12);",
 			"",
 			"value = BaseAmount * rate;",
