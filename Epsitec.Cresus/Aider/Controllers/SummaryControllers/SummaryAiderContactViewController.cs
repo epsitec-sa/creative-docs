@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright ï¿½ 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -31,8 +31,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			FormattedText personTitle;
 
-			wall.AddBrick ()
-					.EnableActionButton<ActionAiderContactViewController1AddToBag> ();
 
 			if ((contact.Person.IsNotNull ()) &&
 				(contact.Person.eCH_Person.DataSource == Enumerations.DataSource.Government))
@@ -114,7 +112,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				case Enumerations.ContactType.Deceased:
 					if (contact.Person.IsNotNull ())
-					{						
+					{
 						wall.AddBrick (x => x.Person)
 							.Title (personTitle)
 							.Icon (contact.Person.GetIconName ("Data"))
@@ -129,10 +127,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						if ((contact.Household.IsNull ()) &&
 							(this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator)))
-							
+
 						{
 							wall.AddBrick ()
-								.Text ("Personne sans ménage !?")
+								.Text ("Personne sans mï¿½nage !?")
 								.EnableActionButton<ActionAiderContactViewController6DeleteContact> ();
 						}
 
@@ -143,7 +141,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.EnableActionMenu<ActionAiderPersonViewController10AddToBag> ()
 							.Attribute (BrickMode.DefaultToSummarySubView);
 					}
-					
+
 					if (household.IsNotNull ())
 					{
 						if (contact.Address.IsNotNull ())
@@ -161,8 +159,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						if (household.Members.Count > 1)
 						{
 							wall.AddBrick (x => x.Household.Members)
-								.Title (Resources.Text ("Membres du ménage"))
-								.Icon ("Data.AiderPersons")							
+								.Title (Resources.Text ("Membres du mï¿½nage"))
+								.Icon ("Data.AiderPersons")
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)
 								.Attribute (BrickMode.AutoGroup)
@@ -215,7 +213,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.EnableActionMenu<ActionAiderContactViewController3AddAddressToBag> ()
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 						}
-						
+
 					}
 					break;
 
@@ -254,7 +252,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			var text = contact.Person.GetCompactSummary ();
-			
+
 			var contactInfoPrivate      = new List<FormattedText> (text.Split (FormattedText.HtmlBreak));
 			var contactInfoConfidential = new List<FormattedText> ();
 			var contactInfoProf			= new List<FormattedText> ();
@@ -273,11 +271,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				switch (detail.AddressType)
 				{
 					case Enumerations.AddressType.Default:
-					
-					case Enumerations.AddressType.Other:					
+
+					case Enumerations.AddressType.Other:
 						contactInfoPrivate.AddRange (phonesAndMails);
 						break;
-					
+
 					case Enumerations.AddressType.Confidential:
 						if (user.CanViewConfidentialAddress ())
 						{
