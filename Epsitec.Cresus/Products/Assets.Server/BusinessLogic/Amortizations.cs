@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.Expression;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -268,9 +269,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						}
 
 						baseAmount = aa.Value.FinalAmount.Value;
-
-						baseYearCount = (AbstractCalculator.GetMonthsCount (lastDate) -
-										 AbstractCalculator.GetMonthsCount (baseDate)) / 12.0m;
+						baseYearCount = (DateTime.Months (lastDate,baseDate)) / 12.0m;
 					}
 				}
 			}

@@ -81,12 +81,12 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			if (direction > 0)
 			{
-				var month = this.ExcludeTo.GetTotalMonth () - this.IncludeFrom.GetTotalMonth ();
+				var month = DateTime.Months (this.ExcludeTo, this.IncludeFrom);
 				return new DateRange (this.ExcludeTo, this.ExcludeTo.AddMonths (month));
 			}
 			else if (direction < 0)
 			{
-				var month = this.ExcludeTo.GetTotalMonth () - this.IncludeFrom.GetTotalMonth ();
+				var month = DateTime.Months (this.ExcludeTo, this.IncludeFrom);
 				return new DateRange (this.IncludeFrom.AddMonths (-month), this.IncludeFrom);
 			}
 			else

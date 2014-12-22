@@ -444,9 +444,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (i.HasValue && f.HasValue)
 			{
-				return f.Value.GetTotalMonth ()
-					 - i.Value.GetTotalMonth ()
-					 + 1;
+				return DateTime.Months (f.Value, i.Value) + 1;
 			}
 			else
 			{

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
@@ -243,8 +244,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					v = new System.DateTime (this.CurrentDate.Year, this.CurrentDate.Month, 1);
 				}
 
-				decimal n = AbstractCalculator.GetMonthsCount (v)                    - AbstractCalculator.GetMonthsCount (this.Range.IncludeFrom);
-				decimal d = AbstractCalculator.GetMonthsCount (this.Range.ExcludeTo) - AbstractCalculator.GetMonthsCount (this.Range.IncludeFrom);
+				decimal n = DateTime.Months (v, this.Range.IncludeFrom);
+				decimal d = DateTime.Months (this.Range.ExcludeTo, this.Range.IncludeFrom);
 
 				n = d - n;
 				n = System.Math.Max (n, 0);
@@ -258,8 +259,8 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			get
 			{
 				//	Retourne le facteur pour le prorata au jour, sur la base d'une année de 360 jours.
-				decimal n = AbstractCalculator.GetDaysCount (this.CurrentDate)     - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
-				decimal d = AbstractCalculator.GetDaysCount (this.Range.ExcludeTo) - AbstractCalculator.GetDaysCount (this.Range.IncludeFrom);
+				decimal n = DateTime.Months (this.CurrentDate, this.Range.IncludeFrom);
+				decimal d = DateTime.Months (this.Range.ExcludeTo, this.Range.IncludeFrom);
 
 				n = d - n;
 				n = System.Math.Max (n, 0);
@@ -285,43 +286,17 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		protected static decimal Days(System.DateTime a, System.DateTime b)
 		{
-			return System.Math.Abs (a.Subtract (b).Days);
+			return DateTime.Days (a, b);
 		}
 
 		protected static decimal Days30(System.DateTime a, System.DateTime b)
 		{
-			var aa = AbstractCalculator.GetDaysCount (a);
-			var bb = AbstractCalculator.GetDaysCount (b);
-
-			return System.Math.Abs (aa - bb);
+			return DateTime.Days30 (a, b);
 		}
 
 		protected static decimal Months(System.DateTime a, System.DateTime b)
 		{
-			var aa = AbstractCalculator.GetMonthsCount (a);
-			var bb = AbstractCalculator.GetMonthsCount (b);
-
-			return System.Math.Abs (aa - bb);
-		}
-
-		public static decimal GetMonthsCount(System.DateTime date)
-		{
-			//	Retourne le nombre de mois écoulés depuis le 01.01.0000.
-			//	L'origine est sans importance, car le résultat est utilisé pour
-			//	calculer une différence entre 2 dates !
-			return date.Year*12
-				+ (date.Month-1);
-		}
-
-		private static decimal GetDaysCount(System.DateTime date)
-		{
-			//	Retourne le nombre de jours écoulés depuis le 01.01.0000,
-			//	en se basant sur 12 mois à 30 jours par année.
-			//	L'origine est sans importance, car le résultat est utilisé pour
-			//	calculer une différence entre 2 dates !
-			return date.Year*12*30
-				+ (date.Month-1)*30
-				+ System.Math.Min ((date.Day-1), 30-1);
+			return DateTime.Months (a, b);
 		}
 		#endregion
 	
