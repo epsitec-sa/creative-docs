@@ -120,36 +120,43 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		public void CreateUI(Widget parent)
 		{
-			//	On crée 6 lignes pour:
-			//	0: InitialValue
-			//	1: Amortization
-			//	2: FinalValue
-			//	3: Trace
-			//	4: Error
-			//	5: espace libre
-
-			this.lines = new FrameBox[6];
+			this.lines = new FrameBox[AmortizedAmountController.LineCount];
 
 			for (int i=0; i<this.lines.Length; i++)
 			{
 				this.lines[i] = this.CreateFrame (parent);
 			}
 
-			this.CreateLabel (this.lines[0], 100, Res.Strings.AmortizedAmountController.InitialValue.ToString ());
-			this.initialAmountTextField = this.CreateTextField (this.lines[0], AmortizedAmountController.AmountWidth, null, "CHF");
+			{
+				int y = AmortizedAmountController.InitialValueLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.InitialValue.ToString ());
+				this.initialAmountTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF");
+			}
 
-			this.CreateLabel (this.lines[1], 100, Res.Strings.AmortizedAmountController.Amortization.ToString ());
-			this.amortizationTextField = this.CreateTextField (this.lines[1], AmortizedAmountController.AmountWidth, null, "CHF");
+			{
+				int y = AmortizedAmountController.AmortizationLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Amortization.ToString ());
+				this.amortizationTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF");
+			}
 
-			this.CreateLabel (this.lines[2], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
-			this.finalAmountTextField = this.CreateTextField (this.lines[2], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
-			this.CreateUnlockButton (this.lines[2]);
+			{
+				int y = AmortizedAmountController.FinalValueLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
+				this.finalAmountTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
+				this.CreateUnlockButton (this.lines[y]);
+			}
 
-			this.CreateLabel (this.lines[3], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
-			this.traceTextField = this.CreateTextField (this.lines[3], AbstractFieldController.maxWidth, null, null);
+			{
+				int y = AmortizedAmountController.TraceLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Trace.ToString ());
+				this.traceTextField = this.CreateTextField (this.lines[y], AbstractFieldController.maxWidth, null, null);
+			}
 
-			this.CreateLabel (this.lines[4], 100, Res.Strings.AmortizedAmountController.Error.ToString ());
-			this.errorTextField = this.CreateTextField (this.lines[4], AbstractFieldController.maxWidth, null, null);
+			{
+				int y = AmortizedAmountController.ErrorLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Error.ToString ());
+				this.errorTextField = this.CreateTextField (this.lines[y], AbstractFieldController.maxWidth, null, null);
+			}
 
 			this.CreateEntryController (parent);
 			this.UpdateUI ();
@@ -449,9 +456,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateField (this.errorTextField, true);
 				this.UpdateField (this.scenarioFieldCombo, false);
 
-				this.lines[1].Visibility = this.IsAmortization;      // ligne Amortissement
-				this.lines[3].Visibility = this.IsAmortizationAuto;  // ligne Trace
-				this.lines[4].Visibility = this.IsAmortizationAuto;  // ligne Error
+				this.lines[AmortizedAmountController.AmortizationLine].Visibility = this.IsAmortization;
+				this.lines[AmortizedAmountController.TraceLine       ].Visibility = this.IsAmortizationAuto;
+				this.lines[AmortizedAmountController.ErrorLine       ].Visibility = this.IsAmortizationAuto;
 
 				this.UpdateEntry ();
 			}
@@ -742,6 +749,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public event EventHandler<AbstractViewState> Goto;
 		#endregion
 
+
+		private const int InitialValueLine = 0;
+		private const int AmortizationLine = 1;
+		private const int FinalValueLine   = 2;
+		private const int TraceLine        = 3;
+		private const int ErrorLine        = 4;
+		private const int LineCount        = 6;
 
 		private const int AmountWidth = 80;
 
