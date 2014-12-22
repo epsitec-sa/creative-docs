@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			"",
 			"		public override decimal Evaluate()",
 			"		{",
-			"			decimal value = this.InitialAmount;",
+			"			decimal value = this.InputAmount;",
 			"",
 			"			try",
 			"			{",

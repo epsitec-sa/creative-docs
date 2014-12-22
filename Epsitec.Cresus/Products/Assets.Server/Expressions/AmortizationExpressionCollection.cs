@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsLinearLines =
 		{
-			"var start = InputDate;",
+			"var start = FirstDate;",
 			"",
 			"if (!Prorata)",
 			"{",
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private static string[] yearsDegressiveLines =
 		{
-			"var start = InputDate;",
+			"var start = FirstDate;",
 			"",
 			"if (!Prorata)",
 			"{",

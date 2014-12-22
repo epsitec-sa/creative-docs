@@ -106,11 +106,11 @@ namespace Epsitec.Cresus.Assets.App.DataFillers
 
 				if (!node.Details.IsEmpty)
 				{
-					inputDate     = node.Details.History.InputDate;
-					inputAmount   = node.Details.History.InputAmount;
+					inputDate     = node.Details.History.FirstDate;
+					inputAmount   = node.Details.History.FirstAmount;
 					baseDate      = node.Details.History.BaseDate;
 					baseAmount    = node.Details.History.BaseAmount;
-					initialAmount = node.Details.History.InitialAmount;
+					initialAmount = node.Details.History.InputAmount;
 				}
 
 				var cell21 = new TreeTableCellDate    (inputDate,     cellState);

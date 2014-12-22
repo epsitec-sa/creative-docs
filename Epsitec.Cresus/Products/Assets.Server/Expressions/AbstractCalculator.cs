@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			this.traceBuilder = new System.Text.StringBuilder ();
 
-			this.Range         = details.Def.Range;
-			this.CurrentDate   = details.Def.CurrentDate;
-			this.InputDate     = details.History.InputDate;
-			this.InputAmount   = details.History.InputAmount;
-			this.BaseDate      = details.History.BaseDate;
-			this.BaseAmount    = details.History.BaseAmount;
-			this.InitialAmount = details.History.InitialAmount;
-			this.Periodicity   = details.Def.Periodicity;
+			this.Range       = details.Def.Range;
+			this.CurrentDate = details.Def.CurrentDate;
+			this.FirstDate   = details.History.FirstDate;
+			this.FirstAmount = details.History.FirstAmount;
+			this.BaseDate    = details.History.BaseDate;
+			this.BaseAmount  = details.History.BaseAmount;
+			this.InputAmount = details.History.InputAmount;
+			this.Periodicity = details.Def.Periodicity;
 		}
 
 
@@ -329,11 +329,11 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public readonly DateRange				Range;
 		public readonly System.DateTime			CurrentDate;
-		public readonly System.DateTime			InputDate;
-		public readonly decimal					InputAmount;		// valeur d'achat
+		public readonly System.DateTime			FirstDate;
+		public readonly decimal					FirstAmount;		// valeur d'achat
 		public readonly System.DateTime			BaseDate;
 		public readonly decimal					BaseAmount;			// dernière valeur modifiée
-		public readonly decimal					InitialAmount;		// valeur avant amortissement
+		public readonly decimal					InputAmount;		// valeur avant amortissement
 		public readonly Periodicity				Periodicity;
 	}
 }

@@ -228,11 +228,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static HistoryDetails GetHistoryDetails(DataObject obj, Timestamp timestamp, AmortizationDefinition def)
 		{
-			var      inputDate     = timestamp.Date;
-			decimal? inputAmount   = null;
-			var      baseDate      = timestamp.Date;
-			decimal  baseAmount    = 0.0m;
-			decimal  initialAmount = 0.0m;
+			var      firstDate   = timestamp.Date;
+			decimal? firstAmount = null;
+			var      baseDate    = timestamp.Date;
+			decimal  baseAmount  = 0.0m;
+			decimal  inputAmount = 0.0m;
 
 			foreach (var e in obj.Events.Where (x => x.Timestamp < timestamp))
 			{
@@ -240,13 +240,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (aa != null && aa.Value.FinalAmount.HasValue)
 				{
-					if (!inputAmount.HasValue)
+					if (!firstAmount.HasValue)
 					{
-						inputDate   = e.Timestamp.Date;
-						inputAmount = aa.Value.FinalAmount.Value;
+						firstDate   = e.Timestamp.Date;
+						firstAmount = aa.Value.FinalAmount.Value;
 					}
 
-					initialAmount = aa.Value.FinalAmount.Value;
+					inputAmount = aa.Value.FinalAmount.Value;
 
 					if (e.Type != EventType.AmortizationPreview &&
 						e.Type != EventType.AmortizationAuto    )
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			return new HistoryDetails (inputDate, inputAmount.GetValueOrDefault (), baseDate, baseAmount, initialAmount);
+			return new HistoryDetails (firstDate, firstAmount.GetValueOrDefault (), baseDate, baseAmount, inputAmount);
 		}
 
 		private static System.DateTime GetFloorDate(System.DateTime date, int monthCount)
@@ -330,7 +330,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				var result = Amortizations.ComputeAmortization (this.accessor, details);
 
-				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InitialAmount, result.Value, result.Trace, result.Error);
+				var aa = AmortizedAmount.SetAmounts (p.Value, details.History.InputAmount, result.Value, result.Trace, result.Error);
 				Amortizations.SetAmortizedAmount (e, aa);
 			}
 		}
