@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				int y = AmortizedAmountController.AmortizationLine;
 				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Amortization.ToString ());
-				this.amortizationTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF");
+				this.amortizationTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeAmortization);
 			}
 
 			{
@@ -449,8 +449,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				}
 
 				this.UpdateField (this.initialAmountTextField, true);
-				this.UpdateField (this.amortizationTextField, true);
-				this.UpdateField (this.finalAmountTextField, !isFinalEnable);
+				this.UpdateField (this.amortizationTextField, !isFinalEnable);
+				this.UpdateField (this.finalAmountTextField,  !isFinalEnable);
 				this.unlockButton.Visibility = unlockEnable;
 				this.UpdateField (this.traceTextField, true);
 				this.UpdateField (this.errorTextField, true);
@@ -487,6 +487,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void ChangeFinalAmount()
 		{
 			this.value = AmortizedAmount.SetFinalAmount (this.value.Value, this.FinalAmount);
+
+			using (this.ignoreChanges.Enter ())
+			{
+				this.Amortization = this.value.Value.Amortization;
+			}
+
+			this.OnValueEdited ();
+		}
+
+		private void ChangeAmortization()
+		{
+			this.value = AmortizedAmount.SetFinalAmount (this.value.Value, this.InitialAmount.GetValueOrDefault () - this.Amortization.GetValueOrDefault ());
+			
+			using (this.ignoreChanges.Enter ())
+			{
+				this.FinalAmount = this.value.Value.FinalAmount;
+			}
+			
 			this.OnValueEdited ();
 		}
 
