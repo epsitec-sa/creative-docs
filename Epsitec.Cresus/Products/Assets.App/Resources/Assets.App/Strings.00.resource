@@ -478,4 +478,5 @@
   <data name="AmortizedAmountController.Amortization" id="KSK">Amortissement</data>
   <data name="Event.AmortizationSuppl.Help" id="KTK">Amortissement supplémentaire de la valeur comptable</data>
   <data name="Event.AmortizationSuppl.ShortName" id="KUK">Amortissement supplémentaire</data>
+  <data name="Popup.ExpressionSimulationParams.AmortizationSuppl" id="K0L">Amortissement supplémentaire</data>
 </bundle>

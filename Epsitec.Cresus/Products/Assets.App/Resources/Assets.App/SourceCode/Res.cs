@@ -4325,6 +4325,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544983));
 						}
 					}
+					//	designer:str/JUK0L01
+					public static global::Epsitec.Common.Types.FormattedText AmortizationSuppl
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544992));
+						}
+					}
 					//	designer:str/JUKIK01
 					public static global::Epsitec.Common.Types.FormattedText EndDate
 					{
@@ -8892,6 +8900,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544983);
+						}
+					}
+					//	designer:str/JUK0L01
+					public static global::Epsitec.Common.Support.Druid AmortizationSuppl
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544992);
 						}
 					}
 					//	designer:str/JUKIK01

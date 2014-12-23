@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				//	Supprime les amortissements automatiques.
 				a.Delete (simulationParams.Range.IncludeFrom, asset.Guid);
 
-				ExpressionSimulation.CreateExtra (simulationParams, asset, finalAmount);
+				ExpressionSimulation.CreateExtra (simulationParams, asset, finalAmount, simulationParams.AmortizationSuppl);
 			}
 			else
 			{
@@ -150,13 +150,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		private static void CreateExtra(ExpressionSimulationParams simulationParams, DataObject asset, decimal finalAmount)
+		private static void CreateExtra(ExpressionSimulationParams simulationParams, DataObject asset, decimal finalAmount,
+			bool amortizationSuppl)
 		{
 			//	Crée l'éventuel événement exceptionnel d'amortissement.
 			if (simulationParams.HasExtra)
 			{
 				var timestamp = new Timestamp (simulationParams.ExtraDate.Value, 0);
-				var e = new DataEvent (null, timestamp, EventType.AmortizationExtra);
+				var e = new DataEvent (null, timestamp, amortizationSuppl ? EventType.AmortizationSuppl : EventType.AmortizationExtra);
 				asset.AddEvent (e);
 
 				var aa = new AmortizedAmount (finalAmount - simulationParams.ExtraAmount);
