@@ -18,6 +18,12 @@ using Epsitec.Cresus.Assets.App.Popups;
 
 namespace Epsitec.Cresus.Assets.App.Views
 {
+	/// <summary>
+	/// Ce contrôleur est utilisé dans l'onglet "Valeur", pour montrer les valeurs initiales et
+	/// finales (InitialAmount et FinalAmount) de la valeur comptable (AmortizedAmount).
+	/// Pour certains événements, ces valeurs sont éditables.
+	/// Il montre également l'écriture comptable générée, avec EntryController.
+	/// </summary>
 	public class AmortizedAmountController
 	{
 		public AmortizedAmountController(DataAccessor accessor)

@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				BottomMargin          = 20,
 			});
 
-			int rank = list.Count;
+			int rank = list.Count;  // 9
 			foreach (var field in this.fields)
 			{
 				var argument = ArgumentsLogic.GetArgument (this.accessor, field);

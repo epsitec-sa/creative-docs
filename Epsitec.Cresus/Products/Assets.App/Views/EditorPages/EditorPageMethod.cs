@@ -186,8 +186,11 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		{
 			//	Lance la simulation d'une expression et retourne tous les noeuds correspondants,
 			//	qui pourront être donnés à ExpressionSimulationTreeTableFiller.
-			return ExpressionSimulation.ComputeSimulation (this.accessor, this.expressionController.Value,
-				this.argumentsController.ArgumentGuids, LocalSettings.ExpressionSimulationParams);
+			using (var s = new ExpressionSimulation (this.accessor))
+			{
+				return s.ComputeSimulation (this.expressionController.Value,
+					this.argumentsController.ArgumentGuids, LocalSettings.ExpressionSimulationParams);
+			}
 		}
 
 
