@@ -314,6 +314,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.AmortizationExtra:
 					return new TimelineGlyph (TimelineGlyphShape.FilledDiamond, mode);
 
+				case EventType.AmortizationSuppl:
+					return new TimelineGlyph (TimelineGlyphShape.PlusDiamond, mode);
+
 				case EventType.Locked:
 					return new TimelineGlyph (TimelineGlyphShape.Locked, mode);
 

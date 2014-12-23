@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Assets.Data
 		AmortizationAuto,		// amortissement ordinaire
 		AmortizationPreview,	// aperçu d'un amortissement ordinaire
 		AmortizationExtra,		// amortissement extraordinaire
+		AmortizationSuppl,		// amortissement supplémentaire
 		Locked,					// verrouille les événements antérieurs
 		Output,					// sortie de l'inventaire, vente, vol, destruction, etc.
 	}

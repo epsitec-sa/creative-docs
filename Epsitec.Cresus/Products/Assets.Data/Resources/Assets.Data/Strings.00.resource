@@ -69,4 +69,5 @@
   <data name="Enum.ObjectField.ArgumentVariable" id="K92">Variable C#</data>
   <data name="Enum.ObjectField.ArgumentNullable" id="KA2">Nullable</data>
   <data name="Enum.ObjectField.ArgumentDefault" id="KB2">Valeur initiale</data>
+  <data name="Enum.EventType.AmortizationSuppl" id="KC2">Amort. suppl.</data>
 </bundle>

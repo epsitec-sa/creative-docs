@@ -231,6 +231,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						this.DateRange,
 						EventType.AmortizationExtra);
 
+				case Column.AmortizationsSuppl:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.Amortizations,
+						this.DateRange,
+						EventType.AmortizationSuppl);
+
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
 					//	le 31 décembre. Comme la date "au" est exclue dans un DateRange, la date
@@ -303,6 +309,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.AmortizationsExtra:
 					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Text.ToString ();
 
+				case Column.AmortizationsSuppl:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Text.ToString ();
+
 				case Column.FinalState:
 					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Text.ToString (), this.FinalDate);
 
@@ -344,6 +353,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.AmortizationsExtra:
 					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Tooltip.ToString ();
+
+				case Column.AmortizationsSuppl:
+					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip.ToString ();
 
 				case Column.FinalState:
 					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.FinalDateTooltip);
@@ -430,6 +442,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.Outputs;
 				yield return Column.AmortizationsAuto;
 				yield return Column.AmortizationsExtra;
+				yield return Column.AmortizationsSuppl;
 				yield return Column.FinalState;
 			}
 		}
@@ -455,6 +468,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			Outputs,
 			AmortizationsAuto,
 			AmortizationsExtra,
+			AmortizationsSuppl,
 			FinalState,
 		}
 

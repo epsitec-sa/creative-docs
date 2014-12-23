@@ -146,6 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					yield return EventType.Increase;
 					yield return EventType.Adjust;
 					yield return EventType.AmortizationExtra;
+					yield return EventType.AmortizationSuppl;
 					yield return EventType.Locked;
 				}
 

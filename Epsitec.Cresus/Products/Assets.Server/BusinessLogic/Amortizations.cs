@@ -273,6 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						{
 							//	Une modification de valeur dans l'année est considérée
 							//	comme une modification au début de l'année.
+							//	C'est également ce qu'il faut faire avec EventType.AmortizationSuppl !
 							baseDate = Amortizations.GetFloorDate (e.Timestamp.Date, def.PeriodMonthCount);
 						}
 

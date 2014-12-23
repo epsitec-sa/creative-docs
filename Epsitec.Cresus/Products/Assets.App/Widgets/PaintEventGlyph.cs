@@ -57,6 +57,22 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
+				case TimelineGlyphShape.PlusDiamond:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
+					r.Deflate (0.5);
+					path = PaintEventGlyph.GetDiamondPath (r);
+
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (ColorManager.GetBackgroundColor ());
+
+					graphics.AddPath (path);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
+
+					path = PaintEventGlyph.GetPlusPath (r);
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
+					break;
+
 				case TimelineGlyphShape.PinnedDiamond:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.35);
 					r.Deflate (0.5);
@@ -239,21 +255,21 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var path = new Path ();
 
 			//	Forme extérieure (CW).
-			path.MoveTo (PaintEventGlyph.GetPoint (rect, 1, 0));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 1, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 2, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 2, 7));
+			path.MoveTo  (PaintEventGlyph.GetPoint (rect, 1, 0));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 1, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 2, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 2, 7));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 2, 9), PaintEventGlyph.GetPoint (rect, 3, 10), PaintEventGlyph.GetPoint (rect, 5, 10));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 7, 10), PaintEventGlyph.GetPoint (rect, 8, 9), PaintEventGlyph.GetPoint (rect, 8, 7));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 8, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 9, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 9, 0));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 8, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 9, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 9, 0));
 			path.Close ();
 
 			//	Trou de la boucle supérieure (CCW).
-			path.MoveTo (PaintEventGlyph.GetPoint (rect, 3, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 6));
-			path.LineTo (PaintEventGlyph.GetPoint (rect, 7, 7));
+			path.MoveTo  (PaintEventGlyph.GetPoint (rect, 3, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 7, 6));
+			path.LineTo  (PaintEventGlyph.GetPoint (rect, 7, 7));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 7, 8), PaintEventGlyph.GetPoint (rect, 6, 9), PaintEventGlyph.GetPoint (rect, 5, 9));
 			path.CurveTo (PaintEventGlyph.GetPoint (rect, 4, 9), PaintEventGlyph.GetPoint (rect, 3, 8), PaintEventGlyph.GetPoint (rect, 3, 7));
 			path.Close ();
@@ -281,6 +297,20 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var path = new Path ();
 
 			path.AppendCircle (rect.Center, rect.Width*0.15);
+
+			return path;
+		}
+
+		private static Path GetPlusPath(Rectangle rect)
+		{
+			//	Retourne le chemin pour un armotissement supplémentaire.
+			var path = new Path ();
+
+			path.MoveTo (rect.Center.X, rect.Top);
+			path.LineTo (rect.Center.X, rect.Bottom);
+			path.LineTo (rect.Right, rect.Center.Y);
+			path.LineTo (rect.Left, rect.Center.Y);
+			path.Close ();
 
 			return path;
 		}

@@ -195,6 +195,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case EventType.AmortizationExtra:
 					return Res.Strings.Enum.EventType.AmortizationExtra.ToString ();
 
+				case EventType.AmortizationSuppl:
+					return Res.Strings.Enum.EventType.AmortizationSuppl.ToString ();
+
 				case EventType.Locked:
 					return Res.Strings.Enum.EventType.Locked.ToString ();
 

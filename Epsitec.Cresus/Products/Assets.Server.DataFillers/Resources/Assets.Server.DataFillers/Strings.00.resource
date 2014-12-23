@@ -88,4 +88,6 @@
   <data name="ArgumentsTreeTableFiller.Default" id="K23">Valeur initiale</data>
   <data name="CategoriesTreeTableFiller.Bool.True" id="K33">oui</data>
   <data name="CategoriesTreeTableFiller.Bool.False" id="K43">non</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsSuppl.Text" id="K53">Amort. suppl.</data>
+  <data name="Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip" id="K63">Variations dues aux amortissements supplémentaires</data>
 </bundle>

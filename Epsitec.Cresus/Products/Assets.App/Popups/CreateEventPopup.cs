@@ -189,6 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				yield return EventType.Decrease;
 				yield return EventType.Adjust;
 				yield return EventType.AmortizationExtra;
+				yield return EventType.AmortizationSuppl;
 				yield return EventType.Locked;
 				yield return EventType.Output;
 			}
@@ -235,6 +236,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					return new ButtonDescription (type,
 						Res.Strings.Event.AmortizationExtra.ShortName.ToString (),
 						Res.Strings.Event.AmortizationExtra.Help.ToString (),
+						enable);
+
+				case EventType.AmortizationSuppl:
+					return new ButtonDescription (type,
+						Res.Strings.Event.AmortizationSuppl.ShortName.ToString (),
+						Res.Strings.Event.AmortizationSuppl.Help.ToString (),
 						enable);
 
 				case EventType.Locked:

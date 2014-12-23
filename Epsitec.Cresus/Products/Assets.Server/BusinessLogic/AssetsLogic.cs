@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				.Where (x => x.Timestamp > timestamp &&
 					(x.Type == EventType.AmortizationAuto   ||
 					 x.Type == EventType.AmortizationExtra  ||
+					 x.Type == EventType.AmortizationSuppl  ||
 					 x.Type == EventType.AmortizationPreview))
 				.Any ();
 		}

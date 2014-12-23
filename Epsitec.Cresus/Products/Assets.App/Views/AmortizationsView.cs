@@ -139,7 +139,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			return e.Type == EventType.AmortizationAuto
 				|| e.Type == EventType.AmortizationPreview
-				|| e.Type == EventType.AmortizationExtra;
+				|| e.Type == EventType.AmortizationExtra
+				|| e.Type == EventType.AmortizationSuppl;
 		}
 
 

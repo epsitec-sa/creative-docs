@@ -625,11 +625,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateField(AbstractTextField textField, bool isReadonly)
+		private void UpdateField(AbstractTextField textField, bool isReadOnly)
 		{
-			isReadonly |= this.isReadOnly;
-
-			var type = isReadonly ? FieldColorType.Result : FieldColorType.Defined;
+			isReadOnly |= this.isReadOnly;
+			var type = isReadOnly ? FieldColorType.Result : FieldColorType.Defined;
 
 			if (textField is TextFieldCombo)
 			{
@@ -667,7 +666,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				return this.eventType == EventType.AmortizationPreview
 					|| this.eventType == EventType.AmortizationAuto
-					|| this.eventType == EventType.AmortizationExtra;
+					|| this.eventType == EventType.AmortizationExtra
+					|| this.eventType == EventType.AmortizationSuppl;
 			}
 		}
 
@@ -699,7 +699,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return !this.isReadOnly && this.eventType == EventType.AmortizationExtra;
+				return !this.isReadOnly &&
+					(this.eventType == EventType.AmortizationExtra || this.eventType == EventType.AmortizationSuppl);
 			}
 		}
 

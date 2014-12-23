@@ -89,6 +89,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544368));
 						}
 					}
+					//	designer:str/HUKC201
+					public static global::Epsitec.Common.Types.FormattedText AmortizationSuppl
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544396));
+						}
+					}
 					//	designer:str/HUKD101
 					public static global::Epsitec.Common.Types.FormattedText Decrease
 					{
@@ -739,6 +747,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544368);
+						}
+					}
+					//	designer:str/HUKC201
+					public static global::Epsitec.Common.Support.Druid AmortizationSuppl
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544396);
 						}
 					}
 					//	designer:str/HUKD101

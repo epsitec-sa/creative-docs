@@ -315,6 +315,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					break;
 
 				case EventType.AmortizationExtra:
+				case EventType.AmortizationSuppl:
 					entryScenario = EntryScenario.AmortizationExtra;
 					break;
 

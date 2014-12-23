@@ -570,8 +570,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				var e = asset.Events[i];
 
-				if (e.Type == EventType.AmortizationAuto ||
-					e.Type == EventType.AmortizationExtra)
+				if (e.Type == EventType.AmortizationAuto  ||
+					e.Type == EventType.AmortizationExtra ||
+					e.Type == EventType.AmortizationSuppl )
 				{
 					return e.Timestamp;
 				}

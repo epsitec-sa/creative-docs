@@ -314,6 +314,7 @@ namespace Epsitec.Cresus.Assets.App.Views.Editors
 					switch (type)
 					{
 						case EventType.AmortizationExtra:
+						case EventType.AmortizationSuppl:
 						case EventType.Decrease:
 						case EventType.Increase:
 						case EventType.Adjust:

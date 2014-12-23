@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			get
 			{
 				return this.EventType == Data.EventType.AmortizationExtra
+					|| this.EventType == Data.EventType.AmortizationSuppl
 					|| this.EventType == Data.EventType.AmortizationPreview
 					|| this.EventType == Data.EventType.AmortizationAuto;
 			}
