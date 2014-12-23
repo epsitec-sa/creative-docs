@@ -303,7 +303,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private static Path GetPlusPath(Rectangle rect)
 		{
-			//	Retourne le chemin pour un armotissement supplémentaire.
+			//	Retourne le chemin pour un armotissement supplémentaire, sorte de damier
+			//	ou noeud papillon évoquant un "+".
 			var path = new Path ();
 
 			path.MoveTo (rect.Center.X, rect.Top);

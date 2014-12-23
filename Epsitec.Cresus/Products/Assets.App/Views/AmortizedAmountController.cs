@@ -217,6 +217,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				YesNoPopup.Show (this.unlockButton, question, delegate
 				{
 					this.DeleteFuturAmortizations ();
+					this.SetFocus ();
 				});
 			};
 		}
