@@ -38,6 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.AutoGroup)
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
 					.EnableActionButton<ActionAiderEventViewController0AddParticipantsFromBag> ()
+					.EnableActionMenu<ActionAiderEventViewController5AddParticipantFromScratch> ()
 					.Template ()
 					.End ();
 			}
@@ -61,56 +62,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.End ();
 			}
 			
-		}
-
-
-		private static void CreateBricksForSetup(BrickWall<AiderEventEntity> wall, AiderEventEntity currentEvent)
-		{
-			switch (currentEvent.Type)
-			{
-				case Enumerations.EventType.Blessing:
-					SummaryAiderEventViewController.CreateBricksForBlessingSetup (wall);
-					break;
-
-				case Enumerations.EventType.Baptism:
-					SummaryAiderEventViewController.CreateBricksForBaptismSetup (wall);
-					break;
-
-				case Enumerations.EventType.Marriage:
-					SummaryAiderEventViewController.CreateBricksForMarriageSetup (wall);
-					break;
-
-			}
-		}
-
-		private static void CreateBricksForBlessingSetup(BrickWall<AiderEventEntity> wall)
-		{
-			wall.AddBrick ()
-				.Icon ("Data.AiderEvent")
-				.Title ("Préparation")
-				.Text ("")
-				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
-				.Attribute (BrickMode.DefaultToSetSubView);
-		}
-
-		private static void CreateBricksForBaptismSetup(BrickWall<AiderEventEntity> wall)
-		{
-			wall.AddBrick ()
-				.Icon ("Data.AiderEvent")
-				.Title ("Préparation")
-				.Text ("")
-				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
-				.Attribute (BrickMode.DefaultToSetSubView);
-		}
-
-		private static void CreateBricksForMarriageSetup(BrickWall<AiderEventEntity> wall)
-		{
-			wall.AddBrick ()
-				.Icon ("Data.AiderEvent")
-				.Title ("Préparation")
-				.Text ("")
-				.EnableActionOnDrop<ActionAiderEventViewController0AddParticipantsFromBag> ()
-				.Attribute (BrickMode.DefaultToSetSubView);
 		}
 	}
 }

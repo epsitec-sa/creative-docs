@@ -94,6 +94,7 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4Delete.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController3Validate.cs" />

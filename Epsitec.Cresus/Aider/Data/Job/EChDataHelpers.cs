@@ -57,6 +57,28 @@ namespace Epsitec.Aider.Data.Job
 			return personEntity;
 		}
 
+		public static eCH_PersonEntity CreateEChPersonEntity(BusinessContext businessContext, EChPerson eChPerson, Enumerations.DataSource source, PersonDeclarationStatus status)
+		{
+			var personEntity = businessContext.CreateAndRegisterEntity<eCH_PersonEntity> ();
+			personEntity.PersonId = eChPerson.Id;
+			personEntity.PersonOfficialName = eChPerson.OfficialName;
+			personEntity.PersonFirstNames = eChPerson.FirstNames;
+			personEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
+			personEntity.PersonSex = eChPerson.Sex;
+			personEntity.NationalityStatus = eChPerson.NationalityStatus;
+			personEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
+			personEntity.Origins = eChPerson.OriginPlaces
+				.Select (p => p.Name + " (" + p.Canton + ")")
+				.Join ("\n");
+			personEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
+			personEntity.CreationDate = Date.Today;
+			personEntity.DataSource = source;
+			personEntity.DeclarationStatus = status;
+			personEntity.RemovalReason = RemovalReason.None;
+
+			return personEntity;
+		}
+
 		public static void UpdateEChPersonEntity(eCH_PersonEntity existingPersonEntity, EChPerson eChPerson)
 		{
 			existingPersonEntity.PersonOfficialName = eChPerson.OfficialName;
