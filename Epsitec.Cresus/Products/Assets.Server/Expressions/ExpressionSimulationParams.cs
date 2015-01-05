@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
@@ -24,6 +25,21 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 			this.arguments = new Dictionary<ObjectField, object> ();
 		}
+
+		public ExpressionSimulationParams(System.Xml.XmlReader reader)
+		{
+			this.Range             =               IOHelpers.ReadDateRangeAttribute (reader, "Range");
+			this.Periodicity       = (Periodicity) IOHelpers.ReadTypeAttribute      (reader, "Periodicity", typeof (Periodicity));
+			this.InitialAmount     =               IOHelpers.ReadDecimalAttribute   (reader, "InitialAmount").GetValueOrDefault ();
+			this.ExtraDate         =               IOHelpers.ReadDateAttribute      (reader, "ExtraDate");
+			this.ExtraAmount       =               IOHelpers.ReadDecimalAttribute   (reader, "ExtraAmount");
+			this.AmortizationSuppl =               IOHelpers.ReadBoolAttribute      (reader, "AmortizationSuppl");
+			this.AdjustDate        =               IOHelpers.ReadDateAttribute      (reader, "AdjustDate");
+			this.AdjustAmount      =               IOHelpers.ReadDecimalAttribute   (reader, "AdjustAmount");
+
+			this.arguments = new Dictionary<ObjectField, object> ();
+		}
+
 
 		public Dictionary<ObjectField, object> Arguments
 		{
@@ -49,31 +65,28 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			}
 		}
 
-		public ExpressionSimulationParams(System.Xml.XmlReader reader)
-		{
-			// Todo...
-			this.Range             = DateRange.Empty;
-			this.Periodicity       = Periodicity.Unknown;
-			this.InitialAmount     = 0.0m;
-			this.ExtraDate         = null;
-			this.ExtraAmount       = null;
-			this.AmortizationSuppl = false;
-			this.AdjustDate        = null;
-			this.AdjustAmount      = null;
-
-			this.arguments = new Dictionary<ObjectField, object> ();
-		}
-
 
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
-			// Todo...
+			writer.WriteStartElement (name);
+
+			IOHelpers.WriteDateRangeAttribute (writer, "Range",             this.Range);
+			IOHelpers.WriteTypeAttribute      (writer, "Periodicity",       this.Periodicity);
+			IOHelpers.WriteDecimalAttribute   (writer, "InitialAmount",     this.InitialAmount);
+			IOHelpers.WriteDateAttribute      (writer, "ExtraDate",         this.ExtraDate);
+			IOHelpers.WriteDecimalAttribute   (writer, "ExtraAmount",       this.ExtraAmount);
+			IOHelpers.WriteBoolAttribute      (writer, "AmortizationSuppl", this.AmortizationSuppl);
+			IOHelpers.WriteDateAttribute      (writer, "AdjustDate",        this.AdjustDate);
+			IOHelpers.WriteDecimalAttribute   (writer, "AdjustAmount",      this.AdjustAmount);
+
+			writer.WriteEndElement ();
 		}
 
 
 		public static ExpressionSimulationParams Default = new ExpressionSimulationParams (
 			new DateRange (new System.DateTime (2000, 1, 1), new System.DateTime (2020, 1, 1)),
 			Periodicity.Annual, 10000.0m, null, null, false, null, null);
+
 
 		public readonly DateRange				Range;
 		public readonly Periodicity				Periodicity;

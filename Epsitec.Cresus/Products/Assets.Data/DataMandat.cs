@@ -308,6 +308,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("Objects");
 
+			this.SerializeObjects (writer, "Arguments",         this.arguments);
+			this.SerializeObjects (writer, "Methods",           this.methods);
 			this.SerializeObjects (writer, "AssetsUserFields",  this.assetsUserFields);
 			this.SerializeObjects (writer, "PersonsUserFields", this.personsUserFields);
 			this.SerializeObjects (writer, "Categories",        this.categories);
@@ -468,6 +470,14 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
+						case "Arguments":
+							this.DeserializeObjects (reader, this.arguments);
+							break;
+
+						case "Methods":
+							this.DeserializeObjects (reader, this.methods);
+							break;
+
 						case "AssetsUserFields":
 							this.DeserializeObjects (reader, this.assetsUserFields);
 							break;

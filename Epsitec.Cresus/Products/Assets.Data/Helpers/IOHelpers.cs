@@ -216,6 +216,33 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		#endregion
 
 
+		#region Range
+		public static DateRange ReadDateRangeAttribute(System.Xml.XmlReader reader, string name)
+		{
+			var includeFrom = IOHelpers.ReadDateAttribute (reader, name+".IncludeFrom");
+			var excludeTo   = IOHelpers.ReadDateAttribute (reader, name+".ExcludeTo");
+
+			if (includeFrom.HasValue && excludeTo.HasValue)
+			{
+				return new DateRange (includeFrom.Value, excludeTo.Value);
+			}
+			else
+			{
+				return DateRange.Empty;
+			}
+		}
+
+		public static void WriteDateRangeAttribute(System.Xml.XmlWriter writer, string name, DateRange value)
+		{
+			if (!value.IsEmpty)
+			{
+				IOHelpers.WriteDateAttribute (writer, name+".IncludeFrom", value.IncludeFrom);
+				IOHelpers.WriteDateAttribute (writer, name+".ExcludeTo",   value.ExcludeTo);
+			}
+		}
+		#endregion
+
+
 		#region Date
 		public static System.DateTime? ReadDateAttribute(System.Xml.XmlReader reader, string name)
 		{

@@ -204,6 +204,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			writer.WriteElementString ("AccountCategories", LocalSettings.AccountCategories.ToStringIO ());
 
+			LocalSettings.ExpressionSimulationParams.Serialize (writer, "ExpressionSimulationParams");
+
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
 		}
@@ -396,6 +398,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 						case "AccountCategories":
 							LocalSettings.AccountCategories = (AccountCategory) reader.ReadElementContentAsString ().ParseType (typeof (AccountCategory));
+							break;
+
+						case "ExpressionSimulationParams":
+							LocalSettings.ExpressionSimulationParams = new ExpressionSimulationParams (reader);
 							break;
 					}
 				}

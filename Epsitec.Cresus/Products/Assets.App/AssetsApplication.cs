@@ -172,7 +172,12 @@ namespace Epsitec.Cresus.Assets.App
 				try
 				{
 					var filename = System.IO.Path.Combine (computerSettings.MandatDirectory, computerSettings.MandatFilename);
-					AssetsApplication.OpenMandat (this.accessor, filename);
+					var err = AssetsApplication.OpenMandat (this.accessor, filename);
+
+					if (!string.IsNullOrEmpty (err))  // erreur ?
+					{
+						this.OpenDefaultMandat ();
+					}
 				}
 				catch
 				{
