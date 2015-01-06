@@ -28,16 +28,48 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		public ExpressionSimulationParams(System.Xml.XmlReader reader)
 		{
-			this.Range             =               IOHelpers.ReadDateRangeAttribute (reader, "Range");
-			this.Periodicity       = (Periodicity) IOHelpers.ReadTypeAttribute      (reader, "Periodicity", typeof (Periodicity));
-			this.InitialAmount     =               IOHelpers.ReadDecimalAttribute   (reader, "InitialAmount").GetValueOrDefault ();
-			this.ExtraDate         =               IOHelpers.ReadDateAttribute      (reader, "ExtraDate");
-			this.ExtraAmount       =               IOHelpers.ReadDecimalAttribute   (reader, "ExtraAmount");
-			this.AmortizationSuppl =               IOHelpers.ReadBoolAttribute      (reader, "AmortizationSuppl");
-			this.AdjustDate        =               IOHelpers.ReadDateAttribute      (reader, "AdjustDate");
-			this.AdjustAmount      =               IOHelpers.ReadDecimalAttribute   (reader, "AdjustAmount");
+			this.Range             = DateRange.Empty;
+			this.Periodicity       = Periodicity.Unknown;
+			this.InitialAmount     = 0.0m;
+			this.ExtraDate         = null;
+			this.ExtraAmount       = null;
+			this.AmortizationSuppl = false;
+			this.AdjustDate        = null;
+			this.AdjustAmount      = null;
 
 			this.arguments = new Dictionary<ObjectField, object> ();
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Definitions":
+							{
+								this.Range             =               IOHelpers.ReadDateRangeAttribute (reader, "Range");
+								this.Periodicity       = (Periodicity) IOHelpers.ReadTypeAttribute      (reader, "Periodicity", typeof (Periodicity));
+								this.InitialAmount     =               IOHelpers.ReadDecimalAttribute   (reader, "InitialAmount").GetValueOrDefault ();
+								this.ExtraDate         =               IOHelpers.ReadDateAttribute      (reader, "ExtraDate");
+								this.ExtraAmount       =               IOHelpers.ReadDecimalAttribute   (reader, "ExtraAmount");
+								this.AmortizationSuppl =               IOHelpers.ReadBoolAttribute      (reader, "AmortizationSuppl");
+								this.AdjustDate        =               IOHelpers.ReadDateAttribute      (reader, "AdjustDate");
+								this.AdjustAmount      =               IOHelpers.ReadDecimalAttribute   (reader, "AdjustAmount");
+
+								reader.Read ();  // on avance sur le noeud suivant
+							}
+							break;
+
+						case "Arguments":
+							this.DeserializeArguments (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
 		}
 
 
@@ -70,6 +102,16 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 		{
 			writer.WriteStartElement (name);
 
+			this.SerializeDefinitions (writer);
+			this.SerializeArguments   (writer);
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeDefinitions(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Definitions");
+
 			IOHelpers.WriteDateRangeAttribute (writer, "Range",             this.Range);
 			IOHelpers.WriteTypeAttribute      (writer, "Periodicity",       this.Periodicity);
 			IOHelpers.WriteDecimalAttribute   (writer, "InitialAmount",     this.InitialAmount);
@@ -80,6 +122,125 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			IOHelpers.WriteDecimalAttribute   (writer, "AdjustAmount",      this.AdjustAmount);
 
 			writer.WriteEndElement ();
+		}
+
+		private void SerializeArguments(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Arguments");
+
+			foreach (var pair in this.arguments)
+			{
+				writer.WriteStartElement ("Argument");
+
+				IOHelpers.WriteObjectFieldAttribute (writer, "ObjectField", pair.Key);
+				this.SerializeArgumentValue (writer, pair.Value);
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeArgumentValue(System.Xml.XmlWriter writer, object value)
+		{
+			if (value != null)
+			{
+				if (value is decimal)
+				{
+					IOHelpers.WriteDecimalAttribute (writer, "Decimal", (decimal) value);
+				}
+				else if (value is int)
+				{
+					IOHelpers.WriteIntAttribute (writer, "Int", (int) value);
+				}
+				else if (value is bool)
+				{
+					if ((bool) value)
+					{
+						IOHelpers.WriteBoolAttribute (writer, "Bool", (bool) value);
+					}
+				}
+				else if (value is System.DateTime)
+				{
+					IOHelpers.WriteDateAttribute (writer, "Date", (System.DateTime) value);
+				}
+				else if (value is string)
+				{
+					IOHelpers.WriteStringAttribute (writer, "String", (string) value);
+				}
+				else
+				{
+					throw new System.InvalidOperationException (string.Format ("Invalid ArgumentType {0}", value.GetType ()));
+				}
+			}
+		}
+
+		private void DeserializeArguments(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Argument":
+							this.DeserializeArgument (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeArgument(System.Xml.XmlReader reader)
+		{
+			var field = (ObjectField) IOHelpers.ReadObjectFieldAttribute (reader, "ObjectField");
+			var obj = this.DeserializeArgumentValue (reader);
+
+			if (obj != null)
+			{
+				this.arguments.Add (field, obj);
+			}
+
+			reader.Read ();  // on avance sur le noeud suivant
+		}
+
+		private object DeserializeArgumentValue(System.Xml.XmlReader reader)
+		{
+			var d = IOHelpers.ReadDecimalAttribute (reader, "Decimal");
+			if (d.HasValue)
+			{
+				return d;
+			}
+
+			var i = IOHelpers.ReadIntAttribute (reader, "Int");
+			if (i.HasValue)
+			{
+				return d;
+			}
+
+			var b = IOHelpers.ReadBoolAttribute (reader, "Bool");
+			if (b)
+			{
+				return b;
+			}
+
+			var date = IOHelpers.ReadDateAttribute (reader, "Date");
+			if (date.HasValue)
+			{
+				return date;
+			}
+
+			var s = IOHelpers.ReadStringAttribute (reader, "String");
+			if (!string.IsNullOrEmpty (s))
+			{
+				return s;
+			}
+
+			return null;
 		}
 
 

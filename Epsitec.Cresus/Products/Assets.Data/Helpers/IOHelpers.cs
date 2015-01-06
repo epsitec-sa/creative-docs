@@ -110,6 +110,11 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			{
 				return "GroupGuidRatio+" + (value-ObjectField.GroupGuidRatioFirst).ToStringIO ();
 			}
+			else if (value >= ObjectField.ArgumentFirst &&
+					 value <= ObjectField.ArgumentLast)
+			{
+				return "Argument+" + (value-ObjectField.ArgumentFirst).ToStringIO ();
+			}
 			else if (value >= ObjectField.UserFieldFirst &&
 					 value <= ObjectField.UserFieldLast)
 			{
@@ -130,6 +135,10 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			if (s.StartsWith ("GroupGuidRatio+"))
 			{
 				return ObjectField.GroupGuidRatioFirst + s.Substring (15).ParseInt ();
+			}
+			else if (s.StartsWith ("Argument+"))
+			{
+				return ObjectField.ArgumentFirst + s.Substring (9).ParseInt ();
 			}
 			else if (s.StartsWith ("UserField+"))
 			{
