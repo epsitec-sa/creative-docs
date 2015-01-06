@@ -206,7 +206,6 @@ namespace Epsitec.Cresus.Assets.App
 
 			try
 			{
-				filename = DataIO.PreprocessFilename (filename);
 				DataIO.OpenMandat (accessor, filename, delegate (System.Xml.XmlReader reader)
 				{
 					//	Effectue la désérialisation des LocalSettings.
@@ -225,7 +224,6 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			try
 			{
-				filename = DataIO.PreprocessFilename (filename);
 				DataIO.SaveMandat (accessor, filename, mode, delegate (System.Xml.XmlWriter writer)
 				{
 					//	Effectue la sérialisation des LocalSettings.

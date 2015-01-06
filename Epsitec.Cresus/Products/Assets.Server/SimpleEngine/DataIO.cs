@@ -15,37 +15,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// </summary>
 	public static class DataIO
 	{
-		public static string PreprocessFilename(string filename)
-		{
-			//	Complète un nom de fichier tout nu par le chemin "Mes documents" et l'extension ".crassets".
-			if (!string.IsNullOrEmpty (filename))
-			{
-				//	On s'occupe du chemin d'accès.
-				var dir = System.IO.Path.GetDirectoryName (filename);
-
-				if (string.IsNullOrEmpty (dir))
-				{
-					FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
-					filename = System.IO.Path.Combine (item.FullPath, filename);
-				}
-
-				//	On s'occupe de l'extension.
-				var ext = System.IO.Path.GetExtension (filename);
-
-				if (string.IsNullOrEmpty (ext))
-				{
-					filename = filename + IOHelpers.Extension;
-				}
-			}
-
-			return filename;
-		}
-
-
 		public static MandatInfo OpenInfo(string filename)
 		{
 			//	Lit le petit fichier d'informations, soit à partir du fichier xx.description.xml
 			//	s'il existe, sinon à partir du fichier compressé.
+			filename = DataIO.PreprocessFilename (filename);
+
 			if (DataIO.ExistingInfo (filename))
 			{
 				var reader = System.Xml.XmlReader.Create (DataIO.GetInfoFilename (filename));
@@ -69,6 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			//	Lit le mandat, soit à partir des fichiers xx.data.xml et xx.accounts.xml
 			//	s'ils existent, sinon à partir du fichier compressé.
+			filename = DataIO.PreprocessFilename (filename);
 
 			//	On s'occupe de la partie data.
 			if (DataIO.ExistingData (filename))
@@ -140,6 +116,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			//	Enregistre le mandat dans un fichier compressé. Selon le mode, on crée
 			//	en plus les fichiers xx.description.xml, xx.data.xml et xx.accounts.xml.
+			filename = DataIO.PreprocessFilename (filename);
+
 			var zip = new ZipFile ();
 
 			//	On s'occupe de la partie description.
@@ -717,6 +695,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					return "anonymous";  // garde-fou
 				}
 			}
+		}
+
+
+		private static string PreprocessFilename(string filename)
+		{
+			//	Complète un nom de fichier tout nu par le chemin "Mes documents" et l'extension ".crassets".
+			if (!string.IsNullOrEmpty (filename))
+			{
+				//	On s'occupe du chemin d'accès.
+				var dir = System.IO.Path.GetDirectoryName (filename);
+
+				if (string.IsNullOrEmpty (dir))
+				{
+					FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+					filename = System.IO.Path.Combine (item.FullPath, filename);
+				}
+
+				//	On s'occupe de l'extension.
+				var ext = System.IO.Path.GetExtension (filename);
+
+				if (string.IsNullOrEmpty (ext))
+				{
+					filename = filename + IOHelpers.Extension;
+				}
+			}
+
+			return filename;
 		}
 
 
