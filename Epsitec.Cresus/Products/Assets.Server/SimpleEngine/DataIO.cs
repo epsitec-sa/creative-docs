@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.IO;
+using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
 
@@ -14,6 +15,33 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// </summary>
 	public static class DataIO
 	{
+		public static string PreprocessFilename(string filename)
+		{
+			//	Complète un nom de fichier tout nu par le chemin "Mes documents" et l'extension ".crassets".
+			if (!string.IsNullOrEmpty (filename))
+			{
+				//	On s'occupe du chemin d'accès.
+				var dir = System.IO.Path.GetDirectoryName (filename);
+
+				if (string.IsNullOrEmpty (dir))
+				{
+					FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+					filename = System.IO.Path.Combine (item.FullPath, filename);
+				}
+
+				//	On s'occupe de l'extension.
+				var ext = System.IO.Path.GetExtension (filename);
+
+				if (string.IsNullOrEmpty (ext))
+				{
+					filename = filename + IOHelpers.Extension;
+				}
+			}
+
+			return filename;
+		}
+
+
 		public static MandatInfo OpenInfo(string filename)
 		{
 			//	Lit le petit fichier d'informations, soit à partir du fichier xx.description.xml
