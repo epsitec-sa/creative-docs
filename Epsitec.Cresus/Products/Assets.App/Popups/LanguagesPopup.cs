@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -25,7 +24,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 0
 			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = DateController.controllerWidth,
+				Width                 = LanguagesPopup.Width,
 				Label                 = Res.Strings.Popup.Language.UI.ToString (),
 			});
 
@@ -39,7 +38,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 2
 			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = DateController.controllerWidth,
+				Width                 = LanguagesPopup.Width,
 				Label                 = Res.Strings.Popup.Language.Data.ToString (),
 			});
 
@@ -191,5 +190,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 		#endregion
 
+
+		private const int Width = 180;
 	}
 }
