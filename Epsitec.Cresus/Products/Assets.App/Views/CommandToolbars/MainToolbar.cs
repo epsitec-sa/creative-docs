@@ -429,7 +429,21 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.UpdateLanguagesButton ();
 
-			Resources.OverrideDefaultTwoLetterISOLanguageName (LocalSettings.UILanguage.ToLower ());
+			var newTwo = LocalSettings.UILanguage.ToLower ();
+			//?var info = Resources.FindSpecificCultureInfo (newTwo);
+			var info = Resources.FindCultureInfo (newTwo);
+
+			//?System.Threading.Thread.CurrentThread.CurrentCulture = info;
+			//?System.Threading.Thread.CurrentThread.CurrentUICulture = info;
+
+			var m = Epsitec.Common.Support.ResourceManager.GetResourceManager (this.toolbar.Window);
+			m.ActiveCulture = info;
+
+			//?if (newTwo != Resources.GetDefaultTwoLetterISOLanguageName ())
+			//?{
+			//?	Resources.OverrideDefaultTwoLetterISOLanguageName (newTwo);
+			//?}
+
 			// TODO...
 		}
 

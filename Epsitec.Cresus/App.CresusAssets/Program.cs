@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			//?Epsitec.Common.Support.Resources.OverrideDefaultTwoLetterISOLanguageName ("en");
 			Epsitec.Cresus.Core.CoreProgram.Main (args);
 		}
 	}
