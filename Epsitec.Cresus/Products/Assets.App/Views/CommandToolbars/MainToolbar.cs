@@ -403,10 +403,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			LanguagesPopup.Show (target, this.accessor, LocalSettings.UILanguage, LocalSettings.DataLanguage,
 				delegate (string uiLanguage, string dataLanguage)
 			{
-				LocalSettings.UILanguage   = uiLanguage;
-				LocalSettings.DataLanguage = dataLanguage;
+				if (LocalSettings.UILanguage   != uiLanguage  ||
+					LocalSettings.DataLanguage != dataLanguage)
+				{
+					LocalSettings.UILanguage   = uiLanguage;
+					LocalSettings.DataLanguage = dataLanguage;
 
-				this.UpdateLanguagesButton ();
+					this.UpdateLanguagesButton ();
+				}
 			});
 		}
 
