@@ -428,6 +428,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			LocalSettings.DataLanguage = dataLanguage;
 
 			this.UpdateLanguagesButton ();
+
+			Resources.OverrideDefaultTwoLetterISOLanguageName (LocalSettings.UILanguage.ToLower ());
 			// TODO...
 		}
 

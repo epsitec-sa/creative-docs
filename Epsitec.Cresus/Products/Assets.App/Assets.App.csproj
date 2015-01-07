@@ -558,6 +558,7 @@
     <EmbeddedResource Include="Images\Methods.Test.icon" />
     <EmbeddedResource Include="Images\View.Arguments.icon" />
     <None Include="packages.config" />
+    <None Include="Resources\Assets.App\Strings.en.resource" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Assets.Server.Export\Assets.Server.Export.csproj">
