@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			//	Retourne le nom d'une langue en clair, dans la langue en question.
 			//	Il n'est donc pas nécessaire de mettre ces textes dans les ressources.
-			//	Par exemple "FR: Français".
+			//	Par exemple "FR — Français".
 			string name = null;
 
 			switch (twoLetters)
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				return string.Format ("{0}: {1}", twoLetters.ToUpper (), name);
+				return string.Format ("{0} — {1}", twoLetters.ToUpper (), name);
 			}
 		}
 

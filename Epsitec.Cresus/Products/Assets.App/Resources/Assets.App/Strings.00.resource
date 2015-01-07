@@ -480,7 +480,7 @@
   <data name="Event.AmortizationSuppl.ShortName" id="KUK">Amortissement supplémentaire</data>
   <data name="Popup.ExpressionSimulationParams.AmortizationSuppl" id="K0L">Amortissement supplémentaire</data>
   <data name="Popup.Language.Title" id="K1L">Choix des langues</data>
-  <data name="Popup.Language.UI" id="K2L">Langue de l'interface</data>
-  <data name="Popup.Language.Data" id="K3L">Langue des données</data>
+  <data name="Popup.Language.UI" id="K2L">Interface</data>
+  <data name="Popup.Language.Data" id="K3L">Données</data>
   <data name="Popup.Language.Tooltip" id="K4L">Choix des langues&lt;br/&gt;Ctrl+clic remet les langues précédentes</data>
 </bundle>
