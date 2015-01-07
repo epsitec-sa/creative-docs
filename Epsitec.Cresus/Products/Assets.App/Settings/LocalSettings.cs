@@ -78,6 +78,51 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 
 
+		#region Languages
+		public static string					UILanguage
+		{
+			get
+			{
+				return LocalSettings.uiLanguage;
+			}
+			set
+			{
+				LocalSettings.lastUILanguage = LocalSettings.uiLanguage;
+				LocalSettings.uiLanguage = value;
+			}
+		}
+
+		public static string					DataLanguage
+		{
+			get
+			{
+				return LocalSettings.dataLanguage;
+			}
+			set
+			{
+				LocalSettings.lastDataLanguage = LocalSettings.dataLanguage;
+				LocalSettings.dataLanguage = value;
+			}
+		}
+
+		public static string					LastUILanguage
+		{
+			get
+			{
+				return LocalSettings.lastUILanguage;
+			}
+		}
+
+		public static string					LastDataLanguage
+		{
+			get
+			{
+				return LocalSettings.lastDataLanguage;
+			}
+		}
+		#endregion
+
+
 		#region Columns state
 		public static ColumnsState GetColumnsState(string name)
 		{
@@ -500,8 +545,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		#endregion
 
 
-		public static string						UILanguage;
-		public static string						DataLanguage;
+		private static string						uiLanguage;
+		private static string						dataLanguage;
+		private static string						lastUILanguage;
+		private static string						lastDataLanguage;
 
 		public static System.DateTime				CreateMandatDate;
 		public static System.DateTime				CreateAssetDate;

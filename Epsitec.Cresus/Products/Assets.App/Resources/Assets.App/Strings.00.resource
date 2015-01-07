@@ -482,4 +482,5 @@
   <data name="Popup.Language.Title" id="K1L">Choix des langues</data>
   <data name="Popup.Language.UI" id="K2L">Langue de l'interface</data>
   <data name="Popup.Language.Data" id="K3L">Langue des données</data>
+  <data name="Popup.Language.Tooltip" id="K4L">Choix des langues&lt;br/&gt;Ctrl+clic remet les langues précédentes</data>
 </bundle>

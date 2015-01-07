@@ -174,11 +174,18 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				PreferredSize = new Size (size, size),
 			};
 
-			ToolTip.Default.SetToolTip (this.buttonLanguages, Res.Strings.Popup.Language.Title.ToString ());
+			ToolTip.Default.SetToolTip (this.buttonLanguages, Res.Strings.Popup.Language.Tooltip.ToString ());
 
-			this.buttonLanguages.Clicked += delegate
+			this.buttonLanguages.Clicked += delegate (object sender, MessageEventArgs e)
 			{
-				this.ShowLanguagesPopup (this.buttonLanguages);
+				if (e.Message.IsControlPressed)
+				{
+					this.SwapLanguages ();
+				}
+				else
+				{
+					this.ShowLanguagesPopup (this.buttonLanguages);
+				}
 			};
 		}
 
@@ -398,8 +405,22 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				LocalSettings.UILanguage   = uiLanguage;
 				LocalSettings.DataLanguage = dataLanguage;
+
 				this.UpdateLanguagesButton ();
 			});
+		}
+
+		private void SwapLanguages()
+		{
+			//	Permute les langues actuelles avec les précédentes.
+			if (!string.IsNullOrEmpty (LocalSettings.LastUILanguage) &&
+				!string.IsNullOrEmpty (LocalSettings.LastDataLanguage))
+			{
+				LocalSettings.UILanguage   = LocalSettings.LastUILanguage;
+				LocalSettings.DataLanguage = LocalSettings.LastDataLanguage;
+
+				this.UpdateLanguagesButton ();
+			}
 		}
 
 
