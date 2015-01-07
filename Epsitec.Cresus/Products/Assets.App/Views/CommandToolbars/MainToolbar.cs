@@ -404,12 +404,9 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				delegate (string uiLanguage, string dataLanguage)
 			{
 				if (LocalSettings.UILanguage   != uiLanguage  ||
-					LocalSettings.DataLanguage != dataLanguage)
+					LocalSettings.DataLanguage != dataLanguage)  // y a-t-il un changement ?
 				{
-					LocalSettings.UILanguage   = uiLanguage;
-					LocalSettings.DataLanguage = dataLanguage;
-
-					this.UpdateLanguagesButton ();
+					this.ChangeLanguages (uiLanguage, dataLanguage);
 				}
 			});
 		}
@@ -418,13 +415,20 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		{
 			//	Permute les langues actuelles avec les précédentes.
 			if (!string.IsNullOrEmpty (LocalSettings.LastUILanguage) &&
-				!string.IsNullOrEmpty (LocalSettings.LastDataLanguage))
+				!string.IsNullOrEmpty (LocalSettings.LastDataLanguage))  // y a-t-il des langues précédentes ?
 			{
-				LocalSettings.UILanguage   = LocalSettings.LastUILanguage;
-				LocalSettings.DataLanguage = LocalSettings.LastDataLanguage;
-
-				this.UpdateLanguagesButton ();
+				this.ChangeLanguages (LocalSettings.LastUILanguage, LocalSettings.LastDataLanguage);
 			}
+		}
+
+		private void ChangeLanguages(string uiLanguage, string dataLanguage)
+		{
+			//	Effectue le changement des langues et met à jour tout ce qu'il faut.
+			LocalSettings.UILanguage   = uiLanguage;
+			LocalSettings.DataLanguage = dataLanguage;
+
+			this.UpdateLanguagesButton ();
+			// TODO...
 		}
 
 

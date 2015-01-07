@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private int UILanguage
+		private int								UILanguage
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private int DataLanguage
+		private int								DataLanguage
 		{
 			get
 			{
@@ -87,9 +87,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 
-		#region Languages
+		#region Language list
 		private static string RadioLanguages
 		{
+			//	Retourne le texte multilignes permettant de créer les boutons radio.
 			get
 			{
 				return string.Join ("<br/>", LanguagesPopup.Languages.Select (x => LanguagesPopup.GetLanguageName (x)));
@@ -141,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (name == null)
 			{
-				return twoLetters;
+				return twoLetters;  // ne devrait pas arriver
 			}
 			else
 			{
