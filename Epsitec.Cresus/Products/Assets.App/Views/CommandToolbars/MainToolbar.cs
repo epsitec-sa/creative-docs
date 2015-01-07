@@ -149,12 +149,36 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			//-this.buttonSimulation =
 			//-this.CreateButton (DockStyle.Left, Res.Commands.Main.Simulation);
 
+			this.CreateDataLanguageButton ();
+
 			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Cancel);
 			this.CreateButton (DockStyle.Right, Res.Commands.Edit.Accept);
 
 			this.UpdateViewTypeCommands ();
 			this.UpdateViewModeCommands ();
 			this.UpdateSimulation ();
+			this.UpdateDataLanguageButton ();
+		}
+
+		private void CreateDataLanguageButton()
+		{
+			var size = this.toolbar.PreferredHeight;
+
+			this.buttonDataLanguage = new Button
+			{
+				Parent        = this.toolbar,
+				ButtonStyle   = ButtonStyle.ToolItem,
+				AutoFocus     = false,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (size, size),
+			};
+
+			ToolTip.Default.SetToolTip (this.buttonDataLanguage, Res.Strings.Language.Data.ToString ());
+
+			this.buttonDataLanguage.Clicked += delegate
+			{
+				this.ShowDataLanguagePopup (this.buttonDataLanguage);
+			};
 		}
 
 
@@ -303,6 +327,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		private void UpdateDataLanguageButton()
+		{
+			this.buttonDataLanguage.Text = string.Format ("<font size=\"18\">{0}</font>", LocalSettings.DataLanguage);
+		}
+
+
 		private void ShowViewPopup(Widget target)
 		{
 			//	Affiche le popup permettant de choisir une vue parmi celles regroupées dans l'engrenage.
@@ -342,6 +372,30 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
 				this.toolbar.ExecuteCommand (command);
+			};
+		}
+
+		private void ShowDataLanguagePopup(Widget target)
+		{
+			var languages = MainToolbar.Languages.ToList ();
+
+			var popup = new SimplePopup ()
+			{
+				SelectedItem = languages.IndexOf (LocalSettings.DataLanguage),
+			};
+
+			foreach (var twoLetters in MainToolbar.Languages)
+			{
+				var s = string.Format ("{0}: {1}", twoLetters, MainToolbar.GetLanguageName (twoLetters));
+				popup.Items.Add (s);
+			}
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				LocalSettings.DataLanguage = languages[rank];
+				this.UpdateDataLanguageButton ();
 			};
 		}
 
@@ -506,6 +560,44 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		#endregion
 
 
+		#region Languages
+		private static string GetLanguageName(string twoLetters)
+		{
+			//	Retourne le nom d'une langue en clair, dans la langue en question.
+			//	Il n'est donc pas nécessaire de mettre ces textes dans les ressources.
+			switch (twoLetters)
+			{
+				case "FR":
+					return "Français";
+
+				case "DE":
+					return "Deutsch";
+
+				case "EN":
+					return "English";
+
+				case "IT":
+					return "Italiano";
+
+				default:
+					return twoLetters;
+			}
+		}
+
+		private static IEnumerable<string> Languages
+		{
+			//	Retourne les langues disponibles, dans l'ordre dans lequel elles apparaissent
+			//	dans la UI.
+			get
+			{
+				yield return "FR";
+				yield return "DE";
+				yield return "EN";
+				yield return "IT";
+			}
+		}
+		#endregion
+
 		#region Events handler
 		private void OnChangeView()
 		{
@@ -519,6 +611,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private ButtonWithRedDot				buttonWarnings;
 		private ButtonWithRedDot				buttonViewMode;
 		private ButtonWithRedDot				buttonSimulation;
+		private Button							buttonDataLanguage;
 
 		private ViewType						viewType;
 		private ViewMode						viewMode;

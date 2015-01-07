@@ -479,4 +479,6 @@
   <data name="Event.AmortizationSuppl.Help" id="KTK">Amortissement supplémentaire de la valeur comptable</data>
   <data name="Event.AmortizationSuppl.ShortName" id="KUK">Amortissement supplémentaire</data>
   <data name="Popup.ExpressionSimulationParams.AmortizationSuppl" id="K0L">Amortissement supplémentaire</data>
+  <data name="Language.UI" id="K1L">Choix de la langue de l'interface</data>
+  <data name="Language.Data" id="K2L">Choix de la langue des données</data>
 </bundle>

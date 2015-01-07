@@ -22,6 +22,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 	{
 		static LocalSettings()
 		{
+			LocalSettings.UILanguage   = "FR";
+			LocalSettings.DataLanguage = "FR";
+
 			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
 			LocalSettings.searchInfos = new Dictionary<SearchKind, SearchInfo> ();
 			LocalSettings.createAssetDefaultGroups = new Dictionary<Guid, Guid> ();
@@ -486,6 +489,9 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		}
 		#endregion
 
+
+		public static string						UILanguage;
+		public static string						DataLanguage;
 
 		public static System.DateTime				CreateMandatDate;
 		public static System.DateTime				CreateAssetDate;

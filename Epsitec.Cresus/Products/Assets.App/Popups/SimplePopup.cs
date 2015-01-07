@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public int								SelectedItem;
 
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{
