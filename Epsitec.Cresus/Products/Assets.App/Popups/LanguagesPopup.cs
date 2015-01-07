@@ -85,7 +85,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-
 		#region Language list
 		private static string RadioLanguages
 		{
@@ -96,12 +95,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private static int GetLanguageRank(string twoLetters)
+		private static int GetLanguageRank(string twoLetterCode)
 		{
-			return LanguagesPopup.Languages.ToList ().IndexOf (twoLetters);
+			return LanguagesPopup.Languages.ToList ().IndexOf (twoLetterCode);
 		}
 
-		private static string GetLanguageTwoLetter(int rank)
+		private static string GetLanguageTwoLetterCode(int rank)
 		{
 			if (rank == -1)
 			{
@@ -113,14 +112,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private static string GetLanguageName(string twoLetters)
+		private static string GetLanguageName(string twoLetterCode)
 		{
 			//	Retourne le nom d'une langue en clair, dans la langue en question.
 			//	Il n'est donc pas nécessaire de mettre ces textes dans les ressources.
 			//	Par exemple "FR — Français".
 			string name = null;
 
-			switch (twoLetters)
+			switch (twoLetterCode)
 			{
 				case "fr":
 					name = "Français";
@@ -141,11 +140,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (name == null)
 			{
-				return twoLetters.ToUpper ();  // ne devrait pas arriver
+				return twoLetterCode.ToUpper ();  // ne devrait pas arriver
 			}
 			else
 			{
-				return string.Format ("{0} — {1}", twoLetters.ToUpper (), name);
+				return string.Format ("{0} — {1}", twoLetterCode.ToUpper (), name);
 			}
 		}
 
@@ -182,8 +181,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					if (name == "ok")
 					{
 						action (
-							LanguagesPopup.GetLanguageTwoLetter (popup.UILanguage),
-							LanguagesPopup.GetLanguageTwoLetter (popup.DataLanguage));
+							LanguagesPopup.GetLanguageTwoLetterCode (popup.UILanguage),
+							LanguagesPopup.GetLanguageTwoLetterCode (popup.DataLanguage));
 					}
 				};
 			}
