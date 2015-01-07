@@ -651,9 +651,11 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (ViewMode.Event, null);
+					global::System.Object.Equals (ViewMode.Choice, null);
 				}
 				
+				//	designer:cap/JUK9701
+				public static readonly global::Epsitec.Common.Widgets.Command Choice = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 233));
 				//	designer:cap/JUKG001
 				public static readonly global::Epsitec.Common.Widgets.Command Event = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16));
 				//	designer:cap/JUKH001
@@ -1212,6 +1214,8 @@ namespace Epsitec.Cresus.Assets.App
 			
 			public static class ViewMode
 			{
+				//	designer:cap/JUK9701
+				public const long Choice = 0x7D3000140000E9L;
 				//	designer:cap/JUKG001
 				public const long Event = 0x7D300014000010L;
 				//	designer:cap/JUKH001

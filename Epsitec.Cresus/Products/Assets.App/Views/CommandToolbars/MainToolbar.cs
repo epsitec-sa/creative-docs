@@ -108,18 +108,16 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateSajex (10);
 
 			{
-				//	Les boutons sont mis dans un frame, afin qu'ils conservent leurs
-				//	place même s'ils sont cachés.
+				//	Le bouton est mis dans un frame, afin qu'il conserve sa place
+				//	même s'il est caché.
 				var frame = new FrameBox
 				{
 					Parent         = this.toolbar,
-					PreferredWidth = this.toolbar.PreferredHeight * 3,
+					PreferredWidth = this.toolbar.PreferredHeight * 1,
 					Dock           = DockStyle.Left,
 				};
 
-				this.CreateButton (frame, Res.Commands.ViewMode.Single);
-				this.CreateButton (frame, Res.Commands.ViewMode.Event);
-				this.CreateButton (frame, Res.Commands.ViewMode.Multiple);
+				this.buttonViewMode = this.CreateButton (frame, Res.Commands.ViewMode.Choice);
 			}
 
 			this.CreateSajex (10);
@@ -135,8 +133,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateSajex (10);
 
 			{
-				//	Le bouton est mis dans un frame, afin qu'il conserve sa
-				//	place même s'il est caché.
+				//	Le bouton est mis dans un frame, afin qu'il conserve sa place
+				//	même s'il est caché.
 				var frame = new FrameBox
 				{
 					Parent         = this.toolbar,
@@ -229,6 +227,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.ShowViewPopup (target);
 		}
 
+		[Command (Res.CommandIds.ViewMode.Choice)]
+		private void OnViewModeChoice(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.GetTarget (e);
+			this.ShowViewModePopup (target);
+		}
+
 		[Command (Res.CommandIds.ViewMode.Single)]
 		[Command (Res.CommandIds.ViewMode.Event)]
 		[Command (Res.CommandIds.ViewMode.Multiple)]
@@ -258,6 +263,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private void UpdateViewModeCommands()
 		{
 			bool visibility = (this.viewType.Kind == ViewTypeKind.Assets);
+
+			this.SetVisibility (Res.Commands.ViewMode.Choice, visibility);
+			this.SetEnable     (Res.Commands.ViewMode.Choice, visibility);
+
+			var icon = MainToolbar.GetViewModeIcon (this.viewMode);
+			this.buttonViewMode.IconUri = Misc.GetResourceIconUri (icon);
 
 			foreach (var mode in MainToolbar.ViewTypeModes)
 			{
@@ -294,8 +305,30 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void ShowViewPopup(Widget target)
 		{
+			//	Affiche le popup permettant de choisir une vue parmi celles regroupées dans l'engrenage.
 			var commands = MainToolbar.PopupViewTypeKinds
 				.Select (x => MainToolbar.GetViewCommand (x))
+				.ToArray ();
+
+			var popup = new ViewPopup ()
+			{
+				ViewCommands = commands,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ChangeView += delegate (object sender, Command command)
+			{
+				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
+				this.toolbar.ExecuteCommand (command);
+			};
+		}
+
+		private void ShowViewModePopup(Widget target)
+		{
+			//	Affiche le popup permettant de choisir le ViewMode.
+			var commands = MainToolbar.ViewTypeModes
+				.Select (x => MainToolbar.GetViewModeCommand (x))
 				.ToArray ();
 
 			var popup = new ViewPopup ()
@@ -443,6 +476,24 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			}
 		}
 
+		private static string GetViewModeIcon(ViewMode mode)
+		{
+			switch (mode)
+			{
+				case ViewMode.Single:
+					return "ViewMode.Single";
+
+				case ViewMode.Event:
+					return "ViewMode.Event";
+
+				case ViewMode.Multiple:
+					return "ViewMode.Multiple";
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Unsupported ViewMode {0}", mode.ToString ()));
+			}
+		}
+
 		private static IEnumerable<ViewMode> ViewTypeModes
 		{
 			get
@@ -466,6 +517,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 
 		private ButtonWithRedDot				buttonWarnings;
+		private ButtonWithRedDot				buttonViewMode;
 		private ButtonWithRedDot				buttonSimulation;
 
 		private ViewType						viewType;

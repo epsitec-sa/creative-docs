@@ -452,9 +452,9 @@
     <EmbeddedResource Include="Images\Main.Simulation1.icon" />
     <EmbeddedResource Include="Images\Main.Simulation2.icon" />
     <EmbeddedResource Include="Images\Main.Simulation0.icon" />
-    <EmbeddedResource Include="Images\Show.TimelineEvent.icon" />
-    <EmbeddedResource Include="Images\Show.TimelineSingle.icon" />
-    <EmbeddedResource Include="Images\Show.TimelineMultiple.icon" />
+    <EmbeddedResource Include="Images\ViewMode.Event.icon" />
+    <EmbeddedResource Include="Images\ViewMode.Single.icon" />
+    <EmbeddedResource Include="Images\ViewMode.Multiple.icon" />
     <EmbeddedResource Include="Images\Timeline.Wide.icon" />
     <EmbeddedResource Include="Images\Timeline.Narrow.icon" />
     <EmbeddedResource Include="Images\TreeTable.Filter.icon" />
@@ -556,6 +556,7 @@
     <EmbeddedResource Include="Images\Methods.Show.icon" />
     <EmbeddedResource Include="Images\Methods.Test.icon" />
     <EmbeddedResource Include="Images\View.Arguments.icon" />
+    <EmbeddedResource Include="Images\ViewMode.Choice.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
