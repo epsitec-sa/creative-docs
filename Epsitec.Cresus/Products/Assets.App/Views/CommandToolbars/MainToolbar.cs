@@ -162,6 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void CreateDataLanguageButton()
 		{
+			//	Crée le bouton permettant de choisir la langue des données.
 			var size = this.toolbar.PreferredHeight;
 
 			this.buttonDataLanguage = new Button
@@ -377,6 +378,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private void ShowDataLanguagePopup(Widget target)
 		{
+			//	Affiche le popup permettant de choisir la langue des données.
 			var languages = MainToolbar.Languages.ToList ();
 
 			var popup = new SimplePopup ()
@@ -386,6 +388,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			foreach (var twoLetters in MainToolbar.Languages)
 			{
+				//	Par exemple "FR: Français"
 				var s = string.Format ("{0}: {1}", twoLetters, MainToolbar.GetLanguageName (twoLetters));
 				popup.Items.Add (s);
 			}

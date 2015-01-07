@@ -556,7 +556,6 @@
     <EmbeddedResource Include="Images\Methods.Show.icon" />
     <EmbeddedResource Include="Images\Methods.Test.icon" />
     <EmbeddedResource Include="Images\View.Arguments.icon" />
-    <EmbeddedResource Include="Images\ViewMode.Choice.icon" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
