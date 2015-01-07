@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 	{
 		static LocalSettings()
 		{
-			LocalSettings.UILanguage   = "FR";
-			LocalSettings.DataLanguage = "FR";
+			LocalSettings.UILanguage   = "fr";
+			LocalSettings.DataLanguage = "fr";
 
 			LocalSettings.columnsStates = new Dictionary<string, ColumnsState> ();
 			LocalSettings.searchInfos = new Dictionary<SearchKind, SearchInfo> ();

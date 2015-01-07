@@ -122,30 +122,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			switch (twoLetters)
 			{
-				case "FR":
+				case "fr":
 					name = "Français";
 					break;
 
-				case "DE":
+				case "de":
 					name = "Deutsch";
 					break;
 
-				case "EN":
+				case "en":
 					name = "English";
 					break;
 
-				case "IT":
+				case "it":
 					name = "Italiano";
 					break;
 			}
 
 			if (name == null)
 			{
-				return twoLetters;  // ne devrait pas arriver
+				return twoLetters.ToUpper ();  // ne devrait pas arriver
 			}
 			else
 			{
-				return string.Format ("{0}: {1}", twoLetters, name);
+				return string.Format ("{0}: {1}", twoLetters.ToUpper (), name);
 			}
 		}
 
@@ -155,10 +155,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	dans la UI.
 			get
 			{
-				yield return "FR";
-				yield return "DE";
-				yield return "EN";
-				yield return "IT";
+				yield return "fr";
+				yield return "de";
+				yield return "en";
+				yield return "it";
 			}
 		}
 		#endregion

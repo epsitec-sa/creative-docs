@@ -343,12 +343,12 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			if (LocalSettings.UILanguage == LocalSettings.DataLanguage)
 			{
 				//	Si les deux langues sont les mêmes, affiche les 2 lettres en grand.
-				desc = string.Format ("<font size=\"18\">{0}</font>", LocalSettings.DataLanguage);
+				desc = string.Format ("<font size=\"18\">{0}</font>", LocalSettings.DataLanguage.ToUpper ());
 			}
 			else
 			{
 				//	Si les deux langues sont différentes, elles sont affichées l'une sous l'autre.
-				desc = string.Format ("{0}<br/>{1}", LocalSettings.UILanguage, LocalSettings.DataLanguage);
+				desc = string.Format ("{0}<br/>{1}", LocalSettings.UILanguage.ToUpper (), LocalSettings.DataLanguage.ToUpper ());
 			}
 
 			this.buttonLanguages.Text = desc;
@@ -429,9 +429,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.UpdateLanguagesButton ();
 
-			var newTwo = LocalSettings.UILanguage.ToLower ();
-			//?var info = Resources.FindSpecificCultureInfo (newTwo);
-			var info = Resources.FindCultureInfo (newTwo);
+			//?var info = Resources.FindSpecificCultureInfo (LocalSettings.UILanguage);
+			var info = Resources.FindCultureInfo (LocalSettings.UILanguage);
 
 			//?System.Threading.Thread.CurrentThread.CurrentCulture = info;
 			//?System.Threading.Thread.CurrentThread.CurrentUICulture = info;
@@ -441,7 +440,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			//?if (newTwo != Resources.GetDefaultTwoLetterISOLanguageName ())
 			//?{
-			//?	Resources.OverrideDefaultTwoLetterISOLanguageName (newTwo);
+			//?	Resources.OverrideDefaultTwoLetterISOLanguageName (LocalSettings.UILanguage);
 			//?}
 
 			// TODO...
