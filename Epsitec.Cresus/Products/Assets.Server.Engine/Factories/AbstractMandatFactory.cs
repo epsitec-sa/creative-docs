@@ -32,8 +32,23 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected virtual void AddAssetsSettings()
 		{
+#if true
 			this.fieldAssetName   = this.AddSettings (BaseType.AssetsUserFields, "Nom",    FieldType.String, true,  200, 380, 1,    1,  0);
 			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, "Numéro", FieldType.String, false,  70,  90, 1, null,  0);
+#else
+			var t1 = new Epsitec.Common.Types.MultilingualText ();
+			t1.SetText ("fr", "Nom");
+			t1.SetText ("de", "Name");
+			t1.SetText ("en", "Name");
+
+			var t2 = new Epsitec.Common.Types.MultilingualText ();
+			t2.SetText ("fr", "Numéro");
+			t2.SetText ("de", "Numer");
+			t2.SetText ("en", "Number");
+
+			this.fieldAssetName   = this.AddSettings (BaseType.AssetsUserFields, t1.ToString (), FieldType.String, true,  200, 380, 1,    1,  0);
+			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, t2.ToString (), FieldType.String, false,  70,  90, 1, null,  0);
+#endif
 		}
 
 		protected virtual void AddPersonsSettings()
