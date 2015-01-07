@@ -184,6 +184,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
 			LocalSettings.SerializeHiddenWarnings (writer);
 
+			writer.WriteElementString ("UILanguage",           LocalSettings.UILanguage);
+			writer.WriteElementString ("DataLanguage",         LocalSettings.DataLanguage);
 			writer.WriteElementString ("CreateMandatDate",     LocalSettings.CreateMandatDate.ToStringIO ());
 			writer.WriteElementString ("CreateAssetDate",      LocalSettings.CreateAssetDate.ToStringIO ());
 			writer.WriteElementString ("AmortizationDateFrom", LocalSettings.AmortizationDateFrom.ToStringIO ());
@@ -329,6 +331,14 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 						case "HiddenWarnings":
 							LocalSettings.DeserializeHiddenWarnings (reader);
+							break;
+
+						case "UILanguage":
+							LocalSettings.UILanguage = reader.ReadElementContentAsString ();
+							break;
+
+						case "DataLanguage":
+							LocalSettings.DataLanguage = reader.ReadElementContentAsString ();
 							break;
 
 						case "CreateMandatDate":

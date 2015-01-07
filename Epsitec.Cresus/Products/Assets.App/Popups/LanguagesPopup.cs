@@ -1,0 +1,194 @@
+﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System.Collections.Generic;
+using System.Linq;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Views;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
+
+namespace Epsitec.Cresus.Assets.App.Popups
+{
+	/// <summary>
+	/// Ce popup permet de choisir les deux langues de l'application (UI et Data).
+	/// </summary>
+	public class LanguagesPopup : AbstractStackedPopup
+	{
+		private LanguagesPopup(DataAccessor accessor)
+			: base (accessor)
+		{
+			this.title = Res.Strings.Popup.Language.Title.ToString ();
+
+			var list = new List<StackedControllerDescription> ();
+
+			list.Add (new StackedControllerDescription  // 0
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = DateController.controllerWidth,
+				Label                 = Res.Strings.Popup.Language.UI.ToString (),
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
+				StackedControllerType = StackedControllerType.Radio,
+				MultiLabels           = LanguagesPopup.RadioLanguages,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 2
+			{
+				StackedControllerType = StackedControllerType.Label,
+				Width                 = DateController.controllerWidth,
+				Label                 = Res.Strings.Popup.Language.Data.ToString (),
+			});
+
+			list.Add (new StackedControllerDescription  // 3
+			{
+				StackedControllerType = StackedControllerType.Radio,
+				MultiLabels           = LanguagesPopup.RadioLanguages,
+			});
+
+			this.SetDescriptions (list);
+		}
+
+
+		private int UILanguage
+		{
+			get
+			{
+				var controller = this.GetController (1) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value.GetValueOrDefault ();
+			}
+			set
+			{
+				var controller = this.GetController (1) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private int DataLanguage
+		{
+			get
+			{
+				var controller = this.GetController (3) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value.GetValueOrDefault ();
+			}
+			set
+			{
+				var controller = this.GetController (3) as RadioStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+
+
+		#region Languages
+		private static string RadioLanguages
+		{
+			get
+			{
+				return string.Join ("<br/>", LanguagesPopup.Languages.Select (x => LanguagesPopup.GetLanguageName (x)));
+			}
+		}
+
+		private static int GetLanguageRank(string twoLetters)
+		{
+			return LanguagesPopup.Languages.ToList ().IndexOf (twoLetters);
+		}
+
+		private static string GetLanguageTwoLetter(int rank)
+		{
+			if (rank == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return LanguagesPopup.Languages.ToArray ()[rank];
+			}
+		}
+
+		private static string GetLanguageName(string twoLetters)
+		{
+			//	Retourne le nom d'une langue en clair, dans la langue en question.
+			//	Il n'est donc pas nécessaire de mettre ces textes dans les ressources.
+			//	Par exemple "FR: Français".
+			string name = null;
+
+			switch (twoLetters)
+			{
+				case "FR":
+					name = "Français";
+					break;
+
+				case "DE":
+					name = "Deutsch";
+					break;
+
+				case "EN":
+					name = "English";
+					break;
+
+				case "IT":
+					name = "Italiano";
+					break;
+			}
+
+			if (name == null)
+			{
+				return twoLetters;
+			}
+			else
+			{
+				return string.Format ("{0}: {1}", twoLetters, name);
+			}
+		}
+
+		private static IEnumerable<string> Languages
+		{
+			//	Retourne les langues disponibles, dans l'ordre dans lequel elles apparaissent
+			//	dans la UI.
+			get
+			{
+				yield return "FR";
+				yield return "DE";
+				yield return "EN";
+				yield return "IT";
+			}
+		}
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, string uiLanguage, string dataLanguage, System.Action<string, string> action)
+		{
+			if (target != null)
+			{
+				var popup = new LanguagesPopup (accessor)
+				{
+					UILanguage   = LanguagesPopup.GetLanguageRank (uiLanguage),
+					DataLanguage = LanguagesPopup.GetLanguageRank (dataLanguage),
+				};
+
+				popup.Create (target, leftOrRight: false);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "ok")
+					{
+						action (
+							LanguagesPopup.GetLanguageTwoLetter (popup.UILanguage),
+							LanguagesPopup.GetLanguageTwoLetter (popup.DataLanguage));
+					}
+				};
+			}
+		}
+		#endregion
+
+	}
+}
