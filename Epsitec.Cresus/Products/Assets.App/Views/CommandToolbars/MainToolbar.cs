@@ -429,21 +429,10 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			this.UpdateLanguagesButton ();
 
-			//?var info = Resources.FindSpecificCultureInfo (LocalSettings.UILanguage);
 			var info = Resources.FindCultureInfo (LocalSettings.UILanguage);
-
-			//?System.Threading.Thread.CurrentThread.CurrentCulture = info;
-			//?System.Threading.Thread.CurrentThread.CurrentUICulture = info;
-
-			var t1 = Res.Strings.Popup.Language.Title;
 			ResourceManager.ActivateCulture (info);
 
-			//?if (newTwo != Resources.GetDefaultTwoLetterISOLanguageName ())
-			//?{
-			//?	Resources.OverrideDefaultTwoLetterISOLanguageName (LocalSettings.UILanguage);
-			//?}
-
-			// TODO...
+			this.OnChangeView ();
 		}
 
 

@@ -564,6 +564,12 @@
     <Content Include="Resources\Assets.App\Strings.de.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Assets.App\Captions.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\Assets.App\Captions.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Assets.Server.Export\Assets.Server.Export.csproj">
