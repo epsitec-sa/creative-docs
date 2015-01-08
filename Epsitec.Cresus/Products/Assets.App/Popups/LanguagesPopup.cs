@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				yield return "fr";
 				yield return "de";
 				yield return "en";
-				yield return "it";
+				//yield return "it";
 			}
 		}
 		#endregion

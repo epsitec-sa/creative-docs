@@ -14,4 +14,25 @@
   <data id="KTI">Look forward</data>
   <data id="KUI">Look backward</data>
   <data id="KSI">Search options</data>
+  <data id="KLI">Exit</data>
+  <data id="KJI">Do you want to exit the software?</data>
+  <data id="KKI">Save before exit&lt;br/&gt;Exit without save</data>
+  <data id="KII">Crésus Assets</data>
+  <data id="K6">Cancel</data>
+  <data id="KD">Close</data>
+  <data id="KE">Compute</data>
+  <data id="K8">Copy</data>
+  <data id="K4">Create</data>
+  <data id="KB">Export</data>
+  <data id="K7">Import</data>
+  <data id="KG">No</data>
+  <data id="K5">OK</data>
+  <data id="KC">Open</data>
+  <data id="K9">Paste</data>
+  <data id="K3I">Save</data>
+  <data id="KA">Show</data>
+  <data id="KF">Yes</data>
+  <data id="K3L">Data</data>
+  <data id="K4L">Language setup&lt;br/&gt;Ctrl+click set previous language</data>
+  <data id="K2L">User interface</data>
 </bundle>
