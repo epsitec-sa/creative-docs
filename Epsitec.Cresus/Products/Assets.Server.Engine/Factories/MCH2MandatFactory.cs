@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected override void AddAssetsSamples()
 		{
 			var i1 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Bâtiment administratif",   "100", 2400000.0m, 3500000.0m, 2100000.0m, "Dupond",   "Nicolet",  "Immobilier",             "Bâtiments",              "Immobilisations corporelles",   "Patrimoine administratif");
-			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Voirie",                   "105", 1200000.0m, 1500000.0m,  500000.0m, "Dupond",   "Nicolet",  "Immobilier",             "Décheteries",            "Immobilisations corporelles",   "Patrimoine administratif");
-			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Déchéterie communale",     "106", 3500000.0m, 4100000.0m, 3000000.0m, "Dupond",   null,       "Immobilier",             "Décheteries",            "Immobilisations corporelles",   "Patrimoine administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Voirie",                   "105", 1200000.0m, 1500000.0m,  500000.0m, "Dupond",   "Nicolet",  "Immobilier",             "Déchèteries",            "Immobilisations corporelles",   "Patrimoine administratif");
+			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Déchèterie communale",     "106", 3500000.0m, 4100000.0m, 3000000.0m, "Dupond",   null,       "Immobilier",             "Déchèteries",            "Immobilisations corporelles",   "Patrimoine administratif");
 			var i2 = this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Collège de Marcolet",      "200", 5100000.0m, 7500000.0m, 4000000.0m, "Dupond",   null,       "Immobilier",             "Ecoles",                 "Immobilisations corporelles",   "Patrimoine administratif");
 			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddDays  (  0), "Ecole des Trois Sapins",   "201", 3200000.0m, 3300000.0m, 3000000.0m, "Dupond",   null,       "Immobilier",             "Ecoles",                 "Immobilisations corporelles",   "Patrimoine administratif");
 			         this.AddAssetsSamples (this.accessor.Mandat.StartDate.AddYears (  2), "STEP intercommunale",      "115", 3200000.0m, 4000000.0m, 2500000.0m, "Dubosson", "Nicolet",  "Immobilier",             "Traitement des eaux",    "Immobilisations corporelles",   "Patrimoine administratif");
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddGroup (imm, "Bâtiments",   "10");
 			this.AddGroup (imm, "Ecoles",      "20");
 			this.AddGroup (imm, "Dépôts",      "30");
-			this.AddGroup (imm, "Décheteries", "40");
+			this.AddGroup (imm, "Déchèteries", "40");
 
 			this.AddGroup (veh, "Camions",      "10");
 			this.AddGroup (veh, "Camionnettes", "20");
