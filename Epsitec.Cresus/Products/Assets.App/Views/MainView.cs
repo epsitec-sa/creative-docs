@@ -71,6 +71,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				var viewType = this.toolbar.ViewType;
 				this.parent.Children.Clear ();
+				this.accessor.WarningsDirty = true;
 				this.CreateBaseUI ();
 				this.UpdateViewState ();
 				this.CreateView (viewType);
