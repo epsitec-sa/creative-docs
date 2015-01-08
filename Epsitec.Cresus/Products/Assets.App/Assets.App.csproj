@@ -558,7 +558,12 @@
     <EmbeddedResource Include="Images\Methods.Test.icon" />
     <EmbeddedResource Include="Images\View.Arguments.icon" />
     <None Include="packages.config" />
-    <None Include="Resources\Assets.App\Strings.en.resource" />
+    <Content Include="Resources\Assets.App\Strings.en.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets.App\Strings.de.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Assets.Server.Export\Assets.Server.Export.csproj">

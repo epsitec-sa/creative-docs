@@ -1468,6 +1468,34 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+
+		public static void ActivateCulture(CultureInfo info)
+		{
+			ResourceManagerPool.Default.Managers.ForEach (m => m.ActiveCulture = info);
+			ResourceManager.PatchAllStringBundles ();
+		}
+		
+		private static void PatchAllStringBundles()
+		{
+			var assemblies  = System.AppDomain.CurrentDomain.GetAssemblies ();
+			var stringTypes = assemblies.SelectMany (x => x.GetTypes ().Where (t => t.IsClass && t.FullName.EndsWith (".Res+Strings")));
+			var resources   = (from type in stringTypes
+							   let field = type.GetField ("_stringsBundle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+							   select new
+							   {
+								   Field = field,
+								   Bundle = field.GetValue (null) as ResourceBundle,
+								   ReplaceBundle = (System.Action<ResourceBundle>) (b => field.SetValue (null, b))
+							   }).ToList ();
+
+			foreach (var res in resources)
+			{
+				var resourceManager   = res.Bundle.ResourceManager;
+				var replacementBundle = resourceManager.GetBundleOrThrow ("Strings");
+				res.ReplaceBundle (replacementBundle);
+			}
+		}
+
 		#region IComparable<ResourceManager> Members
 
 		int System.IComparable<ResourceManager>.CompareTo(ResourceManager other)

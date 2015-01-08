@@ -435,8 +435,8 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			//?System.Threading.Thread.CurrentThread.CurrentCulture = info;
 			//?System.Threading.Thread.CurrentThread.CurrentUICulture = info;
 
-			var m = Epsitec.Common.Support.ResourceManager.GetResourceManager (this.toolbar.Window);
-			m.ActiveCulture = info;
+			var t1 = Res.Strings.Popup.Language.Title;
+			ResourceManager.ActivateCulture (info);
 
 			//?if (newTwo != Resources.GetDefaultTwoLetterISOLanguageName ())
 			//?{
