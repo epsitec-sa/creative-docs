@@ -101,13 +101,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 			switch (mode)
 			{
 				case ViewMode.Single:
-					return "Show.TimelineSingle";
+					return "ViewMode.Single";
 
 				case ViewMode.Event:
-					return "Show.TimelineEvent";
+					return "ViewMode.Event";
 
 				case ViewMode.Multiple:
-					return "Show.TimelineMultiple";
+					return "ViewMode.Multiple";
 
 				default:
 					return null;

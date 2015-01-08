@@ -432,7 +432,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			var info = Resources.FindCultureInfo (LocalSettings.UILanguage);
 			ResourceManager.ActivateCulture (info);
 
-			this.OnChangeView ();
+			this.OnRebuildUI ();
 		}
 
 
@@ -603,6 +603,14 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 		public event EventHandler ChangeView;
+
+
+		private void OnRebuildUI()
+		{
+			this.RebuildUI.Raise (this);
+		}
+
+		public event EventHandler RebuildUI;
 		#endregion
 
 

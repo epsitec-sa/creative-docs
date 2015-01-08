@@ -42,14 +42,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 			CommandDispatcher.SetDispatcher (parent, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
 			this.parent = parent;
 
-			MouseCursorManager.SetWindow (parent.Window);
+			MouseCursorManager.SetWindow (this.parent.Window);
 
 			this.toolbar = new MainToolbar (this.accessor, this.commandContext);
-			this.toolbar.CreateUI (parent);
+			this.CreateBaseUI ();
+
+			this.CreateFirstView ();
+			this.UpdateToolbar ();
+		}
+
+		private void CreateBaseUI()
+		{
+			this.toolbar.CreateUI (this.parent);
 
 			this.viewBox = new FrameBox
 			{
-				Parent = parent,
+				Parent = this.parent,
 				Dock   = DockStyle.Fill,
 			};
 
@@ -59,8 +67,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.CreateView (this.toolbar.ViewType);
 			};
 
-			this.CreateFirstView ();
-			this.UpdateToolbar ();
+			this.toolbar.RebuildUI += delegate
+			{
+				var viewType = this.toolbar.ViewType;
+				this.parent.Children.Clear ();
+				this.CreateBaseUI ();
+				this.UpdateViewState ();
+				this.CreateView (viewType);
+			};
 		}
 
 
