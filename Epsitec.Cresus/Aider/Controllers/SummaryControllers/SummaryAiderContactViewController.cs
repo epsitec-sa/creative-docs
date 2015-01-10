@@ -130,7 +130,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 						{
 							wall.AddBrick ()
-								.Text ("Personne sans m�nage !?")
+								.Text ("Personne sans ménage !?")
 								.EnableActionButton<ActionAiderContactViewController6DeleteContact> ();
 						}
 
@@ -159,7 +159,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						if (household.Members.Count > 1)
 						{
 							wall.AddBrick (x => x.Household.Members)
-								.Title (Resources.Text ("Membres du m�nage"))
+								.Title (Resources.Text ("Membres du ménage"))
 								.Icon ("Data.AiderPersons")
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)
