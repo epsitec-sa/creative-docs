@@ -520,21 +520,24 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void DeserializeObjects(System.Xml.XmlReader reader, GuidDictionary<DataObject> objects)
 		{
-			while (reader.Read ())
+			if (!reader.IsEmptyElement)
 			{
-				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				while (reader.Read ())
 				{
-					if (reader.Name == "Object")
+					if (reader.NodeType == System.Xml.XmlNodeType.Element)
 					{
-						var obj = new DataObject (this.undoManager, reader);
-						objects.Add (obj);
+						if (reader.Name == "Object")
+						{
+							var obj = new DataObject (this.undoManager, reader);
+							objects.Add (obj);
+						}
+					}
+					else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+					{
+						break;
 					}
 				}
-				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
-				{
-					break;
-				}
-			}		
+			}
 		}
 
 		private void DeserializeReports(System.Xml.XmlReader reader)
