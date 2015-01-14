@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Data
 		}
 
 
-		public System.DateTime Date
+		public System.DateTime					Date
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public int Position
+		public int								Position
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public Timestamp JustBefore
+		public Timestamp						JustBefore
 		{
 			//	Retourne un timestamp un chouia avant.
 			get
@@ -61,30 +61,46 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public static Timestamp Now
+		public static Timestamp					Now
 		{
 			get
 			{
 				var now = System.DateTime.Now;
 
 				//	Il faut absolument forcer l'heure à 00:00:00 !
-				return new Timestamp (new System.DateTime (now.Year, now.Month, now.Day), 0);
+
+				return Timestamp.FromDate (
+					now.Year,
+					now.Month,
+					now.Day,
+					0);
 			}
 		}
 
-		public static Timestamp MinValue
+		public static Timestamp					MinValue
 		{
 			get
 			{
-				return new Timestamp (System.DateTime.MinValue, int.MinValue);
+				return Timestamp.FromDate (
+					System.DateTime.MinValue.Year,
+					System.DateTime.MinValue.Month,
+					System.DateTime.MinValue.Day,
+					int.MinValue);
 			}
 		}
 
-		public static Timestamp MaxValue
+		public static Timestamp					MaxValue
 		{
 			get
 			{
-				return new Timestamp (System.DateTime.MaxValue, int.MaxValue);
+				//	Il ne faut surtout pas utiliser System.DateTime.MaxValue de façon brute (avec
+				//	l'heure), car il faut toujours avoir 00:00:00 et non 23:59:59 !
+
+				return Timestamp.FromDate (
+					System.DateTime.MaxValue.Year,
+					System.DateTime.MaxValue.Month,
+					System.DateTime.MaxValue.Day,
+					int.MaxValue);
 			}
 		}
 
@@ -97,11 +113,23 @@ namespace Epsitec.Cresus.Assets.Data
 		#region IComparable<Timestamp> Members
 		public int CompareTo(Timestamp other)
 		{
-			int result = this.date.CompareTo (other.date);
+			//	Voir la remarqur importante de Equals juste en dessous !
+
+			int result = this.date.Year.CompareTo (other.date.Year);
 
 			if (result == 0)
 			{
-				result = this.position.CompareTo (other.position);
+				result = this.date.Month.CompareTo (other.date.Month);
+
+				if (result == 0)
+				{
+					result = this.date.Day.CompareTo (other.date.Day);
+
+					if (result == 0)
+					{
+						result = this.position.CompareTo (other.position);
+					}
+				}
 			}
 
 			return result;
@@ -111,8 +139,14 @@ namespace Epsitec.Cresus.Assets.Data
 		#region IEquatable<Timestamp> Members
 		public bool Equals(Timestamp other)
 		{
-			return this.date     == other.date
-				&& this.position == other.position;
+			//	La comparaison ne doit pas tenir compte de l'heure. En effet, la sérialisation ne la sérialise pas.
+			//	On a donc parfois un timestamp désérialisé qui n'a pas la même heure, avec l'emploi de
+			//	System.DateTime.MaxValue !
+
+			return this.date.Year  == other.date.Year
+				&& this.date.Month == other.date.Month
+				&& this.date.Day   == other.date.Day
+				&& this.position   == other.position;
 		}
 		#endregion
 

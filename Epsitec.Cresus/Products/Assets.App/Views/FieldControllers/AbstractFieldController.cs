@@ -139,6 +139,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			this.UpdatePropertyState ();
 		}
 
+		public void ValueChanged()
+		{
+			this.OnValueEdited (this.Field);
+		}
+
 		public virtual void SetFocus()
 		{
 			this.OnSetFieldFocus (this.Field);

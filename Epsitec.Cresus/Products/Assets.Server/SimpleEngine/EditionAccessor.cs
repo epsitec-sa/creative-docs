@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			if (this.obj == null)
 			{
 				//	Si on essaie de sélectionner un événement sur une ligne de groupement,
-				//	il n'y a rien à éditer. Dans ce cas, le Guid passé correspont à un
+				//	il n'y a rien à éditer. Dans ce cas, le Guid passé correspond à un
 				//	objet dans BaseType.Groups.
 				this.CancelObjectEdition ();
 				return;

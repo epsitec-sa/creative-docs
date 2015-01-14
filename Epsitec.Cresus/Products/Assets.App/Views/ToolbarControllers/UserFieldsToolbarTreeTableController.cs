@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 					throw new System.InvalidOperationException (string.Format ("Unknown BaseType {0}", this.baseType.ToString ()));
 			}
 
-			var primary = new GuidNodeGetter (this.accessor.Mandat, this.baseType);
-			this.secondaryGetter = new SortableNodeGetter (primary, this.accessor, this.baseType);
+			this.primaryGetter = new GuidNodeGetter (this.accessor.Mandat, this.baseType);
+			this.secondaryGetter = new SortableNodeGetter (this.primaryGetter, this.accessor, this.baseType);
 			this.nodeGetter = new SorterNodeGetter (this.secondaryGetter);
 		}
 
@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		public override void UpdateData()
 		{
+			this.primaryGetter.Update ();
 			this.secondaryGetter.SetParams (null, this.sortingInstructions);
 			(this.nodeGetter as SorterNodeGetter).SetParams (this.sortingInstructions);
 
@@ -186,7 +187,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			accessor.WarningsDirty = true;
 			this.UpdateData ();
-			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);
+
+			this.SelectedGuid = userField.Guid;
+			this.OnUpdateAfterCreate (userField.Guid, EventType.Unknown, Timestamp.Now);  // Timestamp quelconque !
 
 			var desc = UndoManager.GetDescription (Res.Commands.UserFields.New.Description, UserFieldsLogic.GetSummary (this.accessor, this.baseType, userField.Guid));
 			this.accessor.UndoManager.SetDescription (desc);
@@ -328,6 +331,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private SortableNodeGetter secondaryGetter;
+		private GuidNodeGetter					primaryGetter;
+		private SortableNodeGetter				secondaryGetter;
 	}
 }

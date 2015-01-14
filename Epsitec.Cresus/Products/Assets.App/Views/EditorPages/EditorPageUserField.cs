@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Views.FieldControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -33,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			{
 				dict = EnumDictionaries.GetDictFieldTypes (hasComplexTypes: false);
 			}
-			this.CreateEnumController (parent, ObjectField.UserFieldType, dict, editWidth: 100);
+			this.typeController = this.CreateEnumController (parent, ObjectField.UserFieldType, dict, editWidth: 100);
 
 			this.CreateBoolController (parent, ObjectField.UserFieldRequired);
 
@@ -57,9 +58,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 			};
 
-			this.CreateIntController (parent, ObjectField.UserFieldLineWidth);
-			this.CreateIntController (parent, ObjectField.UserFieldLineCount);
-			this.CreateIntController (parent, ObjectField.UserFieldTopMargin);
+			this.lineWidthController = this.CreateIntController (parent, ObjectField.UserFieldLineWidth);
+			this.lineCountController = this.CreateIntController (parent, ObjectField.UserFieldLineCount);
+			                           this.CreateIntController (parent, ObjectField.UserFieldTopMargin);
 
 			new StaticText
 			{
@@ -70,6 +71,58 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 
 			this.CreateIntController (parent, ObjectField.UserFieldSummaryOrder);
+
+			//	Connexion des événements.
+			this.typeController.ValueEdited += delegate (object sender, ObjectField val1)
+			{
+				this.UpdateType ();
+			};
 		}
+
+		private void UpdateType()
+		{
+			if (this.FieldType == FieldType.String)
+			{
+				if (!this.lineWidthController.Value.HasValue)
+				{
+					this.lineWidthController.Value = AbstractFieldController.maxWidth;
+					this.lineWidthController.ValueChanged ();
+				}
+
+				if (!this.lineCountController.Value.HasValue)
+				{
+					this.lineCountController.Value = 1;
+					this.lineCountController.ValueChanged ();
+				}
+			}
+			else
+			{
+				this.lineWidthController.Value = null;
+				this.lineCountController.Value = null;
+
+				this.lineWidthController.ValueChanged ();
+				this.lineCountController.ValueChanged ();
+			}
+		}
+
+		private FieldType FieldType
+		{
+			get
+			{
+				if (this.typeController.Value.HasValue)
+				{
+					return (FieldType) this.typeController.Value.Value;
+				}
+				else
+				{
+					return FieldType.Unknown;
+				}
+			}
+		}
+
+
+		private EnumFieldController				typeController;
+		private IntFieldController				lineWidthController;
+		private IntFieldController				lineCountController;
 	}
 }
