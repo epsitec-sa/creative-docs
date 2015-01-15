@@ -69,16 +69,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\Epsitec\dot.net\Epsitec.Batch\Sources\BatchTool\Printer.cs">
+    <Compile Include="..\..\Epsitec.ShellPE\Epsitec.Batch\Sources\BatchTool\Printer.cs">
       <Link>Printer.cs</Link>
     </Compile>
-    <Compile Include="..\..\Epsitec\dot.net\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodePrestation.cs">
+    <Compile Include="..\..\Epsitec.ShellPE\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodePrestation.cs">
       <Link>BarCodePrestation.cs</Link>
     </Compile>
-    <Compile Include="..\..\Epsitec\dot.net\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodeServiceRecord.cs">
+    <Compile Include="..\..\Epsitec.ShellPE\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodeServiceRecord.cs">
       <Link>BarCodeServiceRecord.cs</Link>
     </Compile>
-    <Compile Include="..\..\Epsitec\dot.net\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodeWebService.cs">
+    <Compile Include="..\..\Epsitec.ShellPE\Epsitec.Batch\Sources\BatchTool\SwissPostWebServices\BarCodeWebService.cs">
       <Link>BarCodeWebService.cs</Link>
     </Compile>
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
