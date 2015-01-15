@@ -255,8 +255,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
-      <Project>{B4D96BD8-5B65-486D-99B1-16D7948FED61}</Project>
+    <ProjectReference Include="..\..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
+      <Project>{b4d96bd8-5b65-486d-99b1-16d7948fed61}</Project>
       <Name>Epsitec.TwixClip</Name>
     </ProjectReference>
     <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">

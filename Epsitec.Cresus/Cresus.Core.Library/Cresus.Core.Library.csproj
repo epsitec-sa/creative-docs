@@ -652,7 +652,7 @@
     <Compile Include="Workflows\WorkflowTransitionType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+    <ProjectReference Include="..\..\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
       <Project>{bc0605f1-c986-4b52-ae21-aae545fcb970}</Project>
       <Name>Epsitec.CresusToolkit</Name>
     </ProjectReference>

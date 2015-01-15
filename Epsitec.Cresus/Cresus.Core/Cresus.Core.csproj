@@ -307,7 +307,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+    <ProjectReference Include="..\..\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
       <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
       <Name>Epsitec.CresusToolkit</Name>
     </ProjectReference>
