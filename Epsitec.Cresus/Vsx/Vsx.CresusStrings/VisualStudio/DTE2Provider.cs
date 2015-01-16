@@ -50,7 +50,7 @@ namespace Epsitec.VisualStudio
 		{
 			using (new TimeTrace ())
 			{
-				string progId = "!VisualStudio.DTE.11.0:" + processId.ToString ();
+				string progId = "!VisualStudio.DTE.12.0:" + processId.ToString ();
 
 				IBindCtx bindCtx = null;
 				IRunningObjectTable rot = null;

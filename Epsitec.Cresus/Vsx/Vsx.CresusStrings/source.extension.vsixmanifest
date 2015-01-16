@@ -6,7 +6,7 @@
     <Description xml:space="preserve">Displays the content of Cresus Designer strings</Description>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Premium" Version="11.0" />
+    <InstallationTarget Version="[12.0,13.0)" Id="Microsoft.VisualStudio.Premium" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />

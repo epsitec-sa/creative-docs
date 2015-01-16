@@ -26,6 +26,9 @@ namespace Epsitec.VisualStudio
 			this.EngineAsync (CancellationToken.None).ConfigureAwait (false);
 		}
 
+		//[Import]
+		//VisualStudioWorkspace
+
 		[Import]
 		public Epsitec.VisualStudio.DTE			DTE
 		{
