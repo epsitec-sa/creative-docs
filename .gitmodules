@@ -1,0 +1,16 @@
+[submodule "Epsitec.Serial"]
+	path = Epsitec.Serial
+	url = https://git.epsitec.ch/cresus-dotnet/serial.git
+	branch = master
+[submodule "Epsitec.TwixClip"]
+	path = Epsitec.TwixClip
+	url = https://git.epsitec.ch/cresus-dotnet/twixclip.git
+	branch = master
+[submodule "Epsitec.SwissPost"]
+	path = Epsitec.SwissPost
+	url = https://git.epsitec.ch/cresus-dotnet/swisspost.git
+	branch = master
+[submodule "Epsitec.ShellPE"]
+	path = Epsitec.ShellPE
+	url = https://git.epsitec.ch/cresus-dotnet/shellpe.git
+	branch = master
