@@ -27,48 +27,24 @@ if %configurationDirectory%==0 (
 
 @rem Cleans up if we must do so
 if %cleanup%==1 (
-    @rem Ask the user if is really wants to revert everything in its svn repositories
+    @rem Ask the user if is really wants to revert everything in its git repositories
     echo This script will:
-    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
-    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
-    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.ShellPE
-    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
-    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
-    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.SwissPost
-    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
-    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
-    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.TwixClip
-    echo - Revert all changes to %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
-    echo - Delete all unversionned items in %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
-    echo - Delete all ignored items in %~dp0..\..\Epsitec\dot.net\Epsitec.ZipMe
-    echo - Revert all changes to %~dp0..\
-    echo - Delete all unversionned items in %~dp0..\
-    echo - Delete all ignored items in %~dp0..\
+    echo - Clean submodule %~dp0..\..\Epsitec.Serial
+    echo - Clean submodule %~dp0..\..\Epsitec.ShellPE
+    echo - Clean submodule %~dp0..\..\Epsitec.SwissPost
+    echo - Clean submodule %~dp0..\..\Epsitec.TwixClip
+    echo - Clean %~dp0..\
     choice /M "Are you sure that you want to continue"
     if ERRORLEVEL 2 exit /B
 
     @echo on
 
-    @rem Revert all changes in the two repositories.
-    svn revert -R ..\..\Epsitec\dot.net\Epsitec.ShellPE
-    svn revert -R ..\..\Epsitec\dot.net\Epsitec.SwissPost
-    svn revert -R ..\..\Epsitec\dot.net\Epsitec.TwixClip
-    svn revert -R ..\..\Epsitec\dot.net\Epsitec.ZipMe
-    svn revert -R ..\
-
-    @rem Delete all unversionned files and folders in the two repositories.
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.ShellPE ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.SwissPost ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.TwixClip ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\..\Epsitec\dot.net\Epsitec.ZipMe ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status ..\ ^| findstr /r "^\?"`) do svn delete --force "%%i %%j"
-
-    @rem Delete all ignored files and folders in the two repositories
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.ShellPE ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.SwissPost ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.TwixClip ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\..\Epsitec\dot.net\Epsitec.ZipMe ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
-    for /f "usebackq tokens=2*" %%i in (`svn status --no-ignore ..\ ^| findstr /r "^I"`) do svn delete --force "%%i %%j"
+    @rem Clean all repositories.
+    git clean -xdf ..\..\Epsitec.Serial
+    git clean -xdf ..\..\Epsitec.ShellPE
+    git clean -xdf ..\..\Epsitec.SwissPost
+    git clean -xdf ..\..\Epsitec.TwixClip
+    git clean -xdf ..\
 )
 
 @echo on
@@ -111,6 +87,6 @@ copy %configurationDirectory%\Aider.Features.crconfig bin\Build\aider\server\Aid
 
 @rem Zip the build.
 set zipname=aider-%suffix%
-..\..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\%zipname%.zip bin\Build\aider
+..\..\Epsitec.ShellPE\Epsitec.ZipMe\Epsitec.ZipMe\bin\Release\Epsitec.ZipMe.exe bin\Build\%zipname%.zip bin\Build\aider
 
 copy bin\Build\%zipname%.zip S:\ /Y
