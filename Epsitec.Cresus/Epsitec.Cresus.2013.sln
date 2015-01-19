@@ -115,13 +115,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pdf", "Common.Pdf\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Data.Platform", "Tool.Data.Platform\Tool.Data.Platform.csproj", "{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4117699-97FC-4D11-BC34-2F13368524A0}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{A254E420-166A-488D-9687-0268BF6FFEE5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aider.Processors", "Aider.Processors\Aider.Processors.csproj", "{8DE96414-E7B3-42B6-831A-2C92E924E121}"
