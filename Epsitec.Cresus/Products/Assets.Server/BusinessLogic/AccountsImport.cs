@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public DateRange Import(GuidDictionary<DataObject> accounts, string filename)
+		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vats, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -24,14 +24,59 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
+			this.vats = vats;
+			if (this.vats != null)
+			{
+				this.vats.Clear ();
+			}
+
 			this.ReadLines (filename);
 			this.InitDates ();
+
+			if (this.vats != null)
+			{
+				this.AddVatCodes ();
+			}
+
 			this.AddAccounts ();
 
 			//	Retourne la période (attention, la date de fin est exclue).
 			return new DateRange (this.beginDate, this.endDate.AddDays (1));
 		}
 
+
+		private void AddVatCodes()
+		{
+			//	Importe tous les codes TVA.
+			int index = this.IndexOfLine ("BEGIN=TVACODES");
+
+			while (++index < this.lines.Length)
+			{
+				var line = this.lines[index];
+
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				if (line.StartsWith ("END=TVACODES"))
+				{
+					break;
+				}
+
+				if (line.StartsWith ("ENTRY"))
+				{
+					var name = this.GetEntryContentText    (index, "NAME");
+					var rate = this.GetEntryContentDecimal (index, "TAUX");
+					var desc = this.GetEntryContentText    (index, "COMMENT");
+
+					if (rate.HasValue)
+					{
+						this.AddVatCode (name, rate.Value, desc);
+					}
+				}
+			}
+		}
 
 		private void AddAccounts()
 		{
@@ -162,6 +207,24 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return date.Value;
 		}
 
+		private DataObject AddVatCode(string name, decimal rate, string desc)
+		{
+			var o = new DataObject (null);
+			this.vats.Add (o);
+			{
+				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+				var e = new DataEvent (null, start, EventType.Input);
+				o.AddEvent (e);
+
+				e.AddProperty (new DataStringProperty  (ObjectField.Name, name));
+				e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate));
+				e.AddProperty (new DataStringProperty  (ObjectField.Description, desc));
+			}
+
+			//?System.Console.WriteLine (number);
+			return o;
+		}
+
 		private DataObject AddAccount(string number, string name, AccountCategory category, AccountType type)
 		{
 			var o = new DataObject (null);
@@ -280,6 +343,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return null;
 		}
 
+		private decimal? GetEntryContentDecimal(int index, string key)
+		{
+			var text = this.GetEntryContentText (index, key);
+
+			if (!string.IsNullOrEmpty (text))
+			{
+				decimal value;
+				if (decimal.TryParse (text, out value))
+				{
+					return value;
+				}
+			}
+
+			return null;
+		}
+
 		private string GetEntryContentText(int index, string key)
 		{
 			key += "=";
@@ -364,7 +443,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 
 		private string[]						lines;
-		private GuidDictionary<DataObject>			accounts;
+		private GuidDictionary<DataObject>		accounts;
+		private GuidDictionary<DataObject>		vats;
 		private System.DateTime					beginDate;
 		private System.DateTime					endDate;
 	}

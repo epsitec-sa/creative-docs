@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				try
 				{
 					var accounts = new GuidDictionary<DataObject> (mandat.UndoManager);
-					var range = importEngine.Import (accounts, filename);
+					var range = importEngine.Import (accounts, null, filename);
 
 					mandat.AddAccounts (range, accounts);
 					//?mandat.CurrentAccountsDateRange = range;
