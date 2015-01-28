@@ -602,7 +602,7 @@
   <data name="Fld.AiderEmployeeJob.Description" id="A8J">&lt;s:data id="_0" f:Name="Description" f:Labels="{Collection {Text 'Détails (site, secteur, etc.)'}}" /&gt;</data>
   <data name="Fld.AiderEmployeeJob.Employee" id="A9J">&lt;s:data id="_0" f:Name="Employee" f:Labels="{Collection {Text 'Employé'}}" /&gt;</data>
   <data name="Fld.AiderEmployeeJob.Office" id="AAJ">&lt;s:data id="_0" f:Name="Office" f:Labels="{Collection {Text 'Lieu d\'église'}}" /&gt;</data>
-  <data name="Fld.AiderEmployeeJob.EmployeeJobFunction" id="ABJ">&lt;s:data id="_0" f:Name="EmployeeJobFunction" f:Labels="{Collection {Text 'Fonction'}}" /&gt;</data>
+  <data name="Fld.AiderEmployeeJob.EmployeeJobFunction" id="ABJ">&lt;s:data id="_0" f:Name="EmployeeJobFunction" f:Labels="{Collection {Text 'Statut'}}" /&gt;</data>
   <data name="Fld.AiderEmployeeJob.Employer" id="ACJ">&lt;s:data id="_0" f:Name="Employer" f:Labels="{Collection {Text 'Employeur'}}" /&gt;</data>
   <data name="Fld.AiderReferee.Employee" id="AEJ">&lt;s:data id="_0" f:Name="Employee" /&gt;</data>
   <data name="Fld.AiderReferee.ReferenceType" id="AFJ">&lt;s:data id="_0" f:Name="ReferenceType" f:Labels="{Collection {Text 'Répondance pour...'}}" /&gt;</data>
