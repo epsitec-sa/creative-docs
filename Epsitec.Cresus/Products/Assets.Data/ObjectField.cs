@@ -71,6 +71,9 @@ namespace Epsitec.Cresus.Assets.Data
 		AccountCategory,
 		AccountType,
 
+		//	Définition d'un code TVA.
+		VatRate,
+
 		//	Définitins d'une écriture.
 		EntryAssetGuid,
 		EntryEventGuid,

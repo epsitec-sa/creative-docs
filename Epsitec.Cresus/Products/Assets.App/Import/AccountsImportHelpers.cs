@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				try
 				{
-					var range = importEngine.Import (importedAccounts, filename);
+					var range = importEngine.Import (importedAccounts, null, filename);
 
 					bool existing = this.accessor.Mandat.AccountsDateRanges.Contains (range);
 					if (existing)
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				try
 				{
-					range = importEngine.Import (importedAccounts, filename);
+					range = importEngine.Import (importedAccounts, null, filename);
 				}
 				catch (System.Exception ex)
 				{
