@@ -74,6 +74,10 @@ namespace Epsitec.Aider.Entities
 			context.DeleteEntity (this);
 		}
 
+		public void RemoveParticipant (BusinessContext context, AiderEventParticipantEntity participant)
+		{
+			participant.Delete (context);
+		}
 
 		partial void GetParticipants(ref IList<AiderEventParticipantEntity> value)
 		{
