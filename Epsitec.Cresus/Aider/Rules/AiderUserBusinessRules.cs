@@ -31,6 +31,7 @@ namespace Epsitec.Aider.Rules
 			this.CheckLoginNameIsUnique (user);
 			this.CheckDisplayNameIsNotEmpty (user);
 			this.CheckParishIsParishOrRegionGroup (user);
+			this.CheckContact (user);
 			this.CheckEmail (user);
 		}
 
@@ -125,6 +126,18 @@ namespace Epsitec.Aider.Rules
 			}
 
 			Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse ou région.");
+		}
+
+		private void CheckContact(AiderUserEntity user)
+		{
+			var contact = user.Contact;
+
+			if (contact.IsNull ())
+			{
+				var message = Resources.Text ("Un contact doit être renseigné!");
+
+				Logic.BusinessRuleException (user, message);
+			}
 		}
 
 		private void CheckEmail(AiderUserEntity user)
