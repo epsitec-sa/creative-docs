@@ -915,7 +915,7 @@ AiderEventParticipant = [LVAA3]
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>      
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVABJ]" title="Fonction" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVABJ]" title="Statut" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -923,11 +923,11 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVA4J]" title="Type de collaborateur" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVA4J]" title="Fonction" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVA5J]" title="Statut collaborateur" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVA5J]" title="Activité" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -1170,11 +1170,11 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA4J]" title="Fonction" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA4J]" title="Statut" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA5J]" title="Statut collaborateur" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVA5J]" title="Activité" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -1408,11 +1408,11 @@ AiderEventParticipant = [LVAA3]
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>      
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVA4J]" title="Type collaborateur" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVA4J]" title="Fonction" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVA5J]" title="Statut collaborateur" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVA5J]" title="Activité" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
