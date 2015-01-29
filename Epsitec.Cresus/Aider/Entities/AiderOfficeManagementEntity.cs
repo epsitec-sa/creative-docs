@@ -123,6 +123,11 @@ namespace Epsitec.Aider.Entities
 		{
 			office.DeleteOfficeUserJobsForUser (businessContext, user);
 		}
+
+		public static void LeaveOfficeSuppleants (BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		{
+			office.DeleteOfficeUserJobsForSuppleant (businessContext, user);
+		}
 		
 		public static void JoinOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
 		{
@@ -236,6 +241,11 @@ namespace Epsitec.Aider.Entities
 		public void DeleteOfficeUserJobsForUser(BusinessContext businessContext, AiderUserEntity user)
 		{		
 			this.DeleteOfficeJobs (businessContext, user.Contact.Person.Employee, EmployeeJobFunction.UtilisateurAIDER);
+		}
+
+		public void DeleteOfficeUserJobsForSuppleant(BusinessContext businessContext, AiderUserEntity user)
+		{
+			this.DeleteOfficeJobs (businessContext, user.Contact.Person.Employee, EmployeeJobFunction.SuppléantAIDER);
 		}
 
 		private void DeleteOfficeJobs(BusinessContext businessContext, AiderEmployeeEntity employee, EmployeeJobFunction userFonction)

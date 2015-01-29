@@ -73,33 +73,28 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 				throw new BusinessRuleException (this.Entity, message);
 			}
 
-			//Stop old usergroup participation
-			if(this.Entity.Parish.IsNotNull () && this.Entity.Contact.IsNotNull())
+			if (this.Entity.Contact.IsNotNull ())
 			{
-				var currentParish    = this.Entity.Parish;
-				var currentUserGroup = currentParish.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.Users);
-				if (currentUserGroup.IsNotNull ())
+				var employee = this.Entity.Contact.Person.Employee;
+				if (employee.IsNotNull ())
 				{
-					var participation = currentUserGroup.FindParticipationsByGroup (this.BusinessContext, 
-																					this.Entity.Contact, 
-																					currentUserGroup);
-					AiderGroupEntity.RemoveParticipations ( this.BusinessContext, 
-															participation);
-				}
-			}
+					var userJobsToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
+					foreach (var userJob in userJobsToRemove)
+					{
+						AiderOfficeManagementEntity.LeaveOfficeUsers (this.BusinessContext, userJob.Office, this.Entity);
+					}
 
-			//Stop old office management participation
-			if(this.Entity.Office.IsNotNull () && this.Entity.Contact.IsNotNull ())
-			{
-				var currentOffice    = this.Entity.Office;
-				var currentUserGroup = currentOffice.ParishGroup.Subgroups.Single (s => s.GroupDef.Classification == Enumerations.GroupClassification.ResponsibleUser);
-				if (currentUserGroup.IsNotNull ())
-				{
-					var participation = currentUserGroup.FindParticipationsByGroup (this.BusinessContext,
-																					this.Entity.Contact,
-																					currentUserGroup);
-					AiderGroupEntity.RemoveParticipations (this.BusinessContext,
-															participation);
+					var suppleantJobsToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER);
+					foreach (var suppleantJob in suppleantJobsToRemove)
+					{
+						AiderOfficeManagementEntity.LeaveOfficeSuppleants (this.BusinessContext, suppleantJob.Office, this.Entity);
+					}
+
+					var officeManagerJobToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER);
+					foreach (var managerJob in officeManagerJobToRemove)
+					{
+						AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, managerJob.Office, this.Entity);
+					}
 				}
 			}
 			
