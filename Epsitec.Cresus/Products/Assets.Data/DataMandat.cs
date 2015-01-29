@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#region VatCodes
 		public IEnumerable<DateRange> VatCodesDateRanges
 		{
-			//	Retourne la liste des périodes de tous les plans comptables connus.
+			//	Retourne la liste des périodes de tous les codes TVA connus.
 			get
 			{
 				return this.rangeVatCodes.Select (x => x.Key);
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidDictionary<DataObject> GetVatCodes(DateRange range)
 		{
-			//	Retourne le plan comptable correspondant à une période.
+			//	Retourne le code TVA correspondant à une période.
 			GuidDictionary<DataObject> vatCodes;
 			if (!range.IsEmpty && this.rangeVatCodes.TryGetValue (range, out vatCodes))
 			{
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void AddVatCodes(DateRange dateRange, GuidDictionary<DataObject> vatCodes)
 		{
-			//	Prend connaissance d'un nouveau plan comptable, qui est ajouté ou
+			//	Prend connaissance d'un nouveau code TVA, qui est ajouté ou
 			//	qui remplace un existant, selon sa période.
 			this.rangeVatCodes[dateRange] = vatCodes;
 		}
