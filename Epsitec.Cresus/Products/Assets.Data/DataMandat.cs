@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
 			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
 
@@ -49,6 +50,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
 			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
@@ -193,6 +195,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case BaseTypeKind.Accounts:
 					return this.GetAccounts (type.AccountsDateRange);
 
+				case BaseTypeKind.VatCodes:
+					return this.GetVatCodes (type.AccountsDateRange);
+
 				case BaseTypeKind.Methods:
 					return this.methods;
 
@@ -220,7 +225,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Retourne la base correspondant à une date.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
-			var range = this.GetBestDateRange (date);
+			var range = this.GetBestAccountsDateRange (date);
 			return new BaseType (BaseTypeKind.Accounts, range);
 		}
 
@@ -246,11 +251,63 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
-		public DateRange GetBestDateRange(System.DateTime date)
+		public DateRange GetBestAccountsDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
 			return this.AccountsDateRanges
+				.Reverse ()
+				.Where (x => x.IsInside (date))
+				.FirstOrDefault ();
+		}
+		#endregion
+
+
+		#region VatCodes
+		public IEnumerable<DateRange> VatCodesDateRanges
+		{
+			//	Retourne la liste des périodes de tous les plans comptables connus.
+			get
+			{
+				return this.rangeVatCodes.Select (x => x.Key);
+			}
+		}
+
+		public BaseType GetVatCodesBase(System.DateTime date)
+		{
+			//	Retourne la base correspondant à une date.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			var range = this.GetBestVatCodesDateRange (date);
+			return new BaseType (BaseTypeKind.VatCodes, range);
+		}
+
+		public GuidDictionary<DataObject> GetVatCodes(DateRange range)
+		{
+			//	Retourne le plan comptable correspondant à une période.
+			GuidDictionary<DataObject> vatCodes;
+			if (!range.IsEmpty && this.rangeVatCodes.TryGetValue (range, out vatCodes))
+			{
+				return vatCodes;
+			}
+			else
+			{
+				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				return new GuidDictionary<DataObject> (this.undoManager);
+			}
+		}
+
+		public void AddVatCodes(DateRange dateRange, GuidDictionary<DataObject> vatCodes)
+		{
+			//	Prend connaissance d'un nouveau plan comptable, qui est ajouté ou
+			//	qui remplace un existant, selon sa période.
+			this.rangeVatCodes[dateRange] = vatCodes;
+		}
+
+		private DateRange GetBestVatCodesDateRange(System.DateTime date)
+		{
+			//	Retourne la période comptable correspondant à une date donnée.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			return this.VatCodesDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
 				.FirstOrDefault ();
@@ -587,6 +644,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidDictionary<DataObject>						methods;
 		private readonly GuidDictionary<DataObject>						arguments;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
+		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeVatCodes;
 		private readonly GuidDictionary<AbstractReportParams>			reports;
 
 		private Guid													guid;
