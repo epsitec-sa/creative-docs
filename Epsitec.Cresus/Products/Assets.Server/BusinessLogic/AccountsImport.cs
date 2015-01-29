@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vats, string filename)
+		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vatCodes, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -24,16 +24,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
-			this.vats = vats;
-			if (this.vats != null)
+			this.vatCodes = vatCodes;
+			if (this.vatCodes != null)
 			{
-				this.vats.Clear ();
+				this.vatCodes.Clear ();
 			}
 
 			this.ReadLines (filename);
 			this.InitDates ();
 
-			if (this.vats != null)
+			if (this.vatCodes != null)
 			{
 				this.AddVatCodes ();
 			}
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private DataObject AddVatCode(string name, decimal rate, string desc)
 		{
 			var o = new DataObject (null);
-			this.vats.Add (o);
+			this.vatCodes.Add (o);
 			{
 				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
 				var e = new DataEvent (null, start, EventType.Input);
@@ -444,7 +444,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string[]						lines;
 		private GuidDictionary<DataObject>		accounts;
-		private GuidDictionary<DataObject>		vats;
+		private GuidDictionary<DataObject>		vatCodes;
 		private System.DateTime					beginDate;
 		private System.DateTime					endDate;
 	}
