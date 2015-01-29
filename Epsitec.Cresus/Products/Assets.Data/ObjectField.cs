@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Assets.Data
 		AssetEntryForcedStamp,
 		AssetEntryForcedTitle,
 		AssetEntryForcedAmount,
+		AssetEntryForcedVatCode,
 
 		HistoryDate,
 		HistoryGlyph,
@@ -83,6 +84,7 @@ namespace Epsitec.Cresus.Assets.Data
 		EntryStamp,
 		EntryTitle,
 		EntryAmount,
+		EntryVatCode,
 
 		EventDate,
 		EventGlyph,
