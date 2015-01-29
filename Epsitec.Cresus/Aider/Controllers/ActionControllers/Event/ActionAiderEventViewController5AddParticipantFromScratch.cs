@@ -57,6 +57,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(Enumerations.PersonMrMrs mrMrs, string name, string firstName, Enumerations.EventParticipantRole role)
 		{
+			if (mrMrs == Enumerations.PersonMrMrs.None)
+			{
+				throw new BusinessRuleException ("impossible de determiner le sexe de la personne avec ce titre");
+			}
+
 			if(string.IsNullOrEmpty (name) || string.IsNullOrEmpty (firstName))
 			{
 				throw new BusinessRuleException ("un nom et un prénom et obligatoire");
