@@ -91,6 +91,27 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 											"",
 											Enumerations.EmployeeActivity.None,
 											"");
+
+				if (user.Parish.IsNotNull ())
+				{
+					var officeExemple = new AiderOfficeManagementEntity
+					{
+						ParishGroup = user.Parish
+					};
+
+					var offices = this.BusinessContext.GetByExample<AiderOfficeManagementEntity> (officeExemple);
+					if (offices.Any ())
+					{
+						if (!offices.First ().UserJobExistFor (user))
+						{
+							AiderEmployeeJobEntity.CreateOfficeUser (
+							this.BusinessContext,
+							employee,
+							offices.First (),
+							"");
+						}
+					}
+				}
 			}
 
 			return user;
