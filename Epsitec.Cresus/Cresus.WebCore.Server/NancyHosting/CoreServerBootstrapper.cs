@@ -1,5 +1,5 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2011-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.WebCore.Server.Core;
 
@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	/// <summary>
 	/// This class initializes the Nancy server engine.
 	/// </summary>
-	internal class CoreServerBootstrapper : DefaultNancyBootstrapper
+	internal sealed class CoreServerBootstrapper : DefaultNancyBootstrapper
 	{
 		public CoreServerBootstrapper(CoreServer coreServer)
 		{
