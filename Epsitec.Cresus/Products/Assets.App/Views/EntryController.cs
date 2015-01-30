@@ -280,13 +280,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void CreateVatCodeController(Widget parent)
 		{
-			this.vatCodeController = new StringFieldController (this.accessor)
+			this.vatCodeController = new VatCodeFieldController (this.accessor)
 			{
 				Field                 = ObjectField.Unknown,
-				//??Label                 = Res.Strings.EntryController.VatCode.ToString (),
-				Label                 = "Code TVA",
+				Label                 = Res.Strings.EntryController.VatCode.ToString (),
 				EditWidth             = AbstractFieldController.maxWidth,
-				LineCount             = 1,
 				HideAdditionalButtons = false,
 				TabIndex              = this.tabIndex,
 			};
@@ -493,6 +491,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StringFieldController			stampController;
 		private StringFieldController			titleController;
 		private DecimalFieldController			amountController;
-		private StringFieldController			vatCodeController;
+		private VatCodeFieldController			vatCodeController;
 	}
 }
