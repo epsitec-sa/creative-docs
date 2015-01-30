@@ -483,4 +483,5 @@
   <data name="Popup.Language.UI" id="K2L">Interface</data>
   <data name="Popup.Language.Data" id="K3L">Données</data>
   <data name="Popup.Language.Tooltip" id="K4L">Choix des langues&lt;br/&gt;Ctrl+clic remet les langues précédentes</data>
+  <data name="EntryController.VatCode" id="K5L">Code TVA</data>
 </bundle>
