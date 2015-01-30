@@ -100,6 +100,7 @@
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController3Validate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController2Rollback.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController0AddParticipantsFromBag.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController6RemoveParticipant.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController2DeleteAll.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController3Move.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController5DeleteFunction.cs" />
