@@ -25,7 +25,10 @@ namespace Epsitec.Aider.Enumerations
 		HusbandMother   = 13,
 		SpouseFather	= 14,
 		SpouseMother	= 15,
+		[Hidden]
 		SecondWitness   = 16,
-		FirstWitness	= 17
+		[Hidden]
+		FirstWitness	= 17,
+		Confirmant      = 18,
 	}
 }
