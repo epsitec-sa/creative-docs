@@ -329,12 +329,21 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteEndDocument ();
 		}
 
-		public void SerializeAccounts(System.Xml.XmlWriter writer)
+		public void SerializeAccountsAndCo(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Accounts");
+			writer.WriteStartElement ("Mandat");
 
 			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			this.SerializeAccounts (writer);
+			this.SerializeVatCodes (writer);
+
+			writer.WriteEndDocument ();
+		}
+
+		private void SerializeAccounts(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Accounts");
 
 			foreach (var pair in this.rangeAccounts)
 			{
@@ -347,16 +356,32 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			writer.WriteEndElement ();
-			writer.WriteEndDocument ();
+		}
+
+		private void SerializeVatCodes(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("VatCodes");
+
+			foreach (var pair in this.rangeVatCodes)
+			{
+				writer.WriteStartElement ("Period");
+
+				pair.Key.Serialize (writer, "DateRange");
+				this.SerializeObjects (writer, "List", pair.Value);
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
 		}
 
 		private void SerializeDefinitions(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Definitions");
 
-			IOHelpers.WriteGuidAttribute  (writer, "Guid", this.Guid);
-			IOHelpers.WriteStringAttribute(writer, "Name", this.Name);
-			IOHelpers.WriteDateAttribute  (writer, "StartDate", this.StartDate);
+			IOHelpers.WriteGuidAttribute   (writer, "Guid",      this.Guid);
+			IOHelpers.WriteStringAttribute (writer, "Name",      this.Name);
+			IOHelpers.WriteDateAttribute   (writer, "StartDate", this.StartDate);
 
 			writer.WriteEndElement ();
 		}
@@ -463,7 +488,27 @@ namespace Epsitec.Cresus.Assets.Data
 			reader.Read ();  // on avance sur le noeud suivant
 		}
 
-		public void DeserializeAccounts(System.Xml.XmlReader reader)
+		public void DeserializeAccountsAndCo(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Mandat":
+							this.DeserializeAccountsMandat (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccountsMandat(System.Xml.XmlReader reader)
 		{
 			while (reader.Read ())
 			{
@@ -475,6 +520,30 @@ namespace Epsitec.Cresus.Assets.Data
 							var version = reader.ReadElementContentAsString ();
 							break;
 
+						case "Accounts":
+							this.DeserializeAccounts (reader);
+							break;
+
+						case "VatCodes":
+							this.DeserializeVatCodes (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccounts(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
 						case "Period":
 							this.DeserializeAccountsPeriod (reader);
 							break;
@@ -512,6 +581,58 @@ namespace Epsitec.Cresus.Assets.Data
 					if (!dateRange.IsEmpty && objects.Any ())
 					{
 						this.rangeAccounts.Add (dateRange, objects);
+					}
+
+					break;
+				}
+			}
+		}
+
+		private void DeserializeVatCodes(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Period":
+							this.DeserializeVatCodesPeriod (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeVatCodesPeriod(System.Xml.XmlReader reader)
+		{
+			var dateRange = DateRange.Empty;
+			var objects = new GuidDictionary<DataObject> (null);
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "DateRange":
+							dateRange = new DateRange (reader);
+							break;
+
+						case "List":
+							this.DeserializeObjects (reader, objects);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					if (!dateRange.IsEmpty && objects.Any ())
+					{
+						this.rangeVatCodes.Add (dateRange, objects);
 					}
 
 					break;
