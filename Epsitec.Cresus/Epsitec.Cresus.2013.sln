@@ -66,7 +66,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32.GraphConnector", "Win
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{BE113330-11CC-46B3-98FD-2D92295A1010}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.CresusToolkit", "..\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj", "{BC0605F1-C986-4B52-AE21-AAE545FCB970}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Business", "Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj", "{E70C6F16-A0BF-439B-845D-87B164510AA0}"
 EndProject
@@ -113,22 +113,22 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cr
 		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.TwixClip", "..\Epsitec\dot.net\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{B4D96BD8-5B65-486D-99B1-16D7948FED61}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.TwixClip", "..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj", "{B4D96BD8-5B65-486D-99B1-16D7948FED61}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pdf", "Common.Pdf\Common.Pdf.csproj", "{0C93255B-4D0C-4AF6-9244-D835427E42E0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.Data.Platform", "Tool.Data.Platform\Tool.Data.Platform.csproj", "{7D04D788-D4B2-440E-B3E3-AB646E7AFE5F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B4117699-97FC-4D11-BC34-2F13368524A0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{A254E420-166A-488D-9687-0268BF6FFEE5}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.ZipMe", "..\Epsitec\dot.net\Epsitec.ZipMe\Epsitec.ZipMe\Epsitec.ZipMe.csproj", "{C7FE1E82-BC10-43AE-BCFB-3A00D3F671E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Data", "Products\Assets.Data\Assets.Data.csproj", "{873E478A-D8A9-40AF-ABF9-96AF6AEDA126}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Epsitec.PostBarCodes", "..\Epsitec\dot.net\Epsitec.SwissPost\Epsitec.PostBarCodes\Epsitec.PostBarCodes.csproj", "{33651191-2712-4F69-92A8-1C3D216531B3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Core.Tests.Vs", "Products\Assets.Core.Tests.Vs\Assets.Core.Tests.Vs.csproj", "{71F55467-5296-4781-A1D5-494D88E662F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{A254E420-166A-488D-9687-0268BF6FFEE5}"
 EndProject
