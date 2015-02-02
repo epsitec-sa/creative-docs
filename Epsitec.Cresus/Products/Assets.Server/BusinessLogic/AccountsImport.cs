@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 					if (rate.HasValue)
 					{
-						this.AddVatCode (name, rate.Value, desc);
+						this.AddVatCode (name, rate.Value/100.0m, desc);
 					}
 				}
 			}

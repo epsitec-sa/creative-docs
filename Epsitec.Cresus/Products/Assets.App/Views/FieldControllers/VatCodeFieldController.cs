@@ -174,13 +174,12 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private void ShowPopup()
 		{
 			//	Affiche le popup pour choisir un code de TVA.
-			var baseType = this.accessor.Mandat.GetAccountsBase (this.EffectiveDate);
+			var baseType = this.accessor.Mandat.GetVatCodesBase (this.EffectiveDate);
 
-			AccountsPopup.Show (this.textField, this.accessor, baseType, this.Label, this.Value, LocalSettings.AccountCategories,
-				delegate (string account, AccountCategory categories)
+			VatCodesPopup.Show (this.textField, this.accessor, baseType, this.Label, this.Value,
+				delegate (string vatCode)
 			{
-				this.Value = account;
-				LocalSettings.AccountCategories = categories;
+				this.Value = vatCode;
 
 				this.SetFocus ();
 				this.OnValueEdited (this.Field);
