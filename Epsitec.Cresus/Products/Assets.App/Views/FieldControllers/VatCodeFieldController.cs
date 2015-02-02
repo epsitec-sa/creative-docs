@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 			if (this.textField != null)
 			{
-				bool hasError, gotoVisible;
-				string explanationsValue = VatCodesLogic.GetExplanation (this.accessor, this.EffectiveDate, this.value, out hasError, out gotoVisible);
+				bool hasError;
+				string explanationsValue = VatCodesLogic.GetExplanation (this.accessor, this.EffectiveDate, this.value, out hasError);
 
 				this.hasError = hasError;
 

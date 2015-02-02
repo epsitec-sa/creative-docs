@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
@@ -25,7 +24,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				return new SortingInstructions (ObjectField.VatRate, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
+				// Tri primaire du plus grand taux au plus petit, et secondaire selon le code.
+				return new SortingInstructions (ObjectField.VatRate, SortedType.Descending, ObjectField.Name, SortedType.Ascending);
 			}
 		}
 

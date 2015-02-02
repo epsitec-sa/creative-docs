@@ -30,19 +30,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller = new NavigationTreeTableController(this.accessor);
 
 			var primary     = this.accessor.GetNodeGetter (baseType);
-			var secondary   = new SortableNodeGetter (primary, this.accessor, BaseType.Methods);
+			var secondary   = new SortableNodeGetter (primary, this.accessor, baseType);
 			this.nodeGetter = new SorterNodeGetter (secondary);
-
-			//?secondary.SetParams (this.SortingInstructions);
-			//?this.UpdateGetter ();
 
 			this.dataFiller = new SingleVatCodesTreeTableFiller (this.accessor, this.nodeGetter)
 			{
 				BaseType = this.baseType,
 			};
 
-			this.UpdateGetter ();
-			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetNumber (x.Guid) == selectedVatCode);
+			secondary.SetParams (null, this.dataFiller.DefaultSorting);
+			this.nodeGetter.SetParams (this.dataFiller.DefaultSorting);
+
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetVatCode (x.Guid) == selectedVatCode);
 			this.UpdateSelectedGuid ();
 
 			//	Connexion des événements.
@@ -56,18 +55,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				this.OnNavigate (this.SelectedAccount);
+				this.OnNavigate (this.SelectedVatCode);
 				this.ClosePopup ();
 			};
 		}
 
 
-		private string							SelectedAccount
+		private string							SelectedVatCode
 		{
 			get
 			{
 				var node = this.nodeGetter[this.visibleSelectedRow];
-				return this.GetNumber (node.Guid);
+				return this.GetVatCode (node.Guid);
 			}
 		}
 
@@ -106,7 +105,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.Groups");
+			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.VatCodes");
 
 			this.UpdateController ();
 		}
@@ -137,9 +136,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private string GetNumber(Guid guid)
+		private string GetVatCode(Guid guid)
 		{
-			return AccountsLogic.GetNumber (this.accessor, this.baseType, guid);
+			return VatCodesLogic.GetVatCode (this.accessor, this.baseType, guid);
 		}
 
 
@@ -190,11 +189,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private void UpdateGetter()
-		{
-			this.nodeGetter.SetParams (this.dataFiller.DefaultSorting);
-		}
-
 		private void UpdateController(bool crop = true)
 		{
 			TreeTableFiller<SortableNode>.FillContent (this.controller, this.dataFiller, this.visibleSelectedRow, crop);
@@ -214,7 +208,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Helpers
 		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string title, string selectedVatCode, System.Action<string> action)
 		{
-			//	Affiche le popup pour choisir un compte dans le plan comptable.
+			//	Affiche le popup pour choisir un code TVA.
 			var popup = new VatCodesPopup (accessor, baseType, title, selectedVatCode);
 			
 			popup.Create (target, leftOrRight: true);
@@ -228,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				if (raison == ReasonClosure.AcceptKey)
 				{
-					action (popup.SelectedAccount);
+					action (popup.SelectedVatCode);
 				}
 			};
 		}
