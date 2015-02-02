@@ -11,8 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class VatCodesLogic
 	{
-		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string code,
-			out bool hasError, out bool gotoVisible)
+		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string code, out bool hasError)
 		{
 			//	Retourne le texte explicatif d'un code TVA. Exemples:
 			//	"TVARED 3.6% Prestations du secteur d'hébergement"
@@ -23,7 +22,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				explanationsValue = null;
 				hasError = false;
-				gotoVisible = false;
 			}
 			else  // code présent ?
 			{
@@ -34,7 +32,6 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					explanationsValue = VatCodesLogic.AddError (code, Res.Strings.VatCodesLogic.InvalidDate.ToString ());
 					hasError = true;
-					gotoVisible = false;
 				}
 				else  // plan comptable trouvé ?
 				{
@@ -45,13 +42,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					{
 						explanationsValue = VatCodesLogic.AddError (code, Res.Strings.VatCodesLogic.CodeDoesNotExist.ToString ());
 						hasError = true;
-						gotoVisible = false;
 					}
 					else
 					{
 						explanationsValue = summary;  // par exemple "1000 Caisse"
 						hasError = false;
-						gotoVisible = true;
 					}
 				}
 			}
@@ -120,6 +115,20 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			return null;
+		}
+
+		public static string GetVatCode(DataAccessor accessor, BaseType baseType, Guid guid)
+		{
+			//	Retourne le nom d'un code TVA.
+			var obj = accessor.GetObject (baseType, guid);
+			if (obj == null)
+			{
+				return null;
+			}
+			else
+			{
+				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+			}
 		}
 	}
 }

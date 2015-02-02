@@ -65,6 +65,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Assets.Server.DataFillers\SourceCode\Res.cs" />
     <Compile Include="FillerSearchEngine.cs" />
+    <Compile Include="SingleVatCodesTreeTableFiller.cs" />
     <Compile Include="SingleAccountsTreeTableFiller.cs" />
     <Compile Include="SingleCategoriesTreeTableFiller.cs" />
     <Compile Include="SingleGroupsTreeTableFiller.cs" />

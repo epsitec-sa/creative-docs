@@ -354,8 +354,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.value.HasValue)
 			{
-				this.debitController .Date = this.accessor.EditionAccessor.EventDate;
-				this.creditController.Date = this.accessor.EditionAccessor.EventDate;
+				this.debitController  .Date = this.accessor.EditionAccessor.EventDate;
+				this.creditController .Date = this.accessor.EditionAccessor.EventDate;
+				this.vatCodeController.Date = this.accessor.EditionAccessor.EventDate;
 
 				EntryProperties baseProperties = null;
 				EntryProperties editProperties = null;
