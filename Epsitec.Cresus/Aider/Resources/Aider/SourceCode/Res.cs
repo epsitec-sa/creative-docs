@@ -31,6 +31,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployee = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 117));
 				//	designer:cap/LVOJ33
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 115));
+				//	designer:cap/LVOF63
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobAIDERUsersOnly = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 207));
 				//	designer:cap/LVOR53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
 				//	designer:cap/LVOI53
@@ -108,6 +110,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderEmployee = 0x3F500078000075L;
 				//	designer:cap/LVOJ33
 				public const long ShowAiderEmployeeJob = 0x3F500078000073L;
+				//	designer:cap/LVOF63
+				public const long ShowAiderEmployeeJobAIDERUsersOnly = 0x3F5000780000CFL;
 				//	designer:cap/LVOR53
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
 				//	designer:cap/LVOI53
@@ -909,6 +913,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 150));
+						}
+					}
+					//	designer:cap/LVOE63
+					public static global::Epsitec.Common.Types.Caption Confirmant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 206));
 						}
 					}
 					//	designer:cap/LVOP43
