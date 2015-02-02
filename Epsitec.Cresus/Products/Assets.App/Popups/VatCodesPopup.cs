@@ -81,18 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		protected override void CreateUI()
 		{
-			string title;
-
-			if (this.baseType.AccountsDateRange.IsEmpty)
-			{
-				title = Res.Strings.Popup.Accounts.NoAccounts.ToString ();
-			}
-			else
-			{
-				title = string.Format (Res.Strings.Popup.Accounts.Choice.ToString (), this.baseType.AccountsDateRange.ToNiceString ());
-			}
-
-			this.CreateTitle (UniversalLogic.NiceJoin (this.title, title));
+			this.CreateTitle (this.title);
 			this.CreateCloseButton ();
 
 			var frame = new FrameBox
