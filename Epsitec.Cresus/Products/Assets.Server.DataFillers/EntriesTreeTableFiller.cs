@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryStamp,         TreeTableColumnType.String,  70, Res.Strings.EntriesTreeTableFiller.Stamp.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   350, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String,  80, "Code TVA"));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.VatCode.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 
 				return columns.ToArray ();
