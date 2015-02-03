@@ -70,4 +70,11 @@
   <data name="Enum.ObjectField.ArgumentNullable" id="KA2">Nullable</data>
   <data name="Enum.ObjectField.ArgumentDefault" id="KB2">Valeur initiale</data>
   <data name="Enum.EventType.AmortizationSuppl" id="KC2">Amort. suppl.</data>
+  <data name="Enum.ObjectField.AccountAdjustVatCode" id="KD2">TVA correction</data>
+  <data name="Enum.ObjectField.AccountAmortizationAutoVatCode" id="KE2">TVA amort. ord.</data>
+  <data name="Enum.ObjectField.AccountAmortizationExtraVatCode" id="KF2">TVA amort. extra.</data>
+  <data name="Enum.ObjectField.AccountDecreaseVatCode" id="KG2">TVA rééval.</data>
+  <data name="Enum.ObjectField.AccountIncreaseVatCode" id="KH2">TVA reval.</data>
+  <data name="Enum.ObjectField.AccountPurchaseVatCode" id="KI2">TVA achat</data>
+  <data name="Enum.ObjectField.AccountSaleVatCode" id="KJ2">TVA vente</data>
 </bundle>

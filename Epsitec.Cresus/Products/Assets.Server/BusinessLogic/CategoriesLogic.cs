@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				CategoriesLogic.ImportArgument (accessor, asset, e, catObj, field);
 			}
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				CategoriesLogic.ImportField (accessor, asset, e, catObj, field, field);
 			}
@@ -73,18 +73,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void ImportFieldString(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
+			//	Une chaîne vide doit être insérée telle quelle. Il peut s'agit par exemple d'un
+			//	code TVA vide (pour une écriture sans TVA).
 			var s = ObjectProperties.GetObjectPropertyString (catObj, null, fieldSrc);
-			if (!string.IsNullOrEmpty (s))
+
+			if (asset == null)
 			{
-				if (asset == null)
-				{
-					accessor.EditionAccessor.SetField (fieldDst, s);
-				}
-				else
-				{
-					var newProperty = new DataStringProperty (fieldDst, s);
-					e.AddProperty (newProperty);
-				}
+				accessor.EditionAccessor.SetField (fieldDst, s);
+			}
+			else
+			{
+				var newProperty = new DataStringProperty (fieldDst, s);
+				e.AddProperty (newProperty);
 			}
 		}
 
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var e = cat.GetInputEvent ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				e.RemoveProperty (field);
 			}

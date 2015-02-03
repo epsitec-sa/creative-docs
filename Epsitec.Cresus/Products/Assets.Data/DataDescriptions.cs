@@ -24,11 +24,17 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountPurchaseCredit:
 					return Res.Strings.Enum.ObjectField.AccountPurchaseCredit.ToString ();
 
+				case ObjectField.AccountPurchaseVatCode:
+					return Res.Strings.Enum.ObjectField.AccountPurchaseVatCode.ToString ();
+
 				case ObjectField.AccountSaleDebit:
 					return Res.Strings.Enum.ObjectField.AccountSaleDebit.ToString ();
 
 				case ObjectField.AccountSaleCredit:
 					return Res.Strings.Enum.ObjectField.AccountSaleCredit.ToString ();
+
+				case ObjectField.AccountSaleVatCode:
+					return Res.Strings.Enum.ObjectField.AccountSaleVatCode.ToString ();
 
 				case ObjectField.AccountAmortizationAutoDebit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoDebit.ToString ();
@@ -36,11 +42,17 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountAmortizationAutoCredit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoCredit.ToString ();
 
+				case ObjectField.AccountAmortizationAutoVatCode:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoVatCode.ToString ();
+
 				case ObjectField.AccountAmortizationExtraDebit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraDebit.ToString ();
 
 				case ObjectField.AccountAmortizationExtraCredit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraCredit.ToString ();
+
+				case ObjectField.AccountAmortizationExtraVatCode:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraVatCode.ToString ();
 
 				case ObjectField.AccountIncreaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountIncreaseDebit.ToString ();
@@ -48,17 +60,26 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountIncreaseCredit:
 					return Res.Strings.Enum.ObjectField.AccountIncreaseCredit.ToString ();
 
+				case ObjectField.AccountIncreaseVatCode:
+					return Res.Strings.Enum.ObjectField.AccountIncreaseVatCode.ToString ();
+
 				case ObjectField.AccountDecreaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountDecreaseDebit.ToString ();
 
 				case ObjectField.AccountDecreaseCredit:
 					return Res.Strings.Enum.ObjectField.AccountDecreaseCredit.ToString ();
 
+				case ObjectField.AccountDecreaseVatCode:
+					return Res.Strings.Enum.ObjectField.AccountDecreaseVatCode.ToString ();
+
 				case ObjectField.AccountAdjustDebit:
 					return Res.Strings.Enum.ObjectField.AccountAdjustDebit.ToString ();
 
 				case ObjectField.AccountAdjustCredit:
 					return Res.Strings.Enum.ObjectField.AccountAdjustCredit.ToString ();
+
+				case ObjectField.AccountAdjustVatCode:
+					return Res.Strings.Enum.ObjectField.AccountAdjustVatCode.ToString ();
 
 				case ObjectField.AccountCategory:
 					return Res.Strings.Enum.ObjectField.AccountCategory.ToString ();

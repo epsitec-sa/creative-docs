@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string code, out bool hasError)
 		{
 			//	Retourne le texte explicatif d'un code TVA. Exemples:
-			//	"TVARED 3.6% Prestations du secteur d'hébergement"
+			//	"TVARED 3.6%"
 			//	"XX — Inconnu dans le plan comptable"
 			string explanationsValue;
 
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetSummary(DataAccessor accessor, BaseType baseType, string code)
 		{
-			//	Retourne le résumé (par exemple "TVARED 3.6% Prestations du secteur d'hébergement") d'après le seul code.
+			//	Retourne le résumé (par exemple "TVARED 3.6%") d'après le seul code.
 			if (!string.IsNullOrEmpty (code))
 			{
 				var obj = VatCodesLogic.GetVatCode (accessor, baseType, code);
@@ -85,12 +85,11 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				if (obj != null)
 				{
 					var rate = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.VatRate);
-					var desc = ObjectProperties.GetObjectPropertyString  (obj, null, ObjectField.Description);
 
-					if (rate.HasValue && !string.IsNullOrEmpty (desc))
+					if (rate.HasValue)
 					{
 						var r = TypeConverters.RateToString (rate);
-						return string.Join (" ", code, r, desc);
+						return string.Join (" ", code, r);
 					}
 				}
 			}
