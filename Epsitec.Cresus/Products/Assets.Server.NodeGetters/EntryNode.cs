@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public struct EntryNode
 	{
-		public EntryNode(Guid entryGuid, Guid assetGuid, string assetName, System.DateTime? date, string debit, string credit, string stamp, string title, decimal? value, int level, NodeType nodeType, EventType eventType)
+		public EntryNode(Guid entryGuid, Guid assetGuid, string assetName, System.DateTime? date, string debit, string credit, string stamp, string title, decimal? value, string vatCode, int level, NodeType nodeType, EventType eventType)
 		{
 			this.EntryGuid = entryGuid;
 			this.AssetGuid = assetGuid;
@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.Stamp     = stamp;
 			this.Title     = title;
 			this.Value     = value;
+			this.VatCode   = vatCode;
 			this.Level     = level;
 			this.NodeType  = nodeType;
 			this.EventType = eventType;
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static EntryNode Empty = new EntryNode (Guid.Empty, Guid.Empty, null, System.DateTime.MaxValue, null, null, null, null, null, -1, NodeType.None, EventType.Unknown);
+		public static EntryNode Empty = new EntryNode (Guid.Empty, Guid.Empty, null, System.DateTime.MaxValue, null, null, null, null, null, null, -1, NodeType.None, EventType.Unknown);
 
 		public readonly Guid				EntryGuid;
 		public readonly Guid				AssetGuid;
@@ -45,6 +46,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public readonly string				Stamp;
 		public readonly string				Title;
 		public readonly decimal?			Value;
+		public readonly string				VatCode;
 		public readonly int					Level;
 		public readonly NodeType			NodeType;
 		public readonly EventType			EventType;
