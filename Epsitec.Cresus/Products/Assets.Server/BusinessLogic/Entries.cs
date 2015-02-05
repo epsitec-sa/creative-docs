@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var aa = new AmortizedAmount (scenario);
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				ea[field] = this.accessor.EditionAccessor.GetFieldString (field);
 			}
@@ -102,6 +102,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			
 				case 2:
 					text = this.GetTitle (null, null, aa, GetEntryPropertiesType.Sample);
+					break;
+
+				case 3:
+					text = this.GetVatCode (null, null, aa, ea, GetEntryPropertiesType.Sample);
 					break;
 			}
 		}
