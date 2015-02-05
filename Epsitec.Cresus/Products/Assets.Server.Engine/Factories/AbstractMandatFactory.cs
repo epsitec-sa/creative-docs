@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 					}
 				}
 
-				foreach (var field in DataAccessor.AccountFields)
+				foreach (var field in DataAccessor.AccountAndVatCodeFields)
 				{
 					var c = ObjectProperties.GetObjectPropertyString  (cat, null, field);
 					e.AddProperty (new DataStringProperty (field, c));
@@ -292,25 +292,32 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			var method = this.GetMethod (methodName);
 
-			this.AddField (e, ObjectField.Name, name);
-			this.AddField (e, ObjectField.Description,                    desc);
-			this.AddField (e, ObjectField.Number,                         number);
-			this.AddField (e, ObjectField.MethodGuid,                     method.Guid);
-			this.AddField (e, ObjectField.Periodicity,                    (int) periodicity);
-			this.AddField (e, ObjectField.AccountPurchaseDebit,           accountPurchaseDebit);
-			this.AddField (e, ObjectField.AccountPurchaseCredit,	      accountPurchaseCredit);
-			this.AddField (e, ObjectField.AccountSaleDebit,	              accountSaleDebit);
-			this.AddField (e, ObjectField.AccountSaleCredit,	          accountSaleCredit);
-			this.AddField (e, ObjectField.AccountAmortizationAutoDebit,	  accountAmortizationAutoDebit);
-			this.AddField (e, ObjectField.AccountAmortizationAutoCredit,  accountAmortizationAutoCredit);
-			this.AddField (e, ObjectField.AccountAmortizationExtraDebit,  accountAmortizationExtraDebit);
-			this.AddField (e, ObjectField.AccountAmortizationExtraCredit, accountAmortizationExtraCredit);
-			this.AddField (e, ObjectField.AccountIncreaseDebit,	          accountIncreaseDebit);
-			this.AddField (e, ObjectField.AccountIncreaseCredit,	      accountIncreaseCredit);
-			this.AddField (e, ObjectField.AccountDecreaseDebit,	          accountDecreaseDebit);
-			this.AddField (e, ObjectField.AccountDecreaseCredit,          accountDecreaseCredit);
-			this.AddField (e, ObjectField.AccountAdjustDebit,             accountAdjustDebit);
-			this.AddField (e, ObjectField.AccountAdjustCredit,            accountAdjustCredit);
+			this.AddField (e, ObjectField.Name,                            name);
+			this.AddField (e, ObjectField.Description,                     desc);
+			this.AddField (e, ObjectField.Number,                          number);
+			this.AddField (e, ObjectField.MethodGuid,                      method.Guid);
+			this.AddField (e, ObjectField.Periodicity,                     (int) periodicity);
+			this.AddField (e, ObjectField.AccountPurchaseDebit,            accountPurchaseDebit);
+			this.AddField (e, ObjectField.AccountPurchaseCredit,	       accountPurchaseCredit);
+			this.AddField (e, ObjectField.AccountPurchaseVatCode,	       DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountSaleDebit,	               accountSaleDebit);
+			this.AddField (e, ObjectField.AccountSaleCredit,	           accountSaleCredit);
+			this.AddField (e, ObjectField.AccountSaleVatCode,              DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountAmortizationAutoDebit,    accountAmortizationAutoDebit);
+			this.AddField (e, ObjectField.AccountAmortizationAutoCredit,   accountAmortizationAutoCredit);
+			this.AddField (e, ObjectField.AccountAmortizationAutoVatCode,  DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountAmortizationExtraDebit,   accountAmortizationExtraDebit);
+			this.AddField (e, ObjectField.AccountAmortizationExtraCredit,  accountAmortizationExtraCredit);
+			this.AddField (e, ObjectField.AccountAmortizationExtraVatCode, DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountIncreaseDebit,            accountIncreaseDebit);
+			this.AddField (e, ObjectField.AccountIncreaseCredit,	       accountIncreaseCredit);
+			this.AddField (e, ObjectField.AccountIncreaseVatCode,          DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountDecreaseDebit,            accountDecreaseDebit);
+			this.AddField (e, ObjectField.AccountDecreaseCredit,           accountDecreaseCredit);
+			this.AddField (e, ObjectField.AccountDecreaseVatCode,          DataStringProperty.WithoutVat);
+			this.AddField (e, ObjectField.AccountAdjustDebit,              accountAdjustDebit);
+			this.AddField (e, ObjectField.AccountAdjustCredit,             accountAdjustCredit);
+			this.AddField (e, ObjectField.AccountAdjustVatCode,            DataStringProperty.WithoutVat);
 
 			var field = ObjectField.ArgumentFirst;
 			foreach (var argument in arguments)

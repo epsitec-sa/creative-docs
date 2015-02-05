@@ -73,18 +73,18 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static void ImportFieldString(DataAccessor accessor, DataObject asset, DataEvent e, DataObject catObj, ObjectField fieldSrc, ObjectField fieldDst)
 		{
-			//	Une chaîne vide doit être insérée telle quelle. Il peut s'agit par exemple d'un
-			//	code TVA vide (pour une écriture sans TVA).
 			var s = ObjectProperties.GetObjectPropertyString (catObj, null, fieldSrc);
-
-			if (asset == null)
+			if (!string.IsNullOrEmpty (s))
 			{
-				accessor.EditionAccessor.SetField (fieldDst, s);
-			}
-			else
-			{
-				var newProperty = new DataStringProperty (fieldDst, s);
-				e.AddProperty (newProperty);
+				if (asset == null)
+				{
+					accessor.EditionAccessor.SetField (fieldDst, s);
+				}
+				else
+				{
+					var newProperty = new DataStringProperty (fieldDst, s);
+					e.AddProperty (newProperty);
+				}
 			}
 		}
 

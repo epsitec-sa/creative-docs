@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Importe tous les codes TVA.
 			int index = this.IndexOfLine ("BEGIN=TVACODES");
 
+			this.AddVatCode (DataStringProperty.WithoutVat, null, Res.Strings.AccountsImport.WithoutVat.ToString ());
+
 			while (++index < this.lines.Length)
 			{
 				var line = this.lines[index];
@@ -207,7 +209,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return date.Value;
 		}
 
-		private DataObject AddVatCode(string name, decimal rate, string desc)
+		private DataObject AddVatCode(string name, decimal? rate, string desc)
 		{
 			var o = new DataObject (null);
 			this.vatCodes.Add (o);
@@ -216,9 +218,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty  (ObjectField.Name, name));
-				e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate));
-				e.AddProperty (new DataStringProperty  (ObjectField.Description, desc));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Description, desc));
+
+				if (rate.HasValue)
+				{
+					e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate.Value));
+				}
 			}
 
 			//?System.Console.WriteLine (number);
