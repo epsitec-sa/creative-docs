@@ -6,7 +6,6 @@ using System.Linq;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups;
-using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 

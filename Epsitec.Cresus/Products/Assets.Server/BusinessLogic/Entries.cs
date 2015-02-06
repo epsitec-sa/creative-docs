@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var aa = new AmortizedAmount (scenario);
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				ea[field] = this.accessor.EditionAccessor.GetFieldString (field);
 			}
@@ -102,6 +102,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			
 				case 2:
 					text = this.GetTitle (null, null, aa, GetEntryPropertiesType.Sample);
+					break;
+
+				case 3:
+					text = this.GetVatCode (null, null, aa, ea, GetEntryPropertiesType.Sample);
 					break;
 			}
 		}
@@ -129,7 +133,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				Stamp   = this.GetStamp   (asset, e, amount,                type),
 				Title   = this.GetTitle   (asset, e, amount,                type),
 				Amount  = this.GetValue   (asset, e, amount,                type),
-				VatCode = this.GetVatCode (asset, e, amount,                type),
+				VatCode = this.GetVatCode (asset, e, amount, entryAccounts, type),
 			};
 		}
 
@@ -140,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	à l'événement contenant ce montant.
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				ea[field] = ObjectProperties.GetObjectPropertyString (asset, e.Timestamp, field);
 			}
@@ -423,7 +427,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetVatCode(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
+		private string GetVatCode(DataObject asset, DataEvent e, AmortizedAmount amount, EntryAccounts entryAccouts, GetEntryPropertiesType type)
 		{
 			//	Retourne le code TVA de l'écriture.
 			if (type == GetEntryPropertiesType.Current)
@@ -444,7 +448,32 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			return null;
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return entryAccouts[ObjectField.AccountPurchaseVatCode];
+
+				case EntryScenario.Sale:
+					return entryAccouts[ObjectField.AccountSaleVatCode];
+
+				case EntryScenario.AmortizationAuto:
+					return entryAccouts[ObjectField.AccountAmortizationAutoVatCode];
+
+				case EntryScenario.AmortizationExtra:
+					return entryAccouts[ObjectField.AccountAmortizationExtraVatCode];
+
+				case EntryScenario.Increase:
+					return entryAccouts[ObjectField.AccountIncreaseVatCode];
+
+				case EntryScenario.Decrease:
+					return entryAccouts[ObjectField.AccountDecreaseVatCode];
+
+				case EntryScenario.Adjust:
+					return entryAccouts[ObjectField.AccountAdjustVatCode];
+
+				default:
+					return null;
+			}
 		}
 
 

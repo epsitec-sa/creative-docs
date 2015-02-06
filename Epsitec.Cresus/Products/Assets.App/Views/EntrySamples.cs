@@ -65,13 +65,15 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 
 			int w12 = EntrySamples.accountWidth;
-			int w3  = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth - margins*2 - w12*2;
+			int w4  = EntrySamples.vatCodeWidth;
+			int w3  = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth - margins*2 - w12*2 - w4;
 			
 			var c1 = new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String, w12, Res.Strings.EntryController.Debit.ToString ());
 			var c2 = new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String, w12, Res.Strings.EntryController.Credit.ToString ());
 			var c3 = new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.String, w3,  Res.Strings.EntryController.Title.ToString ());
+			var c4 = new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String, w4,  Res.Strings.EntryController.VatCode.ToString ());
 
-			var columns = new TreeTableColumnDescription[] { c1, c2, c3 };
+			var columns = new TreeTableColumnDescription[] { c1, c2, c3, c4 };
 			this.treeTable.SetColumns (columns, SortingInstructions.Default, 0, "EntrySamples");
 		}
 
@@ -79,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			int totalRows = EntrySamples.Scenarios.Count ();
 
-			for (int c=0; c<3; c++)
+			for (int c=0; c<4; c++)
 			{
 				var columnItem = new TreeTableColumnItem ();
 
@@ -161,8 +163,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private const int rowHeight    = 18;
+		private const int rowHeight    =  18;
 		private const int accountWidth = 110;
+		private const int vatCodeWidth =  80;
 
 		private readonly DataAccessor			accessor;
 		private readonly System.DateTime?		forcedDate;
