@@ -72,11 +72,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var rate = this.GetEntryContentDecimal (index, "TAUX");
 					var desc = this.GetEntryContentText    (index, "COMMENT");
 
-					if (rate.HasValue)
+					if (rate.HasValue && !AccountsImport.ObsoleteVatCodes.Contains(name))
 					{
 						this.AddVatCode (name, rate.Value/100.0m, desc);
 					}
 				}
+			}
+		}
+
+		private static IEnumerable<string> ObsoleteVatCodes
+		{
+			get
+			{
+				yield return "SM";
+				yield return "SMRED";
+				yield return "PAVEH";
 			}
 		}
 
