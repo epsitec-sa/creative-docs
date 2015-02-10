@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Aider.Data.Job;
 using Epsitec.Aider.Data.ECh;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -33,11 +34,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<Enumerations.PersonMrMrs, string, string, Enumerations.EventParticipantRole> (this.Execute);
+			return ActionExecutor.Create<Enumerations.PersonMrMrs, string, string, Date, Enumerations.EventParticipantRole> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
 		{
+			var currentUser = UserManager.Current.AuthenticatedUser;
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			form
 				.Title ("Créer une personne")
 				.Field<Enumerations.PersonMrMrs> ()
@@ -49,13 +53,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<string> ()
 					.Title ("Prénom")
 				.End ()
+				.Field<Date> ()
+					.Title ("Date de naissance")
+					.InitialValue (new Date ())
+				.End ()
 				.Field<Enumerations.EventParticipantRole> ()
 					.Title ("Rôle")
 				.End ()
 			.End ();
 		}
 
-		private void Execute(Enumerations.PersonMrMrs mrMrs, string name, string firstName, Enumerations.EventParticipantRole role)
+		private void Execute(Enumerations.PersonMrMrs mrMrs, string name, string firstName,Date dateOfBirst, Enumerations.EventParticipantRole role)
 		{
 			if (mrMrs == Enumerations.PersonMrMrs.None)
 			{
@@ -75,8 +83,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			var eChPerson = new EChPerson (	"",
 											name, 
-											firstName, 
-											new Date (), 
+											firstName,
+											dateOfBirst, 
 											sex, 
 											Enumerations.PersonNationalityStatus.Unknown, 
 											"", 
@@ -89,7 +97,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 																		Enumerations.PersonDeclarationStatus.NotDeclared);
 
 			var person = AiderPersonEntity.Create (this.BusinessContext, eChPersonEntity, mrMrs);
-			
+			var contact = AiderContactEntity.Create (this.BusinessContext, person, Enumerations.AddressType.Default);
 			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, person, role);			
 		}
 	}

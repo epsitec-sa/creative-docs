@@ -9,6 +9,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
+using Epsitec.Cresus.Core.Bricks;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
@@ -16,10 +17,17 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderEventParticipantEntity> wall)
 		{
+			var currentUser = UserManager.Current.AuthenticatedUser;
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Role)
 					.Field (x => x.Person)
+				.End ()
+				.Input ()
+					.Field (x => x.Person.MainContact.Address.Town)
+						.WithFavorites (favorites)
 				.End ();
 		}
 	}

@@ -22,6 +22,7 @@ using System.Linq;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Aider.Reporting;
 using Epsitec.Aider.BusinessCases;
+using Epsitec.Cresus.Core.Business.UserManagement;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -35,11 +36,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderOfficeManagementEntity, EventType, AiderTownEntity,EventPlaceType, string, Date> (this.Execute);
+			return ActionExecutor.Create<AiderOfficeManagementEntity, EventType,EventPlaceType, string, AiderTownEntity, Date> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
+			var currentUser = UserManager.Current.AuthenticatedUser;
+			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+
 			form
 				.Title ("Préparation d'un acte")
 				.Field<AiderOfficeManagementEntity> ()
@@ -49,16 +53,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<EventType> ()
 					.Title ("Registre")
 				.End ()
-				.Field<AiderTownEntity> ()
-					.Title ("Lieu de la célébration")
-					.InitialValue (this.Entity.OfficeMainContact.Address.Town)
-				.End ()
 				.Field<EventPlaceType> ()
 					.Title ("Précision sur le lieu")
 					.InitialValue (EventPlaceType.Church)
 				.End ()
 				.Field<string> ()
 					.Title ("Désignation du lieu")
+				.End ()
+				.Field<AiderTownEntity> ()
+					.Title ("Localité")
+					.InitialValue (this.Entity.OfficeMainContact.Address.Town)
+					.WithFavorites (favorites)
 				.End ()
 				.Field<Date> ()
 					.Title ("Date de la célébration")
@@ -70,9 +75,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(
 			AiderOfficeManagementEntity office, 
 			EventType type,
-			AiderTownEntity town,
 			EventPlaceType placeType,
 			string placeDescription,
+			AiderTownEntity town,
 			Date celebrationDate)
 		{
 			AiderEventEntity.Create (
