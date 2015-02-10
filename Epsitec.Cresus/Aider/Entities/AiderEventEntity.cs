@@ -109,6 +109,12 @@ namespace Epsitec.Aider.Entities
 			return actors;
 		}
 
+		public int CountRole (Enumerations.EventParticipantRole role)
+		{
+			var result = this.Participants.Count (p => p.Role == role);
+			return result;
+		}
+
 		public void RemoveParticipant (BusinessContext context, AiderEventParticipantEntity participant)
 		{
 			participant.Delete (context);
