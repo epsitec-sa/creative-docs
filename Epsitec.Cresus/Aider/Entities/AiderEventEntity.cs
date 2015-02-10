@@ -80,30 +80,30 @@ namespace Epsitec.Aider.Entities
 			List<AiderPersonEntity> actors = new List<AiderPersonEntity> ();
 			switch (this.Type)
 			{
-				case Enumerations.EventType.Baptism:
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.ChildBatise);
-					break;
-				case Enumerations.EventType.Blessing:
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
-					break;
-				case Enumerations.EventType.CelebrationRegisteredPartners:
-					TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
-					TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse);
-					break;
+			case Enumerations.EventType.Baptism:
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.ChildBatise);
+				break;
+			case Enumerations.EventType.Blessing:
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
+				break;
+			case Enumerations.EventType.CelebrationRegisteredPartners:
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+				break;
 
-				case Enumerations.EventType.Confirmation:
-				case Enumerations.EventType.EndOfCatechism:
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
-					break;
-				case Enumerations.EventType.FuneralService:
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
-					break;
-				case Enumerations.EventType.Marriage:
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Husband);
-					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Spouse);
-					break;
-				case Enumerations.EventType.None:
-					break;
+			case Enumerations.EventType.Confirmation:
+			case Enumerations.EventType.EndOfCatechism:
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
+				break;
+			case Enumerations.EventType.FuneralService:
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
+				break;
+			case Enumerations.EventType.Marriage:
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Husband);
+				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+				break;
+			case Enumerations.EventType.None:
+				break;
 			}
 
 			return actors;
