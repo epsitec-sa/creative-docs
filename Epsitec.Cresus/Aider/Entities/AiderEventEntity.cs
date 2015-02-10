@@ -18,7 +18,8 @@ namespace Epsitec.Aider.Entities
 		{
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
-			return TextFormatter.FormatText (type + "\n" + place + "\n" + this.Date + "\n" + this.Description);
+			var actors = this.GetMainActors ().Select (p => p.GetDisplayName ()).Join (" & ");
+			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
 		public override FormattedText GetCompactSummary()
@@ -30,7 +31,7 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetParticipantsSummary()
 		{
 			var lines = this.GetParticipations ().Select (
-				p => p.Person.GetShortFullName () + "\n"
+				p => p.Person.GetDisplayName () + "\n"
 			);
 			return TextFormatter.FormatText (lines);
 		}
@@ -74,6 +75,40 @@ namespace Epsitec.Aider.Entities
 			context.DeleteEntity (this);
 		}
 
+		public List<AiderPersonEntity> GetMainActors ()
+		{
+			List<AiderPersonEntity> actors = new List<AiderPersonEntity> ();
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.ChildBatise);
+					break;
+				case Enumerations.EventType.Blessing:
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
+					TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+					break;
+
+				case Enumerations.EventType.Confirmation:
+				case Enumerations.EventType.EndOfCatechism:
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
+					break;
+				case Enumerations.EventType.FuneralService:
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
+					break;
+				case Enumerations.EventType.Marriage:
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Husband);
+					TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+					break;
+				case Enumerations.EventType.None:
+					break;
+			}
+
+			return actors;
+		}
+
 		public void RemoveParticipant (BusinessContext context, AiderEventParticipantEntity participant)
 		{
 			participant.Delete (context);
@@ -82,6 +117,25 @@ namespace Epsitec.Aider.Entities
 		partial void GetParticipants(ref IList<AiderEventParticipantEntity> value)
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();
+		}
+
+		private void TryAddActorWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		{
+			var participant = this.Participants
+										.SingleOrDefault (p => p.Role == role);
+			if (participant.IsNotNull ()) {
+				actors.Add (participant.Person);
+			}
+		}
+
+		private void TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		{
+			var participants = this.Participants
+										.Where (p => p.Role == role).Select (p => p.Person);
+			if (participants.Any ())
+			{
+				actors.AddRange (participants);
+			}
 		}
 
 		private string GetTypeCaption ()
