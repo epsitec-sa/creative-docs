@@ -20,7 +20,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderEventParticipantEntity> wall)
 		{
 			wall.AddBrick (p => p.Person)
-				.Attribute (BrickMode.DefaultToSummarySubView);			
+				.Attribute (BrickMode.DefaultToSummarySubView);
+			wall.AddBrick (p => p.Person.MainContact)
+				.Attribute (BrickMode.DefaultToSummarySubView);	
 		}
 	}
 }
