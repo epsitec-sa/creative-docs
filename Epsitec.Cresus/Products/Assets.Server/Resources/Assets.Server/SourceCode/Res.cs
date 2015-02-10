@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544321));
 					}
 				}
+				//	designer:str/IUKJ301
+				public static global::Epsitec.Common.Types.FormattedText WithoutVat
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544435));
+					}
+				}
 			}
 			
 			public static class AccountsLogic
@@ -851,6 +859,26 @@ namespace Epsitec.Cresus.Assets.Server
 				}
 			}
 			
+			public static class VatCodesLogic
+			{
+				//	designer:str/IUKI301
+				public static global::Epsitec.Common.Types.FormattedText CodeDoesNotExist
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544434));
+					}
+				}
+				//	designer:str/IUKH301
+				public static global::Epsitec.Common.Types.FormattedText InvalidDate
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544433));
+					}
+				}
+			}
+			
 			public static class WarningsLogic
 			{
 				//	designer:str/IUK9001
@@ -1064,6 +1092,14 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+					}
+				}
+				//	designer:str/IUKJ301
+				public static global::Epsitec.Common.Support.Druid WithoutVat
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544435);
 					}
 				}
 			}
@@ -1876,6 +1912,26 @@ namespace Epsitec.Cresus.Assets.Server
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544328);
+					}
+				}
+			}
+			
+			public static class VatCodesLogic
+			{
+				//	designer:str/IUKI301
+				public static global::Epsitec.Common.Support.Druid CodeDoesNotExist
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544434);
+					}
+				}
+				//	designer:str/IUKH301
+				public static global::Epsitec.Common.Support.Druid InvalidDate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544433);
 					}
 				}
 			}

@@ -49,6 +49,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		}
 
 
+		public static string WithoutVat = "-";
+
+
 		public readonly string Value;
 	}
 }

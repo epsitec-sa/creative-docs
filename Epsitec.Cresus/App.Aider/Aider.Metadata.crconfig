@@ -2222,6 +2222,22 @@ AiderEventParticipant = [LVAA3]
       <L>
         <l t="Adresse normale" f="0"/>
       </L>
+      <f id="@AiderEmployeeJob">
+        <!-- Column id=Fonction (Valeur) (Comparaison) c=Equals(2) v="(e)num EmployeeType/99 Bénévole AIDER" -->
+        <C><c id="[LVA9J].[LVA4J]"><v><comp c="2" v="e[LVADK]/90" /></v></c></C>
+      </f>
+    </d>
+
+    <d cid="[LVOF63]" teid="@AiderEmployeeJob" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
+      <R><r>@user</r></R>
+      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEmployeeJob:[LVA9J].[LVALK]" /></M>
+      <L>
+        <l t="Adresse normale" f="0"/>
+      </L>
+      <f id="@AiderEmployeeJob">
+        <!-- Column id=Fonction (Valeur) (Comparaison) c=Equals(1) v="(e)num EmployeeType/99 Bénévole AIDER" -->
+        <C><c id="[LVA9J].[LVA4J]"><v><comp c="1" v="e[LVADK]/90" /></v></c></C>
+      </f>
     </d>
 
     <d cid="[LVOK33]" teid="@AiderReferee" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">

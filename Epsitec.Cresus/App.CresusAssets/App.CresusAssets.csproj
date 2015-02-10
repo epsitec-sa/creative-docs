@@ -42,6 +42,9 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -78,6 +81,7 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
+    <Content Include="app.ico" />
     <Content Include="Cresus.Core.Library.crconfig">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

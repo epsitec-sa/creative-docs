@@ -23,10 +23,10 @@
   <data name="Popup.Amortizations.FromDate" id="KL">Depuis</data>
   <data name="Popup.Amortizations.ToDate" id="KM">jusqu'au</data>
   <data name="Popup.Amortizations.Object" id="KN">Pour l'objet sélectionné&lt;br/&gt;Pour tous les objets</data>
-  <data name="Popup.Amortizations.Preview.Title" id="KO">Générer les préamortissements</data>
+  <data name="Popup.Amortizations.Preview.Title" id="KO">Générer les amortissements</data>
   <data name="Popup.Amortizations.Preview.One" id="KP">Générer pour un</data>
   <data name="Popup.Amortizations.Preview.All" id="KQ">Générer pour tous</data>
-  <data name="Popup.Amortizations.Fix.Title" id="KR">Fixer les préamortissements</data>
+  <data name="Popup.Amortizations.Fix.Title" id="KR">Fixer les amortissements</data>
   <data name="Popup.Amortizations.Fix.One" id="KS">Fixer pour un</data>
   <data name="Popup.Amortizations.Fix.All" id="KT">Fixer pour tous</data>
   <data name="Popup.Amortizations.Unpreview.Title" id="KU">Supprimer les préamortissements</data>
@@ -483,4 +483,5 @@
   <data name="Popup.Language.UI" id="K2L">Interface</data>
   <data name="Popup.Language.Data" id="K3L">Données</data>
   <data name="Popup.Language.Tooltip" id="K4L">Choix des langues&lt;br/&gt;Ctrl+clic remet les langues précédentes</data>
+  <data name="EntryController.VatCode" id="K5L">Code TVA</data>
 </bundle>

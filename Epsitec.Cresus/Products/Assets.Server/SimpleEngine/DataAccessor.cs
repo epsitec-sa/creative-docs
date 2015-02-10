@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				yield return ObjectField.MethodGuid;
 				yield return ObjectField.Periodicity;
 
-				foreach (var field in DataAccessor.AccountFields)
+				foreach (var field in DataAccessor.AccountAndVatCodeFields)
 				{
 					yield return field;
 				}
@@ -499,20 +499,67 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				yield return ObjectField.AccountPurchaseDebit;
-				yield return ObjectField.AccountPurchaseCredit;
-				yield return ObjectField.AccountSaleDebit;
-				yield return ObjectField.AccountSaleCredit;
-				yield return ObjectField.AccountAmortizationAutoDebit;
-				yield return ObjectField.AccountAmortizationAutoCredit;
-				yield return ObjectField.AccountAmortizationExtraDebit;
-				yield return ObjectField.AccountAmortizationExtraCredit;
-				yield return ObjectField.AccountIncreaseDebit;
-				yield return ObjectField.AccountIncreaseCredit;
-				yield return ObjectField.AccountDecreaseDebit;
-				yield return ObjectField.AccountDecreaseCredit;
-				yield return ObjectField.AccountAdjustDebit;
-				yield return ObjectField.AccountAdjustCredit;
+				return DataAccessor.GetAccountAndVatCodeFields (false);
+			}
+		}
+
+		public static IEnumerable<ObjectField> AccountAndVatCodeFields
+		{
+			get
+			{
+				return DataAccessor.GetAccountAndVatCodeFields (true);
+			}
+		}
+
+		private static IEnumerable<ObjectField> GetAccountAndVatCodeFields(bool vatCode)
+		{
+			yield return ObjectField.AccountPurchaseDebit;
+			yield return ObjectField.AccountPurchaseCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountPurchaseVatCode;
+			}
+
+			yield return ObjectField.AccountSaleDebit;
+			yield return ObjectField.AccountSaleCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountSaleVatCode;
+			}
+
+			yield return ObjectField.AccountAmortizationAutoDebit;
+			yield return ObjectField.AccountAmortizationAutoCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountAmortizationAutoVatCode;
+			}
+
+			yield return ObjectField.AccountAmortizationExtraDebit;
+			yield return ObjectField.AccountAmortizationExtraCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountAmortizationExtraVatCode;
+			}
+
+			yield return ObjectField.AccountIncreaseDebit;
+			yield return ObjectField.AccountIncreaseCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountIncreaseVatCode;
+			}
+
+			yield return ObjectField.AccountDecreaseDebit;
+			yield return ObjectField.AccountDecreaseCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountDecreaseVatCode;
+			}
+
+			yield return ObjectField.AccountAdjustDebit;
+			yield return ObjectField.AccountAdjustCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountAdjustVatCode;
 			}
 		}
 

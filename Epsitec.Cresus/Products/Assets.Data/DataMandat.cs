@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
 			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
 
@@ -49,6 +50,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
 			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
@@ -193,6 +195,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case BaseTypeKind.Accounts:
 					return this.GetAccounts (type.AccountsDateRange);
 
+				case BaseTypeKind.VatCodes:
+					return this.GetVatCodes (type.AccountsDateRange);
+
 				case BaseTypeKind.Methods:
 					return this.methods;
 
@@ -220,7 +225,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Retourne la base correspondant à une date.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
-			var range = this.GetBestDateRange (date);
+			var range = this.GetBestAccountsDateRange (date);
 			return new BaseType (BaseTypeKind.Accounts, range);
 		}
 
@@ -246,11 +251,63 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
-		public DateRange GetBestDateRange(System.DateTime date)
+		public DateRange GetBestAccountsDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
 			return this.AccountsDateRanges
+				.Reverse ()
+				.Where (x => x.IsInside (date))
+				.FirstOrDefault ();
+		}
+		#endregion
+
+
+		#region VatCodes
+		public IEnumerable<DateRange> VatCodesDateRanges
+		{
+			//	Retourne la liste des périodes de tous les codes TVA connus.
+			get
+			{
+				return this.rangeVatCodes.Select (x => x.Key);
+			}
+		}
+
+		public BaseType GetVatCodesBase(System.DateTime date)
+		{
+			//	Retourne la base correspondant à une date.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			var range = this.GetBestVatCodesDateRange (date);
+			return new BaseType (BaseTypeKind.VatCodes, range);
+		}
+
+		public GuidDictionary<DataObject> GetVatCodes(DateRange range)
+		{
+			//	Retourne le code TVA correspondant à une période.
+			GuidDictionary<DataObject> vatCodes;
+			if (!range.IsEmpty && this.rangeVatCodes.TryGetValue (range, out vatCodes))
+			{
+				return vatCodes;
+			}
+			else
+			{
+				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				return new GuidDictionary<DataObject> (this.undoManager);
+			}
+		}
+
+		public void AddVatCodes(DateRange dateRange, GuidDictionary<DataObject> vatCodes)
+		{
+			//	Prend connaissance d'un nouveau code TVA, qui est ajouté ou
+			//	qui remplace un existant, selon sa période.
+			this.rangeVatCodes[dateRange] = vatCodes;
+		}
+
+		private DateRange GetBestVatCodesDateRange(System.DateTime date)
+		{
+			//	Retourne la période comptable correspondant à une date donnée.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			return this.VatCodesDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
 				.FirstOrDefault ();
@@ -272,12 +329,21 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteEndDocument ();
 		}
 
-		public void SerializeAccounts(System.Xml.XmlWriter writer)
+		public void SerializeAccountsAndCo(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Accounts");
+			writer.WriteStartElement ("Mandat");
 
 			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			this.SerializeAccounts (writer);
+			this.SerializeVatCodes (writer);
+
+			writer.WriteEndDocument ();
+		}
+
+		private void SerializeAccounts(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("Accounts");
 
 			foreach (var pair in this.rangeAccounts)
 			{
@@ -290,16 +356,32 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 
 			writer.WriteEndElement ();
-			writer.WriteEndDocument ();
+		}
+
+		private void SerializeVatCodes(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement ("VatCodes");
+
+			foreach (var pair in this.rangeVatCodes)
+			{
+				writer.WriteStartElement ("Period");
+
+				pair.Key.Serialize (writer, "DateRange");
+				this.SerializeObjects (writer, "List", pair.Value);
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
 		}
 
 		private void SerializeDefinitions(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartElement ("Definitions");
 
-			IOHelpers.WriteGuidAttribute  (writer, "Guid", this.Guid);
-			IOHelpers.WriteStringAttribute(writer, "Name", this.Name);
-			IOHelpers.WriteDateAttribute  (writer, "StartDate", this.StartDate);
+			IOHelpers.WriteGuidAttribute   (writer, "Guid",      this.Guid);
+			IOHelpers.WriteStringAttribute (writer, "Name",      this.Name);
+			IOHelpers.WriteDateAttribute   (writer, "StartDate", this.StartDate);
 
 			writer.WriteEndElement ();
 		}
@@ -406,7 +488,27 @@ namespace Epsitec.Cresus.Assets.Data
 			reader.Read ();  // on avance sur le noeud suivant
 		}
 
-		public void DeserializeAccounts(System.Xml.XmlReader reader)
+		public void DeserializeAccountsAndCo(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Mandat":
+							this.DeserializeAccountsMandat (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccountsMandat(System.Xml.XmlReader reader)
 		{
 			while (reader.Read ())
 			{
@@ -418,6 +520,30 @@ namespace Epsitec.Cresus.Assets.Data
 							var version = reader.ReadElementContentAsString ();
 							break;
 
+						case "Accounts":
+							this.DeserializeAccounts (reader);
+							break;
+
+						case "VatCodes":
+							this.DeserializeVatCodes (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccounts(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
 						case "Period":
 							this.DeserializeAccountsPeriod (reader);
 							break;
@@ -455,6 +581,58 @@ namespace Epsitec.Cresus.Assets.Data
 					if (!dateRange.IsEmpty && objects.Any ())
 					{
 						this.rangeAccounts.Add (dateRange, objects);
+					}
+
+					break;
+				}
+			}
+		}
+
+		private void DeserializeVatCodes(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "Period":
+							this.DeserializeVatCodesPeriod (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeVatCodesPeriod(System.Xml.XmlReader reader)
+		{
+			var dateRange = DateRange.Empty;
+			var objects = new GuidDictionary<DataObject> (null);
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case "DateRange":
+							dateRange = new DateRange (reader);
+							break;
+
+						case "List":
+							this.DeserializeObjects (reader, objects);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					if (!dateRange.IsEmpty && objects.Any ())
+					{
+						this.rangeVatCodes.Add (dateRange, objects);
 					}
 
 					break;
@@ -587,6 +765,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidDictionary<DataObject>						methods;
 		private readonly GuidDictionary<DataObject>						arguments;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
+		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeVatCodes;
 		private readonly GuidDictionary<AbstractReportParams>			reports;
 
 		private Guid													guid;

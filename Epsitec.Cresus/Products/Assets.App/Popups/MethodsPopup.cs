@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.Expressions");
+			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.Methods");
 			this.CreateFilterUI (this.mainFrameBox);
 			this.UpdateController ();
 

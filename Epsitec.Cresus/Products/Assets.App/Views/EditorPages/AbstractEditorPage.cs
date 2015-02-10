@@ -187,6 +187,16 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					c.PropertyState = this.GetPropertyState (field);
 					c.IsReadOnly    = this.isLocked;
 				}
+				else if (controller is VatCodeFieldController)
+				{
+					var c = controller as VatCodeFieldController;
+
+					c.EventType     = this.eventType;
+					c.Date          = this.accessor.EditionAccessor.EventDate;
+					c.Value         = this.accessor.EditionAccessor.GetFieldString (field);
+					c.PropertyState = this.GetPropertyState (field);
+					c.IsReadOnly    = this.isLocked;
+				}
 				else if (controller is GuidRatioFieldController)
 				{
 					var c = controller as GuidRatioFieldController;
@@ -494,6 +504,62 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		protected AccountFieldController CreateAccountController(Widget parent, ObjectField field, System.DateTime? forcedDate = null)
 		{
 			var controller = new AccountFieldController (this.accessor)
+			{
+				ForcedDate = forcedDate,
+				Date       = this.accessor.EditionAccessor.EventDate,
+				Field      = field,
+				Required   = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
+				Label      = this.accessor.GetFieldName (field),
+				EditWidth  = AbstractFieldController.maxWidth,
+				TabIndex   = this.tabIndex,
+			};
+
+			controller.CreateUI (parent);
+			this.tabIndex = controller.TabIndex;
+
+			controller.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.accessor.EditionAccessor.SetField (of, controller.Value);
+
+				controller.Value         = this.accessor.EditionAccessor.GetFieldString (of);
+				controller.PropertyState = this.GetPropertyState (of);
+
+				this.OnValueEdited (of);
+			};
+
+			controller.DataChanged += delegate (object sender)
+			{
+				this.OnDataChanged ();
+			};
+
+			controller.DeepUpdate += delegate (object sender)
+			{
+				this.OnDeepUpdate ();
+			};
+
+			controller.SetFieldFocus += delegate (object sender, ObjectField of)
+			{
+				this.fieldFocus = of;
+			};
+
+			controller.ShowHistory += delegate (object sender, Widget target, ObjectField of)
+			{
+				this.ShowHistoryPopup (target, of);
+			};
+
+			controller.Goto += delegate (object sender, AbstractViewState viewState)
+			{
+				this.OnGoto (viewState);
+			};
+
+			this.fieldControllers.Add (field, controller);
+
+			return controller;
+		}
+
+		protected VatCodeFieldController CreateVatCodeController(Widget parent, ObjectField field, System.DateTime? forcedDate = null)
+		{
+			var controller = new VatCodeFieldController (this.accessor)
 			{
 				ForcedDate = forcedDate,
 				Date       = this.accessor.EditionAccessor.EventDate,

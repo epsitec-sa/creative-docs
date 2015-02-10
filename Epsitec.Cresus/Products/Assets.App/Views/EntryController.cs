@@ -116,12 +116,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			get
 			{
-				return this.dateController  .HasError
-					|| this.debitController .HasError
-					|| this.creditController.HasError
-					|| this.stampController .HasError
-					|| this.titleController .HasError
-					|| this.amountController.HasError;
+				return this.dateController   .HasError
+					|| this.debitController  .HasError
+					|| this.creditController .HasError
+					|| this.stampController  .HasError
+					|| this.titleController  .HasError
+					|| this.amountController .HasError
+					|| this.vatCodeController.HasError;
 			}
 		}
 
@@ -144,12 +145,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			this.tabIndex = 0;
 
-			this.CreateDateController   (parent);
-			this.CreateDebitController  (parent);
-			this.CreateCreditController (parent);
-			this.CreateStampController  (parent);
-			this.CreateTitleController  (parent);
-			this.CreateAmountController (parent);
+			this.CreateDateController    (parent);
+			this.CreateDebitController   (parent);
+			this.CreateCreditController  (parent);
+			this.CreateStampController   (parent);
+			this.CreateTitleController   (parent);
+			this.CreateAmountController  (parent);
+			this.CreateVatCodeController (parent);
 
 			this.UpdateUI ();
 		}
@@ -276,6 +278,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void CreateVatCodeController(Widget parent)
+		{
+			this.vatCodeController = new VatCodeFieldController (this.accessor)
+			{
+				Field                 = ObjectField.Unknown,
+				Label                 = Res.Strings.EntryController.VatCode.ToString (),
+				EditWidth             = AbstractFieldController.maxWidth,
+				HideAdditionalButtons = false,
+				TabIndex              = this.tabIndex,
+			};
+
+			this.vatCodeController.CreateUI (parent);
+			this.tabIndex = this.vatCodeController.TabIndex;
+
+			this.vatCodeController.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.SetVatCode (this.vatCodeController.Value);
+			};
+		}
+
 
 		private void SetDate(System.DateTime? value)
 		{
@@ -313,6 +335,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnValueEdited ();
 		}
 
+		private void SetVatCode(string value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedVatCode, value);
+			this.OnValueEdited ();
+		}
+
 
 
 		public void UpdateNoEditingUI()
@@ -326,8 +354,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			if (this.value.HasValue)
 			{
-				this.debitController .Date = this.accessor.EditionAccessor.EventDate;
-				this.creditController.Date = this.accessor.EditionAccessor.EventDate;
+				this.debitController  .Date = this.accessor.EditionAccessor.EventDate;
+				this.creditController .Date = this.accessor.EditionAccessor.EventDate;
+				this.vatCodeController.Date = this.accessor.EditionAccessor.EventDate;
 
 				EntryProperties baseProperties = null;
 				EntryProperties editProperties = null;
@@ -338,42 +367,47 @@ namespace Epsitec.Cresus.Assets.App.Views
 					editProperties = entries.GetEntryProperties (this.Asset, this.Event, this.value.Value, Entries.GetEntryPropertiesType.EditedOrBase);
 				}
 
-				this.UpdatePropertyState (this.dateController,   baseProperties.Date   == editProperties.Date);
-				this.UpdatePropertyState (this.debitController,  baseProperties.Debit  == editProperties.Debit);
-				this.UpdatePropertyState (this.creditController, baseProperties.Credit == editProperties.Credit);
-				this.UpdatePropertyState (this.stampController,  baseProperties.Stamp  == editProperties.Stamp);
-				this.UpdatePropertyState (this.titleController,  baseProperties.Title  == editProperties.Title);
-				this.UpdatePropertyState (this.amountController, baseProperties.Amount == editProperties.Amount);
+				this.UpdatePropertyState (this.dateController,    baseProperties.Date    == editProperties.Date);
+				this.UpdatePropertyState (this.debitController,   baseProperties.Debit   == editProperties.Debit);
+				this.UpdatePropertyState (this.creditController,  baseProperties.Credit  == editProperties.Credit);
+				this.UpdatePropertyState (this.stampController,   baseProperties.Stamp   == editProperties.Stamp);
+				this.UpdatePropertyState (this.titleController,   baseProperties.Title   == editProperties.Title);
+				this.UpdatePropertyState (this.amountController,  baseProperties.Amount  == editProperties.Amount);
+				this.UpdatePropertyState (this.vatCodeController, baseProperties.VatCode == editProperties.VatCode);
 
-				this.dateController  .Value = editProperties.Date;
-				this.debitController .Value = editProperties.Debit;
-				this.creditController.Value = editProperties.Credit;
-				this.stampController .Value = editProperties.Stamp;
-				this.titleController .Value = editProperties.Title;
-				this.amountController.Value = editProperties.Amount;
+				this.dateController   .Value = editProperties.Date;
+				this.debitController  .Value = editProperties.Debit;
+				this.creditController .Value = editProperties.Credit;
+				this.stampController  .Value = editProperties.Stamp;
+				this.titleController  .Value = editProperties.Title;
+				this.amountController .Value = editProperties.Amount;
+				this.vatCodeController.Value = editProperties.VatCode;
 			}
 			else
 			{
-				this.dateController  .PropertyState = this.propertyState;
-				this.debitController .PropertyState = this.propertyState;
-				this.creditController.PropertyState = this.propertyState;
-				this.stampController .PropertyState = this.propertyState;
-				this.titleController .PropertyState = this.propertyState;
-				this.amountController.PropertyState = this.propertyState;
+				this.dateController   .PropertyState = this.propertyState;
+				this.debitController  .PropertyState = this.propertyState;
+				this.creditController .PropertyState = this.propertyState;
+				this.stampController  .PropertyState = this.propertyState;
+				this.titleController  .PropertyState = this.propertyState;
+				this.amountController .PropertyState = this.propertyState;
+				this.vatCodeController.PropertyState = this.propertyState;
 
-				this.dateController  .IsReadOnly = this.isReadOnly;
-				this.debitController .IsReadOnly = this.isReadOnly;
-				this.creditController.IsReadOnly = this.isReadOnly;
-				this.stampController .IsReadOnly = this.isReadOnly;
-				this.titleController .IsReadOnly = this.isReadOnly;
-				this.amountController.IsReadOnly = this.isReadOnly;
+				this.dateController   .IsReadOnly = this.isReadOnly;
+				this.debitController  .IsReadOnly = this.isReadOnly;
+				this.creditController .IsReadOnly = this.isReadOnly;
+				this.stampController  .IsReadOnly = this.isReadOnly;
+				this.titleController  .IsReadOnly = this.isReadOnly;
+				this.amountController .IsReadOnly = this.isReadOnly;
+				this.vatCodeController.IsReadOnly = this.isReadOnly;
 
-				this.dateController  .Value = null;
-				this.debitController .Value = null;
-				this.creditController.Value = null;
-				this.stampController .Value = null;
-				this.titleController .Value = null;
-				this.amountController.Value = null;
+				this.dateController   .Value = null;
+				this.debitController  .Value = null;
+				this.creditController .Value = null;
+				this.stampController  .Value = null;
+				this.titleController  .Value = null;
+				this.amountController .Value = null;
+				this.vatCodeController.Value = null;
 
 				var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly);
 				this.fieldColorTypes.Add (type);
@@ -458,5 +492,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StringFieldController			stampController;
 		private StringFieldController			titleController;
 		private DecimalFieldController			amountController;
+		private VatCodeFieldController			vatCodeController;
 	}
 }

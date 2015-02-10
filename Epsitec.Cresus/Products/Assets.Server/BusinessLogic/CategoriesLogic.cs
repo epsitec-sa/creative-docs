@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				CategoriesLogic.ImportArgument (accessor, asset, e, catObj, field);
 			}
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				CategoriesLogic.ImportField (accessor, asset, e, catObj, field, field);
 			}
@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var e = cat.GetInputEvent ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				e.RemoveProperty (field);
 			}

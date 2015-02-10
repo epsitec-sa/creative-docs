@@ -105,4 +105,7 @@
   <data name="Enum.ArgumentType.Date" id="KE3">Date</data>
   <data name="Enum.AmortizationExpressionType.None" id="KF3">Aucun amortissement</data>
   <data name="WarningsLogic.Expression.CompileError" id="KG3">L'expression contient des erreurs de compilation</data>
+  <data name="VatCodesLogic.InvalidDate" id="KH3">Aucun plan comptable à cette date</data>
+  <data name="VatCodesLogic.CodeDoesNotExist" id="KI3">Ce code n'existe pas</data>
+  <data name="AccountsImport.WithoutVat" id="KJ3">Pas de TVA</data>
 </bundle>

@@ -613,14 +613,14 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static void OpenAccounts(string filename, DataAccessor accessor)
 		{
 			var reader = System.Xml.XmlReader.Create (DataIO.GetAccountsFilename (filename));
-			accessor.Mandat.DeserializeAccounts (reader);
+			accessor.Mandat.DeserializeAccountsAndCo (reader);
 			reader.Close ();
 		}
 
 		private static void OpenAccounts(System.IO.MemoryStream stream, DataAccessor accessor)
 		{
 			var reader = System.Xml.XmlReader.Create (stream);
-			accessor.Mandat.DeserializeAccounts (reader);
+			accessor.Mandat.DeserializeAccountsAndCo (reader);
 			reader.Close ();
 		}
 		#endregion
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			};
 
 			var writer = System.Xml.XmlWriter.Create (stream, settings);
-			accessor.Mandat.SerializeAccounts (writer);
+			accessor.Mandat.SerializeAccountsAndCo (writer);
 
 			writer.Flush ();
 			writer.Close ();
@@ -649,7 +649,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			};
 
 			var writer = System.Xml.XmlWriter.Create (DataIO.GetAccountsFilename (filename), settings);
-			accessor.Mandat.SerializeAccounts (writer);
+			accessor.Mandat.SerializeAccountsAndCo (writer);
 
 			writer.Flush ();
 			writer.Close ();

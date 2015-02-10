@@ -250,6 +250,7 @@
     <Compile Include="Controllers\SetControllers\SetAiderMailingViewController0RecipientsContact.cs" />
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
+    <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />

@@ -102,10 +102,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				DateRange range;
 				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedVatCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
 				try
 				{
-					range = importEngine.Import (importedAccounts, null, filename);
+					range = importEngine.Import (importedAccounts, importedVatCodes, filename);
 				}
 				catch (System.Exception ex)
 				{
@@ -115,6 +116,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 				}
 
 				this.accessor.Mandat.AddAccounts (range, importedAccounts);
+				this.accessor.Mandat.AddVatCodes (range, importedVatCodes);
 				//?this.accessor.Mandat.CurrentAccountsDateRange = range;
 				this.accessor.WarningsDirty = true;
 

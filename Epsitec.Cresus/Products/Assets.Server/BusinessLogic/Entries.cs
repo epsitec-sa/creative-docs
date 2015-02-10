@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var aa = new AmortizedAmount (scenario);
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				ea[field] = this.accessor.EditionAccessor.GetFieldString (field);
 			}
@@ -102,6 +102,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			
 				case 2:
 					text = this.GetTitle (null, null, aa, GetEntryPropertiesType.Sample);
+					break;
+
+				case 3:
+					text = this.GetVatCode (null, null, aa, ea, GetEntryPropertiesType.Sample);
 					break;
 			}
 		}
@@ -123,12 +127,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			return new EntryProperties
 			{
-				Date   = this.GetDate   (asset, e, amount,                type),
-				Debit  = this.GetDebit  (asset, e, amount, entryAccounts, type, out tooltip),
-				Credit = this.GetCredit (asset, e, amount, entryAccounts, type, out tooltip),
-				Stamp  = this.GetStamp  (asset, e, amount,                type),
-				Title  = this.GetTitle  (asset, e, amount,                type),
-				Amount = this.GetValue  (asset, e, amount,                type),
+				Date    = this.GetDate    (asset, e, amount,                type),
+				Debit   = this.GetDebit   (asset, e, amount, entryAccounts, type, out tooltip),
+				Credit  = this.GetCredit  (asset, e, amount, entryAccounts, type, out tooltip),
+				Stamp   = this.GetStamp   (asset, e, amount,                type),
+				Title   = this.GetTitle   (asset, e, amount,                type),
+				Amount  = this.GetValue   (asset, e, amount,                type),
+				VatCode = this.GetVatCode (asset, e, amount, entryAccounts, type),
 			};
 		}
 
@@ -139,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	à l'événement contenant ce montant.
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
 				ea[field] = ObjectProperties.GetObjectPropertyString (asset, e.Timestamp, field);
 			}
@@ -422,6 +427,55 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		private string GetVatCode(DataObject asset, DataEvent e, AmortizedAmount amount, EntryAccounts entryAccouts, GetEntryPropertiesType type)
+		{
+			//	Retourne le code TVA de l'écriture.
+			if (type == GetEntryPropertiesType.Current)
+			{
+				var p = e.GetProperty (ObjectField.AssetEntryForcedVatCode) as DataStringProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			if (type == GetEntryPropertiesType.EditedOrBase)
+			{
+				var s = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedVatCode, synthetic: false);
+				if (!string.IsNullOrEmpty (s))
+				{
+					return s;
+				}
+			}
+
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.Purchase:
+					return entryAccouts[ObjectField.AccountPurchaseVatCode];
+
+				case EntryScenario.Sale:
+					return entryAccouts[ObjectField.AccountSaleVatCode];
+
+				case EntryScenario.AmortizationAuto:
+					return entryAccouts[ObjectField.AccountAmortizationAutoVatCode];
+
+				case EntryScenario.AmortizationExtra:
+					return entryAccouts[ObjectField.AccountAmortizationExtraVatCode];
+
+				case EntryScenario.Increase:
+					return entryAccouts[ObjectField.AccountIncreaseVatCode];
+
+				case EntryScenario.Decrease:
+					return entryAccouts[ObjectField.AccountDecreaseVatCode];
+
+				case EntryScenario.Adjust:
+					return entryAccouts[ObjectField.AccountAdjustVatCode];
+
+				default:
+					return null;
+			}
+		}
+
 
 		private DataObject CreateDataEntry(DataObject asset, DataEvent e, AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
 		{
@@ -453,6 +507,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			e.AddProperty (new DataStringProperty  (ObjectField.EntryStamp,         entryProperties.Stamp));
 			e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,         entryProperties.Title));
 			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount,        entryProperties.Amount));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryVatCode,       entryProperties.VatCode));
 
 			return entry.Guid;
 		}

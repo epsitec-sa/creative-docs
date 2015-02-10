@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public string							Stamp;
 		public string							Title;
 		public decimal							Amount;
+		public string							VatCode;
 
 		public bool IsValid
 		{
@@ -29,12 +30,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static EntryProperties Empty = new EntryProperties
 		{
-			Date   = System.DateTime.MinValue,
-			Debit  = null,
-			Credit = null,
-			Stamp  = null,
-			Title  = null,
-			Amount = 0.0m,
+			Date    = System.DateTime.MinValue,
+			Debit   = null,
+			Credit  = null,
+			Stamp   = null,
+			Title   = null,
+			Amount  = 0.0m,
+			VatCode = null,
 		};
 	}
 }

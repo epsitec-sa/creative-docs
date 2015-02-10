@@ -85,9 +85,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void CreateAccountsUI(Widget parent, System.DateTime? forcedDate)
 		{
-			foreach (var field in DataAccessor.AccountFields)
+			foreach (var field in DataAccessor.AccountAndVatCodeFields)
 			{
-				this.CreateAccountController (parent, field, forcedDate);
+				var type = this.accessor.GetFieldType (field);
+
+				if (type == FieldType.Account)
+				{
+					this.CreateAccountController (parent, field, forcedDate);
+				}
+				else
+				{
+					this.CreateVatCodeController (parent, field, forcedDate);
+					this.CreateSepartor (parent);
+				}
 			}
 
 			this.entrySamples = new EntrySamples (this.accessor, forcedDate);

@@ -2154,6 +2154,14 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544753));
 					}
 				}
+				//	designer:str/JUK5L01
+				public static global::Epsitec.Common.Types.FormattedText VatCode
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544997));
+					}
+				}
 			}
 			
 			public static class EntrySamples
@@ -6765,6 +6773,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544753);
+					}
+				}
+				//	designer:str/JUK5L01
+				public static global::Epsitec.Common.Support.Druid VatCode
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544997);
 					}
 				}
 			}

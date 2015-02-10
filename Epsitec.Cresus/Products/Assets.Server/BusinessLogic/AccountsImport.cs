@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vats, string filename)
+		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vatCodes, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -24,16 +24,16 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			this.accounts = accounts;
 			this.accounts.Clear ();
 
-			this.vats = vats;
-			if (this.vats != null)
+			this.vatCodes = vatCodes;
+			if (this.vatCodes != null)
 			{
-				this.vats.Clear ();
+				this.vatCodes.Clear ();
 			}
 
 			this.ReadLines (filename);
 			this.InitDates ();
 
-			if (this.vats != null)
+			if (this.vatCodes != null)
 			{
 				this.AddVatCodes ();
 			}
@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			//	Importe tous les codes TVA.
 			int index = this.IndexOfLine ("BEGIN=TVACODES");
+
+			this.AddVatCode (DataStringProperty.WithoutVat, null, Res.Strings.AccountsImport.WithoutVat.ToString ());
 
 			while (++index < this.lines.Length)
 			{
@@ -70,11 +72,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					var rate = this.GetEntryContentDecimal (index, "TAUX");
 					var desc = this.GetEntryContentText    (index, "COMMENT");
 
-					if (rate.HasValue)
+					if (rate.HasValue && !AccountsImport.ObsoleteVatCodes.Contains(name))
 					{
-						this.AddVatCode (name, rate.Value, desc);
+						this.AddVatCode (name, rate.Value/100.0m, desc);
 					}
 				}
+			}
+		}
+
+		private static IEnumerable<string> ObsoleteVatCodes
+		{
+			get
+			{
+				yield return "SM";
+				yield return "SMRED";
+				yield return "PAVEH";
 			}
 		}
 
@@ -207,18 +219,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return date.Value;
 		}
 
-		private DataObject AddVatCode(string name, decimal rate, string desc)
+		private DataObject AddVatCode(string name, decimal? rate, string desc)
 		{
 			var o = new DataObject (null);
-			this.vats.Add (o);
+			this.vatCodes.Add (o);
 			{
 				var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
 				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty  (ObjectField.Name, name));
-				e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate));
-				e.AddProperty (new DataStringProperty  (ObjectField.Description, desc));
+				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Description, desc));
+
+				if (rate.HasValue)
+				{
+					e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate.Value));
+				}
 			}
 
 			//?System.Console.WriteLine (number);
@@ -444,7 +460,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string[]						lines;
 		private GuidDictionary<DataObject>		accounts;
-		private GuidDictionary<DataObject>		vats;
+		private GuidDictionary<DataObject>		vatCodes;
 		private System.DateTime					beginDate;
 		private System.DateTime					endDate;
 	}

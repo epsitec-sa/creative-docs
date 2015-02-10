@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -99,11 +99,27 @@ namespace Epsitec.Common.Support
 			{
 				if (Globals.isDebugBuildInitialized == false)
 				{
-					Globals.isDebugBuild = typeof (Globals).Assembly.Location.Contains ("Debug") || Globals.Directories.ExecutableRoot.StartsWith (@"S:\Epsitec.Cresus");
+					Globals.isDebugBuild = typeof (Globals).Assembly.Location.Contains ("Debug") ||
+										   Globals.Directories.ExecutableRoot.Contains (Globals.EpsitecCresusSubPath);
 					Globals.isDebugBuildInitialized = true;
 				}
 
 				return Globals.isDebugBuild;
+			}
+		}
+
+		public static string DebugBuildSourcePath
+		{
+			get
+			{
+				if (Globals.IsDebugBuild)
+				{
+					var app = Globals.Directories.ExecutableRoot;
+					int pos = app.IndexOf (Globals.EpsitecCresusSubPath);
+					return app.Substring (0, pos + Globals.EpsitecCresusSubPath.Length - 1);
+				}
+
+				throw new System.InvalidOperationException ("No source path for a deployed application");
 			}
 		}
 		
@@ -298,7 +314,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		#endregion
-		
+
+		private const string					EpsitecCresusSubPath = @"\Epsitec.Cresus\";
+
 		private Dictionary<string, object>		propertyHash;
 		private static Globals					properties;
 		private static ManualResetEvent			abortEvent;

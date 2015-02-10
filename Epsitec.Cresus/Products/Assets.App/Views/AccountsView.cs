@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Retourne un ViewState permettant de voir un compte donné à une date donnée.
 			if (date.HasValue)
 			{
-				var range = accessor.Mandat.GetBestDateRange (date.Value);
+				var range = accessor.Mandat.GetBestAccountsDateRange (date.Value);
 
 				return new AccountsViewState
 				{

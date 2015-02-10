@@ -559,3 +559,23 @@ Lancé le 08.01.2015
 
 -exportsubscriptions -output:export-2015-01-15.txt -error:error-2015-01-15.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-01-15.txt -publicationdate:2015-01-15 -response:tamedia-2015-01-15.log
+
+
+Lancé le 08.01.2015
+-------------------
+
+SVN update > 24173
+
+
+-echupdate -newechfile:S:\eerv\eerv-2015-01-08.xml -oldechfile:S:\eerv\eerv-2015-01-01.xml -output:s:\eerv\ech-diff-2015-01-08.md
+
+
+Lancé le 24.01.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-01-22.xml -oldechfile:S:\eerv\eerv-2015-01-08.xml -output:s:\eerv\ech-diff-2015-01-22.md
+
+Lancé le 01.02.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-01-29.xml -oldechfile:S:\eerv\eerv-2015-01-22.xml -output:s:\eerv\ech-diff-2015-01-29.md
