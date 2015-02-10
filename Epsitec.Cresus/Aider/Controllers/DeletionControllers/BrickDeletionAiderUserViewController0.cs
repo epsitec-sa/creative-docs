@@ -95,9 +95,16 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 					{
 						AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, managerJob.Office, this.Entity);
 					}
+
+					foreach (var jobs in employee.EmployeeJobs)
+					{
+						jobs.Delete (this.BusinessContext);
+					}
+
+					this.BusinessContext.DeleteEntity (employee);
 				}
 			}
-			
+		
 
 			this.Entity.Delete (this.BusinessContext);
 		}
