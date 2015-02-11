@@ -309,6 +309,8 @@ namespace Epsitec.Cresus.Assets.App
 				
 				//	designer:cap/JUKM001
 				public static readonly global::Epsitec.Common.Widgets.Command Edit = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+				//	designer:cap/JUKA701
+				public static readonly global::Epsitec.Common.Widgets.Command ExportEntries = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 234));
 				//	designer:cap/JUKN001
 				public static readonly global::Epsitec.Common.Widgets.Command Locked = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
 				//	designer:cap/JUKI001
@@ -934,6 +936,8 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				//	designer:cap/JUKM001
 				public const long Edit = 0x7D300014000016L;
+				//	designer:cap/JUKA701
+				public const long ExportEntries = 0x7D3000140000EAL;
 				//	designer:cap/JUKN001
 				public const long Locked = 0x7D300014000017L;
 				//	designer:cap/JUKI001

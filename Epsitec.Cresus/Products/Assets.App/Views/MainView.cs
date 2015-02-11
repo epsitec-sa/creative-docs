@@ -172,6 +172,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.ShowSaveMandatPopup (target);
 		}
 
+		[Command (Res.CommandIds.Main.ExportEntries)]
+		private void OnExportEntries(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+		}
+
 		[Command (Res.CommandIds.Main.Navigate.Back)]
 		private void OnNavigateBack(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

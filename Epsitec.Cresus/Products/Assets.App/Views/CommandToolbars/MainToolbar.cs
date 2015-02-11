@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.New);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Open);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Save);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.ExportEntries);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Forward);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Menu);
