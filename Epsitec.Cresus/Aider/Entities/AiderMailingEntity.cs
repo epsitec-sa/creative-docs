@@ -488,6 +488,7 @@ namespace Epsitec.Aider.Entities
 				request.RequestedEntity = contact;
 
 				request.AddCondition (dataContext, example, queryFilter);
+
 				return request;
 			}
 
@@ -520,6 +521,19 @@ namespace Epsitec.Aider.Entities
 				{
 					Employee = employee
 				};
+
+				request.RootEntity      = example;
+				request.RequestedEntity = contact;
+
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
+
+			if (query.CommandId == Res.Commands.Base.ShowAiderHousehold.CommandId)
+			{
+				var contact             = new AiderContactEntity ();
+
+				var example            = new AiderHouseholdEntity ();
 
 				request.RootEntity      = example;
 				request.RequestedEntity = contact;

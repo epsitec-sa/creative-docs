@@ -56,6 +56,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionButton<ActionAiderMailingViewController21AddEmployeeQuery> ()
 					.EnableActionMenu<ActionAiderMailingViewController22AddRefereeQuery> ()
 					.EnableActionButton<ActionAiderMailingViewController22AddRefereeQuery> ()
+					.EnableActionMenu<ActionAiderMailingViewController23AddHouseholdQuery> ()
+					.EnableActionButton<ActionAiderMailingViewController23AddHouseholdQuery> ()
 					.EnableActionMenu<ActionAiderMailingViewController19RemoveContactQuery> ()
 					.EnableActionButton<ActionAiderMailingViewController19RemoveContactQuery> ()
 					.Template ()
