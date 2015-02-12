@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +15,11 @@ namespace Epsitec.Cresus.Core.Metadata
 {
 	public class EntityFilter : IFilter
 	{
-		public EntityFilter(Druid entityId)
+		public EntityFilter(Druid entityId, FilterCombineMode mode)
 		{
 			this.columns = new List<ColumnRef<EntityColumnFilter>> ();
 			this.entityId = entityId;
+			this.combineMode = mode;
 		}
 
 
@@ -37,6 +39,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public FilterCombineMode CombineMode
+		{
+			get
+			{
+				return this.combineMode;
+			}
+		}
+
 		#region IFilter Members
 
 		public bool								IsValid
@@ -49,7 +59,7 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public Expression GetExpression(AbstractEntity example, Expression parameter)
 		{
-			return Filter.GetExpression (this.GetColumnFilters (example, parameter), FilterCombineMode.And);
+			return Filter.GetExpression (this.GetColumnFilters (example, parameter), this.CombineMode);
 		}
 
 		#endregion
@@ -59,6 +69,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		{
 			var xml = new XElement (xmlNodeName,
 				new XAttribute (Strings.EntityId, this.entityId.ToCompactString ()),
+				new XAttribute (Strings.CombineMode, InvariantConverter.ToString (EnumType.ConvertToInt (this.CombineMode))),
 				new XElement (Strings.ColumnList,
 					this.columns.Select (x => x.Save (Strings.ColumnItem))));
 
@@ -74,8 +85,10 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			var list     = xml.Element (Strings.ColumnList).Elements ();
 			var entityId = Druid.Parse (xml.Attribute (Strings.EntityId));
-			var filter   = new EntityFilter (entityId);
+			var mode     = xml.Attribute (Strings.CombineMode).ToEnum (FilterCombineMode.And);
+			var filter   = new EntityFilter (entityId, mode);
 
+		
 			filter.columns.AddRange (list.Select (x => ColumnRef.Restore<EntityColumnFilter> (x)));
 
 			return filter;
@@ -110,9 +123,10 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private static class Strings
 		{
-			public const string EntityId = "id";
-			public const string ColumnList = "C";
-			public const string ColumnItem = "c";
+			public const string EntityId    = "id";
+			public const string CombineMode = "cm";
+			public const string ColumnList  = "C";
+			public const string ColumnItem  = "c";
 		}
 
 		#endregion
@@ -120,5 +134,6 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		private readonly List<ColumnRef<EntityColumnFilter>> columns;
 		private readonly Druid entityId;
+		private readonly FilterCombineMode combineMode;
 	}
 }

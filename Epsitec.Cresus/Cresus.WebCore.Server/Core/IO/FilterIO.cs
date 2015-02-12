@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 		{
 			var entityType = database.DataSetMetadata.EntityTableMetadata.EntityType;
 			var entityId = EntityInfo.GetTypeId (entityType);
-			var entityFilter = new EntityFilter (entityId);
+			var entityFilter = new EntityFilter (entityId, FilterCombineMode.And);
 
 			if (string.IsNullOrEmpty (filterParameter))
 			{
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 				{
 					//Create simple filter and add it to existing filter node
 					var field = (string) type["field"];
-					var entityFilter = new EntityFilter (entityId);
+					var entityFilter = new EntityFilter (entityId, FilterCombineMode.And);
 
 					var column = ColumnIO.ParseColumn (caches, database, field);
 					var columnId = column.MetaData.Id;
