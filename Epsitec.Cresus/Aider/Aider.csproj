@@ -116,6 +116,9 @@
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController11AddPlaGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController12AddGroupExtraction.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController13RemoveGroupExtraction.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController25AddAiderEmployeeQuery.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController24AddLegalPersonQuery.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController23AddHouseholdQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController22AddRefereeQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController21AddEmployeeQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController20AddJobQuery.cs" />
