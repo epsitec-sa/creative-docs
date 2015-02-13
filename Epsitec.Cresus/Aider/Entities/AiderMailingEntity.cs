@@ -18,6 +18,7 @@ using System.Linq;
 using Epsitec.Aider.Helpers;
 using Epsitec.Cresus.Core.Metadata;
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 
 namespace Epsitec.Aider.Entities
@@ -471,6 +472,7 @@ namespace Epsitec.Aider.Entities
 				request.AddCondition (dataContext, example, queryFilter);
 				return request;
 			}
+
 			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJob.CommandId)
 			{
 				var contact             = new AiderContactEntity ();
@@ -483,12 +485,38 @@ namespace Epsitec.Aider.Entities
 				{
 					Employee = employee
 				};
-				
+
 				request.RootEntity      = example;
 				request.RequestedEntity = contact;
 
 				request.AddCondition (dataContext, example, queryFilter);
+				request.AddCondition (dataContext, example, j => j.EmployeeJobFunction != EmployeeJobFunction.GestionnaireAIDER &&
+					                                             j.EmployeeJobFunction != EmployeeJobFunction.UtilisateurAIDER && 
+																 j.EmployeeJobFunction != EmployeeJobFunction.SuppléantAIDER); 
 
+				return request;
+			}
+
+			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJobAIDERUsersOnly.CommandId)
+			{
+				var contact             = new AiderContactEntity ();
+
+				var employee            = new AiderEmployeeEntity ()
+				{
+					PersonContact = contact
+				};
+				var example			    = new AiderEmployeeJobEntity ()
+				{
+					Employee = employee
+				};
+
+				request.RootEntity      = example;
+				request.RequestedEntity = contact;
+
+				request.AddCondition (dataContext, example, queryFilter);
+				request.AddCondition (dataContext, example, j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER || 
+																 j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER ||
+																 j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER);
 				return request;
 			}
 
@@ -531,13 +559,31 @@ namespace Epsitec.Aider.Entities
 
 			if (query.CommandId == Res.Commands.Base.ShowAiderHousehold.CommandId)
 			{
-				var contact             = new AiderContactEntity ();
+				var example             = new AiderHouseholdEntity ();
 
-				var example            = new AiderHouseholdEntity ();
+				var contact             = new AiderContactEntity ()
+				{
+					Household = example
+				};
 
-				request.RootEntity      = example;
+				request.RootEntity      = contact;
 				request.RequestedEntity = contact;
+				
+				request.AddCondition (dataContext, example, queryFilter);
+				return request;
+			}
 
+			if (query.CommandId == Res.Commands.Base.ShowAiderLegalPerson.CommandId)
+			{
+				var example			   = new AiderLegalPersonEntity ();
+
+				var contact			   = new AiderContactEntity ()
+				{
+					LegalPerson = example
+				};
+
+				request.RootEntity      = contact;
+				request.RequestedEntity = contact;
 				request.AddCondition (dataContext, example, queryFilter);
 				return request;
 			}
