@@ -61,10 +61,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (move)
 			{
-				person.RemoveFromHouseholds (context);
+				AiderContactEntity.ChangeHousehold (this.BusinessContext, person.HouseholdContact, household, isPersonHead);
 			}
-
-			AiderContactEntity.Create (context, person, household, isPersonHead);
 
 			var contact = this.AdditionalEntity;
 			EntityBag.Remove (contact);

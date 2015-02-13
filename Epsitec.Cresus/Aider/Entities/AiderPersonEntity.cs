@@ -338,10 +338,8 @@ namespace Epsitec.Aider.Entities
 
 			if (move)
 			{
-				this.RemoveFromHouseholds (context);
+				AiderContactEntity.ChangeHousehold (context, this.HouseholdContact, newHousehold, isHead: true);
 			}
-
-			AiderContactEntity.Create (context, this, newHousehold, isHead: true);
 		}
 
 		public void RemoveFromHousehold(BusinessContext context, AiderHouseholdEntity household)

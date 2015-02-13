@@ -259,6 +259,25 @@ namespace Epsitec.Aider.Entities
 			return AiderContactEntity.Create (businessContext, person, household, role);
 		}
 
+		public static AiderContactEntity ChangeHousehold(BusinessContext businessContext, AiderContactEntity contact, AiderHouseholdEntity newHousehold, bool isHead)
+		{
+			var role = isHead
+				? HouseholdRole.Head
+				: HouseholdRole.None;
+
+			contact.Household.RemoveContactInternal (contact);
+			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, contact.Household);
+			contact.Person.RemoveContactInternal (contact);
+
+			contact.Household     = newHousehold;
+			contact.HouseholdRole = role;
+
+			contact.Person.AddContactInternal (contact);
+			newHousehold.AddContactInternal (contact);
+
+			return contact;
+		}
+
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
 		{
 			if (person.IsDeceased)
