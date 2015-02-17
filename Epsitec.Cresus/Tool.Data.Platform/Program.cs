@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Data.Platform;
@@ -67,6 +67,6 @@ namespace Epsitec.Tool.Data.Platform
 			zip.SaveFile (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "ZipCodeFolding.zip"));
 		}
 		
-		private static string rootPath = @"S:\Epsitec.Cresus";
+		private static string rootPath = @"S:\git\core\cresus\Epsitec.Cresus";
 	}
 }
