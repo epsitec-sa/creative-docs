@@ -584,3 +584,10 @@ Lancé le 15.02.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-02-12.xml -oldechfile:S:\eerv\eerv-2015-01-29.xml -output:s:\eerv\ech-diff-2015-02-12.md
+
+
+Lancé le 17.02.2015
+-------------------
+
+-exportsubscriptions -output:export-2015-02-26.txt -error:error-2015-02-26.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-02-26.txt -publicationdate:2015-02-26 -response:tamedia-2015-02-26.log
