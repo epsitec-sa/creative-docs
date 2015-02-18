@@ -2265,6 +2265,11 @@ AiderEventParticipant = [LVAA3]
       <L>
         <l t="Adresse normale" f="0"/>
       </L>
+      <f id="@AiderEmployee">
+        <C>
+	    <c id="[LVA4J]"><v><comp c="2" v="e[LVADK]/90" /></v></c>
+	</C>
+      </f>
     </d>
 
     <d cid="[LVG232]" teid="@AiderSubscription" tn="default" df="true" d="true" ec="true" ed="true" cvid="0" dvid="0" dg="@submenuBonneNouvelle">
