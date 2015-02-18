@@ -420,7 +420,7 @@ namespace Epsitec.Aider.Entities
 			return AiderGroupEntity.CreateSummary (() => this.GetParticipantCount (), count => this.GetParticipants (count).Select (x => x.Contact));
 		}
 
-		private static FormattedText CreateSummary(System.Func<int> getCount, System.Func<int, IEnumerable<AiderContactEntity>> getParticipants)
+		public static FormattedText CreateSummary(System.Func<int> getCount, System.Func<int, IEnumerable<AiderContactEntity>> getParticipants)
 		{
 			int count = getCount ();
 
@@ -442,6 +442,7 @@ namespace Epsitec.Aider.Entities
 				return TextFormatter.FormatText (count, "membres");
 			}
 		}
+
 		public FormattedText GetGroupAndSubGroupParticipantTitle()
 		{
 			var count = this.GetGroupAndSubGroupParticipantCount ();
