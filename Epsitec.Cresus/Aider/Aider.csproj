@@ -90,6 +90,7 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
+    <Compile Include="Controllers\ActionControllers\EmployeeJob\ActionAiderEmployeeJobViewController01RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
