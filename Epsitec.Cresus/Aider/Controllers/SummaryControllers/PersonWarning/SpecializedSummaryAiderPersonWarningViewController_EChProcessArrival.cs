@@ -33,7 +33,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
 				.EnableActionButton<ActionAiderPersonWarningViewController11CreateSubscription> ().IfTrue (this.Entity.Person.HouseholdContact.IsNotNull ())
 				.EnableActionButton<ActionAiderPersonWarningViewController13AssignHouseholdFromECh> ().IfTrue (this.Entity.Person.MainContact.IsNull ())
-				.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ().IfTrue (this.Entity.Person.MainContact.IsNotNull ());
+				.EnableActionButton<ActionAiderPersonWarningViewController7ProcessArrival> ().IfTrue (this.Entity.Person.MainContact.IsNotNull ())
+				.EnableActionButton<ActionAiderPersonWarningViewController100AddToBag> ().IfTrue (this.Entity.Person.MainContact.IsNotNull ());
 		}
 	}
 }

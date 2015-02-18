@@ -130,6 +130,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController5PrepareEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
+    <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
