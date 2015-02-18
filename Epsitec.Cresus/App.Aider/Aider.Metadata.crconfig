@@ -1721,6 +1721,10 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAN3]" title="Date début" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
