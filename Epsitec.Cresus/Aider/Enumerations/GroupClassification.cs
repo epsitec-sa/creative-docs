@@ -23,5 +23,6 @@ namespace Epsitec.Aider.Enumerations
 		Users					= 80,
 		ActingUser				= 90,
 		ResponsibleUser			= 100,
+		LastArrived             = 110
 	}
 }

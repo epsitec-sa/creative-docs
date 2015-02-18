@@ -1279,6 +1279,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 427));
 						}
 					}
+					//	designer:cap/LVOG63
+					public static global::Epsitec.Common.Types.Caption LastArrived
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 208));
+						}
+					}
 					//	designer:cap/LVAUB
 					public static global::Epsitec.Common.Types.Caption None
 					{
