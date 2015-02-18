@@ -389,7 +389,29 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsSummary()
 		{
-			return "Consulter la liste actuelle";
+			var count =  this.GetParticipantCount ();
+			var type  = "contact";
+
+			if (this.IsGroupedByHousehold)
+			{
+				type = "ménage";
+			}
+
+			if (count > 0)
+			{
+				if (count == 1)
+				{
+					return String.Format ("Un {0}", type);
+				}
+				else
+				{
+					return String.Format ("{0} {1}s", count, type);
+				}
+			}
+			else
+			{
+				return String.Format ("Aucun {0}", type);
+			}
 		}
 
 		public FormattedText GetExclusionsTitleSummary()
@@ -596,7 +618,21 @@ namespace Epsitec.Aider.Entities
 			this.LastUpdate = System.DateTime.UtcNow;
 		}
 
+		private int GetParticipantCount()
+		{
+			return this.ExecuteWithDataContext (c => this.CountParticipants (c), () => 0);		
+		}
 
+		private int CountParticipants (DataContext dataContext)
+		{
+			var example = new AiderMailingParticipantEntity ()
+			{
+				Mailing = this,
+				IsExcluded = false
+			};
+
+			return dataContext.GetCount (example);
+		}
 
 		private IEnumerable<AiderHouseholdEntity> GetParticipantsByHousehold (DataContext dataContext)
 		{
