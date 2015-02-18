@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Aider.Helpers;
 
 namespace Epsitec.Aider.Entities
 {
@@ -276,6 +277,47 @@ namespace Epsitec.Aider.Entities
 				.GetByExample (example)
 				.Where (x => x.Person.IsAlive)
 				.ToList ();
+		}
+
+		public string GetMainPhone()
+		{
+			return AiderContactsHelpers.GetMainPhone (this.GetContacts ());
+		}
+
+		public string GetMainEmail()
+		{
+			return AiderContactsHelpers.GetMainEmail (this.GetContacts ());
+		}
+
+
+		public string GetSecondaryPhone()
+		{
+			return AiderContactsHelpers.GetSecondaryPhone (this.GetContacts ());
+		}
+
+		public string GetSecondaryEmail()
+		{
+			return AiderContactsHelpers.GetSecondaryEmail (this.GetContacts ());
+		}
+
+		partial void GetMainEmail(ref string value)
+		{
+			value = this.GetMainEmail ();
+		}
+
+		partial void GetMainPhone(ref string value)
+		{
+			value = this.GetMainPhone ();
+		}
+
+		partial void GetSecondaryEmail(ref string value)
+		{
+			value = this.GetSecondaryEmail ();
+		}
+
+		partial void GetSecondaryPhone(ref string value)
+		{
+			value = this.GetSecondaryPhone ();
 		}
 
 

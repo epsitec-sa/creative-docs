@@ -404,6 +404,7 @@
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
+    <Compile Include="Helpers\AiderContactsHelpers.cs" />
     <Compile Include="Helpers\AiderParticipationRole.cs" />
     <Compile Include="Helpers\AiderParticipationsHelpers.cs" />
     <Compile Include="Helpers\FrenchLanguage.cs" />

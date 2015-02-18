@@ -355,6 +355,22 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVOG63]" title="E-mail primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVOH63]" title="E-mail secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVOI63]" title="Téléphone primaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVOJ63]" title="Téléphone secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <!--
         Address data
       -->
@@ -687,6 +703,14 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVOG63]" title="E-mail primaire (PM)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVOH63]" title="E-mail secondaire (PM)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAHH]" title="Téléphones" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -696,6 +720,14 @@ AiderEventParticipant = [LVAA3]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOE33]" title="Téléphone secondaire" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVOI63]" title="Téléphone primaire (PM)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA7E].[LVOJ63]" title="Téléphone secondaire (PM)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
