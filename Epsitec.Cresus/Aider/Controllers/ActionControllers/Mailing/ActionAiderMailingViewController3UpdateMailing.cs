@@ -19,7 +19,7 @@ using System.Linq;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (3)]
-	public sealed class ActionAiderMailingViewController3UpdateRecipients : ActionViewController<AiderMailingEntity>
+	public sealed class ActionAiderMailingViewController3UpdateMailing : ActionViewController<AiderMailingEntity>
 	{
 		public override FormattedText GetTitle()
 		{
@@ -41,6 +41,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
+			this.Entity.UpdateMailingExclusions (this.BusinessContext);
 			this.Entity.UpdateMailingParticipants (this.BusinessContext);
 		}
 	}

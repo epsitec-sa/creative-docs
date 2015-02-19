@@ -174,7 +174,7 @@
     <Compile Include="Controllers\ActionControllers\Household\ActionAiderHouseholdViewController5CleanHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController13AssignHouseholdFromECh.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController0AddRecipientOnDrop.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController3UpdateRecipients.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController3UpdateMailing.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController5AddGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController6RemoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController7AddHousehold.cs" />
