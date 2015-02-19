@@ -931,6 +931,10 @@ AiderEventParticipant = [LVAA3]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVACJ]" title="Employeur" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVA6J]" title="Détails collaborateur" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
