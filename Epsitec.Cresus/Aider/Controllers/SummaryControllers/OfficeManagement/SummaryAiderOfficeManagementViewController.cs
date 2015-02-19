@@ -133,6 +133,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetEventsInPreparationSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.EnableActionButton<ActionAiderOfficeManagementViewController5PrepareEvent> ()
+				.EnableActionButton<ActionAiderOfficeManagementViewController6CreatePlace> ()
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController3EventsInPreparation));
 
 			wall.AddBrick ()

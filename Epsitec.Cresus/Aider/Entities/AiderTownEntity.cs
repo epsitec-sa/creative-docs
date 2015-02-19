@@ -17,6 +17,8 @@ using System;
 
 using System.Linq;
 using System.Collections.Generic;
+using Epsitec.Aider.Data.Common;
+using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Entities
 {
@@ -176,15 +178,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				//TODO FIND TOWN BY SCOPE
-				//ParishAddressRepository parishRepo = ParishAddressRepository.Current;
-				//var parish = parishRepo.GetDetails(user.Parish.Name);
-				//Replacement code:
-				var example = new AiderTownEntity
-				{
-					SwissCantonCode = "VD"
-				};
-				return townRepository.GetByExample (example).ToList ();
+				ParishAddressRepository parishRepo = ParishAddressRepository.Current;
+				var parishInfo = parishRepo.GetDetails(user.Parish.Name);
+
+				var example = new AiderTownEntity ();
+				var request = new Request ();
+				request.RootEntity = example;
+				request.AddCondition (businessContext.DataContext, example, p => p.SwissZipCode == parishInfo.ZipCode);
+				return businessContext.GetByExample (example).ToList ();
 			}
 		}
 	}

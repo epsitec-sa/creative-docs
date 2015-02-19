@@ -37,6 +37,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
 				//	designer:cap/LVOI53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 178));
+				//	designer:cap/LVON63
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventPlace = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 215));
 				//	designer:cap/LVA1D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVGI22
@@ -116,6 +118,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
 				//	designer:cap/LVOI53
 				public const long ShowAiderEventParticipants = 0x3F5000780000B2L;
+				//	designer:cap/LVON63
+				public const long ShowAiderEventPlace = 0x3F5000780000D7L;
 				//	designer:cap/LVA1D
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVGI22

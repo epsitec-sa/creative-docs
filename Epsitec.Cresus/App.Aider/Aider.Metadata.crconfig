@@ -35,6 +35,7 @@ AiderEmployeeJob = [LVA7J]
 AiderReferee = [LVADJ]
 AiderEvent = [LVA93]
 AiderEventParticipant = [LVAA3]
+AiderEventPlace = [LVOH63]
 
 <meta>
   <T>
@@ -2171,6 +2172,21 @@ AiderEventParticipant = [LVAA3]
       </col>
     </t>
 
+    <t eid="@AiderEventPlace" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventPlace:[LVOI63]" title="Nom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventPlace:[LVOK63].[LVO913]" title="Gestion" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventPlace:[LVOJ63]" title="Partagé" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
   </T>
 
   <!-- DATASETS COMMANDS (MENU ENTRY) -->
@@ -2357,6 +2373,10 @@ AiderEventParticipant = [LVAA3]
     <d cid="[LVOI53]" teid="@AiderEventParticipant" tn="default" df="false" d="false" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEventParticipant:[LVAC3].[LVAEH]" /></M>
+    </d>
+
+    <d cid="[LVON63]" teid="@AiderEventPlace" tn="default" df="false" d="false" ec="false" ed="true" dg="@submenuDefs">
+      <R><r>@user</r></R>
     </d>
 
     <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">

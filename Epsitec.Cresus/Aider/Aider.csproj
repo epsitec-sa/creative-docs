@@ -95,6 +95,7 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
+    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4Delete.cs" />
@@ -354,6 +355,7 @@
     <Compile Include="Data\Subscription\SubscriptionUploader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderEmployeeJobEntity.cs" />
+    <Compile Include="Entities\AiderEventPlaceEntity.cs" />
     <Compile Include="Entities\AiderEventParticipantEntity.cs" />
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
