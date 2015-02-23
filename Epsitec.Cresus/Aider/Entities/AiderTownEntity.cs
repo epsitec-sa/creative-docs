@@ -19,6 +19,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Aider.Data.Common;
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.Entities
 {
@@ -179,13 +180,43 @@ namespace Epsitec.Aider.Entities
 			else
 			{
 				ParishAddressRepository parishRepo = ParishAddressRepository.Current;
-				var parishInfo = parishRepo.GetDetails(user.Parish.Name);
+				var parishInfo = parishRepo.GetDetailsByFullName (user.Parish.Name);
+				if (parishInfo != null)
+				{
+					var example = new AiderTownEntity ();
+					var request = new Request ();
+					request.RootEntity = example;
+					if (scope.Name == "Paroisse")
+					{
+						request.AddCondition (businessContext.DataContext, example, p => p.ZipCode == parishInfo.ZipCode.ToString ());
+					}
+					if (scope.Name == "Région")
+					{
+						var zips = parishRepo.FindAllAddressInformations ()
+												.Where (p => p.RegionCode == parishInfo.RegionCode)
+												.Select (p => p.ZipCode.ToString ()).ToList ();
 
-				var example = new AiderTownEntity ();
-				var request = new Request ();
-				request.RootEntity = example;
-				request.AddCondition (businessContext.DataContext, example, p => p.SwissZipCode == parishInfo.ZipCode);
-				return businessContext.GetByExample (example).ToList ();
+						request.AddCondition (businessContext.DataContext, example, p => SqlMethods.IsInSet (p.ZipCode, zips));
+					}
+					if (scope.Name == "Canton")
+					{
+						var zips = parishRepo.FindAllAddressInformations ()
+												.Select (p => p.ZipCode.ToString ()).ToList ();
+
+						request.AddCondition (businessContext.DataContext, example, p => SqlMethods.IsInSet (p.ZipCode, zips));
+					}
+
+					return businessContext.GetByRequest<AiderTownEntity> (request).ToList ();
+				} 
+				else
+				{
+					var example = new AiderTownEntity
+					{
+						SwissCantonCode = "VD"
+					};
+					return townRepository.GetByExample (example).ToList ();
+				}
+				
 			}
 		}
 	}

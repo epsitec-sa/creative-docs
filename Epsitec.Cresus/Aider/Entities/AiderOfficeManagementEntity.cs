@@ -346,7 +346,7 @@ namespace Epsitec.Aider.Entities
 			var request = new Request ();
 			request.RootEntity = example;
 			request.AddCondition (businessContext.DataContext, example, p => p.Shared == true || p.OfficeOwner == office);
-			return businessContext.GetByExample (example).ToList ();
+			return businessContext.GetByRequest<AiderEventPlaceEntity> (request).ToList ();
 		}
 
 		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()
