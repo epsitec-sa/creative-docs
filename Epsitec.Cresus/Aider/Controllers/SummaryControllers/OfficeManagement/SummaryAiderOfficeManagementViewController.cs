@@ -55,6 +55,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				this.CreateBricksGuestUser (wall);
 			}
 
+			if ((currentOffice.IsNotNull ()) ||
+				(currentUser.CanViewOfficeEvents ()))
+			{
+				this.CreateBricksForParishCollaborators (wall);
+			}
+
 			if (this.IsRegion)
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksReferees (wall);
@@ -84,7 +90,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
 				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksEventPlaceManagement (wall);
+				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);			
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksEmployees (wall, user);
@@ -92,8 +99,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			SummaryAiderOfficeManagementViewController.CreateBricksSettings (wall);
 			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);	
 		}
-		
-		
+
+		private void CreateBricksForParishCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			if (this.IsParish)
+			{
+				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
+			}
+		}
+
 		private static void CreateBricksParishMembers(BrickWall<AiderOfficeManagementEntity> wall)
 		{
 			wall.AddBrick (p => p.ParishGroup)
@@ -133,7 +147,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetEventsInPreparationSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.EnableActionButton<ActionAiderOfficeManagementViewController5PrepareEvent> ()
-				.EnableActionButton<ActionAiderOfficeManagementViewController6CreatePlace> ()
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController3EventsInPreparation));
 
 			wall.AddBrick ()
@@ -142,6 +155,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetEventsToValidateSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController4EventsToValidate));
+		}
+
+		private static void CreateBricksEventPlaceManagement(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title ("Gestion des lieux de célébrations")
+				.Text ("---")
+				.Attribute (BrickMode.DefaultToNoSubView)
+				.EnableActionButton<ActionAiderOfficeManagementViewController6CreatePlace> ();
 		}
 
 		private static void CreateBricksDerogations(BrickWall<AiderOfficeManagementEntity> wall)
