@@ -20,6 +20,26 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderEventPlaceEntity
 	{
+		public override FormattedText GetSummary()
+		{
+			var additionalInfo = "";
+			if (this.OfficeOwner.IsNotNull ())
+			{
+				additionalInfo += "\n" + this.OfficeOwner.OfficeShortName;
+			}
+
+			if (this.Shared)
+			{
+				additionalInfo += "\n(lieu partagé)";
+			}
+			return TextFormatter.FormatText (this.Name + additionalInfo);
+		}
+
+		public override FormattedText GetCompactSummary()
+		{
+			return TextFormatter.FormatText (this.Name);
+		}
+
 		public static AiderEventPlaceEntity Create(BusinessContext context, string placeName,  bool isSharedPlace, AiderOfficeManagementEntity office)
 		{
 			var place = context.CreateAndRegisterEntity<AiderEventPlaceEntity> ();
