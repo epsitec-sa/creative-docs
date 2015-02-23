@@ -216,6 +216,7 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderEventPlaceViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderUserViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderLegalPersonViewController0.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventPlaceViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController2WithoutContact.cs" />
