@@ -15,7 +15,8 @@
     <ErrorReportUrlHistory />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>

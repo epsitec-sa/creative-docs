@@ -48,8 +48,7 @@ namespace Epsitec.Aider.Entities
 			Enumerations.EventType type,
 			AiderOfficeManagementEntity office,
 			AiderTownEntity town,
-			Enumerations.EventPlaceType placeType,
-			string placeDescription,
+			AiderEventPlaceEntity place,
 			Date celebrationDate)
 		{
 			var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
@@ -58,8 +57,7 @@ namespace Epsitec.Aider.Entities
 					
 			newEvent.Office = office;
 			newEvent.Town = town;
-			newEvent.PlaceType = placeType;
-			newEvent.PlaceName = placeDescription;
+			newEvent.Place = place;
 
 			newEvent.Date = celebrationDate;
 			return newEvent;

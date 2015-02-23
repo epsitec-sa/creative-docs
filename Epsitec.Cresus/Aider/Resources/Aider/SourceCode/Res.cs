@@ -37,6 +37,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
 				//	designer:cap/LVOI53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 178));
+				//	designer:cap/LVOR63
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventPlace = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 219));
 				//	designer:cap/LVA1D
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 417));
 				//	designer:cap/LVGI22
@@ -116,6 +118,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
 				//	designer:cap/LVOI53
 				public const long ShowAiderEventParticipants = 0x3F5000780000B2L;
+				//	designer:cap/LVOR63
+				public const long ShowAiderEventPlace = 0x3F5000780000DBL;
 				//	designer:cap/LVA1D
 				public const long ShowAiderGroup = 0x3F50000A0001A1L;
 				//	designer:cap/LVGI22
@@ -359,6 +363,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderEventOfficeReport = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 203));
 			//	designer:cap/LVAA3
 			public static readonly Epsitec.Common.Types.StructuredType AiderEventParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 106));
+			//	designer:cap/LVOL63
+			public static readonly Epsitec.Common.Types.StructuredType AiderEventPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 213));
 			//	designer:cap/LVA54
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133));
 			//	designer:cap/LVA2A
@@ -2650,6 +2656,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 162);
 				//	designer:cap/LVOJ53
 				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 179);
+				//	designer:cap/LVOQ63
+				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 218);
 				//	designer:cap/LVO953
 				public static readonly global::Epsitec.Common.Support.Druid PlaceName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 169);
 				//	designer:cap/LVO853
@@ -2688,6 +2696,23 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 108);
 				//	designer:cap/LVAD3
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 109);
+			}
+			
+			public static class AiderEventPlace
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderEventPlace.Events, null);
+				}
+				
+				//	designer:cap/LVOP63
+				public static readonly global::Epsitec.Common.Support.Druid Events = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 217);
+				//	designer:cap/LVOM63
+				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 214);
+				//	designer:cap/LVOO63
+				public static readonly global::Epsitec.Common.Support.Druid OfficeOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 216);
+				//	designer:cap/LVON63
+				public static readonly global::Epsitec.Common.Support.Druid Shared = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 215);
 			}
 			
 			public static class AiderEventReport
@@ -4039,6 +4064,7 @@ namespace Epsitec.Aider
 			Fields.AiderEvent._Initialize ();
 			Fields.AiderEventOfficeReport._Initialize ();
 			Fields.AiderEventParticipant._Initialize ();
+			Fields.AiderEventPlace._Initialize ();
 			Fields.AiderEventReport._Initialize ();
 			Fields.AiderGroup._Initialize ();
 			Fields.AiderGroupDef._Initialize ();
