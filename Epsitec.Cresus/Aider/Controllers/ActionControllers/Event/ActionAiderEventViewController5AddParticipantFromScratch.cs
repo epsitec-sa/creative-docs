@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 				.Field<Date> ()
 					.Title ("Date de naissance")
-					.InitialValue (new Date ())
+					.InitialValue (Date.Today)
 				.End ()
 				.Field<Enumerations.EventParticipantRole> ()
 					.Title ("Rôle")
