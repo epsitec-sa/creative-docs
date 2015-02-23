@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
-			var actors = this.GetMainActors ().Select (p => p.GetDisplayName ()).Join (" & ");
+			var actors = this.GetMainActors ().Select (p => p.GetDisplayName ()).Join ("\n");
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
@@ -91,7 +91,7 @@ namespace Epsitec.Aider.Entities
 
 			case Enumerations.EventType.Confirmation:
 			case Enumerations.EventType.EndOfCatechism:
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
 				break;
 			case Enumerations.EventType.FuneralService:
 				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
