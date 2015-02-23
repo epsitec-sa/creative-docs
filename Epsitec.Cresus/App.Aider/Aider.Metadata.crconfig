@@ -2410,7 +2410,7 @@ AiderEventPlace = [LVOL63]
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEventParticipant:[LVAC3].[LVAEH]" /></M>
     </d>
 
-    <d cid="[LVOR63]" teid="@AiderEventPlace" tn="default" df="true" d="false" ec="false" ed="true" dg="@submenuDefs">
+    <d cid="[LVOR63]" teid="@AiderEventPlace" tn="default" df="true" d="true" ec="true" ed="false" cvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
     </d>
 
