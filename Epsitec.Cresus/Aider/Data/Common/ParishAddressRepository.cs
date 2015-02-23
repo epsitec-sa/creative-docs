@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Data.Common
 		{
 			this.addresses = new Dictionary<string, ParishAddresses> ();
 			this.infos     = new Dictionary<string, ParishAddressInformation> ();
-
+			this.infosByFullname = new Dictionary<string, ParishAddressInformation> ();
 			foreach (var info in ParishAddressRepository.GetParishInformations (lines))
 			{
 				var key  = ParishAddressRepository.GetKey (info.ZipCode, info.TownNameOfficial);
@@ -34,6 +34,7 @@ namespace Epsitec.Aider.Data.Common
 				}
 
 				this.infos[info.ParishName] = info;
+				this.infosByFullname[info.FullParishName] = info;
 			}
 		}
 
@@ -103,6 +104,20 @@ namespace Epsitec.Aider.Data.Common
 			ParishAddressInformation info;
 
 			this.infos.TryGetValue (parishName, out info);
+
+			return info;
+		}
+
+		/// <summary>
+		/// Gets the details about the specified parish.
+		/// </summary>
+		/// <param name="fullParishName">Fullname of the parish.</param>
+		/// <returns>The detailes information about the parish.</returns>
+		public ParishAddressInformation GetDetailsByFullName(string fullParishName)
+		{
+			ParishAddressInformation info;
+
+			this.infosByFullname.TryGetValue (fullParishName, out info);
 
 			return info;
 		}
@@ -194,5 +209,6 @@ namespace Epsitec.Aider.Data.Common
 		
 		private readonly Dictionary<string, ParishAddresses>	addresses;
 		private readonly Dictionary<string, ParishAddressInformation> infos;
+		private readonly Dictionary<string, ParishAddressInformation> infosByFullname;
 	}
 }
