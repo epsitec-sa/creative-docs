@@ -1279,12 +1279,12 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 427));
 						}
 					}
-					//	designer:cap/LVOG63
+					//	designer:cap/LVOK63
 					public static global::Epsitec.Common.Types.Caption LastArrived
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 208));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 212));
 						}
 					}
 					//	designer:cap/LVAUB
@@ -2907,6 +2907,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 531);
 				//	designer:cap/LVAN7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 247);
+				//	designer:cap/LVOG63
+				public static readonly global::Epsitec.Common.Support.Druid MainEmail = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 208);
+				//	designer:cap/LVOI63
+				public static readonly global::Epsitec.Common.Support.Druid MainPhone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 210);
 				//	designer:cap/LVAV8
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 287);
 				//	designer:cap/LVACF
@@ -2915,6 +2919,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 491);
 				//	designer:cap/LVA17
 				public static readonly global::Epsitec.Common.Support.Druid RemovalReason = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 225);
+				//	designer:cap/LVOH63
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryEmail = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 209);
+				//	designer:cap/LVOJ63
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryPhone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 211);
 				//	designer:cap/LVAS6
 				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 220);
 				//	designer:cap/LVA2F
