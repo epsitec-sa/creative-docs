@@ -707,12 +707,12 @@
   <data name="Val.Enum.EventParticipantRole.Husband" id="ON43">&lt;s:data id="_0" f:Name="Husband" f:Labels="{Collection {Text 'Époux'}}" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.Spouse" id="OO43">&lt;s:data id="_0" f:Name="Spouse" f:Labels="{Collection {Text 'Épouse'}}" /&gt;</data>
   <data name="Val.Enum.EventParticipantRole.DeceasedPerson" id="OP43">&lt;s:data id="_0" f:Name="DeceasedPerson" f:Labels="{Collection {Text 'Défunt'}}" /&gt;</data>
-  <data name="Val.Enum.EventType.Blessing" id="OQ43">&lt;s:data id="_0" f:Name="Blessing" f:Labels="{Collection {Text 'Bénédiction'}}" /&gt;</data>
+  <data name="Val.Enum.EventType.Blessing" id="OQ43">&lt;s:data id="_0" f:Name="Blessing" f:Labels="{Collection {Text 'Bénédiction d’enfants'}}" /&gt;</data>
   <data name="Val.Enum.EventType.Baptism" id="OR43">&lt;s:data id="_0" f:Name="Baptism" f:Labels="{Collection {Text 'Baptême'}}" /&gt;</data>
   <data name="Val.Enum.EventType.Confirmation" id="OS43">&lt;s:data id="_0" f:Name="Confirmation" f:Labels="{Collection {Text 'Confirmation'}}" /&gt;</data>
-  <data name="Val.Enum.EventType.EndOfCatechism" id="OT43">&lt;s:data id="_0" f:Name="EndOfCatechism" f:Labels="{Collection {Text 'Fin de catéchisme'}}" /&gt;</data>
-  <data name="Val.Enum.EventType.Marriage" id="OU43">&lt;s:data id="_0" f:Name="Marriage" f:Labels="{Collection {Text 'Mariage'}}" /&gt;</data>
-  <data name="Val.Enum.EventType.CelebrationRegisteredPartners" id="OV43">&lt;s:data id="_0" f:Name="CelebrationRegisteredPartners" f:Labels="{Collection {Text 'Célébration pour partenaires enregistrés'}}" /&gt;</data>
+  <data name="Val.Enum.EventType.EndOfCatechism" id="OT43">&lt;s:data id="_0" f:Name="EndOfCatechism" f:Labels="{Collection {Text 'Bénédiction des catéchumènes'}}" /&gt;</data>
+  <data name="Val.Enum.EventType.Marriage" id="OU43">&lt;s:data id="_0" f:Name="Marriage" f:Labels="{Collection {Text 'Bénédiction de mariage'}}" /&gt;</data>
+  <data name="Val.Enum.EventType.CelebrationRegisteredPartners" id="OV43">&lt;s:data id="_0" f:Name="CelebrationRegisteredPartners" f:Labels="{Collection {Text 'Célébration pour les partenaires enregistrés'}}" /&gt;</data>
   <data name="Val.Enum.EventType.FuneralService" id="O053">&lt;s:data id="_0" f:Name="FuneralService" f:Labels="{Collection {Text 'Service funèbre'}}" /&gt;</data>
   <data name="Fld.AiderPlace.Office" id="O153">&lt;s:data id="_0" f:Name="Office" /&gt;</data>
   <data name="Fld.AiderEvent.Office" id="O253">&lt;s:data id="_0" f:Name="Office" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
