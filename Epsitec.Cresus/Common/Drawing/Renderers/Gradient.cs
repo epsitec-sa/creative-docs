@@ -32,11 +32,6 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 			set
 			{
-				if (value == null)
-				{
-					throw new System.NullReferenceException ("Rasterizer.Transform");
-				}
-				
 				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
 				//	Graphics.UpdateTransform...
 				
