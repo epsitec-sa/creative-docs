@@ -70,7 +70,6 @@ namespace Epsitec.Aider.Entities
 					var employee = this.Contact.Person.Employee;
 					switch (employee.EmployeeType)
 					{
-						case Enumerations.EmployeeType.Employee:
 						case Enumerations.EmployeeType.Diacre:
 						case Enumerations.EmployeeType.Pasteur:
 							ministerBypass = true;
