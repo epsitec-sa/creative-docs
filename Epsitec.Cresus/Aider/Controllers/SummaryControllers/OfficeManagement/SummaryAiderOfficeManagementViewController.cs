@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
 				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksEventPlaceManagement (wall);
+				//SummaryAiderOfficeManagementViewController.CreateBricksEventPlaceManagement (wall);
 				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);			
 			}
 
