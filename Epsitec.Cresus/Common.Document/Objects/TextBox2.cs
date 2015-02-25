@@ -485,13 +485,8 @@ namespace Epsitec.Common.Document.Objects
 		public override Drawing.Point ConvertInTextFrame(Drawing.Point pos)
 		{
 			//	Calcule la coordonnée transformée dans le texte frame.
-			if ( this.transform != null )
-			{
-				pos = this.transform.TransformInverse(pos);
-			}
-
-			return pos;
-		}
+			return this.transform.TransformInverse (pos);
+        }
 
 
 		protected override void DrawText(IPaintPort port, DrawingContext drawingContext, InternalOperation op)

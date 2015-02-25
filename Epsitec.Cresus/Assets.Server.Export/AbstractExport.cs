@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using System.Collections.Generic;
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (amount.HasValue)
 				{
-					return amount.Value.ToString ("0.00");  // toujours 2 décimales
+					return amount.Value.ToString ("0.00", System.Globalization.CultureInfo.InvariantCulture);  // toujours 2 décimales
 				}
 				else
 				{
@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (rate.HasValue)
 				{
-					return rate.Value.ToString ("P");
+					return rate.Value.ToString ("P", System.Globalization.CultureInfo.InvariantCulture);
 				}
 				else
 				{
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (date.HasValue)
 				{
-					return date.Value.ToString ("dd.MM.yyyy");
+					return date.Value.ToString ("dd.MM.yyyy", System.Globalization.CultureInfo.InvariantCulture);
 				}
 				else
 				{

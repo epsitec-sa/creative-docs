@@ -2121,7 +2121,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		///	designer:fld/J1A72/J1AD2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[J1AD2]")]
-		public int IntegerValue
+		public int? IntegerValue
 		{
 			get
 			{
@@ -2129,11 +2129,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 			}
 			set
 			{
-				int oldValue = this.IntegerValue;
+				int? oldValue = this.IntegerValue;
 				if (oldValue != value || !this.IsFieldDefined("[J1AD2]"))
 				{
 					this.OnIntegerValueChanging (oldValue, value);
-					this.SetField<int> ("[J1AD2]", oldValue, value);
+					this.SetField<int?> ("[J1AD2]", oldValue, value);
 					this.OnIntegerValueChanged (oldValue, value);
 				}
 			}
@@ -2217,8 +2217,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnDecimalValueChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnEnumValueChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum newValue);
 		partial void OnEnumValueChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.SimpleEnum newValue);
-		partial void OnIntegerValueChanging(int oldValue, int newValue);
-		partial void OnIntegerValueChanged(int oldValue, int newValue);
+		partial void OnIntegerValueChanging(int? oldValue, int? newValue);
+		partial void OnIntegerValueChanged(int? oldValue, int? newValue);
 		partial void OnLongIntegerValueChanging(long oldValue, long newValue);
 		partial void OnLongIntegerValueChanged(long oldValue, long newValue);
 		partial void OnStringValueChanging(string oldValue, string newValue);

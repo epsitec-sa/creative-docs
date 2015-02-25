@@ -2780,9 +2780,6 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 
-			System.Diagnostics.Debug.Assert (sourceColumnKey != null);
-			System.Diagnostics.Debug.Assert (targetTableKey  != null);
-
 			SqlFieldList fields = new SqlFieldList ();
 			SqlFieldList conds  = new SqlFieldList ();
 

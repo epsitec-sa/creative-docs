@@ -41,13 +41,29 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public static bool operator!=(PdfStyle s1, PdfStyle s2)
 		{
-			return s1.LabelColor      != s2.LabelColor
-				|| s1.EvenColor       != s2.EvenColor
-				|| s1.OddColor        != s2.OddColor
-				|| s1.BorderColor     != s2.BorderColor
-				|| s1.BorderThickness != s2.BorderThickness;
+			return !(s1 == s2);
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj is PdfStyle)
+			{
+				return this.Equals ((PdfStyle) obj);
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override int GetHashCode()
+		{
+			return this.LabelColor.GetHashCode ()
+				 ^ this.EvenColor.GetHashCode ()
+				 ^ this.OddColor.GetHashCode ()
+				 ^ this.BorderColor.GetHashCode ()
+				 ^ this.BorderThickness.GetHashCode ();
+		}
 
 		#region IEquatable<PdfStyle> Members
 		public bool Equals(PdfStyle other)

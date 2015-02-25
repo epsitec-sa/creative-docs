@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private static readonly System.Func<double, T, T, T> computeFunc;
+		private static System.Func<double, T, T, T> computeFunc;
 
 		private readonly T					v1;
 		private readonly T					v2;

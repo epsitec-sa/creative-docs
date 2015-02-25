@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 					(
 						dataContext,
 						new ValueDataEntity (),
-						(Expression<Func<ValueDataEntity, int>>) (e => e.IntegerValue)
+						(Expression<Func<ValueDataEntity, int?>>) (e => e.IntegerValue)
 					)
 				);
 			}
