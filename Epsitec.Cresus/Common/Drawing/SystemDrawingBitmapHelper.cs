@@ -591,7 +591,7 @@ namespace Epsitec.Common.Drawing.Platform
 				return SystemDrawingBitmapHelper.CreateGrayImage (bitmap);
 			}
 
-			//	Do we really want to create a 32-bit output file ? Probably not...
+			//	TODO: Do we really want to create a 32-bit output file ? Probably not...
 
 			throw new System.NotImplementedException ("Code not ready for use");
 

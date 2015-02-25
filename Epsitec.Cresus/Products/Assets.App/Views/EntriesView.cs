@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		private void UpdateToolbars()
+		protected override void UpdateToolbars()
 		{
 			this.mainToolbar.SetVisibility (Res.Commands.Main.Edit,   false);
 			this.mainToolbar.SetVisibility (Res.Commands.Edit.Accept, false);
