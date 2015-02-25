@@ -2668,6 +2668,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 170);
 				//	designer:cap/LVA04
 				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 128);
+				//	designer:cap/LVOS63
+				public static readonly global::Epsitec.Common.Support.Druid Validator = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 220);
 			}
 			
 			public static class AiderEventOfficeReport
