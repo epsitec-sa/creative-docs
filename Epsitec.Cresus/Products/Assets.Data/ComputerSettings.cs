@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("ComputerSettings");
 
-			writer.WriteElementString ("DocumentVersion",  DataMandat.DocumentVersion);
+			writer.WriteElementString ("DocumentVersion",  DataMandat.SerializationVersion);
 			writer.WriteElementString ("SoftwareLanguage", this.SoftwareLanguage);
 			writer.WriteElementString ("MandatDirectory",  this.MandatDirectory);
 			writer.WriteElementString ("MandatFilename",   this.MandatFilename);

@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.Data
 					this.groups.Count, this.persons.Count, this.reports.Count, this.rangeAccounts.Count);
 
 				return new MandatInfo (this.SoftwareKey, this.SoftwareVersion, this.SoftwareLanguage,
-					this.name, this.guid, DataMandat.DocumentVersion, this.DocummentLanguage, statistics);
+					this.name, this.guid, DataMandat.SerializationVersion, this.DocummentLanguage, statistics);
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Assets.Data
 			}
 		}
 
-		public const string						DocumentVersion = "1.0";
+		public const string						SerializationVersion = "1.0";
 
 		private int								EventCount
 		{
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("Mandat");
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
 			this.SerializeDefinitions (writer);
 			this.SerializeObjects (writer);
 
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("Mandat");
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
 			this.SerializeAccounts (writer);
 			this.SerializeVatCodes (writer);
 
