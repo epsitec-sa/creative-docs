@@ -686,14 +686,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Retourne le nom de l'utilisateur courant (par exemple "Daniel").
 			get
 			{
-				try
-				{
-					return System.Environment.UserName;
-				}
-				catch
-				{
-					return "anonymous";  // garde-fou
-				}
+				return System.Environment.UserName ?? "anonymous";
 			}
 		}
 
