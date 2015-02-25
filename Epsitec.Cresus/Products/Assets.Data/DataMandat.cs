@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Mandat");
+			writer.WriteStartElement ("Document");
 
 			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
 			this.SerializeDefinitions (writer);
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.Assets.Data
 		public void SerializeAccountsAndCo(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Mandat");
+			writer.WriteStartElement ("Document");
 
 			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
 			this.SerializeAccounts (writer);
@@ -439,7 +439,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Mandat":
+						case "Document":
 							this.DeserializeMandat (reader);
 							break;
 					}
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Mandat":
+						case "Document":
 							this.DeserializeAccountsMandat (reader);
 							break;
 					}
