@@ -232,6 +232,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderEventPlaceViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeReportViewController.cs" />
