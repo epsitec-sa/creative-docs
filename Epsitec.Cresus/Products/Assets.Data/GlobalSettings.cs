@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement ("GlobalSettings");
 
-			writer.WriteElementString ("DocumentVersion",  DataMandat.DocumentVersion);
+			writer.WriteElementString ("DocumentVersion",  DataMandat.SerializationVersion);
 			writer.WriteElementString ("MandatLanguage",   this.MandatLanguage);
 			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
 			writer.WriteElementString ("CopyNameStrategy", this.CopyNameStrategy.ToStringIO ());

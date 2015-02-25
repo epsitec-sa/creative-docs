@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			}
 
 			decimal d;
-			if (decimal.TryParse (text, out d))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
 			{
 				return d / 100;
 			}
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			text = text.Replace ("—", "0");
 
 			decimal d;
-			if (decimal.TryParse (text, out d))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
 			{
 				return d*neg;
 			}
@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			}
 
 			decimal i;
-			if (decimal.TryParse (text, out i))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out i))
 			{
 				return i;
 			}
@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 		{
 			//	Parse un entier.
 			int i;
-			if (int.TryParse (text, out i))
+			if (int.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out i))
 			{
 				return i;
 			}

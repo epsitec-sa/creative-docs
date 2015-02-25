@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			writer.WriteStartDocument ();
 			writer.WriteStartElement ("LocalSettings");
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
 
 			LocalSettings.SerializeColumnsState (writer);
 			LocalSettings.SerializeSearchInfo (writer);

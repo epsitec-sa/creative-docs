@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private static bool				useRows = true;
 
 		private readonly Widget			parent;
-		private readonly string			title;
+		private readonly new string		title;
 
 		private Widget					optionsContainer;
 		private CheckButton				optionCheckButtonColumns;

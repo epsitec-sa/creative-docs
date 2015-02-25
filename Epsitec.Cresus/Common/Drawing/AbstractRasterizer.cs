@@ -65,11 +65,6 @@ namespace Epsitec.Common.Drawing
 			}
 			set
 			{
-				if (value == null)
-				{
-					throw new System.NullReferenceException ("Rasterizer.Transform");
-				}
-				
 				if (this.transform != value)
 				{
 					this.transform = value;

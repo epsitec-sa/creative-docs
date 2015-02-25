@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					switch (reader.Name)
 					{
-						case "FileDescription":
+						case X.FileDescription:
 							info = DataIO.OpenInfoDescription (reader);
 							break;
 					}
@@ -256,30 +256,30 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							version = reader.ReadElementContentAsString ();
 							break;
 
-						case "Software":
-							softwareId       = reader["id"];
-							softwareVersion  = reader["ver"];
-							softwareLanguage = reader["lang"];
+						case X.Software:
+							softwareId       = reader[X.Attr.Id];
+							softwareVersion  = reader[X.Attr.Ver];
+							softwareLanguage = reader[X.Attr.Lang];
 							break;
 
-						case "File":
-							fileName     = reader["name"];
-							fileGuid     = reader["id"].ParseGuid ();
-							fileVersion  = reader["ver"];
-							fileLanguage = reader["lang"];
+						case X.File:
+							fileName     = reader[X.Attr.Name];
+							fileGuid     = reader[X.Attr.Id].ParseGuid ();
+							fileVersion  = reader[X.Attr.Ver];
+							fileLanguage = reader[X.Attr.Lang];
 							break;
 
-						case "Templates":
+						case X.Templates:
 							break;
 
-						case "FileSources":
+						case X.FileSources:
 							break;
 
-						case "About":
+						case X.About:
 							statistics = DataIO.OpenStatistics (reader);
 							break;
 					}
@@ -307,41 +307,41 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Summary")
+					if (reader.Name == X.Summary)
 					{
-						string summary = reader["text"];
+						string summary = reader[X.Attr.Text];
 					}
-					else if (reader.Name == "Data")
+					else if (reader.Name == X.Data)
 					{
-						int i = IOHelpers.ParseInt (reader["value"]);
+						int i = IOHelpers.ParseInt (reader[X.Attr.Value]);
 
-						switch (reader["name"])
+						switch (reader[X.Attr.Name])
 						{
-							case "AssetCount":
+							case X.AssetCount:
 								assetCount = i;
 								break;
 
-							case "EventCount":
+							case X.EventCount:
 								eventCount = i;
 								break;
 
-							case "CategoryCount":
+							case X.CategoryCount:
 								categoryCount = i;
 								break;
 
-							case "GroupCount":
+							case X.GroupCount:
 								groupCount = i;
 								break;
 
-							case "PersonCount":
+							case X.PersonCount:
 								personCount = i;
 								break;
 
-							case "ReportCount":
+							case X.ReportCount:
 								reportCount = i;
 								break;
 
-							case "AccountCount":
+							case X.AccountCount:
 								accountCount = i;
 								break;
 						}
@@ -386,27 +386,27 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		private static void SaveInfo(System.Xml.XmlWriter writer, MandatInfo info)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("FileDescription");
+			writer.WriteStartElement (X.FileDescription);
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.DocumentVersion);
+			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
 
-			writer.WriteStartElement    ("Software");
-			writer.WriteAttributeString ("id",   info.SoftwareId);
-			writer.WriteAttributeString ("ver",  info.SoftwareVersion);
-			writer.WriteAttributeString ("lang", info.SoftwareLanguage);
+			writer.WriteStartElement    (X.Software);
+			writer.WriteAttributeString (X.Attr.Id,   info.SoftwareId);
+			writer.WriteAttributeString (X.Attr.Ver,  info.SoftwareVersion);
+			writer.WriteAttributeString (X.Attr.Lang, info.SoftwareLanguage);
 			writer.WriteEndElement      ();
 
-			writer.WriteStartElement    ("File");
-			writer.WriteAttributeString ("name", info.FileName);
-			writer.WriteAttributeString ("id",   info.FileGuid.ToStringIO ());
-			writer.WriteAttributeString ("ver",  info.FileVersion);
-			writer.WriteAttributeString ("lang", info.FileLanguage);
+			writer.WriteStartElement    (X.File);
+			writer.WriteAttributeString (X.Attr.Name, info.FileName);
+			writer.WriteAttributeString (X.Attr.Id,   info.FileGuid.ToStringIO ());
+			writer.WriteAttributeString (X.Attr.Ver,  info.FileVersion);
+			writer.WriteAttributeString (X.Attr.Lang, info.FileLanguage);
 			writer.WriteEndElement ();
 
-			writer.WriteStartElement    ("Templates");
+			writer.WriteStartElement    (X.Templates);
 			writer.WriteEndElement      ();
 
-			writer.WriteStartElement    ("FileSources");
+			writer.WriteStartElement    (X.FileSources);
 			writer.WriteEndElement      ();
 
 			DataIO.SaveStatistics (writer, info.Statistics);
@@ -420,28 +420,28 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static void SaveStatistics(System.Xml.XmlWriter writer, MandatStatistics statistics)
 		{
-			writer.WriteStartElement ("About");
+			writer.WriteStartElement (X.About);
 
-			writer.WriteStartElement ("Summary");
-			writer.WriteAttributeString ("text", statistics.Summary);
+			writer.WriteStartElement (X.Summary);
+			writer.WriteAttributeString (X.Attr.Text, statistics.Summary);
 			writer.WriteEndElement ();
 
-			DataIO.SaveStatistics (writer, "AssetCount",    statistics.AssetCount);
-			DataIO.SaveStatistics (writer, "EventCount",    statistics.EventCount);
-			DataIO.SaveStatistics (writer, "CategoryCount", statistics.CategoryCount);
-			DataIO.SaveStatistics (writer, "GroupCount",    statistics.GroupCount);
-			DataIO.SaveStatistics (writer, "PersonCount",   statistics.PersonCount);
-			DataIO.SaveStatistics (writer, "ReportCount",   statistics.ReportCount);
-			DataIO.SaveStatistics (writer, "AccountCount",  statistics.AccountCount);
+			DataIO.SaveStatistics (writer, X.AssetCount,    statistics.AssetCount);
+			DataIO.SaveStatistics (writer, X.EventCount,    statistics.EventCount);
+			DataIO.SaveStatistics (writer, X.CategoryCount, statistics.CategoryCount);
+			DataIO.SaveStatistics (writer, X.GroupCount,    statistics.GroupCount);
+			DataIO.SaveStatistics (writer, X.PersonCount,   statistics.PersonCount);
+			DataIO.SaveStatistics (writer, X.ReportCount,   statistics.ReportCount);
+			DataIO.SaveStatistics (writer, X.AccountCount,  statistics.AccountCount);
 
 			writer.WriteEndElement ();
 		}
 
 		private static void SaveStatistics(System.Xml.XmlWriter writer, string name, int count)
 		{
-			writer.WriteStartElement ("Data");
-			writer.WriteAttributeString ("name", name);
-			writer.WriteAttributeString ("value", count.ToStringIO ());
+			writer.WriteStartElement (X.Data);
+			writer.WriteAttributeString (X.Attr.Name, name);
+			writer.WriteAttributeString (X.Attr.Value, count.ToStringIO ());
 			writer.WriteEndElement ();
 		}
 		#endregion
@@ -686,14 +686,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			//	Retourne le nom de l'utilisateur courant (par exemple "Daniel").
 			get
 			{
-				try
-				{
-					return System.Environment.UserName;
-				}
-				catch
-				{
-					return "anonymous";  // garde-fou
-				}
+				return System.Environment.UserName ?? "anonymous";
 			}
 		}
 

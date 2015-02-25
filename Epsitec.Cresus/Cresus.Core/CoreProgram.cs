@@ -20,8 +20,9 @@ namespace Epsitec.Cresus.Core
 		public static void Main(string[] args)
 		{
 			GeneralExceptionCatcher.Setup ();
+            GeneralExceptionCatcher.AbortOnException = true;
 
-			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
+            CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
 
 			if ((args.Length > 0) &&
 				(args[0] != "-start"))

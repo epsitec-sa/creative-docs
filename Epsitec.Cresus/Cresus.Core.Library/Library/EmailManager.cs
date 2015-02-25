@@ -31,8 +31,6 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		#endregion
-
-		private static IMailHub			hub;
 	}
 }
 
