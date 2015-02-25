@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -48,9 +49,31 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					throw new BusinessRuleException ("La gestion n'est pas de type paroisse");
 				}
 			}
-			
 
-			return AiderEventPlaceEntity.Create (this.BusinessContext, name, shared, office);
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			if (user.CanViewOfficeDetails ())
+			{
+				return AiderEventPlaceEntity.Create (this.BusinessContext, name, shared, office);
+			}
+			else
+			{
+				if (office == null)
+				{
+					throw new BusinessRuleException ("Veuillez choisir une gestion!");
+				}
+				else
+				{
+					if(user.Office.OfficeName != office.OfficeName)
+					{
+						throw new BusinessRuleException ("Vous n'êtes pas gestionnaire de cette gestion");
+					}
+					else
+					{
+						return AiderEventPlaceEntity.Create (this.BusinessContext, name, shared, office);
+					}
+				}
+			}
+			
 		}
 	}
 }
