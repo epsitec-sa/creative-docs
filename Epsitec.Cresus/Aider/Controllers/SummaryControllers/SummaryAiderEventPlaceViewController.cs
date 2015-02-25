@@ -19,11 +19,23 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderEventPlaceEntity> wall)
 		{
-			wall.AddBrick ()
-			.Icon ("Base.AiderPlace")
-			.Title ("Lieu de célébration")
-			.Text (x => x.GetSummary ())
-			.Attribute (BrickMode.DefaultToNoSubView);
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			if(user.CanViewOfficeDetails () || user.Office.OfficeName == this.Entity.OfficeOwner.OfficeName)
+			{
+				wall.AddBrick ()
+					.Icon ("Base.AiderPlace")
+					.Title ("Lieu de célébration")
+					.Text (x => x.GetSummary ())
+					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+			}
+			else
+			{
+				wall.AddBrick ()
+					.Icon ("Base.AiderPlace")
+					.Title ("Lieu de célébration")
+					.Text (x => x.GetSummary ())
+					.Attribute (BrickMode.DefaultToNoSubView);
+			}
 		}
 	}
 }
