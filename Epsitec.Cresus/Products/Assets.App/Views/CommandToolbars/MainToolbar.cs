@@ -329,11 +329,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			{
 				icon += this.simulation.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
-
-			if (this.buttonSimulation != null)
-			{
-				this.buttonSimulation.IconUri = Misc.GetResourceIconUri (icon);
-			}
 		}
 
 		private void UpdateLanguagesButton()
@@ -617,7 +612,6 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 		private ButtonWithRedDot				buttonWarnings;
 		private ButtonWithRedDot				buttonViewMode;
-		private ButtonWithRedDot				buttonSimulation;
 		private Button							buttonLanguages;
 
 		private ViewType						viewType;

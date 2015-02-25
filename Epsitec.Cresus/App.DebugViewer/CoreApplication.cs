@@ -210,7 +210,6 @@ namespace Epsitec.Cresus.DebugViewer
 
 		private BusinessContext					businessContext;
 		private MainViewController				mainController;
-		private Accessors.LogDataAccessor		mainAccessor;
 		private Accessors.LogFolderDataAccessor	folderAccessor;
 	}
 }

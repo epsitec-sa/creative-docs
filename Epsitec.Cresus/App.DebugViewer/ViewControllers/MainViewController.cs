@@ -339,10 +339,11 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			{
 				return;
 			}
-
+#if false
 			var item = this.folderList.ItemList.Cache.GetItemData (index).GetData<Data.LogFolderRecord> ();
 
 			this.DefineHistoryAccessor (new LogDataAccessor (item.Path));
+#endif
 		}
 
 		private void HandleFolderScrollListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
@@ -403,7 +404,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 #if false
 				this.folderData.Reset ();
 				this.folderList.Invalidate ();
-#else		
+#else
 				this.folderScrollList.Invalidate ();
 #endif
 			}
@@ -422,9 +423,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		private FrameBox						view;
 		private ItemListVerticalContentView		historyList;
 		private ItemList						historyData;
-		private ItemListVerticalContentView		folderList;
 		private Epsitec.Common.BigList.Widgets.ItemScrollList folderScrollList;
-		private ItemList						folderData;
 		private StaticImage						mainImage;
 		private LogDataAccessor					historyAccessor;
 		private LogFolderDataAccessor			folderAccessor;
