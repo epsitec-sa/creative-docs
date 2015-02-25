@@ -135,6 +135,7 @@
     <Compile Include="SimpleEngine\EditionAccessor.cs" />
     <Compile Include="SimpleEngine\DataAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleEngine\X.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">
