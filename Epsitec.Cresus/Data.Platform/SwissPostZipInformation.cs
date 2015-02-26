@@ -38,21 +38,86 @@ namespace Epsitec.Data.Platform
 			return string.Format ("{0:0000} {1} ({2})", this.ZipCode, this.LongName, this.Canton);
 		}
 
-		
-		public readonly int						OnrpCode;
-		public readonly SwissPostZipType		ZipType;
-		public readonly int						ZipCode;
-		public readonly int						ZipCodeAddOn;
-		public readonly string					ShortName;
-		public readonly string					LongName;
-		public readonly string					Canton;
-		public readonly SwissPostLanguageCode	LanguageCode1;
-		public readonly SwissPostLanguageCode	LanguageCode2;
-		public readonly bool					InSortFile;
-		public readonly string					DistributionBy;
-		public readonly int						ComunityCode;
-		public readonly Date					ValidSince;
 
-		private readonly string					alternateName;
+		public int OnrpCode
+		{
+			get;
+			set;
+		}
+		public  SwissPostZipType		ZipType
+		{
+			get;
+			set;
+		}
+		public  int						ZipCode
+		{
+			get;
+			set;
+		}
+		public  int						ZipCodeAddOn
+		{
+			get;
+			set;
+		}
+		public  int						RootZipCode
+		{
+			get;
+			set;
+		}
+		public  string					ShortName
+		{
+			get;
+			set;
+		}
+		public  string					LongName
+		{
+			get;
+			set;
+		}
+		public  string					Canton
+		{
+			get;
+			set;
+		}
+		public  SwissPostLanguageCode	LanguageCode1
+		{
+			get;
+			set;
+		}
+		public  SwissPostLanguageCode	LanguageCode2
+		{
+			get;
+			set;
+		}
+		public  bool					InSortFile
+		{
+			get;
+			set;
+		}
+		public  int					    DeliveryOnrp
+		{
+			get;
+			set;
+		}
+		public  int					    DeliveryZipCode
+		{
+			get;
+			set;
+		}
+		public  string					OnlyOfficial
+		{
+			get;
+			set;
+		}
+		public  int						CommunityCode
+		{
+			get;
+			set;
+		}
+		public  Date					ValidSince
+		{
+			get;
+			set;
+		}
 	}
 }
