@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -144,13 +145,13 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public ComputedAmount(System.Xml.XmlReader reader)
 		{
-			this.InitialAmount   = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
-			this.ArgumentAmount  = IOHelpers.ReadDecimalAttribute (reader, "ArgumentAmount");
-			this.FinalAmount     = IOHelpers.ReadDecimalAttribute (reader, "FinalAmount");
-			this.Computed        = IOHelpers.ReadBoolAttribute    (reader, "Computed");
-			this.Subtract        = IOHelpers.ReadBoolAttribute    (reader, "Subtract");
-			this.Rate            = IOHelpers.ReadBoolAttribute    (reader, "Rate");
-			this.ArgumentDefined = IOHelpers.ReadBoolAttribute    (reader, "ArgumentDefined");
+			this.InitialAmount   = reader.ReadDecimalAttribute (X.Attr.InitialAmount);
+			this.ArgumentAmount  = reader.ReadDecimalAttribute (X.Attr.ArgumentAmount);
+			this.FinalAmount     = reader.ReadDecimalAttribute (X.Attr.FinalAmount);
+			this.Computed        = reader.ReadBoolAttribute    (X.Attr.Computed);
+			this.Subtract        = reader.ReadBoolAttribute    (X.Attr.Subtract);
+			this.Rate            = reader.ReadBoolAttribute    (X.Attr.Rate);
+			this.ArgumentDefined = reader.ReadBoolAttribute    (X.Attr.ArgumentDefined);
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -311,13 +312,13 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount",   this.InitialAmount);
-			IOHelpers.WriteDecimalAttribute (writer, "ArgumentAmount",  this.ArgumentAmount);
-			IOHelpers.WriteDecimalAttribute (writer, "FinalAmount",     this.FinalAmount);
-			IOHelpers.WriteBoolAttribute    (writer, "Computed",        this.Computed);
-			IOHelpers.WriteBoolAttribute    (writer, "Subtract",        this.Subtract);
-			IOHelpers.WriteBoolAttribute    (writer, "Rate",            this.Rate);
-			IOHelpers.WriteBoolAttribute    (writer, "ArgumentDefined", this.ArgumentDefined);
+			writer.WriteDecimalAttribute (X.Attr.InitialAmount,   this.InitialAmount);
+			writer.WriteDecimalAttribute (X.Attr.ArgumentAmount,  this.ArgumentAmount);
+			writer.WriteDecimalAttribute (X.Attr.FinalAmount,     this.FinalAmount);
+			writer.WriteBoolAttribute    (X.Attr.Computed,        this.Computed);
+			writer.WriteBoolAttribute    (X.Attr.Subtract,        this.Subtract);
+			writer.WriteBoolAttribute    (X.Attr.Rate,            this.Rate);
+			writer.WriteBoolAttribute    (X.Attr.ArgumentDefined, this.ArgumentDefined);
 
 			writer.WriteEndElement ();
 		}

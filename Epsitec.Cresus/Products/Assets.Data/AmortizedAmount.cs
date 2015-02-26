@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -48,14 +49,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public AmortizedAmount(System.Xml.XmlReader reader)
 		{
-			this.InitialAmount = IOHelpers.ReadDecimalAttribute (reader, "InitialAmount");
-			this.FinalAmount   = IOHelpers.ReadDecimalAttribute (reader, "FinalAmount");
-			this.Trace         = IOHelpers.ReadStringAttribute  (reader, "Trace");
-			this.Error         = IOHelpers.ReadStringAttribute  (reader, "Error");
+			this.InitialAmount = reader.ReadDecimalAttribute (X.Attr.InitialAmount);
+			this.FinalAmount   = reader.ReadDecimalAttribute (X.Attr.FinalAmount);
+			this.Trace         = reader.ReadStringAttribute  (X.Attr.Trace);
+			this.Error         = reader.ReadStringAttribute  (X.Attr.Error);
 
-			this.EntryScenario = (EntryScenario) IOHelpers.ReadTypeAttribute (reader, "EntryScenario", typeof (EntryScenario));
-			this.EntryGuid     = IOHelpers.ReadGuidAttribute (reader, "EntryGuid");
-			this.EntrySeed     = IOHelpers.ReadIntAttribute  (reader, "EntrySeed").GetValueOrDefault ();
+			this.EntryScenario = (EntryScenario) reader.ReadTypeAttribute (X.Attr.EntryScenario, typeof (EntryScenario));
+			this.EntryGuid     = reader.ReadGuidAttribute (X.Attr.EntryGuid);
+			this.EntrySeed     = reader.ReadIntAttribute  (X.Attr.EntrySeed).GetValueOrDefault ();
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -211,14 +212,14 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteDecimalAttribute (writer, "InitialAmount", this.InitialAmount);
-			IOHelpers.WriteDecimalAttribute (writer, "FinalAmount",   this.FinalAmount);
-			IOHelpers.WriteStringAttribute  (writer, "Trace",         this.Trace);
-			IOHelpers.WriteStringAttribute  (writer, "Error",         this.Error);
+			writer.WriteDecimalAttribute (X.Attr.InitialAmount, this.InitialAmount);
+			writer.WriteDecimalAttribute (X.Attr.FinalAmount,   this.FinalAmount);
+			writer.WriteStringAttribute  (X.Attr.Trace,         this.Trace);
+			writer.WriteStringAttribute  (X.Attr.Error,         this.Error);
 
-			IOHelpers.WriteTypeAttribute    (writer, "EntryScenario", this.EntryScenario);
-			IOHelpers.WriteGuidAttribute    (writer, "EntryGuid",     this.EntryGuid);
-			IOHelpers.WriteIntAttribute     (writer, "EntrySeed",     this.EntrySeed);
+			writer.WriteTypeAttribute    (X.Attr.EntryScenario, this.EntryScenario);
+			writer.WriteGuidAttribute    (X.Attr.EntryGuid,     this.EntryGuid);
+			writer.WriteIntAttribute     (X.Attr.EntrySeed,     this.EntrySeed);
 
 			writer.WriteEndElement ();
 		}

@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Cresus.Assets.Data.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -53,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Report.Persons");
+			writer.WriteStartElement (X.Report_Persons);
 			base.Serialize (writer);
 			writer.WriteEndElement ();
 		}

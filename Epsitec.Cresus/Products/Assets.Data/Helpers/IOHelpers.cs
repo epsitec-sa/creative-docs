@@ -13,13 +13,13 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		//	mais une classe, il faut le sérialiser en passant par une énumération interne
 		//	(IOEncoding). Seuls les encodages utilisés dans Assets sont gérés-
 
-		public static System.Text.Encoding ReadEncodingAttribute(System.Xml.XmlReader reader, string name)
+		public static System.Text.Encoding ReadEncodingAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var e = (IOEncoding) IOHelpers.ReadTypeAttribute (reader, name, typeof (IOEncoding));
 			return IOHelpers.EncodingFactory (e);
 		}
 
-		public static void WriteEncodingAttribute(System.Xml.XmlWriter writer, string name, System.Text.Encoding encoding)
+		public static void WriteEncodingAttribute(this System.Xml.XmlWriter writer, string name, System.Text.Encoding encoding)
 		{
 			IOEncoding e = IOHelpers.IOEncodings.Where (x => IOHelpers.EncodingFactory (x) == encoding).FirstOrDefault ();
 			IOHelpers.WriteTypeAttribute (writer, name, e);
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		//	serait sérialisé sous la forme "20010". Avec la méthode employée, il est
 		//	sérailisé avec "UserField+10".
 
-		public static ObjectField ReadObjectFieldAttribute(System.Xml.XmlReader reader, string name)
+		public static ObjectField ReadObjectFieldAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteObjectFieldAttribute(System.Xml.XmlWriter writer, string name, ObjectField value)
+		public static void WriteObjectFieldAttribute(this System.Xml.XmlWriter writer, string name, ObjectField value)
 		{
 			writer.WriteAttributeString (name, value.ToStringIO ());
 		}
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Type
-		public static object ReadTypeAttribute(System.Xml.XmlReader reader, string name, System.Type enumType)
+		public static object ReadTypeAttribute(this System.Xml.XmlReader reader, string name, System.Type enumType)
 		{
 			var s = reader[name];
 
@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteTypeAttribute(System.Xml.XmlWriter writer, string name, object value)
+		public static void WriteTypeAttribute(this System.Xml.XmlWriter writer, string name, object value)
 		{
 			writer.WriteAttributeString (name, value.ToStringIO ());
 		}
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Guid
-		public static Guid ReadGuidAttribute(System.Xml.XmlReader reader, string name)
+		public static Guid ReadGuidAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteGuidAttribute(System.Xml.XmlWriter writer, string name, Guid value)
+		public static void WriteGuidAttribute(this System.Xml.XmlWriter writer, string name, Guid value)
 		{
 			if (!value.IsEmpty)
 			{
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Range
-		public static DateRange ReadDateRangeAttribute(System.Xml.XmlReader reader, string name)
+		public static DateRange ReadDateRangeAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var includeFrom = IOHelpers.ReadDateAttribute (reader, name+".IncludeFrom");
 			var excludeTo   = IOHelpers.ReadDateAttribute (reader, name+".ExcludeTo");
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteDateRangeAttribute(System.Xml.XmlWriter writer, string name, DateRange value)
+		public static void WriteDateRangeAttribute(this System.Xml.XmlWriter writer, string name, DateRange value)
 		{
 			if (!value.IsEmpty)
 			{
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Date
-		public static System.DateTime? ReadDateAttribute(System.Xml.XmlReader reader, string name)
+		public static System.DateTime? ReadDateAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteDateAttribute(System.Xml.XmlWriter writer, string name, System.DateTime? value)
+		public static void WriteDateAttribute(this System.Xml.XmlWriter writer, string name, System.DateTime? value)
 		{
 			if (value.HasValue)
 			{
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Decimal
-		public static decimal? ReadDecimalAttribute(System.Xml.XmlReader reader, string name)
+		public static decimal? ReadDecimalAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteDecimalAttribute(System.Xml.XmlWriter writer, string name, decimal? value)
+		public static void WriteDecimalAttribute(this System.Xml.XmlWriter writer, string name, decimal? value)
 		{
 			if (value.HasValue)
 			{
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Int
-		public static int? ReadIntAttribute(System.Xml.XmlReader reader, string name)
+		public static int? ReadIntAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteIntAttribute(System.Xml.XmlWriter writer, string name, int? value)
+		public static void WriteIntAttribute(this System.Xml.XmlWriter writer, string name, int? value)
 		{
 			if (value.HasValue)
 			{
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Bool
-		public static bool ReadBoolAttribute(System.Xml.XmlReader reader, string name)
+		public static bool ReadBoolAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
 
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteBoolAttribute(System.Xml.XmlWriter writer, string name, bool value)
+		public static void WriteBoolAttribute(this System.Xml.XmlWriter writer, string name, bool value)
 		{
 			writer.WriteAttributeString (name, value.ToStringIO ());
 		}
@@ -396,12 +396,12 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region String
-		public static string ReadStringAttribute(System.Xml.XmlReader reader, string name)
+		public static string ReadStringAttribute(this System.Xml.XmlReader reader, string name)
 		{
 			return reader[name];
 		}
 
-		public static void WriteStringAttribute(System.Xml.XmlWriter writer, string name, string value)
+		public static void WriteStringAttribute(this System.Xml.XmlWriter writer, string name, string value)
 		{
 			writer.WriteAttributeString (name, value);
 		}
