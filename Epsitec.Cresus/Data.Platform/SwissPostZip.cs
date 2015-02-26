@@ -4,6 +4,8 @@
 using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Data.Platform.MatchSort;
+using System.IO;
 
 namespace Epsitec.Data.Platform
 {
@@ -30,6 +32,33 @@ namespace Epsitec.Data.Platform
 			string file = SwissPostZip.DownloadZippedTextFile (uri);
 
 			return Epsitec.Common.IO.StringLineExtractor.GetLines (file);
+		}
+
+		private static string DownloadFileToTemp (string uri)
+		{
+			var filename = Path.GetTempFileName ();
+			using (WebClient client = new WebClient ())
+			{
+				using (var stream = client.OpenRead (uri))
+				{
+					try
+					{
+						var zipFile = new Epsitec.Common.IO.ZipFile ();
+						zipFile.LoadFile (stream);
+						var zipEntry = zipFile.Entries.First ();
+
+						using (StreamWriter sw = new StreamWriter (filename))
+						{
+							sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
+						}
+					}
+					catch
+					{
+						throw new System.Exception ("Error during file download");
+					}
+				}
+			}
+			return filename;
 		}
 
 		private static string DownloadZippedTextFile(string uri)
