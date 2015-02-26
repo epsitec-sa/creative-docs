@@ -17,13 +17,9 @@ namespace Epsitec.Data.Platform
 	{
 		public static IEnumerable<SwissPostZipInformation> GetZips()
 		{
-			foreach (var line in SwissPostZip.GetZipPlusFile ())
-			{
-				if (!string.IsNullOrWhiteSpace (line))
-				{
-					yield return new SwissPostZipInformation (line);
-				}
-			}
+			string uri = "https://match.post.ch/download?file=10177&tid=36&rol=0";
+			string file = SwissPostZip.DownloadFileToTemp (uri);
+			return MatchSortLoader.LoadRecords<SwissPostZipInformation> (file, "01");
 		}
 
 		private static IEnumerable<string> GetZipPlusFile()
