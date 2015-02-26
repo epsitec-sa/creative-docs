@@ -98,9 +98,13 @@
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
     <Compile Include="ISwissPostStreetInformation.cs" />
+    <Compile Include="MatchSort\Mapping\MatchSortMetaDataMap.cs" />
+    <Compile Include="MatchSort\Mapping\SwissPostZipInformationMap.cs" />
     <Compile Include="MatchSort\MatchSortEtl.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
+    <Compile Include="MatchSort\MatchSortLoader.cs" />
+    <Compile Include="MatchSort\Rows\MatchSortMetaData.cs" />
     <Compile Include="SwissPostFullZip.cs" />
     <Compile Include="MatchSort\MatchSortStreetInformation.cs" />
     <Compile Include="SwissPostZipCodeFolding.cs" />
