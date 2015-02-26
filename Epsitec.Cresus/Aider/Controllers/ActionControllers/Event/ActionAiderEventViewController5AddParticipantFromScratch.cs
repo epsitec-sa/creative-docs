@@ -21,6 +21,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Aider.Data.Job;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -34,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<Enumerations.PersonMrMrs, string, string, Date, Enumerations.EventParticipantRole> (this.Execute);
+			return ActionExecutor.Create<Enumerations.PersonMrMrs, string, string, Date, AiderTownEntity, string, Enumerations.EventParticipantRole> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
@@ -57,13 +58,28 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Date de naissance")
 					.InitialValue (Date.Today)
 				.End ()
+				.Field<AiderTownEntity> ()
+					.Title ("Localité")
+					.WithFavorites (favorites)
+				.End ()
+				.Field<string> ()
+					.Title ("Rue et numéro (avec complément)")
+				.End ()
 				.Field<Enumerations.EventParticipantRole> ()
 					.Title ("Rôle")
 				.End ()
 			.End ();
 		}
 
-		private void Execute(Enumerations.PersonMrMrs mrMrs, string name, string firstName,Date dateOfBirst, Enumerations.EventParticipantRole role)
+		private void Execute(
+			Enumerations.PersonMrMrs mrMrs,
+			string name,
+			string firstName,
+			Date dateOfBirst,
+			AiderTownEntity town, 
+			string streetHouseNumberAndComplement,
+			Enumerations.EventParticipantRole role
+		)
 		{
 			if (mrMrs == Enumerations.PersonMrMrs.None)
 			{
@@ -74,6 +90,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				throw new BusinessRuleException ("un nom et un prénom et obligatoire");
 			}
+
+			if (town.IsNull ())
+			{
+				throw new BusinessRuleException ("La localité est obligatoire");
+			}
+
 
 			var sex = Enumerations.PersonSex.Female;
 			if (mrMrs == Enumerations.PersonMrMrs.Monsieur) 
@@ -96,9 +118,18 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 																		Enumerations.DataSource.Undefined, 
 																		Enumerations.PersonDeclarationStatus.NotDeclared);
 
-			var person = AiderPersonEntity.Create (this.BusinessContext, eChPersonEntity, mrMrs);
-			var contact = AiderContactEntity.Create (this.BusinessContext, person, Enumerations.AddressType.Default);
-			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, person, role);			
+			var person    = AiderPersonEntity.Create (this.BusinessContext, eChPersonEntity, mrMrs);
+			var household = AiderHouseholdEntity.Create (this.BusinessContext);
+			var address   = household.Address;
+			address.Town  = town;
+			address.StreetHouseNumberAndComplement = streetHouseNumberAndComplement;
+			var contact   = AiderContactEntity.Create (this.BusinessContext, person, household, true);
+
+			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, person, role);
+
+			//Ensure parish assignation
+			var parishRepository = ParishAddressRepository.Current;
+			ParishAssigner.AssignToParish (parishRepository, this.BusinessContext, person);
 		}
 	}
 }
