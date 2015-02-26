@@ -4,10 +4,10 @@
 # This file defines the environment settings which configure how AIDER will run.
 #
 
-DefineFileDepot ("assets", "S:\Epsitec.Cresus\App.Aider\Assets")
-DefineFileDepot ("downloads", "S:\Epsitec.Cresus\App.Aider\Downloads")
+DefineFileDepot ("assets", "S:\core\Epsitec.Cresus\App.Aider\Assets")
+DefineFileDepot ("downloads", "S:\core\Epsitec.Cresus\App.Aider\Downloads")
 
 # ConfigureAsTestEnvironment ();
 # ConfigureAsReadOnly ();
 
-# EnableDbConsoleLogger ("S:\db.log");
+# EnableDbConsoleLogger ("S:\core\db.log");
