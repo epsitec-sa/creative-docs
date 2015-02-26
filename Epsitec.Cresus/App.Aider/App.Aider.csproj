@@ -105,6 +105,7 @@
     </Content>
     <Content Include="ServerConfigProduction\Aider.Environment.crconfig" />
     <Content Include="ServerConfigProduction\Aider.Features.crconfig" />
+    <None Include="packages.config" />
     <None Include="ServerConfigProduction\app.config" />
     <None Include="ServerConfigProduction\certificate.key" />
     <None Include="ServerConfigProduction\certificate.pem" />
