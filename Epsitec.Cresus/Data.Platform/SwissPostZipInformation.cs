@@ -7,49 +7,11 @@ using Epsitec.Common.Types.Converters;
 namespace Epsitec.Data.Platform
 {
 	/// <summary>
-	/// The <c>SwissPostZipInformation</c> class describes a MAT[CH]zip entry provided in
-	/// the ZIP plus 1 format.
+	/// The <c>SwissPostZipInformation</c> class describes a MAT[CH]Sort NEW_PLZ1 entries
+	/// https://www.post.ch/fr/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/pm-sortierfile-angebote-datenstrukturen.pdf
 	/// </summary>
 	public sealed class SwissPostZipInformation
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SwissPostZipInformation"/> class
-		/// based on a source line taken from MAT[CH] zip.
-		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-zip.htm
-		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-zip/post-match-zip-factsheet.pdf
-		/// </summary>
-		/// <param name="line">The line.</param>
-		public SwissPostZipInformation(string line)
-		{
-			string[] args = line.Split ('\t');
-
-			int date = InvariantConverter.ParseInt (args[12]);
-
-			this.OnrpCode       = InvariantConverter.ParseInt (args[0]);
-			this.ZipType        = InvariantConverter.ParseInt<SwissPostZipType> (args[1]);
-			this.ZipCode        = InvariantConverter.ParseInt (args[2]);
-			this.ZipCodeAddOn   = InvariantConverter.ParseInt (args[3]);
-			this.ShortName      = args[4];
-			this.LongName       = args[5];
-			this.Canton         = args[6];
-			this.LanguageCode1  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[7]);
-			this.LanguageCode2  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[8]);
-			this.InSortFile     = args[9] == "1";
-			this.DistributionBy = args[10];
-			this.ComunityCode   = InvariantConverter.ParseInt (args[11]);
-			this.ValidSince     = new Date (year: date / 10000, month: (date/100) % 100, day: date % 100);
-
-			string shortName = this.ShortName;
-			
-			if (shortName.EndsWith (" " + this.Canton))
-			{
-				shortName = shortName.Substring (0, shortName.Length - 3);
-			}
-
-			this.alternateName = SwissPostZipInformation.ConvertToAlternateName (shortName);
-		}
-
-
 		/// <summary>
 		/// Check if the name matches this instance.
 		/// </summary>
