@@ -25,7 +25,7 @@ namespace Epsitec.Data.Platform
 
 		internal bool MatchAlternateName(string altName)
 		{
-			return this.alternateName == altName;
+			return SwissPostZipInformation.ConvertToAlternateName (this.ShortName) == altName;
 		}
 
 		public static string ConvertToAlternateName(string shortName)
