@@ -193,7 +193,7 @@ namespace Epsitec.Aider.Tests
 		}
 
 
-		private static void AssignToParishes(ParishAddressRepository repository, Dictionary<string, Parish> parishes, Town town, string streetName, List<ISwissPostStreetInformation> streets)
+		private static void AssignToParishes(ParishAddressRepository repository, Dictionary<string, Parish> parishes, Town town, string streetName, List<SwissPostStreetInformation> streets)
 		{
 			var numbers = new Dictionary<string, HashSet<int>> ();
 
@@ -259,7 +259,7 @@ namespace Epsitec.Aider.Tests
 		}
 
 
-		private static Dictionary<string, List<ISwissPostStreetInformation>> FindStreets(Town town)
+		private static Dictionary<string, List<SwissPostStreetInformation>> FindStreets(Town town)
 		{
 			return ParishFileAnalyzer
 				.FindTowns (town)
@@ -281,7 +281,7 @@ namespace Epsitec.Aider.Tests
 		}
 
 
-		private static IEnumerable<ISwissPostStreetInformation> FindStreets(SwissPostZipInformation town)
+		private static IEnumerable<SwissPostStreetInformation> FindStreets(SwissPostZipInformation town)
 		{
 			return SwissPostStreetRepository
 				.Current

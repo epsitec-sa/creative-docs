@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Data.Job
 		private static bool IsAmbiguous
 		(
 			SwissPostStreetRepository streetRepository,
-			ISet<ISwissPostStreetInformation> ambiguousStreets,
+			ISet<SwissPostStreetInformation> ambiguousStreets,
 			EChAddress address
 		)
 		{
@@ -94,7 +94,7 @@ namespace Epsitec.Aider.Data.Job
 		(
 			IEnumerable<EChReportedPerson> echReportedPersons,
 			SwissPostStreetRepository streetRepository,
-			ISet<ISwissPostStreetInformation> ambiguousStreets,
+			ISet<SwissPostStreetInformation> ambiguousStreets,
 			BusinessContext businessContext,
 			EChReportedPerson echReportedPerson
 		)
@@ -272,12 +272,12 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 
-		private static ISet<ISwissPostStreetInformation> GetAmbiguousStreets
+		private static ISet<SwissPostStreetInformation> GetAmbiguousStreets
 		(
 			SwissPostStreetRepository streetRepository
 		)
 		{
-			var streetComparer = new LambdaComparer<ISwissPostStreetInformation>
+			var streetComparer = new LambdaComparer<SwissPostStreetInformation>
 			(
 				(s1, s2) => s1.StreetName == s2.StreetName
 					&& s1.ZipCode == s2.ZipCode

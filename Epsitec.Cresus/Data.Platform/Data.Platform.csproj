@@ -98,7 +98,6 @@
     <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
-    <Compile Include="ISwissPostStreetInformation.cs" />
     <Compile Include="MatchSort\Mapping\MatchSortMetaDataMap.cs" />
     <Compile Include="MatchSort\Mapping\SwissPostZipInformationMap.cs" />
     <Compile Include="MatchSort\MatchSortEtl.cs" />
@@ -110,7 +109,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SwissPostFullZip.cs" />
-    <Compile Include="MatchSort\MatchSortStreetInformation.cs" />
+    <Compile Include="SwissPostStreetInformation.cs" />
     <Compile Include="SwissPostZipCodeFolding.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
@@ -128,7 +127,6 @@
     <Compile Include="SwissPost.cs" />
     <Compile Include="SwissPostDividerCode.cs" />
     <Compile Include="SwissPostStreet.cs" />
-    <Compile Include="MatchLight\MatchLightStreetInformation.cs" />
     <Compile Include="SwissPostStreetRepository.cs" />
     <Compile Include="SwissPostZip.cs" />
     <Compile Include="SwissPostZipCodeFoldingRepository.cs" />
