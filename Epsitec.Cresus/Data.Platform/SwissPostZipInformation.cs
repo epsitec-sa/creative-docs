@@ -17,6 +17,7 @@ namespace Epsitec.Data.Platform
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <returns><c>true</c> if the name matches this instance; otherwise, <c>false</c>.</returns>
+		/// 
 		public bool MatchName(string name)
 		{
 			return this.MatchAlternateName (SwissPostZipInformation.ConvertToAlternateName (name))
