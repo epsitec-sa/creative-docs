@@ -33,6 +33,15 @@ namespace Epsitec.Data.Platform
 			return TextConverter.ConvertToUpperAndStripAccents (shortName);
 		}
 
+		/// <summary>
+		/// Return corresponding Mat[CH]Sort datatable id (REC_ART)
+		/// </summary>
+		/// <returns></returns>
+		public static string GetMatchRecordId()
+		{
+			return "01";
+		}
+
 		public override string ToString()
 		{
 			return string.Format ("{0:0000} {1} ({2})", this.ZipCode, this.LongName, this.Canton);
