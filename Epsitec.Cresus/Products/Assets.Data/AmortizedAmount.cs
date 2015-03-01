@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#endregion
 
 
-		#region IEquatable<AmortizedAmount2> Members
+		#region IEquatable<AmortizedAmount> Members
 		public bool Equals(AmortizedAmount other)
 		{
 			return this.InitialAmount == other.InitialAmount

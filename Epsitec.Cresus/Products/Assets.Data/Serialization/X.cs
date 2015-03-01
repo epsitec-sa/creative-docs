@@ -1,4 +1,6 @@
-﻿
+﻿//	Copyright © 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Daniel ROUX
+
 namespace Epsitec.Cresus.Assets.Data.Serialization
 {
 	public static class X
@@ -52,6 +54,23 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string EntryScenario = "entryScenario";
 			public const string EntryGuid = "entryGuid";
 			public const string EntrySeed = "entrySeed";
+			public const string PageSize_Width = "pageSize.Width";
+			public const string PageSize_Height = "pageSize.Height";
+			public const string PageMargins_Left = "PageMargins.Left";
+			public const string PageMargins_Right = "PageMargins.Right";
+			public const string PageMargins_Top = "PageMargins.Top";
+			public const string PageMargins_Bottom = "PageMargins.Bottom";
+			public const string CellMargins_Left = "CellMargins.Left";
+			public const string CellMargins_Right = "CellMargins.Right";
+			public const string CellMargins_Top = "CellMargins.Top";
+			public const string CellMargins_Bottom = "CellMargins.Bottom";
+			public const string Font = "Font";
+			public const string FontSize = "FontSize";
+			public const string AutomaticColumnWidths = "AutomaticColumnWidths";
+			public const string Header = "Header";
+			public const string Footer = "Footer";
+			public const string Indent = "Indent";
+			public const string Watermark = "Watermark";
 		}
 	}
 }
