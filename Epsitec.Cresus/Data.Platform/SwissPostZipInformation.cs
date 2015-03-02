@@ -124,7 +124,7 @@ namespace Epsitec.Data.Platform
 			get;
 			set;
 		}
-		public  Date					ValidSince
+		public  System.DateTime			ValidSince
 		{
 			get;
 			set;
