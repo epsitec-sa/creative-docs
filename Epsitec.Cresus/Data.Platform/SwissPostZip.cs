@@ -14,11 +14,19 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	internal static class SwissPostZip
 	{
-		public static IEnumerable<SwissPostZipInformation> GetZips()
+		public static string GetSwissPostZipCsv()
 		{
 			var matchClient = new MatchWebClient ();
-			string file = matchClient.GetMatchSortFileFromWebsite ();
-			return MatchSortLoader.LoadRecords<SwissPostZipInformation> (file, SwissPostZipInformation.GetMatchRecordId ());
+			var file = matchClient.GetMatchSortFileFromWebsite ();
+			var swissPostZipCsv = SwissPostZip.GetMatchZipCsvPath ();
+			MatchSortExtractor.WriteRecordsToFile<SwissPostZipInformation> (file, SwissPostZipInformation.GetMatchRecordId (), swissPostZipCsv);
+			return swissPostZipCsv;
+		}
+
+		private static string GetMatchZipCsvPath()
+		{
+			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			return System.IO.Path.Combine (path1, "Epsitec", "swisspostzip.csv");
 		}
 	}
 }
