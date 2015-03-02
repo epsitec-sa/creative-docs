@@ -71,6 +71,11 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string Footer = "Footer";
 			public const string Indent = "Indent";
 			public const string Watermark = "Watermark";
+			public const string LabelColor = "LabelColor";
+			public const string EvenColor = "EvenColor";
+			public const string OddColor = "OddColor";
+			public const string BorderColor = "BorderColor";
+			public const string BorderThickness = "BorderThickness";
 		}
 	}
 }
