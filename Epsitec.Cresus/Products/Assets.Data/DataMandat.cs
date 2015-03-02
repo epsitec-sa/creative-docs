@@ -725,23 +725,19 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name.StartsWith ("Report."))
+					switch (reader.Name)
 					{
-						var name = reader.Name.Substring (7);  // nom après "Report."
-						switch (name)
-						{
-							case "MCH2Summary":
-								this.reports.Add (new MCH2SummaryParams (reader));
-								break;
+						case X.Report_MCH2Summary:
+							this.reports.Add (new MCH2SummaryParams (reader));
+							break;
 
-							case "Assets":
-								this.reports.Add (new AssetsParams (reader));
-								break;
+						case X.Report_Assets:
+							this.reports.Add (new AssetsParams (reader));
+							break;
 
-							case "Persons":
-								this.reports.Add (new PersonsParams (reader));
-								break;
-						}
+						case X.Report_Persons:
+							this.reports.Add (new PersonsParams (reader));
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
