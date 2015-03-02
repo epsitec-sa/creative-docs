@@ -30,9 +30,21 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public string GetMatchSortFileFromWebsite()
+		public DateTime GetMatchSortFileReleaseDate()
 		{
-			var response = this.DoMatchLoginRequest ();
+			if (!this.IsLogged)
+			{
+				this.DoMatchLoginRequest ();
+			}
+			return FindProductReleaseDate ();
+		}
+
+		public string GetMatchSortFile()
+		{
+			if (!this.IsLogged)
+			{
+				this.DoMatchLoginRequest ();
+			}
 			var uri = this.FindProductUri ();
 			return this.DownloadFileToTemp (uri);
 		}
@@ -45,6 +57,17 @@ namespace Epsitec.Data.Platform
 			return "https://match.post.ch" + page.Substring (startIndex, length);
 		}
 
+		private DateTime FindProductReleaseDate()
+		{
+			var currentYear = DateTime.UtcNow.Year.ToString ();
+			var page = this.DownloadString ("https://match.post.ch/downloadCenter?product=4");
+			var endIndex = page.IndexOf (currentYear + "</b>");
+			var startIndex = endIndex - 6;
+			var length = endIndex - startIndex;
+			var date = page.Substring (startIndex, length) + currentYear;
+			return Convert.ToDateTime (date);
+		}
+
 		private string DoMatchLoginRequest()
 		{
 			System.Console.WriteLine ("Login to Mat[CH] Downloadcenter...");
@@ -52,8 +75,8 @@ namespace Epsitec.Data.Platform
 			var values = this.BuildLoginFormPostData (hiddenFieldValue);
 			var response = this.UploadValues ("https://match.post.ch/downloadCenter?login=match", values);
 			System.Console.WriteLine ("Done");
+			this.IsLogged = true;
 			return Encoding.Default.GetString (response);
-
 		}
 
 		private string FindHiddenFormField()
@@ -140,6 +163,12 @@ namespace Epsitec.Data.Platform
 				CookieCollection cookies = response.Cookies;
 				container.Add (cookies);
 			}
+		}
+
+		public bool IsLogged
+		{
+			get;
+			internal set;
 		}
 	}
 }
