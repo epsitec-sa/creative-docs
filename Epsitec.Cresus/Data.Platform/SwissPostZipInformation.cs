@@ -48,7 +48,6 @@ namespace Epsitec.Data.Platform
 			return string.Format ("{0:0000} {1} ({2})", this.ZipCode, this.LongName, this.Canton);
 		}
 
-
 		public int OnrpCode
 		{
 			get;
