@@ -88,6 +88,10 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string AmortizedAmount = "AmortizedAmount";
 		public const string ComputedAmount = "ComputedAmount";
 		public const string GuidRatio = "GuidRatio";
+		public const string GlobalSettings = "GlobalSettings";
+		public const string MandatLanguage = "MandatLanguage";
+		public const string SaveMandatMode = "SaveMandatMode";
+		public const string CopyNameStrategy = "CopyNameStrategy";
 
 		public static class Attr
 		{
