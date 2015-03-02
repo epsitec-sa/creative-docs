@@ -30,7 +30,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
-				.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ();
+				.EnableActionButton<ActionAiderPersonWarningViewController0DiscardWarning> ()
+				.EnableActionButton<ActionAiderPersonWarningViewController100AddToBag> ();
 		}
 	}
 }

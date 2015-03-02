@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		protected override void Execute()
 		{
-			this.ClearWarningAndRefreshCaches ();
+			this.ClearWarningAndBackupPersonInSubParishGroup (GroupClassification.LastArrived);
 		}
 	}
 }

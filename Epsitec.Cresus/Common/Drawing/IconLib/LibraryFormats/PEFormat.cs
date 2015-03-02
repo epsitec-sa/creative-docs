@@ -150,7 +150,7 @@ namespace System.Drawing.IconLib.EncodingFormats
             }
             finally
             {
-                if (hLib != null)
+                if (hLib != System.IntPtr.Zero)
                     Win32.FreeLibrary(hLib);
                 if (tmpFile != null)
                     File.Delete(tmpFile);
@@ -257,7 +257,7 @@ namespace System.Drawing.IconLib.EncodingFormats
             }
             finally
             {
-                if (hLib != null)
+                if (hLib != System.IntPtr.Zero)
                     Win32.FreeLibrary(hLib);
                 if (tmpFile != null)
                     File.Delete(tmpFile);

@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -16,7 +17,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		protected override void Execute()
 		{
-			this.ClearWarningAndRefreshCaches ();
+			this.ClearWarningAndBackupPersonInSubParishGroup (GroupClassification.LastArrived);
 		}
 	}
 }

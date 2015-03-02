@@ -48,10 +48,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 
 			//if ((mode & TimelineMode.Compacted) != 0)
-			if (false)
-			{
-				this.AddFirstMonthDay (start, end);
-			}
+			//if (false)
+			//{
+			//	this.AddFirstMonthDay (start, end);
+			//}
 
 			//	Si nécessaire, ajoute les cellules forcées.
 			this.AddForcedDate (Timestamp.Now.Date);

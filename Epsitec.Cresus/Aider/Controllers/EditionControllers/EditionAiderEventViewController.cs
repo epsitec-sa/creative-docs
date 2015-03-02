@@ -18,18 +18,19 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			var currentUser = UserManager.Current.AuthenticatedUser;
 			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+			var favoritesPlaces = AiderOfficeManagementEntity.GetOfficeEventPlaces (this.BusinessContext, this.Entity.Office);
 
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Type)
 					.Field (x => x.State).ReadOnly ()
-					.Field (x => x.PlaceType)
-					.Field (x => x.PlaceName)
+					.Field (x => x.Place)
+						.WithFavorites (favoritesPlaces)
 					.Field (x => x.Town)
 						.Title ("Localité")
 						.WithFavorites (favorites)
 					.Field (x => x.Date)
-					.Field (x => x.Office)
+					.Field (x => x.Office).ReadOnly ()
 					.Field (x => x.Kind)
 					.Field (x => x.Description)
 				.End ();

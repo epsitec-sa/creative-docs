@@ -36,13 +36,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderOfficeManagementEntity, EventType,EventPlaceType, string, AiderTownEntity, Date> (this.Execute);
+			return ActionExecutor.Create<AiderOfficeManagementEntity, EventType, AiderEventPlaceEntity, AiderTownEntity, Date> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
-			var currentUser = UserManager.Current.AuthenticatedUser;
-			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+			var currentUser     = UserManager.Current.AuthenticatedUser;
+			var favorites       = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
+			var favoritesPlaces = AiderOfficeManagementEntity.GetOfficeEventPlaces (this.BusinessContext, this.Entity);
 
 			form
 				.Title ("Préparation d'un acte")
@@ -53,16 +54,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<EventType> ()
 					.Title ("Registre")
 				.End ()
-				.Field<EventPlaceType> ()
-					.Title ("Précision sur le lieu")
-					.InitialValue (EventPlaceType.Church)
-				.End ()
-				.Field<string> ()
-					.Title ("Désignation du lieu")
+				.Field<AiderEventPlaceEntity> ()
+					.Title ("Lieu de la célébration")
+					.WithFavorites (favoritesPlaces)
 				.End ()
 				.Field<AiderTownEntity> ()
 					.Title ("Localité")
-					.InitialValue (this.Entity.OfficeMainContact.Address.Town)
 					.WithFavorites (favorites)
 				.End ()
 				.Field<Date> ()
@@ -75,8 +72,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(
 			AiderOfficeManagementEntity office, 
 			EventType type,
-			EventPlaceType placeType,
-			string placeDescription,
+			AiderEventPlaceEntity place,
 			AiderTownEntity town,
 			Date celebrationDate)
 		{
@@ -85,8 +81,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				type,
 				office,
 				town,
-				placeType,
-				placeDescription,
+				place,
 				celebrationDate);
 		}
 	}

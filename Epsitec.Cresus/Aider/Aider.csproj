@@ -90,10 +90,12 @@
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController5ChangeHeadOfHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController6DeleteContact.cs" />
+    <Compile Include="Controllers\ActionControllers\EmployeeJob\ActionAiderEmployeeJobViewController01RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController02AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
+    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4Delete.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController5PrepareEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
+    <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
@@ -172,7 +175,7 @@
     <Compile Include="Controllers\ActionControllers\Household\ActionAiderHouseholdViewController5CleanHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController13AssignHouseholdFromECh.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController0AddRecipientOnDrop.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController3UpdateRecipients.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController3UpdateMailing.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController5AddGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController6RemoveGroup.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController7AddHousehold.cs" />
@@ -213,6 +216,7 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderGroupExtractionViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderHouseholdViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderCountryViewController0.cs" />
+    <Compile Include="Controllers\CreationControllers\BrickCreationAiderEventPlaceViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderTownViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderUserViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderLegalPersonViewController0.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionRefusalViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderMailingController0.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderEventPlaceViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEventViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderOfficeReportViewController.cs" />
@@ -255,6 +260,7 @@
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventPlaceViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController2WithoutContact.cs" />
@@ -352,6 +358,7 @@
     <Compile Include="Data\Subscription\SubscriptionUploader.cs" />
     <Compile Include="Entities\AiderContactEntity.cs" />
     <Compile Include="Entities\AiderEmployeeJobEntity.cs" />
+    <Compile Include="Entities\AiderEventPlaceEntity.cs" />
     <Compile Include="Entities\AiderEventParticipantEntity.cs" />
     <Compile Include="Entities\AiderGroupExtractionEntity.cs" />
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
@@ -403,6 +410,7 @@
     <Compile Include="Enumerations\SubscriptionType.cs" />
     <Compile Include="Enumerations\TextParser.cs" />
     <Compile Include="Enumerations\WarningTarget.cs" />
+    <Compile Include="Helpers\AiderContactsHelpers.cs" />
     <Compile Include="Helpers\AiderParticipationRole.cs" />
     <Compile Include="Helpers\AiderParticipationsHelpers.cs" />
     <Compile Include="Helpers\FrenchLanguage.cs" />
@@ -464,6 +472,7 @@
     <Compile Include="Reporting\StaticContent.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />
     <Compile Include="Rules\AiderEventParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeBusinessRules.cs" />
     <Compile Include="Rules\AiderGroupDefBusinessRules.cs" />
@@ -666,6 +675,7 @@
     </Content>
     <Content Include="Resources\Aider\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\Aider\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

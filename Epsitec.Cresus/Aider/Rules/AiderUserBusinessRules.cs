@@ -103,20 +103,12 @@ namespace Epsitec.Aider.Rules
 
 		private void CheckParishIsParishOrRegionGroup(AiderUserEntity user)
 		{
-			if (user.EnableGroupEditionParish)
-			{
-				if ((user.Parish.IsNull ()) ||
-					(user.Parish.IsParish () == false))
-				{
-					Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse.");
-				}
-			}
-			if (user.EnableGroupEditionRegion)
+			if (user.EnableGroupEditionParish || user.EnableGroupEditionRegion)
 			{
 				if ((user.Parish.IsNull ()) ||
 					((user.Parish.IsParish () == false) && (user.Parish.IsRegion () == false)))
 				{
-					Logic.BusinessRuleException (user, "L'utilisateur doit être rattaché à une paroisse ou région.");
+					Logic.BusinessRuleException (user, "Les droits d'éditions ne peuvent être appliqués sans associer une paroisse ou une région à l'utilisateur.");
 				}
 			}
 

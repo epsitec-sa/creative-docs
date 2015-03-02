@@ -26,6 +26,11 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
+			if (entity.Role == Enumerations.EventParticipantRole.Confirmant)
+			{
+				return;
+			}
+
 			if (entity.Event.CountRole (entity.Role) > 1)
 			{
 				Logic.BusinessRuleException ("Ce rôle est déjà attribué");

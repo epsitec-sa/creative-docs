@@ -42,6 +42,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.EnableActionButton<ActionAiderMailingViewController11AddRecipientFromBag> ()
 				.EnableActionOnDrop<ActionAiderMailingViewController0AddRecipientOnDrop> ()
+				.EnableActionButton<ActionAiderMailingViewController3UpdateMailing> ()
 				.WithSpecialController (typeof (SummaryAiderMailingViewController2Build));
 
 			wall.AddBrick ()
@@ -50,17 +51,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Text (p => p.GetRecipientsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
 				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
-				.EnableActionButton<ActionAiderMailingViewController3UpdateRecipients> ()
 				.EnableActionButton<ActionAiderMailingViewController17ToggleHouseholdGrouping> ();
 
-			
+
 			wall.AddBrick ()
 				.Icon ("Data.AiderGroup.Exclusions")
 				.Title (p => p.GetExclusionsTitleSummary ())
 				.Text (p => p.GetExclusionsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact))
-				.EnableActionButton<ActionAiderMailingViewController16UpdateExclusions> ();
+				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
 		}
 	}
 }

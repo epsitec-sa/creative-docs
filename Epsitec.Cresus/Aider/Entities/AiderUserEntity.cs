@@ -59,6 +59,28 @@ namespace Epsitec.Aider.Entities
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
 		}
 
+		public bool CanViewOfficeEvents()
+		{
+			var canViewDetails = this.CanViewOfficeDetails ();
+			var ministerBypass = false;
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					switch (employee.EmployeeType)
+					{
+						case Enumerations.EmployeeType.Diacre:
+						case Enumerations.EmployeeType.Pasteur:
+							ministerBypass = true;
+						break;
+					}
+				}
+			}
+
+			return  canViewDetails || ministerBypass;
+		}
+
 		public bool CanRemoveMailing()
 		{
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);

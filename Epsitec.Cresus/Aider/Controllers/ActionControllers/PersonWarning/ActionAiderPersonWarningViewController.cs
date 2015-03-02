@@ -22,6 +22,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			this.ClearWarningAndRefreshCaches (warning);
 		}
 
+		protected void ClearWarningAndBackupPersonInSubParishGroup(GroupClassification subParishGroupClass)
+		{
+			var parishGroup = this.Entity.Person.ParishGroup;
+			var backupGroup = parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == subParishGroupClass);
+			if (backupGroup != null)
+			{
+				var participation =  new ParticipationData (this.Entity.Person);
+				AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, backupGroup, participation, Common.Types.Date.Today);
+			}
+
+			var warning = this.Entity;
+			this.ClearWarningAndRefreshCaches (warning);
+		}
+
 		protected void ClearWarningAndRefreshCachesForAll(WarningType type)
 		{
 			var warning = this.Entity;

@@ -1,37 +1,27 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Bricks;
-
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
-
+using Epsitec.Aider.Controllers.SpecialFieldControllers;
+using Epsitec.Aider.Override;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
-	public sealed class ActionAiderMailingViewController3UpdateRecipients : ActionViewController<AiderMailingEntity>
+	[ControllerSubType (1)]
+	public sealed class ActionAiderEmployeeJobViewController01RemoveJob : ActionViewController<AiderEmployeeJobEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Mettre à jour");
-		}
-
-		public override bool ExecuteInQueue
-		{
-			get
-			{
-				return true;
-			}
+			return Resources.Text ("Supprimer ce poste...");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -41,7 +31,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.UpdateMailingParticipants (this.BusinessContext);
+			var context  = this.BusinessContext;
+			this.Entity.Delete (context);
 		}
 	}
 }
+

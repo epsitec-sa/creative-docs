@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Data.Groups;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Entities
 {
@@ -337,6 +338,15 @@ namespace Epsitec.Aider.Entities
 			this.OfficeType = type;
 			this.OfficeShortName = name.Trim ();
 			this.Region = this.ParishGroup.GetRootRegionCode ();
+		}
+
+		public static List<AiderEventPlaceEntity> GetOfficeEventPlaces(BusinessContext businessContext, AiderOfficeManagementEntity office)
+		{
+			var example = new AiderEventPlaceEntity ();
+			var request = new Request ();
+			request.RootEntity = example;
+			request.AddCondition (businessContext.DataContext, example, p => p.Shared == true || p.OfficeOwner == office);
+			return businessContext.GetByRequest<AiderEventPlaceEntity> (request).ToList ();
 		}
 
 		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()

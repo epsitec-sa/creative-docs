@@ -56,8 +56,6 @@ namespace Epsitec.Common
 			{
 				return true;
 			}
-
-			return false;
 		}
 		
 		public static bool Equal(double a, double b, double δ)
