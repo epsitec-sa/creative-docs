@@ -66,6 +66,11 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string HiddenWarnings = "HiddenWarnings";
 		public const string Definition = "Definition";
 		public const string LastPattern = "LastPattern";
+		public const string ComputerSettings = "ComputerSettings";
+		public const string SoftwareLanguage = "SoftwareLanguage";
+		public const string MandatDirectory = "MandatDirectory";
+		public const string MandatFilename = "MandatFilename";
+		public const string WindowPlacement = "WindowPlacement";
 
 		public static class Attr
 		{
@@ -132,6 +137,13 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string Parent = "parent";
 			public const string Selection = "selection";
 			public const string PersistantUniqueId = "persistantUniqueId";
+			public const string Left = "left";
+			public const string Bottom = "bottom";
+			public const string Width = "width";
+			public const string Height = "height";
+			public const string IsFullScreen = "isFullScreen";
+			public const string IsMinimized = "isMinimized";
+			public const string IsHidden = "isHidden";
 		}
 	}
 }
