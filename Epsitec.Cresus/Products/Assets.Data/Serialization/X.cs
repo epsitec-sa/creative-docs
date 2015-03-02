@@ -92,6 +92,12 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string RecordTag = "recordTag";
 			public const string Pattern = "pattern";
 			public const string Options = "options";
+			public const string Field = "field";
+			public const string OriginalWidth = "originalWidth";
+			public const string Hide = "hide";
+			public const string Type = "type";
+			public const string IncludeFrom = "includeFrom";
+			public const string ExcludeTo = "excludeTo";
 		}
 	}
 }

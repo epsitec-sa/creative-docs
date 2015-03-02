@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -18,8 +19,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public DateRange(System.Xml.XmlReader reader)
 		{
-			this.IncludeFrom = IOHelpers.ReadDateAttribute (reader, "IncludeFrom").GetValueOrDefault ();
-			this.ExcludeTo   = IOHelpers.ReadDateAttribute (reader, "ExcludeTo"  ).GetValueOrDefault ();
+			this.IncludeFrom = IOHelpers.ReadDateAttribute (reader, X.Attr.IncludeFrom).GetValueOrDefault ();
+			this.ExcludeTo   = IOHelpers.ReadDateAttribute (reader, X.Attr.ExcludeTo  ).GetValueOrDefault ();
 
 			reader.Read ();  // on avance plus loin
 		}
@@ -168,8 +169,8 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
-			IOHelpers.WriteDateAttribute (writer, "IncludeFrom", this.IncludeFrom);
-			IOHelpers.WriteDateAttribute (writer, "ExcludeTo",   this.ExcludeTo);
+			IOHelpers.WriteDateAttribute (writer, X.Attr.IncludeFrom, this.IncludeFrom);
+			IOHelpers.WriteDateAttribute (writer, X.Attr.ExcludeTo,   this.ExcludeTo);
 			writer.WriteEndElement ();
 		}
 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -23,9 +24,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public ColumnState(System.Xml.XmlReader reader)
 		{
-			this.Field         = IOHelpers.ReadObjectFieldAttribute (reader, "Field");
-			this.OriginalWidth = IOHelpers.ReadIntAttribute         (reader, "OriginalWidth").GetValueOrDefault ();
-			this.Hide          = IOHelpers.ReadBoolAttribute        (reader, "Hide");
+			this.Field         = IOHelpers.ReadObjectFieldAttribute (reader, X.Attr.Field);
+			this.OriginalWidth = IOHelpers.ReadIntAttribute         (reader, X.Attr.OriginalWidth).GetValueOrDefault ();
+			this.Hide          = IOHelpers.ReadBoolAttribute        (reader, X.Attr.Hide);
 
 			reader.Read ();
 		}
@@ -52,9 +53,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteObjectFieldAttribute (writer, "Field",         this.Field);
-			IOHelpers.WriteIntAttribute         (writer, "OriginalWidth", this.OriginalWidth);
-			IOHelpers.WriteBoolAttribute        (writer, "Hide",          this.Hide);
+			IOHelpers.WriteObjectFieldAttribute (writer, X.Attr.Field,         this.Field);
+			IOHelpers.WriteIntAttribute         (writer, X.Attr.OriginalWidth, this.OriginalWidth);
+			IOHelpers.WriteBoolAttribute        (writer, X.Attr.Hide,          this.Hide);
 
 			writer.WriteEndElement ();
 		}
