@@ -56,26 +56,27 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string EntrySeed = "entrySeed";
 			public const string PageSize_Width = "pageSize.Width";
 			public const string PageSize_Height = "pageSize.Height";
-			public const string PageMargins_Left = "PageMargins.Left";
-			public const string PageMargins_Right = "PageMargins.Right";
-			public const string PageMargins_Top = "PageMargins.Top";
-			public const string PageMargins_Bottom = "PageMargins.Bottom";
-			public const string CellMargins_Left = "CellMargins.Left";
-			public const string CellMargins_Right = "CellMargins.Right";
-			public const string CellMargins_Top = "CellMargins.Top";
-			public const string CellMargins_Bottom = "CellMargins.Bottom";
-			public const string Font = "Font";
-			public const string FontSize = "FontSize";
-			public const string AutomaticColumnWidths = "AutomaticColumnWidths";
-			public const string Header = "Header";
-			public const string Footer = "Footer";
-			public const string Indent = "Indent";
-			public const string Watermark = "Watermark";
-			public const string LabelColor = "LabelColor";
-			public const string EvenColor = "EvenColor";
-			public const string OddColor = "OddColor";
-			public const string BorderColor = "BorderColor";
-			public const string BorderThickness = "BorderThickness";
+			public const string PageMargins_Left = "pageMargins.Left";
+			public const string PageMargins_Right = "pageMargins.Right";
+			public const string PageMargins_Top = "pageMargins.Top";
+			public const string PageMargins_Bottom = "pageMargins.Bottom";
+			public const string CellMargins_Left = "cellMargins.Left";
+			public const string CellMargins_Right = "cellMargins.Right";
+			public const string CellMargins_Top = "cellMargins.Top";
+			public const string CellMargins_Bottom = "cellMargins.Bottom";
+			public const string Font = "font";
+			public const string FontSize = "fontSize";
+			public const string AutomaticColumnWidths = "automaticColumnWidths";
+			public const string Header = "header";
+			public const string Footer = "footer";
+			public const string Indent = "indent";
+			public const string Watermark = "watermark";
+			public const string LabelColor = "labelColor";
+			public const string EvenColor = "evenColor";
+			public const string OddColor = "oddColor";
+			public const string BorderColor = "borderColor";
+			public const string BorderThickness = "borderThickness";
+			public const string Ratio = "ratio";
 		}
 	}
 }
