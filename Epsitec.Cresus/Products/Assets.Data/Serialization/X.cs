@@ -169,6 +169,8 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string IsFullScreen = "isFullScreen";
 			public const string IsMinimized = "isMinimized";
 			public const string IsHidden = "isHidden";
+			public const string FormatedIncludeFrom = "{0}.IncludeFrom";
+			public const string FormatedExcludeTo = "{0}.ExcludeTo";
 		}
 	}
 }

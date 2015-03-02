@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.Helpers
 {
@@ -228,8 +229,8 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		#region Range
 		public static DateRange ReadDateRangeAttribute(this System.Xml.XmlReader reader, string name)
 		{
-			var includeFrom = reader.ReadDateAttribute (name+".IncludeFrom");
-			var excludeTo   = reader.ReadDateAttribute (name+".ExcludeTo");
+			var includeFrom = reader.ReadDateAttribute (string.Format (X.Attr.FormatedIncludeFrom, name));
+			var excludeTo   = reader.ReadDateAttribute (string.Format (X.Attr.FormatedExcludeTo,   name));
 
 			if (includeFrom.HasValue && excludeTo.HasValue)
 			{
@@ -245,8 +246,8 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		{
 			if (!value.IsEmpty)
 			{
-				writer.WriteDateAttribute (name+".IncludeFrom", value.IncludeFrom);
-				writer.WriteDateAttribute (name+".ExcludeTo",   value.ExcludeTo);
+				writer.WriteDateAttribute (string.Format (X.Attr.FormatedIncludeFrom, name), value.IncludeFrom);
+				writer.WriteDateAttribute (string.Format (X.Attr.FormatedExcludeTo,   name),   value.ExcludeTo);
 			}
 		}
 		#endregion
