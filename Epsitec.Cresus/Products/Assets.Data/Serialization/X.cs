@@ -92,6 +92,10 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string MandatLanguage = "MandatLanguage";
 		public const string SaveMandatMode = "SaveMandatMode";
 		public const string CopyNameStrategy = "CopyNameStrategy";
+		public const string Mappers = "Mappers";
+		public const string Column = "Column";
+		public const string Sorted = "Sorted";
+		public const string DockToLeftCount = "DockToLeftCount";
 
 		public static class Attr
 		{
