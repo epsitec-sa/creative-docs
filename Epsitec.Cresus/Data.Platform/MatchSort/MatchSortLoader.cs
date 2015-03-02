@@ -22,15 +22,15 @@ namespace Epsitec.Data.Platform.MatchSort
 				throw new System.Exception ("The MAT[CH]sort file does not exist at path " + csvFilePath);
 			}
 
-			return MatchSortLoader.LoadRecords<MatchSortMetaData> (csvFilePath, "00").SingleOrDefault ();
+			return MatchSortLoader.LoadBaseRecords<MatchSortMetaData> (csvFilePath, "00").SingleOrDefault ();
 		}
 
-		public static IEnumerable<T> LoadRecords<T> (string csvFilePath, string recordType)
+		public static IEnumerable<T> LoadBaseRecords<T>(string csvFilePath, string recordType)
 		{
 			var records = new List<T> ();
 			using (var stream = File.OpenText (csvFilePath))
 			{
-				var csv   = new CsvReader (stream, MatchSortLoader.ConfigureReader ());
+				var csv   = new CsvReader (stream, MatchSortLoader.ConfigureBaseReader ());
 				while (csv.Read ())
 				{
 					if(recordType == csv.GetField (0))
@@ -43,7 +43,8 @@ namespace Epsitec.Data.Platform.MatchSort
 			return records;
 		}
 
-		private static CsvConfiguration ConfigureReader()
+
+		public static CsvConfiguration ConfigureBaseReader()
 		{
 			var config = new CsvConfiguration ();
 			config.Encoding = System.Text.Encoding.GetEncoding ("Windows-1252");
