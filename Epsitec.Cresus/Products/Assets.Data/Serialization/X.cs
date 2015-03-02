@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string CreateAssetDefaultGroups = "CreateAssetDefaultGroups";
 		public const string Group = "Group";
 		public const string HiddenWarnings = "HiddenWarnings";
+		public const string Definition = "Definition";
+		public const string LastPattern = "LastPattern";
 
 		public static class Attr
 		{
