@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public XmlExportProfile(System.Xml.XmlReader reader)
 		{
-			this.BodyTag   = IOHelpers.ReadStringAttribute   (reader, X.Attr.BodyTag);
-			this.RecordTag = IOHelpers.ReadStringAttribute   (reader, X.Attr.RecordTag);
-			this.Indent    = IOHelpers.ReadStringAttribute   (reader, X.Attr.Indent);
-			this.EndOfLine = IOHelpers.ReadStringAttribute   (reader, X.Attr.EndOfLine);
-			this.CamelCase = IOHelpers.ReadBoolAttribute     (reader, X.Attr.CamelCase);
-			this.Compact   = IOHelpers.ReadBoolAttribute     (reader, X.Attr.Compact);
-			this.Encoding  = IOHelpers.ReadEncodingAttribute (reader, X.Attr.Encoding);
+			this.BodyTag   = reader.ReadStringAttribute   (X.Attr.BodyTag);
+			this.RecordTag = reader.ReadStringAttribute   (X.Attr.RecordTag);
+			this.Indent    = reader.ReadStringAttribute   (X.Attr.Indent);
+			this.EndOfLine = reader.ReadStringAttribute   (X.Attr.EndOfLine);
+			this.CamelCase = reader.ReadBoolAttribute     (X.Attr.CamelCase);
+			this.Compact   = reader.ReadBoolAttribute     (X.Attr.Compact);
+			this.Encoding  = reader.ReadEncodingAttribute (X.Attr.Encoding);
 
 			reader.Read ();
 		}
@@ -60,17 +60,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		protected override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute   (writer, X.Attr.BodyTag,   this.BodyTag);
-			IOHelpers.WriteStringAttribute   (writer, X.Attr.RecordTag, this.RecordTag);
-			IOHelpers.WriteStringAttribute   (writer, X.Attr.Indent,    this.Indent);
-			IOHelpers.WriteStringAttribute   (writer, X.Attr.EndOfLine, this.EndOfLine);
-			IOHelpers.WriteBoolAttribute     (writer, X.Attr.CamelCase, this.CamelCase);
-			IOHelpers.WriteBoolAttribute     (writer, X.Attr.Compact,   this.Compact);
-			IOHelpers.WriteEncodingAttribute (writer, X.Attr.Encoding,  this.Encoding);
+			writer.WriteStringAttribute   (X.Attr.BodyTag,   this.BodyTag);
+			writer.WriteStringAttribute   (X.Attr.RecordTag, this.RecordTag);
+			writer.WriteStringAttribute   (X.Attr.Indent,    this.Indent);
+			writer.WriteStringAttribute   (X.Attr.EndOfLine, this.EndOfLine);
+			writer.WriteBoolAttribute     (X.Attr.CamelCase, this.CamelCase);
+			writer.WriteBoolAttribute     (X.Attr.Compact,   this.Compact);
+			writer.WriteEncodingAttribute (X.Attr.Encoding,  this.Encoding);
 
 			writer.WriteEndElement ();
 		}

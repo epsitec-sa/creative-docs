@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public SearchDefinition(System.Xml.XmlReader reader)
 		{
-			this.Pattern = IOHelpers.ReadStringAttribute (reader, X.Attr.Pattern);
-			this.Options = (SearchOptions) IOHelpers.ReadTypeAttribute (reader, X.Attr.Options, typeof (SearchOptions));
+			this.Pattern = reader.ReadStringAttribute (X.Attr.Pattern);
+			this.Options = (SearchOptions) reader.ReadTypeAttribute (X.Attr.Options, typeof (SearchOptions));
 
 			reader.Read ();
 		}
@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute (writer, X.Attr.Pattern, this.Pattern);
-			IOHelpers.WriteTypeAttribute (writer, X.Attr.Options, this.Options);
+			writer.WriteStringAttribute (X.Attr.Pattern, this.Pattern);
+			writer.WriteTypeAttribute   (X.Attr.Options, this.Options);
 
 			writer.WriteEndElement ();
 		}

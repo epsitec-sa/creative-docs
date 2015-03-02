@@ -44,26 +44,26 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					}
 					else if (reader.Name == X.Params)
 					{
-						this.PageSize.Width        = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageSize_Width);
-						this.PageSize.Height       = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageSize_Height);
+						this.PageSize.Width        = (double) reader.ReadDecimalAttribute (X.Attr.PageSize_Width);
+						this.PageSize.Height       = (double) reader.ReadDecimalAttribute (X.Attr.PageSize_Height);
 
-						this.PageMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageMargins_Left);
-						this.PageMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageMargins_Right);
-						this.PageMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageMargins_Top);
-						this.PageMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageMargins_Bottom);
+						this.PageMargins.Left      = (double) reader.ReadDecimalAttribute (X.Attr.PageMargins_Left);
+						this.PageMargins.Right     = (double) reader.ReadDecimalAttribute (X.Attr.PageMargins_Right);
+						this.PageMargins.Top       = (double) reader.ReadDecimalAttribute (X.Attr.PageMargins_Top);
+						this.PageMargins.Bottom    = (double) reader.ReadDecimalAttribute (X.Attr.PageMargins_Bottom);
 
-						this.CellMargins.Left      = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.CellMargins_Left);
-						this.CellMargins.Right     = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.CellMargins_Right);
-						this.CellMargins.Top       = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.CellMargins_Top);
-						this.CellMargins.Bottom    = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.CellMargins_Bottom);
+						this.CellMargins.Left      = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Left);
+						this.CellMargins.Right     = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Right);
+						this.CellMargins.Top       = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Top);
+						this.CellMargins.Bottom    = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Bottom);
 
-						this.Font                  = (ExportFont) IOHelpers.ReadTypeAttribute (reader, X.Attr.Font, typeof (ExportFont));
-						this.FontSize              = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.FontSize);
-						this.AutomaticColumnWidths = IOHelpers.ReadBoolAttribute   (reader, X.Attr.AutomaticColumnWidths);
-						this.Header                = IOHelpers.ReadStringAttribute (reader, X.Attr.Header);
-						this.Footer                = IOHelpers.ReadStringAttribute (reader, X.Attr.Footer);
-						this.Indent                = IOHelpers.ReadStringAttribute (reader, X.Attr.Indent);
-						this.Watermark             = IOHelpers.ReadStringAttribute (reader, X.Attr.Watermark);
+						this.Font                  = (ExportFont) reader.ReadTypeAttribute (X.Attr.Font, typeof (ExportFont));
+						this.FontSize              = (double) reader.ReadDecimalAttribute (X.Attr.FontSize);
+						this.AutomaticColumnWidths = reader.ReadBoolAttribute   (X.Attr.AutomaticColumnWidths);
+						this.Header                = reader.ReadStringAttribute (X.Attr.Header);
+						this.Footer                = reader.ReadStringAttribute (X.Attr.Footer);
+						this.Indent                = reader.ReadStringAttribute (X.Attr.Indent);
+						this.Watermark             = reader.ReadStringAttribute (X.Attr.Watermark);
 
 						reader.Read ();
 					}
@@ -117,33 +117,33 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		protected override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 
 			this.Style.Serialize (writer, X.Style);
 
 			writer.WriteStartElement (X.Params);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageSize_Width,        (decimal) this.PageSize.Width);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageSize_Height,       (decimal) this.PageSize.Height);
+			writer.WriteDecimalAttribute (X.Attr.PageSize_Width,        (decimal) this.PageSize.Width);
+			writer.WriteDecimalAttribute (X.Attr.PageSize_Height,       (decimal) this.PageSize.Height);
 
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageMargins_Left,      (decimal) this.PageMargins.Left);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageMargins_Right,     (decimal) this.PageMargins.Right);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageMargins_Top,       (decimal) this.PageMargins.Top);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageMargins_Bottom,    (decimal) this.PageMargins.Bottom);
+			writer.WriteDecimalAttribute (X.Attr.PageMargins_Left,      (decimal) this.PageMargins.Left);
+			writer.WriteDecimalAttribute (X.Attr.PageMargins_Right,     (decimal) this.PageMargins.Right);
+			writer.WriteDecimalAttribute (X.Attr.PageMargins_Top,       (decimal) this.PageMargins.Top);
+			writer.WriteDecimalAttribute (X.Attr.PageMargins_Bottom,    (decimal) this.PageMargins.Bottom);
 
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.CellMargins_Left,      (decimal) this.CellMargins.Left);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.CellMargins_Right,     (decimal) this.CellMargins.Right);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.CellMargins_Top,       (decimal) this.CellMargins.Top);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.CellMargins_Bottom,    (decimal) this.CellMargins.Bottom);
+			writer.WriteDecimalAttribute (X.Attr.CellMargins_Left,      (decimal) this.CellMargins.Left);
+			writer.WriteDecimalAttribute (X.Attr.CellMargins_Right,     (decimal) this.CellMargins.Right);
+			writer.WriteDecimalAttribute (X.Attr.CellMargins_Top,       (decimal) this.CellMargins.Top);
+			writer.WriteDecimalAttribute (X.Attr.CellMargins_Bottom,    (decimal) this.CellMargins.Bottom);
 
-			IOHelpers.WriteTypeAttribute    (writer, X.Attr.Font,                  this.Font);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.FontSize,              (decimal) this.FontSize);
-			IOHelpers.WriteBoolAttribute    (writer, X.Attr.AutomaticColumnWidths, this.AutomaticColumnWidths);
-			IOHelpers.WriteStringAttribute  (writer, X.Attr.Header,                this.Header);
-			IOHelpers.WriteStringAttribute  (writer, X.Attr.Footer,                this.Footer);
-			IOHelpers.WriteStringAttribute  (writer, X.Attr.Indent,                this.Indent);
-			IOHelpers.WriteStringAttribute  (writer, X.Attr.Watermark,             this.Watermark);
+			writer.WriteTypeAttribute    (X.Attr.Font,                  this.Font);
+			writer.WriteDecimalAttribute (X.Attr.FontSize,              (decimal) this.FontSize);
+			writer.WriteBoolAttribute    (X.Attr.AutomaticColumnWidths, this.AutomaticColumnWidths);
+			writer.WriteStringAttribute  (X.Attr.Header,                this.Header);
+			writer.WriteStringAttribute  (X.Attr.Footer,                this.Footer);
+			writer.WriteStringAttribute  (X.Attr.Indent,                this.Indent);
+			writer.WriteStringAttribute  (X.Attr.Watermark,             this.Watermark);
 			writer.WriteEndElement ();
 
 			writer.WriteEndElement ();

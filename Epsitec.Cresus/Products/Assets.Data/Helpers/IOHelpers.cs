@@ -15,14 +15,14 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 		public static System.Text.Encoding ReadEncodingAttribute(this System.Xml.XmlReader reader, string name)
 		{
-			var e = (IOEncoding) IOHelpers.ReadTypeAttribute (reader, name, typeof (IOEncoding));
+			var e = (IOEncoding) reader.ReadTypeAttribute (name, typeof (IOEncoding));
 			return IOHelpers.EncodingFactory (e);
 		}
 
 		public static void WriteEncodingAttribute(this System.Xml.XmlWriter writer, string name, System.Text.Encoding encoding)
 		{
 			IOEncoding e = IOHelpers.IOEncodings.Where (x => IOHelpers.EncodingFactory (x) == encoding).FirstOrDefault ();
-			IOHelpers.WriteTypeAttribute (writer, name, e);
+			writer.WriteTypeAttribute (name, e);
 		}
 
 		private static System.Text.Encoding EncodingFactory(IOEncoding e)
@@ -228,8 +228,8 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		#region Range
 		public static DateRange ReadDateRangeAttribute(this System.Xml.XmlReader reader, string name)
 		{
-			var includeFrom = IOHelpers.ReadDateAttribute (reader, name+".IncludeFrom");
-			var excludeTo   = IOHelpers.ReadDateAttribute (reader, name+".ExcludeTo");
+			var includeFrom = reader.ReadDateAttribute (name+".IncludeFrom");
+			var excludeTo   = reader.ReadDateAttribute (name+".ExcludeTo");
 
 			if (includeFrom.HasValue && excludeTo.HasValue)
 			{
@@ -245,8 +245,8 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		{
 			if (!value.IsEmpty)
 			{
-				IOHelpers.WriteDateAttribute (writer, name+".IncludeFrom", value.IncludeFrom);
-				IOHelpers.WriteDateAttribute (writer, name+".ExcludeTo",   value.ExcludeTo);
+				writer.WriteDateAttribute (name+".IncludeFrom", value.IncludeFrom);
+				writer.WriteDateAttribute (name+".ExcludeTo",   value.ExcludeTo);
 			}
 		}
 		#endregion

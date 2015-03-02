@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public SortedColumn(System.Xml.XmlReader reader)
 		{
-			this.Field = IOHelpers.ReadObjectFieldAttribute (reader, X.Attr.Field);
-			this.Type  = (SortedType) IOHelpers.ReadTypeAttribute (reader, X.Attr.Type, typeof (SortedType));
+			this.Field = reader.ReadObjectFieldAttribute (X.Attr.Field);
+			this.Type  = (SortedType) reader.ReadTypeAttribute (X.Attr.Type, typeof (SortedType));
 
 			reader.Read ();
 		}
@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteObjectFieldAttribute (writer, X.Attr.Field, this.Field);
-			IOHelpers.WriteTypeAttribute        (writer, X.Attr.Type,  this.Type);
+			writer.WriteObjectFieldAttribute (X.Attr.Field, this.Field);
+			writer.WriteTypeAttribute        (X.Attr.Type,  this.Type);
 
 			writer.WriteEndElement ();
 		}

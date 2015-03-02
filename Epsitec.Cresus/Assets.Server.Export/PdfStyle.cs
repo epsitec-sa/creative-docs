@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public PdfStyle(System.Xml.XmlReader reader)
 		{
-			this.LabelColor      = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, X.Attr.LabelColor,  typeof (ExportColor));
-			this.EvenColor       = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, X.Attr.EvenColor,   typeof (ExportColor));
-			this.OddColor        = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, X.Attr.OddColor,    typeof (ExportColor));
-			this.BorderColor     = (ExportColor) IOHelpers.ReadTypeAttribute    (reader, X.Attr.BorderColor, typeof (ExportColor));
-			this.BorderThickness = (double)      IOHelpers.ReadDecimalAttribute (reader, X.Attr.BorderThickness);
+			this.LabelColor      = (ExportColor) reader.ReadTypeAttribute    (X.Attr.LabelColor,  typeof (ExportColor));
+			this.EvenColor       = (ExportColor) reader.ReadTypeAttribute    (X.Attr.EvenColor,   typeof (ExportColor));
+			this.OddColor        = (ExportColor) reader.ReadTypeAttribute    (X.Attr.OddColor,    typeof (ExportColor));
+			this.BorderColor     = (ExportColor) reader.ReadTypeAttribute    (X.Attr.BorderColor, typeof (ExportColor));
+			this.BorderThickness = (double)      reader.ReadDecimalAttribute (X.Attr.BorderThickness);
 
 			reader.Read ();
 		}
@@ -121,11 +121,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteTypeAttribute    (writer, X.Attr.LabelColor,      this.LabelColor);
-			IOHelpers.WriteTypeAttribute    (writer, X.Attr.EvenColor,       this.EvenColor);
-			IOHelpers.WriteTypeAttribute    (writer, X.Attr.OddColor,        this.OddColor);
-			IOHelpers.WriteTypeAttribute    (writer, X.Attr.BorderColor,     this.BorderColor);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.BorderThickness, (decimal) this.BorderThickness);
+			writer.WriteTypeAttribute    (X.Attr.LabelColor,      this.LabelColor);
+			writer.WriteTypeAttribute    (X.Attr.EvenColor,       this.EvenColor);
+			writer.WriteTypeAttribute    (X.Attr.OddColor,        this.OddColor);
+			writer.WriteTypeAttribute    (X.Attr.BorderColor,     this.BorderColor);
+			writer.WriteDecimalAttribute (X.Attr.BorderThickness, (decimal) this.BorderThickness);
 
 			writer.WriteEndElement ();
 		}

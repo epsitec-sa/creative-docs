@@ -74,14 +74,14 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.Left,   (decimal) windowPlacement.Bounds.Left);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.Bottom, (decimal) windowPlacement.Bounds.Bottom);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.Width,  (decimal) windowPlacement.Bounds.Width);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.Height, (decimal) windowPlacement.Bounds.Height);
+			writer.WriteDecimalAttribute (X.Attr.Left,   (decimal) windowPlacement.Bounds.Left);
+			writer.WriteDecimalAttribute (X.Attr.Bottom, (decimal) windowPlacement.Bounds.Bottom);
+			writer.WriteDecimalAttribute (X.Attr.Width,  (decimal) windowPlacement.Bounds.Width);
+			writer.WriteDecimalAttribute (X.Attr.Height, (decimal) windowPlacement.Bounds.Height);
 
-			IOHelpers.WriteBoolAttribute (writer, X.Attr.IsFullScreen, windowPlacement.IsFullScreen);
-			IOHelpers.WriteBoolAttribute (writer, X.Attr.IsMinimized,  windowPlacement.IsMinimized);
-			IOHelpers.WriteBoolAttribute (writer, X.Attr.IsHidden,     windowPlacement.IsHidden);
+			writer.WriteBoolAttribute (X.Attr.IsFullScreen, windowPlacement.IsFullScreen);
+			writer.WriteBoolAttribute (X.Attr.IsMinimized,  windowPlacement.IsMinimized);
+			writer.WriteBoolAttribute (X.Attr.IsHidden,     windowPlacement.IsHidden);
 
 			writer.WriteEndElement ();
 		}

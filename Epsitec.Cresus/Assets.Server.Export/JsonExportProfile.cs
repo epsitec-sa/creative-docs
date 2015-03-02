@@ -24,10 +24,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public JsonExportProfile(System.Xml.XmlReader reader)
 		{
-			this.EndOfLine = IOHelpers.ReadStringAttribute   (reader, X.Attr.EndOfLine);
-			this.CamelCase = IOHelpers.ReadBoolAttribute     (reader, X.Attr.CamelCase);
-			this.Compact   = IOHelpers.ReadBoolAttribute     (reader, X.Attr.Compact);
-			this.Encoding  = IOHelpers.ReadEncodingAttribute (reader, X.Attr.Encoding);
+			this.EndOfLine = reader.ReadStringAttribute   (X.Attr.EndOfLine);
+			this.CamelCase = reader.ReadBoolAttribute     (X.Attr.CamelCase);
+			this.Compact   = reader.ReadBoolAttribute     (X.Attr.Compact);
+			this.Encoding  = reader.ReadEncodingAttribute (X.Attr.Encoding);
 
 			reader.Read ();
 		}
@@ -44,14 +44,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		protected override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute   (writer, X.Attr.EndOfLine, this.EndOfLine);
-			IOHelpers.WriteBoolAttribute     (writer, X.Attr.CamelCase, this.CamelCase);
-			IOHelpers.WriteBoolAttribute     (writer, X.Attr.Compact,   this.Compact);
-			IOHelpers.WriteEncodingAttribute (writer, X.Attr.Encoding,  this.Encoding);
+			writer.WriteStringAttribute   (X.Attr.EndOfLine, this.EndOfLine);
+			writer.WriteBoolAttribute     (X.Attr.CamelCase, this.CamelCase);
+			writer.WriteBoolAttribute     (X.Attr.Compact,   this.Compact);
+			writer.WriteEncodingAttribute (X.Attr.Encoding,  this.Encoding);
 
 			writer.WriteEndElement ();
 		}

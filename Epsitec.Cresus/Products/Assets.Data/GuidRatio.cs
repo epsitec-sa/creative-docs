@@ -18,8 +18,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidRatio(System.Xml.XmlReader reader)
 		{
-			this.Guid  = IOHelpers.ReadGuidAttribute    (reader, X.Attr.Guid);
-			this.Ratio = IOHelpers.ReadDecimalAttribute (reader, X.Attr.Ratio);
+			this.Guid  = reader.ReadGuidAttribute    (X.Attr.Guid);
+			this.Ratio = reader.ReadDecimalAttribute (X.Attr.Ratio);
 
 			reader.Read ();
 		}
@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteGuidAttribute    (writer, X.Attr.Guid,  this.Guid);
-			IOHelpers.WriteDecimalAttribute (writer, X.Attr.Ratio, this.Ratio);
+			writer.WriteGuidAttribute    (X.Attr.Guid,  this.Guid);
+			writer.WriteDecimalAttribute (X.Attr.Ratio, this.Ratio);
 
 			writer.WriteEndElement ();
 		}

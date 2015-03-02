@@ -302,8 +302,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				{
 					writer.WriteStartElement (X.Group);
 
-					IOHelpers.WriteStringAttribute (writer, X.Attr.Parent,    pair.Key  .ToStringIO ());
-					IOHelpers.WriteStringAttribute (writer, X.Attr.Selection, pair.Value.ToStringIO ());
+					writer.WriteStringAttribute (X.Attr.Parent, pair.Key.ToStringIO ());
+					writer.WriteStringAttribute (X.Attr.Selection, pair.Value.ToStringIO ());
 
 					writer.WriteEndElement ();
 				}
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				foreach (var persistantUniqueId in LocalSettings.hiddenWarnings)
 				{
 					writer.WriteStartElement (X.Warning);
-					IOHelpers.WriteStringAttribute (writer, X.Attr.PersistantUniqueId, persistantUniqueId);
+					writer.WriteStringAttribute (X.Attr.PersistantUniqueId, persistantUniqueId);
 					writer.WriteEndElement ();
 				}
 
