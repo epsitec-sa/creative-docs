@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "GuidRatio")
+					if (reader.Name == X.GuidRatio)
 					{
 						this.Value = new GuidRatio (reader);
 					}
@@ -42,9 +43,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Property.GuidRatio");
+			writer.WriteStartElement (X.Property_GuidRatio);
 			base.Serialize (writer);
-			this.Value.Serialize (writer, "GuidRatio");
+			this.Value.Serialize (writer, X.GuidRatio);
 			writer.WriteEndElement ();
 		}
 

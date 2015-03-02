@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "ObjectField")
+					if (reader.Name == X.ObjectField)
 					{
 						var s = reader.ReadElementContentAsString ();
 						this.Field = IOHelpers.ParseObjectField  (s);
@@ -85,7 +86,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public virtual void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteElementString ("ObjectField", this.Field.ToStringIO ());
+			writer.WriteElementString (X.ObjectField, this.Field.ToStringIO ());
 		}
 
 

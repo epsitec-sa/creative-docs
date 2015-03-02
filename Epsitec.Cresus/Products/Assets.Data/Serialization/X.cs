@@ -71,6 +71,23 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string MandatDirectory = "MandatDirectory";
 		public const string MandatFilename = "MandatFilename";
 		public const string WindowPlacement = "WindowPlacement";
+		public const string Type = "Type";
+		public const string Properties = "Properties";
+		public const string Event = "Event";
+		public const string Events = "Events";
+		public const string Value = "Value";
+		public const string ObjectField = "ObjectField";
+		public const string Property_AmortizedAmount = "Property.AmortizedAmount";
+		public const string Property_ComputedAmount = "Property_ComputedAmount";
+		public const string Property_Date = "Property_Date";
+		public const string Property_Decimal = "Property_Decimal";
+		public const string Property_Guid = "Property_Guid";
+		public const string Property_GuidRatio = "Property_GuidRatio";
+		public const string Property_Int = "Property_Int";
+		public const string Property_String = "Property_String";
+		public const string AmortizedAmount = "AmortizedAmount";
+		public const string ComputedAmount = "ComputedAmount";
+		public const string GuidRatio = "GuidRatio";
 
 		public static class Attr
 		{

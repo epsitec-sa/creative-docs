@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -59,20 +60,20 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Guid":
+						case X.Guid:
 							this.guid = new Guid (reader);
 							break;
 
-						case "Type":
+						case X.Type:
 							var s = reader.ReadElementContentAsString ();
 							this.Type = (EventType) IOHelpers.ParseType (s, typeof (EventType));
 							break;
 
-						case "Timestamp":
+						case X.Timestamp:
 							this.Timestamp = new Timestamp (reader);
 							break;
 
-						case "Properties":
+						case X.Properties:
 							this.DeserializeProperties (reader);
 							break;
 					}
@@ -203,7 +204,7 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.EventDate:
 					return new DataDateProperty (field, this.Timestamp.Date);
 
-				//	Si on trie selon la colonne du glyphe, on trie en fait selon le
+				//	Si on trie selon la colonne du glyph, on trie en fait selon le
 				//	nom du type de l'événement. Cela parait plausible.
 				case ObjectField.EventGlyph:
 				case ObjectField.EventType:
@@ -217,11 +218,11 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Event");
+			writer.WriteStartElement (X.Event);
 
-			this.guid.Serialize (writer, "Guid");
-			writer.WriteElementString ("Type", this.Type.ToStringIO ());
-			this.Timestamp.Serialize (writer, "Timestamp");
+			this.guid.Serialize (writer, X.Guid);
+			writer.WriteElementString (X.Type, this.Type.ToStringIO ());
+			this.Timestamp.Serialize (writer, X.Timestamp);
 			this.SerializeProperties (writer);
 
 			writer.WriteEndElement ();
@@ -229,7 +230,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void SerializeProperties(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Properties");
+			writer.WriteStartElement (X.Properties);
 
 			foreach (var property in this.properties)
 			{
@@ -245,43 +246,39 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name.StartsWith ("Property."))
+					switch (reader.Name)
 					{
-						var name = reader.Name.Substring (9);  // nom après "Property."
-						switch (name)
-						{
-							case "String":
-								this.properties.Add (new DataStringProperty (reader));
-								break;
+						case X.Property_String:
+							this.properties.Add (new DataStringProperty (reader));
+							break;
 
-							case "Int":
-								this.properties.Add (new DataIntProperty (reader));
-								break;
+						case X.Property_Int:
+							this.properties.Add (new DataIntProperty (reader));
+							break;
 
-							case "GuidRatio":
-								this.properties.Add (new DataGuidRatioProperty (reader));
-								break;
+						case X.Property_GuidRatio:
+							this.properties.Add (new DataGuidRatioProperty (reader));
+							break;
 
-							case "Guid":
-								this.properties.Add (new DataGuidProperty (reader));
-								break;
+						case X.Property_Guid:
+							this.properties.Add (new DataGuidProperty (reader));
+							break;
 
-							case "Decimal":
-								this.properties.Add (new DataDecimalProperty (reader));
-								break;
+						case X.Property_Decimal:
+							this.properties.Add (new DataDecimalProperty (reader));
+							break;
 
-							case "Date":
-								this.properties.Add (new DataDateProperty (reader));
-								break;
+						case X.Property_Date:
+							this.properties.Add (new DataDateProperty (reader));
+							break;
 
-							case "ComputedAmount":
-								this.properties.Add (new DataComputedAmountProperty (reader));
-								break;
+						case X.Property_ComputedAmount:
+							this.properties.Add (new DataComputedAmountProperty (reader));
+							break;
 
-							case "AmortizedAmount":
-								this.properties.Add (new DataAmortizedAmountProperty (reader));
-								break;
-						}
+						case X.Property_AmortizedAmount:
+							this.properties.Add (new DataAmortizedAmountProperty (reader));
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

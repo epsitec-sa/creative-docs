@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Guid")
+					if (reader.Name == X.Guid)
 					{
 						this.Value = new Guid (reader);
 					}
@@ -42,9 +43,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Property.Guid");
+			writer.WriteStartElement (X.Property_Guid);
 			base.Serialize (writer);
-			this.Value.Serialize (writer, "Guid");
+			this.Value.Serialize (writer, X.Guid);
 			writer.WriteEndElement ();
 		}
 
