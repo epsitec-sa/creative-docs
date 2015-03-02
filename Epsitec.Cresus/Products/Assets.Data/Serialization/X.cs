@@ -77,6 +77,21 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string BorderColor = "borderColor";
 			public const string BorderThickness = "borderThickness";
 			public const string Ratio = "ratio";
+			public const string Format = "Fformat";
+			public const string Filename = "filename";
+			public const string EndOfLine = "endOfLine";
+			public const string CamelCase = "camelCase";
+			public const string Compact = "compact";
+			public const string Encoding = "encoding";
+			public const string ColumnSeparator = "columnSeparator";
+			public const string ColumnBracket = "columnBracket";
+			public const string Escape = "escape";
+			public const string HasHeader = "hasHeader";
+			public const string Inverted = "inverted";
+			public const string BodyTag = "bodyTag";
+			public const string RecordTag = "recordTag";
+			public const string Pattern = "pattern";
+			public const string Options = "options";
 		}
 	}
 }

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
@@ -17,8 +18,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public ExportInstructions(System.Xml.XmlReader reader)
 		{
-			this.Format   = (ExportFormat) IOHelpers.ReadTypeAttribute (reader, "Format", typeof (ExportFormat));
-			this.Filename = IOHelpers.ReadStringAttribute (reader, "Filename");
+			this.Format   = (ExportFormat) IOHelpers.ReadTypeAttribute (reader, X.Attr.Format, typeof (ExportFormat));
+			this.Filename = IOHelpers.ReadStringAttribute (reader, X.Attr.Filename);
 
 			reader.Read ();
 		}
@@ -37,8 +38,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteTypeAttribute   (writer, "Format",   this.Format);
-			IOHelpers.WriteStringAttribute (writer, "Filename", this.Filename);
+			IOHelpers.WriteTypeAttribute   (writer, X.Attr.Format,   this.Format);
+			IOHelpers.WriteStringAttribute (writer, X.Attr.Filename, this.Filename);
 
 			writer.WriteEndElement ();
 		}
