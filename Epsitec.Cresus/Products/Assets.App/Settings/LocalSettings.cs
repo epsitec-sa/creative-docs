@@ -220,41 +220,41 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("LocalSettings");
+			writer.WriteStartElement (X.LocalSettings);
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
+			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
 
 			LocalSettings.SerializeColumnsState (writer);
 			LocalSettings.SerializeSearchInfo (writer);
 			LocalSettings.SerializeCreateAssetDefaultGroups (writer);
 			LocalSettings.SerializeHiddenWarnings (writer);
 
-			writer.WriteElementString ("UILanguage",           LocalSettings.UILanguage);
-			writer.WriteElementString ("DataLanguage",         LocalSettings.DataLanguage);
-			writer.WriteElementString ("CreateMandatDate",     LocalSettings.CreateMandatDate.ToStringIO ());
-			writer.WriteElementString ("CreateAssetDate",      LocalSettings.CreateAssetDate.ToStringIO ());
-			writer.WriteElementString ("AmortizationDateFrom", LocalSettings.AmortizationDateFrom.ToStringIO ());
-			writer.WriteElementString ("AmortizationDateTo",   LocalSettings.AmortizationDateTo.ToStringIO ());
-			writer.WriteElementString ("LockedDate",           LocalSettings.LockedDate.ToStringIO ());
-			writer.WriteElementString ("DefaultMandatDate",    LocalSettings.DefaultMandatDate.ToStringIO ());
-			writer.WriteElementString ("DefaultFreeDate",      LocalSettings.DefaultFreeDate.ToStringIO ());
+			writer.WriteElementString (X.UILanguage,           LocalSettings.UILanguage);
+			writer.WriteElementString (X.DataLanguage,         LocalSettings.DataLanguage);
+			writer.WriteElementString (X.CreateMandatDate,     LocalSettings.CreateMandatDate.ToStringIO ());
+			writer.WriteElementString (X.CreateAssetDate,      LocalSettings.CreateAssetDate.ToStringIO ());
+			writer.WriteElementString (X.AmortizationDateFrom, LocalSettings.AmortizationDateFrom.ToStringIO ());
+			writer.WriteElementString (X.AmortizationDateTo,   LocalSettings.AmortizationDateTo.ToStringIO ());
+			writer.WriteElementString (X.LockedDate,           LocalSettings.LockedDate.ToStringIO ());
+			writer.WriteElementString (X.DefaultMandatDate,    LocalSettings.DefaultMandatDate.ToStringIO ());
+			writer.WriteElementString (X.DefaultFreeDate,      LocalSettings.DefaultFreeDate.ToStringIO ());
 
-			LocalSettings.ExportInstructions.Serialize (writer, "ExportInstructions");
-			LocalSettings.ExportTxtProfile  .Serialize (writer, "ExportTxtProfile");
-			LocalSettings.ExportCsvProfile  .Serialize (writer, "ExportCsvProfile");
-			LocalSettings.ExportXmlProfile  .Serialize (writer, "ExportXmlProfile");
-			LocalSettings.ExportYamlProfile .Serialize (writer, "ExportYamlProfile");
-			LocalSettings.ExportJsonProfile .Serialize (writer, "ExportJsonProfile");
-			LocalSettings.ExportPdfProfile  .Serialize (writer, "ExportPdfProfile");
+			LocalSettings.ExportInstructions.Serialize (writer, X.ExportInstructions);
+			LocalSettings.ExportTxtProfile  .Serialize (writer, X.ExportTxtProfile);
+			LocalSettings.ExportCsvProfile  .Serialize (writer, X.ExportCsvProfile);
+			LocalSettings.ExportXmlProfile  .Serialize (writer, X.ExportXmlProfile);
+			LocalSettings.ExportYamlProfile .Serialize (writer, X.ExportYamlProfile);
+			LocalSettings.ExportJsonProfile .Serialize (writer, X.ExportJsonProfile);
+			LocalSettings.ExportPdfProfile  .Serialize (writer, X.ExportPdfProfile);
 
-			writer.WriteElementString ("AccountsImportFilename", LocalSettings.AccountsImportFilename);
+			writer.WriteElementString (X.AccountsImportFilename, LocalSettings.AccountsImportFilename);
 
-			writer.WriteElementString ("SplitterAssetsEventPos",    LocalSettings.SplitterAssetsEventPos.ToStringIO ());
-			writer.WriteElementString ("SplitterAssetsMultiplePos", LocalSettings.SplitterAssetsMultiplePos.ToStringIO ());
+			writer.WriteElementString (X.SplitterAssetsEventPos, LocalSettings.SplitterAssetsEventPos.ToStringIO ());
+			writer.WriteElementString (X.SplitterAssetsMultiplePos, LocalSettings.SplitterAssetsMultiplePos.ToStringIO ());
 
-			writer.WriteElementString ("AccountCategories", LocalSettings.AccountCategories.ToStringIO ());
+			writer.WriteElementString (X.AccountCategories, LocalSettings.AccountCategories.ToStringIO ());
 
-			LocalSettings.ExpressionSimulationParams.Serialize (writer, "ExpressionSimulationParams");
+			LocalSettings.ExpressionSimulationParams.Serialize (writer, X.ExpressionSimulationParams);
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
@@ -266,7 +266,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			if (columnsStates.Any ())
 			{
-				writer.WriteStartElement ("ColumnsState");
+				writer.WriteStartElement (X.ColumnsState);
 
 				foreach (var pair in columnsStates)
 				{
@@ -281,7 +281,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			if (LocalSettings.searchInfos.Any ())
 			{
-				writer.WriteStartElement ("SearchInfo");
+				writer.WriteStartElement (X.SearchInfo);
 
 				foreach (var pair in LocalSettings.searchInfos)
 				{
@@ -296,14 +296,14 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			if (LocalSettings.createAssetDefaultGroups.Any ())
 			{
-				writer.WriteStartElement ("CreateAssetDefaultGroups");
+				writer.WriteStartElement (X.CreateAssetDefaultGroups);
 
 				foreach (var pair in LocalSettings.createAssetDefaultGroups)
 				{
-					writer.WriteStartElement ("Group");
+					writer.WriteStartElement (X.Group);
 
-					IOHelpers.WriteStringAttribute (writer, "Parent",    pair.Key  .ToStringIO ());
-					IOHelpers.WriteStringAttribute (writer, "Selection", pair.Value.ToStringIO ());
+					IOHelpers.WriteStringAttribute (writer, X.Attr.Parent,    pair.Key  .ToStringIO ());
+					IOHelpers.WriteStringAttribute (writer, X.Attr.Selection, pair.Value.ToStringIO ());
 
 					writer.WriteEndElement ();
 				}
@@ -316,12 +316,12 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			if (LocalSettings.hiddenWarnings.Any ())
 			{
-				writer.WriteStartElement ("HiddenWarnings");
+				writer.WriteStartElement (X.HiddenWarnings);
 
 				foreach (var persistantUniqueId in LocalSettings.hiddenWarnings)
 				{
-					writer.WriteStartElement ("Warning");
-					IOHelpers.WriteStringAttribute (writer, "PersistantUniqueId", persistantUniqueId);
+					writer.WriteStartElement (X.Warning);
+					IOHelpers.WriteStringAttribute (writer, X.Attr.PersistantUniqueId, persistantUniqueId);
 					writer.WriteEndElement ();
 				}
 
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "LocalSettings")
+					if (reader.Name == X.LocalSettings)
 					{
 						LocalSettings.DeserializeLocalSettings (reader);
 					}
@@ -358,107 +358,107 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "ColumnsState":
+						case X.ColumnsState:
 							LocalSettings.DeserializeColumnsState (reader);
 							break;
 
-						case "SearchInfo":
+						case X.SearchInfo:
 							LocalSettings.DeserializeSearchInfo (reader);
 							break;
 
-						case "CreateAssetDefaultGroups":
+						case X.CreateAssetDefaultGroups:
 							LocalSettings.DeserializeCreateAssetDefaultGroups (reader);
 							break;
 
-						case "HiddenWarnings":
+						case X.HiddenWarnings:
 							LocalSettings.DeserializeHiddenWarnings (reader);
 							break;
 
-						case "UILanguage":
+						case X.UILanguage:
 							LocalSettings.UILanguage = reader.ReadElementContentAsString ();
 							break;
 
-						case "DataLanguage":
+						case X.DataLanguage:
 							LocalSettings.DataLanguage = reader.ReadElementContentAsString ();
 							break;
 
-						case "CreateMandatDate":
+						case X.CreateMandatDate:
 							LocalSettings.CreateMandatDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "CreateAssetDate":
+						case X.CreateAssetDate:
 							LocalSettings.CreateAssetDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "AmortizationDateFrom":
+						case X.AmortizationDateFrom:
 							LocalSettings.AmortizationDateFrom = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "AmortizationDateTo":
+						case X.AmortizationDateTo:
 							LocalSettings.AmortizationDateTo = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "LockedDate":
+						case X.LockedDate:
 							LocalSettings.LockedDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "DefaultMandatDate":
+						case X.DefaultMandatDate:
 							LocalSettings.DefaultMandatDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "DefaultFreeDate":
+						case X.DefaultFreeDate:
 							LocalSettings.DefaultFreeDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case "ExportInstructions":
+						case X.ExportInstructions:
 							LocalSettings.ExportInstructions = new ExportInstructions (reader);
 							break;
 
-						case "ExportTxtProfile":
+						case X.ExportTxtProfile:
 							LocalSettings.ExportTxtProfile = new TextExportProfile (reader);
 							break;
 
-						case "ExportCsvProfile":
+						case X.ExportCsvProfile:
 							LocalSettings.ExportCsvProfile = new TextExportProfile (reader);
 							break;
 
-						case "ExportXmlProfile":
+						case X.ExportXmlProfile:
 							LocalSettings.ExportXmlProfile = new XmlExportProfile (reader);
 							break;
 
-						case "ExportYamlProfile":
+						case X.ExportYamlProfile:
 							LocalSettings.ExportYamlProfile = new YamlExportProfile (reader);
 							break;
 
-						case "ExportJsonProfile":
+						case X.ExportJsonProfile:
 							LocalSettings.ExportJsonProfile = new JsonExportProfile (reader);
 							break;
 
-						case "ExportPdfProfile":
+						case X.ExportPdfProfile:
 							LocalSettings.ExportPdfProfile = new PdfExportProfile (reader);
 							break;
 
-						case "AccountsImportFilename":
+						case X.AccountsImportFilename:
 							LocalSettings.AccountsImportFilename = reader.ReadElementContentAsString ();
 							break;
 
-						case "SplitterAssetsEventPos":
+						case X.SplitterAssetsEventPos:
 							LocalSettings.SplitterAssetsEventPos = reader.ReadElementContentAsString ().ParseInt ();
 							break;
 
-						case "SplitterAssetsMultiplePos":
+						case X.SplitterAssetsMultiplePos:
 							LocalSettings.SplitterAssetsMultiplePos = reader.ReadElementContentAsString ().ParseInt ();
 							break;
 
-						case "AccountCategories":
+						case X.AccountCategories:
 							LocalSettings.AccountCategories = (AccountCategory) reader.ReadElementContentAsString ().ParseType (typeof (AccountCategory));
 							break;
 
-						case "ExpressionSimulationParams":
+						case X.ExpressionSimulationParams:
 							LocalSettings.ExpressionSimulationParams = new ExpressionSimulationParams (reader);
 							break;
 					}
@@ -515,8 +515,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					var k = IOHelpers.ParseGuid (reader["Parent"]);
-					var v = IOHelpers.ParseGuid (reader["Selection"]);
+					var k = IOHelpers.ParseGuid (reader[X.Attr.Parent]);
+					var v = IOHelpers.ParseGuid (reader[X.Attr.Selection]);
 					LocalSettings.createAssetDefaultGroups.Add (k, v);
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					LocalSettings.hiddenWarnings.Add (reader["PersistantUniqueId"]);
+					LocalSettings.hiddenWarnings.Add (reader[X.Attr.PersistantUniqueId]);
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
 				{

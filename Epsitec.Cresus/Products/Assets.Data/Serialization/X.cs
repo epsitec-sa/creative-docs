@@ -34,7 +34,36 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string Report_Assets = "Report.Assets";
         public const string Report_MCH2Summary = "Report.MCH2Summary";
 		public const string Report_Persons = "Report.Persons";
-
+		public const string Style = "Style";
+		public const string Params = "Params";
+		public const string LocalSettings = "LocalSettings";
+		public const string DocumentVersion = "DocumentVersion";
+		public const string UILanguage = "UILanguage";
+		public const string DataLanguage = "DataLanguage";
+		public const string CreateMandatDate = "CreateMandatDate";
+		public const string CreateAssetDate = "CreateAssetDate";
+		public const string AmortizationDateFrom = "AmortizationDateFrom";
+		public const string AmortizationDateTo = "AmortizationDateTo";
+		public const string LockedDate = "LockedDate";
+		public const string DefaultMandatDate = "DefaultMandatDate";
+		public const string DefaultFreeDate = "DefaultFreeDate";
+		public const string ExportInstructions = "ExportInstructions";
+		public const string ExportTxtProfile = "ExportTxtProfile";
+		public const string ExportCsvProfile = "ExportCsvProfile";
+		public const string ExportXmlProfile = "ExportXmlProfile";
+		public const string ExportYamlProfile = "ExportYamlProfile";
+		public const string ExportJsonProfile = "ExportJsonProfile";
+		public const string ExportPdfProfile = "ExportPdfProfile";
+		public const string AccountsImportFilename = "AccountsImportFilename";
+		public const string SplitterAssetsEventPos = "SplitterAssetsEventPos";
+		public const string SplitterAssetsMultiplePos = "SplitterAssetsMultiplePos";
+		public const string AccountCategories = "AccountCategories";
+		public const string ExpressionSimulationParams = "ExpressionSimulationParams";
+		public const string ColumnsState = "ColumnsState";
+		public const string SearchInfo = "SearchInfo";
+		public const string CreateAssetDefaultGroups = "CreateAssetDefaultGroups";
+		public const string Group = "Group";
+		public const string HiddenWarnings = "HiddenWarnings";
 
 		public static class Attr
 		{
@@ -77,7 +106,7 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string BorderColor = "borderColor";
 			public const string BorderThickness = "borderThickness";
 			public const string Ratio = "ratio";
-			public const string Format = "Fformat";
+			public const string Format = "format";
 			public const string Filename = "filename";
 			public const string EndOfLine = "endOfLine";
 			public const string CamelCase = "camelCase";
@@ -98,6 +127,9 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string Type = "type";
 			public const string IncludeFrom = "includeFrom";
 			public const string ExcludeTo = "excludeTo";
+			public const string Parent = "parent";
+			public const string Selection = "selection";
+			public const string PersistantUniqueId = "persistantUniqueId";
 		}
 	}
 }

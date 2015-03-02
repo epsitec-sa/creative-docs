@@ -38,11 +38,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Style")
+					if (reader.Name == X.Style)
 					{
 						this.Style = new PdfStyle (reader);
 					}
-					else if (reader.Name == "Params")
+					else if (reader.Name == X.Params)
 					{
 						this.PageSize.Width        = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageSize_Width);
 						this.PageSize.Height       = (double) IOHelpers.ReadDecimalAttribute (reader, X.Attr.PageSize_Height);
@@ -121,9 +121,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			writer.WriteStartElement (name);
 
-			this.Style.Serialize (writer, "Style");
+			this.Style.Serialize (writer, X.Style);
 
-			writer.WriteStartElement ("Params");
+			writer.WriteStartElement (X.Params);
 			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageSize_Width,        (decimal) this.PageSize.Width);
 			IOHelpers.WriteDecimalAttribute (writer, X.Attr.PageSize_Height,       (decimal) this.PageSize.Height);
 
