@@ -55,5 +55,15 @@ namespace Epsitec.Data.Platform.MatchSort
 			config.RegisterClassMap<SwissPostZipInformationMap> ();
 			return config;
 		}
+
+		public static CsvConfiguration ConfigureSwissPostReader<T>()
+		{
+			var config = new CsvConfiguration ();
+			config.Delimiter = ";";
+			config.HasHeaderRecord = false;
+			config.IgnoreQuotes = true;
+			config.AutoMap<T> ();
+			return config;
+		}
 	}
 }
