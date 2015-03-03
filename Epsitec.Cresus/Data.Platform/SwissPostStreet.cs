@@ -18,6 +18,24 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public static class SwissPostStreet
 	{
+
+		public static string GetSwissPostStreetCsv()
+		{
+			var matchClient        = new MatchWebClient ();
+			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
+			var file               = matchClient.GetMatchSortFile ();
+
+			if (matchClient.IsANewRelease || SwissPostStreet.MustGenerateMatchStreetCsv ())
+			{			
+				MatchSortExtractor.WriteRecordsToFile<SwissPostStreetInformation> (file, SwissPostStreetInformation.GetMatchRecordId (), swissPostStreetCsv);
+				return swissPostStreetCsv;
+			}
+			else
+			{
+				return swissPostStreetCsv;
+			}
+		}
+
 		/// <summary>
 		/// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
 		/// that is "Neuchâtel, rue de") into a user friendly street name (such as
@@ -203,24 +221,16 @@ namespace Epsitec.Data.Platform
 
 			return SwissPostStreet.NormalizeHouseNumber (strippedNumber);
 		}
-	
-		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
-		{		
-			foreach (var l in SwissPostStreet.GetStreetFile ())
-			{
-				yield return new SwissPostStreetInformation (l);
-			}
+
+		private static string GetMatchStreetCsvPath()
+		{
+			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			return System.IO.Path.Combine (path1, "Epsitec", "swisspoststreet.csv");
 		}
 
-		
-
-		private static IEnumerable<string> GetStreetFile()
+		private static bool MustGenerateMatchStreetCsv()
 		{
-			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
-			var resource = "Epsitec.Data.Platform.DataFiles.MatchStreetLight.zip";
-			var source   = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
-			
-			return Epsitec.Common.IO.StringLineExtractor.GetLines (source);
+			return !System.IO.File.Exists (SwissPostStreet.GetMatchStreetCsvPath ());
 		}
 		
 		private static bool IsMeaningful(string token)
