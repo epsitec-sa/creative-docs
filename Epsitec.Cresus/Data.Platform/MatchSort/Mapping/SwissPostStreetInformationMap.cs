@@ -12,7 +12,7 @@ namespace Epsitec.Data.Platform.MatchSort.Mapping
 		public SwissPostStreetInformationMap()
 		{
 			Map (m => m.StreetCode).Index (1);
-			Map (m => m.BasicPostCode).Index (2);
+			Map (m => m.OnrpCode).Index (2);
 			Map (m => m.StreetNameShort).Index (3);
 			Map (m => m.StreetName).Index (4);
 			// 5 Transposition de la désignation de rue abrégée

@@ -105,12 +105,12 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public int StreetCode
+		public int						StreetCode
 		{
 			get;
 			set;
 		}
-		public int						BasicPostCode
+		public int						OnrpCode
 		{
 			get;
 			set;
