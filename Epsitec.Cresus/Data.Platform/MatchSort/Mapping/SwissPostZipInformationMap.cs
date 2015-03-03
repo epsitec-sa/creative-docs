@@ -26,11 +26,11 @@ namespace Epsitec.Data.Platform.MatchSort.Mapping
 			Map (m => m.LanguageCode2).ConvertUsing (row =>
 				InvariantConverter.ParseInt<SwissPostLanguageCode> (row.GetField (11)));
 			Map (m => m.DeliveryOnrp).Index (12);
-			Map (m => m.ValidSince).ConvertUsing (row => new Date (Convert.ToInt32 (row.GetField (13).Substring (0, 4)),
-																   Convert.ToInt32 (row.GetField (13).Substring (4, 2)),
-																   Convert.ToInt32 (row.GetField (13).Substring (6, 2))
-																  )
-												);
+			Map (m => m.ValidSince).ConvertUsing (row => new DateTime (Convert.ToInt32 (row.GetField (13).Substring (0, 4)),
+															/**/       Convert.ToInt32 (row.GetField (13).Substring (4, 2)),
+															/**/       Convert.ToInt32 (row.GetField (13).Substring (6, 2))
+															/**/      )
+											/**/);
 			Map (m => m.DeliveryZipCode).Index (14);
 			Map (m => m.OnlyOfficial).Index (15);
 		}
