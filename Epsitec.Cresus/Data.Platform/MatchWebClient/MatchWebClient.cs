@@ -30,13 +30,10 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public DateTime GetMatchSortFileReleaseDate()
+		public bool IsANewRelease
 		{
-			if (!this.IsLogged)
-			{
-				this.DoMatchLoginRequest ();
-			}
-			return FindProductReleaseDate ();
+			get;
+			internal set;
 		}
 
 		public string GetMatchSortFile()
@@ -46,7 +43,52 @@ namespace Epsitec.Data.Platform
 				this.DoMatchLoginRequest ();
 			}
 			var uri = this.FindProductUri ();
-			return this.DownloadFileToTemp (uri);
+			
+			if (this.MustUpdateOrCreate ())
+			{
+				this.DownloadFile (uri);
+				var release = this.GetMatchSortFileReleaseDate ();
+				MatchWebClient.WriteLocalMetaData (release);
+				this.IsANewRelease = true;
+				return MatchWebClient.GetLocalMatchSortDataPath ();
+			}
+			else
+			{
+				this.IsANewRelease = false;
+				return MatchWebClient.GetLocalMatchSortDataPath ();
+			}
+		}
+
+		public bool MustUpdateOrCreate()
+		{
+			var swissPostMeta = MatchWebClient.GetLocalMetaDataPath ();
+			if (System.IO.File.Exists (swissPostMeta))
+			{
+				var currentRelease = MatchWebClient.ReadLocalMetaData ();
+				var lastRelease     = this.GetMatchSortFileReleaseDate ();
+				int result = System.DateTime.Compare (lastRelease, currentRelease);
+				if (result < 0)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		private DateTime GetMatchSortFileReleaseDate()
+		{
+			if (!this.IsLogged)
+			{
+				this.DoMatchLoginRequest ();
+			}
+			return FindProductReleaseDate ();
 		}
 
 		private string FindProductUri()
@@ -98,18 +140,16 @@ namespace Epsitec.Data.Platform
 			return loginFormData;
 		}
 
-		private string DownloadFileToTemp(string uri)
+		private string DownloadFile(string uri)
 		{
-			var filename = Path.GetTempFileName ();
+			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
 			System.Console.WriteLine ("Downloading Mat[CH]Sort file...");
 
 			using (var stream = this.OpenRead (uri))
 			{
 				try
 				{
-					System.Console.WriteLine ("Done");
 					var zipFile = new Epsitec.Common.IO.ZipFile ();
-					System.Console.WriteLine ("Unzipping file...");
 					zipFile.LoadFile (stream);
 					System.Console.WriteLine ("Done");
 					var zipEntry = zipFile.Entries.First ();
@@ -126,6 +166,32 @@ namespace Epsitec.Data.Platform
 				}
 			}
 			return filename;
+		}
+
+		private static string GetLocalMetaDataPath()
+		{
+			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			return System.IO.Path.Combine (path1, "Epsitec", "swisspost.meta");
+		}
+
+		private static string GetLocalMatchSortDataPath()
+		{
+			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			return System.IO.Path.Combine (path1, "Epsitec", "swisspost.csv");
+		}
+
+		private static System.DateTime ReadLocalMetaData()
+		{
+			var swissPostStreetMeta = MatchWebClient.GetLocalMetaDataPath ();
+			string date = System.IO.File.ReadAllText (swissPostStreetMeta);
+			return System.Convert.ToDateTime (date);
+		}
+
+		private static void WriteLocalMetaData(System.DateTime releaseDate)
+		{
+			var date = releaseDate.ToShortDateString ();
+			var swissPostStreetMeta = MatchWebClient.GetLocalMetaDataPath ();
+			System.IO.File.WriteAllText (swissPostStreetMeta, date);
 		}
 
 		private CookieContainer container = new CookieContainer ();
