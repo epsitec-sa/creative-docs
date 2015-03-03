@@ -99,6 +99,7 @@
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
     <Compile Include="MatchSort\Mapping\MatchSortMetaDataMap.cs" />
+    <Compile Include="MatchSort\Mapping\SwissPostStreetInformationMap.cs" />
     <Compile Include="MatchSort\Mapping\SwissPostZipInformationMap.cs" />
     <Compile Include="MatchSort\MatchSortEtl.cs" />
     <Compile Include="GeoNamesCountryInformation.cs" />
