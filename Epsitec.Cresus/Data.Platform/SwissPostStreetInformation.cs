@@ -22,7 +22,7 @@ namespace Epsitec.Data.Platform
 		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-street/post-match-street-schweiz-light-factsheet.pdf
 		/// </summary>
 		/// <param name="line">The line.</param>
-		public SwissPostStreetInformation(string line)
+		/*public SwissPostStreetInformation(string line)
 		{
 			this.StreetCode            = InvariantConverter.ParseInt (line.Substring (0, 6));
 			this.BasicPostCode         = InvariantConverter.ParseInt (line.Substring (6, 4));
@@ -86,32 +86,100 @@ namespace Epsitec.Data.Platform
 					System.Diagnostics.Debug.WriteLine (string.Format ("{0} > {1}", line, this.StreetNameRoot));
 				}
 			}
+		}*/
+
+		/// <summary>
+		/// Return corresponding Mat[CH]Sort datatable id (REC_ART)
+		/// </summary>
+		/// <returns></returns>
+		public static string GetMatchRecordId()
+		{
+			return "04";
 		}
 
 		public SwissPostFullZip					ZipCodeAndAddOn
 		{
 			get
 			{
-				return new SwissPostFullZip (this.ZipCode, this.ZipCodeAddOn);
+				return new SwissPostFullZip (this.Zip.ZipCode, this.Zip.ZipCodeAddOn);
 			}
 		}
 
-		public readonly int						StreetCode;
-		public readonly int						BasicPostCode;
-		public readonly SwissPostLanguageCode	LanguageCode;
-		public readonly int						ZipCode;
-		public readonly int						ZipCodeAddOn;
-		public readonly SwissPostDividerCode	DividerCode;
-		public readonly int						HouseNumberFrom;
-		public readonly string					HouseNumberFromAlpha;
-		public readonly int						HouseNumberTo;
-		public readonly string					HouseNumberToAlpha;
-		public readonly string					StreetName;
-		public readonly string					StreetNameShort;
-		public readonly string					StreetNameRoot;
-		public readonly int						StreetNameType;
-		public readonly int						StreetNamePreposition;
-		public readonly string					NormalizedStreetName;
+		public int StreetCode
+		{
+			get;
+			set;
+		}
+		public int						BasicPostCode
+		{
+			get;
+			set;
+		}
+		public SwissPostLanguageCode	LanguageCode
+		{
+			get;
+			set;
+		}
+		public SwissPostZipInformation  Zip
+		{
+			get;
+			set;
+		}
+		public SwissPostDividerCode	    DividerCode
+		{
+			get;
+			set;
+		}
+		public int						HouseNumberFrom
+		{
+			get;
+			set;
+		}
+		public string					HouseNumberFromAlpha
+		{
+			get;
+			set;
+		}
+		public int						HouseNumberTo
+		{
+			get;
+			set;
+		}
+		public string					HouseNumberToAlpha
+		{
+			get;
+			set;
+		}
+		public string					StreetName
+		{
+			get;
+			set;
+		}
+		public string					StreetNameShort
+		{
+			get;
+			set;
+		}
+		public string					StreetNameRoot
+		{
+			get;
+			set;
+		}
+		public int						StreetNameType
+		{
+			get;
+			set;
+		}
+		public int						StreetNamePreposition
+		{
+			get;
+			set;
+		}
+		public string					NormalizedStreetName
+		{
+			get;
+			set;
+		}
 
 
 		/// <summary>
@@ -342,7 +410,7 @@ namespace Epsitec.Data.Platform
 
 		public override string ToString()
 		{
-			return string.Concat (this.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
+			return string.Concat (this.Zip.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
 		}
 	}
 }

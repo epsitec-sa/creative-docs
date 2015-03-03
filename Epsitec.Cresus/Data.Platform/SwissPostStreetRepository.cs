@@ -31,7 +31,7 @@ namespace Epsitec.Data.Platform
 
 				var swissPostStreetName    = street.StreetName;
 				var userFriendlyStreetName = SwissPostStreet.ConvertToUserFriendlyStreetName (swissPostStreetName);
-				var zipStreetKey           = SwissPostStreetRepository.GetZipStreetKey (street.ZipCode, street.ZipCodeAddOn, userFriendlyStreetName);
+				var zipStreetKey           = SwissPostStreetRepository.GetZipStreetKey (street.Zip.ZipCode, street.Zip.ZipCodeAddOn, userFriendlyStreetName);
 
 				//	Make sure that a given user friendly name always maps to the same postal name.
 				//	This should be the case, since the data comes from the MAT[CH] Street database.
