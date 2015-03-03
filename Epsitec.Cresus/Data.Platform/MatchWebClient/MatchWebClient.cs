@@ -36,25 +36,46 @@ namespace Epsitec.Data.Platform
 			internal set;
 		}
 
+
+		public bool IsLogged
+		{
+			get;
+			internal set;
+		}
+
+		public string ProductUri
+		{
+			get;
+			internal set;
+		}
+
 		public string GetMatchSortFile()
 		{
+			if (this.aValidFileIsAvailable)
+			{
+				return MatchWebClient.GetLocalMatchSortDataPath ();
+			}
+
 			if (!this.IsLogged)
 			{
 				this.DoMatchLoginRequest ();
 			}
-			var uri = this.FindProductUri ();
+
+			this.ProductUri = this.FindProductUri ();
 			
 			if (this.MustUpdateOrCreate ())
 			{
-				this.DownloadFile (uri);
+				this.DownloadFile (this.ProductUri);
 				var release = this.GetMatchSortFileReleaseDate ();
 				MatchWebClient.WriteLocalMetaData (release);
 				this.IsANewRelease = true;
+				this.aValidFileIsAvailable = true;
 				return MatchWebClient.GetLocalMatchSortDataPath ();
 			}
 			else
 			{
 				this.IsANewRelease = false;
+				this.aValidFileIsAvailable = true;
 				return MatchWebClient.GetLocalMatchSortDataPath ();
 			}
 		}
@@ -69,15 +90,18 @@ namespace Epsitec.Data.Platform
 				int result = System.DateTime.Compare (lastRelease, currentRelease);
 				if (result < 0)
 				{
+					Console.WriteLine ("Outdated local Mat[CH] file detected");
 					return true;
 				}
 				else
 				{
+					Console.WriteLine ("No update required");
 					return false;
 				}
 			}
 			else
 			{
+				Console.WriteLine ("No local Mat[CH] file found, download required");
 				return true;
 			}
 		}
@@ -231,10 +255,6 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		public bool IsLogged
-		{
-			get;
-			internal set;
-		}
+		private bool aValidFileIsAvailable = false;
 	}
 }
