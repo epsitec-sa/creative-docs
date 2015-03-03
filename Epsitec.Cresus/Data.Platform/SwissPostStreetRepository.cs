@@ -20,17 +20,16 @@ namespace Epsitec.Data.Platform
 			this.streetByUserFriendlyStreetName = new Dictionary<string, SwissPostStreetInformation> ();
 
 			using (var streetStream = System.IO.File.OpenText (SwissPostStreet.GetSwissPostStreetCsv ()))
-			using (var zipStream = System.IO.File.OpenText (SwissPostZip.GetSwissPostZipCsv ()))
 			{
 				var streetCsv   = new CsvReader (streetStream, MatchSortLoader.ConfigureSwissPostReader<SwissPostStreetInformation> ());
 				var streets     = streetCsv.GetRecords<SwissPostStreetInformation> ().ToList ();
-				var zipCsv      = new CsvReader (zipStream, MatchSortLoader.ConfigureSwissPostReader<SwissPostZipInformation> ());
-				var zips        = zipCsv.GetRecords<SwissPostZipInformation> ().ToList ();
-				
+
 				foreach (var street in streets)
 				{
 					List<SwissPostStreetInformation> list;
-					street.SetSwissPostZipInformations (zips);
+					street.SetSwissPostZipInformations ();
+					street.SetSwissPostHouseInformations ();
+					street.CheckAndFix ();
 
 					this.streets.Add (street);
 					if (this.streetByZip.TryGetValue (street.ZipCodeAndAddOn, out list) == false)

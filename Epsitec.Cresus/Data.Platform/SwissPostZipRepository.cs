@@ -23,8 +23,8 @@ namespace Epsitec.Data.Platform
 				var csv   = new CsvReader (stream, MatchSortLoader.ConfigureSwissPostReader<SwissPostZipInformation> ());
 				var zips = csv.GetRecords<SwissPostZipInformation> ().ToList ();
 			
-				this.nameByZip  = new Dictionary<int, List<SwissPostZipInformation>> ();
-				this.nameByOnrp = new Dictionary<int, SwissPostZipInformation> ();
+				this.nameByZip    = new Dictionary<int, List<SwissPostZipInformation>> ();
+				this.nameByOnrp   = new Dictionary<int, SwissPostZipInformation> ();
 
 				foreach (var zip in zips)
 				{
