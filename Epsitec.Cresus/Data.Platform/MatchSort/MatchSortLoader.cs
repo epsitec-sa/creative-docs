@@ -54,6 +54,7 @@ namespace Epsitec.Data.Platform.MatchSort
 			config.RegisterClassMap<MatchSortMetaDataMap> ();
 			config.RegisterClassMap<SwissPostZipInformationMap> ();
 			config.RegisterClassMap<SwissPostStreetInformationMap> ();
+			config.RegisterClassMap<SwissPostHouseInformationMap> ();
 			return config;
 		}
 
