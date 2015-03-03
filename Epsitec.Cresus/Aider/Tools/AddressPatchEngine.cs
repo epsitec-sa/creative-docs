@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Tools
 				return;
 			}
 
-			var zip = SwissPostZipRepository.Current.FindZips (info.ZipCode, info.ZipCodeAddOn).FirstOrDefault ();
+			var zip = SwissPostZipRepository.Current.FindZips (info.Zip.ZipCode, info.Zip.ZipCodeAddOn).FirstOrDefault ();
 
 			if (zip == null)
 			{

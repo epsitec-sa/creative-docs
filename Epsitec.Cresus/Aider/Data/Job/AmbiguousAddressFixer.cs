@@ -280,15 +280,15 @@ namespace Epsitec.Aider.Data.Job
 			var streetComparer = new LambdaComparer<SwissPostStreetInformation>
 			(
 				(s1, s2) => s1.StreetName == s2.StreetName
-					&& s1.ZipCode == s2.ZipCode
-					&& s1.ZipCodeAddOn == s2.ZipCodeAddOn,
+					&& s1.Zip.ZipCode == s2.Zip.ZipCode
+					&& s1.Zip.ZipCodeAddOn == s2.Zip.ZipCodeAddOn,
 				(s) => s.StreetName.GetHashCode ()
 			);
 
 			return streetRepository
 				.Streets
 				.Distinct (streetComparer)
-				.GroupBy (s => Tuple.Create (s.StreetName, s.ZipCode))
+				.GroupBy (s => Tuple.Create (s.StreetName, s.Zip.ZipCode))
 				.Select (g => g.ToList ())
 				.Where (g => g.Count > 1)
 				.SelectMany (g => g)

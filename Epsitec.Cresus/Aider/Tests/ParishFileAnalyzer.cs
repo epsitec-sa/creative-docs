@@ -286,7 +286,7 @@ namespace Epsitec.Aider.Tests
 			return SwissPostStreetRepository
 				.Current
 				.FindStreets (town.ZipCode, town.ZipCodeAddOn)
-				.Where (s => s.ZipCodeAddOn == town.ZipCodeAddOn);
+				.Where (s => s.Zip.ZipCodeAddOn == town.ZipCodeAddOn);
 		}
 
 
