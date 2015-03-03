@@ -15,10 +15,20 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public sealed class SwissPostStreetInformation
 	{
-		public void SetSwissPostZipInformations (IEnumerable<SwissPostZipInformation> zips)
+		public void SetSwissPostZipInformations()
 		{
-			this.Zip = zips.SingleOrDefault (z => z.OnrpCode == this.OnrpCode);
+			this.Zip = SwissPostZipRepository.Current.FindByOnrpCode (this.OnrpCode);
 		}
+
+		public void SetSwissPostHouseInformations()
+		{
+			var currentStreetHouses = SwissPostHouseRepository.Current.FindByStreetCode (this.StreetCode);
+			this.HouseNumberFrom = currentStreetHouses.Min (h => h.HouseNumber);
+			this.HouseNumberTo = currentStreetHouses.Max (h => h.HouseNumber);
+			this.HouseNumberFromAlpha = this.HouseNumberFrom + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberFrom).Min (h => h.HouseLetter);
+			this.HouseNumberToAlpha = this.HouseNumberTo + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberTo).Max (h => h.HouseLetter);
+		}
+
 		/// <summary>
 		/// Old check&fix for this class
 		/// </summary>
