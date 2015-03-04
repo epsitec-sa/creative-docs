@@ -89,9 +89,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			if (this.IsParish)
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksParishMembers (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);
-				//SummaryAiderOfficeManagementViewController.CreateBricksEventPlaceManagement (wall);
-				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);			
+				SummaryAiderOfficeManagementViewController.CreateBricksDerogations (wall);	
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksEmployees (wall, user);
