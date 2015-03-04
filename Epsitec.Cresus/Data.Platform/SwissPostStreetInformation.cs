@@ -32,8 +32,9 @@ namespace Epsitec.Data.Platform
 		/// <summary>
 		/// Old check&fix for this class
 		/// </summary>
-		public void CheckAndFix()
+		public void BuildAndCheckRootName()
 		{
+			this.StreetNameRoot = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort.Split (',')[0]);
 			if (this.StreetNameRoot.Length < 2)
 			{
 				//	Very short root names are often an indication that something is incorrect in the source data
@@ -52,6 +53,7 @@ namespace Epsitec.Data.Platform
 					var fix = names[0];
 
 					this.StreetNameRoot = fix;
+					System.Console.WriteLine ("Very short root name detected, fix applied", this.ToString ());
 				}
 			}
 
@@ -62,6 +64,7 @@ namespace Epsitec.Data.Platform
 				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
 				{
 					this.StreetNameRoot = names.Last ();
+					System.Console.WriteLine ("Fix applied for {0}", this.ToString ());
 				}
 			}
 		}

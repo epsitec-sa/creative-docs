@@ -29,7 +29,7 @@ namespace Epsitec.Data.Platform
 					List<SwissPostStreetInformation> list;
 					street.SetSwissPostZipInformations ();
 					street.SetSwissPostHouseInformations ();
-					street.CheckAndFix ();
+					street.BuildAndCheckRootName ();
 
 					this.streets.Add (street);
 					if (this.streetByZip.TryGetValue (street.ZipCodeAndAddOn, out list) == false)
