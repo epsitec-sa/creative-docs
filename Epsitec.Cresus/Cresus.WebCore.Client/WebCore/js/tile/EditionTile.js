@@ -75,6 +75,7 @@ function() {
       this.hideError();
       this.setLoading();
       this.getForm().reset();
+      this.setLoading(false);
     },
 
     onSaveClick: function() {
