@@ -14,5 +14,7 @@ namespace Epsitec.Data.Platform
 			var zipRepo    = SwissPostZipRepository.Current;
 			var countries  = Iso3166.GetCountries ("FR").ToArray ();
 		}
+
+		public static MatchWebClient MatchWebClient = new MatchWebClient ();
 	}
 }

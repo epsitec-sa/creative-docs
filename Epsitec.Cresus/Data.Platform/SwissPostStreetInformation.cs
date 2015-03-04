@@ -15,45 +15,26 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public sealed class SwissPostStreetInformation
 	{
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SwissPostStreetInformation"/> class
-		/// based on a source line taken from MAT[CH]street Switzerland light.
-		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-street.htm
-		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-street/post-match-street-schweiz-light-factsheet.pdf
-		/// </summary>
-		/// <param name="line">The line.</param>
-		public SwissPostStreetInformation(string line)
+		public void SetSwissPostZipInformations()
 		{
-			this.StreetCode            = InvariantConverter.ParseInt (line.Substring (0, 6));
-			this.BasicPostCode         = InvariantConverter.ParseInt (line.Substring (6, 4));
-			this.LanguageCode          = InvariantConverter.ParseInt<SwissPostLanguageCode> (line.Substring (10, 1));
-			this.ZipCode               = InvariantConverter.ParseInt (line.Substring (36, 4));
-			this.ZipCodeAddOn          = InvariantConverter.ParseInt (line.Substring (40, 2));
-			this.DividerCode           = InvariantConverter.ParseInt<SwissPostDividerCode> (line.Substring (42, 1));
-			this.HouseNumberFrom       = InvariantConverter.ParseInt (line.Substring (43, 4));
-			this.HouseNumberFromAlpha  = line.Substring (47, 2).TrimEnd ();
-			this.HouseNumberTo         = InvariantConverter.ParseInt (line.Substring (49, 4));
-			this.HouseNumberToAlpha    = line.Substring (53, 2).TrimEnd ();
-			this.StreetName            = line.Substring (55, 25).TrimEnd ();
-			this.StreetNameRoot        = line.Substring (80, 10).TrimEnd ();
-			this.StreetNameType        = InvariantConverter.ParseInt (line.Substring (90, 2));
-			this.StreetNamePreposition = InvariantConverter.ParseInt (line.Substring (92, 2));
-			this.StreetNameShort       = this.StreetName.Split (',').First ();
-			this.NormalizedStreetName  = SwissPostStreet.NormalizeStreetName (this.StreetName);
+			this.Zip = SwissPostZipRepository.Current.FindByOnrpCode (this.OnrpCode);
+		}
 
-			//	We have to clean up the mess in the MAT[CH] data. There are errors, such as "Praz, chemin de la"
-			//	where the root is "CHEMIN" and not "PRAZ", for instance. Or weirder: "Chemin, route de" where the
-			//	root is "ROUTE" and it should be "CHEMIN". E-mail sent to match@post.ch on Feb. 14 2013 in the
-			//	hope that this will be fixed in the future.
+		public void SetSwissPostHouseInformations()
+		{
+			var currentStreetHouses = SwissPostHouseRepository.Current.FindByStreetCode (this.StreetCode);
+			this.HouseNumberFrom = currentStreetHouses.Min (h => h.HouseNumber);
+			this.HouseNumberTo = currentStreetHouses.Max (h => h.HouseNumber);
+			this.HouseNumberFromAlpha = this.HouseNumberFrom + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberFrom).Min (h => h.HouseLetter);
+			this.HouseNumberToAlpha = this.HouseNumberTo + currentStreetHouses.Where (h => h.HouseNumber == this.HouseNumberTo).Max (h => h.HouseLetter);
+		}
 
-#if false
-			if ((this.StreetName.ToLowerInvariant ().Contains ("marjovet")) ||
-				(this.StreetName.ToLowerInvariant ().Contains ("chaussiaz")))
-			{
-				System.Diagnostics.Debug.WriteLine (line);
-			}
-#endif
-
+		/// <summary>
+		/// Old check&fix for this class
+		/// </summary>
+		public void BuildAndCheckRootName()
+		{
+			this.StreetNameRoot = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort.Split (',')[0]);
 			if (this.StreetNameRoot.Length < 2)
 			{
 				//	Very short root names are often an indication that something is incorrect in the source data
@@ -72,7 +53,7 @@ namespace Epsitec.Data.Platform
 					var fix = names[0];
 
 					this.StreetNameRoot = fix;
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0} = {1}", line, this.StreetNameRoot));
+					System.Console.WriteLine ("Very short root name detected, fix applied", this.ToString ());
 				}
 			}
 
@@ -83,35 +64,108 @@ namespace Epsitec.Data.Platform
 				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
 				{
 					this.StreetNameRoot = names.Last ();
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0} > {1}", line, this.StreetNameRoot));
+					System.Console.WriteLine ("Fix applied for {0}", this.ToString ());
 				}
 			}
 		}
 
-		public SwissPostFullZip					ZipCodeAndAddOn
+		public void BuildNormalizedName()
+		{
+			this.NormalizedStreetName = SwissPostStreet.NormalizeStreetName (this.StreetName);
+		}
+
+		/// <summary>
+		/// Return corresponding Mat[CH]Sort datatable id (REC_ART)
+		/// </summary>
+		/// <returns></returns>
+		public static string GetMatchRecordId()
+		{
+			return "04";
+		}
+
+		public SwissPostFullZip			ZipCodeAndAddOn
 		{
 			get
 			{
-				return new SwissPostFullZip (this.ZipCode, this.ZipCodeAddOn);
+				return new SwissPostFullZip (this.Zip.ZipCode, this.Zip.ZipCodeAddOn);
 			}
 		}
 
-		public readonly int						StreetCode;
-		public readonly int						BasicPostCode;
-		public readonly SwissPostLanguageCode	LanguageCode;
-		public readonly int						ZipCode;
-		public readonly int						ZipCodeAddOn;
-		public readonly SwissPostDividerCode	DividerCode;
-		public readonly int						HouseNumberFrom;
-		public readonly string					HouseNumberFromAlpha;
-		public readonly int						HouseNumberTo;
-		public readonly string					HouseNumberToAlpha;
-		public readonly string					StreetName;
-		public readonly string					StreetNameShort;
-		public readonly string					StreetNameRoot;
-		public readonly int						StreetNameType;
-		public readonly int						StreetNamePreposition;
-		public readonly string					NormalizedStreetName;
+		public int						StreetCode
+		{
+			get;
+			set;
+		}
+		public int						OnrpCode
+		{
+			get;
+			set;
+		}
+		public SwissPostLanguageCode	LanguageCode
+		{
+			get;
+			set;
+		}
+		public SwissPostZipInformation  Zip
+		{
+			get;
+			internal set;
+		}
+		public SwissPostDividerCode	    DividerCode
+		{
+			get;
+			set;
+		}
+		public int						HouseNumberFrom
+		{
+			get;
+			set;
+		}
+		public string					HouseNumberFromAlpha
+		{
+			get;
+			set;
+		}
+		public int						HouseNumberTo
+		{
+			get;
+			set;
+		}
+		public string					HouseNumberToAlpha
+		{
+			get;
+			set;
+		}
+		public string					StreetName
+		{
+			get;
+			set;
+		}
+		public string					StreetNameShort
+		{
+			get;
+			set;
+		}
+		public string					StreetNameRoot
+		{
+			get;
+			set;
+		}
+		public int						StreetNameType
+		{
+			get;
+			set;
+		}
+		public int						StreetNamePreposition
+		{
+			get;
+			set;
+		}
+		public string					NormalizedStreetName
+		{
+			get;
+			set;
+		}
 
 
 		/// <summary>
@@ -342,7 +396,7 @@ namespace Epsitec.Data.Platform
 
 		public override string ToString()
 		{
-			return string.Concat (this.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
+			return string.Concat (this.Zip.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
 		}
 	}
 }

@@ -89,7 +89,7 @@ namespace Epsitec.Aider.Tools
 				(n > 2) ? new string[] { tokens[n-3], tokens[n-2], tokens[n-1] } : null
 			};
 
-			var fuzzyMatches = new List<ISwissPostStreetInformation> ();
+			var fuzzyMatches = new List<SwissPostStreetInformation> ();
 
 			foreach (var shuffle in shuffles.Where (x => x != null))
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Aider.Tools
 		}
 
 
-		public static void FixAddress(IEnumerable<ISwissPostStreetInformation> hits, ref string street, int? houseNumber, ref int zipCode, ref int zipCodeAddOn, ref int zipCodeId, ref string town)
+		public static void FixAddress(IEnumerable<SwissPostStreetInformation> hits, ref string street, int? houseNumber, ref int zipCode, ref int zipCodeAddOn, ref int zipCodeId, ref string town)
 		{
 			int house = houseNumber ?? 0;
 			var info  = hits.FirstOrDefault (x => x.MatchHouseNumber (house));
@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Tools
 				return;
 			}
 
-			var zip = SwissPostZipRepository.Current.FindZips (info.ZipCode, info.ZipCodeAddOn).FirstOrDefault ();
+			var zip = SwissPostZipRepository.Current.FindZips (info.Zip.ZipCode, info.Zip.ZipCodeAddOn).FirstOrDefault ();
 
 			if (zip == null)
 			{

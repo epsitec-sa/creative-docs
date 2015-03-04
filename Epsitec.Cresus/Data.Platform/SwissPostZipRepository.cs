@@ -5,6 +5,8 @@ using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
+using CsvHelper;
+using Epsitec.Data.Platform.MatchSort;
 
 namespace Epsitec.Data.Platform
 {
@@ -16,29 +18,33 @@ namespace Epsitec.Data.Platform
 	{
 		private SwissPostZipRepository()
 		{
-			IEnumerable<SwissPostZipInformation> zips = SwissPostZip.GetZips ();
-
-			this.nameByZip  = new Dictionary<int, List<SwissPostZipInformation>> ();
-			this.nameByOnrp = new Dictionary<int, SwissPostZipInformation> ();
-
-			foreach (var zip in zips)
+			using (var stream = System.IO.File.OpenText (SwissPostZip.GetSwissPostZipCsv ()))
 			{
-				List<SwissPostZipInformation> list;
+				var csv   = new CsvReader (stream, MatchSortLoader.ConfigureSwissPostReader<SwissPostZipInformation> ());
+				var zips = csv.GetRecords<SwissPostZipInformation> ().ToList ();
+			
+				this.nameByZip    = new Dictionary<int, List<SwissPostZipInformation>> ();
+				this.nameByOnrp   = new Dictionary<int, SwissPostZipInformation> ();
 
-				if (this.nameByZip.TryGetValue (zip.ZipCode, out list) == false)
+				foreach (var zip in zips)
 				{
-					list = new List<SwissPostZipInformation> ();
-					this.nameByZip[zip.ZipCode] = list;
+					List<SwissPostZipInformation> list;
+
+					if (this.nameByZip.TryGetValue (zip.ZipCode, out list) == false)
+					{
+						list = new List<SwissPostZipInformation> ();
+						this.nameByZip[zip.ZipCode] = list;
+					}
+
+					list.Add (zip);
+
+					this.nameByOnrp[zip.OnrpCode] = zip;
 				}
 
-				list.Add (zip);
-
-				this.nameByOnrp[zip.OnrpCode] = zip;
-			}
-
-			foreach (var list in this.nameByZip.Values)
-			{
-				list.Sort (SwissPostZipRepository.Sorter);
+				foreach (var list in this.nameByZip.Values)
+				{
+					list.Sort (SwissPostZipRepository.Sorter);
+				}
 			}
 		}
 

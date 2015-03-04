@@ -1,9 +1,10 @@
 //	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Samuel LOUP
 
-using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Data.Platform.MatchSort;
+
 
 namespace Epsitec.Data.Platform
 {
@@ -13,48 +14,32 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	internal static class SwissPostZip
 	{
-		public static IEnumerable<SwissPostZipInformation> GetZips()
+		public static string GetSwissPostZipCsv()
 		{
-			foreach (var line in SwissPostZip.GetZipPlusFile ())
+			var matchClient     = SwissPost.MatchWebClient;
+			var swissPostZipCsv = SwissPostZip.GetMatchZipCsvPath ();
+			var file            = matchClient.GetMatchSortFile ();
+
+			if (matchClient.IsANewRelease || SwissPostZip.MustGenerateMatchZipCsv ())
 			{
-				if (!string.IsNullOrWhiteSpace (line))
-				{
-					yield return new SwissPostZipInformation (line);
-				}
+				MatchSortExtractor.WriteRecordsToFile<SwissPostZipInformation> (file, SwissPostZipInformation.GetMatchRecordId (), swissPostZipCsv);
+				return swissPostZipCsv;
 			}
+			else
+			{
+				return swissPostZipCsv;
+			}		
 		}
 
-		private static IEnumerable<string> GetZipPlusFile()
+		private static string GetMatchZipCsvPath()
 		{
-			string uri = "https://match.post.ch/download?file=10001&tid=11&rol=0";
-			string file = SwissPostZip.DownloadZippedTextFile (uri);
-
-			return Epsitec.Common.IO.StringLineExtractor.GetLines (file);
+			string path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.ApplicationData);
+			return System.IO.Path.Combine (path1, "Epsitec", "swisspostzip.csv");
 		}
 
-		private static string DownloadZippedTextFile(string uri)
+		private static bool MustGenerateMatchZipCsv()
 		{
-			using (WebClient client = new WebClient ())
-			{
-				using (var stream = client.OpenRead (uri))
-				{
-					try
-					{
-						var zipFile = new Epsitec.Common.IO.ZipFile ();
-						zipFile.LoadFile (stream);
-						var zipEntry = zipFile.Entries.First ();
-						return System.Text.Encoding.Default.GetString (zipEntry.Data);
-					}
-					catch
-					{
-						System.Diagnostics.Trace.WriteLine ("match.post.ch: server did not return a valid MAT[CH]zip file.");
-						
-						var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
-						var resource = "Epsitec.Data.Platform.DataFiles.MatchStreetZip.zip";
-						return Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
-					}
-				}
-			}
+			return !System.IO.File.Exists (SwissPostZip.GetMatchZipCsvPath ());
 		}
 	}
 }
