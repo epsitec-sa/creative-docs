@@ -68,6 +68,12 @@ namespace Epsitec.Data.Platform
 				}
 			}
 		}
+
+		public void BuildNormalizedName()
+		{
+			this.NormalizedStreetName = SwissPostStreet.NormalizeStreetName (this.StreetName);
+		}
+
 		/// <summary>
 		/// Return corresponding Mat[CH]Sort datatable id (REC_ART)
 		/// </summary>
