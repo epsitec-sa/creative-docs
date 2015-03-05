@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -87,21 +88,21 @@ namespace Epsitec.Data.Platform
 			{
 				var currentRelease = MatchWebClient.ReadLocalMetaData ();
 				var lastRelease     = this.GetMatchSortFileReleaseDate ();
-				int result = System.DateTime.Compare (lastRelease, currentRelease);
+				int result = System.DateTime.Compare (currentRelease, lastRelease);
 				if (result < 0)
 				{
-					Console.WriteLine ("Outdated local Mat[CH] file detected");
+					Debug.WriteLine ("Outdated local Mat[CH] file detected");
 					return true;
 				}
 				else
 				{
-					Console.WriteLine ("No update required");
+					Debug.WriteLine ("No update required");
 					return false;
 				}
 			}
 			else
 			{
-				Console.WriteLine ("No local Mat[CH] file found, download required");
+				Debug.WriteLine ("No local Mat[CH] file found, download required");
 				return true;
 			}
 		}
@@ -167,7 +168,7 @@ namespace Epsitec.Data.Platform
 		private string DownloadFile(string uri)
 		{
 			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
-			System.Console.WriteLine ("Downloading Mat[CH]Sort file...");
+			Debug.WriteLine ("Downloading Mat[CH]Sort file...");
 
 			using (var stream = this.OpenRead (uri))
 			{
@@ -175,14 +176,13 @@ namespace Epsitec.Data.Platform
 				{
 					var zipFile = new Epsitec.Common.IO.ZipFile ();
 					zipFile.LoadFile (stream);
-					System.Console.WriteLine ("Done");
 					var zipEntry = zipFile.Entries.First ();
-					System.Console.WriteLine ("Writing file on {0}...", filename);
+					Debug.WriteLine ("Writing file on {0}...", filename);
 					using (StreamWriter sw = new StreamWriter (filename))
 					{
 						sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
 					}
-					System.Console.WriteLine ("Done");
+					Debug.WriteLine ("Done");
 				}
 				catch
 				{
