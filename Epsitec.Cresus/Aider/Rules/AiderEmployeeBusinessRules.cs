@@ -46,6 +46,29 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 		}
+
+		public override void ApplyUpdateRule(AiderEmployeeEntity entity)
+		{
+			if (entity.User.IsNotNull ())
+			{
+				if (entity.User.Contact.IsNotNull ())
+				{
+					entity.Person = entity.User.Contact.Person;
+					entity.PersonContact = entity.User.Contact;
+				}
+				else
+				{
+					Logic.BusinessRuleException ("L'utilisateur n'a pas de contact associé!");
+				}
+			}
+			else
+			{
+				if(entity.PersonContact.Person != entity.Person)
+				{
+					Logic.BusinessRuleException ("Le contact associé ne cible pas la bonne personne");
+				}
+			}
+		}
 	}
 }
 
