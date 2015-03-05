@@ -172,15 +172,34 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 			}
 		}
 
-		public static void WriteTypeAttribute(this System.Xml.XmlWriter writer, string name, object value)
+		public static T ReadTypeAttribute<T>(this System.Xml.XmlReader reader, string name)
+		{
+			var s = reader[name];
+
+			if (string.IsNullOrEmpty (s))
+			{
+				throw new System.ArgumentException ("Enum value cannot be empty.");
+			}
+			else
+			{
+				return IOHelpers.ParseType<T> (s);
+			}
+		}
+
+		public static void WriteTypeAttribute<T>(this System.Xml.XmlWriter writer, string name, T value)
 		{
 			writer.WriteAttributeString (name, value.ToStringIO ());
 		}
 
 
-		public static string ToStringIO(this object value)
+		public static string ToStringIO<T>(this T value)
 		{
-			return value.ToString ();
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", value);
+		}
+
+		public static T ParseType<T>(this string s)
+		{
+			return (T) System.Enum.Parse (typeof (T), s);
 		}
 
 		public static object ParseType(this string s, System.Type enumType)
