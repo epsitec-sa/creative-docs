@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 using System.Linq;
+using Epsitec.Aider.Controllers.SetControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {

@@ -193,21 +193,46 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderUserEntity Create(
 			BusinessContext businessContext, 
-			string username, 
-			string displayname,  
 			AiderContactEntity contact, 
-			AiderUserRoleEntity role, 
-			AiderGroupEntity parish)
+			AiderUserRoleEntity role)
 		{
+			var login = AiderUserEntity.BuildLoginName (businessContext, contact.Person);
 			var user = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
 
-			user.LoginName = username;
-			user.DisplayName = displayname;
+			user.LoginName = login;
+			user.DisplayName = AiderUserEntity.BuildDisplayName (contact.Person);
 			user.Role = role;
-			user.Parish = parish;
+			user.Parish = contact.Person.ParishGroup;
 			user.Contact = contact;
 
 			return user;
+		}
+
+		public static string BuildLoginName (BusinessContext businessContext, AiderPersonEntity person)
+		{
+			var initial = person.eCH_Person.PersonFirstNames.Substring (0, 1).ToLower ();
+			var name    = person.eCH_Person.PersonOfficialName.ToLower ();
+			var desiredUsername = initial + "." + name;
+
+			var checkExample = new AiderUserEntity ()
+			{
+				LoginName = desiredUsername
+			};
+			var count = businessContext.GetByExample<AiderUserEntity> (checkExample).Count;
+			if(count == 0)
+			{
+				return desiredUsername;
+			}
+			else
+			{
+				var next = count + 1;
+				return desiredUsername = initial + "." + name + next.ToString ();
+			}
+		}
+
+		public static string BuildDisplayName(AiderPersonEntity person)
+		{
+			return person.eCH_Person.PersonFirstNames + " " + person.eCH_Person.PersonOfficialName;
 		}
 
 

@@ -24,21 +24,11 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		{
 			action
 				.Title ("Créer un nouvel utilisateur")
-				.Field<string> ()
-					.Title ("Nom d'utilisateur")
-				.End ()
-				.Field<string> ()
-					.Title ("Nom d'affichage")
-				.End ()
 				.Field<AiderContactEntity> ()
 					.Title ("Contact")
 				.End ()
 				.Field<AiderUserRoleEntity> ()
 					.Title ("Role")
-				.End ()
-				.Field<AiderGroupEntity> ()
-					.Title ("Paroisse")
-					.WithSpecialField<AiderGroupSpecialField<AiderUserEntity>> ()
 				.End ()
 				.Field<bool> ()
 					.Title ("Administrateur")
@@ -55,10 +45,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, string, AiderContactEntity, AiderUserRoleEntity, AiderGroupEntity, bool, string, string, AiderUserEntity> (this.Execute);
+			return FunctionExecutor.Create<AiderContactEntity, AiderUserRoleEntity, bool, string, string, AiderUserEntity> (this.Execute);
 		}
 
-		private AiderUserEntity Execute(string username, string displayname,  AiderContactEntity contact, AiderUserRoleEntity role, AiderGroupEntity parish, bool admin, string password, string confirmation)
+		private AiderUserEntity Execute(AiderContactEntity contact, AiderUserRoleEntity role, bool admin, string password, string confirmation)
 		{
 			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
 			{
@@ -76,11 +66,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			{
 				throw new BusinessRuleException (this.Entity, "Un contact est obligatoire");
 			}
-			
-			
-			var user = AiderUserEntity.Create (this.BusinessContext, username, displayname, contact, role, parish);
+			var user        = AiderUserEntity.Create (this.BusinessContext, contact, role);
 			user.SetAdmininistrator (this.BusinessContext, admin);
 			user.SetPassword (password, confirmation);
+			user.Email = contact.Person.MainEmail;
 
 			if (contact.Person.Employee.IsNull ())
 			{
