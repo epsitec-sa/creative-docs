@@ -10322,6 +10322,28 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPath</c> field.
+		///	designer:fld/LVA2J/LVOT63
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOT63]")]
+		public string ParishGroupPath
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOT63]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPath;
+				if (oldValue != value || !this.IsFieldDefined("[LVOT63]"))
+				{
+					this.OnParishGroupPathChanging (oldValue, value);
+					this.SetField<string> ("[LVOT63]", oldValue, value);
+					this.OnParishGroupPathChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
@@ -10337,6 +10359,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnEmployeeActivityChanged(global::Epsitec.Aider.Enumerations.EmployeeActivity oldValue, global::Epsitec.Aider.Enumerations.EmployeeActivity newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathChanged(string oldValue, string newValue);
 		
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		partial void GetRefereeEntries(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderRefereeEntity> value);
@@ -10483,6 +10507,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPath</c> field.
+		///	designer:fld/LVA7J/LVOU63
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOU63]")]
+		public string ParishGroupPath
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOU63]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPath;
+				if (oldValue != value || !this.IsFieldDefined("[LVOU63]"))
+				{
+					this.OnParishGroupPathChanging (oldValue, value);
+					this.SetField<string> ("[LVOU63]", oldValue, value);
+					this.OnParishGroupPathChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnEmployeeChanging(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
 		partial void OnEmployeeChanged(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
@@ -10494,6 +10540,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnDescriptionChanging(string oldValue, string newValue);
 		partial void OnDescriptionChanged(string oldValue, string newValue);
+		partial void OnParishGroupPathChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -10616,6 +10664,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishGroupPath</c> field.
+		///	designer:fld/LVADJ/LVOV63
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOV63]")]
+		public string ParishGroupPath
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOV63]");
+			}
+			set
+			{
+				string oldValue = this.ParishGroupPath;
+				if (oldValue != value || !this.IsFieldDefined("[LVOV63]"))
+				{
+					this.OnParishGroupPathChanging (oldValue, value);
+					this.SetField<string> ("[LVOV63]", oldValue, value);
+					this.OnParishGroupPathChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnEmployeeChanging(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
 		partial void OnEmployeeChanged(global::Epsitec.Aider.Entities.AiderEmployeeEntity oldValue, global::Epsitec.Aider.Entities.AiderEmployeeEntity newValue);
@@ -10625,6 +10695,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishGroupPathChanging(string oldValue, string newValue);
+		partial void OnParishGroupPathChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

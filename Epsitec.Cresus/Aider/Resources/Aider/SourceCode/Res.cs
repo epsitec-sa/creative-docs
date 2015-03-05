@@ -2610,6 +2610,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid EmployeeType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 612);
 				//	designer:cap/LVAPK
 				public static readonly global::Epsitec.Common.Support.Druid Navs13 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 665);
+				//	designer:cap/LVOT63
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPath = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 221);
 				//	designer:cap/LVA3J
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 611);
 				//	designer:cap/LVALK
@@ -2637,6 +2639,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Employer = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 620);
 				//	designer:cap/LVAAJ
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 618);
+				//	designer:cap/LVOU63
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPath = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 222);
 			}
 			
 			public static class AiderEvent
@@ -3362,6 +3366,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 627);
 				//	designer:cap/LVAIJ
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 626);
+				//	designer:cap/LVOV63
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPath = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 223);
 				//	designer:cap/LVAFJ
 				public static readonly global::Epsitec.Common.Support.Druid ReferenceType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 623);
 			}

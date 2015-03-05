@@ -56,6 +56,7 @@ namespace Epsitec.Aider.Entities
 			employee.Description      = function;
 			employee.Navs13           = navs13;
 			employee.User             = user;
+			employee.ParishGroupPath  = user.ParishGroupPathCache;
 			return employee;
 		}
 

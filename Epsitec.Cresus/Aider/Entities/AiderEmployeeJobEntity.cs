@@ -50,6 +50,7 @@ namespace Epsitec.Aider.Entities
 			job.Employer = employer;
 			job.Office = office;
 			job.Description = detail;
+			job.ParishGroupPath = office.ParishGroupPathCache;
 
 			return job;
 		}
@@ -67,6 +68,7 @@ namespace Epsitec.Aider.Entities
 			job.Employer = EmployeeEmployer.None;
 			job.Office = office;
 			job.Description = detail;
+			job.ParishGroupPath = office.ParishGroupPathCache;
 
 			return job;
 		}
@@ -84,6 +86,7 @@ namespace Epsitec.Aider.Entities
 			job.Employer = EmployeeEmployer.None;
 			job.Office = office;
 			job.Description = detail;
+			job.ParishGroupPath = office.ParishGroupPathCache;
 
 			return job;
 		}

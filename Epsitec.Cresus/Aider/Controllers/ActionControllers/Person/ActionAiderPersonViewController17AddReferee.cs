@@ -89,6 +89,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			referee.Employee = employee;
 			referee.ReferenceType = referenceType;
 			referee.Group = group;
+			referee.ParishGroupPath = group.Path;
 		}
 	}
 }
