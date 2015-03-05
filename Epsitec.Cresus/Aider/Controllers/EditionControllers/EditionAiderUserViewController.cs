@@ -60,9 +60,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 		private static void AddUserDataBrickReadonly(BrickWall<AiderUserEntity> wall, bool senderDefined)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
-				.EnableActionMenu<ActionAiderUserViewController3SetMyOffice> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
 					.Field (x => x.Contact)
