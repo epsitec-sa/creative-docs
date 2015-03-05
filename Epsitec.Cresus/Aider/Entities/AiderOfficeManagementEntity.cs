@@ -112,9 +112,9 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public static void JoinOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		public static void JoinOfficeUsers(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user, bool forceJoin)
 		{
-			if(office.IsUserJobRequiredFor(user))
+			if(office.IsUserJobRequiredFor(user) || forceJoin)
 			{
 				AiderEmployeeJobEntity.CreateOfficeUser (businessContext, user.Contact.Person.Employee, office, "");
 			}		
@@ -188,7 +188,9 @@ namespace Epsitec.Aider.Entities
 			}
 
 			office.DeleteOfficeManagerJobsForUser (businessContext, user);
-			
+
+			//Join office as simple user
+			AiderOfficeManagementEntity.JoinOfficeUsers (businessContext, office, user, true);
 			//Leave parish
 			user.Office = null;
 		}

@@ -176,7 +176,7 @@ namespace Epsitec.Aider.Entities
 				var office = AiderOfficeManagementEntity.Find (businessContext, group);
 				if (office.IsNotNull ())
 				{
-					AiderOfficeManagementEntity.JoinOfficeUsers (businessContext, office, this);
+					AiderOfficeManagementEntity.JoinOfficeUsers (businessContext, office, this, false);
 				}
 			}
 
