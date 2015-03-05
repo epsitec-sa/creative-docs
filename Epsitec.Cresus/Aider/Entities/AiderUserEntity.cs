@@ -98,6 +98,14 @@ namespace Epsitec.Aider.Entities
 					&& this.IsOfficeDefined ();
 		}
 
+		public bool IsParishLevelUser()
+		{
+			var isNotHighLevelEditor = !(this.EnableGroupEditionRegion || this.EnableGroupEditionCanton);
+			var isNotAdmin           = !this.HasPowerLevel (UserPowerLevel.Administrator);
+			var isParishLevel        = (this.Role.Name == AiderUserRoleEntity.ParishRole);
+			return isNotHighLevelEditor && isNotAdmin && isParishLevel;
+		}
+
 		public bool IsOfficeDefined()
 		{
 			return this.Office.IsNotNull ();
