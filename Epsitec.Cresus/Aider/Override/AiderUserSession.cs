@@ -69,43 +69,48 @@ namespace Epsitec.Aider.Override
 			return new LambdaFilter<AiderUserEntity> (x => x.LoginName == user.LoginName);
 		}
 
-		private IFilter GetAiderRefereeEntityFilter(AiderRefereeEntity example)
+		private IFilter GetAiderRefereeEntityFilter(AiderRefereeEntity example, string pattern)
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
-				(user.EnableGroupEditionCanton))
+			if (user.IsParishLevelUser ())
 			{
-				return null;
+				var regionPattern = "R" + user.Parish.GetRootRegionCode () + "%";
+				return new LambdaFilter<AiderRefereeEntity> (x => SqlMethods.Like (x.ParishGroupPath, regionPattern));
 			}
-
-			return new LambdaFilter<AiderRefereeEntity> (x => x.ReferenceType == Enumerations.EmployeeReferenceType.PublicReferee);
+			else
+			{
+				return new LambdaFilter<AiderRefereeEntity> (x => SqlMethods.Like (x.ParishGroupPath, pattern));
+			}	
 		}
 
-		private IFilter GetAiderEmployeeEntityFilter(AiderEmployeeEntity example)
+		private IFilter GetAiderEmployeeEntityFilter(AiderEmployeeEntity example, string pattern)
 		{
 			var user = this.UserManager.AuthenticatedUser;
-
-			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
-				(user.EnableGroupEditionCanton))
+			if (user.IsParishLevelUser ())
 			{
-				return null;
+				var regionPattern = "R" + user.Parish.GetRootRegionCode () + "%";
+				return new LambdaFilter<AiderEmployeeEntity> (x => SqlMethods.Like (x.ParishGroupPath, regionPattern));
+			} 
+			else
+			{
+				return new LambdaFilter<AiderEmployeeEntity> (x => SqlMethods.Like (x.ParishGroupPath, pattern));
 			}
-
-			return new LambdaFilter<AiderEmployeeEntity> (x => x.EmployeeType == Enumerations.EmployeeType.PublicEmployee);
 		}
 
-		private IFilter GetAiderEmployeeJobEntityFilter(AiderEmployeeJobEntity example)
+		private IFilter GetAiderEmployeeJobEntityFilter(AiderEmployeeJobEntity example, string pattern)
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if ((user.HasPowerLevel (UserPowerLevel.Administrator)) ||
-				(user.EnableGroupEditionCanton))
+			if (user.IsParishLevelUser ())
 			{
-				return null;
+				var regionPattern = "R" + user.Parish.GetRootRegionCode () + "%";
+				return new LambdaFilter<AiderEmployeeJobEntity> (x => SqlMethods.Like (x.ParishGroupPath, regionPattern));
 			}
-
-			return new LambdaFilter<AiderEmployeeJobEntity> (x => x.EmployeeJobFunction == Enumerations.EmployeeJobFunction.PublicJob);			
+			else
+			{
+				return new LambdaFilter<AiderEmployeeJobEntity> (x => SqlMethods.Like (x.ParishGroupPath, pattern));
+			}		
 		}
 
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
@@ -219,6 +224,14 @@ namespace Epsitec.Aider.Override
 				else if (entityType == typeof (AiderOfficeSenderEntity))
 				{
 					return this.GetAiderOfficeSenderFilter ((AiderOfficeSenderEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderEmployeeEntity))
+				{
+					return this.GetAiderEmployeeEntityFilter ((AiderEmployeeEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderEmployeeJobEntity))
+				{
+					return this.GetAiderEmployeeJobEntityFilter ((AiderEmployeeJobEntity) example, pattern + "%");
 				}
 			}
 
