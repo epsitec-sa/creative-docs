@@ -500,7 +500,7 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				AiderCollaborators.Start (coreData);
+				AiderCollaborators.Init (coreData);
 			});
 		}
 

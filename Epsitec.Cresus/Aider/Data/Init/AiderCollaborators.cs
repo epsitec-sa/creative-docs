@@ -26,12 +26,109 @@ namespace Epsitec.Aider.Data.Groups
 	/// </summary>
 	public static class AiderCollaborators
 	{	
-		public static void Start(CoreData coreData)
+		public static void Init(CoreData coreData)
 		{
 			System.Console.WriteLine ("Starting job...");
 			AiderCollaborators.InitEmployeeFromUsers (coreData);
 			AiderCollaborators.InitJobsFromUsers (coreData);
+			AiderCollaborators.SetEmployeeParishGroupCache (coreData);
+			AiderCollaborators.SetEmployeeJobParishGroupCache (coreData);
+			AiderCollaborators.SetRefereeParishGroupCache (coreData);
 			System.Console.WriteLine ("Finished!");
+		}
+
+		private static void SetEmployeeParishGroupCache(CoreData coreData)
+		{
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach(var employee in businessContext.GetAllEntities<AiderEmployeeEntity> ())
+				{
+					if(employee.User.IsNotNull ())
+					{
+						employee.ParishGroupPath = employee.User.ParishGroupPathCache;
+					}
+					else
+					{
+						if(employee.Person.IsNotNull ())
+						{
+							employee.ParishGroupPath = employee.Person.ParishGroupPathCache;
+						}
+						else
+						{
+							Console.WriteLine ("Bad employee data found!");
+							businessContext.DeleteEntity (employee);
+						}
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		private static void SetRefereeParishGroupCache(CoreData coreData)
+		{
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var referee in businessContext.GetAllEntities<AiderRefereeEntity> ())
+				{
+					if (referee.Group.IsNotNull ())
+					{
+						referee.ParishGroupPath = referee.Group.Path;
+					}
+					else
+					{					
+						Console.WriteLine ("Bad referee data found!");
+						businessContext.DeleteEntity (referee);
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		private static void SetEmployeeJobParishGroupCache(CoreData coreData)
+		{
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				foreach (var job in businessContext.GetAllEntities<AiderEmployeeJobEntity> ())
+				{
+					if (job.Office.IsNotNull ())
+					{
+						job.ParishGroupPath = job.Office.ParishGroupPathCache;
+					}
+					else
+					{
+						if (job.Employee.IsNotNull ())
+						{
+							if (job.Employee.User.IsNotNull ())
+							{
+								job.ParishGroupPath = job.Employee.User.ParishGroupPathCache;
+							}
+							else
+							{
+								if (job.Employee.Person.IsNotNull ())
+								{
+									job.ParishGroupPath = job.Employee.Person.ParishGroupPathCache;
+								}
+								else
+								{
+									Console.WriteLine ("Bad employee data for this job found!, check moon alignment");
+								}
+							}
+						}
+						else
+						{
+							Console.WriteLine ("Bad job data found!");
+							businessContext.DeleteEntity (job);
+						}
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
 		}
 
 		private static void InitEmployeeFromUsers(CoreData coreData)
