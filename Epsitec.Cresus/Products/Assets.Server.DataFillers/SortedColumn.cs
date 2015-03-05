@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public SortedColumn(System.Xml.XmlReader reader)
 		{
 			this.Field = reader.ReadObjectFieldAttribute (X.Attr.Field);
-			this.Type  = (SortedType) reader.ReadTypeAttribute (X.Attr.Type, typeof (SortedType));
+			this.Type  = reader.ReadTypeAttribute<SortedType> (X.Attr.Type);
 
 			reader.Read ();
 		}

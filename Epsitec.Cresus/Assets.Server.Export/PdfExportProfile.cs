@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 						this.CellMargins.Top       = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Top);
 						this.CellMargins.Bottom    = (double) reader.ReadDecimalAttribute (X.Attr.CellMargins_Bottom);
 
-						this.Font                  = (ExportFont) reader.ReadTypeAttribute (X.Attr.Font, typeof (ExportFont));
+						this.Font                  = reader.ReadTypeAttribute<ExportFont> (X.Attr.Font);
 						this.FontSize              = (double) reader.ReadDecimalAttribute (X.Attr.FontSize);
 						this.AutomaticColumnWidths = reader.ReadBoolAttribute   (X.Attr.AutomaticColumnWidths);
 						this.Header                = reader.ReadStringAttribute (X.Attr.Header);

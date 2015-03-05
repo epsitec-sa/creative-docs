@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public SearchDefinition(System.Xml.XmlReader reader)
 		{
 			this.Pattern = reader.ReadStringAttribute (X.Attr.Pattern);
-			this.Options = (SearchOptions) reader.ReadTypeAttribute (X.Attr.Options, typeof (SearchOptions));
+			this.Options = reader.ReadTypeAttribute<SearchOptions> (X.Attr.Options);
 
 			reader.Read ();
 		}

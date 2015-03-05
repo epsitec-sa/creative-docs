@@ -48,14 +48,14 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 					{
 						case X.Definitions:
 							{
-								this.Range             =               reader.ReadDateRangeAttribute (X.Attr.Range);
-								this.Periodicity       = (Periodicity) reader.ReadTypeAttribute      (X.Attr.Periodicity, typeof (Periodicity));
-								this.InitialAmount     =               reader.ReadDecimalAttribute   (X.Attr.InitialAmount).GetValueOrDefault ();
-								this.ExtraDate         =               reader.ReadDateAttribute      (X.Attr.ExtraDate);
-								this.ExtraAmount       =               reader.ReadDecimalAttribute   (X.Attr.ExtraAmount);
-								this.AmortizationSuppl =               reader.ReadBoolAttribute      (X.Attr.AmortizationSuppl);
-								this.AdjustDate        =               reader.ReadDateAttribute      (X.Attr.AdjustDate);
-								this.AdjustAmount      =               reader.ReadDecimalAttribute   (X.Attr.AdjustAmount);
+								this.Range             = reader.ReadDateRangeAttribute (X.Attr.Range);
+								this.Periodicity       = reader.ReadTypeAttribute<Periodicity > (X.Attr.Periodicity);
+								this.InitialAmount     = reader.ReadDecimalAttribute   (X.Attr.InitialAmount).GetValueOrDefault ();
+								this.ExtraDate         = reader.ReadDateAttribute      (X.Attr.ExtraDate);
+								this.ExtraAmount       = reader.ReadDecimalAttribute   (X.Attr.ExtraAmount);
+								this.AmortizationSuppl = reader.ReadBoolAttribute      (X.Attr.AmortizationSuppl);
+								this.AdjustDate        = reader.ReadDateAttribute      (X.Attr.AdjustDate);
+								this.AdjustAmount      = reader.ReadDecimalAttribute   (X.Attr.AdjustAmount);
 
 								reader.Read ();  // on avance sur le noeud suivant
 							}

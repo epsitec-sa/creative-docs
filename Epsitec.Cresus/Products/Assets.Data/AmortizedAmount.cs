@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.Trace         = reader.ReadStringAttribute  (X.Attr.Trace);
 			this.Error         = reader.ReadStringAttribute  (X.Attr.Error);
 
-			this.EntryScenario = (EntryScenario) reader.ReadTypeAttribute (X.Attr.EntryScenario, typeof (EntryScenario));
+			this.EntryScenario = reader.ReadTypeAttribute<EntryScenario> (X.Attr.EntryScenario);
 			this.EntryGuid     = reader.ReadGuidAttribute (X.Attr.EntryGuid);
 			this.EntrySeed     = reader.ReadIntAttribute  (X.Attr.EntrySeed).GetValueOrDefault ();
 

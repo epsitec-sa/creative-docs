@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 		public static System.Text.Encoding ReadEncodingAttribute(this System.Xml.XmlReader reader, string name)
 		{
-			var e = (IOEncoding) reader.ReadTypeAttribute (name, typeof (IOEncoding));
+			var e = reader.ReadTypeAttribute<IOEncoding> (name);
 			return IOHelpers.EncodingFactory (e);
 		}
 
@@ -158,20 +158,6 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 
 		#region Type
-		public static object ReadTypeAttribute(this System.Xml.XmlReader reader, string name, System.Type enumType)
-		{
-			var s = reader[name];
-
-			if (string.IsNullOrEmpty (s))
-			{
-				return null;
-			}
-			else
-			{
-				return IOHelpers.ParseType (s, enumType);
-			}
-		}
-
 		public static T ReadTypeAttribute<T>(this System.Xml.XmlReader reader, string name)
 		{
 			var s = reader[name];
@@ -200,11 +186,6 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 		public static T ParseType<T>(this string s)
 		{
 			return (T) System.Enum.Parse (typeof (T), s);
-		}
-
-		public static object ParseType(this string s, System.Type enumType)
-		{
-			return System.Enum.Parse (enumType, s);
 		}
 		#endregion
 

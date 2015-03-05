@@ -73,11 +73,11 @@ namespace Epsitec.Cresus.Assets.Data
 							break;
 
 						case X.SaveMandatMode:
-							this.SaveMandatMode = (SaveMandatMode) reader.ReadElementContentAsString ().ParseType (typeof (SaveMandatMode));
+							this.SaveMandatMode = reader.ReadElementContentAsString ().ParseType<SaveMandatMode> ();
 							break;
 
 						case X.CopyNameStrategy:
-							this.CopyNameStrategy = (CopyNameStrategy) reader.ReadElementContentAsString ().ParseType (typeof (CopyNameStrategy));
+							this.CopyNameStrategy = reader.ReadElementContentAsString ().ParseType<CopyNameStrategy> ();
 							break;
 					}
 				}

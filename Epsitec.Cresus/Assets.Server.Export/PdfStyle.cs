@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public PdfStyle(System.Xml.XmlReader reader)
 		{
-			this.LabelColor      = (ExportColor) reader.ReadTypeAttribute    (X.Attr.LabelColor,  typeof (ExportColor));
-			this.EvenColor       = (ExportColor) reader.ReadTypeAttribute    (X.Attr.EvenColor,   typeof (ExportColor));
-			this.OddColor        = (ExportColor) reader.ReadTypeAttribute    (X.Attr.OddColor,    typeof (ExportColor));
-			this.BorderColor     = (ExportColor) reader.ReadTypeAttribute    (X.Attr.BorderColor, typeof (ExportColor));
-			this.BorderThickness = (double)      reader.ReadDecimalAttribute (X.Attr.BorderThickness);
+			this.LabelColor      = reader.ReadTypeAttribute<ExportColor> (X.Attr.LabelColor);
+			this.EvenColor       = reader.ReadTypeAttribute<ExportColor> (X.Attr.EvenColor);
+			this.OddColor        = reader.ReadTypeAttribute<ExportColor> (X.Attr.OddColor);
+			this.BorderColor     = reader.ReadTypeAttribute<ExportColor> (X.Attr.BorderColor);
+			this.BorderThickness = (double) reader.ReadDecimalAttribute (X.Attr.BorderThickness);
 
 			reader.Read ();
 		}

@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 						case X.Type:
 							var s = reader.ReadElementContentAsString ();
-							this.Type = (EventType) IOHelpers.ParseType (s, typeof (EventType));
+							this.Type = IOHelpers.ParseType<EventType> (s);
 							break;
 
 						case X.Timestamp:

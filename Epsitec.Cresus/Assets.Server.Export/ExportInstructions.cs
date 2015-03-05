@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public ExportInstructions(System.Xml.XmlReader reader)
 		{
-			this.Format   = (ExportFormat) reader.ReadTypeAttribute (X.Attr.Format, typeof (ExportFormat));
+			this.Format   = reader.ReadTypeAttribute<ExportFormat> (X.Attr.Format);
 			this.Filename = reader.ReadStringAttribute (X.Attr.Filename);
 
 			reader.Read ();

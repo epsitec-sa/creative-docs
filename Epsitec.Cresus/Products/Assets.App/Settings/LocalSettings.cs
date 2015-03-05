@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 							break;
 
 						case X.AccountCategories:
-							LocalSettings.AccountCategories = (AccountCategory) reader.ReadElementContentAsString ().ParseType (typeof (AccountCategory));
+							LocalSettings.AccountCategories = reader.ReadElementContentAsString ().ParseType<AccountCategory> ();
 							break;
 
 						case X.ExpressionSimulationParams:
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
 					var c = new SearchInfo (reader);
-					var k = (SearchKind) IOHelpers.ParseType (reader.Name, typeof (SearchKind));
+					var k = IOHelpers.ParseType<SearchKind> (reader.Name);
 					LocalSettings.searchInfos.Add (k, c);
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
