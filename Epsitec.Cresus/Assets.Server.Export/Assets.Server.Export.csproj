@@ -50,6 +50,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AbstractExport.cs" />
+    <Compile Include="ExportEntries\ExportEntries.cs" />
     <Compile Include="ExportFont.cs" />
     <Compile Include="ExportColor.cs" />
     <Compile Include="ExportInstructions.cs" />

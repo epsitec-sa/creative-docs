@@ -10,8 +10,10 @@ using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
+using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.Engine;
+using Epsitec.Cresus.Assets.Server.Export;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Views
@@ -176,6 +178,31 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnExportEntries(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
+
+			var filename = LocalSettings.AccountsImportFilename;
+
+			if (string.IsNullOrEmpty (filename))
+			{
+				MessagePopup.ShowMessage (target, "Exportation des écritures", "Le dossier de comptabilisation est inconnu.");
+				return;
+			}
+
+			using (var ee = new ExportEntries (this.accessor))
+			{
+				try
+				{
+					var entryCount = ee.ExportFile (filename);
+
+					var message = string.Format ("{1} écritures pour la comptabilité {0} ont été générées avec succès.", filename, TypeConverters.IntToString (entryCount));
+					MessagePopup.ShowMessage (target, "Exportation des écritures", message);
+				}
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					MessagePopup.ShowMessage (target, "Exportation des écritures", message);
+					return;
+				}
+			}
 		}
 
 		[Command (Res.CommandIds.Main.Navigate.Back)]
