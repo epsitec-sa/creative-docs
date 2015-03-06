@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public ExportEntries(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+			this.eccLines = new List<EccLine> ();
 		}
 
 		public void Dispose()
@@ -25,13 +26,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public int ExportFile(string filename)
 		{
-			var data = this.GetExportData (123);
+			this.filename = filename;
 
-			var dir = System.IO.Path.GetDirectoryName (filename);
-			var name = this.accessor.Mandat.Name;
-			filename = System.IO.Path.Combine (dir, name + ".ecf");
+			this.ReadEcc ();
 
-			System.IO.File.WriteAllText (filename, data, System.Text.Encoding.Unicode);
+			var data = this.GetExportData (ExportEntries.uid);
+			System.IO.File.WriteAllText (this.EcfFilename, data, System.Text.Encoding.Unicode);
 
 			return this.entryCount;
 		}
@@ -109,10 +109,115 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			return builder.ToString ();
 		}
-	
-	
-	
-		private DataAccessor					accessor;
+
+
+		private void ReadEcc()
+		{
+			this.eccLines.Clear ();
+
+			var lines = System.IO.File.ReadAllLines (this.EccFilename);
+			foreach (var line in lines)
+			{
+				var ecc = new EccLine (line);
+				this.eccLines.Add (ecc);
+			}
+		}
+
+		private void WriteEcc()
+		{
+			System.IO.File.WriteAllLines (this.EccFilename, this.eccLines.Select (x => x.Line));
+		}
+
+
+		private struct EccLine
+		{
+			public EccLine(string line)
+			{
+				this.OriginalLine = line;
+
+				var x = line.Split ('\t');
+
+				this.Tag      = x[0];
+				this.N        = null;
+				this.Date     = null;
+				this.Filename = null;
+				this.Uid      = null;
+
+				if (x.Length == 2)
+				{
+					var y = x[1].Split (new string[] { "; " }, System.StringSplitOptions.None);
+					if (y.Length == 4)
+					{
+						this.N        = y[0];
+						this.Date     = y[1];
+						this.Filename = y[2];
+						this.Uid      = y[3];
+					}
+				}
+			}
+
+			public string Line
+			{
+				get
+				{
+					if (this.IsBody)
+					{
+						return string.Concat (this.Tag, "\t", this.N, "; ", this.Date, "; ", this.Filename, "; ", this.Uid);
+					}
+					else
+					{
+						return this.OriginalLine;
+					}
+				}
+			}
+
+			public bool IsBody
+			{
+				get
+				{
+					return !string.IsNullOrEmpty (this.N)
+						&& !string.IsNullOrEmpty (this.Date)
+						&& !string.IsNullOrEmpty (this.Filename)
+						&& !string.IsNullOrEmpty (this.Uid);
+				}
+			}
+
+			public string OriginalLine;
+			public string Tag;
+			public string N;
+			public string Date;
+			public string Filename;
+			public string Uid;
+		}
+
+
+		private string EccFilename
+		{
+			get
+			{
+				var dir = System.IO.Path.GetDirectoryName (this.filename);
+				var name = System.IO.Path.GetFileNameWithoutExtension (this.filename);
+				return System.IO.Path.Combine (dir, name + ".ecc");
+			}
+		}
+
+		private string EcfFilename
+		{
+			get
+			{
+				var dir = System.IO.Path.GetDirectoryName (this.filename);
+				var name = this.accessor.Mandat.Name;
+				return System.IO.Path.Combine (dir, name + ".ecf");
+			}
+		}
+
+
+		private const int uid = 123456;
+
+		private readonly DataAccessor			accessor;
+		private readonly List<EccLine>			eccLines;
+
+		private string							filename;
 		private int								entryCount;
 	}
 }
