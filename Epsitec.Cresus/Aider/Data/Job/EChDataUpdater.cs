@@ -509,8 +509,8 @@ namespace Epsitec.Aider.Data.Job
 						if (existingAiderHousehold.IsNotNull ())
 						{
 
-							this.LogToConsole ("Info: Aider household already exist, skipping");
-							AiderContactEntity.DeleteDuplicateContacts (businessContext, existingAiderHousehold.Contacts);		
+							this.LogToConsole ("Info: Aider household already exist");
+							// we skip data jobs here, potential duplicated contacts must be processed later
 							continue;
 
 						}
@@ -655,7 +655,7 @@ namespace Epsitec.Aider.Data.Job
 					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
 					if (contactToRemove.IsNotNull ())
 					{
-						AiderContactEntity.Delete (businessContext, contactToRemove, true);
+						//AiderContactEntity.Delete (businessContext, contactToRemove, true);
 					}
 
 					if (oldHousehold.Members.Count <= 1)

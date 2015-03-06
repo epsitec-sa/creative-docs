@@ -627,7 +627,9 @@ namespace Epsitec.Aider.Data.Job
 						if (!AiderPersonEntity.MergePersons (businessContext, p1, p2))
 						{
 							//Ech duplicated contact -> Remove the duplicated contact
-							AiderContactEntity.Delete (businessContext, p2.MainContact);
+							// Deleting contact is dangerous, many relationship with other entity
+							// 
+							//AiderContactEntity.Delete (businessContext, p2.MainContact);
 						}
 					}
 				}
