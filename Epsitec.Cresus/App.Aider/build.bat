@@ -52,7 +52,7 @@ if %cleanup%==1 (
 
 
 @rem Build the solution.
-msbuild /verbosity:minimal /property:Configuration=Release /target:Build ..\Epsitec.Cresus.2013.sln
+msbuild /verbosity:minimal /property:Configuration="Release" /property:Platform="x86" ..\Epsitec.Cresus.sln
 if %ERRORLEVEL% neq 0 exit /B 1
 
 @rem Copy the client, maintenance and server directories to the output folder.
