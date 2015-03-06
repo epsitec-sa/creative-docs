@@ -5,14 +5,14 @@
 cd /d %~dp0
 
 @rem Here we store whether we must cleanup or not
-set cleanup=1
+set cleanup=0
 
 @rem Here we set the configuration directory where we want to pick the configuration for the build.
 set configurationDirectory=0
 
 @rem Process the command line arguments.
 for %%a in (%*) do (
-    if "%%a"=="-nocleanup" set cleanup=0
+    if "%%a"=="-cleanup" set cleanup=1
     if "%%a"=="-production" set configurationDirectory=ServerConfigProduction
     if "%%a"=="-production" set suffix=prod
     if "%%a"=="-test" set configurationDirectory=ServerConfigTest
@@ -22,6 +22,7 @@ for %%a in (%*) do (
 @rem Exits if the configuration directory is not set up properly
 if %configurationDirectory%==0 (
     echo The configuration is not set up properly. Use -production or -test.
+	echo To clean up everything, additionally specify -cleanup.
     exit /B
 )
 
@@ -49,8 +50,6 @@ if %cleanup%==1 (
 
 @echo on
 
-@rem First, restore NuGet packages, since we deleted them by cleaning up
-..\.nuget\nuget.exe restore ..\Epsitec.Cresus.2013.sln
 
 @rem Build the solution.
 msbuild /verbosity:minimal /property:Configuration=Release /target:Build ..\Epsitec.Cresus.2013.sln
