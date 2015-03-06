@@ -91,18 +91,18 @@ namespace Epsitec.Data.Platform
 				int result = System.DateTime.Compare (currentRelease, lastRelease);
 				if (result < 0)
 				{
-					Debug.WriteLine ("Outdated local Mat[CH] file detected");
+					System.Diagnostics.Trace.WriteLine ("Outdated local Mat[CH] file detected");
 					return true;
 				}
 				else
 				{
-					Debug.WriteLine ("No update required");
+					System.Diagnostics.Trace.WriteLine ("No update required");
 					return false;
 				}
 			}
 			else
 			{
-				Debug.WriteLine ("No local Mat[CH] file found, download required");
+				System.Diagnostics.Trace.WriteLine ("No local Mat[CH] file found, download required");
 				return true;
 			}
 		}
@@ -137,11 +137,11 @@ namespace Epsitec.Data.Platform
 
 		private string DoMatchLoginRequest()
 		{
-			System.Console.WriteLine ("Login to Mat[CH] Downloadcenter...");
+			System.Diagnostics.Trace.WriteLine ("Login to Mat[CH] Downloadcenter...");
 			var hiddenFieldValue = this.FindHiddenFormField ();
 			var values = this.BuildLoginFormPostData (hiddenFieldValue);
 			var response = this.UploadValues ("https://match.post.ch/downloadCenter?login=match", values);
-			System.Console.WriteLine ("Done");
+			System.Diagnostics.Trace.WriteLine ("Done");
 			this.IsLogged = true;
 			return Encoding.Default.GetString (response);
 		}
@@ -168,7 +168,7 @@ namespace Epsitec.Data.Platform
 		private string DownloadFile(string uri)
 		{
 			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
-			Debug.WriteLine ("Downloading Mat[CH]Sort file...");
+			System.Diagnostics.Trace.WriteLine ("Downloading Mat[CH]Sort file...");
 
 			using (var stream = this.OpenRead (uri))
 			{
@@ -177,12 +177,12 @@ namespace Epsitec.Data.Platform
 					var zipFile = new Epsitec.Common.IO.ZipFile ();
 					zipFile.LoadFile (stream);
 					var zipEntry = zipFile.Entries.First ();
-					Debug.WriteLine ("Writing file on {0}...", filename);
+					System.Diagnostics.Trace.WriteLine ("Writing file on {0}...", filename);
 					using (StreamWriter sw = new StreamWriter (filename))
 					{
 						sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
 					}
-					Debug.WriteLine ("Done");
+					System.Diagnostics.Trace.WriteLine ("Done");
 				}
 				catch
 				{
