@@ -3,5 +3,6 @@ Export/
 External/Clipboard.Win32.dll
 PrecompiledWeb/
 node_modules/
+Setup.CreativeDocs/SignedDlls/
 
 Epsitec.Cresus.sln.GhostDoc.xml

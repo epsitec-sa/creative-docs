@@ -212,7 +212,7 @@ rem xcopy "$(SolutionDir)External\*.Win32.dll" "$(SolutionDir)Setup.CreativeDocs
 
 ren "$(SolutionDir)Setup.CreativeDocs\SignedDlls\App.CreativeDocs.exe" "Creative Docs.exe"
 
-call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*"
+rem call "$(SolutionDir)External\CodeSigning\sign-opac.bat" "$(SolutionDir)Setup.CreativeDocs\SignedDlls\*"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

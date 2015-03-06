@@ -35,8 +35,6 @@ if %cleanup%==1 (
     echo - Clean submodule %~dp0..\..\Epsitec.SwissPost
     echo - Clean submodule %~dp0..\..\Epsitec.TwixClip
     echo - Clean %~dp0..\
-    choice /M "Are you sure that you want to continue"
-    if ERRORLEVEL 2 exit /B
 
     @echo on
 
@@ -50,9 +48,11 @@ if %cleanup%==1 (
 
 @echo on
 
+@rem Restore NuGet packages.
+..\External\NuGet.exe restore ..\Epsitec.Cresus.Aider.sln
 
 @rem Build the solution.
-msbuild /verbosity:minimal /property:Configuration="Release" /property:Platform="x86" ..\Epsitec.Cresus.Aider.sln
+msbuild /verbosity:minimal /property:Configuration="Release" ..\Epsitec.Cresus.Aider.sln
 if %ERRORLEVEL% neq 0 exit /B 1
 
 @rem Copy the client, maintenance and server directories to the output folder.
