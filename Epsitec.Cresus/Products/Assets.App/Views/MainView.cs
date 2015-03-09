@@ -179,9 +179,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			var target = this.toolbar.GetTarget (e);
 
-			var filename = LocalSettings.AccountsImportFilename;
+			var accountsFilename = LocalSettings.AccountsImportFilename;
 
-			if (string.IsNullOrEmpty (filename))
+			if (string.IsNullOrEmpty (accountsFilename))
 			{
 				MessagePopup.ShowMessage (target, "Exportation des écritures", "Le dossier de comptabilisation est inconnu.");
 				return;
@@ -191,9 +191,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				try
 				{
-					var entryCount = ee.ExportFile (filename);
+					var entriesCount = ee.ExportFile (accountsFilename);
 
-					var message = string.Format ("{1} écritures pour la comptabilité {0} ont été générées avec succès.", filename, TypeConverters.IntToString (entryCount));
+					var message = string.Format ("{1} écritures pour la comptabilité {0} ont été générées avec succès.", accountsFilename, TypeConverters.IntToString (entriesCount));
 					MessagePopup.ShowMessage (target, "Exportation des écritures", message);
 				}
 				catch (System.Exception ex)

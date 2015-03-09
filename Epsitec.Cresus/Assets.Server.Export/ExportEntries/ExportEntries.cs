@@ -24,16 +24,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public int ExportFile(string filename)
+		public int ExportFile(string accountsFilename)
 		{
-			this.filename = filename;
+			this.accountsFilename = accountsFilename;
 
 			this.ReadEcc ();
 
 			var data = this.GetExportData (ExportEntries.uid);
 			System.IO.File.WriteAllText (this.EcfFilename, data, System.Text.Encoding.Unicode);
 
-			return this.entryCount;
+			return this.entriesCount;
 		}
 
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 
-			this.entryCount = 0;
+			this.entriesCount = 0;
 			int idno = 1;
 			foreach (var entry in entries)
 			{
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append (vatCode);
 					builder.Append ("\r\n");
 
-					this.entryCount++;
+					this.entriesCount++;
 				}
 			}
 
@@ -193,19 +193,21 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string EccFilename
 		{
+			//	Retourne le nom du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.eca.
 			get
 			{
-				var dir = System.IO.Path.GetDirectoryName (this.filename);
-				var name = System.IO.Path.GetFileNameWithoutExtension (this.filename);
+				var dir = System.IO.Path.GetDirectoryName (this.accountsFilename);
+				var name = System.IO.Path.GetFileNameWithoutExtension (this.accountsFilename);
 				return System.IO.Path.Combine (dir, name + ".ecc");
 			}
 		}
 
 		private string EcfFilename
 		{
+			//	Retourne le nom du fichier contenant les écritures.
 			get
 			{
-				var dir = System.IO.Path.GetDirectoryName (this.filename);
+				var dir = System.IO.Path.GetDirectoryName (this.accountsFilename);
 				var name = this.accessor.Mandat.Name;
 				return System.IO.Path.Combine (dir, name + ".ecf");
 			}
@@ -217,7 +219,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;
 
-		private string							filename;
-		private int								entryCount;
+		private string							accountsFilename;
+		private int								entriesCount;
 	}
 }
