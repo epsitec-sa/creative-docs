@@ -62,17 +62,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			get
 			{
 				return !string.IsNullOrEmpty (this.N)
-							&& !string.IsNullOrEmpty (this.Date)
-							&& !string.IsNullOrEmpty (this.Filename)
-							&& !string.IsNullOrEmpty (this.Uid);
+					&& !string.IsNullOrEmpty (this.Date)
+					&& !string.IsNullOrEmpty (this.Filename)
+					&& !string.IsNullOrEmpty (this.Uid);
 			}
 		}
 
-		public string							OriginalLine;
-		public string							Tag;
-		public string							N;
-		public string							Date;
-		public string							Filename;
-		public string							Uid;
+		private readonly string					OriginalLine;	// ligne originale
+		public string							Tag;			// par exemple #FSC, #ECA ou #END
+		public string							N;				// normalement 1
+		public string							Date;			// par exemple 10/6/2010 11:06:53
+		public string							Filename;		// nom du fichier d'écritures, sans les dossiers
+		public string							Uid;			// identificateur unique
 	}
 }
