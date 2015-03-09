@@ -37,31 +37,65 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 			}
 
-			var data = this.GetEntriesData (ExportEntries.uid);
-			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Unicode);
+			//	On lit le fichier .ecf, à la recherche du dernier uid utilisé.
+			int uid;
+			try
+			{
+				uid = this.GetEntriesUid ();
+			}
+			catch
+			{
+				uid = 1;
+			}
 
-			this.CreateOrUpdateEccLine ();
+			var data = this.GetEntriesData (uid);
+			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
+
+			this.CreateOrUpdateEccLine (uid);
 			this.WriteEcc ();
 
 			return this.entriesCount;
 		}
 
 
+		private int GetEntriesUid()
+		{
+			//	Retourne le dernier uid utilisé dans l'ensemble des écritures générées par Assets.
+			int uid = 1;
+			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+
+			foreach (var line in lines)
+			{
+				if (line.StartsWith ("#ECC"))
+				{
+					var x = line.Split (new string[] { "; " }, System.StringSplitOptions.None);
+					if (x.Length == 4)
+					{
+						int i = int.Parse (x[3]);
+						uid = System.Math.Max (uid, i+1);
+					}
+				}
+			}
+
+			return uid;
+		}
+
 		private string GetEntriesData(int uid)
 		{
 			//	Retourne les données correspondant à l'ensemble des écritures générées par Assets.
+			//	On met toujours un numéro nlot égal à uid.
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append (ExportEntries.entriesHeader);
-			builder.Append (" ");
+			builder.Append ("\t");
 			builder.Append (ExportEntries.type.ToUpper ());
 			builder.Append ("\r\n");
 
-			builder.Append ("#ECC 1;");
-			builder.Append (TypeConverters.IntToString (1));  // nlot
-			builder.Append (";");
-			builder.Append (TypeConverters.DateToString (Timestamp.Now.Date));
-			builder.Append (";");
+			builder.Append ("#ECC 1; ");
+			builder.Append (uid.ToStringIO ());  // nlot
+			builder.Append ("; ");
+			builder.Append (System.DateTime.Now.ToString ("dd.MM.yyyy HH:mm:ss"));
+			builder.Append ("; ");
 			builder.Append (uid.ToStringIO ());  // uid
 			builder.Append ("\r\n");
 
@@ -98,11 +132,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append ("\t");
 					builder.Append (value.Value.ToStringIO ());
 					builder.Append ("\t");
-					builder.Append ("0");  // montant_me
 					builder.Append ("\t");
 					builder.Append ("0");  // cours
 					builder.Append ("\t");
-					builder.Append ("0");  // nmult
 					builder.Append ("\t");
 					builder.Append ("0");  // net
 					builder.Append ("\t");
@@ -110,11 +142,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append ("\t");
 					builder.Append ("0");  // notva
 					builder.Append ("\t");
-					builder.Append ("0");  // unused
 					builder.Append ("\t");
 					builder.Append ((idno++).ToStringIO ());  // idno
 					builder.Append ("\t");
 					builder.Append (vatCode);
+					builder.Append ("\t");
+					builder.Append ("\t");
+					builder.Append ("\t");
+					builder.Append ("\t");
+					builder.Append ("\t");
+					builder.Append ("\t");
+					builder.Append ("0");  // ?
 					builder.Append ("\r\n");
 
 					this.entriesCount++;
@@ -125,22 +163,23 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private EccLine CreateOrUpdateEccLine()
+		private EccLine CreateOrUpdateEccLine(int uid)
 		{
 			//	Crée ou met à jour la ligne concernée dans le fichier .ecc.
 			var eccLine = this.eccLines
-				.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename && x.Uid == ExportEntries.uid)
+				.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename)
 				.FirstOrDefault ();
 
 			if (eccLine == null)  // ligne inexistante ?
 			{
 				//	On crée une nouvelle ligne.
-				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, ExportEntries.uid);
+				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, uid);
 				this.AddEccLine (eccLine);
 			}
 			else  // ligne trouvée ?
 			{
 				eccLine.Date = System.DateTime.Now;  // on met simplement à jour la date
+				eccLine.Uid  = uid;
 			}
 
 			return eccLine;
@@ -179,7 +218,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private void WriteEcc()
 		{
 			//	Ecrit la totalité du fichier .ecc.
-			System.IO.File.WriteAllLines (this.EccPath, this.eccLines.Select (x => x.Line));
+			System.IO.File.WriteAllLines (this.EccPath, this.eccLines.Select (x => x.Line), System.Text.Encoding.Default);
 		}
 
 
@@ -226,12 +265,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private const string					entriesHeader = "#FSC 7.0";
+		private const string					entriesHeader = "#FSC\t9.5.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
 		//?private const string					type = "eca";  // nouveau, à voir avec MW
 		private const string					type = "ecf";  // comme Crésus Facturation en attendant
-		private const int						uid = 123456;
 
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;
