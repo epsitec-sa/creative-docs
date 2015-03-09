@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private static System.DateTime ParseEccDate(string s)
 		{
-			return System.DateTime.ParseExact (s, "dd/MM/yyyy HH:mm:ss", null);
+			return System.DateTime.ParseExact (s, "dd/M/yyyy HH:mm:ss", null);
 		}
 
 

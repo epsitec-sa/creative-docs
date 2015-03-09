@@ -49,9 +49,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string GetEntriesData(int uid)
 		{
+			//	Retourne les données correspondant à l'ensemble des écritures générées par Assets.
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("#FSC 7.0 ");
+			builder.Append (ExportEntries.entriesHeader);
+			builder.Append (" ");
 			builder.Append (ExportEntries.type.ToUpper ());
 			builder.Append ("\r\n");
 
@@ -147,7 +149,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private void AddEccLine(EccLine eccLine)
 		{
 			//	Ajoute une nouvelle ligne au fichier .ecc.
-			if (!this.eccLines.Any ())
+			if (!this.eccLines.Any ())  // fichier vide (inexistant) ?
 			{
 				//	On crée les lignes de début et de fin.
 				this.eccLines.Add (new EccLine (ExportEntries.eccHeader));
@@ -166,8 +168,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var lines = System.IO.File.ReadAllLines (this.EccPath);
 			foreach (var line in lines)
 			{
-				var ecc = new EccLine (line);
-				this.eccLines.Add (ecc);
+				if (!string.IsNullOrEmpty (line))
+				{
+					var ecc = new EccLine (line);
+					this.eccLines.Add (ecc);
+				}
 			}
 		}
 
@@ -180,7 +185,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string EccPath
 		{
-			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.eca.
+			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.eca,
+			//	par exemple "C:\Documents Crésus\Exemples\Compta 2015.ecc".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -191,7 +197,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string EntriesPath
 		{
-			//	Retourne le chemin du fichier contenant les écritures.
+			//	Retourne le chemin du fichier contenant les écritures,
+			//	par exemple "C:\Documents Crésus\Exemples\Mon Village.eca".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -201,15 +208,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string EntriesFilename
 		{
-			//	Retourne le nom du fichier contenant les écritures.
+			//	Retourne le nom du fichier contenant les écritures,
+			//	par exemple "Mon Village.eca".
 			get
 			{
-				return string.Concat(this.accessor.Mandat.Name, ".", ExportEntries.type);
+				return string.Concat (this.accessor.Mandat.Name, ".", ExportEntries.type);
 			}
 		}
 
 		private static string EccTag
 		{
+			//	Retourne le tag pour le fichier .ecc, normalement "#ECA".
 			get
 			{
 				return string.Concat ("#", ExportEntries.type.ToUpper ());
@@ -217,6 +226,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
+		private const string					entriesHeader = "#FSC 7.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
 		//?private const string					type = "eca";  // nouveau, à voir avec MW
