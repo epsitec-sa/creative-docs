@@ -116,7 +116,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.HideAddButton)
 					.Attribute (BrickMode.HideRemoveButton)
 					.Attribute (BrickMode.AutoGroup)
-					.EnableActionMenu<ActionAiderPersonViewController7RemoveHousehold> ()
+					.EnableActionMenu<ActionAiderPersonViewController7RemoveHousehold> ().IfTrue (households.Count > 1)
 					.Template ()
 					.End ()
 					.Attribute (BrickMode.DefaultToSummarySubView);
