@@ -129,68 +129,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private struct EccLine
-		{
-			public EccLine(string line)
-			{
-				this.OriginalLine = line;
-
-				var x = line.Split ('\t');
-
-				this.Tag      = x[0];
-				this.N        = null;
-				this.Date     = null;
-				this.Filename = null;
-				this.Uid      = null;
-
-				if (x.Length == 2)
-				{
-					var y = x[1].Split (new string[] { "; " }, System.StringSplitOptions.None);
-					if (y.Length == 4)
-					{
-						this.N        = y[0];
-						this.Date     = y[1];
-						this.Filename = y[2];
-						this.Uid      = y[3];
-					}
-				}
-			}
-
-			public string Line
-			{
-				get
-				{
-					if (this.IsBody)
-					{
-						return string.Concat (this.Tag, "\t", this.N, "; ", this.Date, "; ", this.Filename, "; ", this.Uid);
-					}
-					else
-					{
-						return this.OriginalLine;
-					}
-				}
-			}
-
-			public bool IsBody
-			{
-				get
-				{
-					return !string.IsNullOrEmpty (this.N)
-						&& !string.IsNullOrEmpty (this.Date)
-						&& !string.IsNullOrEmpty (this.Filename)
-						&& !string.IsNullOrEmpty (this.Uid);
-				}
-			}
-
-			public string OriginalLine;
-			public string Tag;
-			public string N;
-			public string Date;
-			public string Filename;
-			public string Uid;
-		}
-
-
 		private string EccFilename
 		{
 			//	Retourne le nom du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.eca.
