@@ -37,8 +37,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 			}
 
-			var data = this.GetExportData (ExportEntries.uid);
-			System.IO.File.WriteAllText (this.EcfPath, data, System.Text.Encoding.Unicode);
+			var data = this.GetEntriesData (ExportEntries.uid);
+			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Unicode);
 
 			this.CreateOrUpdateEccLine ();
 			this.WriteEcc ();
@@ -47,11 +47,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private string GetExportData(int uid)
+		private string GetEntriesData(int uid)
 		{
 			var builder = new System.Text.StringBuilder ();
 
-			builder.Append ("#FSC 7.0 ECF\r\n");
+			builder.Append ("#FSC 7.0 ");
+			builder.Append (ExportEntries.type.ToUpper ());
+			builder.Append ("\r\n");
 
 			builder.Append ("#ECC 1;");
 			builder.Append (TypeConverters.IntToString (1));  // nlot
@@ -125,13 +127,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			//	Crée ou met à jour la ligne concernée dans le fichier .ecc.
 			var eccLine = this.eccLines
-				.Where (x => x.Tag == ExportEntries.eccTag && x.Filename == this.EcfFilename && x.Uid == ExportEntries.uid)
+				.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename && x.Uid == ExportEntries.uid)
 				.FirstOrDefault ();
 
 			if (eccLine == null)  // ligne inexistante ?
 			{
 				//	On crée une nouvelle ligne.
-				eccLine = new EccLine (ExportEntries.eccTag, 1, System.DateTime.Now, this.EcfFilename, ExportEntries.uid);
+				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, ExportEntries.uid);
 				this.AddEccLine (eccLine);
 			}
 			else  // ligne trouvée ?
@@ -187,30 +189,38 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 		}
 
-		private string EcfPath
+		private string EntriesPath
 		{
 			//	Retourne le chemin du fichier contenant les écritures.
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
-				return System.IO.Path.Combine (dir, this.EcfFilename);
+				return System.IO.Path.Combine (dir, this.EntriesFilename);
 			}
 		}
 
-		private string EcfFilename
+		private string EntriesFilename
 		{
 			//	Retourne le nom du fichier contenant les écritures.
 			get
 			{
-				return this.accessor.Mandat.Name + ".ecf";
+				return string.Concat(this.accessor.Mandat.Name, ".", ExportEntries.type);
+			}
+		}
+
+		private static string EccTag
+		{
+			get
+			{
+				return string.Concat ("#", ExportEntries.type.ToUpper ());
 			}
 		}
 
 
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
-		//?private const string					eccTag = "#ECA";  // nouveau tab, à voir avec MW
-		private const string					eccTag = "#ECF";  // comme Crésus Facturation en attendant
+		//?private const string					type = "eca";  // nouveau, à voir avec MW
+		private const string					type = "ecf";  // comme Crésus Facturation en attendant
 		private const int						uid = 123456;
 
 		private readonly DataAccessor			accessor;
