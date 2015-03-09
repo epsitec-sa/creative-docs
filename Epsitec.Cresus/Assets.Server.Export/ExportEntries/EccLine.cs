@@ -3,11 +3,12 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Cette structure est reflète le contenu d'une ligne quelconque d'un fichier .ecc.
+	/// Cette classe est reflète le contenu d'une ligne quelconque d'un fichier .ecc.
 	/// Par exemple:
 	/// #FSC	9.3 	ECC
 	///	#ECF	1; 10/6/2010 11:06:53; "toto.ecf"; 123
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	///	#END
 	///	Les lignes autres que #ECF/#ECS/#ECA sont simplement bypassées.
 	/// </summary>
-	public struct EccLine
+	public class EccLine
 	{
 		public EccLine(string line)
 		{
@@ -34,13 +35,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var y = x[1].Split (new string[] { "; " }, System.StringSplitOptions.None);
 				if (y.Length == 4)
 				{
-					this.N        = y[0];
-					this.Date     = y[1];
+					this.N        = y[0].ParseInt ();
+					this.Date     = EccLine.ParseEccDate (y[1]);
 					this.Filename = y[2];
-					this.Uid      = y[3];
+					this.Uid      = y[3].ParseInt ();
 				}
 			}
 		}
+
+		public EccLine(string tag, int n, System.DateTime date, string filename, int uid)
+		{
+			this.OriginalLine = null;
+			this.Tag          = tag;
+			this.N            = n;
+			this.Date         = date;
+			this.Filename     = filename;
+			this.Uid          = uid;
+		}
+
 
 		public string							Line
 		{
@@ -48,7 +60,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 				if (this.IsBody)
 				{
-					return string.Concat (this.Tag, "\t", this.N, "; ", this.Date, "; ", this.Filename, "; ", this.Uid);
+					return string.Concat (
+						this.Tag, "\t",
+						this.N.ToStringIO (), "; ",
+						EccLine.ToEccStringIO (this.Date), "; ",
+						this.Filename, "; ",
+						this.Uid.ToStringIO ());
 				}
 				else
 				{
@@ -61,18 +78,37 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			get
 			{
-				return !string.IsNullOrEmpty (this.N)
-					&& !string.IsNullOrEmpty (this.Date)
+				return this.N.HasValue
+					&& this.Date.HasValue
 					&& !string.IsNullOrEmpty (this.Filename)
-					&& !string.IsNullOrEmpty (this.Uid);
+					&& this.Uid.HasValue;
 			}
 		}
 
+
+		private static string ToEccStringIO(System.DateTime? date)
+		{
+			if (date.HasValue)
+			{
+				return date.Value.ToString ("dd/MM/yyyy HH:mm:ss");
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private static System.DateTime ParseEccDate(string s)
+		{
+			return System.DateTime.ParseExact (s, "dd/MM/yyyy HH:mm:ss", null);
+		}
+
+
 		private readonly string					OriginalLine;	// ligne originale
 		public string							Tag;			// par exemple #FSC, #ECA ou #END
-		public string							N;				// normalement 1
-		public string							Date;			// par exemple 10/6/2010 11:06:53
+		public int?								N;				// normalement 1
+		public System.DateTime?					Date;			// date
 		public string							Filename;		// nom du fichier d'écritures, sans les dossiers
-		public string							Uid;			// identificateur unique
+		public int?								Uid;			// identificateur unique
 	}
 }
