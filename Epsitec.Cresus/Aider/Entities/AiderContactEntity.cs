@@ -265,12 +265,6 @@ namespace Epsitec.Aider.Entities
 				? HouseholdRole.Head
 				: HouseholdRole.None;
 
-			var currentSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, contact.Household);
-			if (currentSubscription.IsNotNull ())
-			{
-				currentSubscription.RefreshCache ();
-			}
-
 			contact.Household.RemoveContactInternal (contact);
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, contact.Household);
 			contact.Person.RemoveContactInternal (contact);
@@ -281,11 +275,11 @@ namespace Epsitec.Aider.Entities
 			contact.Person.AddContactInternal (contact);
 			newHousehold.AddContactInternal (contact);
 
-			//TODO CHECK
+
 			var newSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, newHousehold);
 			if (newSubscription.IsNotNull ())
 			{
-				currentSubscription.RefreshCache ();
+				newSubscription.RefreshCache ();
 			}
 
 			return contact;
