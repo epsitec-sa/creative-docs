@@ -99,9 +99,13 @@ namespace Epsitec.Aider.Data.Job
 						//verify that a contact exist
 						if (!household.Contacts.Any (c => c.Person.eCH_Person.PersonId == person.PersonId))
 						{
-							//We need to create a contact
+							
 							EChPersonFixer.LogToConsole ("No contact found for ID {0} in household {1} -> Adding contact", eChPersonId, household.GetCompactSummary ());
-							AiderContactEntity.Create (businessContext, aiderPerson, household, isHead: household.IsHead (aiderPerson));
+							if (!person.IsDeceased)
+							{
+								//We need to create a contact
+								AiderContactEntity.Create (businessContext, aiderPerson, household, isHead: household.IsHead (aiderPerson));
+							}				
 						}
 						else
 						{

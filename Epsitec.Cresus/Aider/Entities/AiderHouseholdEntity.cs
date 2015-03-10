@@ -293,11 +293,6 @@ namespace Epsitec.Aider.Entities
 
 		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
-			foreach (var contact in household.Contacts.ToArray ())
-			{
-				AiderContactEntity.Delete (businessContext, contact);
-			}
-
 			if (household.Comment.IsNotNull ())
 			{
 				businessContext.DeleteEntity (household.Comment);

@@ -509,8 +509,8 @@ namespace Epsitec.Aider.Data.Job
 						if (existingAiderHousehold.IsNotNull ())
 						{
 
-							this.LogToConsole ("Info: Aider household already exist, skipping");
-							AiderContactEntity.DeleteDuplicateContacts (businessContext, existingAiderHousehold.Contacts);		
+							this.LogToConsole ("Info: Aider household already exist");
+							// we skip data jobs here, potential duplicated contacts must be processed later
 							continue;
 
 						}
@@ -648,17 +648,18 @@ namespace Epsitec.Aider.Data.Job
 				this.LogToConsole ("Info: Processing Adult 1 Relocation");
 				var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChReportedPerson.Adult1);
 				var oldHousehold = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
-				//Remove Old Contact
+
 				if (oldHousehold.IsNotNull ())
 				{
-					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
-					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
-					if (contactToRemove.IsNotNull ())
+					this.LogToConsole ("Info: old household detected, moving contact for {0}", aiderPerson.GetFullName ());
+					var contactToMove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+
+					if (contactToMove.IsNotNull ())
 					{
-						AiderContactEntity.Delete (businessContext, contactToRemove, true);
+						AiderContactEntity.ChangeHousehold (businessContext, contactToMove, aiderHousehold, true);
 					}
 
-					if (oldHousehold.Members.Count <= 1)
+					if (oldHousehold.Members.Count == 0)
 					{
 						this.LogToConsole ("Info: old household is now empty, delete household and existing subscription");
 						EChDataHelpers.DeleteAiderHouseholdAndSubscription (businessContext, oldHousehold);
@@ -667,11 +668,9 @@ namespace Epsitec.Aider.Data.Job
 				else
 				{
 					this.LogToConsole ("Info: No old household detected");
-				}
-
-				this.LogToConsole ("Info: Create contact for the new household");
-				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
-				
+					this.LogToConsole ("Info: Create contact for the new household");
+					AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
+				}		
 			}
 			else
 			{
@@ -687,12 +686,15 @@ namespace Epsitec.Aider.Data.Job
 				//Remove Old Contact
 				if (oldHousehold.IsNotNull ())
 				{
-					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+					this.LogToConsole ("Info: old household detected, moving contact for {0}", aiderPerson.GetFullName ());
+					var contactToMove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
 
-					AiderContactEntity.Delete (businessContext, contactToRemove, true);
-					this.LogToConsole ("Info: old household detected, removing contact for {0}", aiderPerson.GetFullName ());
+					if (contactToMove.IsNotNull ())
+					{
+						AiderContactEntity.ChangeHousehold (businessContext, contactToMove, aiderHousehold, true);
+					}
 
-					if (oldHousehold.Members.Count <= 1)
+					if (oldHousehold.Members.Count == 0)
 					{
 						this.LogToConsole ("Info: old household is now empty, delete household and existing subscription");
 						EChDataHelpers.DeleteAiderHouseholdAndSubscription (businessContext, oldHousehold);
@@ -701,11 +703,9 @@ namespace Epsitec.Aider.Data.Job
 				else
 				{
 					this.LogToConsole ("Info: No old household detected");
+					this.LogToConsole ("Info: Create contact for the new household");
+					AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
 				}
-
-				this.LogToConsole ("Info: Create contact for the new household");
-				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, true);
-
 			}
 
 			foreach (var child in eChReportedPerson.Children)
@@ -714,21 +714,22 @@ namespace Epsitec.Aider.Data.Job
 				var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, child);
 				var oldHousehold = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
 				
-				//Remove or not for child?
-				//Remove Old Contact
 				if (oldHousehold.IsNotNull ())
 				{
-					var contactToRemove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
-					if (contactToRemove.IsNotNull ())
+					var contactToMove = aiderPerson.Contacts.Where (c => c.Household == oldHousehold).FirstOrDefault ();
+					if (contactToMove.IsNotNull ())
 					{
-						this.LogToConsole ("Info: We keep the old contact");
+						this.LogToConsole ("Info: We keep child contact");
 					}
+				} 
+				else
+				{
+					this.LogToConsole ("Info: Create contact for the new household");
+					AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
 				}
-				this.LogToConsole ("Info: Create contact for the new household");
-				AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, false);
-
 			}
 
+			EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, aiderHousehold);
 			return aiderHousehold;
 		}
 		
