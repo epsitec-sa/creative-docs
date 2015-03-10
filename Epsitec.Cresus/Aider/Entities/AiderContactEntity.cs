@@ -275,6 +275,13 @@ namespace Epsitec.Aider.Entities
 			contact.Person.AddContactInternal (contact);
 			newHousehold.AddContactInternal (contact);
 
+
+			var newSubscription = AiderSubscriptionEntity.FindSubscription (businessContext, newHousehold);
+			if (newSubscription.IsNotNull ())
+			{
+				newSubscription.RefreshCache ();
+			}
+
 			return contact;
 		}
 
@@ -416,16 +423,15 @@ namespace Epsitec.Aider.Entities
 		public static void DeleteDuplicateContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contacts)
 		{
 			var processed = new List<AiderContactEntity> ();
-
+			var participationsBackup = new List<AiderGroupParticipantEntity> ();
 			foreach (var contact in contacts)
 			{
 				var type       = contact.ContactType;
 				var candidates = processed.Where (x => x.ContactType == type);
-
 				AiderContactEntity remove = null;
 
 				foreach (var candidate in candidates)
-				{
+				{	
 					switch (type)
 					{
 						case ContactType.Deceased:
@@ -477,9 +483,34 @@ namespace Epsitec.Aider.Entities
 			processDuplicate:
 				if (remove != null)
 				{
+					if (contact.participations != null)
+					{
+						participationsBackup.AddRange (contact.participations);
+					}	
 					AiderContactEntity.Delete (businessContext, contact);
 				}
 			}
+
+			// restore backuped participations
+			foreach (var participation in participationsBackup)
+			{
+				foreach (var contact in processed)
+				{
+					if (contact.participations != null)
+					{
+						if (!contact.participations.Contains (participation))
+						{
+							contact.AddParticipationInternal (participation);
+						}
+					} 
+					else
+					{
+						contact.AddParticipationInternal (participation);
+					}
+				}
+				
+			}
+			
 		}
 
 

@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create <AiderHouseholdEntity,bool,bool>(this.Execute);
+			return ActionExecutor.Create <AiderHouseholdEntity,bool>(this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
@@ -49,37 +49,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("En tant que chef de ménage ?")
 					.InitialValue (false)
 				.End ()
-				.Field<bool> ()
-					.Title ("Conserver la présence dans le ménage actuel ?")
-					.InitialValue (false)
-				.End ()
 			.End ();
 		}
 
-		private void Execute(AiderHouseholdEntity newHousehold, bool isHead, bool stayInPlace)
+		private void Execute(AiderHouseholdEntity newHousehold, bool isHead)
 		{
-			if (!stayInPlace)
-			{
-				var mainContact = this.Entity.MainContact;
-
-				if (mainContact.IsNotNull ())
-				{
-					var currentHousehold = mainContact.Household;
-				
-					AiderContactEntity.Delete (this.BusinessContext, this.Entity.MainContact, true);
-					currentHousehold.RefreshCache ();
-					
-					var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
-					
-					if (currentSubscription.IsNotNull ())
-					{
-						currentSubscription.RefreshCache ();
-					}
-				}
-			}
-	
-			AiderContactEntity.Create (this.BusinessContext, this.Entity, newHousehold, isHead);			
-			newHousehold.RefreshCache ();
+			var mainContact = this.Entity.MainContact;
+			AiderContactEntity.ChangeHousehold (this.BusinessContext, mainContact, newHousehold, isHead);
 			
 			var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
 			

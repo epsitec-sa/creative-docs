@@ -450,6 +450,37 @@ namespace Epsitec.Aider.Entities
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
 		}
 
+		public static void MergeGroupParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			var officialContact = officialPerson.MainContact;
+			var officialGroups  = new HashSet<AiderGroupEntity> (officialPerson.Groups.Select (x => x.Group));
+
+			var participationsToReassign = otherPerson.Groups.Where (g => !officialGroups.Contains (g.Group)).ToList ();
+			var duplicateParticipations  = otherPerson.Groups.Where (g => officialGroups.Contains (g.Group)).ToList ();
+
+			//	Migrate groups to the 'official' person by re-affecting the participations from the
+			//	other person:
+
+			foreach (var group in participationsToReassign)
+			{
+				officialPerson.AddParticipationInternal (group);
+				otherPerson.RemoveParticipationInternal (group);
+
+				group.Contact = officialContact;
+				group.Person  = officialPerson;
+
+				//				var participationData = new ParticipationData (officialPerson);
+				//				AiderGroupParticipantEntity.StartParticipation (businessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText ("Fusion"));
+			}
+
+			foreach (var group in duplicateParticipations)
+			{
+				otherPerson.RemoveParticipationInternal (group);
+
+				businessContext.DeleteEntity (group);
+			}
+		}
+
 		private static void Swap(ref AiderPersonEntity a, ref AiderPersonEntity b)
 		{
 			var swap = b;
@@ -489,37 +520,6 @@ namespace Epsitec.Aider.Entities
 					
 					AiderContactEntity.Delete (businessContext, contact, deleteParticipations: false);
 				}
-			}
-		}
-		
-		private static void MergeGroupParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
-		{
-			var officialContact = officialPerson.MainContact;
-			var officialGroups  = new HashSet<AiderGroupEntity> (officialPerson.Groups.Select (x => x.Group));
-
-			var participationsToReassign = otherPerson.Groups.Where (g => !officialGroups.Contains (g.Group)).ToList ();
-			var duplicateParticipations  = otherPerson.Groups.Where (g => officialGroups.Contains (g.Group)).ToList ();
-
-			//	Migrate groups to the 'official' person by re-affecting the participations from the
-			//	other person:
-
-			foreach (var group in participationsToReassign)
-			{
-				officialPerson.AddParticipationInternal (group);
-				otherPerson.RemoveParticipationInternal (group);
-
-				group.Contact = officialContact;
-				group.Person  = officialPerson;
-
-//				var participationData = new ParticipationData (officialPerson);
-//				AiderGroupParticipantEntity.StartParticipation (businessContext, group.Group, participationData, group.StartDate, FormattedText.FromSimpleText ("Fusion"));
-			}
-
-			foreach (var group in duplicateParticipations)
-			{
-				otherPerson.RemoveParticipationInternal (group);
-				
-				businessContext.DeleteEntity (group);
 			}
 		}
 
