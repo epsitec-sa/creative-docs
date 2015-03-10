@@ -26,7 +26,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public int ExportFile(string accountsPath)
 		{
-			int i = 555;
 			this.accountsPath = accountsPath;
 
 			//	On lit le fichier .ecc, sans conséquence si on n'y arrive pas.
@@ -61,7 +60,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private int GetEntriesUid()
 		{
-			//	Retourne le dernier uid utilisé dans l'ensemble des écritures générées par Assets.
+			//	Retourne le dernier uid utilisé pour l'ensemble des écritures générées par Assets,
+			//	obtenu en relisant le fichier des écritures.
 			int uid = 1;
 			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
 

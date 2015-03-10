@@ -20,18 +20,19 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields  = new GuidDictionary<DataObject> (this.undoManager);
-			this.personsUserFields = new GuidDictionary<DataObject> (this.undoManager);
-			this.assets            = new GuidDictionary<DataObject> (this.undoManager);
-			this.categories        = new GuidDictionary<DataObject> (this.undoManager);
-			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
-			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
-			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
-			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
-			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields        = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets                  = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories              = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups                  = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments               = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
+			this.reports                 = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
 
 		public DataMandat(ComputerSettings computerSettings, System.Xml.XmlReader reader)
@@ -40,18 +41,19 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager      = new UndoManager ();
 			this.globalSettings   = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields  = new GuidDictionary<DataObject> (this.undoManager);
-			this.personsUserFields = new GuidDictionary<DataObject> (this.undoManager);
-			this.assets            = new GuidDictionary<DataObject> (this.undoManager);
-			this.categories        = new GuidDictionary<DataObject> (this.undoManager);
-			this.groups            = new GuidDictionary<DataObject> (this.undoManager);
-			this.persons           = new GuidDictionary<DataObject> (this.undoManager);
-			this.entries           = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods           = new GuidDictionary<DataObject> (this.undoManager);
-			this.arguments         = new GuidDictionary<DataObject> (this.undoManager);
-			this.rangeAccounts     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.rangeVatCodes     = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.reports           = new GuidDictionary<AbstractReportParams> (this.undoManager);
+			this.assetsUserFields        = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets                  = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories              = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups                  = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments               = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
+			this.reports                 = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
 		}
@@ -259,6 +261,30 @@ namespace Epsitec.Cresus.Assets.Data
 				.Reverse ()
 				.Where (x => x.IsInside (date))
 				.FirstOrDefault ();
+		}
+		#endregion
+
+
+		#region Accounts filenames
+		public void AddAccountsFilename(DateRange dateRange, string filename)
+		{
+			//	Prend connaissance du nom de fichier d'un plan comptable importé.
+			this.rangeAccountsFilenames[dateRange] = filename;
+		}
+
+		public string GetAccountsFilename(DateRange dateRange)
+		{
+			//	Retourne le nom du plan comptable d'une période.
+			string filename;
+
+			if (this.rangeAccountsFilenames.TryGetValue (dateRange, out filename))
+			{
+				return filename;
+			}
+			else
+			{
+				return null;
+			}
 		}
 		#endregion
 
@@ -766,6 +792,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidDictionary<DataObject>						arguments;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeVatCodes;
+		private readonly UndoableDictionary<DateRange, string>			rangeAccountsFilenames;
 		private readonly GuidDictionary<AbstractReportParams>			reports;
 
 		private Guid													guid;
