@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.Export;
