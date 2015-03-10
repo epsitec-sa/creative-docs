@@ -1,4 +1,7 @@
-﻿namespace Epsitec.Cresus.Assets.Server.SimpleEngine
+﻿//	Copyright © 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Daniel ROUX
+
+namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 {
 	static class X
 	{

@@ -64,6 +64,7 @@
     <Compile Include="PdfPredefinedStyle.cs" />
     <Compile Include="PdfExportProfile.cs" />
     <Compile Include="PdfExport.cs" />
+    <Compile Include="X.cs" />
     <Compile Include="YamlExportProfile.cs" />
     <Compile Include="JsonExportProfile.cs" />
     <Compile Include="YamlExport.cs" />

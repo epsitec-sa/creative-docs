@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Cresus.Assets.Data.Helpers;
-using Epsitec.Cresus.Assets.Data.Serialization;
 using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export

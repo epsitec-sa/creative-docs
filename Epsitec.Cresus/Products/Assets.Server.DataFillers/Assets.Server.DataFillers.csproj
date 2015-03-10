@@ -86,6 +86,7 @@
     <Compile Include="TreeTableColumnType.cs" />
     <Compile Include="TreeTableContentItem.cs" />
     <Compile Include="UserFieldsTreeTableFiller.cs" />
+    <Compile Include="X.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Solution Items\Epsitec.Cresus.snk">

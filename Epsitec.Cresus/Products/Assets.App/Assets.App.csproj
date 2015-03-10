@@ -201,6 +201,7 @@
     <Compile Include="Settings\SearchInfo.cs" />
     <Compile Include="Settings\SearchKind.cs" />
     <Compile Include="Settings\LocalSettings.cs" />
+    <Compile Include="Settings\X.cs" />
     <Compile Include="Views\AbstractView.cs" />
     <Compile Include="Views\CommandToolbars\ArguemntsToolbar.cs" />
     <Compile Include="Views\CommandToolbars\ExpressionSimulationResultToolbar.cs" />
