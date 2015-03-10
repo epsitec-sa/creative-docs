@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			builder.Append (ExportEntries.type.ToUpper ());
 			builder.Append ("\r\n");
 
-			builder.Append ("#ECC 1; ");
+			builder.Append ("#ECC\t1; ");
 			builder.Append (uid.ToStringIO ());  // nlot
 			builder.Append ("; ");
 			builder.Append (System.DateTime.Now.ToString ("dd.MM.yyyy HH:mm:ss"));
