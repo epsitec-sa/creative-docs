@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.Encoding  = encoding;
 		}
 
-		internal YamlExportProfile(System.Xml.XmlReader reader)
+		public YamlExportProfile(System.Xml.XmlReader reader)
 		{
 			this.Indent    = reader.ReadStringAttribute   (X.Attr.Indent);
 			this.EndOfLine = reader.ReadStringAttribute   (X.Attr.EndOfLine);
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		protected override void Serialize(System.Xml.XmlWriter writer, string name)
+		public override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		protected override void Serialize(System.Xml.XmlWriter writer, string name)
+		public override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 

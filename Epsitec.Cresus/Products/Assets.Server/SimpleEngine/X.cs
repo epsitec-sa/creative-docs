@@ -44,6 +44,8 @@
 			public const string Date = "date";
 			public const string String = "string";
 			public const string InitialAmount = "initialAmount";
+			public const string Pattern = "pattern";
+			public const string Options = "options";
         }
 	}
 }
