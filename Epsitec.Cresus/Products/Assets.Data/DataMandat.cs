@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -345,9 +346,9 @@ namespace Epsitec.Cresus.Assets.Data
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Document");
+			writer.WriteStartElement (X.Document);
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
+			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
 			this.SerializeDefinitions (writer);
 			this.SerializeObjects (writer);
 
@@ -358,9 +359,9 @@ namespace Epsitec.Cresus.Assets.Data
 		public void SerializeAccountsAndCo(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("Document");
+			writer.WriteStartElement (X.Document);
 
-			writer.WriteElementString ("DocumentVersion", DataMandat.SerializationVersion);
+			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
 			this.SerializeAccounts (writer);
 			this.SerializeVatCodes (writer);
 
@@ -369,14 +370,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SerializeAccounts(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Accounts");
+			writer.WriteStartElement (X.Accounts);
 
 			foreach (var pair in this.rangeAccounts)
 			{
-				writer.WriteStartElement ("Period");
+				writer.WriteStartElement (X.Period);
 
-				pair.Key.Serialize (writer, "DateRange");
-				this.SerializeObjects (writer, "List", pair.Value);
+				pair.Key.Serialize (writer, X.DateRange);
+				this.SerializeObjects (writer, X.List, pair.Value);
 
 				writer.WriteEndElement ();
 			}
@@ -386,14 +387,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SerializeVatCodes(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("VatCodes");
+			writer.WriteStartElement (X.VatCodes);
 
 			foreach (var pair in this.rangeVatCodes)
 			{
-				writer.WriteStartElement ("Period");
+				writer.WriteStartElement (X.Period);
 
-				pair.Key.Serialize (writer, "DateRange");
-				this.SerializeObjects (writer, "List", pair.Value);
+				pair.Key.Serialize (writer, X.DateRange);
+				this.SerializeObjects (writer, X.List, pair.Value);
 
 				writer.WriteEndElement ();
 			}
@@ -403,28 +404,28 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SerializeDefinitions(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Definitions");
+			writer.WriteStartElement (X.Definitions);
 
-			IOHelpers.WriteGuidAttribute   (writer, "Guid",      this.Guid);
-			IOHelpers.WriteStringAttribute (writer, "Name",      this.Name);
-			IOHelpers.WriteDateAttribute   (writer, "StartDate", this.StartDate);
+			writer.WriteGuidAttribute   (X.Attr.Guid,      this.Guid);
+			writer.WriteStringAttribute (X.Attr.Name,      this.Name);
+			writer.WriteDateAttribute   (X.Attr.StartDate, this.StartDate);
 
 			writer.WriteEndElement ();
 		}
 
 		public void SerializeObjects(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Objects");
+			writer.WriteStartElement (X.Objects);
 
-			this.SerializeObjects (writer, "Arguments",         this.arguments);
-			this.SerializeObjects (writer, "Methods",           this.methods);
-			this.SerializeObjects (writer, "AssetsUserFields",  this.assetsUserFields);
-			this.SerializeObjects (writer, "PersonsUserFields", this.personsUserFields);
-			this.SerializeObjects (writer, "Categories",        this.categories);
-			this.SerializeObjects (writer, "Groups",            this.groups);
-			this.SerializeObjects (writer, "Persons",           this.persons);
-			this.SerializeObjects (writer, "Assets",            this.assets);
-			this.SerializeObjects (writer, "Entries",           this.entries);
+			this.SerializeObjects (writer, X.Arguments,         this.arguments);
+			this.SerializeObjects (writer, X.Methods,           this.methods);
+			this.SerializeObjects (writer, X.AssetsUserFields,  this.assetsUserFields);
+			this.SerializeObjects (writer, X.PersonsUserFields, this.personsUserFields);
+			this.SerializeObjects (writer, X.Categories,        this.categories);
+			this.SerializeObjects (writer, X.Groups,            this.groups);
+			this.SerializeObjects (writer, X.Persons,           this.persons);
+			this.SerializeObjects (writer, X.Assets,            this.assets);
+			this.SerializeObjects (writer, X.Entries,           this.entries);
 			this.SerializeReports (writer);
 
 			writer.WriteEndElement ();
@@ -444,7 +445,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SerializeReports(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Reports");
+			writer.WriteStartElement (X.Reports);
 
 			foreach (var report in this.reports)
 			{
@@ -465,7 +466,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Document":
+						case X.Document:
 							this.DeserializeMandat (reader);
 							break;
 					}
@@ -485,15 +486,15 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "Definitions":
+						case X.Definitions:
 							this.DeserializeDefinitions (reader);
 							break;
-
-						case "Objects":
+						
+						case X.Objects:
 							this.DeserializeObjects (reader);
 							break;
 					}
@@ -507,9 +508,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void DeserializeDefinitions(System.Xml.XmlReader reader)
 		{
-			this.guid      = IOHelpers.ReadGuidAttribute   (reader, "Guid");
-			this.name      = IOHelpers.ReadStringAttribute (reader, "Name");
-			this.startDate = IOHelpers.ReadDateAttribute   (reader, "StartDate").GetValueOrDefault ();
+			this.guid      = reader.ReadGuidAttribute   (X.Attr.Guid);
+			this.name      = reader.ReadStringAttribute (X.Attr.Name);
+			this.startDate = reader.ReadDateAttribute   (X.Attr.StartDate).GetValueOrDefault ();
 
 			reader.Read ();  // on avance sur le noeud suivant
 		}
@@ -522,7 +523,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Document":
+						case X.Document:
 							this.DeserializeAccountsMandat (reader);
 							break;
 					}
@@ -542,15 +543,15 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "Accounts":
+						case X.Accounts:
 							this.DeserializeAccounts (reader);
 							break;
 
-						case "VatCodes":
+						case X.VatCodes:
 							this.DeserializeVatCodes (reader);
 							break;
 					}
@@ -570,7 +571,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Period":
+						case X.Period:
 							this.DeserializeAccountsPeriod (reader);
 							break;
 					}
@@ -593,11 +594,11 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DateRange":
+						case X.DateRange:
 							dateRange = new DateRange (reader);
 							break;
 
-						case "List":
+						case X.List:
 							this.DeserializeObjects (reader, objects);
 							break;
 					}
@@ -622,7 +623,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Period":
+						case X.Period:
 							this.DeserializeVatCodesPeriod (reader);
 							break;
 					}
@@ -645,11 +646,11 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DateRange":
+						case X.DateRange:
 							dateRange = new DateRange (reader);
 							break;
 
-						case "List":
+						case X.List:
 							this.DeserializeObjects (reader, objects);
 							break;
 					}
@@ -674,43 +675,43 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Arguments":
+						case X.Arguments:
 							this.DeserializeObjects (reader, this.arguments);
 							break;
 
-						case "Methods":
+						case X.Methods:
 							this.DeserializeObjects (reader, this.methods);
 							break;
 
-						case "AssetsUserFields":
+						case X.AssetsUserFields:
 							this.DeserializeObjects (reader, this.assetsUserFields);
 							break;
 
-						case "PersonsUserFields":
+						case X.PersonsUserFields:
 							this.DeserializeObjects (reader, this.personsUserFields);
 							break;
 
-						case "Assets":
+						case X.Assets:
 							this.DeserializeObjects (reader, this.assets);
 							break;
 
-						case "Categories":
+						case X.Categories:
 							this.DeserializeObjects (reader, this.categories);
 							break;
 
-						case "Groups":
+						case X.Groups:
 							this.DeserializeObjects (reader, this.groups);
 							break;
 
-						case "Persons":
+						case X.Persons:
 							this.DeserializeObjects (reader, this.persons);
 							break;
 
-						case "Entries":
+						case X.Entries:
 							this.DeserializeObjects (reader, this.entries);
 							break;
 
-						case "Reports":
+						case X.Reports:
 							this.DeserializeReports (reader);
 							break;
 					}
@@ -730,7 +731,7 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					if (reader.NodeType == System.Xml.XmlNodeType.Element)
 					{
-						if (reader.Name == "Object")
+						if (reader.Name == X.Object)
 						{
 							var obj = new DataObject (this.undoManager, reader);
 							objects.Add (obj);
@@ -750,23 +751,19 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name.StartsWith ("Report."))
+					switch (reader.Name)
 					{
-						var name = reader.Name.Substring (7);  // nom après "Report."
-						switch (name)
-						{
-							case "MCH2Summary":
-								this.reports.Add (new MCH2SummaryParams (reader));
-								break;
+						case X.Report_MCH2Summary:
+							this.reports.Add (new MCH2SummaryParams (reader));
+							break;
 
-							case "Assets":
-								this.reports.Add (new AssetsParams (reader));
-								break;
+						case X.Report_Assets:
+							this.reports.Add (new AssetsParams (reader));
+							break;
 
-							case "Persons":
-								this.reports.Add (new PersonsParams (reader));
-								break;
-						}
+						case X.Report_Persons:
+							this.reports.Add (new PersonsParams (reader));
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)

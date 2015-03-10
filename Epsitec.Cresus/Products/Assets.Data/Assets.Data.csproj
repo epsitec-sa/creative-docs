@@ -63,6 +63,7 @@
     <Compile Include="IViewState.cs" />
     <Compile Include="Periodicity.cs" />
     <Compile Include="SaveMandatMode.cs" />
+    <Compile Include="Serialization\X.cs" />
     <Compile Include="UndoableDictionary.cs" />
     <Compile Include="UndoableList.cs" />
     <Compile Include="IUndoData.cs" />

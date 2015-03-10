@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -17,8 +18,8 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidRatio(System.Xml.XmlReader reader)
 		{
-			this.Guid  = IOHelpers.ReadGuidAttribute    (reader, "Guid");
-			this.Ratio = IOHelpers.ReadDecimalAttribute (reader, "Ratio");
+			this.Guid  = reader.ReadGuidAttribute    (X.Attr.Guid);
+			this.Ratio = reader.ReadDecimalAttribute (X.Attr.Ratio);
 
 			reader.Read ();
 		}
@@ -75,8 +76,8 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteGuidAttribute    (writer, "Guid",  this.Guid);
-			IOHelpers.WriteDecimalAttribute (writer, "Ratio", this.Ratio);
+			writer.WriteGuidAttribute    (X.Attr.Guid,  this.Guid);
+			writer.WriteDecimalAttribute (X.Attr.Ratio, this.Ratio);
 
 			writer.WriteEndElement ();
 		}

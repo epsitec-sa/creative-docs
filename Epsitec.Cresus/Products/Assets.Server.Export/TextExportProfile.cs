@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 using Epsitec.Cresus.Assets.Export.Helpers;
 
 namespace Epsitec.Cresus.Assets.Server.Export
@@ -27,13 +28,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public TextExportProfile(System.Xml.XmlReader reader)
 		{
-			this.ColumnSeparator = IOHelpers.ReadStringAttribute   (reader, "ColumnSeparator");
-			this.ColumnBracket   = IOHelpers.ReadStringAttribute   (reader, "ColumnBracket");
-			this.Escape          = IOHelpers.ReadStringAttribute   (reader, "Escape");
-			this.EndOfLine       = IOHelpers.ReadStringAttribute   (reader, "EndOfLine");
-			this.HasHeader       = IOHelpers.ReadBoolAttribute     (reader, "HasHeader");
-			this.Inverted        = IOHelpers.ReadBoolAttribute     (reader, "Inverted");
-			this.Encoding        = IOHelpers.ReadEncodingAttribute (reader, "Encoding");
+			this.ColumnSeparator = reader.ReadStringAttribute   (X.Attr.ColumnSeparator);
+			this.ColumnBracket   = reader.ReadStringAttribute   (X.Attr.ColumnBracket);
+			this.Escape          = reader.ReadStringAttribute   (X.Attr.Escape);
+			this.EndOfLine       = reader.ReadStringAttribute   (X.Attr.EndOfLine);
+			this.HasHeader       = reader.ReadBoolAttribute     (X.Attr.HasHeader);
+			this.Inverted        = reader.ReadBoolAttribute     (X.Attr.Inverted);
+			this.Encoding        = reader.ReadEncodingAttribute (X.Attr.Encoding);
 
 			reader.Read ();
 		}
@@ -75,17 +76,17 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public override void Serialize(System.Xml.XmlWriter writer, string name)
+		protected override void Serialize(System.Xml.XmlWriter writer, string name)
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute   (writer, "ColumnSeparator", this.ColumnSeparator);
-			IOHelpers.WriteStringAttribute   (writer, "ColumnBracket",   this.ColumnBracket);
-			IOHelpers.WriteStringAttribute   (writer, "Escape",          this.Escape);
-			IOHelpers.WriteStringAttribute   (writer, "EndOfLine",       this.EndOfLine);
-			IOHelpers.WriteBoolAttribute     (writer, "HasHeader",       this.HasHeader);
-			IOHelpers.WriteBoolAttribute     (writer, "Inverted",        this.Inverted);
-			IOHelpers.WriteEncodingAttribute (writer, "Encoding",        this.Encoding);
+			writer.WriteStringAttribute   (X.Attr.ColumnSeparator, this.ColumnSeparator);
+			writer.WriteStringAttribute   (X.Attr.ColumnBracket,   this.ColumnBracket);
+			writer.WriteStringAttribute   (X.Attr.Escape,          this.Escape);
+			writer.WriteStringAttribute   (X.Attr.EndOfLine,       this.EndOfLine);
+			writer.WriteBoolAttribute     (X.Attr.HasHeader,       this.HasHeader);
+			writer.WriteBoolAttribute     (X.Attr.Inverted,        this.Inverted);
+			writer.WriteEncodingAttribute (X.Attr.Encoding,        this.Encoding);
 
 			writer.WriteEndElement ();
 		}

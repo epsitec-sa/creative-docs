@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public static Guid Parse(string text)
 		{
-			return new Guid (System.Guid.Parse (text));
+			return new Guid (System.Guid.ParseExact (text, "N"));
 		}
 
 

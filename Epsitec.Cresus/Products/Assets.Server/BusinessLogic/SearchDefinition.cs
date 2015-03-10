@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
@@ -21,8 +22,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public SearchDefinition(System.Xml.XmlReader reader)
 		{
-			this.Pattern = IOHelpers.ReadStringAttribute (reader, "Pattern");
-			this.Options = (SearchOptions) IOHelpers.ReadTypeAttribute (reader, "Options", typeof (SearchOptions));
+			this.Pattern = reader.ReadStringAttribute (X.Attr.Pattern);
+			this.Options = reader.ReadTypeAttribute<SearchOptions> (X.Attr.Options);
 
 			reader.Read ();
 		}
@@ -52,8 +53,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteStringAttribute (writer, "Pattern", this.Pattern);
-			IOHelpers.WriteTypeAttribute   (writer, "Options", this.Options);
+			writer.WriteStringAttribute (X.Attr.Pattern, this.Pattern);
+			writer.WriteTypeAttribute   (X.Attr.Options, this.Options);
 
 			writer.WriteEndElement ();
 		}

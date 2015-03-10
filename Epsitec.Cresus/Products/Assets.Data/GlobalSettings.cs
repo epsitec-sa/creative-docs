@@ -3,8 +3,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Support;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -28,12 +28,12 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("GlobalSettings");
+			writer.WriteStartElement (X.GlobalSettings);
 
-			writer.WriteElementString ("DocumentVersion",  DataMandat.SerializationVersion);
-			writer.WriteElementString ("MandatLanguage",   this.MandatLanguage);
-			writer.WriteElementString ("SaveMandatMode",   this.SaveMandatMode.ToStringIO ());
-			writer.WriteElementString ("CopyNameStrategy", this.CopyNameStrategy.ToStringIO ());
+			writer.WriteElementString (X.DocumentVersion,  DataMandat.SerializationVersion);
+			writer.WriteElementString (X.MandatLanguage,   this.MandatLanguage);
+			writer.WriteElementString (X.SaveMandatMode,   this.SaveMandatMode.ToStringIO ());
+			writer.WriteElementString (X.CopyNameStrategy, this.CopyNameStrategy.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "GlobalSettings")
+					if (reader.Name == X.GlobalSettings)
 					{
 						this.DeserializeGlobalSettings (reader);
 					}
@@ -64,20 +64,20 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "MandatLanguage":
+						case X.MandatLanguage:
 							this.MandatLanguage = reader.ReadElementContentAsString ();
 							break;
 
-						case "SaveMandatMode":
-							this.SaveMandatMode = (SaveMandatMode) reader.ReadElementContentAsString ().ParseType (typeof (SaveMandatMode));
+						case X.SaveMandatMode:
+							this.SaveMandatMode = reader.ReadElementContentAsString ().ParseType<SaveMandatMode> ();
 							break;
 
-						case "CopyNameStrategy":
-							this.CopyNameStrategy = (CopyNameStrategy) reader.ReadElementContentAsString ().ParseType (typeof (CopyNameStrategy));
+						case X.CopyNameStrategy:
+							this.CopyNameStrategy = reader.ReadElementContentAsString ().ParseType<CopyNameStrategy> ();
 							break;
 					}
 				}

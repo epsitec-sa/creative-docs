@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -27,7 +28,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "ComputedAmount")
+					if (reader.Name == X.ComputedAmount)
 					{
 						this.Value = new ComputedAmount (reader);
 					}
@@ -42,9 +43,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Property.ComputedAmount");
+			writer.WriteStartElement (X.Property_ComputedAmount);
 			base.Serialize (writer);
-			this.Value.Serialize (writer, "ComputedAmount");
+			this.Value.Serialize (writer, X.ComputedAmount);
 			writer.WriteEndElement ();
 		}
 

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.DataProperties
 {
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Value")
+					if (reader.Name == X.Value)
 					{
 						var s = reader.ReadElementContentAsString ();
 						this.Value = s.ParseInt ();
@@ -44,9 +45,9 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Property.Int");
+			writer.WriteStartElement (X.Property_Int);
 			base.Serialize (writer);
-			writer.WriteElementString ("Value", this.Value.ToStringIO ());
+			writer.WriteElementString (X.Value, this.Value.ToStringIO ());
 			writer.WriteEndElement ();
 		}
 

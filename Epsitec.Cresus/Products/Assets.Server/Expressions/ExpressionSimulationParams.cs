@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Expression
 {
@@ -45,22 +46,22 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					switch (reader.Name)
 					{
-						case "Definitions":
+						case X.Definitions:
 							{
-								this.Range             =               IOHelpers.ReadDateRangeAttribute (reader, "Range");
-								this.Periodicity       = (Periodicity) IOHelpers.ReadTypeAttribute      (reader, "Periodicity", typeof (Periodicity));
-								this.InitialAmount     =               IOHelpers.ReadDecimalAttribute   (reader, "InitialAmount").GetValueOrDefault ();
-								this.ExtraDate         =               IOHelpers.ReadDateAttribute      (reader, "ExtraDate");
-								this.ExtraAmount       =               IOHelpers.ReadDecimalAttribute   (reader, "ExtraAmount");
-								this.AmortizationSuppl =               IOHelpers.ReadBoolAttribute      (reader, "AmortizationSuppl");
-								this.AdjustDate        =               IOHelpers.ReadDateAttribute      (reader, "AdjustDate");
-								this.AdjustAmount      =               IOHelpers.ReadDecimalAttribute   (reader, "AdjustAmount");
+								this.Range             = reader.ReadDateRangeAttribute (X.Attr.Range);
+								this.Periodicity       = reader.ReadTypeAttribute<Periodicity > (X.Attr.Periodicity);
+								this.InitialAmount     = reader.ReadDecimalAttribute   (X.Attr.InitialAmount).GetValueOrDefault ();
+								this.ExtraDate         = reader.ReadDateAttribute      (X.Attr.ExtraDate);
+								this.ExtraAmount       = reader.ReadDecimalAttribute   (X.Attr.ExtraAmount);
+								this.AmortizationSuppl = reader.ReadBoolAttribute      (X.Attr.AmortizationSuppl);
+								this.AdjustDate        = reader.ReadDateAttribute      (X.Attr.AdjustDate);
+								this.AdjustAmount      = reader.ReadDecimalAttribute   (X.Attr.AdjustAmount);
 
 								reader.Read ();  // on avance sur le noeud suivant
 							}
 							break;
 
-						case "Arguments":
+						case X.Arguments:
 							this.DeserializeArguments (reader);
 							break;
 					}
@@ -110,29 +111,29 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private void SerializeDefinitions(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Definitions");
+			writer.WriteStartElement (X.Definitions);
 
-			IOHelpers.WriteDateRangeAttribute (writer, "Range",             this.Range);
-			IOHelpers.WriteTypeAttribute      (writer, "Periodicity",       this.Periodicity);
-			IOHelpers.WriteDecimalAttribute   (writer, "InitialAmount",     this.InitialAmount);
-			IOHelpers.WriteDateAttribute      (writer, "ExtraDate",         this.ExtraDate);
-			IOHelpers.WriteDecimalAttribute   (writer, "ExtraAmount",       this.ExtraAmount);
-			IOHelpers.WriteBoolAttribute      (writer, "AmortizationSuppl", this.AmortizationSuppl);
-			IOHelpers.WriteDateAttribute      (writer, "AdjustDate",        this.AdjustDate);
-			IOHelpers.WriteDecimalAttribute   (writer, "AdjustAmount",      this.AdjustAmount);
+			writer.WriteDateRangeAttribute (X.Attr.Range,             this.Range);
+			writer.WriteTypeAttribute      (X.Attr.Periodicity,       this.Periodicity);
+			writer.WriteDecimalAttribute   (X.Attr.InitialAmount,     this.InitialAmount);
+			writer.WriteDateAttribute      (X.Attr.ExtraDate,         this.ExtraDate);
+			writer.WriteDecimalAttribute   (X.Attr.ExtraAmount,       this.ExtraAmount);
+			writer.WriteBoolAttribute      (X.Attr.AmortizationSuppl, this.AmortizationSuppl);
+			writer.WriteDateAttribute      (X.Attr.AdjustDate,        this.AdjustDate);
+			writer.WriteDecimalAttribute   (X.Attr.AdjustAmount,      this.AdjustAmount);
 
 			writer.WriteEndElement ();
 		}
 
 		private void SerializeArguments(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Arguments");
+			writer.WriteStartElement (X.Arguments);
 
 			foreach (var pair in this.arguments)
 			{
-				writer.WriteStartElement ("Argument");
+				writer.WriteStartElement (X.Argument);
 
-				IOHelpers.WriteObjectFieldAttribute (writer, "ObjectField", pair.Key);
+				writer.WriteObjectFieldAttribute (X.Attr.ObjectField, pair.Key);
 				this.SerializeArgumentValue (writer, pair.Value);
 
 				writer.WriteEndElement ();
@@ -147,26 +148,26 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 			{
 				if (value is decimal)
 				{
-					IOHelpers.WriteDecimalAttribute (writer, "Decimal", (decimal) value);
+					writer.WriteDecimalAttribute (X.Attr.Decimal, (decimal) value);
 				}
 				else if (value is int)
 				{
-					IOHelpers.WriteIntAttribute (writer, "Int", (int) value);
+					writer.WriteIntAttribute (X.Attr.Int, (int) value);
 				}
 				else if (value is bool)
 				{
 					if ((bool) value)
 					{
-						IOHelpers.WriteBoolAttribute (writer, "Bool", (bool) value);
+						writer.WriteBoolAttribute (X.Attr.Bool, (bool) value);
 					}
 				}
 				else if (value is System.DateTime)
 				{
-					IOHelpers.WriteDateAttribute (writer, "Date", (System.DateTime) value);
+					writer.WriteDateAttribute (X.Attr.Date, (System.DateTime) value);
 				}
 				else if (value is string)
 				{
-					IOHelpers.WriteStringAttribute (writer, "String", (string) value);
+					writer.WriteStringAttribute (X.Attr.String, (string) value);
 				}
 				else
 				{
@@ -183,7 +184,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 				{
 					switch (reader.Name)
 					{
-						case "Argument":
+						case X.Argument:
 							this.DeserializeArgument (reader);
 							break;
 					}
@@ -197,7 +198,7 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private void DeserializeArgument(System.Xml.XmlReader reader)
 		{
-			var field = (ObjectField) IOHelpers.ReadObjectFieldAttribute (reader, "ObjectField");
+			var field = (ObjectField) reader.ReadObjectFieldAttribute (X.Attr.ObjectField);
 			var obj = this.DeserializeArgumentValue (reader);
 
 			if (obj != null)
@@ -210,31 +211,31 @@ namespace Epsitec.Cresus.Assets.Server.Expression
 
 		private object DeserializeArgumentValue(System.Xml.XmlReader reader)
 		{
-			var d = IOHelpers.ReadDecimalAttribute (reader, "Decimal");
+			var d = reader.ReadDecimalAttribute (X.Attr.Decimal);
 			if (d.HasValue)
 			{
 				return d;
 			}
 
-			var i = IOHelpers.ReadIntAttribute (reader, "Int");
+			var i = reader.ReadIntAttribute (X.Attr.Int);
 			if (i.HasValue)
 			{
 				return d;
 			}
 
-			var b = IOHelpers.ReadBoolAttribute (reader, "Bool");
+			var b = reader.ReadBoolAttribute (X.Attr.Bool);
 			if (b)
 			{
 				return b;
 			}
 
-			var date = IOHelpers.ReadDateAttribute (reader, "Date");
+			var date = reader.ReadDateAttribute (X.Attr.Date);
 			if (date.HasValue)
 			{
 				return date;
 			}
 
-			var s = IOHelpers.ReadStringAttribute (reader, "String");
+			var s = reader.ReadStringAttribute (X.Attr.String);
 			if (!string.IsNullOrEmpty (s))
 			{
 				return s;

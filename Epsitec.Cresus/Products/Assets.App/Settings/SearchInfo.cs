@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Assets.Data.Serialization;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 
 namespace Epsitec.Cresus.Assets.App.Settings
@@ -26,11 +27,11 @@ namespace Epsitec.Cresus.Assets.App.Settings
 				{
 					switch (reader.Name)
 					{
-						case "Definition":
+						case X.Definition:
 							this.Definition = new SearchDefinition (reader);
 							break;
 
-						case "LastPattern":
+						case X.LastPattern:
 							var s = reader.ReadElementContentAsString ();
 							this.LastPatterns.Add (s);
 							break;
@@ -57,11 +58,11 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		{
 			writer.WriteStartElement (name);
 
-			this.Definition.Serialize (writer, "Definition");
+			this.Definition.Serialize (writer, X.Definition);
 
 			foreach (var pattern in this.LastPatterns)
 			{
-				writer.WriteElementString ("LastPattern", pattern);
+				writer.WriteElementString (X.LastPattern, pattern);
 			}
 
 			writer.WriteEndElement ();

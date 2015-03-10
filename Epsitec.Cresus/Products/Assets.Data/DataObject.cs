@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.DataProperties;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -43,11 +44,11 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "Guid":
+						case X.Guid:
 							this.guid = new Guid (reader);
 							break;
 
-						case "Events":
+						case X.Events:
 							this.DeserializeEvents (reader);
 							break;
 					}
@@ -331,9 +332,9 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Serialize
 		public void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Object");
+			writer.WriteStartElement (X.Object);
 
-			this.guid.Serialize (writer, "Guid");
+			this.guid.Serialize (writer, X.Guid);
 			this.SerializeEvents (writer);
 
 			writer.WriteEndElement ();
@@ -341,7 +342,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		private void SerializeEvents(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Events");
+			writer.WriteStartElement (X.Events);
 
 			this.UpdateSortedList ();
 
@@ -359,7 +360,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Event")
+					if (reader.Name == X.Event)
 					{
 						var e = new DataEvent (this.undoManager, reader);
 						this.events.Add (e);

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
@@ -27,12 +28,12 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "Guid")
+					if (reader.Name == X.Guid)
 					{
 						var s = reader.ReadElementContentAsString ();
 						this.guid = s.ParseGuid ();
 					}
-					else if (reader.Name == "CustomTitle")
+					else if (reader.Name == X.CustomTitle)
 					{
 						this.customTitle = reader.ReadElementContentAsString ();
 
@@ -124,8 +125,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public virtual void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteElementString ("Guid",        this.guid.ToStringIO ());
-			writer.WriteElementString ("CustomTitle", this.customTitle);
+			writer.WriteElementString (X.Guid,        this.guid.ToStringIO ());
+			writer.WriteElementString (X.CustomTitle, this.customTitle);
 		}
 
 

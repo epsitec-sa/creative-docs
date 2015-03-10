@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
@@ -29,21 +30,21 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				{
 					switch (reader.Name)
 					{
-						case "DateRange":
+						case X.DateRange:
 							this.DateRange = new DateRange (reader);
 							break;
 
-						case "RootGuid":
+						case X.RootGuid:
 							s = reader.ReadElementContentAsString ();
 							this.RootGuid = s.ParseGuid ();
 							break;
 
-						case "Level":
+						case X.Level:
 							s = reader.ReadElementContentAsString ();
 							this.Level = s.ParseInt ();
 							break;
 
-						case "FilterGuid":
+						case X.FilterGuid:
 							s = reader.ReadElementContentAsString ();
 							this.FilterGuid = s.ParseGuid ();
 							break;
@@ -107,18 +108,18 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Report.MCH2Summary");
+			writer.WriteStartElement (X.Report_MCH2Summary);
 			base.Serialize (writer);
 
-			this.DateRange.Serialize (writer, "DateRange");
-			writer.WriteElementString ("RootGuid", this.RootGuid.ToStringIO ());
+			this.DateRange.Serialize (writer, X.DateRange);
+			writer.WriteElementString (X.RootGuid, this.RootGuid.ToStringIO ());
 
 			if (this.Level.HasValue)
 			{
-				writer.WriteElementString ("Level", this.Level.Value.ToStringIO ());
+				writer.WriteElementString (X.Level, this.Level.Value.ToStringIO ());
 			}
 
-			writer.WriteElementString ("FilterGuid", this.FilterGuid.ToStringIO ());
+			writer.WriteElementString (X.FilterGuid, this.FilterGuid.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}

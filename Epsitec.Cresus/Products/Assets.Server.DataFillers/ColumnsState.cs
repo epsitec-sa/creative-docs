@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					switch (reader.Name)
 					{
-						case "Mappers":
+						case X.Mappers:
 							var mappers = reader.ReadElementContentAsString ().Split (new string[] { ";" }, System.StringSplitOptions.RemoveEmptyEntries);
 							foreach (var m in mappers)
 							{
@@ -44,17 +45,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 							break;
 
-						case "Column":
+						case X.Column:
 							var c = new ColumnState (reader);
 							columns.Add (c);
 							break;
 
-						case "Sorted":
+						case X.Sorted:
 							var s = new SortedColumn (reader);
 							sorted.Add (s);
 							break;
 
-						case "DockToLeftCount":
+						case X.DockToLeftCount:
 							this.DockToLeftCount = reader.ReadElementContentAsString ().ParseInt ();
 							break;
 					}
@@ -108,19 +109,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			writer.WriteStartElement (name);
 
 			var mappers = string.Join (";", this.Mapper.Select (x => x.ToStringIO ()));
-			writer.WriteElementString ("Mappers", mappers);
+			writer.WriteElementString (X.Mappers, mappers);
 
 			foreach (var column in this.Columns)
 			{
-				column.Serialize (writer, "Column");
+				column.Serialize (writer, X.Column);
 			}
 
 			foreach (var sorted in this.Sorted)
 			{
-				sorted.Serialize (writer, "Sorted");
+				sorted.Serialize (writer, X.Sorted);
 			}
 
-			writer.WriteElementString ("DockToLeftCount", this.DockToLeftCount.ToStringIO ());
+			writer.WriteElementString (X.DockToLeftCount, this.DockToLeftCount.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}

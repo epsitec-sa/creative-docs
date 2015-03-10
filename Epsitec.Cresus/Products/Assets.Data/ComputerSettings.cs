@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data
 {
@@ -54,13 +55,13 @@ namespace Epsitec.Cresus.Assets.Data
 		private void Serialize(System.Xml.XmlWriter writer)
 		{
 			writer.WriteStartDocument ();
-			writer.WriteStartElement ("ComputerSettings");
+			writer.WriteStartElement (X.ComputerSettings);
 
-			writer.WriteElementString ("DocumentVersion",  DataMandat.SerializationVersion);
-			writer.WriteElementString ("SoftwareLanguage", this.SoftwareLanguage);
-			writer.WriteElementString ("MandatDirectory",  this.MandatDirectory);
-			writer.WriteElementString ("MandatFilename",   this.MandatFilename);
-			this.SerializeWindowPlacement (writer, "WindowPlacement", this.WindowPlacement);
+			writer.WriteElementString (X.DocumentVersion,  DataMandat.SerializationVersion);
+			writer.WriteElementString (X.SoftwareLanguage, this.SoftwareLanguage);
+			writer.WriteElementString (X.MandatDirectory,  this.MandatDirectory);
+			writer.WriteElementString (X.MandatFilename,   this.MandatFilename);
+			this.SerializeWindowPlacement (writer, X.WindowPlacement, this.WindowPlacement);
 
 			writer.WriteEndElement ();
 			writer.WriteEndDocument ();
@@ -73,14 +74,14 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteDecimalAttribute (writer, "Left",   (decimal) windowPlacement.Bounds.Left);
-			IOHelpers.WriteDecimalAttribute (writer, "Bottom", (decimal) windowPlacement.Bounds.Bottom);
-			IOHelpers.WriteDecimalAttribute (writer, "Width",  (decimal) windowPlacement.Bounds.Width);
-			IOHelpers.WriteDecimalAttribute (writer, "Height", (decimal) windowPlacement.Bounds.Height);
+			writer.WriteDecimalAttribute (X.Attr.Left,   (decimal) windowPlacement.Bounds.Left);
+			writer.WriteDecimalAttribute (X.Attr.Bottom, (decimal) windowPlacement.Bounds.Bottom);
+			writer.WriteDecimalAttribute (X.Attr.Width,  (decimal) windowPlacement.Bounds.Width);
+			writer.WriteDecimalAttribute (X.Attr.Height, (decimal) windowPlacement.Bounds.Height);
 
-			IOHelpers.WriteBoolAttribute (writer, "IsFullScreen", windowPlacement.IsFullScreen);
-			IOHelpers.WriteBoolAttribute (writer, "IsMinimized",  windowPlacement.IsMinimized);
-			IOHelpers.WriteBoolAttribute (writer, "IsHidden",     windowPlacement.IsHidden);
+			writer.WriteBoolAttribute (X.Attr.IsFullScreen, windowPlacement.IsFullScreen);
+			writer.WriteBoolAttribute (X.Attr.IsMinimized,  windowPlacement.IsMinimized);
+			writer.WriteBoolAttribute (X.Attr.IsHidden,     windowPlacement.IsHidden);
 
 			writer.WriteEndElement ();
 		}
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				if (reader.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (reader.Name == "ComputerSettings")
+					if (reader.Name == X.ComputerSettings)
 					{
 						this.DeserializeComputerSettings (reader);
 					}
@@ -126,23 +127,23 @@ namespace Epsitec.Cresus.Assets.Data
 				{
 					switch (reader.Name)
 					{
-						case "DocumentVersion":
+						case X.DocumentVersion:
 							var version = reader.ReadElementContentAsString ();
 							break;
 
-						case "SoftwareLanguage":
+						case X.SoftwareLanguage:
 							this.SoftwareLanguage = reader.ReadElementContentAsString ();
 							break;
 
-						case "MandatDirectory":
+						case X.MandatDirectory:
 							this.MandatDirectory = reader.ReadElementContentAsString ();
 							break;
 
-						case "MandatFilename":
+						case X.MandatFilename:
 							this.MandatFilename = reader.ReadElementContentAsString ();
 							break;
 
-						case "WindowPlacement":
+						case X.WindowPlacement:
 							this.WindowPlacement = this.DeserializeWindowPlacement (reader);
 							break;
 					}
@@ -157,15 +158,15 @@ namespace Epsitec.Cresus.Assets.Data
 		private WindowPlacement DeserializeWindowPlacement(System.Xml.XmlReader reader)
 		{
 			var bounds = new Rectangle (
-				(double) reader["Left"  ].ParseDecimal (),
-				(double) reader["Bottom"].ParseDecimal (),
-				(double) reader["Width" ].ParseDecimal (),
-				(double) reader["Height"].ParseDecimal ());
+				(double) reader[X.Attr.Left  ].ParseDecimal (),
+				(double) reader[X.Attr.Bottom].ParseDecimal (),
+				(double) reader[X.Attr.Width ].ParseDecimal (),
+				(double) reader[X.Attr.Height].ParseDecimal ());
 
 			var windowPlacement = new WindowPlacement (bounds,
-				isFullScreen: reader["IsFullScreen"].ParseBool (),
-				isMinimized:  reader["IsMinimized" ].ParseBool (),
-				isHidden:     reader["IsHidden"    ].ParseBool ());
+				isFullScreen: reader[X.Attr.IsFullScreen].ParseBool (),
+				isMinimized:  reader[X.Attr.IsMinimized ].ParseBool (),
+				isHidden:     reader[X.Attr.IsHidden    ].ParseBool ());
 
 			reader.Read ();  // on avance
 

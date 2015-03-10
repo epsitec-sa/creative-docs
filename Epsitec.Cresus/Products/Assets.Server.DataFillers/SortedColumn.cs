@@ -3,6 +3,7 @@
 
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Server.DataFillers
 {
@@ -16,8 +17,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public SortedColumn(System.Xml.XmlReader reader)
 		{
-			this.Field = IOHelpers.ReadObjectFieldAttribute (reader, "Field");
-			this.Type  = (SortedType) IOHelpers.ReadTypeAttribute (reader, "Type",  typeof (SortedType));
+			this.Field = reader.ReadObjectFieldAttribute (X.Attr.Field);
+			this.Type  = reader.ReadTypeAttribute<SortedType> (X.Attr.Type);
 
 			reader.Read ();
 		}
@@ -36,8 +37,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			writer.WriteStartElement (name);
 
-			IOHelpers.WriteObjectFieldAttribute (writer, "Field", this.Field);
-			IOHelpers.WriteTypeAttribute        (writer, "Type",  this.Type);
+			writer.WriteObjectFieldAttribute (X.Attr.Field, this.Field);
+			writer.WriteTypeAttribute        (X.Attr.Type,  this.Type);
 
 			writer.WriteEndElement ();
 		}

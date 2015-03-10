@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Data.Serialization;
 
 namespace Epsitec.Cresus.Assets.Data.Reports
 {
@@ -28,16 +29,16 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				{
 					switch (reader.Name)
 					{
-						case "Timestamp":
+						case X.Timestamp:
 							this.Timestamp = new Timestamp (reader);
 							break;
 
-						case "RootGuid":
+						case X.RootGuid:
 							s = reader.ReadElementContentAsString ();
 							this.RootGuid = s.ParseGuid ();
 							break;
 
-						case "Level":
+						case X.Level:
 							s = reader.ReadElementContentAsString ();
 							this.Level = s.ParseInt ();
 							break;
@@ -100,15 +101,15 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public override void Serialize(System.Xml.XmlWriter writer)
 		{
-			writer.WriteStartElement ("Report.Assets");
+			writer.WriteStartElement (X.Report_Assets);
 			base.Serialize (writer);
 
-			this.Timestamp.Serialize (writer, "Timestamp");
-			writer.WriteElementString ("RootGuid", this.RootGuid.ToStringIO ());
+			this.Timestamp.Serialize (writer, X.Timestamp);
+			writer.WriteElementString (X.RootGuid, this.RootGuid.ToStringIO ());
 
 			if (this.Level.HasValue)
 			{
-				writer.WriteElementString ("Level", this.Level.Value.ToStringIO ());
+				writer.WriteElementString (X.Level, this.Level.Value.ToStringIO ());
 			}
 
 			writer.WriteEndElement ();
