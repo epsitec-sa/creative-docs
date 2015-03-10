@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		public int ExportFile(string accountsPath)
 		{
+			int i = 555;
 			this.accountsPath = accountsPath;
 
 			//	On lit le fichier .ecc, sans conséquence si on n'y arrive pas.

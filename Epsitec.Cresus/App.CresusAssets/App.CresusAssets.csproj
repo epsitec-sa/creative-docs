@@ -89,10 +89,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Assets.Server.Export\Assets.Server.Export.csproj">
-      <Project>{764df1c5-f9bb-4f8d-9987-5639823b8757}</Project>
-      <Name>Assets.Server.Export</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{b324896e-2cde-45b8-91ce-b476687ea384}</Project>
       <Name>Common.Document</Name>
