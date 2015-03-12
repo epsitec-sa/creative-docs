@@ -16,7 +16,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public ExportEntries(DataAccessor accessor)
 		{
 			this.accessor = accessor;
+
 			this.eccLines = new List<EccLine> ();
+			this.reports = new List<ExportEntriesReport> ();
 		}
 
 		public void Dispose()
@@ -24,9 +26,50 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		public int ExportFile(string accountsPath)
+		public string ExportFiles()
 		{
-			this.accountsPath = accountsPath;
+			//	Génère toutes les écritures correspondant aux périodes des plans comptables connus.
+			//	Retourne un texte résumant les opérations effectuées.
+			this.reports.Clear ();
+
+			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
+			{
+				var filename = this.accessor.Mandat.GetAccountsFilename (range);
+
+				if (!string.IsNullOrEmpty (filename))
+				{
+					int entriesCount = this.ExportFile (range, filename);
+
+					var report = new ExportEntriesReport (range, filename, entriesCount);
+					this.reports.Add (report);
+				}
+			}
+
+			return this.ReportsDescription;
+		}
+
+
+		private string ReportsDescription
+		{
+			get
+			{
+				if (this.reports.Any ())
+				{
+					var desc = string.Join ("<br/>", this.reports.Select (x => x.Description));
+					return string.Format ("Les écritures suivantes ont été générées avec succès pour la comptabilité:<br/><br/>{0}", desc);
+				}
+				else
+				{
+					return "Aucune écriture n'a été générée pour la comptabilité.";
+				}
+			}
+		}
+
+
+		private int ExportFile(DateRange accountsRange, string accountsPath)
+		{
+			this.accountsRange = accountsRange;
+			this.accountsPath  = accountsPath;
 
 			//	On lit le fichier .ecc, sans conséquence si on n'y arrive pas.
 			try
@@ -48,7 +91,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				uid = 1;
 			}
 
-			var data = this.GetEntriesData (uid);
+			var data = this.GetEntriesData (accountsRange, uid);
 			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
 
 			this.CreateOrUpdateEccLine (uid);
@@ -81,7 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return uid;
 		}
 
-		private string GetEntriesData(int uid)
+		private string GetEntriesData(DateRange accountsRange, int uid)
 		{
 			//	Retourne les données correspondant à l'ensemble des écritures générées par Assets.
 			//	On met toujours un numéro nlot égal à uid.
@@ -119,7 +162,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					vatCode = null;
 				}
 
-				if (value.HasValue && value.Value != 0.0m)
+				if (date.HasValue && accountsRange.IsInside (date.Value) &&
+					value.HasValue && value.Value != 0.0m)
 				{
 					builder.Append (TypeConverters.DateToString (date));
 					builder.Append ("\t");
@@ -238,7 +282,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesPath
 		{
 			//	Retourne le chemin du fichier contenant les écritures,
-			//	par exemple "C:\Documents Crésus\Exemples\Mon Village.eca".
+			//	par exemple "C:\Documents Crésus\Exemples\Mon Village (01-01-2015 ~ 31-12-2015).eca".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -249,10 +293,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesFilename
 		{
 			//	Retourne le nom du fichier contenant les écritures,
-			//	par exemple "Mon Village.eca".
+			//	par exemple "Mon Village (01-01-2015 ~ 31-12-2015).eca".
 			get
 			{
-				return string.Concat (this.accessor.Mandat.Name, ".", ExportEntries.type);
+				string from = this.accountsRange.IncludeFrom           .ToString ("dd-MM-yyyy");
+				string to   = this.accountsRange.ExcludeTo.AddDays (-1).ToString ("dd-MM-yyyy");
+
+				return string.Format ("{0} ({1} ~ {2}).{3}", this.accessor.Mandat.Name, from, to, ExportEntries.type);
 			}
 		}
 
@@ -274,7 +321,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;
+		private readonly List<ExportEntriesReport> reports;
 
+		private DateRange						accountsRange;
 		private string							accountsPath;
 		private int								entriesCount;
 	}

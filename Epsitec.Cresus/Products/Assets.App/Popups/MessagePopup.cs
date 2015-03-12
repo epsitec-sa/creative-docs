@@ -13,10 +13,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MessagePopup : AbstractPopup
 	{
-		private MessagePopup(string title, string message)
+		private MessagePopup(string title, string message, int? width = null, int? height = null)
 		{
 			this.title   = title;
 			this.message = message;
+			this.width   = width;
+			this.height  = height;
 		}
 
 
@@ -24,7 +26,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new Size (MessagePopup.popupWidth, MessagePopup.popupHeight);
+				int w = this.width.HasValue  ? this.width.Value  : MessagePopup.popupWidth;
+				int h = this.height.HasValue ? this.height.Value : MessagePopup.popupHeight;
+
+				return new Size (w, h);
 			}
 		}
 
@@ -93,9 +98,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			popup.Create (target);
 		}
 
-		public static void ShowMessage(Widget target, string title, string message)
+		public static void ShowMessage(Widget target, string title, string message, int? width = null, int? height = null)
 		{
-			var popup = new MessagePopup (title, message);
+			var popup = new MessagePopup (title, message, width, height);
 
 			popup.Create (target);
 		}
@@ -116,5 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly string					title;
 		private readonly string					message;
+		private readonly int?					width;
+		private readonly int?					height;
 	}
 }
