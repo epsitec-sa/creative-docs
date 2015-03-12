@@ -93,7 +93,7 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 					var officeManagerJobToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER);
 					foreach (var managerJob in officeManagerJobToRemove)
 					{
-						AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, managerJob.Office, this.Entity);
+						AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, managerJob.Office, this.Entity, true);
 					}
 
 					foreach (var jobs in employee.EmployeeJobs)
