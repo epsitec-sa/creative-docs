@@ -6,6 +6,7 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 	public static class X
 	{
 		public const string Accounts = "Accounts";
+		public const string AccountsFilenames = "AccountsFilenames";
 		public const string AmortizedAmount = "AmortizedAmount";
 		public const string Arguments = "Arguments";
 		public const string Assets = "Assets";
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string Event = "Event";
 		public const string Events = "Events";
 
+		public const string Filename = "Filename";
 		public const string FilterGuid = "FilterGuid";
 
 		public const string GlobalSettings = "GlobalSettings";
@@ -93,6 +95,7 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 			public const string Error = "error";
 			public const string ExcludeTo = "excludeTo";
 
+			public const string Filename = "filename";
 			public const string FinalAmount = "finalAmount";
 			public const string FormatedIncludeFrom = "{0}.IncludeFrom";
 			public const string FormatedExcludeTo = "{0}.ExcludeTo";

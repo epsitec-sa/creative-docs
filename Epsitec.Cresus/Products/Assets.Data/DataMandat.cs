@@ -21,19 +21,19 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager    = new UndoManager ();
 			this.globalSettings = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields        = new GuidDictionary<DataObject> (this.undoManager);
-			this.personsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
-			this.assets                  = new GuidDictionary<DataObject> (this.undoManager);
-			this.categories              = new GuidDictionary<DataObject> (this.undoManager);
-			this.groups                  = new GuidDictionary<DataObject> (this.undoManager);
-			this.persons                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.entries                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.arguments               = new GuidDictionary<DataObject> (this.undoManager);
-			this.rangeAccounts           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.rangeVatCodes           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.assetsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields      = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories             = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons                = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries                = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods                = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments              = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
-			this.reports                 = new GuidDictionary<AbstractReportParams> (this.undoManager);
+			this.reports                = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
 
 		public DataMandat(ComputerSettings computerSettings, System.Xml.XmlReader reader)
@@ -42,19 +42,19 @@ namespace Epsitec.Cresus.Assets.Data
 			this.undoManager      = new UndoManager ();
 			this.globalSettings   = new GlobalSettings (this.undoManager);
 
-			this.assetsUserFields        = new GuidDictionary<DataObject> (this.undoManager);
-			this.personsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
-			this.assets                  = new GuidDictionary<DataObject> (this.undoManager);
-			this.categories              = new GuidDictionary<DataObject> (this.undoManager);
-			this.groups                  = new GuidDictionary<DataObject> (this.undoManager);
-			this.persons                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.entries                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.methods                 = new GuidDictionary<DataObject> (this.undoManager);
-			this.arguments               = new GuidDictionary<DataObject> (this.undoManager);
-			this.rangeAccounts           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
-			this.rangeVatCodes           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.assetsUserFields       = new GuidDictionary<DataObject> (this.undoManager);
+			this.personsUserFields      = new GuidDictionary<DataObject> (this.undoManager);
+			this.assets                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.categories             = new GuidDictionary<DataObject> (this.undoManager);
+			this.groups                 = new GuidDictionary<DataObject> (this.undoManager);
+			this.persons                = new GuidDictionary<DataObject> (this.undoManager);
+			this.entries                = new GuidDictionary<DataObject> (this.undoManager);
+			this.methods                = new GuidDictionary<DataObject> (this.undoManager);
+			this.arguments              = new GuidDictionary<DataObject> (this.undoManager);
+			this.rangeAccounts          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeVatCodes          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
-			this.reports                 = new GuidDictionary<AbstractReportParams> (this.undoManager);
+			this.reports                = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
 			this.Deserialize (reader);
 		}
@@ -362,8 +362,9 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement (X.Document);
 
 			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
-			this.SerializeAccounts (writer);
-			this.SerializeVatCodes (writer);
+			this.SerializeAccounts          (writer);
+			this.SerializeVatCodes          (writer);
+			this.SerializeAccountsFilenames (writer);
 
 			writer.WriteEndDocument ();
 		}
@@ -395,6 +396,23 @@ namespace Epsitec.Cresus.Assets.Data
 
 				pair.Key.Serialize (writer, X.DateRange);
 				this.SerializeObjects (writer, X.List, pair.Value);
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeAccountsFilenames(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement (X.AccountsFilenames);
+
+			foreach (var pair in this.rangeAccountsFilenames)
+			{
+				writer.WriteStartElement (X.Period);
+
+				pair.Key.Serialize (writer, X.DateRange);
+				writer.WriteElementString (X.List, pair.Value);
 
 				writer.WriteEndElement ();
 			}
@@ -554,6 +572,10 @@ namespace Epsitec.Cresus.Assets.Data
 						case X.VatCodes:
 							this.DeserializeVatCodes (reader);
 							break;
+
+						case X.AccountsFilenames:
+							this.DeserializeAccountsFilenames (reader);
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -660,6 +682,58 @@ namespace Epsitec.Cresus.Assets.Data
 					if (!dateRange.IsEmpty && objects.Any ())
 					{
 						this.rangeVatCodes.Add (dateRange, objects);
+					}
+
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccountsFilenames(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case X.Period:
+							this.DeserializeAccountsFilenamesPeriod (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeAccountsFilenamesPeriod(System.Xml.XmlReader reader)
+		{
+			var dateRange = DateRange.Empty;
+			string filename = null;
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case X.DateRange:
+							dateRange = new DateRange (reader);
+							break;
+
+						case X.List:
+							filename = reader.ReadElementContentAsString ();
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					if (!dateRange.IsEmpty && !string.IsNullOrEmpty (filename))
+					{
+						this.rangeAccountsFilenames.Add (dateRange, filename);
 					}
 
 					break;
