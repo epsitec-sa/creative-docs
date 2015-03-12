@@ -13,14 +13,7 @@ namespace Epsitec.Data.Platform
 		static SwissPostZipCodeFoldingRepository()
 		{
 			SwissPostZipCodeFoldingRepository.foldings = new Dictionary<SwissPostFullZip, SwissPostZipCodeFolding> ();
-			
-			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
-			var path     = "Epsitec.Data.Platform.DataFiles.ZipCodeFolding.zip";
-			var items    = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, path, System.Text.Encoding.Default)
-				.Split ('\r', '\n').Where (x => x.Length > 0)
-				.Select (x => SwissPostZipCodeFolding.Parse (x));
-
-			foreach (var item in items)
+			foreach(var item in SwissPostZipRepository.Current.FindAll ().Select (z => new SwissPostZipCodeFolding (z.ZipCode, z.ZipCodeAddOn, z.RootZipCode, z.ZipType)))
 			{
 				SwissPostZipCodeFolding folding;
 

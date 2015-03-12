@@ -33,10 +33,11 @@ namespace Epsitec.Data.Platform
 					street.BuildNormalizedName ();
 
 					this.streets.Add (street);
-					if (this.streetByZip.TryGetValue (street.ZipCodeAndAddOn, out list) == false)
+					var fullZip = new SwissPostFullZip (street.Zip.ZipCode, street.Zip.ZipCodeAddOn);
+					if (this.streetByZip.TryGetValue (fullZip, out list) == false)
 					{
 						list = new List<SwissPostStreetInformation> ();
-						this.streetByZip[street.ZipCodeAndAddOn] = list;
+						this.streetByZip[fullZip] = list;
 					}
 
 					list.Add (street);
@@ -77,8 +78,8 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostStreetInformation> FindStreets(int zipCode, int zipAddOn)
 		{
 			List<SwissPostStreetInformation> list;
-			
-			if (this.streetByZip.TryGetValue (new SwissPostFullZip (zipCode, zipAddOn), out list))
+			var fullZip = new SwissPostFullZip (zipCode, zipAddOn);
+			if (this.streetByZip.TryGetValue (fullZip, out list))
 			{
 				return list;
 			}
