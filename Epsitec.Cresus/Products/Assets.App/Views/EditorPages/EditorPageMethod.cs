@@ -171,6 +171,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			if (!string.IsNullOrEmpty(err))
 			{
+				err = TextLayout.ConvertToTaggedText (err);
 				MessagePopup.ShowError (target, err);
 				return;
 			}

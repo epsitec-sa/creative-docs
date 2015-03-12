@@ -337,6 +337,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var err = this.OpenMandat (path);
 				if (!string.IsNullOrEmpty (err))
 				{
+					err = TextLayout.ConvertToTaggedText (err);
 					MessagePopup.ShowError (target, err);
 				}
 			});
@@ -357,6 +358,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var err = this.SaveMandat (path, mode);
 				if (!string.IsNullOrEmpty (err))
 				{
+					err = TextLayout.ConvertToTaggedText (err);
 					MessagePopup.ShowError (target, err);
 				}
 			});
