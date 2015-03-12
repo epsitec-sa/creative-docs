@@ -10,7 +10,6 @@ using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
 using Epsitec.Cresus.Assets.App.Views.ViewStates;
 using Epsitec.Cresus.Assets.App.Widgets;
-using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.Engine;
 using Epsitec.Cresus.Assets.Server.Export;
@@ -185,12 +184,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					var message = ee.ExportFiles ();
 					int linesCount = ((message.Length - message.Replace ("<br/>", "").Length) / 5) + 1;
-					MessagePopup.ShowMessage (target, "Exportation des écritures", message, 450, 60 + linesCount*15);
+					MessagePopup.ShowMessage (target, Res.Commands.Main.ExportEntries.Description, message, 450, 60 + linesCount*15);
 				}
 				catch (System.Exception ex)
 				{
 					string message = TextLayout.ConvertToTaggedText (ex.Message);
-					MessagePopup.ShowMessage (target, "Exportation des écritures", message);
+					MessagePopup.ShowMessage (target, Res.Commands.Main.ExportEntries.Description, message);
 					return;
 				}
 			}
