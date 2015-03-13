@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		public string ExportFiles()
 		{
 			//	Génère toutes les écritures correspondant aux périodes des plans comptables connus.
-			//	Retourne un texte résumant les opérations effectuées.
+			//	Retourne un texte résumant toutes les opérations effectuées.
 			this.reports.Clear ();
 
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
@@ -80,18 +80,22 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 			}
 
-			//	On lit le fichier .ecf, à la recherche du dernier uid utilisé.
-			int uid;
+			int uid = this.GetEccUid ();
+
+			//	On lit le fichier .ecf, à la recherche du dernier idno utilisé.
+			int idno;
 			try
 			{
-				uid = this.GetEntriesUid ();
+				idno = this.GetLastIdno ();
 			}
 			catch
 			{
-				uid = 1;
+				idno = 1;
 			}
 
-			var data = this.GetEntriesData (accountsRange, uid);
+			const int nlot = 1;
+
+			var data = this.GenerateEntriesData (accountsRange, nlot, uid, idno);
 			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
 
 			this.CreateOrUpdateEccLine (uid);
@@ -101,22 +105,44 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private int GetEntriesUid()
-		{
-			//	Retourne le dernier uid utilisé pour l'ensemble des écritures générées par Assets,
-			//	obtenu en relisant le fichier des écritures.
-			int uid = 1;
-			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+		//?private int GetEntriesUid()
+		//?{
+		//?	//	Retourne le dernier uid utilisé pour l'ensemble des écritures générées par Assets,
+		//?	//	obtenu en relisant le fichier des écritures.
+		//?	int uid = 1;
+		//?	var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+		//?
+		//?	foreach (var line in lines)
+		//?	{
+		//?		if (line.StartsWith ("#ECC"))
+		//?		{
+		//?			var x = line.Split (new string[] { "; " }, System.StringSplitOptions.None);
+		//?			if (x.Length == 4)
+		//?			{
+		//?				int i = int.Parse (x[3]);
+		//?				uid = System.Math.Max (uid, i+1);
+		//?			}
+		//?		}
+		//?	}
+		//?
+		//?	return uid;
+		//?}
 
-			foreach (var line in lines)
+		private int GetEccUid()
+		{
+			int uid = 1;
+
+			foreach (var eccLine in this.eccLines)
 			{
-				if (line.StartsWith ("#ECC"))
+				if (eccLine.IsBody)
 				{
-					var x = line.Split (new string[] { "; " }, System.StringSplitOptions.None);
-					if (x.Length == 4)
+					if (eccLine.Tag == ExportEntries.EccTag)
 					{
-						int i = int.Parse (x[3]);
-						uid = System.Math.Max (uid, i+1);
+						return eccLine.Uid.GetValueOrDefault (1);
+					}
+					else
+					{
+						uid = System.Math.Max (uid, eccLine.Uid.GetValueOrDefault () + 1);
 					}
 				}
 			}
@@ -124,7 +150,31 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return uid;
 		}
 
-		private string GetEntriesData(DateRange accountsRange, int uid)
+		private int GetLastIdno()
+		{
+			//	Retourne le dernier idno (c'est-à-dire le numéro de la dernière écriture) utilisé pour
+			//	l'ensemble des écritures générées par Assets, obtenu en relisant le fichier des écritures.
+			int idno = 0;
+			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+
+			foreach (var line in lines)
+			{
+				if (!string.IsNullOrEmpty (line) && !line.StartsWith ("#"))  // ligne d'écriture ?
+				{
+					var x = line.Split ('\t');
+					if (x.Length >= 13)
+					{
+						int i = int.Parse (x[13]);
+						idno = System.Math.Max (idno, i);
+					}
+				}
+			}
+
+			return idno + 1;
+		}
+
+
+		private string GenerateEntriesData(DateRange accountsRange, int nlot, int uid, int idno)
 		{
 			//	Retourne les données correspondant à l'ensemble des écritures générées par Assets.
 			//	On met toujours un numéro nlot égal à uid.
@@ -136,7 +186,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			builder.Append ("\r\n");
 
 			builder.Append ("#ECC\t1; ");
-			builder.Append (uid.ToStringIO ());  // nlot
+			builder.Append (nlot.ToStringIO ());  // nlot
 			builder.Append ("; ");
 			builder.Append (System.DateTime.Now.ToString ("dd.MM.yyyy HH:mm:ss"));
 			builder.Append ("; ");
@@ -146,7 +196,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var entries = this.accessor.Mandat.GetData (BaseType.Entries);
 
 			this.entriesCount = 0;
-			int idno = 1;
 			foreach (var entry in entries)
 			{
 				var date    = ObjectProperties.GetObjectPropertyDate    (entry, null, ObjectField.EntryDate);
