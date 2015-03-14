@@ -606,3 +606,9 @@ Lancé le 06.03.2015
 -initdefaultemployee
 -echupdate -newechfile:S:\eerv\eerv-2015-03-05.xml -oldechfile:S:\eerv\eerv-2015-02-26.xml -output:s:\eerv\ech-diff-2015-03-05.md
 
+
+Lancé le 14.03.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-03-12.xml -oldechfile:S:\eerv\eerv-2015-03-05.xml -output:s:\eerv\ech-diff-2015-03-12.md
+
