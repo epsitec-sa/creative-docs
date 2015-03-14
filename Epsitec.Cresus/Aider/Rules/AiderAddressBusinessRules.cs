@@ -185,6 +185,7 @@ namespace Epsitec.Aider.Rules
 					//
 					//	Martin Schwarz, rue de la Plaine 13, Case postale, 1401 Yverdon-les-Bains
 					//	Service de la population, Division Etrangers, Av. de Beaulieu 19, 1014 Lausanne
+					//	Hans Widmer, Grand-Rue 60, Case postale 1102, 1110 Morges 1
 
 					if ((repo.IsBusinessAddressOrPostBox (zipCode, zipAddOn, postBox)) &&
 						(repo.IsStreetKnownRelaxed (zipCode, zipAddOn, street)))

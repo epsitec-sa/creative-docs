@@ -446,12 +446,12 @@ namespace Epsitec.Aider.Data.Common
 
 		public static string FindParishName(ParishAddressRepository repository, AiderAddressEntity address)
 		{
-			var zipCode = address.Town.SwissZipCode.GetValueOrDefault ();
-			var townName = address.Town.Name;
-			var streetName = address.Street;
+			var zipCode     = address.Town.SwissZipCode.GetValueOrDefault ();
+			var townName    = address.Town.Name;
+			var streetName  = address.Street;
 			var houseNumber = InvariantConverter.ToString (address.HouseNumber.GetValueOrDefault ());
 
-			var normalizedStreetName = SwissPostStreet.NormalizeStreetName (streetName);
+			var normalizedStreetName  = SwissPostStreet.NormalizeStreetName (streetName);
 			var normalizedHouseNumber = SwissPostStreet.StripAndNormalizeHouseNumber (houseNumber);
 
 			return repository.FindParishName (zipCode, townName, normalizedStreetName, normalizedHouseNumber);

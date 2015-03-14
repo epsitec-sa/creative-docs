@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -136,6 +136,7 @@ namespace Epsitec.Aider.Data.Common
 			}
 
 		}
+		
 		private ParishAddressInformation FindParishAddressInformation(string key, string normalizedStreetName, int houseNumber)
 		{
 			var addresses = this.FindAddresses (key);
@@ -178,7 +179,27 @@ namespace Epsitec.Aider.Data.Common
 		
 		private static string GetKey(int zipCode, string townName)
 		{
+			townName = ParishAddressRepository.GetCleanTownName (townName);
 			return string.Format ("{0:0000} {1}", zipCode, townName);
+		}
+
+		private static string GetCleanTownName(string townName)
+		{
+			//	Given "Morges 1", return "Morges".
+			//	Beware of "Renens VD" which must not be altered.
+
+			int pos = townName.IndexOf (' ');
+			
+			if ((pos < 0) ||
+				(pos+1 >= townName.Length) ||
+				(char.IsDigit (townName[pos+1]) == false))
+			{
+				return townName;
+			}
+			else
+			{
+				return townName.Substring (0, pos);
+			}
 		}
 
 		private static IEnumerable<ParishAddressInformation> GetParishInformations(IEnumerable<string> lines)

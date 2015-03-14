@@ -145,6 +145,15 @@ namespace Epsitec.Data.Platform
 				}
 			}
 
+			if (zipAddOn != 0)
+			{
+				//	When searching in "1110 Morges 1", we are using an add-on code of 01 and
+				//	we will not find any street there; try at the base zip code which will
+				//	match "1110 Morges":
+
+				return this.FindStreetFromStreetNameRelaxed (zipCode, 0, street);
+			}
+
 			return null;
 		}
 
