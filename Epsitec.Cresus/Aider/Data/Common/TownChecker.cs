@@ -1,26 +1,19 @@
-﻿using Epsitec.Aider.Data.Normalization;
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Normalization;
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Text;
-
 using Epsitec.Data.Platform;
-
 using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Common
 {
-
-
 	internal sealed class TownChecker
 	{
-
-
 		public TownChecker()
 		{
 			this.manualCorrections = TownChecker.BuildManualCorrection ();
@@ -299,30 +292,12 @@ namespace Epsitec.Aider.Data.Common
 		}
 
 
-		private readonly Dictionary<Tuple<string, string>, Tuple<string, string>> manualCorrections;
-
-
-		private readonly List<Town> towns;
-
-
-		private readonly Dictionary<string, HashSet<Town>> zipCodeToTown;
-
-
-		private readonly Dictionary<string, HashSet<Town>> nameToTown;
-
-
-		private readonly Dictionary<string, HashSet<Town>> normalizedNameToTown;
-
-
 		private sealed class Town
 		{
-
-
 			public Town(string zipCode, string name)
 				: this(zipCode, name, name)
 			{
 			}
-
 
 			public Town(string zipCode, string name, string nameToNormalize)
 			{
@@ -337,26 +312,21 @@ namespace Epsitec.Aider.Data.Common
 				return (value ?? "").Trim ();
 			}
 
-
 			public Tuple<string, string> ToTuple()
 			{
 				return Tuple.Create (this.zipCode, this.name);
 			}
 
-
-			public readonly string zipCode;
-
-
-			public readonly string name;
-
-
-			public readonly string normalizedName;
-
-
+			public readonly string				zipCode;
+			public readonly	string				name;
+			public readonly string				normalizedName;
 		}
-
-
+		
+		
+		private readonly Dictionary<Tuple<string, string>, Tuple<string, string>> manualCorrections;
+		private readonly List<Town> towns;
+		private readonly Dictionary<string, HashSet<Town>> zipCodeToTown;
+		private readonly Dictionary<string, HashSet<Town>> nameToTown;
+		private readonly Dictionary<string, HashSet<Town>> normalizedNameToTown;
 	}
-
-
 }

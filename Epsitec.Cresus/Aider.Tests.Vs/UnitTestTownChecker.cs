@@ -1,19 +1,20 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Data.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 
 namespace Aider.Tests.Vs
 {
-
-
 	[TestClass]
 	public class UnitTestTownChecker
 	{
-
-
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
+		{
+		}
+		
+		static UnitTestTownChecker()
 		{
 			UnitTestTownChecker.townChecker = new TownChecker ();
 		}
@@ -58,7 +59,7 @@ namespace Aider.Tests.Vs
 			this.Check ("1008", "PRILLY", "1008", "Prilly");
 			this.Check ("1027", "LONAY", "1027", "Lonay");
 			this.Check ("1603", "GRANDVAUX", "1091", "Grandvaux");
-			this.Check ("1030", "BUSSIGNY", "1030", "Bussigny-près-Lausanne");
+			this.Check ("1030", "BUSSIGNY", "1030", "Bussigny");
 			this.Check ("1000", "LAUSANNE 26", "1000", "Lausanne 26");
 			this.Check ("1071", "CHEXBRES", "1071", "Chexbres");
 			this.Check ("1018", "LAUSANNE", "1018", "Lausanne");
@@ -153,12 +154,12 @@ namespace Aider.Tests.Vs
 			this.Check ("1806", "St-Légier-Chiésaz", "1806", "St-Légier-La Chiésaz");
 			this.Check ("1008", "Lausanne", "1000", "Lausanne");
 			this.Check ("1588", "Montet", "1588", "Cudrefin");
-			this.Check ("1030", "Bussigny", "1030", "Bussigny-près-Lausanne");
+			this.Check ("1030", "Bussigny-près-Lausanne", "1030", "Bussigny");
 			this.Check ("1162", "Saint-Prex", "1162", "St-Prex");
 			this.Check ("1024", "Eculbens", "1024", "Ecublens VD");
 			this.Check ("1148", "Moiry", "1148", "Moiry VD");
 			this.Check ("1122", "Romanel", "1122", "Romanel-sur-Morges");
-			this.Check ("1030", "Bussigny-Lausanne", "1030", "Bussigny-près-Lausanne");
+			this.Check ("1030", "Bussigny-Lausanne", "1030", "Bussigny");
 			this.Check ("1053", "Cugy", "1053", "Cugy VD");
 			this.Check ("1008", "Jouxtens", "1008", "Jouxtens-Mézery");
 			this.Check ("1607", "Palézieux-Gare", "1607", "Palézieux");
@@ -313,7 +314,6 @@ namespace Aider.Tests.Vs
 			this.Check ("1138", "Villars-sous-Yens", "1168", "Villars-sous-Yens");
 			this.Check ("1417", "Essertines s/Yverdon", "1417", "Essertines-sur-Yverdon");
 			this.Check ("1148", "L’Isle", "1148", "L'Isle");
-			this.Check ("1030", "Bussigny", "1030", "Bussigny-près-Lausanne");
 			this.Check ("3415", "Hasle-Ruegsau", "3415", "Hasle-Rüegsau");
 			this.Check ("1113", "St-Saphorin-sur -Morges", "1113", "St-Saphorin-sur-Morges");
 			this.Check ("1250", "Nyon", "1260", "Nyon");
@@ -337,10 +337,6 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private static TownChecker townChecker;
-
-
+		private static readonly TownChecker		townChecker;
 	}
-
-
 }
