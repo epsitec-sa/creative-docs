@@ -39,10 +39,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool, bool, bool, bool> (this.Execute);
+			return ActionExecutor.Create<bool, bool> (this.Execute);
 		}
 
-		private void Execute(bool confirmAddress, bool hideHousehold,bool deleteParishGroup, bool deleteOtherGroups)
+		private void Execute(bool confirmAddress, bool hideHousehold)
 		{
 			var warning    = this.Entity;
 			var person     = warning.Person;
@@ -60,7 +60,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				foreach (var member in members)
 				{
-					person.HidePerson (this.BusinessContext);
+					member.HidePerson (this.BusinessContext);
+					member.DeleteParishGroupParticipation (this.BusinessContext);
+					member.DeleteNonParishGroupParticipations (this.BusinessContext);
 				}
 			}
 			else
@@ -69,11 +71,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					member.eCH_Person.RemovalReason = RemovalReason.Departed;
 				}
-			}
-			//TODO: participation removal
-			foreach (var member in members)
-			{
-				person.HidePerson (this.BusinessContext);
 			}
 
 			this.ClearWarningAndRefreshCaches ();
@@ -90,14 +87,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 				.Field<bool> ()
 					.Title ("Cacher tous les membres du ménage")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Supprimer l'appartenance à la paroisse ?")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Supprimer l'appartenance à des groupes annexes ?")
 					.InitialValue (false)
 				.End ()
 			.End ();

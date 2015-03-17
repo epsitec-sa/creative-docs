@@ -35,10 +35,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool, bool, bool> (this.Execute);
+			return ActionExecutor.Create<bool, bool> (this.Execute);
 		}
 
-		private void Execute(bool confirmAddress, bool hidePerson, bool deleteParticipation)
+		private void Execute(bool confirmAddress, bool hidePerson)
 		{
 			var warning = this.Entity;
 			var person  = warning.Person;
@@ -54,6 +54,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (hidePerson)
 			{
 				person.HidePerson (this.BusinessContext);
+				person.DeleteNonParishGroupParticipations (this.BusinessContext);
+				person.DeleteParishGroupParticipation (this.BusinessContext);
 			}
 			else
 			{
@@ -73,10 +75,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.End ()
 				.Field<bool> ()
 					.Title ("Cacher la personne")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Supprimer les participations")
 					.InitialValue (false)
 				.End ()
 			.End ();

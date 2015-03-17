@@ -33,8 +33,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var warning = this.Entity;
 			var person  = warning.Person;
-			//TODO: participation removal
+			
 			person.HidePerson (this.BusinessContext);
+			person.DeleteParishGroupParticipation (this.BusinessContext);
+			person.DeleteNonParishGroupParticipations (this.BusinessContext);
 
 			this.ClearWarningAndRefreshCaches ();
 			this.ClearWarningAndRefreshCachesForAll (warning.WarningType);

@@ -408,8 +408,8 @@ namespace Epsitec.Aider.Entities
 		}
 
 		public void DeleteNonParishGroupParticipations(BusinessContext businessContext)
-		{
-			foreach(var participation in this.participations)
+		{		
+			foreach (var participation in this.GetParticipations ())
 			{
 				var parishGroup = participation.Group.IsParish ();
 				var regionGroup = participation.Group.IsRegion ();
@@ -423,7 +423,7 @@ namespace Epsitec.Aider.Entities
 
 		public void DeleteParishGroupParticipation(BusinessContext businessContext)
 		{
-			var participation = this.participations.Where (p => p.Group == this.ParishGroup).SingleOrDefault ();
+			var participation = this.GetParticipations ().Where (p => p.Group == this.ParishGroup).SingleOrDefault ();
 			if (participation != null)
 			{
 				this.MainContact.RemoveParticipationInternal (participation);
