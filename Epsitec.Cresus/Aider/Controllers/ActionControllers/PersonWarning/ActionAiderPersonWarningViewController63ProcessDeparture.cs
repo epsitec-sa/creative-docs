@@ -60,7 +60,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				foreach (var member in members)
 				{
-					person.HidePerson (this.BusinessContext);
+					member.HidePerson (this.BusinessContext);
+					member.DeleteParishGroupParticipation (this.BusinessContext);
+					member.DeleteNonParishGroupParticipations (this.BusinessContext);
 				}
 			}
 			else
@@ -70,7 +72,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					member.eCH_Person.RemovalReason = RemovalReason.Departed;
 				}
 			}
-
 
 			this.ClearWarningAndRefreshCaches ();
 			this.ClearWarningAndRefreshCachesForAll (this.Entity.WarningType);

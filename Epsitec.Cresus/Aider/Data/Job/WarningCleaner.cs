@@ -122,6 +122,7 @@ namespace Epsitec.Aider.Data.Job
 				if(person.IsAlive)
 				{
 					//hide person
+					//TODO: participation removal
 					person.HidePerson (businessContext);
 					WarningCleaner.ClearWarningAndRefreshCaches (businessContext, warn);
 				}

@@ -403,7 +403,31 @@ namespace Epsitec.Aider.Entities
 					{
 						AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
 					}
+				}		
+			}
+		}
+
+		public void DeleteNonParishGroupParticipations(BusinessContext businessContext)
+		{		
+			foreach (var participation in this.GetParticipations ())
+			{
+				var parishGroup = participation.Group.IsParish ();
+				var regionGroup = participation.Group.IsRegion ();
+				if (!parishGroup && !regionGroup)
+				{
+					this.MainContact.RemoveParticipationInternal (participation);
+					businessContext.DeleteEntity (participation);
 				}
+			}
+		}
+
+		public void DeleteParishGroupParticipation(BusinessContext businessContext)
+		{
+			var participation = this.GetParticipations ().Where (p => p.Group == this.ParishGroup).SingleOrDefault ();
+			if (participation != null)
+			{
+				this.MainContact.RemoveParticipationInternal (participation);
+				businessContext.DeleteEntity (participation);
 			}
 		}
 		

@@ -50,10 +50,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException (message);
 			}
 
-
+			//TODO: participation removal
 			if (hidePerson)
 			{
 				person.HidePerson (this.BusinessContext);
+				person.DeleteNonParishGroupParticipations (this.BusinessContext);
+				person.DeleteParishGroupParticipation (this.BusinessContext);
 			}
 			else
 			{
