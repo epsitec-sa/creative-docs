@@ -56,11 +56,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				if (this.reports.Any ())
 				{
 					var desc = string.Join ("<br/>", this.reports.Select (x => x.Description));
-					return string.Format ("Les écritures suivantes ont été générées avec succès pour la comptabilité:<br/><br/>{0}", desc);
+					return string.Format (Res.Strings.ExportEntries.Description.Many.ToString (), desc);
 				}
 				else
 				{
-					return "Aucune écriture n'a été générée pour la comptabilité.";
+					return Res.Strings.ExportEntries.Description.None.ToString ();
 				}
 			}
 		}

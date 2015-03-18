@@ -30,18 +30,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				string entries;
 				if (this.EntriesCount == 0)
 				{
-					entries = "Aucune écriture";
+					entries = Res.Strings.ExportEntriesReport.Description.None.ToString ();
 				}
 				else if (this.EntriesCount == 1)
 				{
-					entries = "1 écriture";
+					entries = Res.Strings.ExportEntriesReport.Description.One.ToString ();
 				}
 				else
 				{
 					entries = string.Format ("{0} écritures", this.EntriesCount);
 				}
 
-				return string.Format ("Du {0} au {1} — {2} — {3}", from, to, filename, entries);
+				return string.Format (Res.Strings.ExportEntriesReport.Description.Summary.ToString (), from, to, filename, entries);
 			}
 		}
 
