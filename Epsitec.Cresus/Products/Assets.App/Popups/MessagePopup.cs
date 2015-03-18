@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MessagePopup : AbstractPopup
 	{
-		private MessagePopup(string title, string message, int? width = null, int? height = null)
+		private MessagePopup(string title, string message, int? width, int? height)
 		{
 			this.title   = title;
 			this.message = message;
@@ -53,47 +53,51 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void ShowAssetsDeleteEventWarning(Widget target)
+		public static void ShowAssetsDeleteEventWarning(Widget target, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.WarningTitle.ToString (),
-				Res.Strings.Popup.Message.DeleteEventWarning.Text.ToString ());
+				Res.Strings.Popup.Message.DeleteEventWarning.Text.ToString (),
+				width, height);
 
 			popup.Create (target);
 		}
 
-		public static void ShowAssetsPreviewEventWarning(Widget target)
+		public static void ShowAssetsPreviewEventWarning(Widget target, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.WarningTitle.ToString (),
-				Res.Strings.Popup.Message.PreviewEventWarning.Text.ToString ());
+				Res.Strings.Popup.Message.PreviewEventWarning.Text.ToString (),
+				width, height);
 
 			popup.Create (target);
 		}
 
-		public static void ShowTodo(Widget target)
+		public static void ShowTodo(Widget target, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.ErrorTitle.ToString (),
-				Res.Strings.Popup.Message.Todo.Text.ToString ());
+				Res.Strings.Popup.Message.Todo.Text.ToString (),
+				width, height);
 
 			popup.Create (target);
 		}
 
-		public static void ShowPasteError(Widget target)
+		public static void ShowPasteError(Widget target, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.ErrorTitle.ToString (),
-				Res.Strings.Popup.Message.PasteError.Text.ToString ());
+				Res.Strings.Popup.Message.PasteError.Text.ToString (),
+				width, height);
 
 			popup.Create (target);
 		}
 
-		public static void ShowError(Widget target, string message)
+		public static void ShowError(Widget target, string message, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.ErrorTitle.ToString (),
-				message);
+				message, width, height);
 
 			popup.Create (target);
 		}
@@ -105,11 +109,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			popup.Create (target);
 		}
 
-		public static void ShowMessage(Widget target, string message)
+		public static void ShowMessage(Widget target, string message, int? width = null, int? height = null)
 		{
 			var popup = new MessagePopup (
 				Res.Strings.Popup.Message.MessageTitle.ToString (),
-				message);
+				message, width, height);
 
 			popup.Create (target);
 		}
