@@ -25,6 +25,14 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			public static class LabelLayout
 			{
+				//	designer:cap/A1A6
+				public static global::Epsitec.Common.Types.Caption Avery_3474
+				{
+					get
+					{
+						return global::Epsitec.Cresus.WebCore.Server.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+					}
+				}
 				//	designer:cap/A1G102
 				public static global::Epsitec.Common.Types.Caption Avery_3475
 				{

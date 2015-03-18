@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -20,6 +20,17 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 			switch (layout)
 			{
+				case LabelLayout.Avery_3474:
+
+					labelSetup = new LabelPageLayout
+					{
+						PageMargins = new Margins (0, 0, 5, 5),
+						LabelGap = new Size (0, 0),
+						LabelSize = new Size (700, 370),
+						LabelMargins = new Margins (100, 100, 50, 50),
+					};
+					break;
+
 				case LabelLayout.Avery_3475:
 
 					// The 0 margin width for the left and right sides is wrong. In reality, it is
@@ -76,6 +87,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		{
 			switch (layout)
 			{
+				case LabelLayout.Avery_3474:
 				case LabelLayout.Avery_3475:
 				case LabelLayout.Sheet_A5_Simple:
 				case LabelLayout.Sheet_A5_SimplePP:
@@ -97,6 +109,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		{
 			switch (layout)
 			{
+				case LabelLayout.Avery_3474:
 				case LabelLayout.Avery_3475:
 					return new LabelRenderer ();
 
