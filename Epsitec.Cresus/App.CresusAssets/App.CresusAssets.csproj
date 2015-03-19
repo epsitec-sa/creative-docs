@@ -141,6 +141,10 @@
       <Project>{d8611b9f-e48b-4fd8-aaba-9a83597d9a82}</Project>
       <Name>Assets.Server.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Products\Assets.Server.Export\Assets.Server.Export.csproj">
+      <Project>{764df1c5-f9bb-4f8d-9987-5639823b8757}</Project>
+      <Name>Assets.Server.Export</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Products\Assets.Server.NodeGetters\Assets.Server.NodeGetters.csproj">
       <Project>{4d38b63f-e835-4436-8946-6af7c88f67e5}</Project>
       <Name>Assets.Server.NodeGetters</Name>
