@@ -20,11 +20,14 @@ namespace Epsitec.Cresus.Assets.App
 		public AssetsApplication()
 		{
 			Epsitec.Cresus.Assets.Server.LogFile.CreateEmptyLogFile ();
-			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start");
+			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-1");
 			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
+			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-2");
 			this.commandContext = new CommandContext ();
+			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-3");
 
 			this.commandDispatcher.RegisterController (this);
+			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-4");
 		}
 
 		public override string					ShortWindowTitle

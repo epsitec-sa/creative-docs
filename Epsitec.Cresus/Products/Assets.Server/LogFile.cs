@@ -10,14 +10,33 @@ namespace Epsitec.Cresus.Assets.Server
 	{
 		public static void CreateEmptyLogFile()
 		{
-			System.IO.File.CreateText (LogFile.Filename);
+			try
+			{
+				System.IO.File.Delete (LogFile.Filename);
+
+				using (var stream = System.IO.File.CreateText (LogFile.Filename))
+				{
+					stream.Close ();
+				}
+			}
+			catch (System.Exception ex)
+			{
+			}
 		}
 
 		public static void AppendToLogFile(string message)
 		{
-			var stream = System.IO.File.AppendText (LogFile.Filename);
-			stream.WriteLine (message);
-			stream.Close ();
+			try
+			{
+				using (var stream = System.IO.File.AppendText (LogFile.Filename))
+				{
+					stream.WriteLine (message);
+					stream.Close ();
+				}
+			}
+			catch (System.Exception ex)
+			{
+			}
 		}
 
 
