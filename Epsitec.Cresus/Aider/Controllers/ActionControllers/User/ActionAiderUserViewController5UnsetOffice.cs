@@ -37,7 +37,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (currentOffice.IsNotNull ())
 			{
-				AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, currentOffice, this.Entity);
+				AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, currentOffice, this.Entity, true);
 			}				
 		}
 	}
