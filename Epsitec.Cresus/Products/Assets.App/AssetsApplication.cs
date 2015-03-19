@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -20,6 +19,8 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public AssetsApplication()
 		{
+			Epsitec.Cresus.Assets.Server.LogFile.CreateEmptyLogFile ();
+			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start");
 			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
 			this.commandContext = new CommandContext ();
 
