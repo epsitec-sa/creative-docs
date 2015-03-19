@@ -653,7 +653,7 @@
   <data name="Val.Enum.OfficeType.None" id="ATK">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.Parish" id="AUK">&lt;s:data id="_0" f:Name="Parish" f:Labels="{Collection {Text 'Paroisse'}}" /&gt;</data>
   <data name="Val.Enum.OfficeType.Region" id="AVK">&lt;s:data id="_0" f:Name="Region" f:Labels="{Collection {Text 'Région'}}" /&gt;</data>
-  <data name="Typ.Enum.OfficeType" id="ASK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.OfficeType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.OfficeType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATK]'}, {Text '1 [LVAUK]'}, {Text '2 [LVAVK]'}, {Text '3 [LVAFL]'}, {Text '4 [LVAGL]'}, {Text '5 [LVAHL]'}, {Text '6 [LVABL]'}, {Text '7 [LVACL]'}, {Text '8 [LVADL]'}, {Text '9 [LVAEL]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.OfficeType, Aider/None" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
+  <data name="Typ.Enum.OfficeType" id="ASK">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.OfficeType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.OfficeType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVATK]'}, {Text '1 [LVAUK]'}, {Text '2 [LVAVK]'}, {Text '3 [LVAFL]'}, {Text '4 [LVAGL]'}, {Text '5 [LVAHL]'}, {Text '6 [LVAJL]'}, {Text '7 [LVABL]'}, {Text '8 [LVACL]'}, {Text '9 [LVADL]'}, {Text '10 [LVAEL]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.OfficeType, Aider/None" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.OfficeType" id="A3L">&lt;s:data id="_0" f:Name="OfficeType" f:Labels="{Collection {Text 'Type de gestion'}}" /&gt;</data>
   <data name="Fld.AiderOfficeManagement.RegionalReferees" id="A4L">&lt;s:data id="_0" f:Name="RegionalReferees" f:Labels="{Collection {Text 'Répondances régionales'}}" /&gt;</data>
   <data name="Val.Enum.EmployeeEmployer.ECVD" id="A5L">&lt;s:data id="_0" f:Name="ECVD" f:Labels="{Collection {Text 'Eglise catholique VD'}}" /&gt;</data>
@@ -776,4 +776,5 @@
   <data name="Fld.AiderEmployee.ParishGroupPath" id="OT63">&lt;s:data id="_0" f:Name="ParishGroupPath" /&gt;</data>
   <data name="Fld.AiderEmployeeJob.ParishGroupPath" id="OU63">&lt;s:data id="_0" f:Name="ParishGroupPath" /&gt;</data>
   <data name="Fld.AiderReferee.ParishGroupPath" id="OV63">&lt;s:data id="_0" f:Name="ParishGroupPath" /&gt;</data>
+  <data name="Val.Enum.OfficeType.RegionVCC" id="AJL">&lt;s:data id="_0" f:Name="RegionVCC" f:Labels="{Collection {Text 'Région – Vie communautaire et cultuelle'}}" /&gt;</data>
 </bundle>

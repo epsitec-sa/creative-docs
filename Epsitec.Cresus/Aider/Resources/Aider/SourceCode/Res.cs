@@ -1693,6 +1693,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 688));
 						}
 					}
+					//	designer:cap/LVAJL
+					public static global::Epsitec.Common.Types.Caption RegionVCC
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 691));
+						}
+					}
 				}
 				
 				public static class PersonConfession
