@@ -138,8 +138,6 @@ namespace Epsitec.Aider.Entities
 
 			if (currentOffice.IsNotNull () && currentOffice != office)
 			{
-				AiderOfficeManagementEntity.LeaveOfficeManagement (businessContext, currentOffice, user);
-
 				//try to remap old sender settings
 				var oldSender = AiderOfficeSenderEntity.Find (businessContext, contact);
 				if (oldSender.IsNotNull ())
@@ -174,7 +172,7 @@ namespace Epsitec.Aider.Entities
 			user.Office = office;
 		}
 
-		public static void LeaveOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user)
+		public static void LeaveOfficeManagement(BusinessContext businessContext, AiderOfficeManagementEntity office, AiderUserEntity user, bool deleteJob)
 		{
 			var currentOffice = user.Office;
 			var currentSender = user.OfficeSender;
@@ -187,7 +185,11 @@ namespace Epsitec.Aider.Entities
 				AiderOfficeSenderEntity.Delete (businessContext, currentSender);
 			}
 
-			office.DeleteOfficeManagerJobsForUser (businessContext, user);
+			if (deleteJob)
+			{
+				office.DeleteOfficeManagerJobsForUser (businessContext, user);
+			}
+			
 
 			//Join office as simple user
 			AiderOfficeManagementEntity.JoinOfficeUsers (businessContext, office, user, true);
