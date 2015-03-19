@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -19,15 +20,10 @@ namespace Epsitec.Cresus.Assets.App
 	{
 		public AssetsApplication()
 		{
-			Epsitec.Cresus.Assets.Server.LogFile.CreateEmptyLogFile ();
-			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-1");
 			this.commandDispatcher = new CommandDispatcher ("Assets", CommandDispatcherLevel.Primary, CommandDispatcherOptions.AutoForwardCommands);
-			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-2");
 			this.commandContext = new CommandContext ();
-			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-3");
 
 			this.commandDispatcher.RegisterController (this);
-			Epsitec.Cresus.Assets.Server.LogFile.AppendToLogFile ("Start-4");
 		}
 
 		public override string					ShortWindowTitle
