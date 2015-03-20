@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -16,6 +16,7 @@ namespace Epsitec.Aider.Enumerations
 		RegionFA		= 3,					//	Formation & accompagnement
 		RegionPS		= 4,					//	Présence & solidarité
 		RegionCI		= 5,					//	Coordination & information
+		RegionVCC		= 6,					//	Vie Communautaire & cultuelle
 		
 		CantonOffice	= 11,					//	4 offices cantonaux
 		CantonService	= 12,					//	4 services (SFA, STN, SSAS, SVCC)

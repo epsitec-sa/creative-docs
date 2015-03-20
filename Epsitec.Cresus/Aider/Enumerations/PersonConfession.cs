@@ -23,5 +23,6 @@ namespace Epsitec.Aider.Enumerations
 		Muslim = 11,
 		JehovahsWitness = 12,
 		None = 13,
+		ChristianCatholic = 14,
 	}
 }
