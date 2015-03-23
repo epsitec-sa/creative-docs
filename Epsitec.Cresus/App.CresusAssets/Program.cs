@@ -1,4 +1,4 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -14,6 +14,9 @@ namespace Epsitec.Cresus.Assets
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			var rootPath = System.IO.Path.GetDirectoryName (typeof (Program).Assembly.Location);
+			System.IO.Directory.SetCurrentDirectory (rootPath);
+			
 			Epsitec.Cresus.Core.CoreProgram.Main (args);
 		}
 	}
