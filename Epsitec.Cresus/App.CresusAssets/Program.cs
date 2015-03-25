@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Splash;
 
 namespace Epsitec.Cresus.Assets
 {
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			using (var splash = new Splash.SplashScreen ("logo.png"))
+			using (var splash = new SplashScreen ("logo.png"))
 			{
 				var rootPath = System.IO.Path.GetDirectoryName (typeof (Program).Assembly.Location);
 				System.IO.Directory.SetCurrentDirectory (rootPath);

@@ -75,9 +75,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Splash\SplashPhase.cs" />
-    <Compile Include="Splash\SplashScreen.cs" />
-    <Compile Include="Splash\Win32Api.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.png">
@@ -98,6 +95,10 @@
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{b324896e-2cde-45b8-91ce-b476687ea384}</Project>
       <Name>Common.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
+      <Project>{28fbe9c0-881e-4bf0-bdfa-4f8bb9e31083}</Project>
+      <Name>Common.Splash</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611e097-a82a-43e5-b616-d7dc6eff3f0d}</Project>
