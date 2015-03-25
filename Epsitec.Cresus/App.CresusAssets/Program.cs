@@ -14,10 +14,13 @@ namespace Epsitec.Cresus.Assets
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			var rootPath = System.IO.Path.GetDirectoryName (typeof (Program).Assembly.Location);
-			System.IO.Directory.SetCurrentDirectory (rootPath);
-			
-			Epsitec.Cresus.Core.CoreProgram.Main (args);
+			using (var splash = new Splash.SplashScreen ("logo.png"))
+			{
+				var rootPath = System.IO.Path.GetDirectoryName (typeof (Program).Assembly.Location);
+				System.IO.Directory.SetCurrentDirectory (rootPath);
+
+				Epsitec.Cresus.Core.CoreProgram.Main (args);
+			}
 		}
 	}
 }
