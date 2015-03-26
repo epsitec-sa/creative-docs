@@ -12,6 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
 	/// Popup posant la question avant de quitter le logiciel.
+	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, pour avoir un look standard
+	/// "Enregistrer ? Oui/Non/Annuler".
 	/// </summary>
 	public class QuitPopup : AbstractPopup
 	{
@@ -21,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override Size DialogSize
+		protected override Size					DialogSize
 		{
 			get
 			{
@@ -33,6 +35,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.CreateTitle (Res.Strings.Popup.Quit.Title.ToString ());
 
+			//	Crée le frame supérieur qui contiendra le message.
 			var messageFrame = this.CreateFrame
 			(
 				0,
@@ -41,6 +44,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				QuitPopup.popupHeight - QuitPopup.buttonHeight
 			);
 
+			//	Crée le frame inférieur qui contiendra les boutons.
 			var buttonsFrame = this.CreateFrame
 			(
 				0,
@@ -49,6 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				QuitPopup.buttonHeight
 			);
 
+			//	Crée le message.
 			new StaticText
 			{
 				Parent           = messageFrame,
@@ -58,12 +63,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				ContentAlignment = ContentAlignment.MiddleCenter,
 			};
 
+			//	Crée les boutons.
 			int w1 = QuitPopup.buttonWidth;
 			int w2 = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - 1 - QuitPopup.buttonMargin;
 
-			this.CreateButton (buttonsFrame, w1, 1, "yes", Res.Strings.Popup.Quit.Yes.Button.ToString (), Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
-			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin, "no", Res.Strings.Popup.Quit.No.Button.ToString (), Res.Strings.Popup.Quit.No.Tooltip.ToString ());
-			this.CreateButton (buttonsFrame, w2, 0, "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
+			//	Les textes pour les boutons yes/no/cancel sont dans des ressources spécifiques, car on peut
+			//	imaginer de les remplacer par d'autres textes. Par exemple:
+			//	Oui     -> Enregistrer
+			//	Non     -> Ne pas enregistrer
+			//	Annuler -> Annuler
+
+			this.CreateButton (buttonsFrame, w1, 1,                      "yes",    Res.Strings.Popup.Quit.Yes.Button.ToString (),    Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin, "no",     Res.Strings.Popup.Quit.No.Button.ToString (),     Res.Strings.Popup.Quit.No.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w2, 0,                      "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
 
 			this.CreateCloseButton ();
 		}
@@ -127,5 +139,4 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int buttonHeight = 30;
 
 		private readonly DataAccessor					accessor;
-	}
-}
+	}}
