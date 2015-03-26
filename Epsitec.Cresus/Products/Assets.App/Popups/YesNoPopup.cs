@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class YesNoPopup : AbstractStackedPopup
 	{
-		private YesNoPopup(string question)
+		private YesNoPopup(string question, int width)
 			: base (null)
 		{
 			this.title = Res.Strings.Popup.YesNo.Title.ToString ();
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription
 			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = 200,
+				Width                 = width,
 				Label                 = question,
 			});
 
@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			YesNoPopup.Show (target, Res.Strings.Popup.YesNo.DeleteEventQuestion.ToString (), action);
 		}
 
-		public static void Show(Widget target, string question, System.Action action)
+		public static void Show(Widget target, string question, System.Action action, int width = 200)
 		{
 			if (target != null)
 			{
-				var popup = new YesNoPopup (question);
+				var popup = new YesNoPopup (question, width);
 
 				popup.Create (target, leftOrRight: true);
 

@@ -62,27 +62,58 @@ namespace Epsitec.Cresus.Assets.App
 			if (!PopupStack.HasPopup)  // garde-fou, car on appelle cette méthode plusieurs fois !
 			{
 				var target = this.pseudoCloseButton;
-				QuitPopup.Show (target, this.accessor, delegate (bool save)
+
+				if (string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
 				{
-					if (save)
-					{
-						var path = System.IO.Path.Combine (this.accessor.ComputerSettings.MandatDirectory, this.accessor.ComputerSettings.MandatFilename);
-						var err = AssetsApplication.SaveMandat (this.accessor, path, this.accessor.GlobalSettings.SaveMandatMode);
-
-						if (!string.IsNullOrEmpty (err))
-						{
-							err = TextLayout.ConvertToTaggedText (err);
-							MessagePopup.ShowError (target, err);
-							return;
-						}
-					}
-
-					this.accessor.ComputerSettings.WindowPlacement = this.Window.WindowPlacement;
-					this.accessor.ComputerSettings.Serialize ();
-
-					base.ExecuteQuit (dispatcher, e);
-				});
+					this.YesNoQuit (dispatcher, e, target);
+				}
+				else
+				{
+					this.YesNoCancelQuit (dispatcher, e, target);
+				}
 			}
+		}
+
+		private void YesNoQuit(CommandDispatcher dispatcher, CommandEventArgs e, Widget target)
+		{
+			string question = Res.Strings.Popup.Quit.WithoutSaveMessage.ToString ();
+			YesNoPopup.Show (target, question, delegate
+			{
+				this.Quit (dispatcher, e);
+			},
+			300);
+		}
+
+		private void YesNoCancelQuit(CommandDispatcher dispatcher, CommandEventArgs e, Widget target)
+		{
+			QuitPopup.Show (target, this.accessor,
+				this.accessor.ComputerSettings.MandatDirectory,
+				this.accessor.ComputerSettings.MandatFilename,
+				delegate (bool save)
+			{
+				if (save)
+				{
+					var path = System.IO.Path.Combine (this.accessor.ComputerSettings.MandatDirectory, this.accessor.ComputerSettings.MandatFilename);
+					var err = AssetsApplication.SaveMandat (this.accessor, path, this.accessor.GlobalSettings.SaveMandatMode);
+
+					if (!string.IsNullOrEmpty (err))
+					{
+						err = TextLayout.ConvertToTaggedText (err);
+						MessagePopup.ShowError (target, err);
+						return;
+					}
+				}
+
+				this.Quit (dispatcher, e);
+			});
+		}
+
+		private void Quit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.accessor.ComputerSettings.WindowPlacement = this.Window.WindowPlacement;
+			this.accessor.ComputerSettings.Serialize ();
+
+			base.ExecuteQuit (dispatcher, e);
 		}
 
 		protected override CoreAppPolicy CreateDefaultPolicy()

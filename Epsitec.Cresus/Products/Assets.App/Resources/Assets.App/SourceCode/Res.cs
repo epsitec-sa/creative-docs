@@ -5038,6 +5038,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544914));
 						}
 					}
+					//	designer:str/JUKDL01
+					public static global::Epsitec.Common.Types.FormattedText WithoutSaveMessage
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545005));
+						}
+					}
 					public static class Cancel
 					{
 						//	designer:str/JUKBL01
@@ -9700,6 +9708,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544914);
+						}
+					}
+					//	designer:str/JUKDL01
+					public static global::Epsitec.Common.Support.Druid WithoutSaveMessage
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545005);
 						}
 					}
 					public static class Cancel
