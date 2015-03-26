@@ -14,9 +14,6 @@
   <data id="KTI">Look forward</data>
   <data id="KUI">Look backward</data>
   <data id="KSI">Search options</data>
-  <data id="KLI">Exit</data>
-  <data id="KJI">Do you want to exit the software?</data>
-  <data id="KKI">Save before exit&lt;br/&gt;Exit without save</data>
   <data id="KII">Crésus Assets</data>
   <data id="K6">Cancel</data>
   <data id="KD">Close</data>

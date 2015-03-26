@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override Size					DialogSize
+		protected override Size DialogSize
 		{
 			get
 			{
@@ -54,16 +54,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Parent           = messageFrame,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (10),
-				Text             = "Voulez-vous enregistrer les modifications avant de quitter ?",
+				Text             = Res.Strings.Popup.Quit.Message.ToString (),
 				ContentAlignment = ContentAlignment.MiddleCenter,
 			};
 
 			int w1 = QuitPopup.buttonWidth;
 			int w2 = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - 1 - QuitPopup.buttonMargin;
 
-			this.CreateButton (buttonsFrame, w1, 1, "yes", "Oui", "Enregistrer puis quitter");
-			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin, "no", "Non", "Quitter sans enregistrer");
-			this.CreateButton (buttonsFrame, w2, 0, "cancel", "Annuler", "Ne rien faire");
+			this.CreateButton (buttonsFrame, w1, 1, "yes", Res.Strings.Popup.Quit.Yes.Button.ToString (), Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin, "no", Res.Strings.Popup.Quit.No.Button.ToString (), Res.Strings.Popup.Quit.No.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w2, 0, "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
 
 			this.CreateCloseButton ();
 		}
@@ -128,4 +128,4 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private readonly DataAccessor					accessor;
 	}
-#
+}
