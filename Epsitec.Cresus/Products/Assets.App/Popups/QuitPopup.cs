@@ -11,9 +11,10 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup posant la question avant de quitter le logiciel.
-	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, pour poser la question
-	/// standard "Enregistrer avant de quitter ? Oui/Non/Annuler".
+	/// Popup posant la question standard "Enregistrer avant de quitter ? Oui/Non/Annuler"
+	/// avant de quitter le logiciel.
+	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, qui n'a pas la souplesse nécessaire
+	/// pour afficher 3 boutons dans la partie inférieure.
 	/// </summary>
 	public class QuitPopup : AbstractPopup
 	{
@@ -70,13 +71,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			//	Crée les boutons.
 			int w12 = QuitPopup.buttonWidth;
-			int w3 = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - QuitPopup.buttonMargin12 - QuitPopup.buttonMargin23;
+			int w3  = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - QuitPopup.buttonMargin12 - QuitPopup.buttonMargin23;
 
 			//	Les textes pour les boutons yes/no/cancel sont dans des ressources spécifiques, car on peut
 			//	imaginer de les remplacer par d'autres textes. Par exemple:
 			//	Oui     -> Enregistrer
 			//	Non     -> Ne pas enregistrer
 			//	Annuler -> Annuler
+			//	C'est ce que fait Word 2013.
 
 			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin12, "yes",    Res.Strings.Popup.Quit.Yes.Button.ToString (),    Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
 			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin23, "no",     Res.Strings.Popup.Quit.No.Button.ToString (),     Res.Strings.Popup.Quit.No.Tooltip.ToString ());
@@ -125,12 +127,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					if (name == "yes")
 					{
-						action (true);
+						action (true);  // on enregistre puis on quitte
 					}
 					else if (name == "no")
 					{
-						action (false);
+						action (false);  // on quitte sans enregistrer
 					}
+
+					//	Si on a cliqué "cancel", le Popup sera simplement fermé.
 				};
 			}
 		}
