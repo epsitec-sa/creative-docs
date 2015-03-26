@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
 	/// Popup posant la question avant de quitter le logiciel.
-	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, pour avoir un look standard
-	/// "Enregistrer ? Oui/Non/Annuler".
+	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, pour poser la question
+	/// standard "Enregistrer avant de quitter ? Oui/Non/Annuler".
 	/// </summary>
 	public class QuitPopup : AbstractPopup
 	{
@@ -69,8 +69,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			};
 
 			//	Crée les boutons.
-			int w1 = QuitPopup.buttonWidth;
-			int w2 = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - QuitPopup.buttonMargin1 - QuitPopup.buttonMargin2;
+			int w12 = QuitPopup.buttonWidth;
+			int w3 = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - QuitPopup.buttonMargin12 - QuitPopup.buttonMargin23;
 
 			//	Les textes pour les boutons yes/no/cancel sont dans des ressources spécifiques, car on peut
 			//	imaginer de les remplacer par d'autres textes. Par exemple:
@@ -78,9 +78,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Non     -> Ne pas enregistrer
 			//	Annuler -> Annuler
 
-			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin1, "yes",    Res.Strings.Popup.Quit.Yes.Button.ToString (),    Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
-			this.CreateButton (buttonsFrame, w1, QuitPopup.buttonMargin2, "no",     Res.Strings.Popup.Quit.No.Button.ToString (),     Res.Strings.Popup.Quit.No.Tooltip.ToString ());
-			this.CreateButton (buttonsFrame, w2, 0,                       "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin12, "yes",    Res.Strings.Popup.Quit.Yes.Button.ToString (),    Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin23, "no",     Res.Strings.Popup.Quit.No.Button.ToString (),     Res.Strings.Popup.Quit.No.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w3,  0,                        "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
 
 			this.CreateCloseButton ();
 		}
@@ -137,12 +137,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth    = 400;
-		private const int popupHeight   = 180;
-		private const int buttonWidth   = 150;
-		private const int buttonMargin1 = 1;	// marge entre Oui/Non
-		private const int buttonMargin2 = 10;	// marge entre Non/Annuler
-		private const int buttonHeight  = 30;
+		private const int popupWidth     = 400;
+		private const int popupHeight    = 180;
+		private const int buttonWidth    = 150;
+		private const int buttonMargin12 = 1;	// marge entre Oui/Non
+		private const int buttonMargin23 = 10;	// marge entre Non/Annuler
+		private const int buttonHeight   = 30;
 
 		private readonly DataAccessor					accessor;
 		private readonly string							directory;

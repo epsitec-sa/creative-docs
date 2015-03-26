@@ -57,64 +57,81 @@ namespace Epsitec.Cresus.Assets.App
 			return window;
 		}
 
+
+		#region Quit logic
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	Commande exécutée lorsque l'utilisateur a cliqué la croix de fermeture "x" en haut
+			//	à droite de la fenêtre.
 			if (!PopupStack.HasPopup)  // garde-fou, car on appelle cette méthode plusieurs fois !
 			{
 				var target = this.pseudoCloseButton;
 
-				if (string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
+				if (string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))  // fichier inconnu ?
 				{
-					this.YesNoQuit (dispatcher, e, target);
+					//	Si le nom du fichier n'est pas connu, on pose simplement la question
+					//	"Voulez-vous quitter sans enregistrer ? Oui/Non".
+					//	C'est le cas après avoir fait Nouveau et n'avoir jamais enregistré.
+					this.WithoutSaveQuit (dispatcher, e, target);
 				}
-				else
+				else  // fichier connu ?
 				{
+					//	Si le nom du fichier est connu, on pose la question standard
+					//	"Enregistrer avant de quitter ? Oui/Non/Annuler".
 					this.YesNoCancelQuit (dispatcher, e, target);
 				}
 			}
 		}
 
-		private void YesNoQuit(CommandDispatcher dispatcher, CommandEventArgs e, Widget target)
+		private void WithoutSaveQuit(CommandDispatcher dispatcher, CommandEventArgs e, Widget target)
 		{
+			//	Pose la question "Voulez-vous quitter sans enregistrer ? Oui/Non".
 			string question = Res.Strings.Popup.Quit.WithoutSaveMessage.ToString ();
+
 			YesNoPopup.Show (target, question, delegate
 			{
-				this.Quit (dispatcher, e);
+				this.SaveSettingsAndQuit (dispatcher, e);
 			},
-			300);
+			300);  // largeur plus grande que la standard
 		}
 
 		private void YesNoCancelQuit(CommandDispatcher dispatcher, CommandEventArgs e, Widget target)
 		{
+			//	Pose la question standard "Enregistrer avant de quitter ? Oui/Non/Annuler".
 			QuitPopup.Show (target, this.accessor,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				delegate (bool save)
 			{
-				if (save)
+				if (save)  // réponse "oui" ?
 				{
 					var path = System.IO.Path.Combine (this.accessor.ComputerSettings.MandatDirectory, this.accessor.ComputerSettings.MandatFilename);
 					var err = AssetsApplication.SaveMandat (this.accessor, path, this.accessor.GlobalSettings.SaveMandatMode);
 
-					if (!string.IsNullOrEmpty (err))
+					if (!string.IsNullOrEmpty (err))  // erreur ?
 					{
+						//	En cas d'erreur lors de l'enregistrement, on l'affiche et on ne
+						//	quitte pas le logiciel.
 						err = TextLayout.ConvertToTaggedText (err);
 						MessagePopup.ShowError (target, err);
 						return;
 					}
 				}
 
-				this.Quit (dispatcher, e);
+				this.SaveSettingsAndQuit (dispatcher, e);
 			});
 		}
 
-		private void Quit(CommandDispatcher dispatcher, CommandEventArgs e)
+		private void SaveSettingsAndQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			//	Enregistre les réglages locaux puis quitte le logiciel.
 			this.accessor.ComputerSettings.WindowPlacement = this.Window.WindowPlacement;
 			this.accessor.ComputerSettings.Serialize ();
 
 			base.ExecuteQuit (dispatcher, e);
 		}
+		#endregion
+
 
 		protected override CoreAppPolicy CreateDefaultPolicy()
 		{
