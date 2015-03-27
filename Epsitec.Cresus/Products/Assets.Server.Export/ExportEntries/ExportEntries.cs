@@ -111,29 +111,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		//?private int GetEntriesUid()
-		//?{
-		//?	//	Retourne le dernier uid utilisé pour l'ensemble des écritures générées par Assets,
-		//?	//	obtenu en relisant le fichier des écritures.
-		//?	int uid = 1;
-		//?	var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
-		//?
-		//?	foreach (var line in lines)
-		//?	{
-		//?		if (line.StartsWith ("#ECC"))
-		//?		{
-		//?			var x = line.Split (new string[] { "; " }, System.StringSplitOptions.None);
-		//?			if (x.Length == 4)
-		//?			{
-		//?				int i = int.Parse (x[3]);
-		//?				uid = System.Math.Max (uid, i+1);
-		//?			}
-		//?		}
-		//?	}
-		//?
-		//?	return uid;
-		//?}
-
 		private int GetEccUid()
 		{
 			int uid = 1;
