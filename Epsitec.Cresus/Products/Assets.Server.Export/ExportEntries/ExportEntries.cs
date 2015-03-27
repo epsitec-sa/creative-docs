@@ -11,6 +11,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
+	/// <summary>
+	/// Cette classe s'occupe d'exporter les écritures pour Crésus Comptabilité
+	/// dans les fichiers .ecc et .eca, sans utiliser la librairie FSC32.
+	/// C'est un choix délibéré, car cette librairie est obsolète. Il faudra la
+	/// réécrire dans un futur indéterminé...
+	/// </summary>
 	public class ExportEntries : System.IDisposable
 	{
 		public ExportEntries(DataAccessor accessor)

@@ -141,8 +141,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
+		//	Les dimensions de ce Popup sont volontairement assez grandes, pour qu'il se voie bien.
+		//	Si l'on se tient strictement à son contenu, il pourrait être bien plus petit.
+
 		private const int popupWidth     = 400;
 		private const int popupHeight    = 180;
+
 		private const int buttonWidth    = 150;
 		private const int buttonMargin12 = 1;	// marge entre Oui/Non
 		private const int buttonMargin23 = 10;	// marge entre Non/Annuler
