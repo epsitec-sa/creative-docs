@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				if (lastName != name)
 				{
 					//	Ajoute une ligne de "titre".
-					var n = new EntryNode (Guid.Empty, Guid.Empty, null, null, null, null, null, name, null, null, 0, NodeType.Expanded, EventType.Unknown);
+					var n = new EntryNode (Guid.Empty, Guid.Empty, null, null, null, null, null, name, null, null, 0, NodeType.Expanded, EventType.Unknown, false);
 					this.nodes.Add (n);
 
 					lastName = name;
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				if (lastDate != node.Date)
 				{
 					//	Ajoute une ligne de "titre".
-					var n = new EntryNode (Guid.Empty, Guid.Empty, null, node.Date, null, null, null, null, null, null, 0, NodeType.Expanded, EventType.Unknown);
+					var n = new EntryNode (Guid.Empty, Guid.Empty, null, node.Date, null, null, null, null, null, null, 0, NodeType.Expanded, EventType.Unknown, false);
 					this.nodes.Add (n);
 
 					lastDate = node.Date.Value;
@@ -136,7 +136,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				var value   = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 				var vatCode = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryVatCode);
 
-				var node = new EntryNode (entry.Guid, assetGuid, name, date, debit, credit, stamp, title, value, vatCode, 1, NodeType.Final, e.Type);
+				var lockedTimestamp = AssetCalculator.GetLockedTimestamp (obj);
+				bool locked = date.HasValue && lockedTimestamp.HasValue && date.Value < lockedTimestamp.Value.Date;
+
+				var node = new EntryNode (entry.Guid, assetGuid, name, date, debit, credit, stamp, title, value, vatCode, 1, NodeType.Final, e.Type, locked);
 				nodes.Add (node);
 			}
 
@@ -169,11 +172,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (node.NodeType == NodeType.Compacted)
 			{
-				this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Expanded, node.EventType);
+				this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Expanded, node.EventType, node.Locked);
 			}
 			else if (node.NodeType == NodeType.Expanded)
 			{
-				this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Compacted, node.EventType);
+				this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Compacted, node.EventType, node.Locked);
 			}
 
 			this.UpdateNodeIndexes ();
@@ -188,7 +191,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				if (node.NodeType == NodeType.Expanded)
 				{
-					this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Compacted, node.EventType);
+					this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Compacted, node.EventType, node.Locked);
 				}
 			}
 
@@ -214,7 +217,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				if (node.NodeType == NodeType.Compacted)
 				{
-					this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Expanded, node.EventType);
+					this.nodes[i] = new EntryNode (node.EntryGuid, node.AssetGuid, node.AssetName, node.Date, node.Debit, node.Credit, node.Stamp, node.Title, node.Value, node.VatCode, node.Level, NodeType.Expanded, node.EventType, node.Locked);
 				}
 			}
 

@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.VatCode.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryLocked,        TreeTableColumnType.Glyph ,  30, ""));
 
 				return columns.ToArray ();
 			}
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<8; i++)
+			for (int i=0; i<9; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -76,6 +77,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				var date = TypeConverters.DateToString (node.Date);
 				var glyph = TimelineData.TypeToGlyph (node.EventType);
+				var locked = node.Locked ? new TimelineGlyph (TimelineGlyphShape.Locked) : TimelineGlyph.Empty;
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
@@ -108,6 +110,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cell6 = new TreeTableCellDecimal (node.Value, cellState);
 				var cell7 = new TreeTableCellString (node.VatCode, cellState);
 				var cell8 = new TreeTableCellGlyph (glyph, cellState);
+				var cell9 = new TreeTableCellGlyph (locked, cellState);
 
 				int columnRank = 0;
 				content.Columns[columnRank++].AddRow (cell1);
@@ -118,6 +121,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell6);
 				content.Columns[columnRank++].AddRow (cell7);
 				content.Columns[columnRank++].AddRow (cell8);
+				content.Columns[columnRank++].AddRow (cell9);
 			}
 
 			return content;
