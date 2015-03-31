@@ -28,7 +28,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var filename = System.IO.Path.GetFileName (this.Filename);
 
 				string entries;
-				if (this.EntriesCount == 0)
+				if (this.EntriesCount == -1)  // aucun changement ?
+				{
+					entries = Res.Strings.ExportEntriesReport.Description.Same.ToString ();
+				}
+				else if (this.EntriesCount == 0)
 				{
 					entries = Res.Strings.ExportEntriesReport.Description.None.ToString ();
 				}
@@ -38,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 				else
 				{
-					entries = string.Format ("{0} écritures", this.EntriesCount);
+					entries = string.Format (Res.Strings.ExportEntriesReport.Description.Many.ToString (), this.EntriesCount);
 				}
 
 				return string.Format (Res.Strings.ExportEntriesReport.Description.Summary.ToString (), from, to, filename, entries);
