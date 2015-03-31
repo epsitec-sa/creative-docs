@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Assets.Data
 		EntryTitle,
 		EntryAmount,
 		EntryVatCode,
+		EntryLocked,
 
 		EventDate,
 		EventGlyph,

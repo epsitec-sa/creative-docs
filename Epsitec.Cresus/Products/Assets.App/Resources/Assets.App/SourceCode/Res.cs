@@ -5022,28 +5022,12 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class Quit
 				{
-					//	designer:str/JUKLI01
-					public static global::Epsitec.Common.Types.FormattedText MainButton
+					//	designer:str/JUK6L01
+					public static global::Epsitec.Common.Types.FormattedText Message
 					{
 						get
 						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544917));
-						}
-					}
-					//	designer:str/JUKJI01
-					public static global::Epsitec.Common.Types.FormattedText Question
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544915));
-						}
-					}
-					//	designer:str/JUKKI01
-					public static global::Epsitec.Common.Types.FormattedText Radios
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544916));
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544998));
 						}
 					}
 					//	designer:str/JUKII01
@@ -5052,6 +5036,73 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544914));
+						}
+					}
+					//	designer:str/JUKDL01
+					public static global::Epsitec.Common.Types.FormattedText WithoutSaveMessage
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545005));
+						}
+					}
+					public static class Cancel
+					{
+						//	designer:str/JUKBL01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545003));
+							}
+						}
+						//	designer:str/JUKCL01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545004));
+							}
+						}
+					}
+					
+					public static class No
+					{
+						//	designer:str/JUK9L01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545001));
+							}
+						}
+						//	designer:str/JUKAL01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545002));
+							}
+						}
+					}
+					
+					public static class Yes
+					{
+						//	designer:str/JUK7L01
+						public static global::Epsitec.Common.Types.FormattedText Button
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544999));
+							}
+						}
+						//	designer:str/JUK8L01
+						public static global::Epsitec.Common.Types.FormattedText Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545000));
+							}
 						}
 					}
 				}
@@ -9643,28 +9694,12 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class Quit
 				{
-					//	designer:str/JUKLI01
-					public static global::Epsitec.Common.Support.Druid MainButton
+					//	designer:str/JUK6L01
+					public static global::Epsitec.Common.Support.Druid Message
 					{
 						get
 						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544917);
-						}
-					}
-					//	designer:str/JUKJI01
-					public static global::Epsitec.Common.Support.Druid Question
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544915);
-						}
-					}
-					//	designer:str/JUKKI01
-					public static global::Epsitec.Common.Support.Druid Radios
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335544916);
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544998);
 						}
 					}
 					//	designer:str/JUKII01
@@ -9673,6 +9708,73 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544914);
+						}
+					}
+					//	designer:str/JUKDL01
+					public static global::Epsitec.Common.Support.Druid WithoutSaveMessage
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545005);
+						}
+					}
+					public static class Cancel
+					{
+						//	designer:str/JUKBL01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545003);
+							}
+						}
+						//	designer:str/JUKCL01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545004);
+							}
+						}
+					}
+					
+					public static class No
+					{
+						//	designer:str/JUK9L01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545001);
+							}
+						}
+						//	designer:str/JUKAL01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545002);
+							}
+						}
+					}
+					
+					public static class Yes
+					{
+						//	designer:str/JUK7L01
+						public static global::Epsitec.Common.Support.Druid Button
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544999);
+							}
+						}
+						//	designer:str/JUK8L01
+						public static global::Epsitec.Common.Support.Druid Tooltip
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545000);
+							}
 						}
 					}
 				}

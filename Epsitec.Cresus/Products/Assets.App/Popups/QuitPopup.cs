@@ -3,94 +3,156 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
+using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup posant la question avant de quitter le logiciel.
+	/// Popup posant la question standard "Enregistrer avant de quitter ? Oui/Non/Annuler"
+	/// avant de quitter le logiciel.
+	/// Ce PopUp n'est plus basé sur AbstractStackedPopup, qui n'a pas la souplesse nécessaire
+	/// pour afficher 3 boutons dans la partie inférieure.
 	/// </summary>
-	public class QuitPopup : AbstractStackedPopup
+	public class QuitPopup : AbstractPopup
 	{
-		private QuitPopup(DataAccessor accessor)
-			: base (accessor)
+		private QuitPopup(DataAccessor accessor, string directory, string filename)
 		{
-			this.title = Res.Strings.Popup.Quit.Title.ToString ();
-
-			var list = new List<StackedControllerDescription> ();
-
-			list.Add (new StackedControllerDescription  // 0
-			{
-				StackedControllerType = StackedControllerType.Label,
-				Width                 = 200,
-				Label                 = Res.Strings.Popup.Quit.Question.ToString (),
-			});
-
-			list.Add (new StackedControllerDescription  // 1
-			{
-				StackedControllerType = StackedControllerType.Radio,
-				MultiLabels           = Res.Strings.Popup.Quit.Radios.ToString (),
-			});
-
-			this.SetDescriptions (list);
-
-			this.defaultAcceptButtonName = Res.Strings.Popup.Quit.MainButton.ToString ();
+			this.accessor  = accessor;
+			this.directory = directory;
+			this.filename  = filename;
 		}
 
 
-		private bool							Save
+		protected override Size					DialogSize
 		{
 			get
 			{
-				var controller = this.GetController (1) as RadioStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				return controller.Value.GetValueOrDefault () == 0;
-			}
-			set
-			{
-				var controller = this.GetController (1) as RadioStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-				controller.Value = value ? 0 : 1;
+				return new Size (QuitPopup.popupWidth, QuitPopup.popupHeight);
 			}
 		}
 
-
-		protected override void UpdateWidgets(StackedControllerDescription description)
+		protected override void CreateUI()
 		{
-			if (string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
+			this.CreateTitle (Res.Strings.Popup.Quit.Title.ToString ());
+
+			//	Crée le frame supérieur qui contiendra le message.
+			var messageFrame = this.CreateFrame
+			(
+				0,
+				QuitPopup.buttonHeight,
+				QuitPopup.popupWidth,
+				QuitPopup.popupHeight - QuitPopup.buttonHeight
+			);
+
+			//	Crée le frame inférieur qui contiendra les boutons.
+			var buttonsFrame = this.CreateFrame
+			(
+				0,
+				0,
+				QuitPopup.popupWidth,
+				QuitPopup.buttonHeight
+			);
+
+			//	Crée le message.
+			var path = System.IO.Path.Combine (this.directory, this.filename);
+			var message = string.Format (Res.Strings.Popup.Quit.Message.ToString (), path);
+
+			new StaticText
 			{
-				//	S'il n'y a pas de nom de fichier connu pour le mandat, on ne pourra
-				//	pas enregistrer au moment de quitter le logiciel.
-				this.Save = false;
-				this.SetEnable (1, false);
+				Parent           = messageFrame,
+				Dock             = DockStyle.Fill,
+				Margins          = new Margins (10),
+				Text             = message,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+			};
+
+			//	Crée les boutons.
+			int w12 = QuitPopup.buttonWidth;
+			int w3  = QuitPopup.popupWidth - QuitPopup.buttonWidth*2 - QuitPopup.buttonMargin12 - QuitPopup.buttonMargin23;
+
+			//	Les textes pour les boutons yes/no/cancel sont dans des ressources spécifiques, car on peut
+			//	imaginer de les remplacer par d'autres textes. Par exemple:
+			//	Oui     -> Enregistrer
+			//	Non     -> Ne pas enregistrer
+			//	Annuler -> Annuler
+			//	C'est ce que fait Word 2013.
+
+			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin12, "yes",    Res.Strings.Popup.Quit.Yes.Button.ToString (),    Res.Strings.Popup.Quit.Yes.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w12, QuitPopup.buttonMargin23, "no",     Res.Strings.Popup.Quit.No.Button.ToString (),     Res.Strings.Popup.Quit.No.Tooltip.ToString ());
+			this.CreateButton (buttonsFrame, w3,  0,                        "cancel", Res.Strings.Popup.Quit.Cancel.Button.ToString (), Res.Strings.Popup.Quit.Cancel.Tooltip.ToString ());
+
+			this.CreateCloseButton ();
+		}
+
+		private ColoredButton CreateButton(FrameBox parent, int dx, int rightMargin, string name, string text, string tooltip)
+		{
+			var button = new ColoredButton
+			{
+				Parent         = parent,
+				Name           = name,
+				Text           = text,
+				Dock           = DockStyle.Left,
+				PreferredWidth = dx,
+				Margins        = new Margins (0, rightMargin, 0, 0),
+			};
+
+			if (!string.IsNullOrEmpty (tooltip))
+			{
+				ToolTip.Default.SetToolTip (button, tooltip);
 			}
+
+			button.Clicked += delegate
+			{
+				this.ClosePopup ();
+				this.OnButtonClicked (button.Name);
+			};
+
+			return button;
 		}
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, System.Action<bool> action)
+		public static void Show(Widget target, DataAccessor accessor, string directory, string filename, System.Action<bool> action)
 		{
 			if (target != null)
 			{
-				var popup = new QuitPopup (accessor)
-				{
-					Save = true,
-				};
+				var popup = new QuitPopup (accessor, directory, filename);
 
 				popup.Create (target, leftOrRight: false);
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{
-					if (name == "ok")
+					if (name == "yes")
 					{
-						action (popup.Save);
+						action (true);  // on enregistre puis on quitte
 					}
+					else if (name == "no")
+					{
+						action (false);  // on quitte sans enregistrer
+					}
+
+					//	Si on a cliqué "cancel", le Popup sera simplement fermé.
 				};
 			}
 		}
 		#endregion
 
-	}
-}
+
+		//	Les dimensions de ce Popup sont volontairement assez grandes, pour qu'il se voie bien.
+		//	Si l'on se tient strictement à son contenu, il pourrait être bien plus petit.
+
+		private const int popupWidth     = 400;
+		private const int popupHeight    = 180;
+
+		private const int buttonWidth    = 150;
+		private const int buttonMargin12 = 1;	// marge entre Oui/Non
+		private const int buttonMargin23 = 10;	// marge entre Non/Annuler
+		private const int buttonHeight   = 30;
+
+		private readonly DataAccessor					accessor;
+		private readonly string							directory;
+		private readonly string							filename;
+	}}

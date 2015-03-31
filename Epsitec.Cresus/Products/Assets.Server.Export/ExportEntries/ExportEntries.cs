@@ -11,6 +11,12 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.Export
 {
+	/// <summary>
+	/// Cette classe s'occupe d'exporter les écritures pour Crésus Comptabilité
+	/// dans les fichiers .ecc et .eca, sans utiliser la librairie FSC32.
+	/// C'est un choix délibéré, car cette librairie est obsolète. Il faudra la
+	/// réécrire dans un futur indéterminé...
+	/// </summary>
 	public class ExportEntries : System.IDisposable
 	{
 		public ExportEntries(DataAccessor accessor)
@@ -104,29 +110,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return this.entriesCount;
 		}
 
-
-		//?private int GetEntriesUid()
-		//?{
-		//?	//	Retourne le dernier uid utilisé pour l'ensemble des écritures générées par Assets,
-		//?	//	obtenu en relisant le fichier des écritures.
-		//?	int uid = 1;
-		//?	var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
-		//?
-		//?	foreach (var line in lines)
-		//?	{
-		//?		if (line.StartsWith ("#ECC"))
-		//?		{
-		//?			var x = line.Split (new string[] { "; " }, System.StringSplitOptions.None);
-		//?			if (x.Length == 4)
-		//?			{
-		//?				int i = int.Parse (x[3]);
-		//?				uid = System.Math.Max (uid, i+1);
-		//?			}
-		//?		}
-		//?	}
-		//?
-		//?	return uid;
-		//?}
 
 		private int GetEccUid()
 		{

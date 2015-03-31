@@ -418,9 +418,6 @@
   <data name="Popup.SaveMandat.Mode.SaveUndoRedo" id="KGI">Enregistrer les informations pour annuler/rétablir</data>
   <data name="Popup.SaveMandat.Mode.KeepXml" id="KHI">Conserver les fichiers xml non comprimés</data>
   <data name="Popup.Quit.Title" id="KII">Crésus Immobilisations</data>
-  <data name="Popup.Quit.Question" id="KJI">Voulez-vous quitter le logiciel ?</data>
-  <data name="Popup.Quit.Radios" id="KKI">Enregistrer avant de quitter&lt;br/&gt;Quitter sans enregistrer</data>
-  <data name="Popup.Quit.MainButton" id="KLI">Quitter</data>
   <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
   <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
   <data name="WarningView.Hidden" id="KRI">Aucun avertissement visible.&lt;br/&gt;Il y a {0} avertissements cachés.</data>
@@ -484,4 +481,12 @@
   <data name="Popup.Language.Data" id="K3L">Données</data>
   <data name="Popup.Language.Tooltip" id="K4L">Choix des langues&lt;br/&gt;Ctrl+clic remet les langues précédentes</data>
   <data name="EntryController.VatCode" id="K5L">Code TVA</data>
+  <data name="Popup.Quit.Message" id="K6L">Voulez-vous enregistrer les modifications que vous avez apportées à&lt;br/&gt;"{0}"&lt;br/&gt;avant de quitter ?</data>
+  <data name="Popup.Quit.Yes.Button" id="K7L">Oui</data>
+  <data name="Popup.Quit.Yes.Tooltip" id="K8L">Enregistrer puis quitter</data>
+  <data name="Popup.Quit.No.Button" id="K9L">Non</data>
+  <data name="Popup.Quit.No.Tooltip" id="KAL">Quitter sans enregistrer</data>
+  <data name="Popup.Quit.Cancel.Button" id="KBL">Annuler</data>
+  <data name="Popup.Quit.Cancel.Tooltip" id="KCL">Ne rien faire</data>
+  <data name="Popup.Quit.WithoutSaveMessage" id="KDL">Les modifications que vous avez apportées n'ont pas été enregistrées. Voulez-vous quitter sans les enregistrer ?</data>
 </bundle>
