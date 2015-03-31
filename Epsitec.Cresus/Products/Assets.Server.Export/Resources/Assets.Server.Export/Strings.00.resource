@@ -6,4 +6,6 @@
   <data name="ExportEntriesReport.Description.None" id="K2">Aucune écriture</data>
   <data name="ExportEntriesReport.Description.One" id="K3">1 écriture</data>
   <data name="ExportEntriesReport.Description.Summary" id="K4">Du {0} au {1} — {2} — {3}</data>
+  <data name="ExportEntriesReport.Description.Many" id="K5">{0} écritures</data>
+  <data name="ExportEntriesReport.Description.Same" id="K6">Aucun changement</data>
 </bundle>

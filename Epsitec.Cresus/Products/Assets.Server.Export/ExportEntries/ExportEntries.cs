@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Data.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -77,6 +78,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			this.accountsRange = accountsRange;
 			this.accountsPath  = accountsPath;
 
+			if (!this.HasEntriesChanged ())
+			{
+				return -1;  // aucun changement
+			}
+
 			//	On lit le fichier .ecc, sans conséquence si on n'y arrive pas.
 			try
 			{
@@ -101,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			const int nlot = 1;
 
-			var data = this.GenerateEntriesData (accountsRange, nlot, uid, idno);
+			var data = this.GenerateEntriesData (nlot, uid, idno);
 			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
 
 			this.CreateOrUpdateEccLine (uid);
@@ -157,7 +163,115 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private string GenerateEntriesData(DateRange accountsRange, int nlot, int uid, int idno)
+		private bool HasEntriesChanged()
+		{
+			//	On relit le fichier des écritures, pour vérifier si les écritures y sont strictement
+			//	identiques à celles qui devraient être générées.
+			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+			var oldEntries = this.ReloadEntries (lines);
+
+			var newEntries = this.accessor.Mandat.GetData (BaseType.Entries);
+			int newEntriesCount = 0;
+
+			foreach (var newEntry in newEntries)
+			{
+				var date  = ObjectProperties.GetObjectPropertyDate    (newEntry, null, ObjectField.EntryDate);
+				var value = ObjectProperties.GetObjectPropertyDecimal (newEntry, null, ObjectField.EntryAmount);
+
+				if (date.HasValue && this.accountsRange.IsInside (date.Value) &&
+					value.HasValue && value.Value != 0.0m)
+				{
+					newEntriesCount++;
+
+					if (!ExportEntries.ContainsEntry (oldEntries, newEntry))
+					{
+						return true;
+					}
+				}
+			}
+
+			return newEntriesCount != oldEntries.Count;
+		}
+
+		private static bool ContainsEntry(List<DataObject> entries, DataObject entry)
+		{
+			//	Retourne true si une écriture existe dans une liste.
+			return entries.Where (x => ExportEntries.CompareEntries (x, entry)).Any ();
+		}
+
+		private static bool CompareEntries(DataObject e1, DataObject e2)
+		{
+			//	Compare deux écritures.
+			var date1    = ObjectProperties.GetObjectPropertyDate    (e1, null, ObjectField.EntryDate);
+			var debit1   = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryDebitAccount)  ?? "";
+			var credit1  = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryCreditAccount) ?? "";
+			var stamp1   = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryStamp)         ?? "";
+			var title1   = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryTitle)         ?? "";
+			var value1   = ObjectProperties.GetObjectPropertyDecimal (e1, null, ObjectField.EntryAmount);
+			var vatCode1 = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryVatCode)       ?? "";
+
+			var date2    = ObjectProperties.GetObjectPropertyDate    (e2, null, ObjectField.EntryDate);
+			var debit2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryDebitAccount)  ?? "";
+			var credit2  = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryCreditAccount) ?? "";
+			var stamp2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryStamp)         ?? "";
+			var title2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryTitle)         ?? "";
+			var value2   = ObjectProperties.GetObjectPropertyDecimal (e2, null, ObjectField.EntryAmount);
+			var vatCode2 = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryVatCode)       ?? "";
+
+			vatCode1 = ExportEntries.FormatVatCode (vatCode1) ?? "";
+			vatCode2 = ExportEntries.FormatVatCode (vatCode2) ?? "";
+
+			return date1    == date2
+				&& debit1   == debit2
+				&& credit1  == credit2
+				&& stamp1   == stamp2
+				&& title1   == title2
+				&& value1   == value2
+				&& vatCode1 == vatCode2;
+		}
+
+		private List<DataObject> ReloadEntries(string[] lines)
+		{
+			//	Relit les écritures contenues dans le fichier des écritures.
+			var entries = new List<DataObject> ();
+
+			foreach (var line in lines.Where (x => !string.IsNullOrEmpty (x) && !x.StartsWith ("#")))
+			{
+				var fields = line.Split ('\t');
+
+				if (fields.Length >= 14)
+				{
+					var date    = TypeConverters.ParseDate (fields[0], System.DateTime.Now, null, null).Value;
+					var debit   = fields[1];
+					var credit  = fields[2];
+					var stamp   = fields[3];
+					var title   = fields[4];
+					var value   = fields[5].ParseDecimal ();
+					var vatCode = fields[14];
+
+					var entry = new DataObject (null);
+
+					var start  = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+					var e = new DataEvent (null, start, EventType.Input);
+					entry.AddEvent (e);
+
+					e.AddProperty (new DataDateProperty    (ObjectField.EntryDate,          date));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryDebitAccount,  debit));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryCreditAccount, credit));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryStamp,         stamp));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,         title));
+					e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount,        value));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryVatCode,       vatCode));
+
+					entries.Add (entry);
+				}
+			}
+
+			return entries;
+		}
+
+
+		private string GenerateEntriesData(int nlot, int uid, int idno)
 		{
 			//	Retourne les données correspondant à l'ensemble des écritures générées par Assets.
 			//	On met toujours un numéro nlot égal à uid.
@@ -189,12 +303,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var value   = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 				var vatCode = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryVatCode);
 
-				if (vatCode.Length == 1)  // pas de code TVA (par exemple "-") ?
-				{
-					vatCode = null;
-				}
+				vatCode = ExportEntries.FormatVatCode (vatCode);
 
-				if (date.HasValue && accountsRange.IsInside (date.Value) &&
+				if (date.HasValue && this.accountsRange.IsInside (date.Value) &&
 					value.HasValue && value.Value != 0.0m)
 				{
 					builder.Append (TypeConverters.DateToString (date));
@@ -237,6 +348,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 
 			return builder.ToString ();
+		}
+
+		private static string FormatVatCode(string vatCode)
+		{
+			//	Retourne le code TVA formaté.
+			//	Lorsqu'il n'y a pas de code TVA, le champ contient un tiret qu'il s'agit d'éliminer.
+			if (vatCode != null && vatCode.Length == 1)  // pas de code TVA (par exemple "-") ?
+			{
+				vatCode = null;
+			}
+
+			return vatCode;
 		}
 
 
@@ -348,7 +471,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private const string					entriesHeader = "#FSC\t9.5.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
-		//?private const string					type = "eca";  // nouveau, à voir avec MW
+		//?private const string					type = "ecassets";  // nouveau, à voir avec MW
 		private const string					type = "ecf";  // comme Crésus Facturation en attendant
 
 		private readonly DataAccessor			accessor;
