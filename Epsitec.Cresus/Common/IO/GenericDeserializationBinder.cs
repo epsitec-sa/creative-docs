@@ -1,4 +1,4 @@
-//	Copyright © 2005-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -166,10 +166,18 @@ namespace Epsitec.Common.IO
 				prefix = GenericDeserializationBinder.FixAssemblyName (prefix);
 			}
 
-			return TypeEnumerator.Instance.GetLoadedAssemblies ()
+			return GenericDeserializationBinder.GetLoadedAssemblies ()
 				.Where (assembly => assembly.FullName.StartsWith (prefix))
 				.Select (assembly => GenericDeserializationBinder.GetFullName (assembly.FullName, typeName))
 				.FirstOrDefault ();
+		}
+
+		private static IEnumerable<System.Reflection.Assembly> GetLoadedAssemblies()
+		{
+			return from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
+				   where assembly.IsDynamic == false
+				      && assembly.ReflectionOnly == false
+				   select assembly;
 		}
 		
 		static readonly Dictionary<string, System.Type>	typeCache = new Dictionary<string, System.Type> ();
