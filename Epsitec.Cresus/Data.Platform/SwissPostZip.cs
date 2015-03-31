@@ -28,7 +28,7 @@ namespace Epsitec.Data.Platform
 			else
 			{
 				return swissPostZipCsv;
-			}		
+			}
 		}
 
 		private static string GetMatchZipCsvPath()
