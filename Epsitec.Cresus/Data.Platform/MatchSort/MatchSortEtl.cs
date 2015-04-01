@@ -17,14 +17,9 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// </summary>
 		public MatchSortEtl(string csvFilePath = null)
 		{
-			if (csvFilePath == null)
-			{
-				csvFilePath = MatchSortEtl.MatchSortCsvPath;
-			}
-
 			if (System.IO.File.Exists (csvFilePath) == false)
 			{
-				throw new System.Exception ("The MAT[CH]sort file does not exist at path " + csvFilePath);
+				csvFilePath = SwissPost.MatchWebClient.GetMatchSortFile ();
 			}
 
 			try
