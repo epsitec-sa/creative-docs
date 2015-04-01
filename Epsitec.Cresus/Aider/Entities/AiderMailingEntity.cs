@@ -46,17 +46,19 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetRecipientsOverview()
 		{
+			int totalCount           = this.GetParticipantCount ();
 			int contactCount         = this.RecipientContacts.Count;
 			int groupCount           = this.RecipientGroups.Count;
 			int groupExtractionCount = this.RecipientGroupExtractions.Count;
 			int householdCount       = this.RecipientHouseholds.Count;
 			int queriesCount         = this.Queries.Count;
-			return TextFormatter.FormatText (contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
+			return TextFormatter.FormatText (totalCount, "destinataires", "\n",
+				/**/						 contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
 				/**/						 householdCount, householdCount > 1 ? "ménages" : "ménage", "\n",
 				/**/						 queriesCount, queriesCount > 1 ? "requêtes" : "requête", "\n",
-				/**/						 this.LastUpdate.Value.ToLocalTime ().ToString ());
+				/**/						 "dernière maj. " + this.LastUpdate.Value.ToLocalTime ().ToString ());
 		}
 
 		public string GetReadyText()
