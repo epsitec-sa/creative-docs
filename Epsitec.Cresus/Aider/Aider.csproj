@@ -199,7 +199,6 @@
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController8PurgeGroupMembers.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController14AddGroupExclusion.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController15RemoveGroupExclusion.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController16UpdateExclusions.cs" />
     <Compile Include="Controllers\ActionControllers\Subscription\ActionAiderSubscriptionViewController1FlagSuspended.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController65ProcessDepartureAndHide.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
