@@ -174,6 +174,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 			catch
 			{
+				//	Si le fichier n'existe pas, on considère qu'il y a eu un changement, pour
+				//	forcer la génération du premier fichier d'écritures.
 				return true;
 			}
 			var oldEntries = this.ReloadEntries (lines);

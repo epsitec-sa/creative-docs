@@ -26,6 +26,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.Parent.SizeChanged -= this.HandleSizeChanged;
+			}
+
+			base.Dispose (disposing);
+		}
+
+
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup "dialogue", dont la queue pointera vers le widget target.
@@ -53,6 +64,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			PopupStack.Push (this);
 
 			CommandDispatcher.SetDispatcher (this.mainFrameBox, this.commandDispatcher);  // nécesaire pour [Command (Res.CommandIds...)]
+
+			this.Parent.SizeChanged += this.HandleSizeChanged;
 		}
 
 		public void Create(Widget widget, Point targetPos, bool leftOrRight = false)
@@ -77,6 +90,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.CreateUI ();
 
 			PopupStack.Push (this);
+
+			this.Parent.SizeChanged += this.HandleSizeChanged;
 		}
 
 
@@ -647,6 +662,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private void HandleSizeChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			if (!this.closed)
+			{
+				this.ClosePopup ();
+				this.closed = true;
+			}
+		}
+
+
 		#region Events handler
 		protected void OnButtonClicked(string name)
 		{
@@ -683,5 +708,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private double							initialDistance;
 		private bool							isDragging;
 		private Point							lastPos;
+		private bool							closed;
 	}
 }
