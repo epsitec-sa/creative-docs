@@ -255,7 +255,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.BusinessLogic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.Engine", "Products\Assets.Server.Engine\Assets.Server.Engine.csproj", "{D8611B9F-E48B-4FD8-AABA-9A83597D9A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.Export", "Assets.Server.Export\Assets.Server.Export.csproj", "{764DF1C5-F9BB-4F8D-9987-5639823B8757}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.Export", "Products\Assets.Server.Export\Assets.Server.Export.csproj", "{764DF1C5-F9BB-4F8D-9987-5639823B8757}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.MatchETL", "App.MatchETL\App.MatchETL.csproj", "{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}"
 EndProject
