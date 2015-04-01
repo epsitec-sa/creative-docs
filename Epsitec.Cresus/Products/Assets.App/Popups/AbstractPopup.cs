@@ -26,17 +26,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.Parent.SizeChanged -= this.HandleSizeChanged;
-			}
-
-			base.Dispose (disposing);
-		}
-
-
 		public void Create(Widget target, bool leftOrRight = false)
 		{
 			//	Crée le popup "dialogue", dont la queue pointera vers le widget target.
@@ -480,6 +469,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void ClosePopup(ReasonClosure reason = ReasonClosure.Click)
 		{
 			//	Ferme le popup qui est par-dessus tous les autres.
+			this.closed = true;
+			this.Parent.SizeChanged -= this.HandleSizeChanged;
+
 			var top = PopupStack.Pop ();
 
 			var parent = top.GetParent ();
@@ -667,7 +659,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			if (!this.closed)
 			{
 				this.ClosePopup ();
-				this.closed = true;
 			}
 		}
 
