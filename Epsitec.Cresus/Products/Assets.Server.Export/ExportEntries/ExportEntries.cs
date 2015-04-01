@@ -167,7 +167,15 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		{
 			//	On relit le fichier des écritures, pour vérifier si les écritures y sont strictement
 			//	identiques à celles qui devraient être générées.
-			var lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+			string[] lines;
+			try
+			{
+				lines = System.IO.File.ReadAllLines (this.EntriesPath, System.Text.Encoding.Default);
+			}
+			catch
+			{
+				return true;
+			}
 			var oldEntries = this.ReloadEntries (lines);
 
 			var newEntries = this.accessor.Mandat.GetData (BaseType.Entries);
