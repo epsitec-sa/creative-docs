@@ -622,3 +622,8 @@ Lancé le 19.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-03-19.xml -oldechfile:S:\eerv\eerv-2015-03-12.xml -output:s:\eerv\ech-diff-2015-03-19.md
+
+Lancé le 29.03.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-03-26.xml -oldechfile:S:\eerv\eerv-2015-03-19.xml -output:s:\eerv\ech-diff-2015-03-26.md

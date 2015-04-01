@@ -93,9 +93,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					cell1 = new TreeTableCellTree (level, type, date, cellState);
 				}
 
-				var cell2 = new TreeTableCellString  (node.Debit,  cellState);
-				var cell3 = new TreeTableCellString  (node.Credit, cellState);
-				var cell4 = new TreeTableCellString  (node.Stamp,  cellState);
+				var cell2 = new TreeTableCellString (node.Debit,  cellState);
+				var cell3 = new TreeTableCellString (node.Credit, cellState);
+				var cell4 = new TreeTableCellString (node.Stamp,  cellState);
 
 				if (string.IsNullOrEmpty (node.Title))
 				{
@@ -107,10 +107,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					cell5 = new TreeTableCellTree (level, type, node.Title, cellState);
 				}
 
-				var cell6 = new TreeTableCellDecimal (node.Value, cellState);
-				var cell7 = new TreeTableCellString (node.VatCode, cellState);
-				var cell8 = new TreeTableCellGlyph (glyph, cellState);
-				var cell9 = new TreeTableCellGlyph (locked, cellState);
+				var cell6 = new TreeTableCellDecimal (node.Value,   cellState);
+				var cell7 = new TreeTableCellString  (node.VatCode, cellState);
+				var cell8 = new TreeTableCellGlyph   (glyph,        cellState);
+				var cell9 = new TreeTableCellGlyph   (locked,       cellState);
 
 				int columnRank = 0;
 				content.Columns[columnRank++].AddRow (cell1);
