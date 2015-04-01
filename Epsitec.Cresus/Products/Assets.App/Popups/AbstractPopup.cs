@@ -469,7 +469,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		protected void ClosePopup(ReasonClosure reason = ReasonClosure.Click)
 		{
 			//	Ferme le popup qui est par-dessus tous les autres.
-			this.closed = true;
 			this.Parent.SizeChanged -= this.HandleSizeChanged;
 
 			var top = PopupStack.Pop ();
@@ -656,10 +655,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void HandleSizeChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			if (!this.closed)
-			{
-				this.ClosePopup ();
-			}
+			this.ClosePopup ();
 		}
 
 
@@ -699,6 +695,5 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private double							initialDistance;
 		private bool							isDragging;
 		private Point							lastPos;
-		private bool							closed;
 	}
 }
