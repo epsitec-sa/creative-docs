@@ -655,6 +655,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private void HandleSizeChanged(object sender, Common.Types.DependencyPropertyChangedEventArgs e)
 		{
+			//	Dès que la fenêtre change de taille, on ferme immédiatement le popup.
+			//	Il y a trop de problèmes s'il reste ouvert. C'est une façon un peu brutale
+			//	mais efficace de résoudre le problème.
 			this.ClosePopup ();
 		}
 
