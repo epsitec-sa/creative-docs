@@ -41,8 +41,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.UpdateMailingExclusions (this.BusinessContext);
-			this.Entity.UpdateMailingParticipants (this.BusinessContext);
+			this.Entity.UpdateMailing (this.BusinessContext);
 		}
 	}
 }

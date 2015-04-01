@@ -51,7 +51,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			this.Entity.IsGroupedByHousehold = !this.Entity.IsGroupedByHousehold;
-			this.Entity.UpdateMailingParticipants (this.BusinessContext);
+			this.Entity.UpdateMailing (this.BusinessContext);
 		}
 	}
 }
