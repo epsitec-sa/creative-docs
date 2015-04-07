@@ -110,24 +110,44 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
 			{
-				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+				if (row != -1)
+				{
+					row += this.treeTableController.TopVisibleRow;
+				}
+
+				this.VisibleSelectedRow = row;
 			};
 
 			this.treeTableController.RowDoubleClicked += delegate (object sender, int row)
 			{
-				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+				if (row != -1)
+				{
+					row += this.treeTableController.TopVisibleRow;
+				}
+
+				this.VisibleSelectedRow = row;
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
 
 			this.treeTableController.RowRightClicked += delegate (object sender, int row, int column, Point pos)
 			{
-				this.VisibleSelectedRow = this.treeTableController.TopVisibleRow + row;
+				if (row != -1)
+				{
+					row += this.treeTableController.TopVisibleRow;
+				}
+
+				this.VisibleSelectedRow = row;
 				this.ShowContextMenu (pos);
 			};
 
 			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
-				this.OnCompactOrExpand (this.treeTableController.TopVisibleRow + row);
+				if (row != -1)
+				{
+					row += this.treeTableController.TopVisibleRow;
+				}
+
+				this.OnCompactOrExpand (row);
 			};
 
 			this.treeTableController.DokeySelect += delegate (object sender, KeyCode key)

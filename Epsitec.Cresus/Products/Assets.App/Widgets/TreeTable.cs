@@ -531,12 +531,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					if (message.Wheel > 0)
 					{
 						this.OnMouseWheel (-1);
-						//?this.OnDokeySelect (KeyCode.ArrowUp);
 					}
 					else if (message.Wheel < 0)
 					{
 						this.OnMouseWheel (1);
-						//?this.OnDokeySelect (KeyCode.ArrowDown);
 					}
 					break;
 
