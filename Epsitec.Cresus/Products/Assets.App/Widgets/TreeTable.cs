@@ -556,10 +556,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnDoubleClicked(MessageEventArgs e)
 		{
-			var result  = this.DetectRow (e.Point);
-			if (result.IsValid)
+			var rowResult    = this.DetectRow    (e.Point);
+			var columnResult = this.DetectColumn (e.Point);
+
+			if (rowResult.IsValid && columnResult.IsValid)
 			{
-				this.OnRowDoubleClicked (result.Rank);
+				this.OnRowDoubleClicked (rowResult.Rank);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 
@@ -633,7 +635,15 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateMouseCursor ();
 			}
 
-			this.SetHilitedHoverRow (this.DetectRow (pos).Rank);
+			var rowResult    = this.DetectRow    (pos);
+			var columnResult = this.DetectColumn (pos);
+
+			if (columnResult.IsValid == false)  // à droite de la dernière colonne ?
+			{
+				rowResult = DetectResult.After;  // pas de lighe hilitée
+			}
+
+			this.SetHilitedHoverRow (rowResult.Rank);
 		}
 
 		private void ProcessMouseUp(Point pos)
@@ -653,24 +663,36 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Si on clique hors des cellules existantes (soit plus bas que la dernière
 			//	ligne, soit à droite de la dernière colonne), row vaut -1 et on effectue
 			//	une sélection normalement, ce qui revient à désélectionner.
-			var result = this.DetectRow (pos);
+			var rowResult = this.DetectRow (pos);
 
-			if (result.IsBefore == false)
+			if (rowResult.IsBefore == false)
 			{
-				this.OnRowClicked (result.Rank, this.DetectColumn (pos));
+				var columnResult = this.DetectColumn (pos);
+
+				if (columnResult.IsValid == false)  // clic à droite de la dernière colonne ?
+				{
+					rowResult = DetectResult.After;  // on désélectionne
+				}
+
+				this.OnRowClicked (rowResult.Rank, columnResult.Rank);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 		}
 
 		private void ProcessMouseRightClick(Point pos)
 		{
-			var result = this.DetectRow (pos);
+			var rowResult = this.DetectRow (pos);
 
-			if (result.IsValid)
+			if (rowResult.IsValid)
 			{
-				var p = this.MapClientToScreen (pos);
-				this.OnRowRightClicked (result.Rank, this.DetectColumn (pos), p);
-				this.Focus ();  // pour que les touches flèches fonctionnent
+				var columnResult = this.DetectColumn (pos);
+
+				if (columnResult.IsValid)
+				{
+					var p = this.MapClientToScreen (pos);
+					this.OnRowRightClicked (rowResult.Rank, columnResult.Rank, p);
+					this.Focus ();  // pour que les touches flèches fonctionnent
+				}
 			}
 		}
 
@@ -738,18 +760,19 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			return DetectResult.After;  // on est en dessous de la dernière ligne
 		}
 
-		private int DetectColumn(Point pos)
+		private DetectResult DetectColumn(Point pos)
 		{
 			var layer = this.interactiveLayers.Where (x => x is InteractiveLayerColumnOrder).FirstOrDefault () as InteractiveLayerColumnOrder;
 			int rank = layer.DetectColumn (pos);
 
 			if (rank == -1)
 			{
-				return -1;
+				return DetectResult.After;
 			}
 			else
 			{
-				return this.columnsState.MappedToAbsolute (rank);
+				int column = this.columnsState.MappedToAbsolute (rank);
+				return new DetectResult (column);
 			}
 		}
 
