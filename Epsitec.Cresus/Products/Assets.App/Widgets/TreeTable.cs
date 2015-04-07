@@ -556,10 +556,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		protected override void OnDoubleClicked(MessageEventArgs e)
 		{
-			int row = this.DetectRow (e.Point);
-			if (row != -1)
+			var result  = this.DetectRow (e.Point);
+			if (result.IsValid)
 			{
-				this.OnRowDoubleClicked (row);
+				this.OnRowDoubleClicked (result.Rank);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 
@@ -633,7 +633,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.UpdateMouseCursor ();
 			}
 
-			this.SetHilitedHoverRow (this.DetectRow (pos));
+			this.SetHilitedHoverRow (this.DetectRow (pos).Rank);
 		}
 
 		private void ProcessMouseUp(Point pos)
@@ -653,18 +653,23 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			//	Si on clique hors des cellules existantes (soit plus bas que la dernière
 			//	ligne, soit à droite de la dernière colonne), row vaut -1 et on effectue
 			//	une sélection normalement, ce qui revient à désélectionner.
-			int row = this.DetectRow (pos);
-			this.OnRowClicked (row, this.DetectColumn (pos));
-			this.Focus ();  // pour que les touches flèches fonctionnent
+			var result = this.DetectRow (pos);
+
+			if (result.IsBefore == false)
+			{
+				this.OnRowClicked (result.Rank, this.DetectColumn (pos));
+				this.Focus ();  // pour que les touches flèches fonctionnent
+			}
 		}
 
 		private void ProcessMouseRightClick(Point pos)
 		{
-			int row = this.DetectRow (pos);
-			if (row != -1)
+			var result = this.DetectRow (pos);
+
+			if (result.IsValid)
 			{
 				var p = this.MapClientToScreen (pos);
-				this.OnRowRightClicked (row, this.DetectColumn (pos), p);
+				this.OnRowRightClicked (result.Rank, this.DetectColumn (pos), p);
 				this.Focus ();  // pour que les touches flèches fonctionnent
 			}
 		}
@@ -704,7 +709,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		private int DetectRow(Point pos)
+		private DetectResult DetectRow(Point pos)
 		{
 			int max = this.VisibleRowsCount;
 
@@ -712,22 +717,25 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			double dy = h / max;
 
 			double y = this.ActualHeight - this.headerHeight - pos.Y;
-			if (y >= 0)
+
+			if (y < 0)
 			{
-				int row = (int) (y / dy);
-
-				if (this.TotalRowsCount > 0)
-				{
-					max = System.Math.Min (max, this.TotalRowsCount);
-				}
-
-				if (row >= 0 && row < max)
-				{
-					return row;
-				}
+				return DetectResult.Before;  // on est dans l'en-tête
 			}
 
-			return -1;
+			int row = (int) (y / dy);
+
+			if (this.TotalRowsCount > 0)  // est-ce que TotalRowsCount est défini ?
+			{
+				max = System.Math.Min (max, this.TotalRowsCount);
+			}
+
+			if (row >= 0 && row < max)
+			{
+				return new DetectResult (row);
+			}
+
+			return DetectResult.After;  // on est en dessous de la dernière ligne
 		}
 
 		private int DetectColumn(Point pos)
@@ -743,6 +751,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				return this.columnsState.MappedToAbsolute (rank);
 			}
+		}
+
+
+		private struct DetectResult
+		{
+			public DetectResult(int rank, bool isBefore = false, bool isAfter = false)
+			{
+				this.Rank     = rank;
+				this.IsBefore = isBefore;
+				this.IsAfter  = isAfter;
+			}
+
+			public bool							IsValid
+			{
+				get
+				{
+					return this.Rank >= 0 && !this.IsBefore && !this.IsAfter;
+				}
+			}
+
+			public static DetectResult Before = new DetectResult (-1, isBefore: true,  isAfter: false);
+			public static DetectResult After  = new DetectResult (-1, isBefore: false, isAfter: true);
+
+			public readonly int					Rank;
+			public readonly bool				IsBefore;
+			public readonly bool				IsAfter;
 		}
 
 
