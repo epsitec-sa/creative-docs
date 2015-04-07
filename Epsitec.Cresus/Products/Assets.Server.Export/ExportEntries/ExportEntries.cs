@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
 	/// Cette classe s'occupe d'exporter les écritures pour Crésus Comptabilité
-	/// dans les fichiers .ecc et .eca, sans utiliser la librairie FSC32.
+	/// dans les fichiers .ecc et .ecassets, sans utiliser la librairie FSC32.
 	/// C'est un choix délibéré, car cette librairie est obsolète. Il faudra la
 	/// réécrire dans un futur indéterminé...
 	/// </summary>
@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private string EccPath
 		{
-			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.eca,
+			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.ecassets,
 			//	par exemple "C:\Documents Crésus\Exemples\Compta 2015.ecc".
 			get
 			{
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesPath
 		{
 			//	Retourne le chemin du fichier contenant les écritures,
-			//	par exemple "C:\Documents Crésus\Exemples\Mon Village (01-01-2015 ~ 31-12-2015).eca".
+			//	par exemple "C:\Documents Crésus\Exemples\Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesFilename
 		{
 			//	Retourne le nom du fichier contenant les écritures,
-			//	par exemple "Mon Village (01-01-2015 ~ 31-12-2015).eca".
+			//	par exemple "Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
 			get
 			{
 				string from = this.accountsRange.IncludeFrom           .ToString ("dd-MM-yyyy");
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private static string EccTag
 		{
-			//	Retourne le tag pour le fichier .ecc, normalement "#ECA".
+			//	Retourne le tag pour le fichier .ecc, normalement "#ECASSETS".
 			get
 			{
 				return string.Concat ("#", ExportEntries.type.ToUpper ());
