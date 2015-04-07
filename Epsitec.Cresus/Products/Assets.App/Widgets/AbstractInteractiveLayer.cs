@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public bool IsDragging
+		public bool								IsDragging
 		{
 			get
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public MouseCursorType MouseCursorType
+		public MouseCursorType					MouseCursorType
 		{
 			get
 			{
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		public virtual bool HasActiveHover
+		public virtual bool						HasActiveHover
 		{
 			get
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 
-		protected Scrollable ColumnsContainer
+		protected Scrollable					ColumnsContainer
 		{
 			get
 			{
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
-		protected int HeaderHeight
+		protected int							HeaderHeight
 		{
 			get
 			{
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.SetHoverMode (mode);
 		}
 
-		protected int DockToLeftCount
+		protected int							DockToLeftCount
 		{
 			get
 			{
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			this.treeTable.SetColumnWidth (rank, width);
 		}
 
-		protected int ColumnCount
+		protected int							ColumnCount
 		{
 			get
 			{

@@ -16,7 +16,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Widgets
 {
 	/// <summary>
-	/// TreeTable de base, constituée de lignes AbstractTreeTableColumn créées créées avec SetColumns.
+	/// TreeTable de base, constituée de lignes AbstractTreeTableColumn créées avec SetColumns.
 	/// La première colonne de gauche est spéciale; elle contient les informations sur l'arborescence
 	/// et elle ne fait pas partie des colonnes scrollables horizontalement.
 	/// On ne gère ici aucun déplacement vertical.
