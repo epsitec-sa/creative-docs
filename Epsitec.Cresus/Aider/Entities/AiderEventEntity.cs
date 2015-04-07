@@ -79,10 +79,10 @@ namespace Epsitec.Aider.Entities
 			switch (this.Type)
 			{
 			case Enumerations.EventType.Baptism:
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.ChildBatise);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.ChildBatise);
 				break;
 			case Enumerations.EventType.Blessing:
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
 				break;
 			case Enumerations.EventType.CelebrationRegisteredPartners:
 				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
@@ -94,11 +94,11 @@ namespace Epsitec.Aider.Entities
 				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
 				break;
 			case Enumerations.EventType.FuneralService:
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
 				break;
 			case Enumerations.EventType.Marriage:
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Husband);
-				this.TryAddActorWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse);
 				break;
 			case Enumerations.EventType.None:
 				break;
