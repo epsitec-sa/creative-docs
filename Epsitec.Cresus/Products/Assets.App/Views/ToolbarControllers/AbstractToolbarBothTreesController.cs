@@ -110,50 +110,40 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.treeTableController.RowClicked += delegate (object sender, int row, int column)
 			{
-				if (row != -1)
-				{
-					row += this.treeTableController.TopVisibleRow;
-				}
-
-				this.VisibleSelectedRow = row;
+				this.VisibleSelectedRow = this.GetVisibleRow (row);
 			};
 
 			this.treeTableController.RowDoubleClicked += delegate (object sender, int row)
 			{
-				if (row != -1)
-				{
-					row += this.treeTableController.TopVisibleRow;
-				}
-
-				this.VisibleSelectedRow = row;
+				this.VisibleSelectedRow = this.GetVisibleRow (row);
 				this.OnRowDoubleClicked (this.VisibleSelectedRow);
 			};
 
 			this.treeTableController.RowRightClicked += delegate (object sender, int row, int column, Point pos)
 			{
-				if (row != -1)
-				{
-					row += this.treeTableController.TopVisibleRow;
-				}
-
-				this.VisibleSelectedRow = row;
+				this.VisibleSelectedRow = this.GetVisibleRow (row);
 				this.ShowContextMenu (pos);
 			};
 
 			this.treeTableController.TreeButtonClicked += delegate (object sender, int row, NodeType type)
 			{
-				if (row != -1)
-				{
-					row += this.treeTableController.TopVisibleRow;
-				}
-
-				this.OnCompactOrExpand (row);
+				this.OnCompactOrExpand (this.GetVisibleRow (row));
 			};
 
 			this.treeTableController.DokeySelect += delegate (object sender, KeyCode key)
 			{
 				this.OnDokeySelect (key);
 			};
+		}
+
+		private int GetVisibleRow(int row)
+		{
+			if (row != -1)  // est-ce une vraie sélection (pas une désélection) ?
+			{
+				row += this.treeTableController.TopVisibleRow;
+			}
+
+			return row;
 		}
 
 		private void CreateGraphicControllerUI(Widget parent)
