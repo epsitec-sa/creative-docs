@@ -124,6 +124,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				if (this.rowsCount != value)
 				{
 					this.rowsCount = value;
+					this.treeTable.TotalRowsCount = value;
 					this.UpdateScroller ();
 				}
 			}

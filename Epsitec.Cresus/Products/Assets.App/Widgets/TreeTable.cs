@@ -128,6 +128,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			}
 		}
 
+		public int								TotalRowsCount;
+
 		public int								VisibleRowsCount
 		{
 			get
@@ -648,12 +650,12 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void ProcessMouseClick(Point pos)
 		{
+			//	Si on clique hors des cellules existantes (soit plus bas que la dernière
+			//	ligne, soit à droite de la dernière colonne), row vaut -1 et on effectue
+			//	une sélection normalement, ce qui revient à désélectionner.
 			int row = this.DetectRow (pos);
-			if (row != -1)
-			{
-				this.OnRowClicked (row, this.DetectColumn (pos));
-				this.Focus ();  // pour que les touches flèches fonctionnent
-			}
+			this.OnRowClicked (row, this.DetectColumn (pos));
+			this.Focus ();  // pour que les touches flèches fonctionnent
 		}
 
 		private void ProcessMouseRightClick(Point pos)
@@ -705,6 +707,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		private int DetectRow(Point pos)
 		{
 			int max = this.VisibleRowsCount;
+
 			double h = this.ActualHeight - this.headerHeight - this.footerHeight - AbstractScroller.DefaultBreadth;
 			double dy = h / max;
 
@@ -712,6 +715,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			if (y >= 0)
 			{
 				int row = (int) (y / dy);
+
+				if (this.TotalRowsCount > 0)
+				{
+					max = System.Math.Min (max, this.TotalRowsCount);
+				}
 
 				if (row >= 0 && row < max)
 				{
