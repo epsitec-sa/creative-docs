@@ -530,11 +530,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				case MessageType.MouseWheel:
 					if (message.Wheel > 0)
 					{
-						this.OnDokeySelect (KeyCode.ArrowUp);
+						this.OnMouseWheel (-1);
+						//?this.OnDokeySelect (KeyCode.ArrowUp);
 					}
 					else if (message.Wheel < 0)
 					{
-						this.OnDokeySelect (KeyCode.ArrowDown);
+						this.OnMouseWheel (1);
+						//?this.OnDokeySelect (KeyCode.ArrowDown);
 					}
 					break;
 
@@ -968,6 +970,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 
 		public event EventHandler<KeyCode> DokeySelect;
+
+
+		private void OnMouseWheel(int direction)
+		{
+			this.MouseWheel.Raise (this, direction);
+		}
+
+		public event EventHandler<int> MouseWheel;
 		#endregion
 
 

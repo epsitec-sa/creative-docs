@@ -106,6 +106,11 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				this.OnDokeySelect (key);
 			};
 
+			this.treeTable.MouseWheel += delegate (object sender, int direction)
+			{
+				this.MoveScroller (direction);
+			};
+
 			this.scroller.ValueChanged += delegate
 			{
 				this.OnContentChanged (false);
@@ -213,6 +218,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 		}
 		#endregion
 
+
+		private void MoveScroller(int direction)
+		{
+			//	On bouge l'ascenseur selon la molette de la souris.
+			this.scroller.Value += direction;  // voir (*)
+			// (*)	Il n'est pas nécessaire d'effectuer des tests de débordement,
+			//		car la propriété Value est blindée !
+		}
 
 		private void UpdateScroller()
 		{
