@@ -105,9 +105,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				zip.LoadFile (filename);
 
 				var data = zip[DataIO.LocalSettingsZipPath].Data;  // "localsettings.Daniel.xml"
-				var stream = new System.IO.MemoryStream (data);
 
-				DataIO.OpenLocalSettings (stream, localSettingsOpenAction);
+				//	Si on lit un fichier créé par un autre utilisateur, il ne contient pas les LocalSettings.
+				//	Par exemple, si le créateur du fichier est Michael et que j'essaie (Daniel) d'ouvrir son
+				//	fichier, le logiciel essaiera d'ouvrir "localsettings.daniel.xml", alors que le fichier
+				//	ne contient que "localsettings.michael.xml". Dans ce cas, il suffit de ne rien faire, pour
+				//	conserver les réglages par défaut. Si le fichierest ensuite enregistrer, il contiendra les
+				//	réglages de Michael et Daniel. Chaque utilisateur trouvera ses propres réglages à
+				//	l'ouverture.
+				if (data != null)
+				{
+					var stream = new System.IO.MemoryStream (data);
+
+					DataIO.OpenLocalSettings (stream, localSettingsOpenAction);
+				}
 			}
 		}
 
