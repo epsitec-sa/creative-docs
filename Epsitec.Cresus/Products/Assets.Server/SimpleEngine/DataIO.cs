@@ -110,8 +110,8 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				//	Par exemple, si le créateur du fichier est Michael et que j'essaie (Daniel) d'ouvrir son
 				//	fichier, le logiciel essaiera d'ouvrir "localsettings.daniel.xml", alors que le fichier
 				//	ne contient que "localsettings.michael.xml". Dans ce cas, il suffit de ne rien faire, pour
-				//	conserver les réglages par défaut. Si le fichierest ensuite enregistrer, il contiendra les
-				//	réglages de Michael et Daniel. Chaque utilisateur trouvera ses propres réglages à
+				//	conserver les réglages par défaut. Si le fichier est ensuite enregistré, il contiendra les
+				//	réglages de Michael et Daniel. Chaque utilisateur trouvera alors ses propres réglages à
 				//	l'ouverture.
 				if (data != null)
 				{

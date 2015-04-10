@@ -905,7 +905,13 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			var cs = LocalSettings.GetColumnsState (this.treeTableName);
 			if (!cs.IsEmpty)
 			{
-				this.columnsState = cs;
+				//	On utilise les réglages désérialisés seulement si le nombre de colonnes
+				//	correspond. Sinon, c'est que les réglages désérialisés correspondaient
+				//	à une ancienne version. Il faut alors les ignorer !
+				if (cs.Columns.Count () == this.columnDescriptions.Length)
+				{
+					this.columnsState = cs;
+				}
 			}
 		}
 
