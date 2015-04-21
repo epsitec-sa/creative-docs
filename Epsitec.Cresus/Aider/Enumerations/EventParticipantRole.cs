@@ -30,5 +30,6 @@ namespace Epsitec.Aider.Enumerations
 		[Hidden]
 		FirstWitness	= 17,
 		Confirmant      = 18,
+		Catechumen		= 19,
 	}
 }

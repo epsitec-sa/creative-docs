@@ -913,6 +913,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 149));
 						}
 					}
+					//	designer:cap/LVO073
+					public static global::Epsitec.Common.Types.Caption Catechumen
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 224));
+						}
+					}
 					//	designer:cap/LVOM43
 					public static global::Epsitec.Common.Types.Caption ChildBatise
 					{
