@@ -627,3 +627,15 @@ Lancé le 29.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-03-26.xml -oldechfile:S:\eerv\eerv-2015-03-19.xml -output:s:\eerv\ech-diff-2015-03-26.md
+
+Lancé le 19.04.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-04-09.xml -oldechfile:S:\eerv\eerv-2015-04-02.xml -output:s:\eerv\ech-diff-2015-04-09.md
+-echupdate -newechfile:S:\eerv\eerv-2015-04-16.xml -oldechfile:S:\eerv\eerv-2015-04-09.xml -output:s:\eerv\ech-diff-2015-04-16.md
+
+Lancé le 23.04.2015
+-------------------
+
+-exportsubscriptions -output:export-2015-04-30.txt -error:error-2015-04-30.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-04-30.txt -publicationdate:2015-04-30 -response:tamedia-2015-04-30.log
