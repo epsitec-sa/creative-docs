@@ -16,6 +16,8 @@ namespace Epsitec.Aider.Rules
 	{
 		public override void ApplyValidateRule(AiderEventParticipantEntity entity)
 		{
+			// TODO: Refactor this list of exception
+
 			if (entity.Role == Enumerations.EventParticipantRole.None)
 			{
 				return;
@@ -32,6 +34,11 @@ namespace Epsitec.Aider.Rules
 			}
 
 			if (entity.Role == Enumerations.EventParticipantRole.Catechumen)
+			{
+				return;
+			}
+
+			if (entity.Role == Enumerations.EventParticipantRole.Minister)
 			{
 				return;
 			}
