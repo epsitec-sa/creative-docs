@@ -90,8 +90,10 @@ namespace Epsitec.Aider.Entities
 				break;
 
 			case Enumerations.EventType.Confirmation:
-			case Enumerations.EventType.EndOfCatechism:
 				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant);
+				break;
+			case Enumerations.EventType.EndOfCatechism:
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Catechumen);
 				break;
 			case Enumerations.EventType.FuneralService:
 				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.DeceasedPerson);
