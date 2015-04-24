@@ -292,11 +292,14 @@ namespace Epsitec.Aider.Data.Job
 
 							if (existingAiderPerson.IsNotNull ())
 							{
-								this.LogToConsole ("Info: warning added: EChProcessDeparture");
-								this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
-									/**/			WarningType.EChProcessDeparture, this.warningTitleMessage,
-									/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH."));
-
+								if (existingAiderPerson.IsAlive)
+								{
+									this.LogToConsole ("Info: warning added: EChProcessDeparture");
+									this.CreateWarning (businessContext, existingAiderPerson, existingAiderPerson.ParishGroupPathCache,
+										/**/			WarningType.EChProcessDeparture, this.warningTitleMessage,
+										/**/			TextFormatter.FormatText (existingAiderPerson.GetDisplayName (), "n'est plus dans le RCH."));
+								}
+								
 								var personKey = businessContext.DataContext.GetNormalizedEntityKey (existingAiderPerson).Value;
 
 								this.aiderPersonsTaggedForDeletion.Add (personKey, existingAiderPerson);
