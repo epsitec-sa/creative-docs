@@ -36,7 +36,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderOfficeManagementEntity, EventType, AiderEventPlaceEntity, AiderTownEntity, Date> (this.Execute);
+			return ActionExecutor.Create<EventType, AiderEventPlaceEntity, AiderTownEntity, Date> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
@@ -47,10 +47,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			form
 				.Title ("Préparation d'un acte")
-				.Field<AiderOfficeManagementEntity> ()
-					.Title ("Paroisse")
-					.InitialValue (this.Entity)
-				.End ()
 				.Field<EventType> ()
 					.Title ("Registre")
 				.End ()
@@ -70,16 +66,30 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		}
 
 		private void Execute(
-			AiderOfficeManagementEntity office, 
 			EventType type,
 			AiderEventPlaceEntity place,
 			AiderTownEntity town,
 			Date celebrationDate)
 		{
+			if (type == null)
+			{
+				throw new BusinessRuleException ("Il faut choisir un registre");
+			}
+
+			if (place.IsNull ())
+			{
+				throw new BusinessRuleException ("Il faut choisir un lieu de célébration");
+			}
+
+			if (town.IsNull ())
+			{
+				throw new BusinessRuleException ("Il faut choisir la localité");
+			}
+
 			AiderEventEntity.Create (
 				this.BusinessContext, 
 				type,
-				office,
+				this.Entity,
 				town,
 				place,
 				celebrationDate);
