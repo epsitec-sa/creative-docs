@@ -82,21 +82,20 @@ namespace Epsitec.Aider.Data.ECh
 
 					System.Console.WriteLine ("FTP: Downloading {0}, {1} MB", fileName, size/(1024*1024));
 
-					var data = client.DownloadData (EchDataDownloader.GetFtpUri (fileName));
+					var filePath = System.IO.Path.Combine (this.repositoryPath, fileName);
+					client.DownloadFile (EchDataDownloader.GetFtpUri (fileName), filePath);
+					var fileInfo = new System.IO.FileInfo (filePath);
 
-					if (data.Length == size)
+					if (fileInfo.Length == size)
 					{
-						var path = System.IO.Path.Combine (this.repositoryPath, fileName);
-						System.IO.File.WriteAllBytes (path, data);
-
-						this.downloadedFilePaths.Add (path);
+						this.downloadedFilePaths.Add (filePath);
 
 						System.Console.WriteLine ("FTP: Download successful ({0}, {1} MB)", fileName, size/(1024*1024));
 
 						return true;
 					}
 
-					System.Console.WriteLine ("FTP: Download failed ({0}, size mismatch = {1})", fileName, data.Length - size);
+					System.Console.WriteLine ("FTP: Download failed ({0}, size mismatch = {1})", fileName, fileInfo.Length - size);
 				}
 			}
 
