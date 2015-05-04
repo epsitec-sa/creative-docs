@@ -639,3 +639,13 @@ Lancé le 23.04.2015
 
 -exportsubscriptions -output:export-2015-04-30.txt -error:error-2015-04-30.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-04-30.txt -publicationdate:2015-04-30 -response:tamedia-2015-04-30.log
+
+Lancé le 25.04.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-04-23.xml -oldechfile:S:\eerv\eerv-2015-04-16.xml -output:s:\eerv\ech-diff-2015-04-23.md
+
+Lancé le 02.05.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-04-30.xml -oldechfile:S:\eerv\eerv-2015-04-23.xml -output:s:\eerv\ech-diff-2015-04-30.md
