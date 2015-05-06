@@ -73,6 +73,19 @@ namespace Epsitec.Aider.Data.Common
 				}
 			}
 
+			var match = " " + normalizedStreetName;
+
+			foreach (var info in this)
+			{
+				if (info.NormalizedStreetName.EndsWith (match))
+				{
+					if (info.StreetNumberSubset == null)
+					{
+						return info;
+					}
+				}
+			}
+
 			return null;
 		}
 
@@ -89,6 +102,22 @@ namespace Epsitec.Aider.Data.Common
 			foreach (var info in this)
 			{
 				if (info.NormalizedStreetName == normalizedStreetName)
+				{
+					if (info.StreetNumberSubset != null)
+					{
+						if (info.StreetNumberSubset.Contains (houseNumber))
+						{
+							return info;
+						}
+					}
+				}
+			}
+
+			var match = " " + normalizedStreetName;
+			
+			foreach (var info in this)
+			{
+				if (info.NormalizedStreetName.EndsWith (match))
 				{
 					if (info.StreetNumberSubset != null)
 					{

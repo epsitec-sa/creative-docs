@@ -76,7 +76,8 @@ namespace Epsitec.Aider.Data.Common
 		/// <returns>The name of the parish or <c>null</c>.</returns>
 		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int houseNumber)
 		{
-			var name = this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, houseNumber);
+			var key  = ParishAddressRepository.GetKey (zipCode, townName);
+			var name = this.FindParishName (key, normalizedStreetName, houseNumber);
 
 			if (name == null)
 			{
@@ -90,8 +91,8 @@ namespace Epsitec.Aider.Data.Common
 					}
 				}
 			}
-			
-			return name;
+
+			return name ?? this.FindDefaultParishName (key);
 		}
 
 		/// <summary>
@@ -134,7 +135,20 @@ namespace Epsitec.Aider.Data.Common
 			{
 				return info.ParishName;
 			}
+		}
 
+		private string FindDefaultParishName(string key)
+		{
+			var info = this.FindDefaultAddressInformation (key);
+
+			if (info == null)
+			{
+				return null;
+			}
+			else
+			{
+				return info.ParishName;
+			}
 		}
 		
 		private ParishAddressInformation FindParishAddressInformation(string key, string normalizedStreetName, int houseNumber)
@@ -145,12 +159,23 @@ namespace Epsitec.Aider.Data.Common
 			{
 				return null;
 			}
-			
+
 			var parish = addresses.FindSpecific (normalizedStreetName, houseNumber)
-					  ?? addresses.FindDefault (normalizedStreetName)
-					  ?? addresses.FindDefault ();
+					  ?? addresses.FindDefault (normalizedStreetName);
 
 			return parish;
+		}
+
+		private ParishAddressInformation FindDefaultAddressInformation(string key)
+		{
+			var addresses = this.FindAddresses (key);
+
+			if (addresses == null)
+			{
+				return null;
+			}
+
+			return addresses.FindDefault ();
 		}
 
 
