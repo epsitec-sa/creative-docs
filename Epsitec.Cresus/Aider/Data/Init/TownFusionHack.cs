@@ -49,6 +49,18 @@ namespace Epsitec.Aider.Data.Groups
 						contact.RefreshCache ();
 						Console.WriteLine ("Cache refresh for {0}", contact.GetCompactSummary ());
 					}
+
+					var goodNewsExample = new AiderSubscriptionEntity ()
+					{
+						DisplayZipCode = "1273"
+					};
+
+					foreach (var sub in businessContext.GetByExample<AiderSubscriptionEntity> (goodNewsExample))
+					{
+						sub.RefreshCache ();
+						Console.WriteLine ("Cache refresh for {0}", sub.GetCompactSummary ());
+					}
+
 				}
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				Console.WriteLine ("hacked! press any key...");
