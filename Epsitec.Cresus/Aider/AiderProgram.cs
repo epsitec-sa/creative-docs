@@ -356,6 +356,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.PurgeRoleCache (args));
 					return;
 				}
+
+				if (args.Contains ("-townfusionhack")) //-townfusionhack
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FusionArzier (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -517,6 +523,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				AiderGeneralFunctions.ApplyFemininForm (coreData);
+			});
+		}
+
+		private static void FusionArzier(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				TownFusionHack.FusionArzier (coreData);
 			});
 		}
 
