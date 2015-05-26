@@ -18,10 +18,10 @@
             <select style="margin-left: 5px" ng-options="c.value as c.name for c in comparators" ng-model="rule.comparison" class="form-control input-xs"></select>
             <ng-switch on="rule.type">
               <span ng-switch-when="date">
-                <input style="margin-left: 5px" type="text" ng-model="rule.value" class="form-control input-xs" />
+                <input style="margin-left: 5px" type="date" ng-model="rule.value" class="form-control input-xs" placeholder="Entrer une date..."/>
               </span>
               <span ng-switch-when="int">
-                <input style="margin-left: 5px" type="number" ng-model="rule.value" class="form-control input-xs" />
+                <input style="margin-left: 5px" type="number" ng-model="rule.value" class="form-control input-xs" placeholder="Entrer un nombre..."/>
               </span>
               <span ng-switch-when="list">
                 <select ng-options="t.id as t.text for t in enum[fieldEnumMap[rule.field]]" ng-model="rule.selectedValue" ng-change="pushSelectedValue(rule)"  class="form-control input-xs"></select>

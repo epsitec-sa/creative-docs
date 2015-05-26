@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 
 	using Database = Core.Databases.Database;
+	using System.Globalization;
 
 
 	/// <summary>
@@ -149,6 +150,23 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 			var type = (string) filter["type"];
 			var value = filter["value"];
+
+			if (type == "date")
+			{
+				DateTime dt;
+				// Check for a valid "wire format"
+				var isValidWireFormat = DateTime.TryParseExact(
+											(string) value,
+											"yyyy-MM-dd",
+											CultureInfo.InvariantCulture,
+											DateTimeStyles.None,
+											out dt);
+				if (isValidWireFormat)
+				{
+					//Convert back to Constant filter date format
+					value = dt.Date.ToString ("dd.MM.yyyy");
+				}
+			}
 
 			if (type == "list")
 			{

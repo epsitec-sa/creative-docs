@@ -597,7 +597,8 @@ function() {
                 });
               }
 
-              //reset sorters
+              //reset sorters & filters
+              this.filters.clearFilters();
               this.store.sorters.clear();
               this.store.proxy.setExtraParam("query", this.queryName);
               this.onRefreshHandler();
