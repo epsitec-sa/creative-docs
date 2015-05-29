@@ -662,3 +662,9 @@ Lancé le 15.05.2015
 -townfusionhack
 -exportsubscriptions -output:export-2015-05-28.txt -error:error-2015-05-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-05-28.txt -publicationdate:2015-05-28 -response:tamedia-2015-05-28.log
+
+Lancé le 29.05.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-05-21.xml -oldechfile:S:\eerv\eerv-2015-05-14.xml -output:s:\eerv\ech-diff-2015-05-21.md
+-echupdate -newechfile:S:\eerv\eerv-2015-05-28.xml -oldechfile:S:\eerv\eerv-2015-05-21.xml -output:s:\eerv\ech-diff-2015-05-28.md
