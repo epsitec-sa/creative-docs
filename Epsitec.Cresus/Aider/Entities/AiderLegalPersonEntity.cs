@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -105,18 +105,21 @@ namespace Epsitec.Aider.Entities
 		private string GetAddressRecipientText()
 		{
 			var contact = this.Contacts.FirstOrDefault ();
-			if(contact != null)
+			
+			if (contact == null)
+			{
+				return "";
+			}
+			else
 			{
 				List<string> lines = new List<string> ();
 
-				lines.Add (contact.LegalPersonContactMrMrs.GetLongText ());
+				lines.Add (AiderContactEntity.GetContactTitleLongText (contact.LegalPersonContactMrMrs, contact.ContactTitle));
 				lines.Add (contact.LegalPersonContactFullName);
 				lines.AddRange (contact.LegalPerson.GetNameLines ());
 
 				return StringUtils.Join ("\n", lines);
 			}
-
-			return "";
 		}
 
 		private IList<AiderGroupParticipantEntity> GetParticipations()

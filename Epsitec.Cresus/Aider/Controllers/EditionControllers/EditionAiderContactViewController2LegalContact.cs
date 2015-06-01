@@ -21,6 +21,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Icon (AiderPersonEntity.GetIconName ("Data", this.Entity.LegalPersonContactMrMrs, this.Entity.LegalPerson.Language))
 				.Input ()
 					.Field (x => x.LegalPersonContactMrMrs)
+					.Field (x => x.ContactTitle)
 					.Field (x => x.LegalPersonContactFullName)
 				.End ();
 		}

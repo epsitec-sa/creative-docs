@@ -6926,6 +6926,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>ContactTitle</c> field.
+		///	designer:fld/LVARD/LVARM
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVARM]")]
+		public global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? ContactTitle
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.PersonMrMrsTitle?> ("[LVARM]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? oldValue = this.ContactTitle;
+				if (oldValue != value || !this.IsFieldDefined("[LVARM]"))
+				{
+					this.OnContactTitleChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.PersonMrMrsTitle?> ("[LVARM]", oldValue, value);
+					this.OnContactTitleChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Person</c> field.
 		///	designer:fld/LVARD/LVA5E
 		///	</summary>
@@ -7344,6 +7366,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
+		partial void OnContactTitleChanging(global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? newValue);
+		partial void OnContactTitleChanged(global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? oldValue, global::Epsitec.Aider.Enumerations.PersonMrMrsTitle? newValue);
 		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnLegalPersonChanging(global::Epsitec.Aider.Entities.AiderLegalPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderLegalPersonEntity newValue);

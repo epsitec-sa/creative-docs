@@ -302,6 +302,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType PersonDeclarationStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 87));
 				//	designer:cap/LVAH1
 				public static readonly Epsitec.Common.Types.EnumType PersonMrMrs = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+				//	designer:cap/LVALL
+				public static readonly Epsitec.Common.Types.EnumType PersonMrMrsTitle = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 693));
 				//	designer:cap/LVAJ3
 				public static readonly Epsitec.Common.Types.EnumType PersonRelationshipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 115));
 				//	designer:cap/LVAM1
@@ -1907,6 +1909,306 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class PersonMrMrsTitle
+				{
+					//	designer:cap/LVAGM
+					public static global::Epsitec.Common.Types.Caption Abbe_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 720));
+						}
+					}
+					//	designer:cap/LVAML
+					public static global::Epsitec.Common.Types.Caption Auto
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 694));
+						}
+					}
+					//	designer:cap/LVANM
+					public static global::Epsitec.Common.Types.Caption Brigadier_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 727));
+						}
+					}
+					//	designer:cap/LVAPM
+					public static global::Epsitec.Common.Types.Caption CdtCorps_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 729));
+						}
+					}
+					//	designer:cap/LVAQM
+					public static global::Epsitec.Common.Types.Caption ChefArmee_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 730));
+						}
+					}
+					//	designer:cap/LVASL
+					public static global::Epsitec.Common.Types.Caption ChefService_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 700));
+						}
+					}
+					//	designer:cap/LVARL
+					public static global::Epsitec.Common.Types.Caption ChefService_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 699));
+						}
+					}
+					//	designer:cap/LVAMM
+					public static global::Epsitec.Common.Types.Caption Colonel_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 726));
+						}
+					}
+					//	designer:cap/LVAOL
+					public static global::Epsitec.Common.Types.Caption ConseillerEtat_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 696));
+						}
+					}
+					//	designer:cap/LVANL
+					public static global::Epsitec.Common.Types.Caption ConseillerEtat_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 695));
+						}
+					}
+					//	designer:cap/LVAFM
+					public static global::Epsitec.Common.Types.Caption Cure_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 719));
+						}
+					}
+					//	designer:cap/LVADM
+					public static global::Epsitec.Common.Types.Caption Diacre_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 717));
+						}
+					}
+					//	designer:cap/LVACM
+					public static global::Epsitec.Common.Types.Caption Diacre_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 716));
+						}
+					}
+					//	designer:cap/LVAUL
+					public static global::Epsitec.Common.Types.Caption Directeur_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 702));
+						}
+					}
+					//	designer:cap/LVATL
+					public static global::Epsitec.Common.Types.Caption Directeur_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 701));
+						}
+					}
+					//	designer:cap/LVAOM
+					public static global::Epsitec.Common.Types.Caption Divisionnaire_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 728));
+						}
+					}
+					//	designer:cap/LVA4M
+					public static global::Epsitec.Common.Types.Caption Doyen_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 708));
+						}
+					}
+					//	designer:cap/LVA3M
+					public static global::Epsitec.Common.Types.Caption Doyen_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 707));
+						}
+					}
+					//	designer:cap/LVAEM
+					public static global::Epsitec.Common.Types.Caption Eveque_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 718));
+						}
+					}
+					//	designer:cap/LVAKM
+					public static global::Epsitec.Common.Types.Caption Frere_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 724));
+						}
+					}
+					//	designer:cap/LVA9M
+					public static global::Epsitec.Common.Types.Caption Juge_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 713));
+						}
+					}
+					//	designer:cap/LVA8M
+					public static global::Epsitec.Common.Types.Caption Juge_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 712));
+						}
+					}
+					//	designer:cap/LVA5M
+					public static global::Epsitec.Common.Types.Caption Maitre
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 709));
+						}
+					}
+					//	designer:cap/LVABM
+					public static global::Epsitec.Common.Types.Caption Pasteur_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 715));
+						}
+					}
+					//	designer:cap/LVAAM
+					public static global::Epsitec.Common.Types.Caption Pasteur_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 714));
+						}
+					}
+					//	designer:cap/LVAHM
+					public static global::Epsitec.Common.Types.Caption Pere_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 721));
+						}
+					}
+					//	designer:cap/LVAQL
+					public static global::Epsitec.Common.Types.Caption Prefet_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 698));
+						}
+					}
+					//	designer:cap/LVAPL
+					public static global::Epsitec.Common.Types.Caption Prefet_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 697));
+						}
+					}
+					//	designer:cap/LVA0M
+					public static global::Epsitec.Common.Types.Caption Président_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 704));
+						}
+					}
+					//	designer:cap/LVAVL
+					public static global::Epsitec.Common.Types.Caption Président_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 703));
+						}
+					}
+					//	designer:cap/LVA7M
+					public static global::Epsitec.Common.Types.Caption Procureur_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 711));
+						}
+					}
+					//	designer:cap/LVA6M
+					public static global::Epsitec.Common.Types.Caption Procureur_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 710));
+						}
+					}
+					//	designer:cap/LVA2M
+					public static global::Epsitec.Common.Types.Caption Recteur_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 706));
+						}
+					}
+					//	designer:cap/LVA1M
+					public static global::Epsitec.Common.Types.Caption Recteur_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 705));
+						}
+					}
+					//	designer:cap/LVAIM
+					public static global::Epsitec.Common.Types.Caption Reverend_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 722));
+						}
+					}
+					//	designer:cap/LVAJM
+					public static global::Epsitec.Common.Types.Caption ReverendPere_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 723));
+						}
+					}
+					//	designer:cap/LVALM
+					public static global::Epsitec.Common.Types.Caption Soeur_Madame
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 725));
+						}
+					}
+				}
+				
 				public static class PersonRelationshipType
 				{
 					//	designer:cap/LVAK3
@@ -2530,6 +2832,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 456);
 				//	designer:cap/LVABE
 				public static readonly global::Epsitec.Common.Support.Druid AddressType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 459);
+				//	designer:cap/LVARM
+				public static readonly global::Epsitec.Common.Support.Druid ContactTitle = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 731);
 				//	designer:cap/LVA4E
 				public static readonly global::Epsitec.Common.Support.Druid ContactType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 452);
 				//	designer:cap/LVA6L

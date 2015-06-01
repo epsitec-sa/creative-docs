@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using System.Linq;
@@ -42,6 +42,23 @@ namespace Epsitec.Aider.Enumerations
 			}
 		}
 
+		public static string GetLongText(this PersonMrMrsTitle? value)
+		{
+			return TextGenerator.GetLongText (value ?? PersonMrMrsTitle.Auto);
+		}
+
+		public static string GetLongText(this PersonMrMrsTitle value)
+		{
+			switch (value)
+			{
+				default:
+					return EnumKeyValues.GetEnumKeyValue (value).Values.First ().ToSimpleText ();
+
+				case PersonMrMrsTitle.Auto:
+					return "";
+			}
+		}
+
 		public static string GetShortText(this PersonMrMrs? value)
 		{
 			return TextGenerator.GetShortText (value ?? PersonMrMrs.None);
@@ -61,6 +78,23 @@ namespace Epsitec.Aider.Enumerations
 
 				default:
 					throw new System.NotImplementedException ();
+			}
+		}
+		
+		public static string GetShortText(this PersonMrMrsTitle? value)
+		{
+			return TextGenerator.GetShortText (value ?? PersonMrMrsTitle.Auto);
+		}
+
+		public static string GetShortText(this PersonMrMrsTitle value)
+		{
+			switch (value)
+			{
+				default:
+					return EnumKeyValues.GetEnumKeyValue (value).Values.Last ().ToSimpleText ();
+
+				case PersonMrMrsTitle.Auto:
+					return "";
 			}
 		}
 

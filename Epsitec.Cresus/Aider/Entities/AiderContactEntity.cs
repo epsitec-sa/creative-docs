@@ -1,4 +1,4 @@
-//	Copyright © 2013-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -73,7 +73,7 @@ namespace Epsitec.Aider.Entities
 		{
 			List<string> lines = new List<string> ();
 
-			lines.Add (this.LegalPersonContactMrMrs.GetLongText ());
+			lines.Add (AiderContactEntity.GetContactTitleLongText (this.LegalPersonContactMrMrs, this.ContactTitle));
 			lines.Add (this.LegalPersonContactFullName);
 			lines.AddRange (this.LegalPerson.GetNameLines ());
 
@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPersonRecipientText()
 		{
-			return this.GetPersonRecipientText (this.Person.MrMrs.GetLongText ());
+			return this.GetPersonRecipientText (AiderContactEntity.GetContactTitleLongText (this.Person.MrMrs, this.ContactTitle));
 		}
 
 		public FormattedText GetAddressOfParentsLabelText(PostalAddressType type = PostalAddressType.Default)
@@ -264,6 +264,31 @@ namespace Epsitec.Aider.Entities
 			}
 
 			value = buffer.ToString ();
+		}
+
+
+		public static string GetContactTitleShortText(PersonMrMrs? personMrMrs, PersonMrMrsTitle? personTitle)
+		{
+			if (personTitle.HasValue && (personTitle.Value != PersonMrMrsTitle.Auto))
+			{
+				return personTitle.GetShortText ();
+			}
+			else
+			{
+				return personMrMrs.GetShortText ();
+			}
+		}
+
+		public static string GetContactTitleLongText(PersonMrMrs? personMrMrs, PersonMrMrsTitle? personTitle)
+		{
+			if (personTitle.HasValue && (personTitle.Value != PersonMrMrsTitle.Auto))
+			{
+				return personTitle.GetLongText ();
+			}
+			else
+			{
+				return personMrMrs.GetLongText ();
+			}
 		}
 
 
