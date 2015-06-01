@@ -15,6 +15,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Aider.Helpers;
 
 namespace Epsitec.Aider.Entities
 {
@@ -138,6 +139,22 @@ namespace Epsitec.Aider.Entities
 			this.DisplayAddress       = this.GetDisplayAddress ();
 			this.DisplayVisibility    = this.GetDisplayVisibilityStatus ();
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
+		}
+
+		public void RefreshRoleCache(DataContext dataContext)
+		{
+			var participations = this.FindRoleCacheParticipations (dataContext);
+
+			foreach (var participation in participations)
+			{
+				var role		= AiderParticipationsHelpers.BuildRoleFromParticipation (participation)
+																.GetRole (participation);
+
+				var rolePath	= AiderParticipationsHelpers.GetRolePath (participation);
+
+				participation.RoleCache		= role;
+				participation.RolePathCache = rolePath;
+			}
 		}
 
 
@@ -592,6 +609,15 @@ namespace Epsitec.Aider.Entities
 			return dataContext
 				.GetByRequest<AiderGroupParticipantEntity> (request)
 				.OrderBy (g => g.GetSummaryWithHierarchicalGroupName ().ToString ())
+				.ToList ();
+		}
+
+		private IList<AiderGroupParticipantEntity> FindRoleCacheParticipations(DataContext dataContext)
+		{
+			var request = AiderGroupParticipantEntity.CreateRoleCacheParticipantRequest (dataContext, this);
+			
+			return dataContext
+				.GetByRequest<AiderGroupParticipantEntity> (request)
 				.ToList ();
 		}
 

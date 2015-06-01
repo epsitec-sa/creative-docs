@@ -489,6 +489,8 @@ namespace Epsitec.Aider.Entities
 			this.UpdateMailingParticipants (businessContext);
 			// Then exclude
 			this.UpdateMailingExclusions (businessContext);
+			// Refresh contacts caches
+			this.RefreshCaches (businessContext);
 		}
 
 		/// <summary>
@@ -589,6 +591,26 @@ namespace Epsitec.Aider.Entities
 			}
 
 			this.UpdateLastUpdateDate ();
+			businessContext.SaveChanges (LockingPolicy.KeepLock);
+		}
+
+		/// <summary>
+		/// Refresh contact cache and role cache for each participants
+		/// </summary>
+		/// <param name="businessContext"></param>
+		private void RefreshCaches(BusinessContext businessContext)
+		{
+			var dataContext = businessContext.DataContext;
+			var participants = AiderMailingParticipantEntity.GetAllParticipants (dataContext, this);
+			foreach (var participant in participants)
+			{
+				if (participant.Contact.IsNotNull ())
+				{
+					participant.Contact.RefreshCache ();
+					participant.Contact.RefreshRoleCache (dataContext);
+				}
+			}
+
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 

@@ -217,6 +217,26 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
+		public static Request CreateRoleCacheParticipantRequest(DataContext dataContext, AiderContactEntity contact)
+		{
+			var participation = new AiderGroupParticipantEntity ()
+			{
+				Contact = new AiderContactEntity (),
+				Group = new AiderGroupEntity (),
+				RoleCacheDisabled = false
+			};
+
+			var request = new Request ()
+			{
+				RootEntity = participation,
+			};
+
+			request.AddCondition (dataContext, participation, p => p.Contact == contact);
+			request.AddCondition (dataContext, participation, p => p.EndDate == null);
+
+			return request;
+		}
+
 		public static Request CreateParticipantRequest(DataContext dataContext, AiderLegalPersonEntity legalPerson, bool current)
 		{
 			var participation = new AiderGroupParticipantEntity ()
