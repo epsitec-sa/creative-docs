@@ -614,7 +614,7 @@ namespace Epsitec.Aider.Entities
 
 		private IList<AiderGroupParticipantEntity> FindRoleCacheParticipations(DataContext dataContext)
 		{
-			var request = AiderGroupParticipantEntity.CreateRoleCacheParticipantRequest (dataContext, this);
+			var request = AiderGroupParticipantEntity.CreateRoleCacheParticipantRequest (dataContext, this, true);
 			
 			return dataContext
 				.GetByRequest<AiderGroupParticipantEntity> (request)

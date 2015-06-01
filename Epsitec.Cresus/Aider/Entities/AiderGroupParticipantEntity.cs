@@ -217,7 +217,7 @@ namespace Epsitec.Aider.Entities
 			return request;
 		}
 
-		public static Request CreateRoleCacheParticipantRequest(DataContext dataContext, AiderContactEntity contact)
+		public static Request CreateRoleCacheParticipantRequest(DataContext dataContext, AiderContactEntity contact, bool current)
 		{
 			var participation = new AiderGroupParticipantEntity ()
 			{
@@ -232,7 +232,11 @@ namespace Epsitec.Aider.Entities
 			};
 
 			request.AddCondition (dataContext, participation, p => p.Contact == contact);
-			request.AddCondition (dataContext, participation, p => p.EndDate == null);
+
+			if (current)
+			{
+				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
+			}
 
 			return request;
 		}

@@ -162,8 +162,10 @@ namespace Epsitec.Aider.Data.Common
 			{
 				RoleCacheDisabled = false
 			};
+
 			var request = AiderEnumerator.CreateParticipationRoleCacheBatchRequest (example, skip, take);
-			request.AddCondition (dataContext, example, e => e.EndDate == null);
+
+			AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, example);
 
 			var aiderSubscriptions = dataContext.GetByRequest<AiderGroupParticipantEntity> (request);
 
