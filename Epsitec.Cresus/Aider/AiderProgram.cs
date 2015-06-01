@@ -357,6 +357,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-cleanhouseholds")) //-cleanhouseholds
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanHouseholds (args));
+					return;
+				}
+
 				if (args.Contains ("-townfusionhack")) //-townfusionhack
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FusionArzier (args));
@@ -912,6 +918,17 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				RoleCache.Purge (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void CleanHouseholds(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

@@ -323,6 +323,7 @@
     <Compile Include="Data\Job\DerogationHotfix.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
+    <Compile Include="Data\Job\HouseholdsFix.cs" />
     <Compile Include="Data\Job\RoleCache.cs" />
     <Compile Include="Data\Job\WarningCleaner.cs" />
     <Compile Include="Data\Job\MatchResponse.cs" />
