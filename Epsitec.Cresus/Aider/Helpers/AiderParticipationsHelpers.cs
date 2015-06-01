@@ -32,7 +32,23 @@ namespace Epsitec.Aider.Helpers
 		{
 			var path = participation.Group.Parents.Select (p => p.Name).ToList ();
 			path.Add(participation.Group.Name);
-			return path.JoinNonEmpty (" / ");
+
+			var pathString = path.JoinNonEmpty (" / ");
+
+			if (pathString.IsNullOrWhiteSpace ())
+			{
+				pathString = "Erreur";
+			}
+
+			if (pathString.Length > 200) 
+			{
+				pathString = pathString.Replace (" / ", "/");
+				if (pathString.Length > 200)
+				{
+					pathString = pathString.SubstringStart (200);
+				}
+			}
+			return pathString;
 		}
 
 		public static AiderParticipationRole BuildRoleFromParticipation(AiderGroupParticipantEntity participation)
