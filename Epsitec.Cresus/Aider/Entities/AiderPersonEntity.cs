@@ -399,10 +399,9 @@ namespace Epsitec.Aider.Entities
 
 				if (household.IsNotNull ())
 				{
-					if (household.Members.All (x => x.Visibility != PersonVisibilityStatus.Default))
-					{
-						AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
-					}
+					this.RemoveFromHousehold (businessContext, household);
+					AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household.ToEnumerable (), true);
+					household.RefreshCache ();
 				}		
 			}
 		}
