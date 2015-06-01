@@ -329,6 +329,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (household.Members.Count == 0)
 				{
+					AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
 					AiderHouseholdEntity.Delete (businessContext, household);
 				}
 				else
@@ -351,6 +352,7 @@ namespace Epsitec.Aider.Entities
 							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
 						}
 
+						AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
 						AiderHouseholdEntity.Delete (businessContext, household);
 					}
 				}
