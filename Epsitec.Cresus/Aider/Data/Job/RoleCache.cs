@@ -118,8 +118,7 @@ namespace Epsitec.Aider.Data.Job
 				var sqlEngine = dbAbstraction.SqlEngine;
 
 				var sqlCommand = "UPDATE mud_lva73 " +
-								 "SET mud_lva73.u_lvoo33 = '' " +
-								 "WHERE mud_lva73.u_lvop33 = 0";
+								 "SET mud_lva73.u_lvoo33 = '', mud_lva73.u_lvo143 = '' ";
 
 
 				var sqlBuilder = dbAbstraction.SqlBuilder;
