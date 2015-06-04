@@ -2414,9 +2414,9 @@ AiderEventPlace = [LVOL63]
       <R><r>@user</r></R>
     </d>
 
-    <d cid="[LVGI22]" teid="@AiderContact" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
+    <d cid="[LVGI22]" teid="@AiderGroupParticipant" tn="default" df="false" d="false" ec="false" ed="false"  dg="">
       <R><r>@user</r></R>
-      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderContact:" /></M>
+      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderGroupParticipant:[LVAIG]" /></M>
       <L>
         <l t="Adresse normale" f="0"/>
         <l t="Adresse aux parents de..." f="1"/>
