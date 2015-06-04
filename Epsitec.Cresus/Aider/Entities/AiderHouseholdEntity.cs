@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetAddressRecipientText()
+		public FormattedText GetAddressRecipientText()
 		{
 			if (this.Contacts.Count == 0)
 			{
@@ -140,7 +140,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetAddressName()
+		public string GetAddressName()
 		{
 			if (this.GetMembers ().Count == 0)
 			{
