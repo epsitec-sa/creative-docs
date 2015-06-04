@@ -668,6 +668,10 @@ AiderEventPlace = [LVOL63]
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
+       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVO173]" title="Intitulé Personalisé" canSort="True" canFilter="True">
+        <sort o="Ascending" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAEE]" title="NPA" dw="45" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
@@ -683,6 +687,10 @@ AiderEventPlace = [LVOL63]
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOS33].[LVO143]" title="Chemin" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOS33].[LVAA8].[LVA88]" title="Commentaire (participation)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVG342]" title="Addresse complète (une ligne)" canSort="False" canFilter="False">
         <sort o="None" />
@@ -937,6 +945,10 @@ AiderEventPlace = [LVOL63]
         Debug et infos techniques
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA6L]" title="Clés internes (technique)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVOS33].[LVOP33]" title="RoleCache désactivé" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1799,7 +1811,7 @@ AiderEventPlace = [LVOL63]
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAA8].[LVA88]" title="Commentaire (participation)" canSort="True" canFilter="True">
         <sort o="None" />
-        <disp m="Hidden" />
+        <disp m="Visible" />
       </col>
       <!--
         Person data

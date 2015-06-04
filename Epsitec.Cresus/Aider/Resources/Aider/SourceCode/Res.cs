@@ -3359,6 +3359,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVON03
 				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
+				//	designer:cap/LVO173
+				public static readonly global::Epsitec.Common.Support.Druid CustomRecipient = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 225);
 				//	designer:cap/LVOS33
 				public static readonly global::Epsitec.Common.Support.Druid GroupParticipation = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 124);
 				//	designer:cap/LVOS03

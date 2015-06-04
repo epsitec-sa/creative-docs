@@ -8766,6 +8766,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>CustomRecipient</c> field.
+		///	designer:fld/LVOL03/LVO173
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO173]")]
+		public string CustomRecipient
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO173]");
+			}
+			set
+			{
+				string oldValue = this.CustomRecipient;
+				if (oldValue != value || !this.IsFieldDefined("[LVO173]"))
+				{
+					this.OnCustomRecipientChanging (oldValue, value);
+					this.SetField<string> ("[LVO173]", oldValue, value);
+					this.OnCustomRecipientChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Contact</c> field.
 		///	designer:fld/LVOL03/LVON03
 		///	</summary>
@@ -8878,6 +8900,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnMailingChanging(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
 		partial void OnMailingChanged(global::Epsitec.Aider.Entities.AiderMailingEntity oldValue, global::Epsitec.Aider.Entities.AiderMailingEntity newValue);
+		partial void OnCustomRecipientChanging(string oldValue, string newValue);
+		partial void OnCustomRecipientChanged(string oldValue, string newValue);
 		partial void OnContactChanging(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnHousholdChanging(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);
