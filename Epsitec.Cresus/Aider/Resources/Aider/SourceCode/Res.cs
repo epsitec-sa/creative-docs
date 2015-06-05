@@ -1443,6 +1443,22 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 292));
 						}
 					}
+					//	designer:cap/LVATM
+					public static global::Epsitec.Common.Types.Caption Mesdames
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 733));
+						}
+					}
+					//	designer:cap/LVASM
+					public static global::Epsitec.Common.Types.Caption Messieurs
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 732));
+						}
+					}
 					//	designer:cap/LVA39
 					public static global::Epsitec.Common.Types.Caption MonsieurEtMadame
 					{

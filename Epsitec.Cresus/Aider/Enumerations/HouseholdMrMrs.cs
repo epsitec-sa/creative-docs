@@ -15,5 +15,8 @@ namespace Epsitec.Aider.Enumerations
 		MonsieurEtMadame = 10,
 		MadameEtMonsieur = 11,
 		Famille = 12,
+
+		Messieurs = 20,
+		Mesdames = 21,
 	}
 }
