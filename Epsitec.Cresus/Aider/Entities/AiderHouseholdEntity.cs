@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetAddressRecipientText()
+		public FormattedText GetAddressRecipientText()
 		{
 			if (this.Contacts.Count == 0)
 			{
@@ -114,6 +114,8 @@ namespace Epsitec.Aider.Entities
 			{
 				case HouseholdMrMrs.MonsieurEtMadame:
 				case HouseholdMrMrs.MadameEtMonsieur:
+				case HouseholdMrMrs.Messieurs:
+				case HouseholdMrMrs.Mesdames:
 					// If we have a single head and some children, we use the "Family" title.
 					if (this.GetHeads ().Count == 1)
 					{
@@ -140,7 +142,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private string GetAddressName()
+		public string GetAddressName()
 		{
 			if (this.GetMembers ().Count == 0)
 			{
@@ -206,6 +208,14 @@ namespace Epsitec.Aider.Entities
 			{
 				return HouseholdMrMrs.MonsieurEtMadame;
 			}
+			if ((manCount > 1) && (womanCount == 0))
+			{
+				return HouseholdMrMrs.Messieurs;
+			}
+			if ((manCount == 0) && (womanCount > 1))
+			{
+				return HouseholdMrMrs.Mesdames;
+			}
 
 			return HouseholdMrMrs.Famille;
 		}
@@ -218,8 +228,18 @@ namespace Epsitec.Aider.Entities
 				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
 				.FirstOrDefault ();
 
+			var man2= heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Male)
+				.Skip (1)
+				.FirstOrDefault ();
+
 			var woman = heads
 				.Where (x => x.eCH_Person.PersonSex == PersonSex.Female)
+				.FirstOrDefault ();
+			
+			var woman2= heads
+				.Where (x => x.eCH_Person.PersonSex == PersonSex.Female)
+				.Skip (1)
 				.FirstOrDefault ();
 
 			var result = new List<AiderPersonEntity> ();
@@ -248,6 +268,28 @@ namespace Epsitec.Aider.Entities
 					if (man != null)
 					{
 						result.Add (man);
+					}
+					break;
+				
+				case HouseholdMrMrs.Messieurs:
+					if (man != null)
+					{
+						result.Add (man);
+					}
+					if (man2 != null)
+					{
+						result.Add (man2);
+					}
+					break;
+
+				case HouseholdMrMrs.Mesdames:
+					if (woman != null)
+					{
+						result.Add (woman);
+					}
+					if (woman2 != null)
+					{
+						result.Add (woman2);
 					}
 					break;
 

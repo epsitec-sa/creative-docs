@@ -112,6 +112,8 @@ namespace Epsitec.Aider.Enumerations
 				case HouseholdMrMrs.Famille:			return "Famille";
 				case HouseholdMrMrs.MadameEtMonsieur:	return "Madame et Monsieur";
 				case HouseholdMrMrs.MonsieurEtMadame:	return "Monsieur et Madame";
+				case HouseholdMrMrs.Messieurs:			return "Messieurs";
+				case HouseholdMrMrs.Mesdames:			return "Mesdames";
 
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.None:
@@ -129,6 +131,8 @@ namespace Epsitec.Aider.Enumerations
 				case HouseholdMrMrs.Famille:			return "Fam.";
 				case HouseholdMrMrs.MadameEtMonsieur:	return "Mme et M.";
 				case HouseholdMrMrs.MonsieurEtMadame:	return "M. et Mme";
+				case HouseholdMrMrs.Messieurs:			return "MM.";
+				case HouseholdMrMrs.Mesdames:			return "Mmes";
 
 				case HouseholdMrMrs.Auto:
 				case HouseholdMrMrs.None:

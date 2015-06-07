@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
+using System.Linq;
+
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
@@ -14,6 +16,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderSubscriptionEntity> wall)
 		{
 			var favorites = AiderGroupEntity.FindRegionRootGroups (this.BusinessContext);
+
+			//Remove PLA from list
+			favorites     = favorites.Where (f => f.Path != "R012.").ToList ();
 
 			wall.AddBrick ()
 				.Input ()

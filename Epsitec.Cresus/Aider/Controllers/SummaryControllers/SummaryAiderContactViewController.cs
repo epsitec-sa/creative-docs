@@ -233,7 +233,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 					var contactPersonSummary = string.IsNullOrEmpty (contact.LegalPersonContactFullName)
 						? FormattedText.Empty
-						: TextFormatter.FormatText (AiderContactEntity.GetContactTitleShortText (contact.LegalPersonContactMrMrs, contact.ContactTitle), contact.LegalPersonContactFullName);
+						: TextFormatter.FormatText (AiderContactEntity.GetContactTitleLongText (contact.LegalPersonContactMrMrs, contact.ContactTitle), "\n",
+						/**/						contact.LegalPersonContactFullName);
 
 					wall.AddBrick ()
 						.Icon (AiderPersonEntity.GetIconName ("Data", contact.LegalPersonContactMrMrs, contact.LegalPerson.Language))

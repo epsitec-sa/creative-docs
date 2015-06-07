@@ -46,10 +46,8 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
-				var contact = (AiderContactEntity) example;
 				var participation = new AiderGroupParticipantEntity ()
 				{
-					Contact = contact,
 				};
 
 				AiderGroupParticipantEntity.AddGroupAndSubGroupMemberCondition (dataContext, request, participation, entity);
@@ -58,7 +56,7 @@ namespace Epsitec.Aider.Controllers.SetControllers
 				request.Distinct = true;
 
 				request.RootEntity = participation;
-				request.RequestedEntity = contact;
+				request.RequestedEntity = participation;
 			});
 		}
 

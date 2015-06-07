@@ -1,4 +1,6 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.IO;
@@ -9,19 +11,15 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Loader;
-
+using System.Linq;
 
 namespace Epsitec.Aider.Data.Job
 {
-
-
 	/// <summary>
 	/// Various dataquality fixes for households
 	/// </summary>
 	internal static class HouseholdsFix
 	{
-
-
 		public static void RemoveHiddenPersonFromHouseholds(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -41,7 +39,7 @@ namespace Epsitec.Aider.Data.Job
 					p => p.Visibility != Enumerations.PersonVisibilityStatus.Default
 				);
 
-				var personsToCheck = businessContext.DataContext.GetByRequest<AiderPersonEntity> (request);
+				var personsToCheck = businessContext.DataContext.GetByRequest<AiderPersonEntity> (request).ToArray ();
 
 				foreach (var person in personsToCheck)
 				{
@@ -70,9 +68,5 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("~             DONE!             ~");
 			}
 		}
-
-
 	}
-
-
 }

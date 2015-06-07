@@ -90,7 +90,7 @@ namespace Epsitec.Aider.Entities
 			return this.GetAddressLabelText (this.GetAddressRecipientParentText (), type);
 		}
 
-		private string GetAddressRecipientParentText()
+		public string GetAddressRecipientParentText()
 		{
 			switch (this.ContactType)
 			{

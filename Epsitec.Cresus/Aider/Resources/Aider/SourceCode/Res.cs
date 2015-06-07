@@ -1443,6 +1443,22 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 292));
 						}
 					}
+					//	designer:cap/LVATM
+					public static global::Epsitec.Common.Types.Caption Mesdames
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 733));
+						}
+					}
+					//	designer:cap/LVASM
+					public static global::Epsitec.Common.Types.Caption Messieurs
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 732));
+						}
+					}
 					//	designer:cap/LVA39
 					public static global::Epsitec.Common.Types.Caption MonsieurEtMadame
 					{
@@ -3359,6 +3375,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVON03
 				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 23);
+				//	designer:cap/LVO173
+				public static readonly global::Epsitec.Common.Support.Druid CustomRecipient = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 225);
 				//	designer:cap/LVOS33
 				public static readonly global::Epsitec.Common.Support.Druid GroupParticipation = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 124);
 				//	designer:cap/LVOS03
