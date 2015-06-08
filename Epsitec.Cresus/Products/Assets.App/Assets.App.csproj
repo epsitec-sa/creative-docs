@@ -561,6 +561,8 @@
     <EmbeddedResource Include="Images\Methods.Test.icon" />
     <EmbeddedResource Include="Images\View.Arguments.icon" />
     <EmbeddedResource Include="Images\Main.ExportEntries.icon" />
+    <EmbeddedResource Include="Images\Main.SaveAs.icon" />
+    <EmbeddedResource Include="Images\Main.File.icon" />
     <None Include="packages.config" />
     <Content Include="Resources\Assets.App\Strings.en.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

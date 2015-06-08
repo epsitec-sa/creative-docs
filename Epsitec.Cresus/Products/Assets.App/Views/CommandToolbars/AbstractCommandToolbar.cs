@@ -107,6 +107,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private static Widget GetTarget(CommandDispatcher commandDispatcher, Command command)
 		{
 			//	Cherche le widget ayant la plus grande surface.
+			if (MainToolbar.FileCommands.Contains (command))
+			{
+				//	S'il s'agit d'une commande regroupée sous le bouton "File", il faut attacher le
+				//	Popup au bouton "File", car il n'existe pas de bouton dédié pour la commande.
+				command = Res.Commands.Main.File;
+			}
+
 			var targets = commandDispatcher.FindVisuals (command)
 				.Where (x => !x.ActualBounds.IsEmpty && x.Name != "NoTarget")
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)

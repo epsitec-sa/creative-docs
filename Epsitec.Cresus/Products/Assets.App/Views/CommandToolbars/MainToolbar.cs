@@ -87,10 +87,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.viewMode = ViewMode.Single;
 			this.simulation = 0;
 
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.New);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Open);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.Save);
-			this.CreateButton (DockStyle.Left, Res.Commands.Main.ExportEntries);
+			this.CreateButton (DockStyle.Left, Res.Commands.Main.File);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Back);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Forward);
 			this.CreateButton (DockStyle.Left, Res.Commands.Main.Navigate.Menu);
@@ -253,6 +250,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.OnChangeView ();
 		}
 
+		[Command (Res.CommandIds.Main.File)]
+		private void OnMainFile(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.GetTarget (e);
+			this.ShowFilePopup (target);
+		}
+
 		[Command (Res.CommandIds.View.Settings)]
 		private void OnViewSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -351,67 +355,51 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		}
 
 
+		public static Command[] FileCommands = new Command[]
+		{
+			Res.Commands.Main.New,
+			null,
+			Res.Commands.Main.Open,
+			Res.Commands.Main.Save,
+			Res.Commands.Main.SaveAs,
+			null,
+			Res.Commands.Main.ExportEntries
+		};
+
+		private void ShowFilePopup(Widget target)
+		{
+			//	Affiche le menu "File".
+			this.ShowMenuPopup (target, MainToolbar.FileCommands);
+		}
+
 		private void ShowViewPopup(Widget target)
 		{
 			//	Affiche le popup permettant de choisir une vue parmi celles regroupées dans l'engrenage.
-#if false
 			var commands = MainToolbar.PopupViewTypeKinds
 				.Select (x => MainToolbar.GetViewCommand (x))
 				.ToArray ();
 
-			var popup = new ViewPopup ()
-			{
-				ViewCommands = commands,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ChangeView += delegate (object sender, Command command)
-			{
-				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
-				this.toolbar.ExecuteCommand (command);
-			};
-#else
-			var commands = MainToolbar.PopupViewTypeKinds
-				.Select (x => MainToolbar.GetViewCommand (x))
-				.ToArray ();
-
-			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));
-
-			MenuPopup.Show (this, target, pos, 32, commands);  // affiche le menu avec les icônes 32x32
-#endif
+			this.ShowMenuPopup (target, commands);
 		}
 
 		private void ShowViewModePopup(Widget target)
 		{
 			//	Affiche le popup permettant de choisir le ViewMode.
-#if false
 			var commands = MainToolbar.ViewTypeModes
 				.Select (x => MainToolbar.GetViewModeCommand (x))
 				.ToArray ();
 
-			var popup = new ViewPopup ()
-			{
-				ViewCommands = commands,
-			};
+			this.ShowMenuPopup (target, commands);
+		}
 
-			popup.Create (target, leftOrRight: false);
-
-			popup.ChangeView += delegate (object sender, Command command)
-			{
-				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
-				this.toolbar.ExecuteCommand (command);
-			};
-#else
-			var commands = MainToolbar.ViewTypeModes
-				.Select (x => MainToolbar.GetViewModeCommand (x))
-				.ToArray ();
-
-			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));
+		private void ShowMenuPopup(Widget target, Command[] commands)
+		{
+			//	Affiche un MenuPop sous le bouton correspondant.
+			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));  // menu attaché en bas au milieu du bouton
 
 			MenuPopup.Show (this, target, pos, 32, commands);  // affiche le menu avec les icônes 32x32
-#endif
 		}
+
 
 		private void ShowLanguagesPopup(Widget target)
 		{

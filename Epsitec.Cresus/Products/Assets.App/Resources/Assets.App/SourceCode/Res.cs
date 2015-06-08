@@ -311,6 +311,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Edit = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
 				//	designer:cap/JUKA701
 				public static readonly global::Epsitec.Common.Widgets.Command ExportEntries = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 234));
+				//	designer:cap/JUKC701
+				public static readonly global::Epsitec.Common.Widgets.Command File = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 236));
 				//	designer:cap/JUKN001
 				public static readonly global::Epsitec.Common.Widgets.Command Locked = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
 				//	designer:cap/JUKI001
@@ -323,6 +325,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command RedoHistory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 200));
 				//	designer:cap/JUKA601
 				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 202));
+				//	designer:cap/JUKB701
+				public static readonly global::Epsitec.Common.Widgets.Command SaveAs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 235));
 				//	designer:cap/JUKO001
 				public static readonly global::Epsitec.Common.Widgets.Command Simulation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
 				//	designer:cap/JUK5601
@@ -938,6 +942,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Edit = 0x7D300014000016L;
 				//	designer:cap/JUKA701
 				public const long ExportEntries = 0x7D3000140000EAL;
+				//	designer:cap/JUKC701
+				public const long File = 0x7D3000140000ECL;
 				//	designer:cap/JUKN001
 				public const long Locked = 0x7D300014000017L;
 				//	designer:cap/JUKI001
@@ -950,6 +956,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long RedoHistory = 0x7D3000140000C8L;
 				//	designer:cap/JUKA601
 				public const long Save = 0x7D3000140000CAL;
+				//	designer:cap/JUKB701
+				public const long SaveAs = 0x7D3000140000EBL;
 				//	designer:cap/JUKO001
 				public const long Simulation = 0x7D300014000018L;
 				//	designer:cap/JUK5601
