@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				color = color.Delta (0.1);  // plus clair si disable
 			}
 
+			if (this.CommandState.ActiveState == ActiveState.Yes)
+			{
+				color = ColorManager.SelectionColor;
+			}
+
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 

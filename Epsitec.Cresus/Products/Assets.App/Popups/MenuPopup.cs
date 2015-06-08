@@ -128,11 +128,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 #if true
 			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
 			var desc = command.Description;
-			
+
 			var item = new MenuPopupItem
 			{
 				Parent          = this.mainFrameBox,
-				IconUri         = Misc.GetResourceIconUri (command.Icon),
+				CommandId       = command.Caption.Id,
 				Text            = desc,
 				Dock            = DockStyle.Top,
 				PreferredHeight = this.itemHeight,

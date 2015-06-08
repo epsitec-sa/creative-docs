@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				.Select (x => MainToolbar.GetViewCommand (x))
 				.ToArray ();
 
-			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 0));
+			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));
 
 			MenuPopup.Show (this, target, pos, 32, commands);
 #endif
