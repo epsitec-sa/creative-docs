@@ -385,6 +385,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private void ShowViewModePopup(Widget target)
 		{
 			//	Affiche le popup permettant de choisir le ViewMode.
+#if false
 			var commands = MainToolbar.ViewTypeModes
 				.Select (x => MainToolbar.GetViewModeCommand (x))
 				.ToArray ();
@@ -401,6 +402,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
 				this.toolbar.ExecuteCommand (command);
 			};
+#else
+			var commands = MainToolbar.ViewTypeModes
+				.Select (x => MainToolbar.GetViewModeCommand (x))
+				.ToArray ();
+
+			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));
+
+			MenuPopup.Show (this, target, pos, 32, commands);  // affiche le menu avec les icônes 32x32
+#endif
 		}
 
 		private void ShowLanguagesPopup(Widget target)
