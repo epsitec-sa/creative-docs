@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 
 			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 6));
 
-			MenuPopup.Show (this, target, pos, 32, commands);
+			MenuPopup.Show (this, target, pos, 32, commands);  // affiche le menu avec les icônes 32x32
 #endif
 		}
 

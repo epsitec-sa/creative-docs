@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			if (this.CommandState.ActiveState == ActiveState.Yes)
 			{
-				color = ColorManager.SelectionColor;
+				color = ColorManager.SelectionColor;  // fond jaune si la commande est sélectionnée
 			}
 
 			graphics.AddFilledRectangle (rect);
