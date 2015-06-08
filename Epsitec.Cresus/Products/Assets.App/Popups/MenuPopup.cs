@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				IconUri         = Misc.GetResourceIconUri (command.Icon),
 				Text            = desc,
 				Dock            = DockStyle.Top,
-				PreferredHeight = MenuPopup.itemHeight,
+				PreferredHeight = this.itemHeight,
 				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
 			};
 
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				Parent          = this.mainFrameBox,
 				Dock            = DockStyle.Top,
-				PreferredHeight = MenuPopup.itemHeight,
+				PreferredHeight = this.itemHeight,
 				Margins         = new Margins (MenuPopup.margins, MenuPopup.margins, top ? MenuPopup.margins : 0, 0),
 				CommandObject   = command,
 			};
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				(
 					command => (command == null) ? 0 : MenuPopupItem.GetRequiredWidth
 					(
-						MenuPopup.itemHeight, command.Description
+						this.itemHeight, command.Description
 					)
 				)
 				+ MenuPopup.margins*2;
@@ -205,13 +205,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				return this.commands.Sum
 				(
-					command => MenuPopup.GetRequiredHeight (command)
+					command => this.GetRequiredHeight (command)
 				)
 				+ MenuPopup.margins*2;
 			}
 		}
 
-		private static int GetRequiredHeight(Command command)
+		private int GetRequiredHeight(Command command)
 		{
 			if (command == null)  // séparateur ?
 			{
@@ -219,13 +219,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 			else
 			{
-				return MenuPopup.itemHeight;
+				return this.itemHeight;
 			}
 		}
 
 
 		#region Helpers
-		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, params Command[] commands)
+		public static void Show(AbstractCommandToolbar toolbar, Widget widget, Point pos, int? itemHeight, params Command[] commands)
 		{
 			//	Affiche le menu contextuel.
 			//	- La toolbar permet d'obtenir les commandes.
@@ -235,6 +235,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	- La liste d'items décrit le contenu du menu.
 
 			var popup = new MenuPopup (toolbar);
+
+			if (itemHeight.HasValue)
+			{
+				popup.itemHeight = itemHeight.Value;
+			}
 
 			foreach (var command in commands)
 			{
@@ -253,9 +258,10 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		private const int							margins		= 2;
-		private const int							itemHeight	= 26;
 
 		private readonly AbstractCommandToolbar		toolbar;
 		private readonly List<Command>				commands;
+
+		private int									itemHeight	= 26;
 	}
 }

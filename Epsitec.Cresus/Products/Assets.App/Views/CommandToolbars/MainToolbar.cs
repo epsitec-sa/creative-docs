@@ -354,6 +354,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private void ShowViewPopup(Widget target)
 		{
 			//	Affiche le popup permettant de choisir une vue parmi celles regroupées dans l'engrenage.
+#if false
 			var commands = MainToolbar.PopupViewTypeKinds
 				.Select (x => MainToolbar.GetViewCommand (x))
 				.ToArray ();
@@ -370,6 +371,15 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 				//	On exécute la commande lorsque le popup est fermé et son CommandDispatcher détruit.
 				this.toolbar.ExecuteCommand (command);
 			};
+#else
+			var commands = MainToolbar.PopupViewTypeKinds
+				.Select (x => MainToolbar.GetViewCommand (x))
+				.ToArray ();
+
+			var pos = target.MapClientToScreen (new Point (target.ActualWidth/2, 0));
+
+			MenuPopup.Show (this, target, pos, 32, commands);
+#endif
 		}
 
 		private void ShowViewModePopup(Widget target)
