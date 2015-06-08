@@ -170,7 +170,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowSaveMandatPopup (target);
+
+			if (string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatDirectory) ||
+				string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
+			{
+				//	Si le nom du fichier n'est pas connu, on effectue un 'SaveAs'.
+				this.ShowSaveMandatPopup (target);
+			}
+			else
+			{
+				//	Effectue un enregistrement non interactif, sauf s'il y a une erreur.
+				var path = System.IO.Path.Combine (this.accessor.ComputerSettings.MandatDirectory, this.accessor.ComputerSettings.MandatFilename);
+				var mode = this.accessor.GlobalSettings.SaveMandatMode;
+
+				this.SaveMandat (target, path, mode);
+			}
 		}
 
 		[Command (Res.CommandIds.Main.SaveAs)]
@@ -352,13 +366,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
 				this.accessor.GlobalSettings.SaveMandatMode = mode;
 
-				var err = this.SaveMandat (path, mode);
-				if (!string.IsNullOrEmpty (err))
-				{
-					err = TextLayout.ConvertToTaggedText (err);
-					MessagePopup.ShowError (target, err);
-				}
+				this.SaveMandat (target, path, mode);
 			});
+		}
+
+		private void SaveMandat(Widget target, string path, SaveMandatMode mode)
+		{
+			var err = this.SaveMandat (path, mode);
+			if (!string.IsNullOrEmpty (err))
+			{
+				err = TextLayout.ConvertToTaggedText (err);
+				MessagePopup.ShowError (target, err);
+			}
 		}
 
 		private void CreateMandat(string factoryName, string name, System.DateTime startDate, bool withSamples)
