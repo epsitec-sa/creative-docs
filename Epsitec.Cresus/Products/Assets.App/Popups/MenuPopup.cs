@@ -129,10 +129,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			bool top = this.mainFrameBox.Children.Count == 0;  // première ligne ?
 			var desc = command.Description;
 
+			//	On ne peut pas définir MenuPopupItem.CommandId, car cela provoque l'exécution de
+			//	la commande à double. C'est normal, la première fois provient du binder standard
+			//	de la commande, et la deuxième du item.Clicked explicite ci-dessous.
+			//	Du coup, MenuPopupItem doit avoir une propriété ActiveState séparée.
+
 			var item = new MenuPopupItem
 			{
 				Parent          = this.mainFrameBox,
-				CommandId       = command.Caption.Id,
+				IconUri         = Misc.GetResourceIconUri (command.Icon),
+				ActiveState     = this.toolbar.GetActiveState (command),
 				Text            = desc,
 				Dock            = DockStyle.Top,
 				PreferredHeight = this.itemHeight,

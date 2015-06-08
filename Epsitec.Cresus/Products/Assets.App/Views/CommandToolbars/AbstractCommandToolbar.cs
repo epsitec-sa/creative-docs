@@ -188,9 +188,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandContext.GetCommandState (command).Enable = enable;
 		}
 
+		public ActiveState GetActiveState(Command command)
+		{
+			return this.commandContext.GetCommandState (command).ActiveState;
+		}
+
 		public void SetActiveState(Command command, bool active)
 		{
-			this.commandContext.GetCommandState (command).ActiveState = active ? ActiveState.Yes : ActiveState.No;
+			this.SetActiveState (command, active ? ActiveState.Yes : ActiveState.No);
+		}
+
+		private void SetActiveState(Command command, ActiveState state)
+		{
+			this.commandContext.GetCommandState (command).ActiveState = state;
 		}
 
 
