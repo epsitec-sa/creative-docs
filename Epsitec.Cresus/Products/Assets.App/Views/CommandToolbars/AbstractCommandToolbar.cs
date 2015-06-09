@@ -107,6 +107,13 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 		private static Widget GetTarget(CommandDispatcher commandDispatcher, Command command)
 		{
 			//	Cherche le widget ayant la plus grande surface.
+			if (MainToolbar.FileCommands.Contains (command))
+			{
+				//	S'il s'agit d'une commande regroupée sous le bouton "File", il faut attacher le
+				//	Popup au bouton "File", car il n'existe pas de bouton dédié pour la commande.
+				command = Res.Commands.Main.File;
+			}
+
 			var targets = commandDispatcher.FindVisuals (command)
 				.Where (x => !x.ActualBounds.IsEmpty && x.Name != "NoTarget")
 				.OrderByDescending (x => x.PreferredHeight * x.PreferredWidth)
@@ -181,9 +188,19 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.commandContext.GetCommandState (command).Enable = enable;
 		}
 
+		public ActiveState GetActiveState(Command command)
+		{
+			return this.commandContext.GetCommandState (command).ActiveState;
+		}
+
 		public void SetActiveState(Command command, bool active)
 		{
-			this.commandContext.GetCommandState (command).ActiveState = active ? ActiveState.Yes : ActiveState.No;
+			this.SetActiveState (command, active ? ActiveState.Yes : ActiveState.No);
+		}
+
+		private void SetActiveState(Command command, ActiveState state)
+		{
+			this.commandContext.GetCommandState (command).ActiveState = state;
 		}
 
 

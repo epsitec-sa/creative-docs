@@ -668,3 +668,10 @@ Lancé le 29.05.2015
 
 -echupdate -newechfile:S:\eerv\eerv-2015-05-21.xml -oldechfile:S:\eerv\eerv-2015-05-14.xml -output:s:\eerv\ech-diff-2015-05-21.md
 -echupdate -newechfile:S:\eerv\eerv-2015-05-28.xml -oldechfile:S:\eerv\eerv-2015-05-21.xml -output:s:\eerv\ech-diff-2015-05-28.md
+
+Lancé le 06.06.2015
+-------------------
+
+-initrolecache
+-buildrolecache
+-echupdate -newechfile:S:\eerv\eerv-2015-06-04.xml -oldechfile:S:\eerv\eerv-2015-05-28.xml -output:s:\eerv\ech-diff-2015-06-04.md

@@ -295,6 +295,10 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVARM]" title="Politesse de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVAAE]" title="Rôle de la personne de contact" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -930,6 +934,10 @@ AiderEventPlace = [LVOL63]
         Legal person contact data
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVAEG]" title="Titre de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVARM]" title="Politesse de la personne de contact" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -2006,6 +2014,10 @@ AiderEventPlace = [LVOL63]
         Legal person contact data
       -->
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVAEG]" title="Titre de la personne de contact" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVARM]" title="Politesse de la personne de contact" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>

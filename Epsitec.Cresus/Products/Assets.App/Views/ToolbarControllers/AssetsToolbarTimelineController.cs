@@ -751,7 +751,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		private void ShowContextMenu(Point pos)
 		{
 			//	Affiche le menu contextuel.
-			MenuPopup.Show (this.toolbar, this.frameBox, pos,
+			MenuPopup.Show (this.toolbar, this.frameBox, pos, null,
 				Res.Commands.Timeline.New,
 				Res.Commands.Timeline.Delete,
 				null,

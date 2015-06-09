@@ -25,6 +25,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		public ActiveState						ActiveState = ActiveState.No;
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var rect = new Rectangle (0, 0, this.ActualWidth, this.ActualHeight);
@@ -35,6 +38,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			if (!this.Enable)
 			{
 				color = color.Delta (0.1);  // plus clair si disable
+			}
+
+			if (this.ActiveState == ActiveState.Yes)
+			{
+				color = ColorManager.SelectionColor;  // fond jaune si la commande est sélectionnée
 			}
 
 			graphics.AddFilledRectangle (rect);
