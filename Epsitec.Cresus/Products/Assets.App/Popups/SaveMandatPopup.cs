@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Filename,
 				Label                 = Res.Strings.Popup.AccountsImport.File.ToString (),
-				Width                 = 300,
+				Width                 = 500,
 				BottomMargin          = 10,
 			});
 
