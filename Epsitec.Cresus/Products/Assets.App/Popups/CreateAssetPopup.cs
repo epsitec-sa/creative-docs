@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = Res.Strings.Popup.CreateAsset.Date.ToString (),
 			});
 
-			this.CreateRequiredUserFields (list, BaseType.AssetsUserFields);
+			this.CreateRequiredUserFields (list, BaseType.AssetsUserFields, CreateAssetPopup.fieldWidth);
 			this.userFieldsCount = list.Count - 1;
 
 			list.Add (new StackedControllerDescription  // userFieldsCount+1
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.CategoryGuid,
 				Label                 = "",
-				Width                 = DateController.controllerWidth,
+				Width                 = CreateAssetPopup.fieldWidth - (int) AbstractScroller.DefaultBreadth - 3,
 				Height                = 180,
 			});
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					StackedControllerType = StackedControllerType.Combo,
 					Label                 = GroupsLogic.GetShortName (this.accessor, group.Guid),
 					MultiLabels           = this.GetMultiLabels (group.Guid),
-					Width                 = DateController.controllerWidth,
+					Width                 = CreateAssetPopup.fieldWidth - (int) AbstractScroller.DefaultBreadth - 3,
 				});
 
 				this.groupsDict.Add (i++, group.Guid);
@@ -328,6 +328,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 		#endregion
 
+
+		private const int fieldWidth = 400;
 
 		private readonly int					userFieldsCount;
 		private readonly Dictionary<int, Guid>	groupsDict;

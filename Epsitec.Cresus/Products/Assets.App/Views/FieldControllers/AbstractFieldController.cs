@@ -25,22 +25,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		public int								TabIndex;
 		public int								LabelWidth = AbstractFieldController.labelWidth;
+		public int								EditWidth;
 		public bool								HideAdditionalButtons;
 		public bool								Required;
 		public EventType						EventType;
 		public ObjectField						Field;
-
-		public int								EditWidth
-		{
-			get
-			{
-				return this.editWidth;
-			}
-			set
-			{
-				this.editWidth = System.Math.Min (value, AbstractFieldController.maxWidth);
-			}
-		}
 
 		public PropertyState					PropertyState
 		{

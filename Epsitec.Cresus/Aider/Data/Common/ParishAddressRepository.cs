@@ -232,6 +232,7 @@ namespace Epsitec.Aider.Data.Common
 			// We skip the entries within region 0 as we know that they are invalid.
 
 			return lines
+				.Where (x => x.Length > 0)
 				.Select (x => new ParishAddressInformation (x))
 				.Where (x => x.RegionCode != 0);
 		}

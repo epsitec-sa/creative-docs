@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Required user fields logic
-		protected void CreateRequiredUserFields(List<StackedControllerDescription> list, BaseType baseType)
+		protected void CreateRequiredUserFields(List<StackedControllerDescription> list, BaseType baseType, int maxWidth)
 		{
 			//	Pour les Popup de création (Asset ou Person), on crée tous les contrôleurs
 			//	permettant de remplir les champs obligatoires (UserField.Required).
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				var userField = userFields[i];
 				bool last = (i == userFields.Count-1);
 				int bottomMargin = last ? 10 : 0;
-				int width = System.Math.Min (userField.LineWidth.HasValue ? userField.LineWidth.GetValueOrDefault () : 1000, DateController.controllerWidth);
+				int width = System.Math.Min (userField.LineWidth.HasValue ? userField.LineWidth.GetValueOrDefault () : 1000, maxWidth);
 
 				switch (userField.Type)
 				{
