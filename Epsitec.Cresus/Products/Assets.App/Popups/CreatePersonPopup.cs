@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
-using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
-using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -25,7 +23,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			var list = new List<StackedControllerDescription> ();
 
-			this.CreateRequiredUserFields (list, BaseType.PersonsUserFields);
+			this.CreateRequiredUserFields (list, BaseType.PersonsUserFields, CreatePersonPopup.fieldWidth);
 			this.userFieldsCount = list.Count;
 
 			list.Add (new StackedControllerDescription  // userFieldsCount + 0
@@ -38,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.PersonGuid,
 				Label                 = "",
-				Width                 = DateController.controllerWidth,
+				Width                 = CreatePersonPopup.fieldWidth - (int) AbstractScroller.DefaultBreadth - 3,
 				Height                = 250,
 			});
 
@@ -98,6 +96,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Enable = this.GetRequiredProperties (BaseType.PersonsUserFields).Count () == this.userFieldsCount;
 		}
 
+
+		private const int fieldWidth = 400;
 
 		private readonly int userFieldsCount;
 	}

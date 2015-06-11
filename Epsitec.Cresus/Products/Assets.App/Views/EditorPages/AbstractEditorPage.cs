@@ -702,7 +702,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field     = field,
 				Required  = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
 				Label     = this.accessor.GetFieldName (field),
-				EditWidth = editWidth,
+				EditWidth = System.Math.Min (editWidth, AbstractFieldController.maxWidth),
 				LineCount = lineCount,
 				TabIndex  = this.tabIndex,
 				MaxLength = maxLength,
@@ -758,7 +758,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field     = field,
 				Required  = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
 				Label     = this.accessor.GetFieldName (field),
-				EditWidth = editWidth,
+				EditWidth = System.Math.Min (editWidth, AbstractFieldController.maxWidth),
 				Enums     = enums,
 				TabIndex  = this.tabIndex,
 			};
@@ -813,7 +813,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				Field         = field,
 				Required      = WarningsLogic.IsRequired (this.accessor, this.baseType, field),
 				Label         = this.accessor.GetFieldName (field),
-				EditWidth     = editWidth.HasValue ? editWidth.Value : 0,
+				EditWidth     = System.Math.Min (editWidth.HasValue ? editWidth.Value : 0, AbstractFieldController.maxWidth),
 				DecimalFormat = format,
 				TabIndex      = this.tabIndex,
 			};

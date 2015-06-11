@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Text,
 				Label                 = Res.Strings.Popup.Report.CustomTitle.ToString (),
-				Width                 = DateController.controllerWidth,
+				Width                 = GroupGuidStackedController.ControllerWidth,
 				BottomMargin          = 10,
 			});
 
@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = "",
-				Width                 = DateController.controllerWidth,
-				Height                = 100,
+				Width                 = GroupGuidStackedController.ControllerWidth,
+				Height                = 150,
 			});
 
 			list.Add (new StackedControllerDescription  // 6
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.GroupGuid,
 				Label                 = "",
-				Width                 = DateController.controllerWidth,
+				Width                 = GroupGuidStackedController.ControllerWidth,
 				Height                = 150,
 			});
 
