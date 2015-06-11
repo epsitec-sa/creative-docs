@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Widgets;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -188,7 +189,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int popupWidth = 300;
+		private const int popupWidth = GroupGuidStackedController.ControllerWidth;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
