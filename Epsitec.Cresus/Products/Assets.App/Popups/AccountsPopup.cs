@@ -232,6 +232,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			var account = this.accessor.GetObject (this.baseType, guid);
 
+			if (account == null)
+			{
+				return false;
+			}
+
 			var accType = (AccountType) ObjectProperties.GetObjectPropertyInt (account, null, ObjectField.AccountType);
 
 			if (accType == AccountType.Normal)
