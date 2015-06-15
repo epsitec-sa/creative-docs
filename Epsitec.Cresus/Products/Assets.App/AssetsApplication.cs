@@ -29,7 +29,16 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return Res.Strings.AssetsApplication.WindowTitle.ToString ();
+				var filename = (this.accessor == null) ? null : this.accessor.ComputerSettings.MandatFilename;
+
+				if (string.IsNullOrEmpty (filename))
+				{
+					return Res.Strings.AssetsApplication.WindowTitle.ToString ();
+				}
+				else
+				{
+					return string.Join (" - ", Res.Strings.AssetsApplication.WindowTitle.ToString (), filename);
+				}
 			}
 		}
 		
@@ -173,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateUI(Window window)
 		{
-			var computerSettings = new ComputerSettings ();
+			var computerSettings = new ComputerSettings (this.UpdateWindowText);
 
 			if (!computerSettings.WindowPlacement.Bounds.IsSurfaceZero)
 			{
@@ -210,6 +219,10 @@ namespace Epsitec.Cresus.Assets.App
 
 			//	Crée et ouvre le mandat par défaut.
 			this.accessor = new DataAccessor(computerSettings, cb);
+
+			//	Nécessaire, car lors de la première initialisation de computerSettings.MandatFilename,
+			//	this.accessor était null !
+			computerSettings.UpdateWindowTitle ();
 
 			if (string.IsNullOrEmpty (computerSettings.MandatFilename))
 			{
