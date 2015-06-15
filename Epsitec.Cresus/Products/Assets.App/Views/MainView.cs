@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowOpenMandatPopup (target);
+			this.ShowOpenMandatDialog (target);
 		}
 
 		[Command (Res.CommandIds.Main.Save)]
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
 			{
 				//	Si le nom du fichier n'est pas connu, on effectue un 'SaveAs'.
-				this.ShowSaveMandatPopup (target);
+				this.ShowSaveMandatDialog (target);
 			}
 			else
 			{
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnSaveAs(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowSaveMandatPopup (target);
+			this.ShowSaveMandatDialog (target);
 		}
 
 		[Command (Res.CommandIds.Main.ExportEntries)]
@@ -336,9 +336,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
-		private void ShowOpenMandatPopup(Widget target)
+		private void ShowOpenMandatDialog(Widget target)
 		{
-			DialogsHelper.Show (target,
+			DialogsHelper.ShowOpen (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				delegate (string path)
@@ -355,9 +355,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			});
 		}
 
-		private void ShowSaveMandatPopup(Widget target)
+		private void ShowSaveMandatDialog(Widget target)
 		{
-			DialogsHelper.Show (target,
+			DialogsHelper.ShowSave (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				this.accessor.GlobalSettings.SaveMandatMode,
