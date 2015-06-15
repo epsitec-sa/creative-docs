@@ -404,9 +404,7 @@
   <data name="Popup.SaveMandat.Title" id="K2I">Enregistrement du fichier</data>
   <data name="Popup.Button.Save" id="K3I">Enregistrer</data>
   <data name="FilenameStackedController.Browse" id="K4I">Parcourir...</data>
-  <data name="Popup.OpenMandat.DialogTitle" id="K5I">Ouvrir</data>
   <data name="Popup.OpenMandat.DialogFormatName" id="K6I">Crésus Immobilisations</data>
-  <data name="Popup.SaveMandat.DialogTitle" id="K7I">Enregistrer</data>
   <data name="Popup.SaveMandat.DialogFormatName" id="K8I">Crésus Immobilisations</data>
   <data name="Popup.Export.DialogTitle" id="K9I">Nom du fichier à exporter</data>
   <data name="Popup.AccountsImport.DialogTitle" id="KAI">Plan comptable Crésus à importer</data>
@@ -414,9 +412,6 @@
   <data name="ToolbarControllers.PersonsTreeTable.DeleteError" id="KCI">Il y a {0} objets d'immobilisations qui référencent ce contact. Par conséquent, il ne peut pas être supprimé.</data>
   <data name="ToolbarControllers.GroupsTreeTable.DeleteError" id="KDI">Il y a {0} objets d'immobilisations qui référencent ce groupe. Par conséquent, il ne peut pas être supprimé.</data>
   <data name="ToolbarControllers.GroupsTreeTable.DeleteErrorChildrens" id="KEI">Ce groupe contient {0} sous-groupes. Par conséquent, il ne peut pas être supprimé.</data>
-  <data name="Popup.SaveMandat.Mode.SaveUI" id="KFI">Enregistrer les réglages de l'interface</data>
-  <data name="Popup.SaveMandat.Mode.SaveUndoRedo" id="KGI">Enregistrer les informations pour annuler/rétablir</data>
-  <data name="Popup.SaveMandat.Mode.KeepXml" id="KHI">Conserver les fichiers xml non comprimés</data>
   <data name="Popup.Quit.Title" id="KII">Crésus Immobilisations</data>
   <data name="AmortizedAmountController.Scenario" id="KPI">Opération</data>
   <data name="AmortizedAmountController.Combos" id="KQI">Méthode et type</data>
