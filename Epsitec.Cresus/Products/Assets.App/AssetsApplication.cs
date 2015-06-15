@@ -247,6 +247,19 @@ namespace Epsitec.Cresus.Assets.App
 				new System.DateTime (2014, 1, 1), true);
 		}
 
+		public static bool IsExistingMandat(string filename)
+		{
+			//	Indique si le fichier d'un mandat existe.
+			try
+			{
+				return DataIO.IsExistingMandat (filename);
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
 		public static string OpenMandat(DataAccessor accessor, string filename)
 		{
 			//	Nécessaire si DataIO.OpenMandat ne lit pas les LocalSettings !

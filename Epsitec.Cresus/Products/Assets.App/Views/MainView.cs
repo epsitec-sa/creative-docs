@@ -362,12 +362,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.GlobalSettings.SaveMandatMode,
 				delegate (string path, SaveMandatMode mode)
 			{
-				this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName (path);
-				this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
-				this.accessor.GlobalSettings.SaveMandatMode = mode;
+				if (AssetsApplication.IsExistingMandat (path))
+				{
+					string question = string.Format ("Voulez-vous remplacer le fichier<br/>{0} ?", path);
 
-				this.SaveMandat (target, path, mode);
+					YesNoPopup.Show (target, question, delegate
+					{
+						this.SaveAsMandat (target, path, mode);
+					},
+					400);  // largeur plus grande que la standard
+				}
+				else
+				{
+					this.SaveAsMandat (target, path, mode);
+				}
 			});
+		}
+
+		private void SaveAsMandat(Widget target, string path, SaveMandatMode mode)
+		{
+			this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName (path);
+			this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
+			this.accessor.GlobalSettings.SaveMandatMode = mode;
+
+			this.SaveMandat (target, path, mode);
 		}
 
 		private void SaveMandat(Widget target, string path, SaveMandatMode mode)
