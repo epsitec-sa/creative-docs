@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			{
 				if (AssetsApplication.IsExistingMandat (path))
 				{
-					string question = string.Format ("Voulez-vous remplacer le fichier<br/>{0} ?", path);
+					string question = string.Format (Res.Strings.Popup.YesNo.DeleteFile.ToString (), path);
 
 					YesNoPopup.Show (target, question, delegate
 					{

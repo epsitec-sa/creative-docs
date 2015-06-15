@@ -489,4 +489,5 @@
   <data name="Popup.Quit.Cancel.Button" id="KBL">Annuler</data>
   <data name="Popup.Quit.Cancel.Tooltip" id="KCL">Ne rien faire</data>
   <data name="Popup.Quit.WithoutSaveMessage" id="KDL">Les modifications que vous avez apportées n'ont pas été enregistrées. Voulez-vous quitter sans les enregistrer ?</data>
+  <data name="Popup.YesNo.DeleteFile" id="KEL">Voulez-vous remplacer le fichier&lt;br/&gt;{0} ?</data>
 </bundle>
