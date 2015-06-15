@@ -120,8 +120,6 @@
     <Compile Include="Popups\QuitPopup.cs" />
     <Compile Include="Popups\StackedControllers\MethodGuidStackedController.cs" />
     <Compile Include="Popups\YearsCalculatorPopup.cs" />
-    <Compile Include="Popups\SaveMandatPopup.cs" />
-    <Compile Include="Popups\OpenMandatPopup.cs" />
     <Compile Include="Popups\UndoListPopup.cs" />
     <Compile Include="Popups\SearchOptionsPopup.cs" />
     <Compile Include="Popups\PageFormatType.cs" />
