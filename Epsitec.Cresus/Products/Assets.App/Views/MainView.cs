@@ -362,20 +362,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.GlobalSettings.SaveMandatMode,
 				delegate (string path, SaveMandatMode mode)
 			{
-				if (AssetsApplication.IsExistingMandat (path))
-				{
-					string question = string.Format (Res.Strings.Popup.YesNo.DeleteFile.ToString (), path);
-
-					YesNoPopup.Show (target, question, delegate
-					{
-						this.SaveAsMandat (target, path, mode);
-					},
-					400);  // largeur plus grande que la standard
-				}
-				else
-				{
-					this.SaveAsMandat (target, path, mode);
-				}
+				this.SaveAsMandat (target, path, mode);
 			});
 		}
 

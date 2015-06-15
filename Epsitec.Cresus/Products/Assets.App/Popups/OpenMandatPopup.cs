@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
@@ -125,9 +126,34 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
+		private static bool ShowFilenameDialog(Widget target, ref string directory, ref string filename)
+		{
+			//	Affiche le dialogue permettant de choisir le fichier à ouvrir.
+			var f = FileOpenDialog.ShowDialog (
+				target.Window,
+				Res.Strings.Popup.OpenMandat.Title.ToString (),
+				directory,
+				filename,
+				IOHelpers.Extension, Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ());
+
+			if (string.IsNullOrEmpty (f))
+			{
+				return false;
+			}
+			else
+			{
+				directory = System.IO.Path.GetDirectoryName (f);
+				filename  = System.IO.Path.GetFileName (f);
+
+				return true;
+			}
+		}
+
+
 		#region Static Helpers
 		public static void Show(DataAccessor accessor, Widget target, string directory, string filename, System.Action<string> action)
 		{
+#if false
 			if (string.IsNullOrEmpty (filename))
 			{
 				filename = "default" + IOHelpers.Extension;
@@ -147,6 +173,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					action (popup.Path);
 				}
 			};
+#else
+			if (OpenMandatPopup.ShowFilenameDialog (target, ref directory, ref filename))
+			{
+				var path = System.IO.Path.Combine (directory, filename);
+				action (path);
+			}
+#endif
 		}
 		#endregion
 	}
