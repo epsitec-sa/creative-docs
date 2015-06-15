@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -337,7 +338,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowOpenMandatPopup(Widget target)
 		{
-			OpenMandatPopup.Show (this.accessor, target,
+			DialogsHelper.Show (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				delegate (string path)
@@ -356,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowSaveMandatPopup(Widget target)
 		{
-			SaveMandatPopup.Show (this.accessor, target,
+			DialogsHelper.Show (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				this.accessor.GlobalSettings.SaveMandatMode,

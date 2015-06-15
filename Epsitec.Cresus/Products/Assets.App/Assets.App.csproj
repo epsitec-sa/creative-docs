@@ -76,6 +76,7 @@
     <Compile Include="DataFillers\ReportsTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
+    <Compile Include="Dialogs\DialogsHelper.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
     <Compile Include="Dialogs\FileSaveDialog.cs" />
     <Compile Include="Export\ExportFontHelpers.cs" />
