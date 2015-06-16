@@ -137,7 +137,6 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\AccountsImportPopup.cs" />
-    <Compile Include="Popups\StackedControllers\FilenameStackedController .cs" />
     <Compile Include="Popups\StackedControllers\PdfStyleStackedController.cs" />
     <Compile Include="Popups\PdfStylePopup.cs" />
     <Compile Include="Popups\StackedControllers\PageSizeStackedController.cs" />
