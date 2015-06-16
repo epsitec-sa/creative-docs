@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
-				var report = string.Format ("Fichier comptable à importer :<br/>{0}<br/><br/>", filename);
+				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
 
 				try
 				{
@@ -76,32 +76,17 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 		public void ShowImportPopup()
 		{
-			//	Affiche le popup permettant de choisir un plan comptable à importer, puis
-			//	effectue l'importation.
-#if false
-			var popup = new AccountsImportPopup (this.accessor)
-			{
-				Filename = LocalSettings.AccountsImportFilename,
-			};
-
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					LocalSettings.AccountsImportFilename = popup.Filename;  // enregistre dans les réglages
-					this.Import (popup.Filename);
-				}
-			};
-#else
+			//	Affiche le dialogue standard de Windows pour choisir le plan comptable à importer,
+			//	puis affiche le popup de résumé, puis effectue l'importation.
 			var directory = System.IO.Path.GetDirectoryName (LocalSettings.AccountsImportFilename);
 			var filename  = System.IO.Path.GetFileName (LocalSettings.AccountsImportFilename);
 
+			//	Affiche le dialogue standard de Windows.
 			DialogsHelper.ShowImportAccounts (this.target, directory, filename, delegate (string path)
 			{
 				LocalSettings.AccountsImportFilename = path;
 
+				//	Affiche le popup de résumé.
 				var popup = new AccountsImportPopup (this.accessor)
 				{
 					Filename = LocalSettings.AccountsImportFilename,
@@ -113,11 +98,11 @@ namespace Epsitec.Cresus.Assets.App.Export
 				{
 					if (name == "ok")
 					{
+						//	Effectue l'importation.
 						this.Import (popup.Filename);
 					}
 				};
 			});
-#endif
 		}
 
 

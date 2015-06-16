@@ -10,8 +10,7 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Popup permettant la saisir des informations nécessaires à l'importation d'un plan comptable.
-	/// Un rapport indique l'éventuel impact de l'importation, si elle est effectuée.
+	/// Popup affichant un résumé de l'impact de l'importation d'un plan comptable.
 	/// </summary>
 	public class AccountsImportPopup : AbstractStackedPopup
 	{

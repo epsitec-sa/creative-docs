@@ -3422,6 +3422,14 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544337));
 						}
 					}
+					//	designer:str/JUKFL01
+					public static global::Epsitec.Common.Types.FormattedText Report
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545007));
+						}
+					}
 				}
 				
 				public static class AddFavorite
@@ -8057,6 +8065,14 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544337);
+						}
+					}
+					//	designer:str/JUKFL01
+					public static global::Epsitec.Common.Support.Druid Report
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545007);
 						}
 					}
 				}

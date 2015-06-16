@@ -485,4 +485,5 @@
   <data name="Popup.Quit.Cancel.Tooltip" id="KCL">Ne rien faire</data>
   <data name="Popup.Quit.WithoutSaveMessage" id="KDL">Les modifications que vous avez apportées n'ont pas été enregistrées. Voulez-vous quitter sans les enregistrer ?</data>
   <data name="Popup.YesNo.DeleteFile" id="KEL">Voulez-vous remplacer le fichier&lt;br/&gt;{0} ?</data>
+  <data name="Popup.AccountsImport.Report" id="KFL">Fichier comptable à importer :&lt;br/&gt;{0}&lt;br/&gt;&lt;br/&gt;</data>
 </bundle>
