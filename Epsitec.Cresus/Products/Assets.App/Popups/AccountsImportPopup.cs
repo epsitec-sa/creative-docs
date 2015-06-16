@@ -24,17 +24,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
-				StackedControllerType = StackedControllerType.Filename,
-				Label                 = Res.Strings.Popup.AccountsImport.File.ToString (),
-				Width                 = 300,
-				BottomMargin          = 10,
-			});
-
-			list.Add (new StackedControllerDescription  // 1
-			{
 				StackedControllerType = StackedControllerType.Label,
-				Width                 = 300,
-				Height                = 15*2,  // place pour 2 lignes du rapport
+				Width                 = 400,
+				Height                = 15*5,  // place pour 5 lignes du rapport
 			});
 
 			this.SetDescriptions (list);
@@ -44,58 +36,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Filename
-		{
-			get
-			{
-				string				filename;
-
-				{
-					var controller = this.GetController (0) as FilenameStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					filename = controller.Value;
-				}
-
-				return filename;
-			}
-			set
-			{
-				{
-					var controller = this.GetController (0) as FilenameStackedController;
-					System.Diagnostics.Debug.Assert (controller != null);
-					controller.Value = value;
-				}
-			}
-		}
+		public string							Filename;
 
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
 		{
 			var report = this.Report;
 
-			//	Met à jour le nom du fichier.
-			{
-				var controller = this.GetController (0) as FilenameStackedController;
-				System.Diagnostics.Debug.Assert (controller != null);
-
-				//	On permet de choisir les fichiers .cre et .crp :
-				//	  .cre -> fichier visible contenant la comptabilité
-				//	  .crp -> fichier caché contenant le plan comptable
-				//	Habituellement, l'utilisateur choisit le fichier .cre qui représente sa
-				//	comptabilité. Mais c'est le fichier .crp qui sera lu par Assets.
-
-				controller.DialogTitle      = Res.Strings.Popup.AccountsImport.DialogTitle.ToString ();
-				controller.DialogExtensions = ".cre|.crp";
-				controller.DialogFormatName = Res.Strings.Popup.AccountsImport.DialogFormatName.ToString ();
-				controller.Save             = false;
-
-				controller.Value = this.Filename;
-				controller.Update ();
-			}
-
 			//	Met à jour le rapport.
 			{
-				var controller = this.GetController (1) as LabelStackedController;
+				var controller = this.GetController (0) as LabelStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.SetLabel (report.Message);
 			}

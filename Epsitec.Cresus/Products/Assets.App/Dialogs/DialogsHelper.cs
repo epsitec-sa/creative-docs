@@ -11,30 +11,41 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 {
 	public static class DialogsHelper
 	{
-		public static void ShowOpen(Widget target, string directory, string filename, System.Action<string> action)
+		public static void ShowOpenMandat(Widget target, string directory, string filename, System.Action<string> action)
 		{
 			//	Affiche le dialogue permettant de choisir le fichier à ouvrir
 			//	et effectue l'action correspondante.
-			if (DialogsHelper.ShowFilenameOpenDialog (target, ref directory, ref filename))
+			if (DialogsHelper.ShowMandatOpenDialog (target, ref directory, ref filename))
 			{
 				var path = System.IO.Path.Combine (directory, filename);
 				action (path);
 			}
 		}
 
-		public static void ShowSave(Widget target, string directory, string filename, SaveMandatMode mode, System.Action<string, SaveMandatMode> action)
+		public static void ShowSaveMandat(Widget target, string directory, string filename, SaveMandatMode mode, System.Action<string, SaveMandatMode> action)
 		{
 			//	Affiche le dialogue permettant de choisir le fichier à enregistrer
 			//	et effectue l'action correspondante.
-			if (DialogsHelper.ShowFilenameSaveDialog (target, ref directory, ref filename))
+			if (DialogsHelper.ShowMandatSaveDialog (target, ref directory, ref filename))
 			{
 				var path = System.IO.Path.Combine (directory, filename);
 				action (path, SaveMandatMode.SaveUI);
 			}
 		}
 
+		public static void ShowImportAccounts(Widget target, string directory, string filename, System.Action<string> action)
+		{
+			//	Affiche le dialogue permettant de choisir le plan comptable à importer
+			//	et effectue l'action correspondante.
+			if (DialogsHelper.ShowAccountsOpenDialog (target, ref directory, ref filename))
+			{
+				var path = System.IO.Path.Combine (directory, filename);
+				action (path);
+			}
+		}
 
-		private static bool ShowFilenameOpenDialog(Widget target, ref string directory, ref string filename)
+
+		private static bool ShowMandatOpenDialog(Widget target, ref string directory, ref string filename)
 		{
 			//	Affiche le dialogue permettant de choisir le fichier à ouvrir.
 			var f = FileOpenDialog.ShowDialog (
@@ -42,7 +53,8 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 				Res.Strings.Popup.OpenMandat.Title.ToString (),
 				directory,
 				filename,
-				IOHelpers.Extension, Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ());
+				IOHelpers.Extension,
+				Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ());
 
 			if (string.IsNullOrEmpty (f))
 			{
@@ -57,7 +69,7 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 			}
 		}
 		
-		private static bool ShowFilenameSaveDialog(Widget target, ref string directory, ref string filename)
+		private static bool ShowMandatSaveDialog(Widget target, ref string directory, ref string filename)
 		{
 			//	Affiche le dialogue permettant de choisir le fichier à enregistrer, en mode 'PromptForOverwriting'.
 			var f = FileSaveDialog.ShowDialog (
@@ -65,7 +77,32 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 				Res.Strings.Popup.SaveMandat.Title.ToString (),
 				directory,
 				filename,
-				IOHelpers.Extension, Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ());
+				IOHelpers.Extension,
+				Res.Strings.Popup.OpenMandat.DialogFormatName.ToString ());
+
+			if (string.IsNullOrEmpty (f))
+			{
+				return false;
+			}
+			else
+			{
+				directory = System.IO.Path.GetDirectoryName (f);
+				filename  = System.IO.Path.GetFileName (f);
+
+				return true;
+			}
+		}
+
+		private static bool ShowAccountsOpenDialog(Widget target, ref string directory, ref string filename)
+		{
+			//	Affiche le dialogue permettant de choisir un plan comptable à importer.
+			var f = FileOpenDialog.ShowDialog (
+				target.Window,
+				Res.Strings.Popup.AccountsImport.DialogTitle.ToString (),
+				directory,
+				filename,
+				".cre|.crp",
+				Res.Strings.Popup.AccountsImport.DialogFormatName.ToString ());
 
 			if (string.IsNullOrEmpty (f))
 			{

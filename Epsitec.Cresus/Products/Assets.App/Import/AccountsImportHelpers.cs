@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
@@ -38,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
+				var report = string.Format ("Fichier comptable à importer :<br/>{0}<br/><br/>", filename);
+
 				try
 				{
 					var range = importEngine.Import (importedAccounts, null, filename);
@@ -49,24 +52,24 @@ namespace Epsitec.Cresus.Assets.App.Export
 						if (equal)
 						{
 							string message = Res.Strings.AccountsImport.Message.Equal.ToString ();
-							return new AccountsImportReport (AccountsImportMode.Error, message);
+							return new AccountsImportReport (AccountsImportMode.Error, report + message);
 						}
 						else
 						{
 							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count);
-							return new AccountsImportReport (AccountsImportMode.Update, message);
+							return new AccountsImportReport (AccountsImportMode.Update, report + message);
 						}
 					}
 					else
 					{
 						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count);
-						return new AccountsImportReport (AccountsImportMode.Add, message);
+						return new AccountsImportReport (AccountsImportMode.Add, report + message);
 					}
 				}
 				catch (System.Exception ex)
 				{
 					string message = TextLayout.ConvertToTaggedText (ex.Message);
-					return new AccountsImportReport (AccountsImportMode.Error, message);
+					return new AccountsImportReport (AccountsImportMode.Error, report + message);
 				}
 			}
 		}
@@ -75,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Affiche le popup permettant de choisir un plan comptable à importer, puis
 			//	effectue l'importation.
+#if false
 			var popup = new AccountsImportPopup (this.accessor)
 			{
 				Filename = LocalSettings.AccountsImportFilename,
@@ -90,6 +94,30 @@ namespace Epsitec.Cresus.Assets.App.Export
 					this.Import (popup.Filename);
 				}
 			};
+#else
+			var directory = System.IO.Path.GetDirectoryName (LocalSettings.AccountsImportFilename);
+			var filename  = System.IO.Path.GetFileName (LocalSettings.AccountsImportFilename);
+
+			DialogsHelper.ShowImportAccounts (this.target, directory, filename, delegate (string path)
+			{
+				LocalSettings.AccountsImportFilename = path;
+
+				var popup = new AccountsImportPopup (this.accessor)
+				{
+					Filename = LocalSettings.AccountsImportFilename,
+				};
+
+				popup.Create (this.target, leftOrRight: true);
+
+				popup.ButtonClicked += delegate (object sender, string name)
+				{
+					if (name == "ok")
+					{
+						this.Import (popup.Filename);
+					}
+				};
+			});
+#endif
 		}
 
 

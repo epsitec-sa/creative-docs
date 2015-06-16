@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowOpenMandatDialog(Widget target)
 		{
-			DialogsHelper.ShowOpen (target,
+			DialogsHelper.ShowOpenMandat (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				delegate (string path)
@@ -357,7 +357,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowSaveMandatDialog(Widget target)
 		{
-			DialogsHelper.ShowSave (target,
+			DialogsHelper.ShowSaveMandat (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				this.accessor.GlobalSettings.SaveMandatMode,
