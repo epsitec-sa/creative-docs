@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class AccountsImportPopup : AbstractStackedPopup
 	{
-		public AccountsImportPopup(DataAccessor accessor)
+		private AccountsImportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.Accounts.Title.ToString ();
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Filename;
+		private string							Filename;
 
 
 		protected override void UpdateWidgets(StackedControllerDescription description)
@@ -64,5 +65,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, string filename, System.Action action)
+		{
+			//	Affiche le popup de résumé pour l'importation d'un plan comptable.
+			var popup = new AccountsImportPopup (accessor)
+			{
+				Filename = filename,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action ();
+				}
+			};
+		}
+		#endregion
 	}
 }

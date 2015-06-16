@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 		{
 			//	Affiche le dialogue permettant de choisir le plan comptable à importer
 			//	et effectue l'action correspondante.
-			var directory = System.IO.Path.GetDirectoryName (path);
-			var filename  = System.IO.Path.GetFileName      (path);
+			var directory = (string.IsNullOrEmpty (path)) ? null : System.IO.Path.GetDirectoryName (path);
+			var filename  = (string.IsNullOrEmpty (path)) ? null : System.IO.Path.GetFileName      (path);
 
 			if (DialogsHelper.ShowAccountsOpenDialog (target, ref directory, ref filename))
 			{
@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 		{
 			//	Affiche le dialogue permettant de choisir le fichier à exporter
 			//	et effectue l'action correspondante.
-			var directory = System.IO.Path.GetDirectoryName (path);
-			var filename  = System.IO.Path.GetFileName      (path);
+			var directory = (string.IsNullOrEmpty (path)) ? null : System.IO.Path.GetDirectoryName (path);
+			var filename  = (string.IsNullOrEmpty (path)) ? null : System.IO.Path.GetFileName      (path);
 
 			if (DialogsHelper.ShowDataSaveDialog (target, format, ref directory, ref filename))
 			{

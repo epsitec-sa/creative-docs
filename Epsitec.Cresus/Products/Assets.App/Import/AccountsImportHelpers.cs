@@ -84,21 +84,10 @@ namespace Epsitec.Cresus.Assets.App.Export
 				LocalSettings.AccountsImportFilename = path;
 
 				//	Affiche le popup de résumé.
-				var popup = new AccountsImportPopup (this.accessor)
+				AccountsImportPopup.Show (this.target, this.accessor, path, delegate
 				{
-					Filename = LocalSettings.AccountsImportFilename,
-				};
-
-				popup.Create (this.target, leftOrRight: true);
-
-				popup.ButtonClicked += delegate (object sender, string name)
-				{
-					if (name == "ok")
-					{
-						//	Effectue l'importation.
-						this.Import (popup.Filename);
-					}
-				};
+					this.Import (path);
+				});
 			});
 		}
 
