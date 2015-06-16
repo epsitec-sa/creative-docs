@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.Server.DataFillers;
@@ -31,59 +32,50 @@ namespace Epsitec.Cresus.Assets.App.Export
 		public void StartExportProcess()
 		{
 			//	Débute le processus d'exportation qui ouvrira plusieurs popups successifs:
-			//	(1) ExportInstructionsPopup pour choisir le format et le fichier.
+			//	(1) ExportFormatPopup pour choisir le format.
 			//	(2) ExportXxxPopup pour choisir le profile (selon le format).
-			//	(3) ExportOpenPopup pour ouvrir le fichier exporté ou l'emplacement.
+			//	(3) ShowExportData pour choisir le fichier (selon le format).
+			//	(4) ExportOpenPopup pour ouvrir le fichier exporté ou l'emplacement.
 
-			var popup = new ExportInstructionsPopup (this.accessor)
+			ExportFormatPopup.Show (this.target, this.accessor, LocalSettings.ExportFormat, delegate (ExportFormat format)
 			{
-				ExportInstructions = LocalSettings.ExportInstructions,
-			};
-
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					LocalSettings.ExportInstructions = popup.ExportInstructions;  // enregistre dans les réglages
-					this.Export (popup.ExportInstructions);
-				}
-			};
+				LocalSettings.ExportFormat = format;
+				this.ShowProfilePopup (format);
+			});
 		}
 
 
-		private void Export(ExportInstructions instructions)
+		private void ShowProfilePopup(ExportFormat format)
 		{
-			//	Effectue l'exportation selon les instructions (format et filename).
-			switch (instructions.Format)
+			//	Choix du profile selon le format, puis continue le processus.
+			switch (format)
 			{
 				case ExportFormat.Txt:
-					this.ShowTxtPopup (instructions);
+					this.ShowTxtPopup (format);
 					break;
 
 				case ExportFormat.Csv:
-					this.ShowCsvPopup (instructions);
+					this.ShowCsvPopup (format);
 					break;
 
 				case ExportFormat.Xml:
-					this.ShowXmlPopup (instructions);
+					this.ShowXmlPopup (format);
 					break;
 
 				case ExportFormat.Yaml:
-					this.ShowYamlPopup (instructions);
+					this.ShowYamlPopup (format);
 					break;
 
 				case ExportFormat.Json:
-					this.ShowJsonPopup (instructions);
+					this.ShowJsonPopup (format);
 					break;
 
 				case ExportFormat.Pdf:
-					this.ShowPdfPopup (instructions);
+					this.ShowPdfPopup (format);
 					break;
 
 				default:
-					var ext = ExportInstructionsHelpers.GetFormatExt (instructions.Format).Replace (".", "").ToUpper ();
+					var ext = ExportInstructionsHelpers.GetFormatExt (format).Replace (".", "").ToUpper ();
 					var message = string.Format (Res.Strings.Export.Engine.UnknownFormat.ToString (), ext);
 					this.ShowErrorPopup (message);
 					break;
@@ -91,9 +83,9 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
-		private void ShowTxtPopup(ExportInstructions instructions)
+		private void ShowTxtPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportTextPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportTxtProfile,
@@ -109,7 +101,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportText (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportTxtFilename, delegate (string filename)
+						{
+							LocalSettings.ExportTxtFilename = filename;
+							this.ExportText (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -117,15 +115,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
-		private void ShowCsvPopup(ExportInstructions instructions)
+		private void ShowCsvPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportTextPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportCsvProfile,
@@ -141,7 +137,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportText (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportCsvFilename, delegate (string filename)
+						{
+							LocalSettings.ExportCsvFilename = filename;
+							this.ExportText (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -149,15 +151,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
-		private void ShowXmlPopup(ExportInstructions instructions)
+		private void ShowXmlPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportXmlPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportXmlProfile,
@@ -173,7 +173,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportXml (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportXmlFilename, delegate (string filename)
+						{
+							LocalSettings.ExportXmlFilename = filename;
+							this.ExportXml (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -181,15 +187,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
-		private void ShowYamlPopup(ExportInstructions instructions)
+		private void ShowYamlPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportYamlPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportYamlProfile,
@@ -205,7 +209,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportYaml (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportYamlFilename, delegate (string filename)
+						{
+							LocalSettings.ExportYamlFilename = filename;
+							this.ExportYaml (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -213,15 +223,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
-		private void ShowJsonPopup(ExportInstructions instructions)
+		private void ShowJsonPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportJsonPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportJsonProfile,
@@ -237,7 +245,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportJson (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportJsonFilename, delegate (string filename)
+						{
+							LocalSettings.ExportJsonFilename = filename;
+							this.ExportJson (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -245,15 +259,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
-		private void ShowPdfPopup(ExportInstructions instructions)
+		private void ShowPdfPopup(ExportFormat format)
 		{
-			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus
+			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
 			var popup = new ExportPdfPopup (this.accessor)
 			{
 				Profile = LocalSettings.ExportPdfProfile,
@@ -269,7 +281,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 					try
 					{
-						this.ExportPdf (instructions, popup.Profile);
+						//	Choix du nom du fichier (3).
+						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportPdfFilename, delegate (string filename)
+						{
+							LocalSettings.ExportPdfFilename = filename;
+							this.ExportPdf (format, popup.Profile, filename);
+							this.ShowOpenPopup (filename);
+						});
 					}
 					catch (System.Exception ex)
 					{
@@ -277,62 +295,60 @@ namespace Epsitec.Cresus.Assets.App.Export
 						this.ShowErrorPopup (message);
 						return;
 					}
-
-					this.ShowOpenPopup (instructions);
 				}
 			};
 		}
 
 
-		private void ExportText(ExportInstructions instructions, TextExportProfile profile)
+		private void ExportText(ExportFormat format, TextExportProfile profile, string filename)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new TextExport<T> ())
 			{
-				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, format, profile, filename, this.dataFiller, this.columnsState);
 			}
 		}
 
-		private void ExportXml(ExportInstructions instructions, XmlExportProfile profile)
+		private void ExportXml(ExportFormat format, XmlExportProfile profile, string filename)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new XmlExport<T> ())
 			{
-				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, format, profile, filename, this.dataFiller, this.columnsState);
 			}
 		}
 
-		private void ExportYaml(ExportInstructions instructions, YamlExportProfile profile)
+		private void ExportYaml(ExportFormat format, YamlExportProfile profile, string filename)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new YamlExport<T> ())
 			{
-				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, format, profile, filename, this.dataFiller, this.columnsState);
 			}
 		}
 
-		private void ExportJson(ExportInstructions instructions, JsonExportProfile profile)
+		private void ExportJson(ExportFormat format, JsonExportProfile profile, string filename)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new JsonExport<T> ())
 			{
-				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, format, profile, filename, this.dataFiller, this.columnsState);
 			}
 		}
 
-		private void ExportPdf(ExportInstructions instructions, PdfExportProfile profile)
+		private void ExportPdf(ExportFormat format, PdfExportProfile profile, string filename)
 		{
 			//	Exporte les données, selon les instructions et le profile, sans aucune interaction.
 			using (var engine = new PdfExport<T> ())
 			{
-				engine.Export (this.accessor, instructions, profile, this.dataFiller, this.columnsState);
+				engine.Export (this.accessor, format, profile, filename, this.dataFiller, this.columnsState);
 			}
 		}
 
 
-		private void ShowOpenPopup(ExportInstructions instructions)
+		private void ShowOpenPopup(string filename)
 		{
-			//	Affiche le popup (3) permettant d'ouvrir le fichier exporté ou l'emplacement,
+			//	Affiche le popup (4) permettant d'ouvrir le fichier exporté ou l'emplacement,
 			//	tout à la fin du processus.
 			var popup = new ExportOpenPopup (this.accessor)
 			{
@@ -347,27 +363,27 @@ namespace Epsitec.Cresus.Assets.App.Export
 				{
 					if (popup.OpenLocation)
 					{
-						ExportEngine<T>.OpenLocation (instructions);
+						ExportEngine<T>.OpenLocation (filename);
 					}
 					else
 					{
-						ExportEngine<T>.OpenFile (instructions);
+						ExportEngine<T>.OpenFile (filename);
 					}
 				}
 			};
 		}
 
-		private static void OpenFile(ExportInstructions instructions)
+		private static void OpenFile(string filename)
 		{
 			//	Ouvre le fichier, en lançant l'application par défaut selon l'extension.
-			System.Diagnostics.Process.Start (instructions.Filename);
+			System.Diagnostics.Process.Start (filename);
 		}
 
-		private static void OpenLocation(ExportInstructions instructions)
+		private static void OpenLocation(string filename)
 		{
 			//	Ouvre l'explorateur de fichier et sélectionne le fichier exporté.
 			//	Voir http://stackoverflow.com/questions/9646114/open-file-location
-			System.Diagnostics.Process.Start ("explorer.exe", "/select," + instructions.Filename);
+			System.Diagnostics.Process.Start ("explorer.exe", "/select," + filename);
 		}
 
 

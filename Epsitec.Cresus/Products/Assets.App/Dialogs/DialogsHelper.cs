@@ -4,8 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Data.Helpers;
+using Epsitec.Cresus.Assets.Server.Export;
 
 namespace Epsitec.Cresus.Assets.App.Dialogs
 {
@@ -33,13 +35,30 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 			}
 		}
 
-		public static void ShowImportAccounts(Widget target, string directory, string filename, System.Action<string> action)
+		public static void ShowImportAccounts(Widget target, string path, System.Action<string> action)
 		{
 			//	Affiche le dialogue permettant de choisir le plan comptable à importer
 			//	et effectue l'action correspondante.
+			var directory = System.IO.Path.GetDirectoryName (path);
+			var filename  = System.IO.Path.GetFileName      (path);
+
 			if (DialogsHelper.ShowAccountsOpenDialog (target, ref directory, ref filename))
 			{
-				var path = System.IO.Path.Combine (directory, filename);
+				path = System.IO.Path.Combine (directory, filename);
+				action (path);
+			}
+		}
+
+		public static void ShowExportData(Widget target, ExportFormat format, string path, System.Action<string> action)
+		{
+			//	Affiche le dialogue permettant de choisir le fichier à exporter
+			//	et effectue l'action correspondante.
+			var directory = System.IO.Path.GetDirectoryName (path);
+			var filename  = System.IO.Path.GetFileName      (path);
+
+			if (DialogsHelper.ShowDataSaveDialog (target, format, ref directory, ref filename))
+			{
+				path = System.IO.Path.Combine (directory, filename);
 				action (path);
 			}
 		}
@@ -103,6 +122,30 @@ namespace Epsitec.Cresus.Assets.App.Dialogs
 				filename,
 				".cre|.crp",
 				Res.Strings.Popup.AccountsImport.DialogFormatName.ToString ());
+
+			if (string.IsNullOrEmpty (f))
+			{
+				return false;
+			}
+			else
+			{
+				directory = System.IO.Path.GetDirectoryName (f);
+				filename  = System.IO.Path.GetFileName (f);
+
+				return true;
+			}
+		}
+
+		private static bool ShowDataSaveDialog(Widget target, ExportFormat format, ref string directory, ref string filename)
+		{
+			//	Affiche le dialogue permettant de choisir un fichier à exporter.
+			var f = FileSaveDialog.ShowDialog (
+				target.Window,
+				Res.Strings.Popup.Export.DialogTitle.ToString (),
+				directory,
+				filename,
+				ExportInstructionsHelpers.GetFormatExt  (format),
+				ExportInstructionsHelpers.GetFormatName (format));
 
 			if (string.IsNullOrEmpty (f))
 			{

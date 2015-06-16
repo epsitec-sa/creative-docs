@@ -78,11 +78,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Affiche le dialogue standard de Windows pour choisir le plan comptable à importer,
 			//	puis affiche le popup de résumé, puis effectue l'importation.
-			var directory = System.IO.Path.GetDirectoryName (LocalSettings.AccountsImportFilename);
-			var filename  = System.IO.Path.GetFileName (LocalSettings.AccountsImportFilename);
-
 			//	Affiche le dialogue standard de Windows.
-			DialogsHelper.ShowImportAccounts (this.target, directory, filename, delegate (string path)
+			DialogsHelper.ShowImportAccounts (this.target, LocalSettings.AccountsImportFilename, delegate (string path)
 			{
 				LocalSettings.AccountsImportFilename = path;
 

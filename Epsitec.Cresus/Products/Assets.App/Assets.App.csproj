@@ -156,7 +156,7 @@
     <Compile Include="Popups\StackedControllers\CategoryGuidStackedController.cs" />
     <Compile Include="Popups\AssetsReportPopup.cs" />
     <Compile Include="Popups\RateCalculatorPopup.cs" />
-    <Compile Include="Popups\ExportInstructionsPopup.cs" />
+    <Compile Include="Popups\ExportFormatPopup.cs" />
     <Compile Include="Popups\StackedControllers\ComboStackedController.cs" />
     <Compile Include="Popups\StackedControllers\LabelStackedController.cs" />
     <Compile Include="Reports\ReportTitleType.cs" />

@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class YamlExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public override void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public override void Export(DataAccessor accessor, ExportFormat format, AbstractExportProfile profile, string filename, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
-			base.Export (accessor, instructions, profile, filler, columnsState);
+			base.Export (accessor, format, profile, filename, filler, columnsState);
 
 			this.FillArray (hasHeader: false);
 			var data = this.GetData ();
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 		private void WriteData(string data)
 		{
-			System.IO.File.WriteAllText (this.instructions.Filename, data, this.Profile.Encoding);
+			System.IO.File.WriteAllText (this.filename, data, this.Profile.Encoding);
 		}
 
 

@@ -18,11 +18,11 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public class PdfExport<T> : AbstractExport<T>
 		where T : struct
 	{
-		public override void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public override void Export(DataAccessor accessor, ExportFormat format, AbstractExportProfile profile, string filename, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
 			this.humanFormat = true;
 
-			base.Export (accessor, instructions, profile, filler, columnsState);
+			base.Export (accessor, format, profile, filename, filler, columnsState);
 
 			this.FillArray (false);
 			this.ExportPdf (filler.Title);
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var columns = new List<ColumnDefinition> ();
 			columns.AddRange (this.ColumnDefinitions);
 
-			array.GeneratePdf (this.instructions.Filename, this.rowCount, columns, this.GetCellContent);
+			array.GeneratePdf (this.filename, this.rowCount, columns, this.GetCellContent);
 		}
 
 
