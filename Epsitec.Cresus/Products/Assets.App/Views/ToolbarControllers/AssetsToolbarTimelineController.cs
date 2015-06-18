@@ -158,22 +158,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		[Command (Res.CommandIds.Timeline.Date)]
 		private void OnDate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var popup = new DatePopup (this.accessor)
-			{
-				Date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date,
-			};
-
 			var target = this.toolbar.GetTarget (e);
-			popup.Create (target, leftOrRight: false);
+			var date = this.selectedTimestamp.HasValue ? this.selectedTimestamp.Value.Date : Timestamp.Now.Date;
 
-			popup.DateChanged += delegate
+			DatePopup.Show (target, this.accessor, date, delegate (System.DateTime? d)
 			{
-				if (popup.Date.HasValue)
+				if (d.HasValue)
 				{
-					this.UpdateData (popup.Date);
-					this.SelectedTimestamp = new Timestamp (popup.Date.Value, 0);
+					this.UpdateData (d);
+					this.SelectedTimestamp = new Timestamp (d.Value, 0);
 				}
-			};
+			});
 		}
 
 		[Command (Res.CommandIds.Timeline.New)]

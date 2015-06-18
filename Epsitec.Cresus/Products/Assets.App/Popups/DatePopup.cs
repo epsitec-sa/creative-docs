@@ -16,13 +16,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class DatePopup : AbstractPopup
 	{
-		public DatePopup(DataAccessor accessor)
+		private DatePopup(DataAccessor accessor)
 		{
 			this.accessor = accessor;
 		}
 
 
-		public System.DateTime?					Date;
+		private System.DateTime?				Date;
 
 		protected override Size					DialogSize
 		{
@@ -69,6 +69,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<System.DateTime?> DateChanged;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, System.DateTime? date, System.Action<System.DateTime?> action)
+		{
+			//	Affiche le Popup.
+			var popup = new DatePopup (accessor)
+			{
+				Date = date,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.DateChanged += delegate
+			{
+				action (popup.Date);
+			};
+		}
 		#endregion
 
 
