@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.DataProperties;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.App.Popups
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CreatePersonPopup : AbstractStackedPopup
 	{
-		public CreatePersonPopup(DataAccessor accessor)
+		private CreatePersonPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.CreatePerson.Title.ToString ();
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								PersonModel
+		private Guid							PersonModel
 		{
 			get
 			{
@@ -95,6 +96,25 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.okButton.Enable = this.GetRequiredProperties (BaseType.PersonsUserFields).Count () == this.userFieldsCount;
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, System.Action<IEnumerable<AbstractDataProperty>, Guid> action)
+		{
+			//	Affiche le Popup.
+			var popup = new CreatePersonPopup (accessor);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.GetRequiredProperties (BaseType.PersonsUserFields), popup.PersonModel);
+				}
+			};
+		}
+		#endregion
 
 
 		private const int fieldWidth = 400;
