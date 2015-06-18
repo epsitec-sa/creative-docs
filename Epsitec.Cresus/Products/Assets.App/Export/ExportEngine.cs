@@ -86,217 +86,157 @@ namespace Epsitec.Cresus.Assets.App.Export
 		private void ShowTxtPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportTextPopup (this.accessor)
+			ExportTextPopup.Show (this.target, this.accessor, LocalSettings.ExportTxtProfile, delegate (TextExportProfile profile)
 			{
-				Profile = LocalSettings.ExportTxtProfile,
-			};
+				LocalSettings.ExportTxtProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportTxtProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportTxtFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportTxtFilename, delegate (string filename)
-						{
-							LocalSettings.ExportTxtFilename = filename;
-							this.ExportText (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportTxtFilename = filename;
+						this.ExportText (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 		private void ShowCsvPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportTextPopup (this.accessor)
+			ExportTextPopup.Show (this.target, this.accessor, LocalSettings.ExportCsvProfile, delegate (TextExportProfile profile)
 			{
-				Profile = LocalSettings.ExportCsvProfile,
-			};
+				LocalSettings.ExportCsvProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportCsvProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportCsvFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportCsvFilename, delegate (string filename)
-						{
-							LocalSettings.ExportCsvFilename = filename;
-							this.ExportText (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportCsvFilename = filename;
+						this.ExportText (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 		private void ShowXmlPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportXmlPopup (this.accessor)
+			ExportXmlPopup.Show (this.target, this.accessor, LocalSettings.ExportXmlProfile, delegate (XmlExportProfile profile)
 			{
-				Profile = LocalSettings.ExportXmlProfile,
-			};
+				LocalSettings.ExportXmlProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportXmlProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportXmlFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportXmlFilename, delegate (string filename)
-						{
-							LocalSettings.ExportXmlFilename = filename;
-							this.ExportXml (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportXmlFilename = filename;
+						this.ExportXml (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 		private void ShowYamlPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportYamlPopup (this.accessor)
+			ExportYamlPopup.Show (this.target, this.accessor, LocalSettings.ExportYamlProfile, delegate (YamlExportProfile profile)
 			{
-				Profile = LocalSettings.ExportYamlProfile,
-			};
+				LocalSettings.ExportYamlProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportYamlProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportYamlFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportYamlFilename, delegate (string filename)
-						{
-							LocalSettings.ExportYamlFilename = filename;
-							this.ExportYaml (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportYamlFilename = filename;
+						this.ExportYaml (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 		private void ShowJsonPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportJsonPopup (this.accessor)
+			ExportJsonPopup.Show (this.target, this.accessor, LocalSettings.ExportJsonProfile, delegate (JsonExportProfile profile)
 			{
-				Profile = LocalSettings.ExportJsonProfile,
-			};
+				LocalSettings.ExportJsonProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportJsonProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportJsonFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportJsonFilename, delegate (string filename)
-						{
-							LocalSettings.ExportJsonFilename = filename;
-							this.ExportJson (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportJsonFilename = filename;
+						this.ExportJson (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 		private void ShowPdfPopup(ExportFormat format)
 		{
 			//	Ouvre le popup (2) pour choisir le profile d'exportation, puis continue le processus.
-			var popup = new ExportPdfPopup (this.accessor)
+			ExportPdfPopup.Show (this.target, this.accessor, LocalSettings.ExportPdfProfile, delegate (PdfExportProfile profile)
 			{
-				Profile = LocalSettings.ExportPdfProfile,
-			};
+				LocalSettings.ExportPdfProfile = profile;  // enregistre dans les réglages
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+				try
 				{
-					LocalSettings.ExportPdfProfile = popup.Profile;  // enregistre dans les réglages
-
-					try
+					//	Choix du nom du fichier (3).
+					DialogsHelper.ShowExportData (target, format, LocalSettings.ExportPdfFilename, delegate (string filename)
 					{
-						//	Choix du nom du fichier (3).
-						DialogsHelper.ShowExportData (target, format, LocalSettings.ExportPdfFilename, delegate (string filename)
-						{
-							LocalSettings.ExportPdfFilename = filename;
-							this.ExportPdf (format, popup.Profile, filename);
-							this.ShowOpenPopup (filename);
-						});
-					}
-					catch (System.Exception ex)
-					{
-						string message = TextLayout.ConvertToTaggedText (ex.Message);
-						this.ShowErrorPopup (message);
-						return;
-					}
+						LocalSettings.ExportPdfFilename = filename;
+						this.ExportPdf (format, profile, filename);
+						this.ShowOpenPopup (filename);
+					});
 				}
-			};
+				catch (System.Exception ex)
+				{
+					string message = TextLayout.ConvertToTaggedText (ex.Message);
+					this.ShowErrorPopup (message);
+					return;
+				}
+			});
 		}
 
 
