@@ -81,14 +81,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		private void ShowCategoriesPopup(Widget target)
 		{
-			var popup = new CategoriesPopup (this.accessor);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			CategoriesPopup.Show (target, this.accessor, delegate (Guid guid)
 			{
 				this.Import (guid);
-			};
+			});
 		}
 
 		private void Import(Guid guid)
