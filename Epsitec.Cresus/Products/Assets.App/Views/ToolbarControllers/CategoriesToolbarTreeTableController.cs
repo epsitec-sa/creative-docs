@@ -196,20 +196,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateCategoryPopup (this.accessor)
+			CreateCategoryPopup.Show (target, this.accessor, this.SelectedGuid, delegate (string objectName, Guid objectModel)
 			{
-				ObjectModel = this.SelectedGuid,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.CreateObject (popup.ObjectName, popup.ObjectModel);
-				}
-			};
+				this.CreateObject (objectName, objectModel);
+			});
 		}
 
 		private void CreateObject(string name, Guid model)
