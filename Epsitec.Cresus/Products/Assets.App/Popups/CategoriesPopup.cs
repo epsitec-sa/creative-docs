@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private const int headerHeight     = 22;
 		private const int rowHeight        = 18;
-		private const int popupWidth       = 390;
+		private const int popupWidth       = 490;
 
 		private readonly DataAccessor					accessor;
 		private readonly NavigationTreeTableController	controller;
