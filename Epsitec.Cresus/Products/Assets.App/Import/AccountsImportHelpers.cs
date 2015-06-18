@@ -78,6 +78,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 		{
 			//	Affiche le dialogue standard de Windows pour choisir le plan comptable à importer,
 			//	puis affiche le popup de résumé, puis effectue l'importation.
+
 			//	Affiche le dialogue standard de Windows.
 			DialogsHelper.ShowImportAccounts (this.target, LocalSettings.AccountsImportFilename, delegate (string path)
 			{

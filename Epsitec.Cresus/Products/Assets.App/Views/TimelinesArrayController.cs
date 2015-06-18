@@ -989,35 +989,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowAmortizationsPopup(Widget target, bool fromAllowed, bool toAllowed, string title, string one, string all, System.Action<DateRange, bool, string> action)
 		{
-			var popup = new AmortizationsPopup (this.accessor)
+			var range = new DateRange (LocalSettings.AmortizationDateFrom, LocalSettings.AmortizationDateTo);
+
+			AmortizationsPopup.Show (target, this.accessor, fromAllowed, toAllowed, title, one, all, this.SelectedGuid.IsEmpty, range,
+				delegate (DateRange r, bool isAll, string description)
 			{
-				Title               = title,
-				ActionOne           = one,
-				ActionAll           = all,
-				DateFromAllowed     = fromAllowed,
-				DateToAllowed       = toAllowed,
-				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-				IsAll               =  this.SelectedGuid.IsEmpty,
-				DateFrom            = LocalSettings.AmortizationDateFrom,
-				DateTo              = LocalSettings.AmortizationDateTo,
-			};
+				LocalSettings.AmortizationDateFrom = r.IncludeFrom;
+				LocalSettings.AmortizationDateTo   = r.ExcludeTo.AddDays (-1);
 
-			popup.Create (target);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
-					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
-					var range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value.AddDays (1));
-
-					LocalSettings.AmortizationDateFrom = popup.DateFrom.Value;
-					LocalSettings.AmortizationDateTo   = popup.DateTo.Value;
-
-					action (range, popup.IsAll, popup.Description);
-				}
-			};
+				action (r, isAll, description);
+			});
 		}
 
 		private void DoAmortisationsPreview(DateRange processRange, bool allObjects, string description)
