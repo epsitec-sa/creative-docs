@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private CreateArgumentPopup(DataAccessor accessor)
 			: base (accessor)
 		{
-			this.title = "Création d'un nouvel argument";
+			this.title = Res.Strings.Popup.CreateArgument.Title.ToString ();
 
 			var list = new List<StackedControllerDescription> ();
 
