@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App
 				}
 				else
 				{
-					return string.Join (" - ", Res.Strings.AssetsApplication.WindowTitle.ToString (), filename);
+					return string.Join (" - ", filename, Res.Strings.AssetsApplication.WindowTitle.ToString ());
 				}
 			}
 		}
