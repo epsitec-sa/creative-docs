@@ -427,21 +427,16 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void ShowCalendarPopup()
 		{
-			var popup = new CalendarPopup ()
-			{
-				Date         = this.value.HasValue ? this.value.Value : Timestamp.Now.Date,
-				SelectedDate = this.value,
-			};
+			var date         = this.value.HasValue ? this.value.Value : Timestamp.Now.Date;
+			var selectedDate = this.value;
 
-			popup.Create (this.calendarButton, leftOrRight: false);
-
-			popup.DateChanged += delegate (object sender, System.DateTime date)
+			CalendarPopup.Show (this.calendarButton, date, selectedDate, delegate (System.DateTime d)
 			{
-				this.Value = date;
+				this.Value = d;
 				this.UpdateButtons ();
 				this.SetFocus ();
 				this.OnValueEdited (this.Field);
-			};
+			});
 		}
 
 
