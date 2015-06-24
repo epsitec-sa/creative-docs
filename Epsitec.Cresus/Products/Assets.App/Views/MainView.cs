@@ -316,24 +316,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreateMandatPopup(Widget target)
 		{
-			var popup = new NewMandatPopup (this.accessor)
-			{
-				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
-				MandatWithSamples = false,
-				MandatStartDate   = LocalSettings.CreateMandatDate,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+			NewMandatPopup.Show (target, this.accessor,
+				MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
+				false,
+				LocalSettings.CreateMandatDate,
+				delegate (string factoryName, string mandatName, bool withSamples, System.DateTime date)
 				{
-					LocalSettings.CreateMandatDate = popup.MandatStartDate;
-					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);
+					LocalSettings.CreateMandatDate = date;
+					this.CreateMandat (factoryName, mandatName, date, withSamples);
 					this.accessor.ComputerSettings.MandatFilename = null;
-				}
-			};
+				});
 		}
 
 		private void ShowOpenMandatDialog(Widget target)
