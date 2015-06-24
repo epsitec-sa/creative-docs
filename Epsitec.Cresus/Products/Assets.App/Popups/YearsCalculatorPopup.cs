@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class YearsCalculatorPopup : AbstractStackedPopup
 	{
-		public YearsCalculatorPopup(DataAccessor accessor)
+		private YearsCalculatorPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.YearsCalculator.Title.ToString ();
@@ -44,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public decimal?							Years
+		private decimal?						Years
 		{
 			get
 			{
@@ -142,5 +143,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, decimal? years, System.Action<decimal?> action)
+		{
+			//	Affiche le Popup.
+			var popup = new YearsCalculatorPopup (accessor)
+			{
+				Years = years,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Years);
+				}
+			};
+		}
+		#endregion
 	}
 }

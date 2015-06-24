@@ -240,21 +240,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private void ShowYearsCalculatorPopup(Widget target)
 		{
 			//	Affiche le Popup de calculation du nombre d'années.
-			var popup = new YearsCalculatorPopup (accessor)
+			YearsCalculatorPopup.Show (target, this.accessor, this.value, delegate (decimal? years)
 			{
-				Years = this.Value,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Years;
-					this.OnValueEdited (this.Field);
-				}
-			};
+				this.Value = years;
+				this.OnValueEdited (this.Field);
+			});
 		}
 
 
