@@ -121,6 +121,8 @@ namespace Epsitec.Aider.Data.Job
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
+				//	Be sure that the SQL Views HOUSEHOLDS, SUBSCRIPTIONREFUSALS and SUBSCRIPTIONS
+				//	exist in the database -- see *.sql files in this source folder.
 
 				var db = businessContext.DataContext.DbInfrastructure;
 				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
