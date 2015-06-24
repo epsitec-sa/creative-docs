@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class HistoryPopup : AbstractPopup
 	{
-		public HistoryPopup(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, ObjectField field)
+		private HistoryPopup(DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, ObjectField field)
 		{
 			this.accessor = new HistoryAccessor (accessor, baseType, objectGuid, timestamp, field);
 			this.controller = new HistoryController (accessor, this.accessor);
@@ -56,6 +56,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<Timestamp> Navigate;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, Guid objectGuid, Timestamp? timestamp, ObjectField field, System.Action<Timestamp> action)
+		{
+			//	Affiche le Popup.
+			var popup = new HistoryPopup (accessor, baseType, objectGuid, timestamp, field);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Timestamp t)
+			{
+				action (t);
+			};
+		}
 		#endregion
 
 

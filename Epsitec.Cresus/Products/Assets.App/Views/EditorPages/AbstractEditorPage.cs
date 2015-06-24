@@ -1216,14 +1216,10 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void ShowHistoryPopup(Widget target, ObjectField field)
 		{
-			var popup = new HistoryPopup (this.accessor, this.baseType, this.objectGuid, this.timestamp, field);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Timestamp timestamp)
+			HistoryPopup.Show (target, this.accessor, this.baseType, this.objectGuid, this.timestamp, field, delegate (Timestamp timestamp)
 			{
 				this.OnNavigate (timestamp);
-			};
+			});
 		}
 
 
