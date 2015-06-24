@@ -646,11 +646,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				.Select (x => x.Guid)
 				.FirstOrDefault ();
 
-			var popup = new LastViewsPopup (this.accessor, this.lastViewStates, navigationGuid);
-
-			popup.Create (target);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			LastViewsPopup.Show (target, this.accessor, this.lastViewStates, navigationGuid, delegate (Guid guid)
 			{
 				if (!guid.IsEmpty)
 				{
@@ -659,12 +655,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var viewState = this.lastViewStates.Where (x => x.Guid == guid).FirstOrDefault ();
 					this.RestoreViewState (viewState);
 				}
-			};
-
-			popup.Closed += delegate
+			}, delegate ()
 			{
 				this.SortLastViewStates ();
-			};
+			}
+			);
 		}
 
 		private void RestoreUndoViewState(AbstractViewState viewState)

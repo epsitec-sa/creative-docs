@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class LastViewsPopup : AbstractPopup
 	{
-		public LastViewsPopup(DataAccessor accessor, List<AbstractViewState> viewStates, Guid selection)
+		private LastViewsPopup(DataAccessor accessor, List<AbstractViewState> viewStates, Guid selection)
 		{
 			this.accessor   = accessor;
 			this.viewStates = viewStates;
@@ -173,6 +173,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<Guid> Navigate;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, List<AbstractViewState> viewStates, Guid selection,
+			System.Action<Guid> navigateAction, System.Action closeAction)
+		{
+			//	Affiche le Popup.
+			var popup = new LastViewsPopup (accessor, viewStates, selection);
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				navigateAction (guid);
+			};
+
+			popup.Closed += delegate
+			{
+				closeAction ();
+			};
+		}
 		#endregion
 
 
