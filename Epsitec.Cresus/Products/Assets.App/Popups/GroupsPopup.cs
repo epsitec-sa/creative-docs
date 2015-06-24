@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.Navigate.Raise (this, guid);
 		}
 
-		public event EventHandler<Guid> Navigate;
+		private event EventHandler<Guid> Navigate;
 		#endregion
 
 

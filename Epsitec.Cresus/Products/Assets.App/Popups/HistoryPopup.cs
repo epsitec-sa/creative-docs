@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.Navigate.Raise (this, timestamp);
 		}
 
-		public event EventHandler<Timestamp> Navigate;
+		private event EventHandler<Timestamp> Navigate;
 		#endregion
 
 
