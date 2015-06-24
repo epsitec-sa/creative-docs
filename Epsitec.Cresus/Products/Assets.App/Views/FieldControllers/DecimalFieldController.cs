@@ -230,21 +230,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private void ShowRateCalculatorPopup(Widget target)
 		{
 			//	Affiche le Popup de calculation du taux.
-			var popup = new RateCalculatorPopup (accessor)
+			RateCalculatorPopup.Show (target, this.accessor, this.value, delegate (decimal? r)
 			{
-				Rate = this.Value,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Rate;
-					this.OnValueEdited (this.Field);
-				}
-			};
+				this.Value = r;
+				this.OnValueEdited (this.Field);
+			});
 		}
 
 		private void ShowYearsCalculatorPopup(Widget target)
