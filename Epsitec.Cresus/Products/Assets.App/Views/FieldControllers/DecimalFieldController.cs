@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected void CreateRateCalculatorButton(Widget parent)
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du taux.
-			var text = "Calculer";
+			var text = Res.Strings.FieldControllers.Decimal.Compute.ToString ();
 			var width = text.GetTextWidth () + 20;
 
 			this.button = new Button
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected void CreateYearsCalculatorButton(Widget parent)
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du nombre d'années.
-			var text = "Calculer";
+			var text = Res.Strings.FieldControllers.Decimal.Compute.ToString ();
 			var width = text.GetTextWidth () + 20;
 
 			this.button = new Button
