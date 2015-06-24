@@ -97,23 +97,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void ShowLibraryPopup(Widget target)
 		{
 			//	Affiche le popup pour choisir une expression à "importer".
-			var popup = new SimplePopup ();
-
-			foreach (var item in AmortizationExpressionCollection.Items)
-			{
-				popup.Items.Add (item.Description);
-			}
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
+			SimplePopup.Show (target, AmortizationExpressionCollection.Items.Select (x => x.Description), -1, delegate (int rank)
 			{
 				var expression = AmortizationExpressionCollection.Items
 					.Select (x => x.Expression)
 					.ElementAt (rank);
 
 				this.SetExpression (expression);
-			};
+			});
 		}
 
 		private void SetExpression(string expression)

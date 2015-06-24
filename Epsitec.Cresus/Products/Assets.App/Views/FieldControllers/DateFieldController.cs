@@ -392,10 +392,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void ShowPredefinedPopup()
 		{
-			var popup = new SimplePopup ()
-			{
-				SelectedItem = this.GetSelectedDate (this.value),
-			};
+			var items = new List<string> ();
 
 			foreach (var type in this.DateTypes)
 			{
@@ -403,26 +400,24 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 				if (string.IsNullOrEmpty (text))
 				{
-					popup.Items.Add (null);
+					items.Add (null);
 				}
 				else
 				{
 					var date = this.GetPredefinedDate (type);
 					var td = TypeConverters.DateToString (date);
 
-					popup.Items.Add (UniversalLogic.NiceJoin (td, text));
+					items.Add (UniversalLogic.NiceJoin (td, text));
 				}
 			}
 
-			popup.Create (this.predefinedButton, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
+			SimplePopup.Show (this.predefinedButton, items, this.GetSelectedDate (this.value), delegate (int rank)
 			{
 				this.Value = this.GetPredefinedDate (rank);
 				this.UpdateButtons ();
 				this.SetFocus ();
 				this.OnValueEdited (this.Field);
-			};
+			});
 		}
 
 		private void ShowCalendarPopup()
