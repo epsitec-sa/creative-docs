@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class GroupsPopup : AbstractPopup
 	{
-		public GroupsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
+		private GroupsPopup(DataAccessor accessor, BaseType baseType, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
@@ -186,6 +186,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 		public event EventHandler<Guid> Navigate;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, Guid selectedGuid, System.Action<Guid> action)
+		{
+			//	Affiche le Popup.
+			var popup = new GroupsPopup (accessor, baseType, selectedGuid);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				action (guid);
+			};
+		}
 		#endregion
 
 
