@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class FilterPopup : AbstractPopup
 	{
-		public FilterPopup(DataAccessor accessor, Guid selectedGuid)
+		private FilterPopup(DataAccessor accessor, Guid selectedGuid)
 		{
 			this.accessor = accessor;
 
@@ -189,6 +189,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, Guid selectedGuid, System.Action<Guid> action)
+		{
+			//	Affiche le Popup.
+			var popup = new FilterPopup (accessor, selectedGuid);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.Navigate += delegate (object sender, Guid guid)
+			{
+				action (guid);
+			};
+		}
+		#endregion
+
+	
 		private const int popupWidth = GroupGuidStackedController.ControllerWidth;
 
 		private readonly DataAccessor					accessor;

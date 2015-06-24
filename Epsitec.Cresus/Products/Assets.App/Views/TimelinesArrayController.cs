@@ -471,15 +471,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnAssetsFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.assetsToolbar.GetTarget (e);
-			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
-			popup.Create (target, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			FilterPopup.Show (target, this.accessor, this.rootGuid, delegate (Guid selectedGuid)
 			{
-				this.rootGuid = guid;
+				this.rootGuid = selectedGuid;
 				this.UpdateTreeColumn ();
-			};
+			});
 		}
 
 		[Command (Res.CommandIds.AssetsLeft.First)]
