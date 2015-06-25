@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,       TreeTableColumnType.String, MethodsTreeTableFiller.nameWidth, Res.Strings.ExpressionsTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Expression, TreeTableColumnType.String, MethodsTreeTableFiller.expWidth,  Res.Strings.ExpressionsTreeTableFiller.Arguments.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,       TreeTableColumnType.String, MethodsTreeTableFiller.nameWidth,       Res.Strings.ExpressionsTreeTableFiller.Name.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Expression, TreeTableColumnType.String, MethodsTreeTableFiller.argumentsWidth,  Res.Strings.ExpressionsTreeTableFiller.Arguments.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -67,13 +67,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var guid  = node.Guid;
 				var obj   = this.accessor.GetObject (BaseType.Methods, guid);
 
-				var name = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
-				var exp  = MethodsLogic.GetExpressionSummary (this.accessor, guid);
+				var name      = ObjectProperties.GetObjectPropertyString (obj, this.Timestamp, ObjectField.Name, inputValue: true);
+				var arguments = MethodsLogic.GetArgumentsSummary (this.accessor, guid);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellString (name, cellState);
-				var cell2 = new TreeTableCellString (exp,  cellState);
+				var cell1 = new TreeTableCellString (name,      cellState);
+				var cell2 = new TreeTableCellString (arguments, cellState);
 
 				int columnRank = 0;
 
@@ -85,11 +85,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private const int nameWidth = 250;
-		private const int expWidth  = 350;
+		private const int nameWidth      = 250;
+		private const int argumentsWidth = 350;
 
 		public const int totalWidth  =
 			MethodsTreeTableFiller.nameWidth +
-			MethodsTreeTableFiller.expWidth;
+			MethodsTreeTableFiller.argumentsWidth;
 	}
 }

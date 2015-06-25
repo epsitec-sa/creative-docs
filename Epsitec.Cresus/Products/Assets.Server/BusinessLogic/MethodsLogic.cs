@@ -55,10 +55,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetExpressionSummary(DataAccessor accessor, Guid guid)
+		public static string GetArgumentsSummary(DataAccessor accessor, Guid guid)
 		{
-			//	Retourne le résumé du code C# d'une méthode d'amortissement, sous la forme
-			//	de la liste des arguments.
+			//	Retourne le résumé des arguments d'une méthode d'amortissement,
+			//	par exemple "Durée, Arrondi, Valeur résiduelle, Prorata".
 			var obj = accessor.GetObject (BaseType.Methods, guid);
 			if (obj == null)
 			{
