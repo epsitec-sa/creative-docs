@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var columns = new List<TreeTableColumnDescription> ();
 
 				columns.Add (new TreeTableColumnDescription (ObjectField.Name,       TreeTableColumnType.String, MethodsTreeTableFiller.nameWidth, Res.Strings.ExpressionsTreeTableFiller.Name.ToString ()));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Expression, TreeTableColumnType.String, MethodsTreeTableFiller.expWidth,  Res.Strings.ExpressionsTreeTableFiller.Expression.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Expression, TreeTableColumnType.String, MethodsTreeTableFiller.expWidth,  Res.Strings.ExpressionsTreeTableFiller.Arguments.ToString ()));
 
 				return columns.ToArray ();
 			}
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		private const int nameWidth = 250;
-		private const int expWidth  = 120;
+		private const int expWidth  = 350;
 
 		public const int totalWidth  =
 			MethodsTreeTableFiller.nameWidth +

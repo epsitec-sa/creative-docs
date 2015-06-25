@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 				}
 				//	designer:str/KUKP201
-				public static global::Epsitec.Common.Types.FormattedText Expression
+				public static global::Epsitec.Common.Types.FormattedText Arguments
 				{
 					get
 					{
@@ -1431,7 +1431,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 				}
 				//	designer:str/KUKP201
-				public static global::Epsitec.Common.Support.Druid Expression
+				public static global::Epsitec.Common.Support.Druid Arguments
 				{
 					get
 					{

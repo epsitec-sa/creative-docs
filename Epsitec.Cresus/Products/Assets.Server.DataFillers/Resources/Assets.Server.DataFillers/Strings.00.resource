@@ -76,7 +76,7 @@
   <data name="UserFieldsTreeTableFiller.Order" id="KM2">Ordre</data>
   <data name="CategoriesTreeTableFiller.Method" id="KN2">Méthode</data>
   <data name="ExpressionsTreeTableFiller.Name" id="KO2">Nom</data>
-  <data name="ExpressionsTreeTableFiller.Expression" id="KP2">Expression</data>
+  <data name="ExpressionsTreeTableFiller.Arguments" id="KP2">Arguments</data>
   <data name="ExpressionsTreeTableFiller.AmortizationMethod" id="KQ2">Type</data>
   <data name="ArgumentsTreeTableFiller.Name" id="KR2">Nom</data>
   <data name="ArgumentsTreeTableFiller.Description" id="KS2">Description</data>
