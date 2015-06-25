@@ -1,3 +1,6 @@
+//	Copyright © 2003-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -23,12 +26,18 @@ namespace Epsitec.Common.Tests.Widgets
 			a.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			b.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			c.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+
+			Button button = new Button ("Hello");
+
+			button.SetParent (a);
 			
 			window.Root.Children.Add (a);
-			a.Children.Add (b);
-			b.Children.Add (c);
+//			a.Children.Add (b);
+//			b.Children.Add (c);
 			
 			window.Show ();
+			
+			Window.RunInTestEnvironment (window);
 		}
 	}
 	
@@ -51,7 +60,8 @@ namespace Epsitec.Common.Tests.Widgets
 			
 			Color color_text = this.IsFocused ? Color.FromRgb (0.0, 0.0, 0.5) : Color.FromRgb (0.0, 0.0, 0.0);
 			Color color_back = this.IsFocused ? Color.FromRgb (0.8, 0.8, 1.0) : Color.FromRgb (1.0, 1.0, 1.0);
-			
+
+			graphics.ScaleTransform (2, 2, 0, 0);
 			graphics.AddFilledRectangle (1, 1, dx - 2, dy - 2);
 			graphics.RenderSolid (color_back);
 			graphics.AddRectangle (1, 1, dx-2, dy-2);

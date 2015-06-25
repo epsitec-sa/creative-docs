@@ -1,0 +1,29 @@
+﻿CREATE VIEW HOUSEHOLDS(
+    ID,
+    TYPE_ID,
+    EM_ID,
+    LABEL,
+    NAME,
+    DISPLAY_NAME,
+    DISPLAY_ADDRESS,
+    ZIPCODE,
+    VISIBILITY,
+    PARISH_GROUP_PATH,
+    ADDRESS_ID,
+    COMMENT_ID)
+AS
+SELECT 
+    CR_ID,
+    CR_TYPE_ID,
+    CR_EM_ID,
+    U_LVAG8,
+    U_LVAH9,
+    U_LVAGE,
+    U_LVA5F,
+    U_LVA6F,
+    U_LVA8F,
+    U_LVAAF,
+    U_LVAT2,
+    U_LVAA8
+FROM MUD_LVAI2;
+;

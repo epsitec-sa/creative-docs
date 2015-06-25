@@ -95,7 +95,7 @@ namespace Epsitec.Aider.Data.Job
 							{
 								System.Diagnostics.Debug.WriteLine (subscription.DisplayAddress);
 
-								subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
+								subscription.SubscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
 							}
 						}
 						else
@@ -388,7 +388,7 @@ namespace Epsitec.Aider.Data.Job
 				if (subscription.IsNotNull ())
 				{
 					System.Diagnostics.Debug.WriteLine ("Subscription: " + subscription.DisplayAddress);
-					subscription.SusbscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
+					subscription.SubscriptionFlag = Enumerations.SubscriptionFlag.VerificationRequired;
 				}
 			}
 			

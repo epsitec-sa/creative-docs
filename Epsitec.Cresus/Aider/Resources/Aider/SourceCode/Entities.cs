@@ -7697,11 +7697,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>SusbscriptionFlag</c> field.
+		///	The <c>SubscriptionFlag</c> field.
 		///	designer:fld/LVGP22/LVABH
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVABH]")]
-		public global::Epsitec.Aider.Enumerations.SubscriptionFlag SusbscriptionFlag
+		public global::Epsitec.Aider.Enumerations.SubscriptionFlag SubscriptionFlag
 		{
 			get
 			{
@@ -7709,12 +7709,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue = this.SusbscriptionFlag;
+				global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue = this.SubscriptionFlag;
 				if (oldValue != value || !this.IsFieldDefined("[LVABH]"))
 				{
-					this.OnSusbscriptionFlagChanging (oldValue, value);
+					this.OnSubscriptionFlagChanging (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Enumerations.SubscriptionFlag> ("[LVABH]", oldValue, value);
-					this.OnSusbscriptionFlagChanged (oldValue, value);
+					this.OnSubscriptionFlagChanged (oldValue, value);
 				}
 			}
 		}
@@ -7867,8 +7867,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLegalPersonContactChanged(global::Epsitec.Aider.Entities.AiderContactEntity oldValue, global::Epsitec.Aider.Entities.AiderContactEntity newValue);
 		partial void OnSubscriptionTypeChanging(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
 		partial void OnSubscriptionTypeChanged(global::Epsitec.Aider.Enumerations.SubscriptionType oldValue, global::Epsitec.Aider.Enumerations.SubscriptionType newValue);
-		partial void OnSusbscriptionFlagChanging(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
-		partial void OnSusbscriptionFlagChanged(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
+		partial void OnSubscriptionFlagChanging(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
+		partial void OnSubscriptionFlagChanged(global::Epsitec.Aider.Enumerations.SubscriptionFlag oldValue, global::Epsitec.Aider.Enumerations.SubscriptionFlag newValue);
 		partial void OnDisplayNameChanging(string oldValue, string newValue);
 		partial void OnDisplayNameChanged(string oldValue, string newValue);
 		partial void OnDisplayAddressChanging(string oldValue, string newValue);

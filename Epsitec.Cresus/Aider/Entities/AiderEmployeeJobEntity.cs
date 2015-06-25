@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -22,7 +22,8 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Office.OfficeName, "(~", this.Description, "~)");
+			var about = TextFormatter.FormatText (this.Description, "~,~", this.EmployeeJobFunction);
+			return TextFormatter.FormatText (this.Office.OfficeName, "(~", about, "~)");
 		}
 
 		public FormattedText GetAddressLabelText(PostalAddressType type = PostalAddressType.Default)
