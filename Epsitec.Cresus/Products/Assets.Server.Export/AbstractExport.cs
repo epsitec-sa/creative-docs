@@ -12,11 +12,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 	public abstract class AbstractExport<T> : System.IDisposable
 		where T : struct
 	{
-		public virtual void Export(DataAccessor accessor, ExportInstructions instructions, AbstractExportProfile profile, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
+		public virtual void Export(DataAccessor accessor, ExportFormat format, AbstractExportProfile profile, string filename, AbstractTreeTableFiller<T> filler, ColumnsState columnsState)
 		{
 			this.accessor     = accessor;
-			this.instructions = instructions;
+			this.format       = format;
 			this.profile      = profile;
+			this.filename     = filename;
 			this.filler       = filler;
 			this.columnsState = columnsState;
 		}
@@ -282,7 +283,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 
 		protected DataAccessor					accessor;
-		protected ExportInstructions			instructions;
+		protected ExportFormat					format;
+		protected string						filename;
 		protected AbstractExportProfile			profile;
 		protected AbstractTreeTableFiller<T>	filler;
 		protected ColumnsState					columnsState;

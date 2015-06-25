@@ -79,21 +79,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private void ShowMarginsPopup(string title)
 		{
-			var popup = new MarginsPopup (this.accessor, title)
+			MarginsPopup.Show (this.button, this.accessor, title, this.value, delegate (Margins margins)
 			{
-				Value = this.Value,
-			};
-
-			popup.Create (this.button, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Value;
-					this.SetFocus ();
-				}
-			};
+				this.Value = margins;
+				this.SetFocus ();
+			});
 		}
 
 		private void UpdateButton()

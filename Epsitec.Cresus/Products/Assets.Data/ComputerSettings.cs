@@ -17,8 +17,9 @@ namespace Epsitec.Cresus.Assets.Data
 	/// </summary>
 	public class ComputerSettings
 	{
-		public ComputerSettings()
+		public ComputerSettings(System.Action updateWindowTitle)
 		{
+			this.updateWindowTitle = updateWindowTitle;
 			this.SoftwareLanguage = "fr";
 
 			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
@@ -30,8 +31,30 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public string							SoftwareLanguage;
 		public string							MandatDirectory;
-		public string							MandatFilename;
 		public WindowPlacement					WindowPlacement;
+
+
+		public string							MandatFilename
+		{
+			get
+			{
+				return this.mandatFilename;
+			}
+			set
+			{
+				if (this.mandatFilename != value)
+				{
+					this.mandatFilename = value;
+					this.updateWindowTitle ();
+				}
+			}
+		}
+
+
+		public void UpdateWindowTitle()
+		{
+			this.updateWindowTitle ();
+		}
 
 
 		#region Serialize
@@ -185,5 +208,9 @@ namespace Epsitec.Cresus.Assets.Data
 				return System.IO.Path.Combine (dir, "Crésus.Assets.ApplicationSettings.settings");
 			}
 		}
+
+
+		private readonly System.Action			updateWindowTitle;
+		private string							mandatFilename;
 	}
 }

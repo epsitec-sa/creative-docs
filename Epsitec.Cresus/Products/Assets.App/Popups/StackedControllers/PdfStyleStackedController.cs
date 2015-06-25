@@ -81,21 +81,11 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 
 		private void ShowStylePopup()
 		{
-			var popup = new PdfStylePopup (this.accessor)
+			PdfStylePopup.Show (this.button, this.accessor, this.value, delegate (PdfStyle style)
 			{
-				Value = this.Value,
-			};
-
-			popup.Create (this.button, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Value;
-					this.SetFocus ();
-				}
-			};
+				this.Value = style;
+				this.SetFocus ();
+			});
 		}
 
 		private void UpdateButton()

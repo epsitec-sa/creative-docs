@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.Export;
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class ExportJsonPopup : AbstractStackedPopup
 	{
-		public ExportJsonPopup(DataAccessor accessor)
+		private ExportJsonPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.ExportJson.Title.ToString ();
@@ -52,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public JsonExportProfile				Profile
+		private JsonExportProfile				Profile
 		{
 			get
 			{
@@ -101,5 +102,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, JsonExportProfile profile, System.Action<JsonExportProfile> action)
+		{
+			//	Affiche le Popup.
+			var popup = new ExportJsonPopup (accessor)
+			{
+				Profile = profile,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Profile);
+				}
+			};
+		}
+		#endregion
 	}
 }

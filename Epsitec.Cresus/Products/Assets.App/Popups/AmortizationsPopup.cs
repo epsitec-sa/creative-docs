@@ -3,9 +3,11 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -13,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class AmortizationsPopup : AbstractStackedPopup
 	{
-		public AmortizationsPopup(DataAccessor accessor)
+		private AmortizationsPopup(DataAccessor accessor)
 			: base(accessor)
 		{
 			var list = new List<StackedControllerDescription> ();
@@ -43,7 +45,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Title
+		private string							Title
 		{
 			set
 			{
@@ -51,13 +53,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public string							ActionOne;
-		public string							ActionAll;
-		public bool								DateFromAllowed;
-		public bool								DateToAllowed;
-		public bool								OneSelectionAllowed;
+		private string							ActionOne;
+		private string							ActionAll;
+		private bool							DateFromAllowed;
+		private bool							DateToAllowed;
+		private bool							OneSelectionAllowed;
 
-		public bool								IsAll
+		private bool							IsAll
 		{
 			get
 			{
@@ -73,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime?					DateFrom
+		private System.DateTime?				DateFrom
 		{
 			get
 			{
@@ -89,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime?					DateTo
+		private System.DateTime?				DateTo
 		{
 			get
 			{
@@ -106,7 +108,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Description
+		private string							Description
 		{
 			//	Retourne la description de l'opération effectuée.
 			//	Par exemple "Depuis 31.03.2015 - Pour tous les objets"
@@ -164,5 +166,39 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.okButton.Enable = !this.HasError;
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, bool fromAllowed, bool toAllowed, string title, string one, string all, bool isAll, DateRange range, System.Action<DateRange, bool, string> action)
+		{
+			//	Affiche le popup pour l'amortissement.
+			var popup = new AmortizationsPopup (accessor)
+			{
+				Title               = title,
+				ActionOne           = one,
+				ActionAll           = all,
+				DateFromAllowed     = fromAllowed,
+				DateToAllowed       = toAllowed,
+				OneSelectionAllowed = !isAll,
+				IsAll               =  isAll,
+				DateFrom            = range.IncludeFrom,
+				DateTo              = range.ExcludeTo,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					System.Diagnostics.Debug.Assert (popup.DateFrom.HasValue);
+					System.Diagnostics.Debug.Assert (popup.DateTo.HasValue);
+					range = new DateRange (popup.DateFrom.Value, popup.DateTo.Value.AddDays (1));
+
+					action (range, popup.IsAll, popup.Description);
+				}
+			};
+		}
+		#endregion
 	}
 }

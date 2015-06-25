@@ -191,17 +191,13 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 
 		private void ShowPopup()
 		{
-			var popup = new GroupsPopup (this.Accessor, BaseType.Groups, this.Value.Guid);
-
-			popup.Create (this.button, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			GroupsPopup.Show (this.button, this.accessor, BaseType.Groups, this.Value.Guid, delegate (Guid selectedGuid)
 			{
-				this.Value = new GuidRatio (guid, this.value.Ratio);
+				this.Value = new GuidRatio (selectedGuid, this.value.Ratio);
 				this.OnValueEdited (this.Field);
 
 				this.textField.Focus ();
-			};
+			});
 		}
 
 		private string GuidToString(Guid guid)

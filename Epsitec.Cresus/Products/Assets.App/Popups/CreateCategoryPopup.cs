@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CreateCategoryPopup : AbstractStackedPopup
 	{
-		public CreateCategoryPopup(DataAccessor accessor)
+		private CreateCategoryPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.CreateCategory.Title.ToString ();
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							ObjectName
+		private string							ObjectName
 		{
 			get
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								ObjectModel
+		private Guid							ObjectModel
 		{
 			get
 			{
@@ -117,5 +117,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName)
 								&& (!this.UseModel || !this.ObjectModel.IsEmpty);
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, Guid objectModel, System.Action<string, Guid> action)
+		{
+			//	Affiche le Popup.
+			var popup = new CreateCategoryPopup (accessor)
+			{
+				ObjectModel = objectModel,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.ObjectName, popup.ObjectModel);
+				}
+			};
+		}
+		#endregion
 	}
 }

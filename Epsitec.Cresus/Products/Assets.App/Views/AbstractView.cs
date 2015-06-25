@@ -181,29 +181,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowLockedPopup(Widget target)
 		{
-			var popup = new LockedPopup (this.accessor)
-			{
-				IsDelete            = false,
-				IsAll               =  this.SelectedGuid.IsEmpty,
-				OneSelectionAllowed = !this.SelectedGuid.IsEmpty,
-				Date                = LocalSettings.LockedDate,
-			};
-
-			popup.Create (target);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+			LockedPopup.Show (target, this.accessor, false, this.SelectedGuid.IsEmpty, !this.SelectedGuid.IsEmpty, LocalSettings.LockedDate,
+				delegate (bool isDelete, bool isAll, bool oneSelectionAllowed, System.DateTime? date, string description)
 				{
-					if (popup.Date.HasValue)
+					if (date.HasValue)
 					{
-						LocalSettings.LockedDate = popup.Date.Value;
+						LocalSettings.LockedDate = date.Value;
 					}
 
-					var guid = popup.IsAll ? Guid.Empty : this.SelectedGuid;
-					var createDate = popup.Date.GetValueOrDefault ();
+					var guid = isAll ? Guid.Empty : this.SelectedGuid;
+					var createDate = date.GetValueOrDefault ();
 
-					if (!popup.IsDelete)  // verrouiller ?
+					if (!isDelete)  // verrouiller ?
 					{
 						if (!AssetCalculator.IsLockable (this.accessor, guid, createDate))
 						{
@@ -212,10 +201,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 						}
 					}
 
-					AssetCalculator.Locked (this.accessor, guid, popup.IsDelete, createDate, popup.Description);
+					AssetCalculator.Locked (this.accessor, guid, isDelete, createDate, description);
 					this.DeepUpdateUI ();
-				}
-			};
+				});
 		}
 
 

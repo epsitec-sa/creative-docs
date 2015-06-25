@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
@@ -13,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class AssetsReportPopup : AbstractStackedPopup
 	{
-		public AssetsReportPopup(DataAccessor accessor)
+		private AssetsReportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.AssetsReport.Title.ToString ();
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public AssetsParams						AssetsParams
+		private AssetsParams					AssetsParams
 		{
 			get
 			{
@@ -186,5 +187,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 								&& (!this.GroupEnable || !this.GroupGuid.IsEmpty)
 								&& !this.HasError;
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, AssetsParams assetsParams, System.Action<AssetsParams> action)
+		{
+			//	Affiche le Popup pour choisir les paramètres d'un rapport.
+			var popup = new AssetsReportPopup (accessor)
+			{
+				AssetsParams = assetsParams,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.AssetsParams);
+				}
+			};
+		}
+		#endregion
 	}
 }

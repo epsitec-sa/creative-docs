@@ -264,20 +264,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateGroupPopup (this.accessor)
+			CreateGroupPopup.Show (target, this.accessor, this.SelectedGuid, delegate (Guid objectParent, IEnumerable<AbstractDataProperty> properties)
 			{
-				ObjectParent = this.SelectedGuid,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.CreateObject (popup.ObjectParent, popup.Properties);
-				}
-			};
+				this.CreateObject (objectParent, properties);
+			});
 		}
 
 		private void CreateObject(Guid parent, IEnumerable<AbstractDataProperty> properties)

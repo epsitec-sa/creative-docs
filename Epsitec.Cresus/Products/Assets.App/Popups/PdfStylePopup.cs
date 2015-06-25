@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class PdfStylePopup : AbstractStackedPopup
 	{
-		public PdfStylePopup(DataAccessor accessor)
+		private PdfStylePopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.PdfStyle.Title.ToString ();
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public PdfStyle							Value
+		private PdfStyle						Value
 		{
 			get
 			{
@@ -175,5 +176,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.Value = this.Value;
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, PdfStyle style, System.Action<PdfStyle> action)
+		{
+			//	Affiche le Popup.
+			var popup = new PdfStylePopup (accessor)
+			{
+				Value = style,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Value);
+				}
+			};
+		}
+		#endregion
 	}
 }

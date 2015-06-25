@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class MarginsPopup : AbstractStackedPopup
 	{
-		public MarginsPopup(DataAccessor accessor, string title)
+		private MarginsPopup(DataAccessor accessor, string title)
 			: base (accessor)
 		{
 			this.title = title;
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public Margins							Value
+		private Margins							Value
 		{
 			get
 			{
@@ -184,5 +185,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				&& margins.Left == margins.Top
 				&& margins.Left == margins.Bottom;
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, string title, Margins margins, System.Action<Margins> action)
+		{
+			//	Affiche le Popup.
+			var popup = new MarginsPopup (accessor, title)
+			{
+				Value = margins,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Value);
+				}
+			};
+		}
+		#endregion
 	}
 }

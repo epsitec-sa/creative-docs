@@ -49,9 +49,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.DefaultMandatDate    = defaultTimestamp.Date;
 			LocalSettings.DefaultFreeDate      = defaultTimestamp.Date;
 
-			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
-			var filename = System.IO.Path.Combine (item.FullPath, "export.pdf");
-			LocalSettings.ExportInstructions = new ExportInstructions (ExportFormat.Pdf, filename);
+			LocalSettings.ExportFormat = ExportFormat.Pdf;
 
 			LocalSettings.ExportTxtProfile  = TextExportProfile.TxtProfile;
 			LocalSettings.ExportCsvProfile  = TextExportProfile.CsvProfile;
@@ -59,6 +57,14 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.ExportYamlProfile = YamlExportProfile.Default;
 			LocalSettings.ExportJsonProfile = JsonExportProfile.Default;
 			LocalSettings.ExportPdfProfile  = PdfExportProfile.Default;
+
+			FolderItem item = FileManager.GetFolderItem (FolderId.VirtualMyDocuments, FolderQueryMode.NoIcons);
+			LocalSettings.ExportTxtFilename  = System.IO.Path.Combine (item.FullPath, "export.txt");
+			LocalSettings.ExportCsvFilename  = System.IO.Path.Combine (item.FullPath, "export.csv");
+			LocalSettings.ExportXmlFilename  = System.IO.Path.Combine (item.FullPath, "export.xml");
+			LocalSettings.ExportYamlFilename = System.IO.Path.Combine (item.FullPath, "export.yaml");
+			LocalSettings.ExportJsonFilename = System.IO.Path.Combine (item.FullPath, "export.json");
+			LocalSettings.ExportPdfFilename  = System.IO.Path.Combine (item.FullPath, "export.pdf");
 
 			LocalSettings.AccountsImportFilename = null;
 
@@ -239,13 +245,21 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			writer.WriteElementString (X.DefaultMandatDate,    LocalSettings.DefaultMandatDate.ToStringIO ());
 			writer.WriteElementString (X.DefaultFreeDate,      LocalSettings.DefaultFreeDate.ToStringIO ());
 
-			LocalSettings.ExportInstructions.Serialize (writer, X.ExportInstructions);
-			LocalSettings.ExportTxtProfile  .Serialize (writer, X.ExportTxtProfile);
-			LocalSettings.ExportCsvProfile  .Serialize (writer, X.ExportCsvProfile);
-			LocalSettings.ExportXmlProfile  .Serialize (writer, X.ExportXmlProfile);
-			LocalSettings.ExportYamlProfile .Serialize (writer, X.ExportYamlProfile);
-			LocalSettings.ExportJsonProfile .Serialize (writer, X.ExportJsonProfile);
-			LocalSettings.ExportPdfProfile  .Serialize (writer, X.ExportPdfProfile);
+			writer.WriteElementString (X.ExportFormat, LocalSettings.ExportFormat.ToStringIO ());
+			
+			LocalSettings.ExportTxtProfile .Serialize (writer, X.ExportTxtProfile);
+			LocalSettings.ExportCsvProfile .Serialize (writer, X.ExportCsvProfile);
+			LocalSettings.ExportXmlProfile .Serialize (writer, X.ExportXmlProfile);
+			LocalSettings.ExportYamlProfile.Serialize (writer, X.ExportYamlProfile);
+			LocalSettings.ExportJsonProfile.Serialize (writer, X.ExportJsonProfile);
+			LocalSettings.ExportPdfProfile .Serialize (writer, X.ExportPdfProfile);
+
+			writer.WriteElementString (X.ExportTxtFilename,  LocalSettings.ExportTxtFilename.ToStringIO ());
+			writer.WriteElementString (X.ExportCsvFilename,  LocalSettings.ExportCsvFilename.ToStringIO ());
+			writer.WriteElementString (X.ExportXmlFilename,  LocalSettings.ExportXmlFilename.ToStringIO ());
+			writer.WriteElementString (X.ExportYamlFilename, LocalSettings.ExportYamlFilename.ToStringIO ());
+			writer.WriteElementString (X.ExportJsonFilename, LocalSettings.ExportJsonFilename.ToStringIO ());
+			writer.WriteElementString (X.ExportPdfFilename,  LocalSettings.ExportPdfFilename.ToStringIO ());
 
 			writer.WriteElementString (X.AccountsImportFilename, LocalSettings.AccountsImportFilename);
 
@@ -414,8 +428,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 							LocalSettings.DefaultFreeDate = reader.ReadElementContentAsString ().ParseDate ();
 							break;
 
-						case X.ExportInstructions:
-							LocalSettings.ExportInstructions = new ExportInstructions (reader);
+						case X.ExportFormat:
+							LocalSettings.ExportFormat = reader.ReadElementContentAsString ().ParseType<ExportFormat> ();
 							break;
 
 						case X.ExportTxtProfile:
@@ -440,6 +454,30 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 						case X.ExportPdfProfile:
 							LocalSettings.ExportPdfProfile = new PdfExportProfile (reader);
+							break;
+
+						case X.ExportTxtFilename:
+							LocalSettings.ExportTxtFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case X.ExportCsvFilename:
+							LocalSettings.ExportCsvFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case X.ExportXmlFilename:
+							LocalSettings.ExportXmlFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case X.ExportYamlFilename:
+							LocalSettings.ExportYamlFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case X.ExportJsonFilename:
+							LocalSettings.ExportJsonFilename = reader.ReadElementContentAsString ();
+							break;
+
+						case X.ExportPdfFilename:
+							LocalSettings.ExportPdfFilename = reader.ReadElementContentAsString ();
 							break;
 
 						case X.AccountsImportFilename:
@@ -558,13 +596,19 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static System.DateTime				DefaultMandatDate;
 		public static System.DateTime				DefaultFreeDate;
 
-		public static ExportInstructions			ExportInstructions;
+		public static ExportFormat					ExportFormat;
 		public static TextExportProfile				ExportTxtProfile;
 		public static TextExportProfile				ExportCsvProfile;
 		public static XmlExportProfile				ExportXmlProfile;
 		public static YamlExportProfile				ExportYamlProfile;
 		public static JsonExportProfile				ExportJsonProfile;
 		public static PdfExportProfile				ExportPdfProfile;
+		public static string						ExportTxtFilename;
+		public static string						ExportCsvFilename;
+		public static string						ExportXmlFilename;
+		public static string						ExportYamlFilename;
+		public static string						ExportJsonFilename;
+		public static string						ExportPdfFilename;
 		public static string						AccountsImportFilename;
 
 		public static int							SplitterAssetsEventPos;

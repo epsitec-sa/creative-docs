@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CreateMethodPopup : AbstractStackedPopup
 	{
-		public CreateMethodPopup(DataAccessor accessor)
+		private CreateMethodPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.CreateMethod.Title.ToString ();
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							ObjectName
+		private string							ObjectName
 		{
 			get
 			{
@@ -57,5 +58,24 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.okButton.Enable = !string.IsNullOrEmpty (this.ObjectName);
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, System.Action<string> action)
+		{
+			//	Affiche le Popup.
+			var popup = new CreateMethodPopup (accessor);
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.ObjectName);
+				}
+			};
+		}
+		#endregion
 	}
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class PageSizePopup : AbstractStackedPopup
 	{
-		public PageSizePopup(DataAccessor accessor)
+		private PageSizePopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.PageSize.Title.ToString ();
@@ -57,7 +58,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public Size							Value
+		private Size							Value
 		{
 			get
 			{
@@ -287,6 +288,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			public readonly PageFormatType		Type;
 			public readonly double				Width;
 			public readonly double				Height;
+		}
+		#endregion
+		
+		
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, Size size, System.Action<Size> action)
+		{
+			//	Affiche le Popup.
+			var popup = new PageSizePopup (accessor)
+			{
+				Value = size,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Value);
+				}
+			};
 		}
 		#endregion
 	}

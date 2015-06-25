@@ -29,7 +29,16 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			get
 			{
-				return Res.Strings.AssetsApplication.WindowTitle.ToString ();
+				var filename = (this.accessor == null) ? null : this.accessor.ComputerSettings.MandatFilename;
+
+				if (string.IsNullOrEmpty (filename))
+				{
+					return Res.Strings.AssetsApplication.WindowTitle.ToString ();
+				}
+				else
+				{
+					return string.Join (" - ", filename, Res.Strings.AssetsApplication.WindowTitle.ToString ());
+				}
 			}
 		}
 		
@@ -173,7 +182,7 @@ namespace Epsitec.Cresus.Assets.App
 
 		private void CreateUI(Window window)
 		{
-			var computerSettings = new ComputerSettings ();
+			var computerSettings = new ComputerSettings (this.UpdateWindowText);
 
 			if (!computerSettings.WindowPlacement.Bounds.IsSurfaceZero)
 			{
@@ -211,6 +220,10 @@ namespace Epsitec.Cresus.Assets.App
 			//	Crée et ouvre le mandat par défaut.
 			this.accessor = new DataAccessor(computerSettings, cb);
 
+			//	Nécessaire, car lors de la première initialisation de computerSettings.MandatFilename,
+			//	this.accessor était null !
+			computerSettings.UpdateWindowTitle ();
+
 			if (string.IsNullOrEmpty (computerSettings.MandatFilename))
 			{
 				this.OpenDefaultMandat ();
@@ -245,6 +258,19 @@ namespace Epsitec.Cresus.Assets.App
 			System.Diagnostics.Debug.Assert (factory != null);
 			factory.Create (this.accessor, Res.Strings.AssetsApplication.DefaultMandat.ToString (),
 				new System.DateTime (2014, 1, 1), true);
+		}
+
+		public static bool IsExistingMandat(string filename)
+		{
+			//	Indique si le fichier d'un mandat existe.
+			try
+			{
+				return DataIO.IsExistingMandat (filename);
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		public static string OpenMandat(DataAccessor accessor, string filename)

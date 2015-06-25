@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CalendarPopup : AbstractPopup
 	{
-		public System.DateTime					Date;
-		public System.DateTime?					SelectedDate;
+		private System.DateTime					Date;
+		private System.DateTime?				SelectedDate;
 
 		protected override Size					DialogSize
 		{
@@ -61,10 +61,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.DateChanged.Raise (this, dateTime);
 		}
 
-		public event EventHandler<System.DateTime> DateChanged;
+		private event EventHandler<System.DateTime> DateChanged;
 		#endregion
 
 
+		#region Helpers
+		public static void Show(Widget target, System.DateTime date, System.DateTime? selectedDate, System.Action<System.DateTime> action)
+		{
+			//	Affiche le Popup pour choisir une date dans un calendrier.
+			var popup = new CalendarPopup ()
+			{
+				Date         = date,
+				SelectedDate = selectedDate,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.DateChanged += delegate (object sender, System.DateTime d)
+			{
+				action (d);
+			};
+		}
+		#endregion
+
+	
 		private const int margins      = 10;
 		private const int dialogWidth  = CalendarController.requiredWidth  + CalendarPopup.margins*2;
 		private const int dialogHeight = AbstractPopup.titleHeight + CalendarController.requiredHeight + CalendarPopup.margins*2;

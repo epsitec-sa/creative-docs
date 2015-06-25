@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected void CreateRateCalculatorButton(Widget parent)
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du taux.
-			var text = "Calculer";
+			var text = Res.Strings.FieldControllers.Decimal.Compute.ToString ();
 			var width = text.GetTextWidth () + 20;
 
 			this.button = new Button
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		protected void CreateYearsCalculatorButton(Widget parent)
 		{
 			//	Crée le bouton qui ouvre le Popup de calculation du nombre d'années.
-			var text = "Calculer";
+			var text = Res.Strings.FieldControllers.Decimal.Compute.ToString ();
 			var width = text.GetTextWidth () + 20;
 
 			this.button = new Button
@@ -230,41 +230,21 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private void ShowRateCalculatorPopup(Widget target)
 		{
 			//	Affiche le Popup de calculation du taux.
-			var popup = new RateCalculatorPopup (accessor)
+			RateCalculatorPopup.Show (target, this.accessor, this.value, delegate (decimal? r)
 			{
-				Rate = this.Value,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Rate;
-					this.OnValueEdited (this.Field);
-				}
-			};
+				this.Value = r;
+				this.OnValueEdited (this.Field);
+			});
 		}
 
 		private void ShowYearsCalculatorPopup(Widget target)
 		{
 			//	Affiche le Popup de calculation du nombre d'années.
-			var popup = new YearsCalculatorPopup (accessor)
+			YearsCalculatorPopup.Show (target, this.accessor, this.value, delegate (decimal? years)
 			{
-				Years = this.Value,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Value = popup.Years;
-					this.OnValueEdited (this.Field);
-				}
-			};
+				this.Value = years;
+				this.OnValueEdited (this.Field);
+			});
 		}
 
 

@@ -204,17 +204,10 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			var popup = new CreateArgumentPopup (this.accessor);
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
+			CreateArgumentPopup.Show (target, this.accessor, delegate (string name)
 			{
-				if (name == "ok")
-				{
-					this.CreateObject (popup.ObjectName);
-				}
-			};
+				this.CreateObject (name);
+			});
 		}
 
 		private void CreateObject(string name)

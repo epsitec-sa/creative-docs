@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Core.Library
 				Icon       = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48)
 			};
 		}
-		private void UpdateWindowText()
+		public void UpdateWindowText()
 		{
 			var text = FormattedText.FromSimpleText (
 				string.Format ("{0} Alpha {1}x{2}{3}",

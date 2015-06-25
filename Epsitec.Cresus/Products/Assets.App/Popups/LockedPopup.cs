@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Core.Helpers;
@@ -13,7 +14,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class LockedPopup : AbstractStackedPopup
 	{
-		public LockedPopup(DataAccessor accessor)
+		private LockedPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.Locked.Title.ToString ();
@@ -45,9 +46,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public bool								OneSelectionAllowed;
+		private bool							OneSelectionAllowed;
 
-		public bool								IsAll
+		private bool							IsAll
 		{
 			get
 			{
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public bool								IsDelete
+		private bool							IsDelete
 		{
 			get
 			{
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime?					Date
+		private System.DateTime?				Date
 		{
 			get
 			{
@@ -96,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							Description
+		private string							Description
 		{
 			//	Retourne la description de l'opération effectuée.
 			//	Par exemple "Verrouiller - Jusqu'au 31.03.2015 - Tous les objets"
@@ -144,5 +145,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.okButton.Enable = this.IsDelete || (this.Date.HasValue && !this.HasError);
 		}
 
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, bool isDelete, bool isAll, bool oneSelectionAllowed, System.DateTime? date,
+			System.Action<bool, bool, bool, System.DateTime?, string> action)
+		{
+			//	Affiche le Popup.
+			var popup = new LockedPopup (accessor)
+			{
+				IsDelete            = isDelete,
+				IsAll               = isAll,
+				OneSelectionAllowed = oneSelectionAllowed,
+				Date                = date,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.IsDelete, popup.IsAll, popup.OneSelectionAllowed, popup.Date, popup.Description);
+				}
+			};
+		}
+		#endregion
 	}
 }

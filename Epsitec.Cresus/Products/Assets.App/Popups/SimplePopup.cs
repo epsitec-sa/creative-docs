@@ -180,7 +180,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.ItemClicked.Raise (this, rank);
 		}
 
-		public event EventHandler<int> ItemClicked;
+		private event EventHandler<int> ItemClicked;
+		#endregion
+
+
+		#region Helpers
+		public static void Show(Widget target, IEnumerable<string> items, int selectedItem, System.Action<int> action)
+		{
+			//	Affiche le Popup.
+			var popup = new SimplePopup ()
+			{
+				SelectedItem = selectedItem,
+			};
+
+			foreach (var item in items)
+			{
+				popup.Items.Add (item);
+			}
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ItemClicked += delegate (object sender, int rank)
+			{
+				action (rank);
+			};
+		}
 		#endregion
 
 
