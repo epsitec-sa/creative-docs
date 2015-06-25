@@ -44,21 +44,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 		public override void ShowParamsPopup(Widget target)
 		{
 			//	Affiche le Popup pour choisir les paramètres d'un rapport.
-			var popup = new AssetsReportPopup (this.accessor)
+			AssetsReportPopup.Show (target, this.accessor, this.Params, delegate (AssetsParams assetsParams)
 			{
-				AssetsParams = this.Params,
-			};
-
-			popup.Create (target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.reportParams = popup.AssetsParams;
-					this.UpdateParams ();
-				}
-			};
+				this.reportParams = assetsParams;
+				this.UpdateParams ();
+			});
 		}
 
 		public override void UpdateParams()

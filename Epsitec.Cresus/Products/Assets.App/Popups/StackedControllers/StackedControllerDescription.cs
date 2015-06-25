@@ -93,9 +93,6 @@ namespace Epsitec.Cresus.Assets.App.Popups.StackedControllers
 				case StackedControllerType.ExpressionGuid:
 					return new MethodGuidStackedController (accessor, description);
 
-				case StackedControllerType.Filename:
-					return new FilenameStackedController (accessor, description);
-
 				case StackedControllerType.Margins:
 					return new MarginsStackedController (accessor, description);
 

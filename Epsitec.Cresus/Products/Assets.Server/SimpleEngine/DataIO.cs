@@ -15,6 +15,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 	/// </summary>
 	public static class DataIO
 	{
+		public static bool IsExistingMandat(string filename)
+		{
+			//	Indique si le fichier d'un mandat existe.
+			filename = DataIO.PreprocessFilename (filename);
+			return System.IO.File.Exists (filename);
+		}
+
 		public static MandatInfo OpenInfo(string filename)
 		{
 			//	Lit le petit fichier d'informations, soit à partir du fichier xx.description.xml

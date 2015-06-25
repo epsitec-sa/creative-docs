@@ -214,19 +214,16 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected void OnFilter(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			var popup = new FilterPopup (this.accessor, this.rootGuid);
 
-			popup.Create (target, leftOrRight: true);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			FilterPopup.Show (target, this.accessor, this.rootGuid, delegate (Guid selectedGuid)
 			{
-				this.rootGuid = guid;
+				this.rootGuid = selectedGuid;
 
 				using (new SaveSelectedGuid (this))
 				{
 					this.UpdateData ();
 				}
-			};
+			});
 		}
 
 		[Command (Res.CommandIds.Assets.Graphic)]

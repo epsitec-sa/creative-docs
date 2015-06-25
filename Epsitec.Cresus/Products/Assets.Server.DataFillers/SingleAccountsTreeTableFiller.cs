@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			SingleAccountsTreeTableFiller.categoryWidth;
 
 		private const int numberWidth   = 140;
-		private const int titleWidth    = 300;
+		private const int titleWidth    = 400;
 		private const int categoryWidth =  60;
 	}
 }

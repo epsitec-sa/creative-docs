@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
@@ -17,7 +18,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class ExportPdfPopup : AbstractStackedPopup
 	{
-		public ExportPdfPopup(DataAccessor accessor)
+		private ExportPdfPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.ExportPdf.Title.ToString ();
@@ -110,7 +111,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public PdfExportProfile					Profile
+		private PdfExportProfile				Profile
 		{
 			get
 			{
@@ -263,5 +264,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, PdfExportProfile profile, System.Action<PdfExportProfile> action)
+		{
+			//	Affiche le Popup.
+			var popup = new ExportPdfPopup (accessor)
+			{
+				Profile = profile,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Profile);
+				}
+			};
+		}
+		#endregion
 	}
 }

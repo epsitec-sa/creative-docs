@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Data;
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class MCH2SummaryReportPopup : AbstractStackedPopup
 	{
-		public MCH2SummaryReportPopup(DataAccessor accessor)
+		private MCH2SummaryReportPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.MCH2SummaryReport.Title.ToString ();
@@ -92,7 +93,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public MCH2SummaryParams				MCH2SummaryParams
+		private MCH2SummaryParams				MCH2SummaryParams
 		{
 			get
 			{
@@ -451,6 +452,28 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				return null;
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, MCH2SummaryParams param, System.Action<MCH2SummaryParams> action)
+		{
+			//	Affiche le Popup.
+			var popup = new MCH2SummaryReportPopup (accessor)
+			{
+				MCH2SummaryParams = param,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.MCH2SummaryParams);
+				}
+			};
+		}
+		#endregion
 
 
 		private const int CustomTitleRank  = 0;

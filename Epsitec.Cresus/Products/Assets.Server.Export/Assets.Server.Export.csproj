@@ -55,7 +55,6 @@
     <Compile Include="ExportEntries\ExportEntries.cs" />
     <Compile Include="ExportFont.cs" />
     <Compile Include="ExportColor.cs" />
-    <Compile Include="ExportInstructions.cs" />
     <Compile Include="Helpers\TagConverters.cs" />
     <Compile Include="Helpers\ExportFontHelpers.cs" />
     <Compile Include="Helpers\ExportColorHelpers.cs" />

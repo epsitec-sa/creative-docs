@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -14,7 +15,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class SearchOptionsPopup : AbstractStackedPopup
 	{
-		public SearchOptionsPopup(DataAccessor accessor)
+		private SearchOptionsPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.SearchController.Title.ToString ();
@@ -56,7 +57,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public SearchOptions					Options
+		private SearchOptions					Options
 		{
 			get
 			{
@@ -203,5 +204,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			this.SetEnable (3, enable);
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, SearchOptions options, System.Action<SearchOptions> action)
+		{
+			//	Affiche le Popup.
+			var popup = new SearchOptionsPopup (accessor)
+			{
+				Options = options,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Options);
+				}
+			};
+		}
+		#endregion
 	}
 }

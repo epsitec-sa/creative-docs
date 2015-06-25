@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Data;
@@ -19,7 +20,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class CreateGroupPopup : AbstractStackedPopup
 	{
-		public CreateGroupPopup(DataAccessor accessor)
+		private CreateGroupPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.CreateGroup.Title.ToString ();
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public IEnumerable<AbstractDataProperty> Properties
+		private IEnumerable<AbstractDataProperty> Properties
 		{
 			get
 			{
@@ -73,7 +74,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public Guid								ObjectParent
+		private Guid							ObjectParent
 		{
 			get
 			{
@@ -161,5 +162,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, Guid objectParent, System.Action<Guid, IEnumerable<AbstractDataProperty>> action)
+		{
+			//	Affiche le Popup.
+			var popup = new CreateGroupPopup (accessor)
+			{
+				ObjectParent = objectParent,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.ObjectParent, popup.Properties);
+				}
+			};
+		}
+		#endregion
 	}
 }

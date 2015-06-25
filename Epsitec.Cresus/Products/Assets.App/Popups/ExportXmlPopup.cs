@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Export;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Server.Export;
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class ExportXmlPopup : AbstractStackedPopup
 	{
-		public ExportXmlPopup(DataAccessor accessor)
+		private ExportXmlPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.ExportXml.Title.ToString ();
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public XmlExportProfile				Profile
+		private XmlExportProfile				Profile
 		{
 			get
 			{
@@ -180,5 +181,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, XmlExportProfile profile, System.Action<XmlExportProfile> action)
+		{
+			//	Affiche le Popup.
+			var popup = new ExportXmlPopup (accessor)
+			{
+				Profile = profile,
+			};
+
+			popup.Create (target, leftOrRight: true);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Profile);
+				}
+			};
+		}
+		#endregion
 	}
 }

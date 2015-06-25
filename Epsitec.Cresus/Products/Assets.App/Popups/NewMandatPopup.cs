@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.App.Views;
 using Epsitec.Cresus.Assets.Server.Engine;
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class NewMandatPopup : AbstractStackedPopup
 	{
-		public NewMandatPopup(DataAccessor accessor)
+		private NewMandatPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.NewMandat.Title.ToString ();
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public string							MandatFactoryName
+		private string							MandatFactoryName
 		{
 			get
 			{
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public string							MandatName
+		private string							MandatName
 		{
 			get
 			{
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public System.DateTime					MandatStartDate
+		private System.DateTime					MandatStartDate
 		{
 			get
 			{
@@ -106,7 +107,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public bool								MandatWithSamples
+		private bool							MandatWithSamples
 		{
 			get
 			{
@@ -170,6 +171,31 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				return string.Join ("<br/>", list);
 			}
+		}
+		#endregion
+		
+		
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, string factoryName, bool withSamples, System.DateTime date,
+			System.Action<string, string, bool, System.DateTime> action)
+		{
+			//	Affiche le Popup.
+			var popup = new NewMandatPopup (accessor)
+			{
+				MandatFactoryName = factoryName,
+				MandatWithSamples = withSamples,
+				MandatStartDate   = date,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.MandatFactoryName, popup.MandatName, popup.MandatWithSamples, popup.MandatStartDate);
+				}
+			};
 		}
 		#endregion
 	}

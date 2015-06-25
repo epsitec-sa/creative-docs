@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.CommandToolbars;
@@ -163,7 +164,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowOpenMandatPopup (target);
+			this.ShowOpenMandatDialog (target);
 		}
 
 		[Command (Res.CommandIds.Main.Save)]
@@ -175,7 +176,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				string.IsNullOrEmpty (this.accessor.ComputerSettings.MandatFilename))
 			{
 				//	Si le nom du fichier n'est pas connu, on effectue un 'SaveAs'.
-				this.ShowSaveMandatPopup (target);
+				this.ShowSaveMandatDialog (target);
 			}
 			else
 			{
@@ -191,7 +192,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private void OnSaveAs(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowSaveMandatPopup (target);
+			this.ShowSaveMandatDialog (target);
 		}
 
 		[Command (Res.CommandIds.Main.ExportEntries)]
@@ -315,29 +316,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreateMandatPopup(Widget target)
 		{
-			var popup = new NewMandatPopup (this.accessor)
-			{
-				MandatFactoryName = MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
-				MandatWithSamples = false,
-				MandatStartDate   = LocalSettings.CreateMandatDate,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
+			NewMandatPopup.Show (target, this.accessor,
+				MandatFactory.Factories.Where (x => x.IsDefault).FirstOrDefault ().Name,
+				false,
+				LocalSettings.CreateMandatDate,
+				delegate (string factoryName, string mandatName, bool withSamples, System.DateTime date)
 				{
-					LocalSettings.CreateMandatDate = popup.MandatStartDate;
-					this.CreateMandat (popup.MandatFactoryName, popup.MandatName, popup.MandatStartDate, popup.MandatWithSamples);
+					LocalSettings.CreateMandatDate = date;
+					this.CreateMandat (factoryName, mandatName, date, withSamples);
 					this.accessor.ComputerSettings.MandatFilename = null;
-				}
-			};
+				});
 		}
 
-		private void ShowOpenMandatPopup(Widget target)
+		private void ShowOpenMandatDialog(Widget target)
 		{
-			OpenMandatPopup.Show (this.accessor, target,
+			DialogsHelper.ShowOpenMandat (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				delegate (string path)
@@ -354,20 +347,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			});
 		}
 
-		private void ShowSaveMandatPopup(Widget target)
+		private void ShowSaveMandatDialog(Widget target)
 		{
-			SaveMandatPopup.Show (this.accessor, target,
+			DialogsHelper.ShowSaveMandat (target,
 				this.accessor.ComputerSettings.MandatDirectory,
 				this.accessor.ComputerSettings.MandatFilename,
 				this.accessor.GlobalSettings.SaveMandatMode,
 				delegate (string path, SaveMandatMode mode)
 			{
-				this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName (path);
-				this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
-				this.accessor.GlobalSettings.SaveMandatMode = mode;
-
-				this.SaveMandat (target, path, mode);
+				this.SaveAsMandat (target, path, mode);
 			});
+		}
+
+		private void SaveAsMandat(Widget target, string path, SaveMandatMode mode)
+		{
+			this.accessor.ComputerSettings.MandatDirectory = System.IO.Path.GetDirectoryName (path);
+			this.accessor.ComputerSettings.MandatFilename  = System.IO.Path.GetFileName (path);
+			this.accessor.GlobalSettings.SaveMandatMode = mode;
+
+			this.SaveMandat (target, path, mode);
 		}
 
 		private void SaveMandat(Widget target, string path, SaveMandatMode mode)
@@ -640,11 +638,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				.Select (x => x.Guid)
 				.FirstOrDefault ();
 
-			var popup = new LastViewsPopup (this.accessor, this.lastViewStates, navigationGuid);
-
-			popup.Create (target);
-
-			popup.Navigate += delegate (object sender, Guid guid)
+			LastViewsPopup.Show (target, this.accessor, this.lastViewStates, navigationGuid, delegate (Guid guid)
 			{
 				if (!guid.IsEmpty)
 				{
@@ -653,12 +647,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 					var viewState = this.lastViewStates.Where (x => x.Guid == guid).FirstOrDefault ();
 					this.RestoreViewState (viewState);
 				}
-			};
-
-			popup.Closed += delegate
+			}, delegate ()
 			{
 				this.SortLastViewStates ();
-			};
+			}
+			);
 		}
 
 		private void RestoreUndoViewState(AbstractViewState viewState)

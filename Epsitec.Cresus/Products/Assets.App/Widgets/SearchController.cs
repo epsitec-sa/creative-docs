@@ -162,20 +162,10 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 
 		private void ShowOptionsPopup(Widget target)
 		{
-			var popup = new SearchOptionsPopup (null)
+			SearchOptionsPopup.Show (target, null, this.Definition.Options, delegate (SearchOptions options)
 			{
-				Options = this.Definition.Options,
-			};
-
-			popup.Create (target, leftOrRight: false);
-
-			popup.ButtonClicked += delegate (object sender, string name)
-			{
-				if (name == "ok")
-				{
-					this.Definition = this.Definition.FromOptions (popup.Options);
-				}
-			};
+				this.Definition = this.Definition.FromOptions (options);
+			});
 		}
 
 

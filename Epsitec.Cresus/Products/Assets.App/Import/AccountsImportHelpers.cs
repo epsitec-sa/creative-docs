@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Dialogs;
 using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.App.Popups;
 using Epsitec.Cresus.Assets.App.Settings;
@@ -38,6 +39,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
+				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
+
 				try
 				{
 					var range = importEngine.Import (importedAccounts, null, filename);
@@ -49,47 +52,44 @@ namespace Epsitec.Cresus.Assets.App.Export
 						if (equal)
 						{
 							string message = Res.Strings.AccountsImport.Message.Equal.ToString ();
-							return new AccountsImportReport (AccountsImportMode.Error, message);
+							return new AccountsImportReport (AccountsImportMode.Error, report + message);
 						}
 						else
 						{
 							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count);
-							return new AccountsImportReport (AccountsImportMode.Update, message);
+							return new AccountsImportReport (AccountsImportMode.Update, report + message);
 						}
 					}
 					else
 					{
 						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count);
-						return new AccountsImportReport (AccountsImportMode.Add, message);
+						return new AccountsImportReport (AccountsImportMode.Add, report + message);
 					}
 				}
 				catch (System.Exception ex)
 				{
 					string message = TextLayout.ConvertToTaggedText (ex.Message);
-					return new AccountsImportReport (AccountsImportMode.Error, message);
+					return new AccountsImportReport (AccountsImportMode.Error, report + message);
 				}
 			}
 		}
 
 		public void ShowImportPopup()
 		{
-			//	Affiche le popup permettant de choisir un plan comptable à importer, puis
-			//	effectue l'importation.
-			var popup = new AccountsImportPopup (this.accessor)
-			{
-				Filename = LocalSettings.AccountsImportFilename,
-			};
+			//	Affiche le dialogue standard de Windows pour choisir le plan comptable à importer,
+			//	puis affiche le popup de résumé, puis effectue l'importation.
 
-			popup.Create (this.target, leftOrRight: true);
-
-			popup.ButtonClicked += delegate (object sender, string name)
+			//	Affiche le dialogue standard de Windows.
+			DialogsHelper.ShowImportAccounts (this.target, LocalSettings.AccountsImportFilename, delegate (string path)
 			{
-				if (name == "ok")
+				LocalSettings.AccountsImportFilename = path;
+
+				//	Affiche le popup de résumé.
+				AccountsImportPopup.Show (this.target, this.accessor, path, delegate
 				{
-					LocalSettings.AccountsImportFilename = popup.Filename;  // enregistre dans les réglages
-					this.Import (popup.Filename);
-				}
-			};
+					this.Import (path);
+				});
+			});
 		}
 
 

@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		CategoryGuid,
 		PersonGuid,
 		ExpressionGuid,
-		Filename,
 		Margins,
 		PageSize,
 		PdfStyle,

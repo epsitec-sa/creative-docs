@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Popups.StackedControllers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 {
 	public class RateCalculatorPopup : AbstractStackedPopup
 	{
-		public RateCalculatorPopup(DataAccessor accessor)
+		private RateCalculatorPopup(DataAccessor accessor)
 			: base (accessor)
 		{
 			this.title = Res.Strings.Popup.RateCalculator.Title.ToString ();
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		public decimal?							Rate
+		private decimal?						Rate
 		{
 			get
 			{
@@ -109,5 +110,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 		}
+
+
+		#region Helpers
+		public static void Show(Widget target, DataAccessor accessor, decimal? rate, System.Action<decimal?> action)
+		{
+			//	Affiche le Popup.
+			var popup = new RateCalculatorPopup (accessor)
+			{
+				Rate = rate,
+			};
+
+			popup.Create (target, leftOrRight: false);
+
+			popup.ButtonClicked += delegate (object sender, string name)
+			{
+				if (name == "ok")
+				{
+					action (popup.Rate);
+				}
+			};
+		}
+		#endregion
 	}
 }

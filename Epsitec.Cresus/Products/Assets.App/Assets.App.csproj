@@ -76,6 +76,7 @@
     <Compile Include="DataFillers\ReportsTreeTableFiller.cs" />
     <Compile Include="DataFillers\LastViewsTreeTableFiller.cs" />
     <Compile Include="DataFillers\WarningsTreeTableFiller.cs" />
+    <Compile Include="Dialogs\DialogsHelper.cs" />
     <Compile Include="Dialogs\FileOpenDialog.cs" />
     <Compile Include="Dialogs\FileSaveDialog.cs" />
     <Compile Include="Export\ExportFontHelpers.cs" />
@@ -119,8 +120,6 @@
     <Compile Include="Popups\QuitPopup.cs" />
     <Compile Include="Popups\StackedControllers\MethodGuidStackedController.cs" />
     <Compile Include="Popups\YearsCalculatorPopup.cs" />
-    <Compile Include="Popups\SaveMandatPopup.cs" />
-    <Compile Include="Popups\OpenMandatPopup.cs" />
     <Compile Include="Popups\UndoListPopup.cs" />
     <Compile Include="Popups\SearchOptionsPopup.cs" />
     <Compile Include="Popups\PageFormatType.cs" />
@@ -138,7 +137,6 @@
     <Compile Include="Popups\AmortizationsPopup.cs" />
     <Compile Include="Popups\AssetCopyPopup.cs" />
     <Compile Include="Popups\AccountsImportPopup.cs" />
-    <Compile Include="Popups\StackedControllers\FilenameStackedController .cs" />
     <Compile Include="Popups\StackedControllers\PdfStyleStackedController.cs" />
     <Compile Include="Popups\PdfStylePopup.cs" />
     <Compile Include="Popups\StackedControllers\PageSizeStackedController.cs" />
@@ -157,7 +155,7 @@
     <Compile Include="Popups\StackedControllers\CategoryGuidStackedController.cs" />
     <Compile Include="Popups\AssetsReportPopup.cs" />
     <Compile Include="Popups\RateCalculatorPopup.cs" />
-    <Compile Include="Popups\ExportInstructionsPopup.cs" />
+    <Compile Include="Popups\ExportFormatPopup.cs" />
     <Compile Include="Popups\StackedControllers\ComboStackedController.cs" />
     <Compile Include="Popups\StackedControllers\LabelStackedController.cs" />
     <Compile Include="Reports\ReportTitleType.cs" />

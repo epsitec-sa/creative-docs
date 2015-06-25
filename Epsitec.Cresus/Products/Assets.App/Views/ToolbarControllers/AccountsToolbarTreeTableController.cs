@@ -225,28 +225,26 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une.
-			var popup = new SimplePopup ();
-
+			var items = new List<string>();
+			int selectedItem = -1;
 			int i = 0;
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
 			{
-				popup.Items.Add ("Période " + range.ToNiceString ());
+				items.Add ("Période " + range.ToNiceString ());
 
 				if (range == this.baseType.AccountsDateRange)
 				{
-					popup.SelectedItem = i;  // sélectionne la période courante actuelle dans le popup
+					selectedItem = i;  // sélectionne la période courante actuelle dans le popup
 				}
 
 				i++;
 			}
 
-			popup.Create (target, leftOrRight: true);
-
-			popup.ItemClicked += delegate (object sender, int rank)
+			SimplePopup.Show (target, items, selectedItem, delegate (int rank)
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
-				this.OnChangeView (new ViewType(ViewTypeKind.Accounts, range));
-			};
+				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
+			});
 		}
 
 

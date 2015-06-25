@@ -76,17 +76,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowPopup()
 		{
-			var popup = new DatePopup (this.accessor)
+			DatePopup.Show (this.mainButton, this.accessor, this.date, delegate (System.DateTime? date)
 			{
-				Date = this.date,
-			};
-
-			popup.Create (this.mainButton, leftOrRight: true);
-
-			popup.DateChanged += delegate
-			{
-				this.Date = popup.Date;
-			};
+				this.Date = date;
+			});
 		}
 
 		private void UpdateButton()
