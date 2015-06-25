@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			switch (this.Entity.SusbscriptionFlag)
+			switch (this.Entity.SubscriptionFlag)
 			{
 				case Enumerations.SubscriptionFlag.VerificationRequired:
 				case Enumerations.SubscriptionFlag.None:
@@ -47,14 +47,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			switch (this.Entity.SusbscriptionFlag)
+			switch (this.Entity.SubscriptionFlag)
 			{
 				case Enumerations.SubscriptionFlag.VerificationRequired:
 				case Enumerations.SubscriptionFlag.None:
-					this.Entity.SusbscriptionFlag = Enumerations.SubscriptionFlag.Suspended;
+					this.Entity.SubscriptionFlag = Enumerations.SubscriptionFlag.Suspended;
 					break;
 				case Enumerations.SubscriptionFlag.Suspended:
-					this.Entity.SusbscriptionFlag = Enumerations.SubscriptionFlag.None;
+					this.Entity.SubscriptionFlag = Enumerations.SubscriptionFlag.None;
 					break;
 				default:
 					throw new System.NotImplementedException ();

@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Count)
 					.Field (x => x.RegionalEdition)
 						.WithFavorites (favorites, favoritesOnly: true)
-					.Field (x => x.SusbscriptionFlag)
+					.Field (x => x.SubscriptionFlag)
 					.Field (x => x.ParishGroupPathCache)
 						.IfTrue (this.HasUserPowerLevel (Cresus.Core.Business.UserManagement.UserPowerLevel.Administrator))
 						.ReadOnly ()

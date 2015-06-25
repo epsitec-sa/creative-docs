@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetEmployeeSummary()
 		{
-			var offices = string.Join ("\n", this.EmployeeJobs.Select (x => x.Office.OfficeName));
+			var offices = FormattedText.Join ("\n", this.EmployeeJobs.Select (x => x.GetCompactSummary ()));
 
 			return TextFormatter.FormatText (this.GetCompactSummary (), "\n", offices);
 		}

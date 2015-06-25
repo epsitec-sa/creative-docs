@@ -3760,10 +3760,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 8);
 				//	designer:cap/LVG532
 				public static readonly global::Epsitec.Common.Support.Druid RegionalEdition = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 101);
+				//	designer:cap/LVABH
+				public static readonly global::Epsitec.Common.Support.Druid SubscriptionFlag = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 555);
 				//	designer:cap/LVG132
 				public static readonly global::Epsitec.Common.Support.Druid SubscriptionType = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 97);
-				//	designer:cap/LVABH
-				public static readonly global::Epsitec.Common.Support.Druid SusbscriptionFlag = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 555);
 			}
 			
 			public static class AiderSubscriptionRefusal
