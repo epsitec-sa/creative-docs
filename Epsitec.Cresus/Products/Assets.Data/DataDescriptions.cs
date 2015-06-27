@@ -183,6 +183,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.UserFieldType:
 					return Res.Strings.Enum.ObjectField.UserFieldType.ToString ();
 
+				case ObjectField.UserFieldMCH2SummaryOrder:
+					return "Ordre MCH2";
+
 				default:
 					return null;
 			}
