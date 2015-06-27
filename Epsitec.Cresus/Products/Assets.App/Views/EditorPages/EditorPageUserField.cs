@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				new StaticText
 				{
 					Parent  = parent,
-					Text    = "Dans le tableau des immobilisations MCH2:",
+					Text    = Res.Strings.EditorPages.UserFields.MCH2Summary.ToString (),
 					Dock    = DockStyle.Top,
 					Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 				};
