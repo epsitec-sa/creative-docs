@@ -251,16 +251,17 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var e = obj.GetInputEvent ();
 			System.Diagnostics.Debug.Assert (e != null);
 
-			var p0 = e.GetProperty (ObjectField.UserFieldOrder       ) as DataIntProperty;
-			var p1 = e.GetProperty (ObjectField.Name                 ) as DataStringProperty;
-			var p2 = e.GetProperty (ObjectField.UserFieldType        ) as DataIntProperty;
-			var p3 = e.GetProperty (ObjectField.UserFieldColumnWidth ) as DataIntProperty;
-			var p4 = e.GetProperty (ObjectField.UserFieldLineWidth   ) as DataIntProperty;
-			var p5 = e.GetProperty (ObjectField.UserFieldLineCount   ) as DataIntProperty;
-			var p6 = e.GetProperty (ObjectField.UserFieldSummaryOrder) as DataIntProperty;
-			var p7 = e.GetProperty (ObjectField.UserFieldTopMargin   ) as DataIntProperty;
-			var p8 = e.GetProperty (ObjectField.UserFieldField       ) as DataIntProperty;
-			var p9 = e.GetProperty (ObjectField.UserFieldRequired    ) as DataIntProperty;
+			var p0  = e.GetProperty (ObjectField.UserFieldOrder           ) as DataIntProperty;
+			var p1  = e.GetProperty (ObjectField.Name                     ) as DataStringProperty;
+			var p2  = e.GetProperty (ObjectField.UserFieldType            ) as DataIntProperty;
+			var p3  = e.GetProperty (ObjectField.UserFieldColumnWidth     ) as DataIntProperty;
+			var p4  = e.GetProperty (ObjectField.UserFieldLineWidth       ) as DataIntProperty;
+			var p5  = e.GetProperty (ObjectField.UserFieldLineCount       ) as DataIntProperty;
+			var p6  = e.GetProperty (ObjectField.UserFieldSummaryOrder    ) as DataIntProperty;
+			var p7  = e.GetProperty (ObjectField.UserFieldTopMargin       ) as DataIntProperty;
+			var p8  = e.GetProperty (ObjectField.UserFieldField           ) as DataIntProperty;
+			var p9  = e.GetProperty (ObjectField.UserFieldRequired        ) as DataIntProperty;
+			var p10 = e.GetProperty (ObjectField.UserFieldMCH2SummaryOrder) as DataIntProperty;
 
 			System.Diagnostics.Debug.Assert (p0 != null);
 			System.Diagnostics.Debug.Assert (p1 != null);
@@ -296,7 +297,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				summaryOrder = p6.Value;
 			}
 
-			return new UserField (obj.Guid, order, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin);
+			int? mch2SummaryOrder = null;
+			if (p10 != null)
+			{
+				mch2SummaryOrder = p10.Value;
+			}
+
+			return new UserField (obj.Guid, order, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin, mch2SummaryOrder);
 		}
 
 
