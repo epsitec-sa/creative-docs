@@ -688,3 +688,16 @@ Lancé le 21.06.2015
 -echupdate -newechfile:S:\eerv\eerv-2015-06-20.xml -oldechfile:S:\eerv\eerv-2015-06-12.xml -output:s:\eerv\ech-diff-2015-06-20.md
 -buildrolecache
 
+Lancé le 25.06.2015
+-------------------
+
+-exportsubscriptions -output:export-2015-07-02.txt -error:error-2015-07-02.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-07-02.txt -publicationdate:2015-07-02 -response:tamedia-2015-07-02.log
+
+
+Lancé le 28.06.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-06-26.xml -oldechfile:S:\eerv\eerv-2015-06-26.xml -output:s:\eerv\ech-diff-2015-06-26.md
+-buildrolecache
+
