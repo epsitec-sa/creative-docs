@@ -301,6 +301,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			if (column >= Column.User)
 			{
+				//	Retourne le nom d'une colonne supplémentaire.
 				return this.userColumns[(column-Column.User)].Name;
 			}
 
@@ -351,6 +352,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			if (column >= Column.User)
 			{
+				//	Retourne le tooltip d'une colonne supplémentaire, par exemple "Valeur fiscale le 31.12.2015 à 23h59".
 				var userColumn = this.userColumns[(column-Column.User)];
 				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.FinalDateTooltip);
 			}
@@ -532,14 +534,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				if (userField.MCH2SummaryOrder.HasValue)
 				{
-					var userColumn = new UserColumn
-					{
-						Order  = userField.MCH2SummaryOrder.Value,
-						Field  = userField.Field,
-						Column = Column.User + (i++),
-						Name   = userField.Name,
-					};
-
+					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name);
 					this.userColumns.Add(userColumn);
 				}
 			}
@@ -548,10 +543,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private class UserColumn
 		{
-			public int							Order;
-			public ObjectField					Field;
-			public Column						Column;
-			public string						Name;
+			public UserColumn(ObjectField field, Column column, string name)
+			{
+				this.Field  = field;
+				this.Column = column;
+				this.Name   = name;
+			}
+
+			public readonly ObjectField			Field;
+			public readonly Column				Column;
+			public readonly string				Name;
 		}
 
 
