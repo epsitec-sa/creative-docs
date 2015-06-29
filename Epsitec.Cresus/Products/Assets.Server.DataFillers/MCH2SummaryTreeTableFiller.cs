@@ -154,7 +154,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private decimal? GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
-			var field = ObjectField.MCH2Report + (int) column;
+			ObjectField field;
+
+			if (column < Column.User)
+			{
+				field = ObjectField.MCH2Report + (int) column;
+			}
+			else
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+				field = userColumn.Field;
+			}
 
 			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
@@ -178,7 +188,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var userColumn = this.userColumns[(column-Column.User)];
 
 				return new ExtractionInstructions (userColumn.Field,
-						ExtractionAmount.StateAt,
+						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						EventType.Unknown);
 			}

@@ -12,5 +12,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		DeltaFiltered,		// variation durant une période (début - fin)
 		LastFiltered,		// état à la fin d'une période pour un événement donné
 		Amortizations,		// amortissements durant une période
+		UserColumn,			// colonne supplémentaire définie à partir de ObjectField.UserFieldMCH2SummaryOrder
 	}
 }

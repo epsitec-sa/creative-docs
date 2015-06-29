@@ -125,6 +125,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					case ExtractionAmount.Amortizations:
 						return ExtractionEngine.GetAmortizations (accessor, obj, extractionInstructions);
 
+					case ExtractionAmount.UserColumn:
+						return ExtractionEngine.GetUserColumn (accessor, obj, extractionInstructions);
+
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
 				}
@@ -254,6 +257,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return sum;
+		}
+
+		private static decimal? GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		{
+			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo, 0);
+			var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
+
+			if (p != null)
+			{
+				return p.Value.FinalAmount;
+			}
+
+			return null;
 		}
 
 		private static bool CompareEventTypes(EventType extractionType, EventType eventType)
