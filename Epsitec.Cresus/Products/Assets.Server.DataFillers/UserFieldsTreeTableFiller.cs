@@ -51,6 +51,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldTopMargin,    TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.TopMargin.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldSummaryOrder, TreeTableColumnType.Int,     70, Res.Strings.UserFieldsTreeTableFiller.SummaryOrder.ToString ()));
 
+				if (this.baseType == BaseType.AssetsUserFields)
+				{
+					columns.Add (new TreeTableColumnDescription (ObjectField.UserFieldMCH2SummaryOrder, TreeTableColumnType.Int, 70, Res.Strings.UserFieldsTreeTableFiller.MCH2SummaryOrder.ToString ()));
+				}
+
 				return columns.ToArray ();
 			}
 		}
@@ -59,7 +64,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<9; i++)
+			for (int i=0; i<this.ColumnsCount; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -111,9 +116,31 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell6);
 				content.Columns[columnRank++].AddRow (cell7);
 				content.Columns[columnRank++].AddRow (cell8);
+
+				if (this.baseType == BaseType.AssetsUserFields)
+				{
+					var c9 = ObjectProperties.GetObjectPropertyInt (obj, null, ObjectField.UserFieldMCH2SummaryOrder);
+					var cell9 = new TreeTableCellInt (c9, cellState);
+					content.Columns[columnRank++].AddRow (cell9);
+				}
 			}
 
 			return content;
+		}
+
+		private int ColumnsCount
+		{
+			get
+			{
+				if (this.baseType == BaseType.AssetsUserFields)
+				{
+					return 10;
+				}
+				else
+				{
+					return 9;
+				}
+			}
 		}
 
 

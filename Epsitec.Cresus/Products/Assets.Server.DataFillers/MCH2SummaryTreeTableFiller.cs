@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		public MCH2SummaryTreeTableFiller(DataAccessor accessor, INodeGetter<SortableCumulNode> nodeGetter)
 			: base (accessor, nodeGetter)
 		{
+			this.userColumns = new List<UserColumn> ();
+			this.InitializeUserColumns ();
 		}
 
 
@@ -171,6 +173,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private ExtractionInstructions GetExtractionInstructions(Column column)
 		{
 			//	Retourne les instructions d'extraction permettant de peupler une colonne.
+			if (column >= Column.User)
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+
+				return new ExtractionInstructions (userColumn.Field,
+						ExtractionAmount.StateAt,
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						EventType.Unknown);
+			}
+
 			var field = ObjectField.MCH2Report + (int) column;
 
 			switch (column)
@@ -277,6 +289,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnName(Column column)
 		{
+			if (column >= Column.User)
+			{
+				return this.userColumns[(column-Column.User)].Name;
+			}
+
 			switch (column)
 			{
 				case Column.Name:
@@ -444,6 +461,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				yield return Column.AmortizationsExtra;
 				yield return Column.AmortizationsSuppl;
 				yield return Column.FinalState;
+
+				foreach (var userField in this.userColumns)
+				{
+					yield return userField.Column;
+				}
 			}
 		}
 
@@ -470,6 +492,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			AmortizationsExtra,
 			AmortizationsSuppl,
 			FinalState,
+			User,					// +n, pour toutes les colonnes de l'utilisateur
 		}
 
 
@@ -480,5 +503,42 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return this.nodeGetter as ObjectsNodeGetter;
 			}
 		}
+
+
+		private void InitializeUserColumns()
+		{
+			this.userColumns.Clear ();
+
+			int i = 0;
+			foreach (var userField in accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields)
+				.Where   (x => x.MCH2SummaryOrder.HasValue)
+				.OrderBy (x => x.MCH2SummaryOrder.Value))
+			{
+				if (userField.MCH2SummaryOrder.HasValue)
+				{
+					var userColumn = new UserColumn
+					{
+						Order  = userField.MCH2SummaryOrder.Value,
+						Field  = userField.Field,
+						Column = Column.User + (i++),
+						Name   = userField.Name,
+					};
+
+					this.userColumns.Add(userColumn);
+				}
+			}
+		}
+
+
+		private class UserColumn
+		{
+			public int							Order;
+			public ObjectField					Field;
+			public Column						Column;
+			public string						Name;
+		}
+
+
+		private readonly List<UserColumn>		userColumns;
 	}
 }

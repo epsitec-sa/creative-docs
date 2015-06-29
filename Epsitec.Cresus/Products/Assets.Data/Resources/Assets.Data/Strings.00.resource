@@ -77,4 +77,5 @@
   <data name="Enum.ObjectField.AccountIncreaseVatCode" id="KH2">TVA reval.</data>
   <data name="Enum.ObjectField.AccountPurchaseVatCode" id="KI2">TVA achat</data>
   <data name="Enum.ObjectField.AccountSaleVatCode" id="KJ2">TVA vente</data>
+  <data name="Enum.ObjectField.UserFieldMCH2SummaryOrder" id="KK2">Ordre MCH2</data>
 </bundle>

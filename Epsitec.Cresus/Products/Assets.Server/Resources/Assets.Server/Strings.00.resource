@@ -89,7 +89,6 @@
   <data name="Enum.AmortizationMethod.RateDegressive.Summary" id="KU2">Taux dégressif</data>
   <data name="Enum.AmortizationMethod.YearsDegressive.Name" id="KV2">Amortissement dégressif selon le nombre d'années</data>
   <data name="Enum.AmortizationMethod.YearsDegressive.Summary" id="K03">Années dégressives</data>
-  <data name="MethodsLogic.ExpressionSummary" id="K13">{0} lignes C#</data>
   <data name="Enum.AmortizationExpressionType.RateLinear" id="K23">Taux linéaire</data>
   <data name="Enum.AmortizationExpressionType.RateDegressive" id="K33">Taux dégressif</data>
   <data name="Enum.AmortizationExpressionType.YearsDegressive" id="K43">Années dégressives</data>
@@ -108,4 +107,5 @@
   <data name="VatCodesLogic.InvalidDate" id="KH3">Aucun plan comptable à cette date</data>
   <data name="VatCodesLogic.CodeDoesNotExist" id="KI3">Ce code n'existe pas</data>
   <data name="AccountsImport.WithoutVat" id="KJ3">Pas de TVA</data>
+  <data name="MethodsLogic.NoArgument" id="KK3">Aucun argument</data>
 </bundle>

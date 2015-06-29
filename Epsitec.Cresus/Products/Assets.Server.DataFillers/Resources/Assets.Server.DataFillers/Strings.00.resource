@@ -76,7 +76,7 @@
   <data name="UserFieldsTreeTableFiller.Order" id="KM2">Ordre</data>
   <data name="CategoriesTreeTableFiller.Method" id="KN2">Méthode</data>
   <data name="ExpressionsTreeTableFiller.Name" id="KO2">Nom</data>
-  <data name="ExpressionsTreeTableFiller.Expression" id="KP2">Expression</data>
+  <data name="ExpressionsTreeTableFiller.Arguments" id="KP2">Arguments</data>
   <data name="ExpressionsTreeTableFiller.AmortizationMethod" id="KQ2">Type</data>
   <data name="ArgumentsTreeTableFiller.Name" id="KR2">Nom</data>
   <data name="ArgumentsTreeTableFiller.Description" id="KS2">Description</data>
@@ -91,4 +91,5 @@
   <data name="Enum.MCH2Summary.Column.AmortizationsSuppl.Text" id="K53">Amort. suppl.</data>
   <data name="Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip" id="K63">Variations dues aux amortissements supplémentaires</data>
   <data name="EntriesTreeTableFiller.VatCode" id="K73">Code TVA</data>
+  <data name="UserFieldsTreeTableFiller.MCH2SummaryOrder" id="K83">Ds MCH2</data>
 </bundle>

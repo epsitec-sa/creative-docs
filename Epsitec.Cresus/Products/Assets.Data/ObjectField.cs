@@ -118,6 +118,7 @@ namespace Epsitec.Cresus.Assets.Data
 		UserFieldSummaryOrder,
 		UserFieldTopMargin,
 		UserFieldField,
+		UserFieldMCH2SummaryOrder,
 
 		WarningViewGlyph,
 		WarningObject,

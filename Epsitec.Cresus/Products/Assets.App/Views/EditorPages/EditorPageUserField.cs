@@ -72,6 +72,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			this.CreateIntController (parent, ObjectField.UserFieldSummaryOrder);
 
+			if (this.baseType == BaseType.AssetsUserFields)
+			{
+				new StaticText
+				{
+					Parent  = parent,
+					Text    = Res.Strings.EditorPages.UserFields.MCH2Summary.ToString (),
+					Dock    = DockStyle.Top,
+					Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
+				};
+
+				this.CreateIntController (parent, ObjectField.UserFieldMCH2SummaryOrder);
+			}
+
 			//	Connexion des événements.
 			this.typeController.ValueEdited += delegate (object sender, ObjectField val1)
 			{
