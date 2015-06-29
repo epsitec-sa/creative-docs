@@ -788,8 +788,8 @@
   <data name="Val.Enum.PersonMrMrsTitle.ChefService_Madame" id="ASL">&lt;s:data id="_0" f:Name="ChefService_Madame" f:Labels="{Collection {Text 'Madame la Cheffe de service'}, {Text 'Mme la Cheffe de service'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrsTitle.Directeur_Monsieur" id="ATL">&lt;s:data id="_0" f:Name="Directeur_Monsieur" f:Labels="{Collection {Text 'Monsieur le Directeur'}, {Text 'M. le Dir.'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrsTitle.Directeur_Madame" id="AUL">&lt;s:data id="_0" f:Name="Directeur_Madame" f:Labels="{Collection {Text 'Madame la Directrice'}, {Text 'Mme la Dir.'}}" /&gt;</data>
-  <data name="Val.Enum.PersonMrMrsTitle.Président_Monsieur" id="AVL">&lt;s:data id="_0" f:Name="Président_Monsieur" f:Labels="{Collection {Text 'Monsieur le Prés.'}, {Text 'M. le Prés.'}}" /&gt;</data>
-  <data name="Val.Enum.PersonMrMrsTitle.Président_Madame" id="A0M">&lt;s:data id="_0" f:Name="Président_Madame" f:Labels="{Collection {Text 'Madame la Prés.'}, {Text 'Mme la Prés.'}}" /&gt;</data>
+  <data name="Val.Enum.PersonMrMrsTitle.Président_Monsieur" id="AVL">&lt;s:data id="_0" f:Name="Président_Monsieur" f:Labels="{Collection {Text 'Monsieur le Président'}, {Text 'M. le Président'}}" /&gt;</data>
+  <data name="Val.Enum.PersonMrMrsTitle.Président_Madame" id="A0M">&lt;s:data id="_0" f:Name="Président_Madame" f:Labels="{Collection {Text 'Madame la Présidente'}, {Text 'Mme la Présisdente'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrsTitle.Recteur_Monsieur" id="A1M">&lt;s:data id="_0" f:Name="Recteur_Monsieur" f:Labels="{Collection {Text 'Monsieur le Recteur'}, {Text 'M. le Rec.'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrsTitle.Recteur_Madame" id="A2M">&lt;s:data id="_0" f:Name="Recteur_Madame" f:Labels="{Collection {Text 'Madame la Rectrice'}, {Text 'Mme la Rec.'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrsTitle.Doyen_Monsieur" id="A3M">&lt;s:data id="_0" f:Name="Doyen_Monsieur" f:Labels="{Collection {Text 'Monsieur le Doyen'}, {Text 'M. le Doyen'}}" /&gt;</data>
