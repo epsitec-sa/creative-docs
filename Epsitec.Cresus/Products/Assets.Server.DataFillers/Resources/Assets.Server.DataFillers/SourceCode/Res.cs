@@ -491,6 +491,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								}
 							}
 						}
+						
+						public static class UserColumn
+						{
+							//	designer:str/KUK9301
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544425));
+								}
+							}
+						}
 					}
 				}
 			}
@@ -1381,6 +1393,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544377);
+								}
+							}
+						}
+						
+						public static class UserColumn
+						{
+							//	designer:str/KUK9301
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544425);
 								}
 							}
 						}

@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				field = ObjectField.MCH2Report + (int) column;
 			}
-			else
+			else  // colonne supplémentaire ?
 			{
 				var userColumn = this.userColumns[(column-Column.User)];
 				field = userColumn.Field;
@@ -349,6 +349,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnTooltip(Column column)
 		{
+			if (column >= Column.User)
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.FinalDateTooltip);
+			}
+
 			switch (column)
 			{
 				case Column.Name:
