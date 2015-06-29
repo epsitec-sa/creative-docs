@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var field = this.accessor.UserFieldsAccessor.GetNewUserField ();
 			int order = this.accessor.UserFieldsAccessor.GetUserFields (baseType).Count ();
 
-			this.accessor.UserFieldsAccessor.AddUserField (baseType, new UserField (order, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin));
+			this.accessor.UserFieldsAccessor.AddUserField (baseType, new UserField (order, name, field, type, required, columnWidth, lineWidth, lineCount, summaryOrder, topMargin, null));
 
 			return field;
 		}

@@ -837,12 +837,12 @@ namespace Epsitec.Cresus.Assets.Server
 			
 			public static class MethodsLogic
 			{
-				//	designer:str/IUK1301
-				public static global::Epsitec.Common.Types.FormattedText ExpressionSummary
+				//	designer:str/IUKK301
+				public static global::Epsitec.Common.Types.FormattedText NoArgument
 				{
 					get
 					{
-						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544417));
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544436));
 					}
 				}
 			}
@@ -1894,12 +1894,12 @@ namespace Epsitec.Cresus.Assets.Server
 			
 			public static class MethodsLogic
 			{
-				//	designer:str/IUK1301
-				public static global::Epsitec.Common.Support.Druid ExpressionSummary
+				//	designer:str/IUKK301
+				public static global::Epsitec.Common.Support.Druid NoArgument
 				{
 					get
 					{
-						return global::Epsitec.Common.Support.Druid.FromFieldId (335544417);
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544436);
 					}
 				}
 			}

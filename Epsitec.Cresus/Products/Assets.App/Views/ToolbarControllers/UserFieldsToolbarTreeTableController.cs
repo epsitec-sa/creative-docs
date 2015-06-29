@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			this.accessor.UndoManager.Start ();
 
-			var userField = new UserField (-1, Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0);
+			var userField = new UserField (-1, Res.Strings.ToolbarControllers.UserFieldsTreeTable.NewName.ToString (), newField, FieldType.String, false, 120, AbstractFieldController.maxWidth, 1, null, 0, null);
 
 			int order = this.VisibleSelectedRow + 1;  // insère après la sélection actuelle
 			if (order == 0)  // pas de sélection ?

@@ -55,18 +55,43 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetExpressionSummary(DataAccessor accessor, Guid guid)
+		public static string GetArgumentsSummary(DataAccessor accessor, Guid guid)
 		{
-			//	Retourne le résumé du code C# d'une méthode d'amortissement.
-			var exp = MethodsLogic.GetExpression (accessor, guid);
-
-			if (!string.IsNullOrEmpty (exp))
+			//	Retourne le résumé des arguments d'une méthode d'amortissement,
+			//	par exemple "Durée, Arrondi, Valeur résiduelle, Prorata".
+			var obj = accessor.GetObject (BaseType.Methods, guid);
+			if (obj == null)
 			{
-				var n = exp.Split (new string[] { "<br/>" }, System.StringSplitOptions.RemoveEmptyEntries).Length;
-				return string.Format (Res.Strings.MethodsLogic.ExpressionSummary.ToString (), TypeConverters.IntToString (n));
+				return null;
 			}
 
-			return null;
+			var list = new List<string> ();
+
+			for (var argumentField = ObjectField.ArgumentFirst; argumentField <= ObjectField.ArgumentLast; argumentField++)
+			{
+				var arguemntGuid = ObjectProperties.GetObjectPropertyGuid (obj, null, argumentField);
+				if (arguemntGuid != null)
+				{
+					var argument = accessor.GetObject (BaseType.Arguments, arguemntGuid);
+					if (argument != null)
+					{
+						var name = ObjectProperties.GetObjectPropertyString (argument, null, ObjectField.Name);
+						if (!string.IsNullOrEmpty (name))
+						{
+							list.Add (name);
+						}
+					}
+				}
+			}
+
+			if (list.Any ())
+			{
+				return string.Join (", ", list);
+			}
+			else
+			{
+				return Res.Strings.MethodsLogic.NoArgument.ToString ();
+			}
 		}
 
 		public static string GetExpression(DataAccessor accessor, Guid guid)
