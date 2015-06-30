@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 				};
 
-				this.CreateIntController (parent, ObjectField.UserFieldMCH2SummaryOrder);
+				this.mch2OrderController = this.CreateIntController (parent, ObjectField.UserFieldMCH2SummaryOrder);
 			}
 
 			//	Connexion des événements.
@@ -111,10 +111,19 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			else
 			{
 				this.lineWidthController.Value = null;
-				this.lineCountController.Value = null;
-
 				this.lineWidthController.ValueChanged ();
+
+				this.lineCountController.Value = null;
 				this.lineCountController.ValueChanged ();
+			}
+
+			if (this.FieldType != FieldType.ComputedAmount)
+			{
+				if (mch2OrderController != null)
+				{
+					this.mch2OrderController.Value = null;
+					this.mch2OrderController.ValueChanged ();
+				}
 			}
 		}
 
@@ -137,5 +146,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private EnumFieldController				typeController;
 		private IntFieldController				lineWidthController;
 		private IntFieldController				lineCountController;
+		private IntFieldController				mch2OrderController;
 	}
 }
