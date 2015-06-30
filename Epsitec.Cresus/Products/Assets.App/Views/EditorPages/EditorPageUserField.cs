@@ -92,6 +92,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 		}
 
+		public override void SetObject(Guid objectGuid, Timestamp timestamp)
+		{
+			base.SetObject (objectGuid, timestamp);
+			this.UpdateType ();
+		}
+
+
 		private void UpdateType()
 		{
 			if (this.FieldType == FieldType.String)
