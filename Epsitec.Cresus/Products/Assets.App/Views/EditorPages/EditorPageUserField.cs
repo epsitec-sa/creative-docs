@@ -100,29 +100,38 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				{
 					this.lineWidthController.Value = AbstractFieldController.maxWidth;
 					this.lineWidthController.ValueChanged ();
+					this.lineWidthController.IsReadOnly = false;
 				}
 
 				if (!this.lineCountController.Value.HasValue)
 				{
 					this.lineCountController.Value = 1;
 					this.lineCountController.ValueChanged ();
+					this.lineCountController.IsReadOnly = false;
 				}
 			}
 			else
 			{
 				this.lineWidthController.Value = null;
 				this.lineWidthController.ValueChanged ();
+				this.lineWidthController.IsReadOnly = true;
 
 				this.lineCountController.Value = null;
 				this.lineCountController.ValueChanged ();
+				this.lineCountController.IsReadOnly = true;
 			}
 
-			if (this.FieldType != FieldType.ComputedAmount)
+			if (mch2OrderController != null)
 			{
-				if (mch2OrderController != null)
+				if (this.FieldType == FieldType.ComputedAmount)
+				{
+					this.mch2OrderController.IsReadOnly = false;
+				}
+				else
 				{
 					this.mch2OrderController.Value = null;
 					this.mch2OrderController.ValueChanged ();
+					this.mch2OrderController.IsReadOnly = true;
 				}
 			}
 		}
