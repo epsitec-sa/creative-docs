@@ -630,7 +630,8 @@ namespace Epsitec.Aider.Data.Job
 			else // We need to check for relocate
 			{
 				this.LogToConsole ("Info: {0} is already assiged to an household", aiderPerson.GetFullName ());
-				var householdAddress	= refAiderHousehold.Address;
+				var currentHousehold    = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
+				var householdAddress	= currentHousehold.Address;
 
 				if (!EChDataHelpers.AddressComparator (householdAddress, rchAddress))
 				{
