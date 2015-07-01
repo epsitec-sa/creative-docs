@@ -152,7 +152,7 @@ namespace Epsitec.Aider.Data.Job
 			return true;
 		}
 
-		private void ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity eChHousehold, AiderPersonEntity person, AiderHouseholdEntity potentialHousehold)
+		private AiderHouseholdEntity ReassignHousehold(BusinessContext businessContext, List<FormattedText> changes, eCH_ReportedPersonEntity eChHousehold, AiderPersonEntity person, AiderHouseholdEntity potentialHousehold)
 		{
 			this.LogToConsole ("Info: Reassign household");
 
@@ -191,14 +191,25 @@ namespace Epsitec.Aider.Data.Job
 					this.ReassignAndWarnParish (businessContext, member, changes);
 				}
 			}
-			else //potential family is different relocate head from ECh new Data
+			else //  potential family is different 
 			{
-				
-				this.LogToConsole ("Info: Reassign only {0}", person.GetFullName ());
-				var newHousehold = this.RelocateAndCreateNewAiderHousehold (businessContext, eChHousehold);
-				this.ReassignAndWarnParish (businessContext, person, changes);
-				EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, newHousehold);
+				if (eChHousehold.Adult1.PersonId == person.eCH_Person.PersonId) // relocate head from ECh new Data
+				{
+					this.LogToConsole ("Info: Reassign only {0}", person.GetFullName ());
+					var newHousehold = this.RelocateAndCreateNewAiderHousehold (businessContext, eChHousehold);
+					this.ReassignAndWarnParish (businessContext, person, changes);
+					EChDataHelpers.CreateOrUpdateAiderSubscription (businessContext, newHousehold);
+					return newHousehold;
+				}
+				else // move person as household member
+				{
+					var household = EChDataHelpers.GetAiderHousehold (businessContext, eChHousehold.Adult1);
+					AiderContactEntity.ChangeHousehold (businessContext, person.MainContact, household, household.IsHead (person));
+					this.ReassignAndWarnParish (businessContext, person, changes);
+				}
 			}
+
+			return null;
 		}
 
 		private bool UpdateHouseholdsAndPropagate()
@@ -451,7 +462,11 @@ namespace Epsitec.Aider.Data.Job
 			if (processAiderHouseholdChanges && refAiderHousehold.IsNotNull ())
 			{
 
-				this.ProcessAiderHouseholdChangesForMember (businessContext, refAiderPerson, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold,true);
+				var newHousehold = this.ProcessAiderHouseholdChangesForMember (businessContext, refAiderPerson, refAiderPerson.eCH_Person, eChReportedPerson.Address, eChReportedPersonEntity, refAiderHousehold, true);
+				if (newHousehold != null)
+				{
+					refAiderHousehold = newHousehold;
+				}
 			}
 
 			if (eChReportedPerson.Adult2 != null)
@@ -528,7 +543,7 @@ namespace Epsitec.Aider.Data.Job
 							//Link household to ECh Entity
 							if (existingEChReportedPerson.Adult1.IsNotNull ())
 							{
-								this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult1, existingEChReportedPerson, aiderHousehold, true, false);
+								this.SetupAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult1, existingEChReportedPerson, aiderHousehold, true, false);
 							}
 							else
 							{
@@ -538,12 +553,12 @@ namespace Epsitec.Aider.Data.Job
 
 							if (existingEChReportedPerson.Adult2.IsNotNull ())
 							{
-								this.SetupAndAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult2, existingEChReportedPerson, aiderHousehold, false, true);
+								this.SetupAiderHouseholdForMember (businessContext, existingEChReportedPerson.Adult2, existingEChReportedPerson, aiderHousehold, false, true);
 							}
 								
 							foreach (var child in existingEChReportedPerson.Children)
 							{
-								this.SetupAndAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
+								this.SetupAiderHouseholdForMember (businessContext, child, existingEChReportedPerson, aiderHousehold, false, false);
 							}
 
 							//Bonne Nouvelle Automatic Subscription
@@ -557,7 +572,7 @@ namespace Epsitec.Aider.Data.Job
 				});
 		}
 
-		private void SetupAndAiderHouseholdForMember(BusinessContext businessContext, eCH_PersonEntity eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, AiderHouseholdEntity aiderHousehold, bool isHead1, bool isHead2)
+		private void SetupAiderHouseholdForMember(BusinessContext businessContext, eCH_PersonEntity eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, AiderHouseholdEntity aiderHousehold, bool isHead1, bool isHead2)
 		{
 			this.LogToConsole ("Info: Processing PERSONID:{0} setup", eChPerson.PersonId);
 			var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPerson);
@@ -584,14 +599,16 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		private void ProcessAiderHouseholdChangesForMember(BusinessContext businessContext,
+		private AiderHouseholdEntity ProcessAiderHouseholdChangesForMember(BusinessContext businessContext,
 			/**/										   AiderPersonEntity aiderPerson, eCH_PersonEntity eChPersonEntity,EChAddress rchAddress, eCH_ReportedPersonEntity eChReportedPersonEntity,AiderHouseholdEntity refAiderHousehold,bool isHead)
 		{
+			AiderHouseholdEntity newHousehold = null;
 			this.LogToConsole ("Info: Processing {0}", eChPersonEntity.PersonId);
 
 			//Assign household EChHousehold
 			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
-			
+			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
+
 			//autoassign person to AiderHousehold if needed
 			if (aiderPerson.Households.IsEmpty ())
 			{
@@ -613,15 +630,14 @@ namespace Epsitec.Aider.Data.Job
 			else // We need to check for relocate
 			{
 				this.LogToConsole ("Info: {0} is already assiged to an household", aiderPerson.GetFullName ());
-				var aiderHousehold		= aiderPerson.HouseholdContact.Household;
-				var householdAddress	= aiderHousehold.Address;
+				var currentHousehold    = EChDataHelpers.GetAiderHousehold (businessContext, aiderPerson);
+				var householdAddress	= currentHousehold.Address;
 
 				if (!EChDataHelpers.AddressComparator (householdAddress, rchAddress))
 				{
 					this.LogToConsole ("Info: new address detected, starting reassign");
 					var changes = EChDataHelpers.GetAddressChanges (householdAddress, rchAddress);
-					this.ReassignHousehold (businessContext, changes, eChReportedPersonEntity, aiderPerson, aiderHousehold);
-
+					newHousehold = this.ReassignHousehold (businessContext, changes, eChReportedPersonEntity, aiderPerson, refAiderHousehold);
 				}
 				else
 				{
@@ -635,6 +651,8 @@ namespace Epsitec.Aider.Data.Job
 				this.LogToConsole ("Info: warning added: EChProcessArrival");
 				this.CreateWarning (businessContext, aiderPerson, aiderPerson.ParishGroupPathCache, WarningType.EChProcessArrival, this.warningTitleMessage, FormattedText.FromSimpleText (aiderPerson.GetDisplayName () + ": nouveau dans le RCH."));
 			}
+
+			return newHousehold;
 		}
 
 		private AiderHouseholdEntity RelocateAndCreateNewAiderHousehold(BusinessContext businessContext,eCH_ReportedPersonEntity eChReportedPerson)
