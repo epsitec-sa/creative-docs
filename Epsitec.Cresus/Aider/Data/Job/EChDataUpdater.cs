@@ -203,8 +203,8 @@ namespace Epsitec.Aider.Data.Job
 				}
 				else // move person as household member
 				{
-					var household = EChDataHelpers.GetAiderHousehold (businessContext, eChHousehold.Adult1);
-					AiderContactEntity.ChangeHousehold (businessContext, person.MainContact, household, household.IsHead (person));
+					AiderContactEntity.ChangeHousehold (businessContext, person.MainContact, potentialHousehold, potentialHousehold.IsHead (person));
+					this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, person);
 					this.ReassignAndWarnParish (businessContext, person, changes);
 				}
 			}
@@ -396,6 +396,7 @@ namespace Epsitec.Aider.Data.Job
 							{
 								this.LogToConsole ("Updated: AiderPerson ECHPERSONID:{0}", eChPerson.Id);
 								EChDataHelpers.UpdateAiderPersonEntity (existingAiderPersonEntity, existingEChPersonEntity, mrMrs);
+								this.CreateArrivalWarningForNewHousehold (businessContext, existingAiderPersonEntity);
 							}
 						}		
 					}
