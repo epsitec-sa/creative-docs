@@ -62,6 +62,23 @@ namespace Epsitec.Aider.Data.Job
 			
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
+
+				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
+
+				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
+
+				EChWarningsFixer.LogToConsole ("Detecting birth: EChProcessArrival -> PersonBirth");
+
+				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+				EChWarningsFixer.LogToConsole ("Detect, clean & merge duplicate childs in family for PersonBirth");
+
+				EChWarningsFixer.DetectDuplicatedChildForBirths (businessContext);
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				
 				EChWarningsFixer.LogToConsole ("Fix Reported Person Linkage For arrivals");
 
 				EChWarningsFixer.FixReportedPersonLinkageForArrivals (businessContext);
@@ -106,20 +123,6 @@ namespace Epsitec.Aider.Data.Job
 				EChWarningsFixer.ApplyNewHouseholdActionsAndDeleteWarnings (businessContext);
 
 				EChWarningsFixer.DeleteWarnings (businessContext, WarningType.EChHouseholdAdded);
-
-				EChWarningsFixer.LogToConsole ("Delete warnings mismatch in time");
-
-				EChWarningsFixer.RemoveWarningInTimeMismatch (businessContext);
-
-				EChWarningsFixer.LogToConsole ("Detecting birth: EChProcessArrival -> PersonBirth");
-
-				EChWarningsFixer.DetectBirthAndMigrate (businessContext);
-				
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-
-				EChWarningsFixer.LogToConsole ("Detect, clean & merge duplicate childs in family for PersonBirth");
-
-				EChWarningsFixer.DetectDuplicatedChildForBirths (businessContext);
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}

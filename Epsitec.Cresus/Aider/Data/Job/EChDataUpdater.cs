@@ -293,7 +293,7 @@ namespace Epsitec.Aider.Data.Job
 					{
 						var existingPersonEntity = EChDataHelpers.GetEchPersonEntity (businessContext, eChPerson);
 
-						if (existingPersonEntity != null)
+						if (existingPersonEntity.IsNotNull ())
 						{
 							this.LogToConsole ("Info: {0} tagged with PersonDeclarationStatus.Removed", existingPersonEntity.GetCompactSummary ());
 							existingPersonEntity.DeclarationStatus = PersonDeclarationStatus.Removed;
