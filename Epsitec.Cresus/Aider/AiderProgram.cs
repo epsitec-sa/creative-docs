@@ -928,7 +928,8 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
+				HouseholdsFix.EchHouseholdsQuality (coreData);
+				//HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

@@ -584,6 +584,7 @@
     <Compile Include="Tools\NamePatchEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Job\SqlViews-EchPersonWithHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-SubscriptionRefusals.sql" />
     <Content Include="Data\Job\SqlViews-Subscriptions.sql" />
     <Content Include="Data\Job\SqlViews-Households.sql" />
