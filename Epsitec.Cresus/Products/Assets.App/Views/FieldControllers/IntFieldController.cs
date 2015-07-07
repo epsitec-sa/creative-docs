@@ -224,6 +224,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				this.Value = this.value.Value + delta;
 				this.OnValueEdited (this.Field);
 			}
+			else
+			{
+				this.Value = 1;
+				this.OnValueEdited (this.Field);
+			}
 		}
 
 
