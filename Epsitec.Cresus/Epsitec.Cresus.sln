@@ -262,6 +262,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.Engine", "Pro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets.Server.Export", "Products\Assets.Server.Export\Assets.Server.Export.csproj", "{764DF1C5-F9BB-4F8D-9987-5639823B8757}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.MatchETL", "App.MatchETL\App.MatchETL.csproj", "{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug .NET 2.0|Any CPU = Debug .NET 2.0|Any CPU
@@ -2643,6 +2645,30 @@ Global
 		{764DF1C5-F9BB-4F8D-9987-5639823B8757}.Release|Win32.ActiveCfg = Release|Any CPU
 		{764DF1C5-F9BB-4F8D-9987-5639823B8757}.Release|x64.ActiveCfg = Release|Any CPU
 		{764DF1C5-F9BB-4F8D-9987-5639823B8757}.Release|x86.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|ARM.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|x64.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|ARM.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|Win32.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|x64.ActiveCfg = Release|Any CPU
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -2709,6 +2735,7 @@ Global
 		{89AC127A-46D0-4337-83BE-262E0133968C} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 		{D8611B9F-E48B-4FD8-AABA-9A83597D9A82} = {A254E420-166A-488D-9687-0268BF6FFEE5}
 		{764DF1C5-F9BB-4F8D-9987-5639823B8757} = {A254E420-166A-488D-9687-0268BF6FFEE5}
+		{3ED24C54-2CD0-436A-A682-3DFB1ADA93F6} = {15A29239-3411-4BDA-BCE6-FEDD2754240A}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
