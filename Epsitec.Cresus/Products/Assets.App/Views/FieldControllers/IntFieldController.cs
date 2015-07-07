@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Assets.App.Helpers;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -121,6 +122,15 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
 			};
 
+			this.deleteButton = new IconButton
+			{
+				Parent        = this.frameBox,
+				IconUri       = Misc.GetResourceIconUri ("Field.Delete"),
+				AutoFocus     = false,
+				Dock          = DockStyle.Left,
+				PreferredSize = new Size (AbstractFieldController.lineHeight, AbstractFieldController.lineHeight),
+			};
+
 			this.UpdateError ();
 			this.UpdatePropertyState ();
 
@@ -186,6 +196,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			{
 				this.AddDelta (1);
 			};
+
+			this.deleteButton.Clicked += delegate
+			{
+				this.Delete ();
+			};
 		}
 
 		public override void SetFocus()
@@ -204,8 +219,11 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				return;
 			}
 
-			this.minusButton.Visibility = this.AreButtonsVisible;
-			this.plusButton .Visibility = this.AreButtonsVisible;
+			this.minusButton.Visibility  = this.AreButtonsVisible;
+			this.plusButton.Visibility   = this.AreButtonsVisible;
+			this.deleteButton.Visibility = this.AreButtonsVisible;
+
+			this.deleteButton.Enable = this.value.HasValue;
 		}
 
 		private bool AreButtonsVisible
@@ -231,6 +249,12 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 			}
 		}
 
+		private void Delete()
+		{
+			this.Value = null;
+			this.OnValueEdited (this.Field);
+		}
+
 
 		private static string ConvIntToString(int? value)
 		{
@@ -246,6 +270,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 		private TextField						textField;
 		private GlyphButton						minusButton;
 		private GlyphButton						plusButton;
+		private IconButton						deleteButton;
 		private int?							value;
 		private bool							hasFocus;
 		private bool							isMouseInside;
