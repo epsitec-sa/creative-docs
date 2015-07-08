@@ -73,7 +73,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 					else
 					{
-						field = ObjectField.MCH2Report + (int) column;
+						if (column < Column.User)
+						{
+							field = ObjectField.MCH2Report + (int) column;
+						}
+						else
+						{
+							var userColumn = this.userColumns[(column-Column.User)];
+							field = userColumn.Field;
+						}
 					}
 
 					var type    = this.GetColumnType    (column);
