@@ -357,7 +357,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-cleanhouseholds")) //-cleanhouseholds
+				if (args.Contains ("-cleanhouseholds")) //-cleanhouseholds -echfile:s:\eerv\last.xml 
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanHouseholds (args));
 					return;
@@ -928,7 +928,8 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				HouseholdsFix.EchHouseholdsQuality (coreData);
+				var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
+				HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
 				//HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
