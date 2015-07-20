@@ -53,18 +53,18 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("// Done!");
 				HouseholdsFix.SaveChanges (businessContext);
 				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// CHECK CHILD WITH EMPTY HOUSEHOLDS");
+				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
 				var fixedPersons = new List<eCH_PersonEntity> ();
 				var unfixable    = new List<eCH_PersonEntity> ();
 				var setupNeeded  = new Dictionary<AiderHouseholdEntity, List<eCH_PersonEntity>> ();
-				var childWithEmptyHoushold = 0;
+				var personWithEmptyHoushold = 0;
 				HouseholdsFix.SelectColumn (
 					businessContext,
 					"a.PERSON_ECHID",
-					"ECH_PERSON_WITH_HOUSEHOLDS a", "a.IS_HEAD = 0 and ECH_STATUS = 1 and a.HOUSEOLD1_ADULT1_PERSON IS NULL",
+					"ECH_PERSON_WITH_HOUSEHOLDS a", "ECH_STATUS = 1 and a.HOUSEOLD1_ADULT1_CRID IS NULL",
 					(personIds) =>
 					{
-						childWithEmptyHoushold = personIds.Count ();
+						personWithEmptyHoushold = personIds.Count ();
 						foreach (var personId in personIds)
 						{
 							var eCH_Person = new eCH_PersonEntity ()
@@ -102,7 +102,7 @@ namespace Epsitec.Aider.Data.Job
 									HouseholdsFix.SelectColumn (
 										businessContext,
 										"a.AIDER_HOUSEHOLD_CRID",
-										"ECH_PERSON_WITH_HOUSEHOLDS a", "a.PERSON_ECHID = '" + personId + "'",
+										"ECH_PERSON_WITH_HOUSEHOLDS a", "a.PERSON_ECHID = '" + personId + "' and ECH_STATUS = 1",
 										(householdIds) =>
 										{
 											var householdId = householdIds.FirstOrDefault ();
@@ -139,19 +139,27 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("// Done!");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + childWithEmptyHoushold);
+				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
 				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
 				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
 				var echData    = EChDataLoader.Load (new System.IO.FileInfo (currentEchFile), int.MaxValue);
+				var householdByAdult1   = echData.Where (h => h.Adult2 != null).ToDictionary (k => k.Adult1.Id, v => v);
+				var householdByAdult2   = echData.Where (h => h.Adult2 != null).ToDictionary (k => k.Adult2.Id, v => v);
+				var householdByChildren = echData.Where (h => h.Children.Count > 0).SelectMany (h => h.Children, (h, c) => new
+				{
+					household = h,
+					id = c.Id
+				}).ToLookup (k => k.id, v => v.household);
 				Logger.LogToConsole ("// Done!");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// SETUP AND FIX ECH HOUSEHOLDS");
 				
 				var childHasMoved   = new List<eCH_PersonEntity> ();
 				var adultHasMoved   = new List<eCH_PersonEntity> ();
-				var lostChilds      = new List<eCH_PersonEntity> (); 
+				var lostChilds      = new List<eCH_PersonEntity> ();
+				var badEchStatus    = new List<eCH_PersonEntity> (); 
 				foreach (var entry in setupNeeded)
 				{
 					var household    = entry.Key;
@@ -164,8 +172,34 @@ namespace Epsitec.Aider.Data.Job
 					{
 						foreach(var head in heads)
 						{
+							EChReportedPerson echHousehold = null;
+
 							var headId = head.eCH_Person.PersonId;
-							var echHousehold = echData.Where (h => h.FamilyKey.StartsWith (headId)).FirstOrDefault ();
+							if (householdByAdult1.ContainsKey (headId))
+							{
+								echHousehold = householdByAdult1[headId];
+							}
+							else
+							{
+								if (householdByAdult2.ContainsKey (headId))
+								{
+									echHousehold = householdByAdult2[headId];
+								}
+								else
+								{
+									if (householdByChildren.Contains (headId))
+									{
+										echHousehold = householdByChildren[headId].ElementAtOrDefault (0);
+									}
+									else
+									{
+										badEchStatus.Add (head.eCH_Person);
+										continue;
+									}
+								}
+							}
+
+							
 							if (echHousehold != null)
 							{
 								var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
@@ -194,7 +228,7 @@ namespace Epsitec.Aider.Data.Job
 										var aiderPerson = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult1);
 										adultHasMoved.Add (aiderPerson);
 									}
-									
+
 									if (echHousehold.Adult2 != null)
 									{
 										if (!HouseholdsFix.ExecuteIfInHousehold (household, echHousehold.Adult2.Id,
@@ -219,9 +253,9 @@ namespace Epsitec.Aider.Data.Job
 										{
 											childHasMoved.Add (child);
 										}
-									}	
+									}
 
-									foreach (var otherChild in echHousehold.Children.Where (c => !childToFix.Select (f => f.PersonId).Contains (c.Id) ))
+									foreach (var otherChild in echHousehold.Children.Where (c => !childToFix.Select (f => f.PersonId).Contains (c.Id)))
 									{
 										if (!HouseholdsFix.ExecuteIfInHousehold (household, otherChild.Id,
 											(p) => EChDataHelpers.SetupHousehold (businessContext, p, household, newReportedPersonEntity, false, false)
@@ -232,6 +266,10 @@ namespace Epsitec.Aider.Data.Job
 										}
 									}
 								}
+							}
+							else
+							{
+								//
 							}
 						}
 					}
@@ -244,22 +282,52 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				
 
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + childWithEmptyHoushold);
+				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
 				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// ChildHasMoved: " + childHasMoved.Count ());
-				Logger.LogToConsole ("// AdultHasMoved: " + adultHasMoved.Count ());
-				Logger.LogToConsole ("// LostChild: " + lostChilds.Count ());
+				Logger.LogToConsole ("// Bad ECH: " + badEchStatus.Count ());
+				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
+				HouseholdsFix.SaveChanges (businessContext);
+				foreach (var person in badEchStatus)
+				{
+					switch (person.RemovalReason)
+					{
+						case Enumerations.RemovalReason.Unknown: 
+						case Enumerations.RemovalReason.None:
+							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+							break;
+						case Enumerations.RemovalReason.Departed:
+						case Enumerations.RemovalReason.Deceased:
+							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+							break;
+						default:
+							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+							break;
+					}
+
+					HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
+				}
+
+				var moves =  adultHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared)
+					/**/			.Union (childHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared))
+					/**/			.Union (lostChilds.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared));
+				var noEch =  adultHasMoved.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared)
+					/**/			.Union (childHasMoved.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared))
+					/**/			.Union (lostChilds.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared));
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// QUALITY CHECK'UP");
+				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
+				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
+				Logger.LogToConsole ("// Bad ECH: " + badEchStatus.Count ());
+				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
+				Logger.LogToConsole ("// - HasMoved: " + moves.Count ());
+				Logger.LogToConsole ("// - Non ECH: " + noEch.Count ());
 				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
 				HouseholdsFix.SaveChanges (businessContext);
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK MOVES");
-				var moves =  adultHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared)
-							 .Union (childHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared))
-							 .Union (lostChilds.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared));
 				var isChildOrAdult2 = new List<eCH_PersonEntity> ();
 				foreach (var personToMove in moves)
 				{
@@ -295,21 +363,13 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// QUALITY CHECK'UP");
 				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// ChildHasMoved: " + childHasMoved.Count ());
-				Logger.LogToConsole ("// AdultHasMoved: " + adultHasMoved.Count ());
-				Logger.LogToConsole ("// IsChildOrAdult2: " + isChildOrAdult2.Count ());
-				Logger.LogToConsole ("// HasNewHousehold: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// LostChild: " + lostChilds.Count ());
+				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
+				Logger.LogToConsole ("// - HasMoved: " + moves.Count ());
+				Logger.LogToConsole ("// |- IsChildOrAdult2: " + isChildOrAdult2.Count ());
+				Logger.LogToConsole ("// - Non ECH: " + noEch.Count ());
 				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
 				HouseholdsFix.SaveChanges (businessContext);
-				var householdByAdult2   = echData.Where (h => h.Adult2 != null).ToDictionary (k => k.Adult2.Id, v => v);
-				var householdByChildren = echData.Where (h => h.Children.Count > 0).SelectMany (h => h.Children, (h, c) => new
-				{
-					household = h,
-					id = c.Id
-				}).ToLookup (k => k.id, v => v.household);
-				var persons =  isChildOrAdult2.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared);
-				foreach (var person in persons)
+				foreach (var person in isChildOrAdult2)
 				{
 					if (householdByAdult2.ContainsKey (person.PersonId))
 					{
@@ -366,7 +426,7 @@ namespace Epsitec.Aider.Data.Job
 				}
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// QUALITY FINAL CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + childWithEmptyHoushold);
+				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
 				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
 				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
 				HouseholdsFix.SaveChanges (businessContext);
