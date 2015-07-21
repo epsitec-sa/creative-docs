@@ -461,7 +461,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold,
-			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false)
+			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool secondaryHousehold = false)
 		{
 			var isHead = isHead1 || isHead2;
 
@@ -496,7 +496,7 @@ namespace Epsitec.Aider.Data.Job
 
 			var eChPerson = aiderPerson.eCH_Person;
 
-			if (eChPerson.ReportedPerson1.IsNull ())
+			if (!secondaryHousehold)
 			{
 				eChPerson.ReportedPerson1 = eChReportedPerson;
 				eChPerson.Address1 = eChReportedPerson.Address;
