@@ -53,10 +53,15 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("// Done!");
 				HouseholdsFix.SaveChanges (businessContext);
 				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
+				var echData    = new EChReportedPersonRepository (currentEchFile);
+				
+				Logger.LogToConsole ("// Done!");
+				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
 				var fixedPersons = new List<eCH_PersonEntity> ();
-				var unfixable    = new List<eCH_PersonEntity> ();
-				var setupNeeded  = new Dictionary<AiderHouseholdEntity, List<eCH_PersonEntity>> ();
+				var badEchStatus = new List<AiderPersonEntity> ();
+				var unfixable    = new List<AiderPersonEntity> ();
 				var personWithEmptyHoushold = 0;
 				HouseholdsFix.SelectColumn (
 					businessContext,
@@ -67,369 +72,81 @@ namespace Epsitec.Aider.Data.Job
 						personWithEmptyHoushold = personIds.Count ();
 						foreach (var personId in personIds)
 						{
-							var eCH_Person = new eCH_PersonEntity ()
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var person = aiderPerson.eCH_Person;
+							var housholdInfo = echData.GetHouseholdsInfo (person.PersonId);
+							if (housholdInfo.Any ())
 							{
-								PersonId = personId
-							};
-
-							var eCH_HouseholdCase1 = new eCH_ReportedPersonEntity ()
-							{
-								Adult1 = eCH_Person
-							};
-
-							var eCH_HouseholdCase2 = new eCH_ReportedPersonEntity ()
-							{
-								Adult2 = eCH_Person
-							};
-
-							var personToFix = businessContext.GetByExample<eCH_PersonEntity> (eCH_Person).FirstOrDefault ();
-							var result = businessContext.GetByExample<eCH_ReportedPersonEntity> (eCH_HouseholdCase1).FirstOrDefault ();
-							if (result.IsNotNull ())
-							{							
-								personToFix.ReportedPerson1 = result;
-								HouseholdsFix.SetPersonAsFixed (fixedPersons, personToFix);
+								var secondHousehold = false;
+								housholdInfo.ForEach ( (info) => {
+									var household    = info.Item1;
+									var isHead1      = info.Item2;
+									var isHead2      = info.Item3;
+									HouseholdsFix.FixPersonHousehold (businessContext, aiderPerson, household, null, isHead1, isHead2, secondHousehold);
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
+									secondHousehold = true;
+								});
 							}
 							else
 							{
-								result = businessContext.GetByExample<eCH_ReportedPersonEntity> (eCH_HouseholdCase2).FirstOrDefault ();
-								if (result.IsNotNull ())
+								switch (person.RemovalReason)
 								{
-									personToFix.ReportedPerson1 = result;
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, personToFix);
+									case Enumerations.RemovalReason.Unknown:
+									case Enumerations.RemovalReason.None:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+										break;
+									case Enumerations.RemovalReason.Departed:
+									case Enumerations.RemovalReason.Deceased:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+										break;
+									default:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+										break;
 								}
-								else
-								{
-									HouseholdsFix.SelectColumn (
-										businessContext,
-										"a.AIDER_HOUSEHOLD_CRID",
-										"ECH_PERSON_WITH_HOUSEHOLDS a", "a.PERSON_ECHID = '" + personId + "' and ECH_STATUS = 1",
-										(householdIds) =>
-										{
-											var householdId = householdIds.FirstOrDefault ();
-											if (householdId != null)
-											{
-												var dbkey     = new DbKey (HouseholdsFix.ToDbId (householdId));
-												var household = businessContext.DataContext.ResolveEntity<AiderHouseholdEntity> (dbkey);
-												if (household.IsNotNull ())
-												{
-													List<eCH_PersonEntity> members;
-													if (setupNeeded.TryGetValue (household, out members))
-													{
-														members.Add (personToFix);
-													}
-													else
-													{
-														members = new List<eCH_PersonEntity> ();
-														members.Add (personToFix);
-														setupNeeded.Add (household, members);
-													}					
-												}
-												else
-												{
-													unfixable.Add (personToFix);
-												}
-											}
-										}
-									);
-								}
-							}		 
+								badEchStatus.Add (aiderPerson);
+							}				
 						}
 					}
 				);
-				Logger.LogToConsole ("// Done!");
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
-				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
-				var echData    = EChDataLoader.Load (new System.IO.FileInfo (currentEchFile), int.MaxValue);
-				var householdByAdult1   = echData.Where (h => h.Adult2 != null).ToDictionary (k => k.Adult1.Id, v => v);
-				var householdByAdult2   = echData.Where (h => h.Adult2 != null).ToDictionary (k => k.Adult2.Id, v => v);
-				var householdByChildren = echData.Where (h => h.Children.Count > 0).SelectMany (h => h.Children, (h, c) => new
-				{
-					household = h,
-					id = c.Id
-				}).ToLookup (k => k.id, v => v.household);
-				Logger.LogToConsole ("// Done!");
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// SETUP AND FIX ECH HOUSEHOLDS");
-				
-				var childHasMoved   = new List<eCH_PersonEntity> ();
-				var adultHasMoved   = new List<eCH_PersonEntity> ();
-				var lostChilds      = new List<eCH_PersonEntity> ();
-				var badEchStatus    = new List<eCH_PersonEntity> (); 
-				foreach (var entry in setupNeeded)
-				{
-					var household    = entry.Key;
-					var childToFix   = entry.Value;
-					var heads        = household.Members.Where (m => household.IsHead (m) && m.eCH_Person.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared);
-					var nonHeads     = household.Members.Where (m => !household.IsHead (m) && m.eCH_Person.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared);
-					var familyKey    = HouseholdsFix.BuildFamilyKey (heads.Union (nonHeads).ToList ());
 
-					if (heads.Any ())
+				HouseholdsFix.SaveChanges (businessContext);
+
+				HouseholdsFix.SelectColumn (
+					businessContext,
+					"a.PERSON_ECHID",
+					"ECH_PERSON_WITH_HOUSEHOLDS a", "a.AIDER_HOUSEHOLD_CRID IS NULL AND a.HOUSEOLD1_ADULT1_CRID IS NOT NULL AND a.ECH_STATUS = 1",
+					(personIds) =>
 					{
-						foreach(var head in heads)
+						personWithEmptyHoushold = personIds.Count ();
+						foreach (var personId in personIds)
 						{
-							EChReportedPerson echHousehold = null;
-
-							var headId = head.eCH_Person.PersonId;
-							if (householdByAdult1.ContainsKey (headId))
+							var aiderPerson     = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var person = aiderPerson.eCH_Person;
+							var householdEntity = aiderPerson.eCH_Person.ReportedPerson1;
+ 							var housholdInfo = echData.GetHouseholdsInfo (personId);
+							if (housholdInfo.Any ())
 							{
-								echHousehold = householdByAdult1[headId];
-							}
-							else
-							{
-								if (householdByAdult2.ContainsKey (headId))
+								var secondHousehold = false;
+								housholdInfo.ForEach ((info) =>
 								{
-									echHousehold = householdByAdult2[headId];
-								}
-								else
-								{
-									if (householdByChildren.Contains (headId))
-									{
-										echHousehold = householdByChildren[headId].ElementAtOrDefault (0);
-									}
-									else
-									{
-										badEchStatus.Add (head.eCH_Person);
-										continue;
-									}
-								}
+									var household    = info.Item1;
+									var isHead1      = info.Item2;
+									var isHead2      = info.Item3;
+									HouseholdsFix.FixPersonHousehold (businessContext, aiderPerson, household, null, isHead1, isHead2, secondHousehold);
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
+									secondHousehold = true;
+								});
 							}
 
-							
-							if (echHousehold != null)
-							{
-								var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
-								if (existingEchReportedPersonEntity != null)
-								{
-									foreach (var child in childToFix)
-									{
-										if (HouseholdsFix.ExecuteIfInEChHousehold (existingEchReportedPersonEntity, child.PersonId, (p) => child.ReportedPerson1 = existingEchReportedPersonEntity))
-										{
-											HouseholdsFix.SetPersonAsFixed (fixedPersons, child);
-										}
-										else
-										{
-											childHasMoved.Add (child);
-										}
-									}
-								}
-								else
-								{
-									var newReportedPersonEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
-
-									if (!HouseholdsFix.ExecuteIfInHousehold (household, echHousehold.Adult1.Id,
-										(p) => EChDataHelpers.SetupHousehold (businessContext, p, household, newReportedPersonEntity, true, false)
-									))
-									{
-										var aiderPerson = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult1);
-										adultHasMoved.Add (aiderPerson);
-									}
-
-									if (echHousehold.Adult2 != null)
-									{
-										if (!HouseholdsFix.ExecuteIfInHousehold (household, echHousehold.Adult2.Id,
-											(p) => EChDataHelpers.SetupHousehold (businessContext, p, household, newReportedPersonEntity, false, true)
-										))
-										{
-											var aiderPerson = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult2);
-											adultHasMoved.Add (aiderPerson);
-										}
-									}
-
-									foreach (var child in childToFix)
-									{
-										if (!HouseholdsFix.ExecuteIfInEChHouseholdRepository (echHousehold, child.PersonId,
-											(p) =>
-											{
-												var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, p);
-												EChDataHelpers.SetupHousehold (businessContext, aiderPerson, household, newReportedPersonEntity, false, false);
-												HouseholdsFix.SetPersonAsFixed (fixedPersons, child);
-											}
-										))
-										{
-											childHasMoved.Add (child);
-										}
-									}
-
-									foreach (var otherChild in echHousehold.Children.Where (c => !childToFix.Select (f => f.PersonId).Contains (c.Id)))
-									{
-										if (!HouseholdsFix.ExecuteIfInHousehold (household, otherChild.Id,
-											(p) => EChDataHelpers.SetupHousehold (businessContext, p, household, newReportedPersonEntity, false, false)
-										))
-										{
-											var aiderPerson = EChDataHelpers.GetEchPersonEntity (businessContext, otherChild);
-											childHasMoved.Add (aiderPerson);
-										}
-									}
-								}
-							}
-							else
-							{
-								//
-							}
 						}
 					}
-					else
-					{
-						foreach (var child in childToFix)
-						{
-							lostChilds.Add (child);
-						}	
-					}
-				}
+				);
 
-
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
-				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// Bad ECH: " + badEchStatus.Count ());
-				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
-				HouseholdsFix.SaveChanges (businessContext);
-				foreach (var person in badEchStatus)
-				{
-					switch (person.RemovalReason)
-					{
-						case Enumerations.RemovalReason.Unknown: 
-						case Enumerations.RemovalReason.None:
-							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
-							break;
-						case Enumerations.RemovalReason.Departed:
-						case Enumerations.RemovalReason.Deceased:
-							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
-							break;
-						default:
-							person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
-							break;
-					}
-
-					HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-				}
-
-				var moves =  adultHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared)
-					/**/			.Union (childHasMoved.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared))
-					/**/			.Union (lostChilds.Where (p => p.DeclarationStatus == Enumerations.PersonDeclarationStatus.Declared));
-				var noEch =  adultHasMoved.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared)
-					/**/			.Union (childHasMoved.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared))
-					/**/			.Union (lostChilds.Where (p => p.DeclarationStatus != Enumerations.PersonDeclarationStatus.Declared));
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
-				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// Bad ECH: " + badEchStatus.Count ());
-				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
-				Logger.LogToConsole ("// - HasMoved: " + moves.Count ());
-				Logger.LogToConsole ("// - Non ECH: " + noEch.Count ());
-				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
 				HouseholdsFix.SaveChanges (businessContext);
 				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// CHECK MOVES");
-				var isChildOrAdult2 = new List<eCH_PersonEntity> ();
-				foreach (var personToMove in moves)
-				{
-					var aiderPerson = EChDataHelpers.GetAiderPersonEntity (businessContext, personToMove);
-					var echHousehold = echData.Where (h => h.FamilyKey.StartsWith (personToMove.PersonId)).FirstOrDefault ();
-					if (echHousehold != null)
-					{
-						var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
-						if (existingEchReportedPersonEntity != null)
-						{
-							personToMove.ReportedPerson1 = existingEchReportedPersonEntity;
-							HouseholdsFix.SetPersonAsFixed (fixedPersons, personToMove);
-						}
-						else
-						{
-							if (aiderPerson.eCH_Person.PersonId == echHousehold.Adult1.Id)
-							{
-								HouseholdsFix.CreateAiderHousehold (businessContext, aiderPerson, echHousehold, null);
-								HouseholdsFix.SetPersonAsFixed (fixedPersons, personToMove);
-							}
-							else
-							{
-								isChildOrAdult2.Add (personToMove);
-							}
-							
-						}
-					}
-					else
-					{
-						isChildOrAdult2.Add (personToMove);
-					}
-				}
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// QUALITY CHECK'UP");
-				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// SetupNeededForHousehold: " + setupNeeded.Count ());
-				Logger.LogToConsole ("// - HasMoved: " + moves.Count ());
-				Logger.LogToConsole ("// |- IsChildOrAdult2: " + isChildOrAdult2.Count ());
-				Logger.LogToConsole ("// - Non ECH: " + noEch.Count ());
-				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
-				HouseholdsFix.SaveChanges (businessContext);
-				foreach (var person in isChildOrAdult2)
-				{
-					if (householdByAdult2.ContainsKey (person.PersonId))
-					{
-						var echHousehold = householdByAdult2[person.PersonId];
-						var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
-						if (existingEchReportedPersonEntity != null)
-						{
-							HouseholdsFix.FixPersonHousehold (businessContext, person, echHousehold, existingEchReportedPersonEntity, false, true);
-							HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-						}
-						else
-						{
-							HouseholdsFix.CreateAiderHousehold (businessContext, null, echHousehold, null);
-							HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-						}
-					}
-					else
-					{
-						if(householdByChildren.Contains (person.PersonId))
-						{
-							if (householdByChildren[person.PersonId].ElementAtOrDefault (0) != null)
-							{
-								var echHousehold = householdByChildren[person.PersonId].ElementAtOrDefault (0);
-								var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
-								if (existingEchReportedPersonEntity != null)
-								{
-									HouseholdsFix.FixPersonHousehold (businessContext, person, echHousehold, existingEchReportedPersonEntity, false, false);
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-								}
-								else
-								{
-									HouseholdsFix.CreateAiderHousehold (businessContext, null, echHousehold, null);
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-								}
-							}
-
-							if (householdByChildren[person.PersonId].ElementAtOrDefault (1) != null)
-							{
-								var echHousehold = householdByChildren[person.PersonId].ElementAtOrDefault (1);
-								var existingEchReportedPersonEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext,echHousehold);
-								if (existingEchReportedPersonEntity != null)
-								{
-									HouseholdsFix.FixPersonHousehold (businessContext, person, echHousehold, existingEchReportedPersonEntity, false, false);
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-								}
-								else
-								{
-									HouseholdsFix.CreateAiderHousehold (businessContext, null, echHousehold, null);
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
-								}
-							}
-						}
-					}
-				}
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// QUALITY FINAL CHECK'UP");
 				Logger.LogToConsole ("// Detected: " + personWithEmptyHoushold);
-				Logger.LogToConsole ("// FixedPersons: " + fixedPersons.Count ());
-				Logger.LogToConsole ("// Unfixable: " + unfixable.Count ());
-				HouseholdsFix.SaveChanges (businessContext);
+				Logger.LogToConsole ("// BadEchStatusFixed: " + badEchStatus.Count ());
+				Logger.LogToConsole ("// HousholdFixed: " + fixedPersons.Count ());
 				Logger.LogToConsole ("~             DONE!             ~");
 			}
 		}
@@ -437,23 +154,30 @@ namespace Epsitec.Aider.Data.Job
 		public static void SetPersonAsFixed (List<eCH_PersonEntity> list, eCH_PersonEntity person)
 		{
 			list.Add (person);
-			Logger.LogToConsole ("// Fixed!");
+			Logger.LogToConsole ("// " + person.GetDisplayName () + " Fixed!");
 		}
 
-		public static void FixPersonHousehold(BusinessContext businessContext, eCH_PersonEntity child, EChReportedPerson echHousehold, eCH_ReportedPersonEntity householdEntity, bool isHead1, bool isHead2)
+		public static void FixPersonHousehold(BusinessContext businessContext, AiderPersonEntity person, EChReportedPerson echHousehold, eCH_ReportedPersonEntity householdEntity, bool isHead1, bool isHead2, bool secondaryHousehold)
 		{
-			var aiderChild   = EChDataHelpers.GetAiderPersonEntity (businessContext, child);
-			var refPerson    = EChDataHelpers.GetAiderPersonEntity (businessContext, householdEntity.Adult1);
-			if (refPerson.MainContact.IsNotNull ())
+			if (householdEntity.IsNull ())
 			{
-				var newHousehold = EChDataHelpers.GetAiderHousehold (businessContext, refPerson);
-				EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, isHead1, isHead2);
+				householdEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
+				if (householdEntity.IsNull ())
+				{
+					householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
+				}
+			}
+
+			var refPerson    = EChDataHelpers.GetAiderPersonEntity (businessContext, householdEntity.Adult1);
+			if (refPerson.HouseholdContact.IsNotNull ())
+			{
+				EChDataHelpers.SetupHousehold (businessContext, person, refPerson.HouseholdContact.Household, householdEntity, isHead1, isHead2, secondaryHousehold);
 			}
 			else
 			{
-				HouseholdsFix.CreateAiderHousehold (businessContext, refPerson, echHousehold, householdEntity);
+				var household = HouseholdsFix.CreateAiderHousehold (businessContext, refPerson, echHousehold, householdEntity);
+				EChDataHelpers.SetupHousehold (businessContext, person, household, householdEntity, isHead1, isHead2, secondaryHousehold);
 			}
-
 		}
 
 		public static AiderHouseholdEntity CreateAiderHousehold(BusinessContext businessContext, AiderPersonEntity refAiderPerson, EChReportedPerson echHousehold, eCH_ReportedPersonEntity householdEntity)
@@ -470,6 +194,13 @@ namespace Epsitec.Aider.Data.Job
 				if (refAiderPerson.IsNull ())
 				{
 					throw new BusinessRuleException ("Cannot create household: missing refAiderPerson");
+				}
+				else
+				{
+					if (refAiderPerson.HouseholdContact.IsNotNull ())
+					{
+						return  refAiderPerson.HouseholdContact.Household;
+					}
 				}
 			}
 			else
@@ -555,6 +286,16 @@ namespace Epsitec.Aider.Data.Job
 			var eChAddressEntity          = EChDataImporter.ImportEchAddressEntity (businessContext, eChReportedPerson.Address);
 			var eChReportedPersonEntity   = businessContext.CreateAndRegisterEntity<eCH_ReportedPersonEntity> ();
 			eChReportedPersonEntity.Address = eChAddressEntity;
+			eChReportedPersonEntity.Adult1  =  EChDataHelpers.GetEchPersonEntityById (businessContext, eChReportedPerson.Adult1.Id);
+			if (eChReportedPerson.Adult2 != null)
+			{
+				eChReportedPersonEntity.Adult2 = EChDataHelpers.GetEchPersonEntityById (businessContext, eChReportedPerson.Adult2.Id);
+			}
+			foreach (var child in eChReportedPerson.Children)
+			{
+				eChReportedPersonEntity.Children.Add (EChDataHelpers.GetEchPersonEntityById (businessContext, child.Id));
+			}
+
 			return eChReportedPersonEntity;
 		}
 
