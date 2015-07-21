@@ -389,6 +389,28 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		public static eCH_PersonEntity GetEchPersonEntityById(BusinessContext businessContext, string id)
+		{
+			var personExample = new eCH_PersonEntity ()
+			{
+				PersonId = id
+			};
+
+			return businessContext.DataContext.GetByExample<eCH_PersonEntity> (personExample).FirstOrDefault ();
+		}
+
+		public static AiderPersonEntity GetAiderPersonEntityById(BusinessContext businessContext, string id)
+		{
+			var personExample = new AiderPersonEntity ();
+
+			personExample.eCH_Person = new eCH_PersonEntity ()
+			{
+				PersonId = id
+			};
+
+			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
+		}
+
 		public static eCH_PersonEntity GetEchPersonEntity(BusinessContext businessContext, EChPerson person)
 		{
 			if (person == null)
