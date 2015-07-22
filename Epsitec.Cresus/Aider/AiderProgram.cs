@@ -93,7 +93,7 @@ namespace Epsitec.Aider
 					return;
 				}
 																		
-				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md -fixpreviousupdate:false -fixhouseholdupdate:false
+				if (args.Contains ("-echupdate"))						//  -echupdate -newechfile:s:\eerv\last.xml -oldechfile:s:\eerv\initial.xml -output:s:\eerv\analyse.md
 				{														//  use -v for verbose logging
 					ConsoleCreator.RunWithConsole (() => AiderProgram.RunEchUpdate (args));
 					return;
@@ -440,42 +440,33 @@ namespace Epsitec.Aider
 				var newEChDataFile     = AiderProgram.GetFile (args, "-newechfile:", true);
 				var oldEChDataFile     = AiderProgram.GetFile (args, "-oldechfile:", true);
 				var reportFile         = AiderProgram.GetFile (args, "-output:", true);
-				var fixPreviousUpdate  = AiderProgram.GetBool (args, "-fixpreviousupdate:", false, false);
-				var fixHouseholdUpdate = AiderProgram.GetBool (args, "-fixhouseholdupdate:", false, false);
 				
 				var verboseLogging	   = false;
 				if (args.Contains ("-v"))
 				{
 					verboseLogging = true;
 				}
+				
+				System.Console.WriteLine ("Running DataQualityJobs before updating...");
+				EChPersonFixer.TryFixAll (coreData);
+				HouseholdsFix.EchHouseholdsQuality (coreData, oldEChDataFile.FullName);
+
 				System.Console.WriteLine ("Running ECh Warning Fixer before updating...");
 				EChWarningsFixer.TryFixAll (coreData);
 
 				var parishRepository = ParishAddressRepository.Current;
-
 				var updater = new EChDataUpdater (oldEChDataFile.FullName, newEChDataFile.FullName, reportFile.FullName, coreData, parishRepository,verboseLogging);
-
-				if (fixHouseholdUpdate)
-				{
-					updater.FixHouseholdUpdate ();
-				}
-
-				if (fixPreviousUpdate)
-				{
-					updater.FixPreviousUpdate ();
-				}
+				updater.ProcessJob ();
 				
-				if ((fixHouseholdUpdate == false) &&
-					(fixPreviousUpdate == false))
-				{
-					updater.ProcessJob ();
-				}
-
 				System.Console.WriteLine ("Running ECh Warning Fixer after updating...");
 				EChWarningsFixer.TryFixAll (coreData);
 
 				System.Console.WriteLine ("Fixing 'no parish' after updating...");
 				ParishAssignationFixer.FixNoParish (coreData);
+
+				System.Console.WriteLine ("Running DataQualityJobs after updating...");
+				HouseholdsFix.EchHouseholdsQuality (coreData, newEChDataFile.FullName);
+				EChPersonFixer.TryFixAll (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
@@ -930,8 +921,6 @@ namespace Epsitec.Aider
 			{
 				var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
 				HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
-				//HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
-
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
