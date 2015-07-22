@@ -309,6 +309,7 @@
     <Compile Include="Data\ECh\EChDataAnalyzer.cs" />
     <Compile Include="Data\ECh\EChDataAnalyzerReporter.cs" />
     <Compile Include="Data\ECh\EChDataComparer.cs" />
+    <Compile Include="Data\ECh\EChReportedPersonRepository.cs" />
     <Compile Include="Data\Eerv\EervKind.cs" />
     <Compile Include="Data\Init\TownFusionHack.cs" />
     <Compile Include="Data\Init\AiderGeneralFunctions.cs" />
@@ -584,6 +585,7 @@
     <Compile Include="Tools\NamePatchEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Job\SqlViews-EchPersonWithHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-SubscriptionRefusals.sql" />
     <Content Include="Data\Job\SqlViews-Subscriptions.sql" />
     <Content Include="Data\Job\SqlViews-Households.sql" />

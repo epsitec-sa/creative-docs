@@ -25,6 +25,25 @@ namespace Epsitec.Aider.Data.ECh
 			this.FamilyKey = this.GetFamilyKey ();
 		}
 
+		public bool IsHead1 (string id)
+		{
+			if (string.IsNullOrEmpty (id))
+			{
+				return false;
+			}
+
+			return this.Adult1.Id == id;
+		}
+
+		public bool IsHead2(string id)
+		{
+			if (string.IsNullOrEmpty (id) || this.Adult2 == null)
+			{
+				return false;
+			}
+
+			return this.Adult2.Id == id;
+		}
 
 		public IEnumerable<EChPerson> GetAdults()
 		{

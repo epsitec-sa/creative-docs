@@ -46,17 +46,12 @@ namespace Epsitec.Aider.Controllers.SetControllers
 		{
 			dataSetAccessor.Customizers.Add ((dataContext, request, example) =>
 			{
-				var participation = new AiderGroupParticipantEntity ()
-				{
-				};
+				var participation = (AiderGroupParticipantEntity) example;
 
 				AiderGroupParticipantEntity.AddGroupAndSubGroupMemberCondition (dataContext, request, participation, entity);
 				AiderGroupParticipantEntity.AddCurrentCondition (dataContext, request, participation);
 
 				request.Distinct = true;
-
-				request.RootEntity = participation;
-				request.RequestedEntity = participation;
 			});
 		}
 
