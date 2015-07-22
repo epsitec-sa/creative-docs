@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("// Done!");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
-				var fixedPersons = new List<eCH_PersonEntity> ();
+				var fixedPersons = new List<AiderPersonEntity> ();
 				var badEchStatus = new List<AiderPersonEntity> ();
 				var unfixable    = new List<AiderPersonEntity> ();
 				HouseholdsFix.SelectColumn (
@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Data.Job
 									var isHead1      = info.Item2;
 									var isHead2      = info.Item3;
 									HouseholdsFix.FixPersonHousehold (businessContext, aiderPerson, household, null, isHead1, isHead2, secondHousehold);
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, person);
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
 									secondHousehold = true;
 								});
 							}
@@ -151,7 +151,7 @@ namespace Epsitec.Aider.Data.Job
 								foreach (var contact in contactToFix)
 								{
 									contact.Household = household;
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson.eCH_Person);
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
 								}
 							}
 							
@@ -161,6 +161,17 @@ namespace Epsitec.Aider.Data.Job
 				);
 
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
+				foreach(var person in fixedPersons)
+				{
+					var household = person.HouseholdContact.Household;
+					if (household.IsNotNull ())
+					{
+						AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
+					}
+				}
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// BadEchStatusFixed: " + badEchStatus.Count ());
 				Logger.LogToConsole ("// HousholdFixed: " + fixedPersons.Count ());
@@ -168,7 +179,7 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
-		public static void SetPersonAsFixed (List<eCH_PersonEntity> list, eCH_PersonEntity person)
+		public static void SetPersonAsFixed (List<AiderPersonEntity> list, AiderPersonEntity person)
 		{
 			list.Add (person);
 			Logger.LogToConsole ("// " + person.GetDisplayName () + " Fixed!");
