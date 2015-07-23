@@ -368,6 +368,12 @@ namespace Epsitec.Aider
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FusionArzier (args));
 					return;
 				}
+
+				if (args.Contains ("-admin2muni")) //-admin2muni
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.Admin2Muni (args));
+					return;
+				}
 			}
 
 			AiderProgram.RunNormalMode (args);
@@ -528,6 +534,16 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				TownFusionHack.FusionArzier (coreData);
+			});
+		}
+
+		private static void Admin2Muni(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				UpdateLegalPerson.AdminToMunicipality (coreData);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
 			});
 		}
 
