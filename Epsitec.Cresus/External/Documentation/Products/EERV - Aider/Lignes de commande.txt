@@ -698,6 +698,17 @@ Lancé le 25.06.2015
 Lancé le 28.06.2015
 -------------------
 
--echupdate -newechfile:S:\eerv\eerv-2015-06-26.xml -oldechfile:S:\eerv\eerv-2015-06-26.xml -output:s:\eerv\ech-diff-2015-06-26.md
+-echupdate -newechfile:S:\eerv\eerv-2015-06-26.xml -oldechfile:S:\eerv\eerv-2015-06-20.xml -output:s:\eerv\ech-diff-2015-06-26.md
 -buildrolecache
 
+
+Lancé le 23.07.2015
+-------------------
+
+Création des vues nécessaires à la main dans IBExpert.
+
+
+-echupdate -newechfile:S:\eerv\eerv-2015-07-06.xml -oldechfile:S:\eerv\eerv-2015-06-26.xml -output:s:\eerv\ech-diff-2015-07-06.md
+-echupdate -newechfile:S:\eerv\eerv-2015-07-13.xml -oldechfile:S:\eerv\eerv-2015-07-06.xml -output:s:\eerv\ech-diff-2015-07-13.md
+-echupdate -newechfile:S:\eerv\eerv-2015-07-20.xml -oldechfile:S:\eerv\eerv-2015-07-13.xml -output:s:\eerv\ech-diff-2015-07-20.md
+-admin2muni
