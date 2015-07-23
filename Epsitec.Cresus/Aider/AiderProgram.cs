@@ -447,9 +447,9 @@ namespace Epsitec.Aider
 					verboseLogging = true;
 				}
 				
-				System.Console.WriteLine ("Running DataQualityJobs before updating...");
-				EChPersonFixer.TryFixAll (coreData);
-				HouseholdsFix.EchHouseholdsQuality (coreData, oldEChDataFile.FullName);
+				//System.Console.WriteLine ("Running DataQualityJobs before updating...");
+				//EChPersonFixer.TryFixAll (coreData);
+				//HouseholdsFix.EchHouseholdsQuality (coreData, oldEChDataFile.FullName);
 
 				System.Console.WriteLine ("Running ECh Warning Fixer before updating...");
 				EChWarningsFixer.TryFixAll (coreData);
@@ -464,9 +464,9 @@ namespace Epsitec.Aider
 				System.Console.WriteLine ("Fixing 'no parish' after updating...");
 				ParishAssignationFixer.FixNoParish (coreData);
 
-				System.Console.WriteLine ("Running DataQualityJobs after updating...");
-				HouseholdsFix.EchHouseholdsQuality (coreData, newEChDataFile.FullName);
-				EChPersonFixer.TryFixAll (coreData);
+				//System.Console.WriteLine ("Running DataQualityJobs after updating...");
+				//HouseholdsFix.EchHouseholdsQuality (coreData, newEChDataFile.FullName);
+				//EChPersonFixer.TryFixAll (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
