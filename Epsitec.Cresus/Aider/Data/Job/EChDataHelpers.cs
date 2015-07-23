@@ -389,6 +389,28 @@ namespace Epsitec.Aider.Data.Job
 			}
 		}
 
+		public static eCH_PersonEntity GetEchPersonEntityById(BusinessContext businessContext, string id)
+		{
+			var personExample = new eCH_PersonEntity ()
+			{
+				PersonId = id
+			};
+
+			return businessContext.DataContext.GetByExample<eCH_PersonEntity> (personExample).FirstOrDefault ();
+		}
+
+		public static AiderPersonEntity GetAiderPersonEntityById(BusinessContext businessContext, string id)
+		{
+			var personExample = new AiderPersonEntity ();
+
+			personExample.eCH_Person = new eCH_PersonEntity ()
+			{
+				PersonId = id
+			};
+
+			return businessContext.DataContext.GetByExample<AiderPersonEntity> (personExample).FirstOrDefault ();
+		}
+
 		public static eCH_PersonEntity GetEchPersonEntity(BusinessContext businessContext, EChPerson person)
 		{
 			if (person == null)
@@ -439,7 +461,7 @@ namespace Epsitec.Aider.Data.Job
 		}
 
 		public static void SetupHousehold(BusinessContext businessContext, AiderPersonEntity aiderPerson, AiderHouseholdEntity aiderHousehold,
-			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false)
+			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool secondaryHousehold = false)
 		{
 			var isHead = isHead1 || isHead2;
 
@@ -474,7 +496,7 @@ namespace Epsitec.Aider.Data.Job
 
 			var eChPerson = aiderPerson.eCH_Person;
 
-			if (eChPerson.ReportedPerson1.IsNull ())
+			if (!secondaryHousehold)
 			{
 				eChPerson.ReportedPerson1 = eChReportedPerson;
 				eChPerson.Address1 = eChReportedPerson.Address;

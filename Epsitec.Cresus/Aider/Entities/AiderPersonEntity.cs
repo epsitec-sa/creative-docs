@@ -575,7 +575,7 @@ namespace Epsitec.Aider.Entities
 			{
 				AiderPersonEntity.Swap (ref officialPerson, ref otherPerson);
 			}
-
+			AiderPersonEntity.CopyAdditionalAddressInfos (officialPerson, otherPerson);
 			AiderPersonEntity.MergeSubscriptions (businessContext, officialPerson, otherPerson);
 			AiderPersonEntity.MergeGroupParticipations (businessContext, officialPerson, otherPerson);
 			AiderPersonEntity.MergeContacts (businessContext, officialPerson, otherPerson);
@@ -586,6 +586,44 @@ namespace Epsitec.Aider.Entities
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 
 			return true;
+		}
+
+		private static void CopyAdditionalAddressInfos(AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
+		{
+			var baseInfos  = officialPerson.Address;
+			var infos  = otherPerson.Address;
+
+			if (baseInfos.Email.IsNullOrWhiteSpace () && !infos.Email.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Email = infos.Email;
+			}
+
+			if (baseInfos.Web.IsNullOrWhiteSpace () && !infos.Web.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Web = infos.Web;
+			}
+
+			if (baseInfos.Mobile.IsNullOrWhiteSpace () && !infos.Mobile.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Mobile = infos.Mobile;
+			}
+
+			if (baseInfos.Phone1.IsNullOrWhiteSpace () && !infos.Phone1.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Phone1 = infos.Phone1;
+			}
+
+			if (baseInfos.Phone2.IsNullOrWhiteSpace () && !infos.Phone2.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Phone2 = infos.Phone2;
+			}
+
+			if (baseInfos.Fax.IsNullOrWhiteSpace () && !infos.Fax.IsNullOrWhiteSpace ())
+			{
+				baseInfos.Fax = infos.Fax;
+			}
+
+			AiderCommentEntity.CombineComments (baseInfos, infos.Comment.Text.ToSimpleText ());
 		}
 
 		private static void MergeSubscriptions(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)

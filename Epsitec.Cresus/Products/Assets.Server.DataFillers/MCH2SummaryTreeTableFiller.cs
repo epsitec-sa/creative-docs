@@ -73,7 +73,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					}
 					else
 					{
-						field = ObjectField.MCH2Report + (int) column;
+						if (column < Column.User)
+						{
+							field = ObjectField.MCH2Report + (int) column;
+						}
+						else
+						{
+							var userColumn = this.userColumns[(column-Column.User)];
+							field = userColumn.Field;
+						}
 					}
 
 					var type    = this.GetColumnType    (column);
@@ -154,7 +162,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		private decimal? GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
-			var field = ObjectField.MCH2Report + (int) column;
+			ObjectField field;
+
+			if (column < Column.User)
+			{
+				field = ObjectField.MCH2Report + (int) column;
+			}
+			else  // colonne supplémentaire ?
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+				field = userColumn.Field;
+			}
 
 			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
@@ -178,7 +196,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var userColumn = this.userColumns[(column-Column.User)];
 
 				return new ExtractionInstructions (userColumn.Field,
-						ExtractionAmount.StateAt,
+						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						EventType.Unknown);
 			}
@@ -291,6 +309,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			if (column >= Column.User)
 			{
+				//	Retourne le nom d'une colonne supplémentaire.
 				return this.userColumns[(column-Column.User)].Name;
 			}
 
@@ -339,6 +358,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnTooltip(Column column)
 		{
+			if (column >= Column.User)
+			{
+				//	Retourne le tooltip d'une colonne supplémentaire, par exemple "Valeur fiscale le 31.12.2015 à 23h59".
+				var userColumn = this.userColumns[(column-Column.User)];
+				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.FinalDateTooltip);
+			}
+
 			switch (column)
 			{
 				case Column.Name:
@@ -516,14 +542,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				if (userField.MCH2SummaryOrder.HasValue)
 				{
-					var userColumn = new UserColumn
-					{
-						Order  = userField.MCH2SummaryOrder.Value,
-						Field  = userField.Field,
-						Column = Column.User + (i++),
-						Name   = userField.Name,
-					};
-
+					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name);
 					this.userColumns.Add(userColumn);
 				}
 			}
@@ -532,10 +551,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private class UserColumn
 		{
-			public int							Order;
-			public ObjectField					Field;
-			public Column						Column;
-			public string						Name;
+			public UserColumn(ObjectField field, Column column, string name)
+			{
+				this.Field  = field;
+				this.Column = column;
+				this.Name   = name;
+			}
+
+			public readonly ObjectField			Field;
+			public readonly Column				Column;
+			public readonly string				Name;
 		}
 
 

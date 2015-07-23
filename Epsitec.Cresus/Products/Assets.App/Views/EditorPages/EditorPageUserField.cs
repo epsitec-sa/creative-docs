@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					Margins = new Epsitec.Common.Drawing.Margins (0, 0, 20, 10),
 				};
 
-				this.CreateIntController (parent, ObjectField.UserFieldMCH2SummaryOrder);
+				this.mch2OrderController = this.CreateIntController (parent, ObjectField.UserFieldMCH2SummaryOrder);
 			}
 
 			//	Connexion des événements.
@@ -92,6 +92,13 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 			};
 		}
 
+		public override void SetObject(Guid objectGuid, Timestamp timestamp)
+		{
+			base.SetObject (objectGuid, timestamp);
+			this.UpdateType ();
+		}
+
+
 		private void UpdateType()
 		{
 			if (this.FieldType == FieldType.String)
@@ -100,21 +107,39 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 				{
 					this.lineWidthController.Value = AbstractFieldController.maxWidth;
 					this.lineWidthController.ValueChanged ();
+					this.lineWidthController.IsReadOnly = false;
 				}
 
 				if (!this.lineCountController.Value.HasValue)
 				{
 					this.lineCountController.Value = 1;
 					this.lineCountController.ValueChanged ();
+					this.lineCountController.IsReadOnly = false;
 				}
 			}
 			else
 			{
 				this.lineWidthController.Value = null;
-				this.lineCountController.Value = null;
-
 				this.lineWidthController.ValueChanged ();
+				this.lineWidthController.IsReadOnly = true;
+
+				this.lineCountController.Value = null;
 				this.lineCountController.ValueChanged ();
+				this.lineCountController.IsReadOnly = true;
+			}
+
+			if (mch2OrderController != null)
+			{
+				if (this.FieldType == FieldType.ComputedAmount)
+				{
+					this.mch2OrderController.IsReadOnly = false;
+				}
+				else
+				{
+					this.mch2OrderController.Value = null;
+					this.mch2OrderController.ValueChanged ();
+					this.mch2OrderController.IsReadOnly = true;
+				}
 			}
 		}
 
@@ -137,5 +162,6 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private EnumFieldController				typeController;
 		private IntFieldController				lineWidthController;
 		private IntFieldController				lineCountController;
+		private IntFieldController				mch2OrderController;
 	}
 }

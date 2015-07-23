@@ -92,4 +92,5 @@
   <data name="Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip" id="K63">Variations dues aux amortissements supplémentaires</data>
   <data name="EntriesTreeTableFiller.VatCode" id="K73">Code TVA</data>
   <data name="UserFieldsTreeTableFiller.MCH2SummaryOrder" id="K83">Ds MCH2</data>
+  <data name="Enum.MCH2Summary.Column.UserColumn.Tooltip" id="K93">{0} le {1}</data>
 </bundle>

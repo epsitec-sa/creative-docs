@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
 					break;
 
+				case ExtractionAmount.UserColumn:
+					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
+					break;
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionAmount));
 			}
