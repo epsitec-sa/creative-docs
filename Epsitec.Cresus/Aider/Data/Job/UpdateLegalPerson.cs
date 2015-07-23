@@ -26,7 +26,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				Logger.LogToConsole ("Update AdminToMunicipality -> Fetch contacts to refresh");
 
-				List<AiderContactEntity> contactsToRefresh = new List<AiderContactEntity> ();
+				List<DbId> contactsidslegalPersonIds = null;
 				var where = "a.U_LVAV8 LIKE 'Administration%ommunale%' " +
 							"AND a.U_LVAEF not in (SELECT b.U_LVAEF FROM MUD_LVAR6 b WHERE b.U_LVAV8 LIKE 'Municipalité%')";
 				SqlHelpers.SelectDbIds (
@@ -35,11 +35,7 @@ namespace Epsitec.Aider.Data.Job
 					where,
 					(crids) =>
 					{
-						foreach (var id in crids)
-						{
-							var entity = businessContext.DataContext.ResolveEntity<AiderLegalPersonEntity> (new DbKey (id));
-							contactsToRefresh.AddRange (entity.Contacts);
-						}
+						contactsidslegalPersonIds = crids;
 					}
 				);
 
@@ -77,12 +73,20 @@ namespace Epsitec.Aider.Data.Job
 				}
 
 				Logger.LogToConsole ("Update AdminToMunicipality -> Refresh contacts");
-				foreach(var contact in contactsToRefresh)
+				foreach (var id in contactsidslegalPersonIds)
 				{
-					contact.RefreshCache ();
-					contact.RefreshRoleCache (businessContext.DataContext);
-					Logger.LogToConsole (contact.DisplayName);
+					var entity = businessContext.DataContext.ResolveEntity<AiderLegalPersonEntity> (new DbKey (id));
+					foreach (var contact in entity.Contacts)
+					{
+						Logger.LogToConsole ("///////////////////////////////");
+						Logger.LogToConsole (contact.DisplayName);
+						Logger.LogToConsole (" | ");
+						contact.RefreshCache ();
+						contact.RefreshRoleCache (businessContext.DataContext);
+						Logger.LogToConsole (contact.DisplayName);
+					}
 				}
+				
 
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
 				Logger.LogToConsole ("Update AdminToMunicipality -> Job Done!");
