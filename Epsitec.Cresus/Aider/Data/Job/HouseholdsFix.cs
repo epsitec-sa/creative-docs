@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("////:::DATAQUALITY JOB STARTED::://///");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CLEAN BAD ECH HOUSEHOLDS");
-				HouseholdsFix.SelectDbIds (
+				SqlHelpers.SelectDbIds (
 					businessContext, 
 					"MUD_LVAG e","e.U_LVAH IS NULL AND e.U_LVAI IS NULL",
 					(ids) => {
@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Data.Job
 				var fixedPersons = new List<AiderPersonEntity> ();
 				var badEchStatus = new List<AiderPersonEntity> ();
 				var unfixable    = new List<AiderPersonEntity> ();
-				HouseholdsFix.SelectColumn (
+				SqlHelpers.SelectColumn (
 					businessContext,
 					"a.PERSON_ECHID",
 					"ECH_PERSON_WITH_HOUSEHOLDS a", "ECH_STATUS = 1 and a.HOUSEOLD1_ADULT1_CRID IS NULL",
@@ -112,7 +112,7 @@ namespace Epsitec.Aider.Data.Job
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH BAD CONTACT");
 
-				HouseholdsFix.SelectColumn (
+				SqlHelpers.SelectColumn (
 					businessContext,
 					"a.PERSON_ECHID",
 					"ECH_PERSON_WITH_HOUSEHOLDS a", "a.AIDER_HOUSEHOLD_CRID IS NULL AND a.HOUSEOLD1_ADULT1_CRID IS NOT NULL AND a.ECH_STATUS = 1",
@@ -335,64 +335,6 @@ namespace Epsitec.Aider.Data.Job
 		public static DbId ToDbId (string crid)
 		{
 			return new DbId (System.Convert.ToInt64 (crid));
-		}
-
-		public static void SelectDbIds (BusinessContext businessContext, string from, string where, System.Action<List<DbId>> action)
-		{
-			var db = businessContext.DataContext.DbInfrastructure;
-			var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
-			var sqlEngine = dbAbstraction.SqlEngine;
-			var sqlCommand = "select CR_ID " +
-							 "from " + from + " " +
-							 "where " + where;
-
-			var sqlBuilder = dbAbstraction.SqlBuilder;
-			var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
-			DataSet dataSet;
-			sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
-
-			var ids = new List<DbId> ();
-			foreach (DataRow row in dataSet.Tables[0].Rows)
-			{
-				if (!row[0].ToString ().IsNullOrWhiteSpace ())
-				{
-					ids.Add (new DbId ((long) row[0]));
-				}
-			}
-
-			if (ids.Any ())
-			{
-				action (ids);
-			}
-		}
-
-		public static void SelectColumn(BusinessContext businessContext, string column, string from, string where, System.Action<List<string>> action)
-		{
-			var db = businessContext.DataContext.DbInfrastructure;
-			var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
-			var sqlEngine = dbAbstraction.SqlEngine;
-			var sqlCommand = "select " + column +  " " +
-							 "from " + from + " " +
-							 "where " + where;
-
-			var sqlBuilder = dbAbstraction.SqlBuilder;
-			var command = sqlBuilder.CreateCommand (dbAbstraction.BeginReadOnlyTransaction (), sqlCommand);
-			DataSet dataSet;
-			sqlEngine.Execute (command, DbCommandType.ReturningData, 1, out dataSet);
-
-			var values = new List<string> ();
-			foreach (DataRow row in dataSet.Tables[0].Rows)
-			{
-				if (!row[0].ToString ().IsNullOrWhiteSpace ())
-				{
-					values.Add (row[0].ToString ());
-				}
-			}
-
-			if (values.Any ())
-			{
-				action (values);
-			}
 		}
 
 		public static void RemoveHiddenPersonFromHouseholds(CoreData coreData)
