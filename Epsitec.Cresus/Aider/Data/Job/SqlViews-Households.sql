@@ -26,4 +26,3 @@ SELECT
     U_LVAT2,
     U_LVAA8
 FROM MUD_LVAI2;
-;
