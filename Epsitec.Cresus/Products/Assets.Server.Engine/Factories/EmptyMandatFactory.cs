@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var initialTimestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
 			var finalTimestamp   = new Timestamp (new System.DateTime (2099, 12, 31), 0);
 
-			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty, false));
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty, indirect: false));
 
 			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial au &lt;DATE&gt;", initialTimestamp, Guid.Empty, null));
 			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat final", finalTimestamp, Guid.Empty, null));
