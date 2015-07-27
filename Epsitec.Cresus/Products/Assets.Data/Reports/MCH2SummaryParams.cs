@@ -82,7 +82,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				&& this.DateRange  == o.DateRange
 				&& this.RootGuid   == o.RootGuid
 				&& this.Level      == o.Level
-				&& this.FilterGuid == o.FilterGuid;
+				&& this.FilterGuid == o.FilterGuid
+				&& this.DirectMode == o.DirectMode;
 		}
 
 		public override int GetHashCode()
@@ -92,7 +93,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				^  this.DateRange.GetHashCode ()
 				^  this.RootGuid.GetHashCode ()
 				^  this.Level.GetHashCode ()
-				^  this.FilterGuid.GetHashCode ();
+				^  this.FilterGuid.GetHashCode ()
+				^  this.DirectMode.GetHashCode ();
 		}
 
 
