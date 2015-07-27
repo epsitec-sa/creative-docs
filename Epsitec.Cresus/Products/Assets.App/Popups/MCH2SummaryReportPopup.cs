@@ -84,6 +84,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = "",
 				Width                 = GroupGuidStackedController.ControllerWidth,
 				Height                = 150,
+				BottomMargin          = 10,
+			});
+
+			list.Add (new StackedControllerDescription  // 9
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.DirectMode.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -97,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.DirectMode);
 			}
 			set
 			{
@@ -108,6 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.GroupGuid   = value.RootGuid;
 				this.FilterGuid  = value.FilterGuid;
 				this.Level       = value.Level;
+				this.DirectMode  = value.DirectMode;
 			}
 		}
 
@@ -269,6 +277,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							DirectMode
+		{
+			get
+			{
+				return this.DirectModeController.Value;
+			}
+			set
+			{
+				this.DirectModeController.Value = value;
+			}
+		}
+
 
 		protected override void CreateUI()
 		{
@@ -418,6 +438,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private BoolStackedController DirectModeController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.DirectModeRank) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
 
 		private System.DateTime? ComputeFinalDate()
 		{
@@ -485,6 +515,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int LevelRank        = 6;
 		private const int FilterEnableRank = 7;
 		private const int FilterGuidRank   = 8;
+		private const int DirectModeRank   = 9;
 
 
 		private string initialCustomTitle;
