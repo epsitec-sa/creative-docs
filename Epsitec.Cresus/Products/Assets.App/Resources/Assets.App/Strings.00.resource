@@ -488,7 +488,7 @@
   <data name="Popup.AccountsImport.Report" id="KFL">Fichier comptable à importer :&lt;br/&gt;{0}&lt;br/&gt;&lt;br/&gt;</data>
   <data name="FieldControllers.Decimal.Compute" id="KGL">Calculer</data>
   <data name="EditorPages.UserFields.MCH2Summary" id="KHL">Dans le tableau des immobilisations MCH2:</data>
-  <data name="Popup.MCH2SummaryReport.DirectMode" id="KIL">Méthode directe</data>
+  <data name="Popup.MCH2SummaryReport.DirectMode" id="KIL">Méthode directe (montants cumulés)</data>
   <data name="ReportParams.MCH2Direct" id="KJL">Direct</data>
   <data name="ReportParams.MCH2Indirect" id="KKL">Indirect</data>
 </bundle>
