@@ -86,6 +86,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Height                = 150,
 			});
 
+			list.Add (new StackedControllerDescription  // 9
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = "Méthode indirecte",
+			});
+
 			this.SetDescriptions (list);
 
 			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Show.ToString ();
@@ -97,7 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.Indirect);
 			}
 			set
 			{
@@ -108,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.GroupGuid   = value.RootGuid;
 				this.FilterGuid  = value.FilterGuid;
 				this.Level       = value.Level;
+				this.Indirect    = value.Indirect;
 			}
 		}
 
@@ -269,6 +276,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							Indirect
+		{
+			get
+			{
+				return this.IndirectController.Value;
+			}
+			set
+			{
+				this.IndirectController.Value = value;
+			}
+		}
+
 
 		protected override void CreateUI()
 		{
@@ -418,6 +437,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private BoolStackedController IndirectController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.IndirectRank) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
 
 		private System.DateTime? ComputeFinalDate()
 		{
@@ -485,6 +514,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int LevelRank        = 6;
 		private const int FilterEnableRank = 7;
 		private const int FilterGuidRank   = 8;
+		private const int IndirectRank     = 9;
 
 
 		private string initialCustomTitle;

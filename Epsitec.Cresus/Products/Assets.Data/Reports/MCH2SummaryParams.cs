@@ -10,13 +10,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class MCH2SummaryParams : AbstractReportParams
 	{
-		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid)
+		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid, bool indirect)
 			: base (customTitle)
 		{
 			this.DateRange  = dateRange;
 			this.RootGuid   = rootGuid;
 			this.Level      = level;
 			this.FilterGuid = filterGuid;
+			this.Indirect   = indirect;
 		}
 
 		public MCH2SummaryParams(System.Xml.XmlReader reader)
@@ -97,12 +98,12 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
-			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid);
+			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid, this.Indirect);
 		}
 
 		public override AbstractReportParams ChangeCustomTitle(string customTitle)
 		{
-			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid);
+			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid, this.Indirect);
 		}
 
 
@@ -129,5 +130,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;
 		public readonly Guid					FilterGuid;
+		public readonly bool					Indirect;
 	}
 }
