@@ -84,12 +84,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = "",
 				Width                 = GroupGuidStackedController.ControllerWidth,
 				Height                = 150,
+				BottomMargin          = 10,
 			});
 
 			list.Add (new StackedControllerDescription  // 9
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = "Méthode indirecte",
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.Indirect.ToString (),
 			});
 
 			this.SetDescriptions (list);
