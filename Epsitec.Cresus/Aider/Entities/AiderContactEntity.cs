@@ -555,6 +555,35 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
+		public static void DeleteBadContact(BusinessContext businessContext, AiderContactEntity goodContact, AiderContactEntity badContact)
+		{
+			var participationsBackup = new List<AiderGroupParticipantEntity> ();
+
+			if (badContact.participations != null)
+			{
+				participationsBackup.AddRange (badContact.participations);
+			}
+			AiderContactEntity.Delete (businessContext, badContact);
+	
+			// restore backuped participations
+			foreach (var participation in participationsBackup)
+			{
+
+				if (goodContact.participations != null)
+				{
+					if (!goodContact.participations.Contains (participation))
+					{
+						goodContact.AddParticipationInternal (participation);
+					}
+				}
+				else
+				{
+					goodContact.AddParticipationInternal (participation);
+				}
+
+			}
+		}
+
 
 		public string GetDisplayName()
 		{

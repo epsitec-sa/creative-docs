@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Aider.Data.ECh;
+using Epsitec.Aider.Properties;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -33,6 +34,19 @@ namespace Epsitec.Aider.Data.Job
 				var dataContext = businessContext.DataContext;
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("////:::DATAQUALITY JOB STARTED::://///");
+				var fixedPersons = new List<AiderPersonEntity> ();
+				var badEchStatus = new List<AiderPersonEntity> ();
+				var unfixable    = new List<System.Tuple<AiderPersonEntity, string>> ();
+
+				if (!SqlHelpers.ViewExist (businessContext, "ECH_PERSON_WITH_HOUSEHOLDS"))
+				{
+					Logger.LogToConsole ("//////////////////////////////////////");
+					Logger.LogToConsole ("// CREATE VIEW");
+					var createViewSqlCommand = SqlRepository.SqlViews_EchPersonWithHouseholds;
+					var result = SqlHelpers.CommitTransaction (businessContext, createViewSqlCommand);
+					Logger.LogToConsole (string.Format ("// Done! {0} view created", result));
+				}
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CLEAN BAD ECH HOUSEHOLDS");
 				SqlHelpers.SelectDbIds (
@@ -54,14 +68,116 @@ namespace Epsitec.Aider.Data.Job
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
-				var echData    = new EChReportedPersonRepository (currentEchFile);
-				
+				var echData    = new EChReportedPersonRepository (currentEchFile);		
 				Logger.LogToConsole ("// Done!");
+
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// DUPLICATED HOUSEHOLD CONTACT");
+				var query = SqlRepository.SqlQueries_DuplicatedContactInHouseholds;
+				SqlHelpers.Select (
+					businessContext,
+					query,
+					(personIds) =>
+					{
+						foreach (var personId in personIds)
+						{
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var housholdInfo = echData.GetHouseholdsInfo (personId);
+							if (housholdInfo.Any ())
+							{
+								List<EChReportedPerson> households = new List<EChReportedPerson> ();
+								housholdInfo.ForEach ((info) =>
+								{
+									var household    = info.Item1;
+									households.Add (household);
+								});
+
+								if (households.Count == 1)
+								{
+									AiderContactEntity goodContact        = null;
+									List<AiderContactEntity> badContacts  = new List<AiderContactEntity> ();
+									var household = households.First ();
+									var address   = household.Address;
+									var familyKey = household.FamilyKey;
+									foreach (var contact in aiderPerson.Contacts)
+									{
+										var sameFamily  = HouseholdsFix.BuildFamilyKey (contact.Household.Members) == familyKey;
+										if (contact.Address.IsNull ())
+										{
+											contact.Address = contact.Household.Address;
+										}
+										var sameaddress = EChDataHelpers.AddressComparator (contact.Address, address); 
+										if (sameaddress && sameFamily)
+										{
+											if (goodContact == null)
+											{
+												goodContact = contact;
+											}
+											else
+											{
+												badContacts.Add (contact);
+											}									
+										}
+										else
+										{
+											badContacts.Add (contact);
+										}
+									}
+
+									if (goodContact == null)
+									{
+										unfixable.Add (System.Tuple.Create (aiderPerson, "No good contact found for ech household"));
+									}
+									else
+									{
+										if (badContacts.Any ())
+										{
+											foreach (var badContact in badContacts)
+											{
+												AiderContactEntity.DeleteBadContact (businessContext, goodContact, badContact);
+											}
+											HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+										}
+										else
+										{
+											AiderContactEntity.DeleteDuplicateContacts (businessContext, aiderPerson.Contacts);
+											HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+										}
+									}							
+								}
+
+								if (households.Count > 1)
+								{
+
+								}
+							}
+							else
+							{
+								var person = aiderPerson.eCH_Person;
+								switch (person.RemovalReason)
+								{
+									case Enumerations.RemovalReason.Unknown:
+									case Enumerations.RemovalReason.None:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+										break;
+									case Enumerations.RemovalReason.Departed:
+									case Enumerations.RemovalReason.Deceased:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+										break;
+									default:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+										break;
+								}
+								badEchStatus.Add (aiderPerson);
+							}
+						}
+					}
+				);
+
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
-				var fixedPersons = new List<AiderPersonEntity> ();
-				var badEchStatus = new List<AiderPersonEntity> ();
-				var unfixable    = new List<System.Tuple<AiderPersonEntity, string>> ();
 				SqlHelpers.SelectColumn (
 					businessContext,
 					"a.PERSON_ECHID",
@@ -197,20 +313,14 @@ namespace Epsitec.Aider.Data.Job
 				);
 
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
-
-				foreach(var person in fixedPersons)
-				{
-					var household = person.HouseholdContact.Household;
-					if (household.IsNotNull ())
-					{
-						AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
-					}
-				}
-
-				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// BadEchStatusFixed: " + badEchStatus.Count ());
 				Logger.LogToConsole ("// HousholdFixed: " + fixedPersons.Count ());
+				Logger.LogToConsole ("// Unfixable: ");
+				foreach (var entry in unfixable)
+				{
+					Logger.LogToConsole (string.Format ("// {0}: {1}",entry.Item1.DisplayName, entry.Item2));
+				}
 				Logger.LogToConsole ("~             DONE!             ~");
 			}
 		}
