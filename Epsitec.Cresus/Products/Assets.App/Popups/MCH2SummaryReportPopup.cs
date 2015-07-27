@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			list.Add (new StackedControllerDescription  // 9
 			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = Res.Strings.Popup.MCH2SummaryReport.Indirect.ToString (),
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.DirectMode.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.Indirect);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.DirectMode);
 			}
 			set
 			{
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.GroupGuid   = value.RootGuid;
 				this.FilterGuid  = value.FilterGuid;
 				this.Level       = value.Level;
-				this.Indirect    = value.Indirect;
+				this.DirectMode  = value.DirectMode;
 			}
 		}
 
@@ -277,15 +277,15 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool							Indirect
+		private bool							DirectMode
 		{
 			get
 			{
-				return this.IndirectController.Value;
+				return this.DirectModeController.Value;
 			}
 			set
 			{
-				this.IndirectController.Value = value;
+				this.DirectModeController.Value = value;
 			}
 		}
 
@@ -438,11 +438,11 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private BoolStackedController IndirectController
+		private BoolStackedController DirectModeController
 		{
 			get
 			{
-				var controller = this.GetController (MCH2SummaryReportPopup.IndirectRank) as BoolStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.DirectModeRank) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int LevelRank        = 6;
 		private const int FilterEnableRank = 7;
 		private const int FilterGuidRank   = 8;
-		private const int IndirectRank     = 9;
+		private const int DirectModeRank   = 9;
 
 
 		private string initialCustomTitle;

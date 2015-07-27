@@ -4688,6 +4688,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class MCH2SummaryReport
 				{
+					//	designer:str/JUKIL01
+					public static global::Epsitec.Common.Types.FormattedText DirectMode
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545010));
+						}
+					}
 					//	designer:str/JUKCE01
 					public static global::Epsitec.Common.Types.FormattedText FilterEnable
 					{
@@ -4710,14 +4718,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544457));
-						}
-					}
-					//	designer:str/JUKIL01
-					public static global::Epsitec.Common.Types.FormattedText Indirect
-					{
-						get
-						{
-							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545010));
 						}
 					}
 					//	designer:str/JUK6401
@@ -5347,6 +5347,22 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544782));
+					}
+				}
+				//	designer:str/JUKJL01
+				public static global::Epsitec.Common.Types.FormattedText MCH2Direct
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545011));
+					}
+				}
+				//	designer:str/JUKKL01
+				public static global::Epsitec.Common.Types.FormattedText MCH2Indirect
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545012));
 					}
 				}
 				//	designer:str/JUKDE01
@@ -9361,6 +9377,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class MCH2SummaryReport
 				{
+					//	designer:str/JUKIL01
+					public static global::Epsitec.Common.Support.Druid DirectMode
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545010);
+						}
+					}
 					//	designer:str/JUKCE01
 					public static global::Epsitec.Common.Support.Druid FilterEnable
 					{
@@ -9383,14 +9407,6 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544457);
-						}
-					}
-					//	designer:str/JUKIL01
-					public static global::Epsitec.Common.Support.Druid Indirect
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (335545010);
 						}
 					}
 					//	designer:str/JUK6401
@@ -10020,6 +10036,22 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544782);
+					}
+				}
+				//	designer:str/JUKJL01
+				public static global::Epsitec.Common.Support.Druid MCH2Direct
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545011);
+					}
+				}
+				//	designer:str/JUKKL01
+				public static global::Epsitec.Common.Support.Druid MCH2Indirect
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545012);
 					}
 				}
 				//	designer:str/JUKDE01
