@@ -466,7 +466,7 @@ namespace Epsitec.Aider.Data.Job
 				.Select (m => m.eCH_Person.PersonId)
 				.OrderBy (id => id);
 
-			return string.Concat (sortedIds);
+			return string.Concat (sortedIds.Distinct ());
 		}
 
 		public static string BuildFamilyKey(IList<eCH_PersonEntity> members)
@@ -475,7 +475,7 @@ namespace Epsitec.Aider.Data.Job
 				.Select (m => m.PersonId)
 				.OrderBy (id => id);
 
-			return string.Concat (sortedIds);
+			return string.Concat (sortedIds.Distinct ());
 		}
 
 		public static DbId ToDbId (string crid)
