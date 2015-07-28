@@ -66,115 +66,11 @@ namespace Epsitec.Aider.Data.Job
 				);
 				Logger.LogToConsole ("// Done!");
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
 				var echData    = new EChReportedPersonRepository (currentEchFile);		
 				Logger.LogToConsole ("// Done!");
-
-				Logger.LogToConsole ("//////////////////////////////////////");
-				Logger.LogToConsole ("// DUPLICATED HOUSEHOLD CONTACT");
-				var query = SqlRepository.SqlQueries_DuplicatedContactInHouseholds;
-				SqlHelpers.Select (
-					businessContext,
-					query,
-					(personIds) =>
-					{
-						foreach (var personId in personIds)
-						{
-							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
-							var housholdInfo = echData.GetHouseholdsInfo (personId);
-							if (housholdInfo.Any ())
-							{
-								List<EChReportedPerson> households = new List<EChReportedPerson> ();
-								housholdInfo.ForEach ((info) =>
-								{
-									var household    = info.Item1;
-									households.Add (household);
-								});
-
-								if (households.Count == 1)
-								{
-									AiderContactEntity goodContact        = null;
-									List<AiderContactEntity> badContacts  = new List<AiderContactEntity> ();
-									var household = households.First ();
-									var address   = household.Address;
-									var familyKey = household.FamilyKey;
-									foreach (var contact in aiderPerson.Contacts)
-									{
-										var sameFamily  = HouseholdsFix.BuildFamilyKey (contact.Household.Members) == familyKey;
-										if (contact.Address.IsNull ())
-										{
-											contact.Address = contact.Household.Address;
-										}
-										var sameaddress = EChDataHelpers.AddressComparator (contact.Address, address); 
-										if (sameaddress && sameFamily)
-										{
-											if (goodContact == null)
-											{
-												goodContact = contact;
-											}
-											else
-											{
-												badContacts.Add (contact);
-											}									
-										}
-										else
-										{
-											badContacts.Add (contact);
-										}
-									}
-
-									if (goodContact == null)
-									{
-										unfixable.Add (System.Tuple.Create (aiderPerson, "No good contact found for ech household"));
-									}
-									else
-									{
-										if (badContacts.Any ())
-										{
-											foreach (var badContact in badContacts)
-											{
-												AiderContactEntity.DeleteBadContact (businessContext, goodContact, badContact);
-											}
-											HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
-										}
-										else
-										{
-											AiderContactEntity.DeleteDuplicateContacts (businessContext, aiderPerson.Contacts);
-											HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
-										}
-									}							
-								}
-
-								if (households.Count > 1)
-								{
-
-								}
-							}
-							else
-							{
-								var person = aiderPerson.eCH_Person;
-								switch (person.RemovalReason)
-								{
-									case Enumerations.RemovalReason.Unknown:
-									case Enumerations.RemovalReason.None:
-										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
-										break;
-									case Enumerations.RemovalReason.Departed:
-									case Enumerations.RemovalReason.Deceased:
-										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
-										break;
-									default:
-										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
-										break;
-								}
-								badEchStatus.Add (aiderPerson);
-							}
-						}
-					}
-				);
-
-				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
@@ -311,8 +207,136 @@ namespace Epsitec.Aider.Data.Job
 						}
 					}
 				);
-
+				Logger.LogToConsole ("// Done!");
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// FIX MISSING ADDRESSES");
+				SqlHelpers.SelectColumn (
+					businessContext,
+					"a.PERSON_ECHID",
+					"ECH_PERSON_WITH_HOUSEHOLDS a", "ECH_STATUS = 1 and a.CONTACT_ADDRESS_CRID IS NULL",
+					(personIds) =>
+					{
+						foreach (var personId in personIds)
+						{
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var address     = aiderPerson.HouseholdContact.Household.Address;
+							if (address.IsNotNull ())
+							{
+								aiderPerson.HouseholdContact.Address = address;
+							}
+						}
+					}
+				);
+				Logger.LogToConsole ("// Done!");
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// DUPLICATED HOUSEHOLD CONTACT");
+				var query = SqlRepository.SqlQueries_DuplicatedContactInHouseholds;
+				SqlHelpers.Select (
+					businessContext,
+					query,
+					(personIds) =>
+					{
+						foreach (var personId in personIds)
+						{
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var housholdInfo = echData.GetHouseholdsInfo (personId);
+							if (housholdInfo.Any ())
+							{
+
+								var fixes = new List<System.Tuple<AiderContactEntity, List<AiderContactEntity>>> ();
+								housholdInfo.ForEach ((info) =>
+								{
+									AiderContactEntity goodContact  = null;
+									var badContacts                 = new List<AiderContactEntity> ();
+									var household                   = info.Item1;
+									var address   = household.Address;
+									var familyKey = household.FamilyKey;
+									foreach (var contact in aiderPerson.Contacts)
+									{
+										var sameFamily  = HouseholdsFix.BuildFamilyKey (contact.Household.Members) == familyKey;
+										if (contact.Address.IsNull ())
+										{
+											contact.Address = contact.Household.Address;
+										}
+										var sameaddress = EChDataHelpers.AddressComparator (contact.Address, address);
+										if (sameaddress && sameFamily)
+										{
+											if (goodContact == null)
+											{
+												goodContact = contact;
+											}
+											else
+											{
+												badContacts.Add (contact);
+											}
+										}
+										else
+										{
+											badContacts.Add (contact);
+										}
+									}
+
+									if (goodContact != null)
+									{
+										var fix = System.Tuple.Create (goodContact, badContacts);
+										fixes.Add (fix);
+									}
+								});
+
+								var goodContacts = fixes.Select (f => f.Item1).ToList ();
+								var fixApplied   = false;
+								foreach (var fix in fixes)
+								{
+									var goodContact = fix.Item1;
+									var badContacts = fix.Item2.Where (c => !goodContacts.Contains (c));
+									if (badContacts.Any ())
+									{
+										foreach (var badContact in badContacts)
+										{
+											AiderContactEntity.DeleteBadContact (businessContext, goodContact, badContact);
+											fixApplied = true;
+										}
+									}
+								}
+
+								if (fixApplied)
+								{
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+								}
+								else
+								{
+									unfixable.Add (System.Tuple.Create (aiderPerson, "No good contact found for ech household"));
+								}
+							}
+							else
+							{
+								var person = aiderPerson.eCH_Person;
+								switch (person.RemovalReason)
+								{
+									case Enumerations.RemovalReason.Unknown:
+									case Enumerations.RemovalReason.None:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+										break;
+									case Enumerations.RemovalReason.Departed:
+									case Enumerations.RemovalReason.Deceased:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+										break;
+									default:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+										break;
+								}
+								badEchStatus.Add (aiderPerson);
+							}
+						}
+					}
+				);
+				Logger.LogToConsole ("// Saving... please wait...");
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+				Logger.LogToConsole ("// Done!");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// BadEchStatusFixed: " + badEchStatus.Count ());
 				Logger.LogToConsole ("// HousholdFixed: " + fixedPersons.Count ());
