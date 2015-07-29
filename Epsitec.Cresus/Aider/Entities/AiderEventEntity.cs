@@ -140,7 +140,157 @@ namespace Epsitec.Aider.Entities
 			return actors;
 		}
 
-		public int CountRole (Enumerations.EventParticipantRole role)
+		public bool IsCurrentEventValid(out string error)
+		{
+			error = "";
+
+			if (this.Office.ParishGroup.IsNoParish ())
+			{
+				error = "Cette gestion n'est pas liée à une paroisse, aucun acte ne peut y être généré";
+				return false;
+			}
+
+			if (this.Place.IsNull ())
+			{
+				error = "La lieu de célébration n'est pas renseigné";
+				return false;
+			}
+
+			if (this.Town.IsNull ())
+			{
+				error = "La localité de célébration n'est pas renseignée";
+				return false;
+			}
+
+			if (this.Date.Value == null)
+			{
+				error = "La date de célébration n'est pas renseignée";
+				return false;
+			}
+
+			if (!this.TryAddActorWithRole (new AiderPersonEntity (), Enumerations.EventParticipantRole.Minister))
+			{
+				error = "Il manque le ministre officiant";
+				return false;
+			}
+
+			var main   = new AiderPersonEntity ();
+			var actors = new List<AiderPersonEntity> ();
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.ChildBatise))
+					{
+						error = "Aucun enfant à baptisé dans les participants";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.Blessing:
+					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.BlessedChild))
+					{
+						error = "Aucune personne à bénir";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.Confirmation:
+					if (this.Kind == null)
+					{
+						error = "Type de célébration non renseigné (Rameaux etc.)";
+						return false;
+					}
+					if (this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant))
+					{
+						error = "Aucunes personnes à confirmer";
+						return false;
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}
+					break;
+				case Enumerations.EventType.EndOfCatechism:
+					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Catechumen))
+					{
+						error = "Aucunes personnes pour la fin de caté.";
+						return false;
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}
+					break;
+				case Enumerations.EventType.FuneralService:
+					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.DeceasedPerson))
+					{
+						error = "Aucun défunt";
+						return false;
+					}
+					if (main.IsAlive)
+					{
+						error = "La personne est encore en vie dans AIDER";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+				case Enumerations.EventType.Marriage:
+					if (!(this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband)
+						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse))
+					)
+					{
+						error = "Aucune personnes à célébrer";
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}	
+					break;
+				case Enumerations.EventType.None:
+					break;
+			}
+
+			return true;
+		}
+
+		public bool CheckActorValidity(AiderPersonEntity main, out string error)
+		{
+			error = "";
+
+			if (main.Age == null)
+			{
+				error = main.GetShortFullName () + ": date de naissance non renseignée";
+				return false;
+			}
+			if (main.Address.Town.IsNull ())
+			{
+				error = main.GetShortFullName () + ": domicile non renseigné";
+				return false;
+			}
+
+			return true;
+		}
+
+		public int CountRole(Enumerations.EventParticipantRole role)
 		{
 			var result = this.Participants.Count (p => p.Role == role);
 			return result;
