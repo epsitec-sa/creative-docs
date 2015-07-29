@@ -38,9 +38,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.AutoGroup)
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
 					.EnableActionButton<ActionAiderEventViewController0AddParticipantsFromBag> ()
+					.EnableActionButton<ActionAiderEventViewController8AddParticipantExternal> ()
 					.EnableActionButton<ActionAiderEventViewController7AddParticipant> ()
 					.EnableActionButton<ActionAiderEventViewController6RemoveParticipant> ()
 					.EnableActionMenu<ActionAiderEventViewController5AddParticipantFromScratch> ()
+					.EnableActionMenu<ActionAiderEventViewController8AddParticipantExternal> ()
 					.Template ()
 					.End ();
 			}
