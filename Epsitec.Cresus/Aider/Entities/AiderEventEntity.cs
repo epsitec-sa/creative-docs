@@ -306,23 +306,35 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
-		private void TryAddActorWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		private bool TryAddActorWithRole(AiderPersonEntity actor, Enumerations.EventParticipantRole role)
 		{
 			var participant = this.Participants
-										.SingleOrDefault (p => p.Role == role && p.IsExternal == false);
+										.SingleOrDefault (p => p.Role == role);
 			if (participant.IsNotNull ()) {
-				actors.Add (participant.Person);
+				if (participant.IsExternal == false)
+				{
+					actor = participant.Person;
+				}
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
-		private void TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		private bool TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
 		{
 			var participants = this.Participants
-										.Where (p => p.Role == role && p.IsExternal == false)
-										.Select (p => p.Person);
+										.Where (p => p.Role == role);
 			if (participants.Any ())
 			{
-				actors.AddRange (participants);
+				actors.AddRange (participants.Where (p => p.IsExternal == false).Select (p => p.Person));
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
