@@ -51,6 +51,18 @@ namespace Epsitec.Aider.Entities
 			return newParticipant;
 		}
 
+		public static AiderEventParticipantEntity CreateForExternal(BusinessContext context, AiderEventEntity targetEvent, string firstName, string lastName, string town, Enumerations.EventParticipantRole role)
+		{
+			var newParticipant         = context.CreateAndRegisterEntity<AiderEventParticipantEntity> ();
+			newParticipant.Event       = targetEvent;
+			newParticipant.Role        = role;
+			newParticipant.IsExternal  = true;
+			newParticipant.FirstNameEx = firstName;
+			newParticipant.LastNameEx  = lastName;
+			newParticipant.TownEx      = town;
+			return newParticipant;
+		}
+
 		public void Delete(BusinessContext context)
 		{
 			context.DeleteEntity (this);
