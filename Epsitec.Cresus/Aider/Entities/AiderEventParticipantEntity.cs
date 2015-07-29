@@ -17,13 +17,29 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetSummary()
 		{
 			var role = this.GetRoleCaption ();
-			return TextFormatter.FormatText (role + ": " + this.Person.GetSummary ());
+			if (this.IsExternal == true)
+			{
+				var personSummary = this.FirstNameEx + " " + this.LastNameEx;
+				return TextFormatter.FormatText (role + ": " + personSummary);
+			}
+			else
+			{
+				return TextFormatter.FormatText (role + ": " + this.Person.GetSummary ());
+			}
+			
 		}
 
 		public override FormattedText GetCompactSummary()
 		{
 			var role = this.GetRoleCaption ();
-			return TextFormatter.FormatText (role + ": " + this.Person.GetCompactSummary ());
+			if (this.IsExternal == true)
+			{
+				return this.GetSummary ();
+			}
+			else
+			{
+				return TextFormatter.FormatText (role + ": " + this.Person.GetCompactSummary ());
+			}		
 		}
 
 		public static AiderEventParticipantEntity Create(BusinessContext context, AiderEventEntity targetEvent, AiderPersonEntity person, Enumerations.EventParticipantRole role)

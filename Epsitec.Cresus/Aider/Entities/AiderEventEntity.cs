@@ -30,9 +30,17 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetParticipantsSummary()
 		{
-			var lines = this.GetParticipations ().Select (
+			var lines = this.GetParticipations ()
+				.Where (p => p.IsExternal == false)
+				.Select (
 				p => p.Person.GetDisplayName () + "\n"
 			);
+			var others = this.GetParticipations ()
+				.Where (p => p.IsExternal == true)
+				.Select (
+				p => p.FirstNameEx + " " + p.LastNameEx + "\n"
+			);
+			lines.Concat (others);
 			return TextFormatter.FormatText (lines);
 		}
 
@@ -128,7 +136,7 @@ namespace Epsitec.Aider.Entities
 		private void TryAddActorWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
 		{
 			var participant = this.Participants
-										.SingleOrDefault (p => p.Role == role);
+										.SingleOrDefault (p => p.Role == role && p.IsExternal == false);
 			if (participant.IsNotNull ()) {
 				actors.Add (participant.Person);
 			}
@@ -137,7 +145,8 @@ namespace Epsitec.Aider.Entities
 		private void TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
 		{
 			var participants = this.Participants
-										.Where (p => p.Role == role).Select (p => p.Person);
+										.Where (p => p.Role == role && p.IsExternal == false)
+										.Select (p => p.Person);
 			if (participants.Any ())
 			{
 				actors.AddRange (participants);
