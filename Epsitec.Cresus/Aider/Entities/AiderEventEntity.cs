@@ -296,7 +296,7 @@ namespace Epsitec.Aider.Entities
 			return result;
 		}
 
-		public void RemoveParticipant (BusinessContext context, AiderEventParticipantEntity participant)
+		public void RemoveParticipant(BusinessContext context, AiderEventParticipantEntity participant)
 		{
 			participant.Delete (context);
 		}
