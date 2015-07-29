@@ -21,20 +21,28 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderEventOfficeReportEntity
 	{
 
-		public static AiderEventOfficeReportEntity Create(BusinessContext context, string eventNumber, AiderEventEntity targetEvent, string templateName, IContent content)
+		public static AiderEventOfficeReportEntity Create(BusinessContext context, string eventNumber, AiderEventEntity targetEvent)
 		{
 			var report = context.CreateAndRegisterEntity<AiderEventOfficeReportEntity> ();
 
 			report.Name			= eventNumber;
-			report.DataTemplate = templateName;
 			report.CreationDate	= Date.Today;
 			report.Office		= targetEvent.Office;
 			report.EventNumber  = eventNumber;
 			report.Event        = targetEvent;
-			report.SetContent (content);
 
 			targetEvent.Office.AddDocumentInternal (report);
 			return report;
+		}
+
+		public static AiderEventOfficeReportEntity GetByEvent (BusinessContext context, AiderEventEntity entity)
+		{
+			var example = new AiderEventOfficeReportEntity ()
+			{
+				Event = entity
+			};
+
+			return context.GetByExample<AiderEventOfficeReportEntity> (example).FirstOrDefault ();
 		}
 	}
 }
