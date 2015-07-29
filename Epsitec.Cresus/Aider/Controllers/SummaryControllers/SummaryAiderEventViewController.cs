@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title ("Acte à valider")
 				.Text (x => x.GetSummary ())
 				.EnableActionButton<ActionAiderEventViewController2Rollback> ()
-				//.EnableActionButton<ActionAiderEventViewController3Validate> ()
+				.EnableActionButton<ActionAiderEventViewController3Validate> ()
 				.Attribute (BrickMode.DefaultToNoSubView);
 
 				wall.AddBrick (x => x.Participants)

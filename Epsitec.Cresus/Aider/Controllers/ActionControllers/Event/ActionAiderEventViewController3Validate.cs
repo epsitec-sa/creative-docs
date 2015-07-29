@@ -44,6 +44,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			this.Entity.State = Enumerations.EventState.Validated;
+			this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
+
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			if (user.CanValidateEvents () || user.IsAdmin ())
+			{
+				if (AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity).IsNotNull ())
+				{
+					Logic.BusinessRuleException ("Un acte existe déjà pour cet événement");
+				}
+
+				var nextNumber = AiderEventEntity.FindNextNumber (this.BusinessContext, this.Entity.Type);
+				AiderEventOfficeReportEntity.Create (this.BusinessContext, nextNumber, this.Entity);
+			}
+			else
+			{
+				Logic.BusinessRuleException ("Vous n'avez pas le droit de valider un acte");
+			}
 		}
 	}
 }
