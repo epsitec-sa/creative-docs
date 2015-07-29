@@ -485,6 +485,7 @@
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeJobBusinessRules.cs" />
+    <Compile Include="Rules\AiderEventBusinessRules.cs" />
     <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />
     <Compile Include="Rules\AiderEventParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeBusinessRules.cs" />
