@@ -821,8 +821,8 @@
   <data name="Fld.AiderMailingParticipant.CustomRecipient" id="O173">&lt;s:data id="_0" f:Name="CustomRecipient" /&gt;</data>
   <data name="Val.Enum.HousholdMrMrs.Messieurs" id="ASM">&lt;s:data id="_0" f:Name="Messieurs" f:Labels="{Collection {Text 'Messieurs'}}" /&gt;</data>
   <data name="Val.Enum.HousholdMrMrs.Mesdames" id="ATM">&lt;s:data id="_0" f:Name="Mesdames" f:Labels="{Collection {Text 'Mesdames'}}" /&gt;</data>
-  <data name="Fld.AiderEventParticipant.IsExternal" id="O273">&lt;s:data id="_0" f:Name="IsExternal" /&gt;</data>
-  <data name="Fld.AiderEventParticipant.FirstNameEx" id="O373">&lt;s:data id="_0" f:Name="FirstNameEx" /&gt;</data>
-  <data name="Fld.AiderEventParticipant.LastNameEx" id="O473">&lt;s:data id="_0" f:Name="LastNameEx" /&gt;</data>
-  <data name="Fld.AiderEventParticipant.TownEx" id="O573">&lt;s:data id="_0" f:Name="TownEx" /&gt;</data>
+  <data name="Fld.AiderEventParticipant.IsExternal" id="O273">&lt;s:data id="_0" f:Name="IsExternal" f:Labels="{Collection {Text 'Est externe à AIDER'}}" /&gt;</data>
+  <data name="Fld.AiderEventParticipant.FirstNameEx" id="O373">&lt;s:data id="_0" f:Name="FirstNameEx" f:Description="" f:Labels="{Collection {Text 'Prénom'}}" /&gt;</data>
+  <data name="Fld.AiderEventParticipant.LastNameEx" id="O473">&lt;s:data id="_0" f:Name="LastNameEx" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
+  <data name="Fld.AiderEventParticipant.TownEx" id="O573">&lt;s:data id="_0" f:Name="TownEx" f:Labels="{Collection {Text 'Localité'}}" /&gt;</data>
 </bundle>
