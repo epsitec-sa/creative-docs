@@ -83,7 +83,7 @@ namespace Epsitec.Aider.Entities
 
 		public List<AiderPersonEntity> GetMainActors ()
 		{
-			List<AiderPersonEntity> actors = new List<AiderPersonEntity> ();
+			var actors = new List<AiderPersonEntity> ();
 			switch (this.Type)
 			{
 			case Enumerations.EventType.Baptism:
