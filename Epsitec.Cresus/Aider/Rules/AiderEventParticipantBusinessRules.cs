@@ -16,37 +16,52 @@ namespace Epsitec.Aider.Rules
 	{
 		public override void ApplyValidateRule(AiderEventParticipantEntity entity)
 		{
-			// TODO: Refactor this list of exception
-
-			if (entity.Role == Enumerations.EventParticipantRole.None)
-			{
-				return;
-			}
-
-			if (entity.Role == Enumerations.EventParticipantRole.Witness)
-			{
-				return;
-			}
-
-			if (entity.Role == Enumerations.EventParticipantRole.Confirmant)
-			{
-				return;
-			}
-
-			if (entity.Role == Enumerations.EventParticipantRole.Catechumen)
-			{
-				return;
-			}
-
-			if (entity.Role == Enumerations.EventParticipantRole.Minister)
-			{
-				return;
-			}
-
-			if (entity.Event.CountRole (entity.Role) > 1)
+			if (!AiderEventParticipantBusinessRules.RoleCanBeSetTwice (entity))
 			{
 				Logic.BusinessRuleException ("Ce rôle est déjà attribué");
-				return;
+			}
+
+			if (!AiderEventParticipantBusinessRules.RoleIsOkForExternal (entity))
+			{
+				Logic.BusinessRuleException ("Le rôle choisi ne peut-être utilisé avec une personne externe");
+			}	
+		}
+
+		public static bool RoleIsOkForExternal(AiderEventParticipantEntity entity)
+		{
+			if (entity.IsExternal == false)
+			{
+				return true;
+			}
+
+			switch (entity.Role)
+			{
+				case Enumerations.EventParticipantRole.None:
+				case Enumerations.EventParticipantRole.BlessedChild:
+				case Enumerations.EventParticipantRole.Catechumen:
+				case Enumerations.EventParticipantRole.ChildBatise:
+				case Enumerations.EventParticipantRole.Confirmant:
+				case Enumerations.EventParticipantRole.DeceasedPerson:
+				case Enumerations.EventParticipantRole.Husband:
+				case Enumerations.EventParticipantRole.Spouse:
+					return false;
+				default:
+					return true;
+			}
+		}
+
+		public static bool RoleCanBeSetTwice (AiderEventParticipantEntity entity)
+		{
+			switch (entity.Role)
+			{
+				case Enumerations.EventParticipantRole.None:
+				case Enumerations.EventParticipantRole.Witness:
+				case Enumerations.EventParticipantRole.Confirmant:
+				case Enumerations.EventParticipantRole.Catechumen:
+				case Enumerations.EventParticipantRole.Minister:
+					return true;
+				default:
+					return !(entity.Event.CountRole (entity.Role) > 1);
 			}
 		}
 	}
