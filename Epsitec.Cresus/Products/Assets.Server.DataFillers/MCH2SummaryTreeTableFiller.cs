@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		public DateRange						DateRange;
+		public bool								DirectMode;
 
 
 		public override SortingInstructions		DefaultSorting
@@ -198,7 +199,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructions (userColumn.Field,
 						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode);
 			}
 
 			var field = ObjectField.MCH2Report + (int) column;
@@ -211,61 +213,71 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
-						EventType.Input);
+						EventType.Input,
+						this.DirectMode);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
-						EventType.Modification);
+						EventType.Modification,
+						this.DirectMode);
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
-						EventType.Decrease);
+						EventType.Decrease,
+						this.DirectMode);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
-						EventType.Increase);
+						EventType.Increase,
+						this.DirectMode);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
 						this.DateRange,
-						EventType.Adjust);
+						EventType.Adjust,
+						this.DirectMode);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaFiltered,
 						this.DateRange,
-						EventType.Output);
+						EventType.Output,
+						this.DirectMode);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
 						this.DateRange,
-						EventType.AmortizationAuto);
+						EventType.AmortizationAuto,
+						this.DirectMode);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
 						this.DateRange,
-						EventType.AmortizationExtra);
+						EventType.AmortizationExtra,
+						this.DirectMode);
 
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.Amortizations,
 						this.DateRange,
-						EventType.AmortizationSuppl);
+						EventType.AmortizationSuppl,
+						this.DirectMode);
 
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
@@ -274,7 +286,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode);
 
 				default:
 					return ExtractionInstructions.Empty;
