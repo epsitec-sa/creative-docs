@@ -56,7 +56,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				}
 
 				var nextNumber = AiderEventEntity.FindNextNumber (this.BusinessContext, this.Entity.Type);
-				AiderEventOfficeReportEntity.Create (this.BusinessContext, nextNumber, this.Entity);
+				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, nextNumber, this.Entity);
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 			else
 			{
