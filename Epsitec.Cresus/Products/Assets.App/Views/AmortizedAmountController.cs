@@ -224,7 +224,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.DeleteFuturAmortizations ();
 					this.SetFocus ();
-				});
+				},
+				leftOrRight: false);
 			};
 		}
 

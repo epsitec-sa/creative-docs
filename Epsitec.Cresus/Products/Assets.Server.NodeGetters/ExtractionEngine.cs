@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			//	Pour une période donnée, retourne la variation d'une valeur suite à un
 			//	type d'événement donné (début - fin, donc une valeur qui diminue suite
-			//	à un amortissement par exemple retourne une valeur positive).
+			//	à un amortissement, qui retourne une valeur positive).
 			decimal? lastValue = null;
 			decimal? value = null;
 
