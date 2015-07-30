@@ -232,21 +232,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Decrease,
 						this.DirectMode);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Increase,
 						this.DirectMode);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
 						this.DateRange,
 						EventType.Adjust,
 						this.DirectMode);
