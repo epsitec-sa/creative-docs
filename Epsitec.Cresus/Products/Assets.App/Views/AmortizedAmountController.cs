@@ -663,6 +663,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			this.OnDataChanged ();
 			this.OnDeepUpdate ();
+			this.UpdateUI ();
 
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
