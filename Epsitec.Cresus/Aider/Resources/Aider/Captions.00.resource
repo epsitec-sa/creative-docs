@@ -139,7 +139,7 @@
   <data name="Val.Enum.AddressType.Default" id="AU5">&lt;s:data id="_0" f:Name="Default" f:Labels="{Collection {Text 'Adresse de domicile habituel'}}" /&gt;</data>
   <data name="Val.Enum.AddressType.Professional" id="AV5">&lt;s:data id="_0" f:Name="Professional" f:Labels="{Collection {Text 'Adresse professionnelle'}}" /&gt;</data>
   <data name="Val.Enum.AddressType.Secondary" id="A16">&lt;s:data id="_0" f:Name="Secondary" f:Labels="{Collection {Text 'Adresse secondaire'}}" /&gt;</data>
-  <data name="Typ.Enum.AddressType" id="AT5">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.AddressType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.AddressType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAU5]'}, {Text '1 [LVAV5]'}, {Text '2 [LVA16]'}, {Text '3 [LVA4B]'}, {Text '4 [LVO403]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.AddressType, Aider/Default" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
+  <data name="Typ.Enum.AddressType" id="AT5">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.AddressType" f:_1.SystemType="E:Epsitec.Aider.Enumerations.AddressType, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA4B]'}, {Text '1 [LVAU5]'}, {Text '2 [LVAV5]'}, {Text '3 [LVA16]'}, {Text '4 [LVO403]'}, {Text '5 [LVO673]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.AddressType, Aider/Default" f:Labels="{Collection {Text 'Type d&amp;amp;apos;adresse'}}" /&gt;</data>
   <data name="Fld.eCH_Person.CreationDate" id="AI6">&lt;s:data id="_0" f:Name="CreationDate" f:Labels="{Collection {Text 'Date de création'}}" /&gt;</data>
   <data name="Val.Enum.RemovalReason.None" id="AL6">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.RemovalReason.Unknown" id="AM6">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Inconnu'}}" /&gt;</data>
@@ -825,4 +825,5 @@
   <data name="Fld.AiderEventParticipant.FirstNameEx" id="O373">&lt;s:data id="_0" f:Name="FirstNameEx" f:Description="" f:Labels="{Collection {Text 'Prénom'}}" /&gt;</data>
   <data name="Fld.AiderEventParticipant.LastNameEx" id="O473">&lt;s:data id="_0" f:Name="LastNameEx" f:Labels="{Collection {Text 'Nom'}}" /&gt;</data>
   <data name="Fld.AiderEventParticipant.TownEx" id="O573">&lt;s:data id="_0" f:Name="TownEx" f:Labels="{Collection {Text 'Localité'}}" /&gt;</data>
+  <data name="Val.Enum.AddressType.LastKnow" id="O673">&lt;s:data id="_0" f:Name="LastKnow" f:Labels="{Collection {Text 'Dernier domicile connu'}}" /&gt;</data>
 </bundle>

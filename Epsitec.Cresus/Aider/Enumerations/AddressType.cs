@@ -13,6 +13,7 @@ namespace Epsitec.Aider.Enumerations
 		Default      = 1,
 		Professional = 2,
 		Secondary    = 4,
-		Confidential = 5
+		Confidential = 5,
+		LastKnow     = 6
 	}
 }
