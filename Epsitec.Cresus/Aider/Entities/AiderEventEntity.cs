@@ -296,10 +296,39 @@ namespace Epsitec.Aider.Entities
 				error = main.GetShortFullName () + ": date de naissance non renseignée";
 				return false;
 			}
-			if (main.Address.Town.IsNull ())
+
+			if (main.IsDeceased)
 			{
-				error = main.GetShortFullName () + ": domicile non renseigné";
-				return false;
+				if (!main.Contacts.Where (c => c.AddressType == Enumerations.AddressType.LastKnow).Any ())
+				{
+					error = main.GetShortFullName () + ": adresse non renseignée";
+					return false;
+				}
+			}
+			else
+			{
+				if (main.IsGovernmentDefined)
+				{
+					if (main.eCH_Person.Address1.IsNull () && main.eCH_Person.Address2.IsNull ())
+					{
+						error = main.GetShortFullName () + ": adresse non renseignée";
+						return false;
+					}
+				}
+				else
+				{
+					if (main.MainContact.GetAddress ().IsNull ())
+					{
+						error = main.GetShortFullName () + ": adresse non renseignée";
+						return false;
+					}
+
+					if (main.MainContact.GetAddress ().IsNull ())
+					{
+						error = main.GetShortFullName () + ": domicile de l'adresse non renseigné";
+						return false;
+					}
+				}
 			}
 
 			return true;
