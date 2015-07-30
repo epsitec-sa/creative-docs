@@ -152,9 +152,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private static decimal? GetDeltaFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
-			//	Pour une période donnée, retourne la variation d'une valeur suite à un
-			//	type d'événement donné (début - fin, donc une valeur qui diminue suite
-			//	à un amortissement, qui retourne une valeur positive).
+			//	Pour une période donnée, retourne la variation qui a conduit à la valeur actuelle.
+			//	Par exemple, pour un événement de sortie, la valeur vaut généralement zéro.
+			//	On retourne alors la dernière valeur avant la sortie, moins la valeur après sortie,
+			//	donc par exemple 1000-0, soit 1000 francs.
+			//	Si d'aventure il y avait une valeur résiduelle après sortie, on retournerait le
+			//	montant sorti. Par exemple, 1000 à l'avant-dernier événement et 50 à l'événement
+			//	de sortie rendrait 950.
 			decimal? lastValue = null;
 			decimal? value = null;
 
