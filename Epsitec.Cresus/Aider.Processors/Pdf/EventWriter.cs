@@ -31,48 +31,88 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
-			
+			var act     = officeReport.Event;
 			var lines = new List<string> ();
-			
-			/*foreach (var participant in officeReport.Participants.OrderBy (x => x.Contact.DisplayName))
+
+			switch (act.Type)
 			{
-				var contact	= participant.Contact;
-				var person	= contact.Person;
-				var address	= contact.Address;
-				
-				var fullName = FormattedText.Escape (person.GetFullName ());
-				var street	 = FormattedText.Escape (address.GetShortStreetAddress ());
-				var zip		 = address.GetDisplayZipCode();
-				var town	 = FormattedText.Escape (address.Town.Name);
-				var bDate	 = person.GetFormattedBirthdayDate ();
-				var parish	 = "";
-				
-				if (person.HasDerogation)
-				{
-					var parishOrigin = (sender.Office.ParishGroupPathCache == person.ParishGroupPathCache) ? ParishOrigin.Geographic : ParishOrigin.Active;
-					parish = person.GetParishLocationName (context, parishOrigin) ?? "—";
-				}
-				
-				lines.Add (fullName + " (" + bDate + "), " + town + ", " + street + "<tab/>" + parish + "<br/>");
+				case Enumerations.EventType.Blessing:
+					this.WriteBlessingAct (act, lines);
+					break;
 			}
-
-			lines = lines.Distinct ().ToList ();
-
-			for (int i = 0; i < lines.Count; i++)
-			{
-				lines[i] = string.Format ("<tab/>{0}.<tab/>{1}", i+1, lines[i]);
-			}*/
-
 
 			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
 			var topLogo	      = string.Format (@"<img src=""{0}"" />", topLogoPath);
-			var headerContent = new FormattedText (topLogo) + officeReport.GetFormattedText ();
+			var headerContent = new FormattedText (topLogo);
+			switch (act.Type)
+			{
+				case Enumerations.EventType.Blessing:
+					headerContent += new FormattedText ("<b>Registre des bénédictions</b><br/><br/>Acte n°" + officeReport.EventNumber);
+					break;
+			}
+
 			var footerContent = TextFormatter.FormatText ("Extrait d'AIDER le", Date.Today.ToShortDateString ());
-			
 			report.AddTopLeftLayer (headerContent, 50);
 			var formattedContent = new FormattedText (string.Concat (lines));
 			report.AddBottomRightLayer (footerContent, 100);
 			report.GeneratePdf (stream, formattedContent);
+		}
+
+		private void WriteEventPlaceAndDateLine (AiderEventEntity act, List<string> lines)
+		{
+			var placeAndDate = act.Place.Name + " le, " + act.Date.Value.ToShortDateString () + "<br/>";
+			lines.Add (placeAndDate);
+		}
+
+		private void WriteMinisterLine(AiderEventEntity act, List<string> lines)
+		{
+			var minister = "Ministre officiant: " + act.GetMinister ().GetFullName () + "<br/>";
+			lines.Add (minister);
+		}
+
+		private void WriteBlessingAct (AiderEventEntity act, List<string> lines)
+		{
+			var blessedPerson = act.GetMainActors ();
+			lines.Add ("<b>Bénédiction</b><br/>");
+			this.WriteEventPlaceAndDateLine (act, lines);
+			foreach (var actor in blessedPerson)
+			{
+				lines.Add ("<br/><tab/><b>" + actor.GetFullName () + "</b><br/>");
+				this.WriteSonOf (actor, act, lines);
+			}
+			this.WriteMinisterLine (act, lines);
+		}
+
+		private void WriteSonOf(AiderPersonEntity person, AiderEventEntity act, List<string> lines)
+		{
+			var filiation = "fils de ";
+
+			if (person.eCH_Person.PersonSex == Enumerations.PersonSex.Female)
+			{
+				filiation = "fille de ";
+			}
+
+			var father = act.GetActor (Enumerations.EventParticipantRole.Father);
+			var mother = act.GetActor (Enumerations.EventParticipantRole.Mother);
+			if (father != null && mother != null)
+			{
+				lines.Add (filiation + father.GetFullName () + " et de " + mother.GetFullName () + "<br/>");
+				return;
+			}
+
+			if (father != null && mother == null)
+			{
+				lines.Add (filiation + father.GetFullName () + "<br/>");
+				return;
+			}
+
+			if (father == null && mother != null)
+			{
+				lines.Add (filiation + mother.GetFullName () + "<br/>");
+				return;
+			}
+
+			lines.Add (filiation + "<i>(non-renseigné)</i>"  + "<br/>");
 		}
 
 		private ListingDocument GetReport(ListingDocumentSetup setup)

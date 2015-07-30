@@ -140,6 +140,20 @@ namespace Epsitec.Aider.Entities
 			return actors;
 		}
 
+		public AiderPersonEntity GetMinister ()
+		{
+			AiderPersonEntity minister;
+			this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister);
+			return minister;
+		}
+
+		public AiderPersonEntity GetActor (Enumerations.EventParticipantRole role)
+		{
+			AiderPersonEntity actor;
+			this.TryAddActorWithRole (out actor, role);
+			return actor;
+		}
+
 		public bool IsCurrentEventValid(out string error)
 		{
 			error = "";
