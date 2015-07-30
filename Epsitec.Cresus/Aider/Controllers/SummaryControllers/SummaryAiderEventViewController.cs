@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderEventEntity> wall)
 		{
 			var currentEvent = this.Entity;
-
+			var userCanValidate = AiderUserManager.Current.AuthenticatedUser.CanValidateEvents ();
 			if(currentEvent.State == Enumerations.EventState.InPreparation)
 			{
 				wall.AddBrick ()
@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title ("Acte à valider")
 				.Text (x => x.GetSummary ())
 				.EnableActionButton<ActionAiderEventViewController2Rollback> ()
-				.EnableActionButton<ActionAiderEventViewController3Validate> ()
+				.EnableActionButton<ActionAiderEventViewController3Validate> ().IfTrue (userCanValidate)
 				.Attribute (BrickMode.DefaultToNoSubView);
 
 				wall.AddBrick (x => x.Participants)

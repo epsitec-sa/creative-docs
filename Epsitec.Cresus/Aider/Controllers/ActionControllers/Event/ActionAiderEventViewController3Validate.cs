@@ -43,12 +43,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.State = Enumerations.EventState.Validated;
-			this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
-
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			if (user.CanValidateEvents () || user.IsAdmin ())
 			{
+				this.Entity.State = Enumerations.EventState.Validated;
+				// Trigger validation rules
+				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
+		
 				if (AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity).IsNotNull ())
 				{
 					Logic.BusinessRuleException ("Un acte existe déjà pour cet événement");
