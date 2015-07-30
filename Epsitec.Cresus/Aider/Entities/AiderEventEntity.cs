@@ -168,7 +168,8 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			if (!this.TryAddActorWithRole (new AiderPersonEntity (), Enumerations.EventParticipantRole.Minister))
+			var minister   = new AiderPersonEntity ();
+			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
 			{
 				error = "Il manque le ministre officiant";
 				return false;
@@ -179,7 +180,7 @@ namespace Epsitec.Aider.Entities
 			switch (this.Type)
 			{
 				case Enumerations.EventType.Baptism:
-					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.ChildBatise))
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.ChildBatise))
 					{
 						error = "Aucun enfant à baptisé dans les participants";
 						return false;
@@ -190,7 +191,7 @@ namespace Epsitec.Aider.Entities
 					}
 					break;
 				case Enumerations.EventType.Blessing:
-					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.BlessedChild))
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.BlessedChild))
 					{
 						error = "Aucune personne à bénir";
 						return false;
@@ -234,7 +235,7 @@ namespace Epsitec.Aider.Entities
 					}
 					break;
 				case Enumerations.EventType.FuneralService:
-					if (!this.TryAddActorWithRole (main, Enumerations.EventParticipantRole.DeceasedPerson))
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.DeceasedPerson))
 					{
 						error = "Aucun défunt";
 						return false;
@@ -306,8 +307,9 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
-		private bool TryAddActorWithRole(AiderPersonEntity actor, Enumerations.EventParticipantRole role)
+		private bool TryAddActorWithRole(out AiderPersonEntity actor, Enumerations.EventParticipantRole role)
 		{
+			actor = null;
 			var participant = this.Participants
 										.SingleOrDefault (p => p.Role == role);
 			if (participant.IsNotNull ()) {
