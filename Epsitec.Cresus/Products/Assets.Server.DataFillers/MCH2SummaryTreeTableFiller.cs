@@ -200,7 +200,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						EventType.Unknown,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 			}
 
 			var field = ObjectField.MCH2Report + (int) column;
@@ -214,70 +215,80 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
 						EventType.Unknown,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Input,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Modification,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Decrease,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: true);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Increase,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Adjust,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Output,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationAuto,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationExtra,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationSuppl,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: true);
 
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
@@ -287,7 +298,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						EventType.Unknown,
-						this.DirectMode);
+						this.DirectMode,
+						inverted: false);
 
 				default:
 					return ExtractionInstructions.Empty;

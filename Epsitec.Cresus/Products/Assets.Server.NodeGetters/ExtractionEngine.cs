@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private static decimal? GetDeltaSum(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne le total des variations effectuées par un événement donné dans une période donnée.
-			//	La baisse d'une valeur retourne un montant positif.
+			//	La baisse d'une valeur retourne un montant négatif si Inverted est false.
 			decimal? lastValue = null;
 			decimal? sum = null;
 
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 							if (lastValue.HasValue)
 							{
-								value = lastValue.Value - aa.Value;
+								value = aa.Value - lastValue.Value;
 							}
 							else
 							{
@@ -217,7 +217,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			return sum;
+			if (sum.HasValue)
+			{
+				return extractionInstructions.Inverted ? -sum : sum;
+			}
+			else
+			{
+				return sum;
+			}
 		}
 
 		private static decimal? GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
