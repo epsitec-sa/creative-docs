@@ -46,7 +46,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			if (user.CanValidateEvents () || user.IsAdmin ())
 			{
-				this.Entity.State = Enumerations.EventState.Validated;
+				this.Entity.State     = Enumerations.EventState.Validated;
+				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
 				// Trigger validation rules
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
 		
