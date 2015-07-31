@@ -218,63 +218,63 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Input,
 						this.DirectMode);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Modification,
 						this.DirectMode);
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Decrease,
 						this.DirectMode);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Increase,
 						this.DirectMode);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaFiltered,
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Adjust,
 						this.DirectMode);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.Output,
 						this.DirectMode);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationAuto,
 						this.DirectMode);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationExtra,
 						this.DirectMode);
 
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						EventType.AmortizationSuppl,
 						this.DirectMode);

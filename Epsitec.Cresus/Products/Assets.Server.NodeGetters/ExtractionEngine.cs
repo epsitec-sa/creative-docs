@@ -116,14 +116,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					case ExtractionAmount.StateAt:
 						return ExtractionEngine.GetStateAt (accessor, obj, extractionInstructions);
 
-					case ExtractionAmount.DeltaFiltered:
-						return ExtractionEngine.GetDeltaFiltered (accessor, obj, extractionInstructions);
-
 					case ExtractionAmount.LastFiltered:
 						return ExtractionEngine.GetLastFiltered (accessor, obj, extractionInstructions);
 
-					case ExtractionAmount.Amortizations:
-						return ExtractionEngine.GetAmortizations (accessor, obj, extractionInstructions);
+					case ExtractionAmount.DeltaSum:
+						return ExtractionEngine.GetDeltaSum (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.UserColumn:
 						return ExtractionEngine.GetUserColumn (accessor, obj, extractionInstructions);
@@ -148,47 +145,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return null;
-		}
-
-		private static decimal? GetDeltaFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
-		{
-			//	Pour une période donnée, retourne la variation qui a conduit à la valeur actuelle.
-			//	Par exemple, pour un événement de sortie, la valeur vaut généralement zéro.
-			//	On retourne alors la dernière valeur avant la sortie, moins la valeur après sortie,
-			//	donc par exemple 1000-0, soit 1000 francs.
-			//	Si d'aventure il y avait une valeur résiduelle après sortie, on retournerait le
-			//	montant sorti. Par exemple, 1000 à l'avant-dernier événement et 50 à l'événement
-			//	de sortie rendrait 950.
-			decimal? lastValue = null;
-			decimal? value = null;
-
-			foreach (var e in obj.Events)
-			{
-				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null)
-				{
-					var aa = p.Value.FinalAmount;
-					if (aa.HasValue)
-					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
-							extractionInstructions.Range.IsInside (e.Timestamp.Date))
-						{
-							if (lastValue.HasValue)
-							{
-								value = lastValue.Value - aa.Value;
-							}
-							else
-							{
-								value = aa.Value;
-							}
-						}
-
-						lastValue = aa.Value;
-					}
-				}
-			}
-
-			return value;
 		}
 
 		private static decimal? GetLastFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
@@ -217,9 +173,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return value;
 		}
 
-		private static decimal? GetAmortizations(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static decimal? GetDeltaSum(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
-			//	Retourne le total des amortissements effectués dans une période donnée.
+			//	Retourne le total des variations effectuées par un événement donné dans une période donnée.
+			//	La baisse d'une valeur retourne un montant positif.
 			decimal? lastValue = null;
 			decimal? sum = null;
 
