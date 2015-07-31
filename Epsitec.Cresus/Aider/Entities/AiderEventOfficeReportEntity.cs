@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var report = context.CreateAndRegisterEntity<AiderEventOfficeReportEntity> ();
 
-			report.Name			= eventNumber;
+			report.Name			= targetEvent.GetRegitryActName () + " " + eventNumber;
 			report.CreationDate	= Date.Today;
 			report.Office		= targetEvent.Office;
 			report.EventNumber  = eventNumber;
