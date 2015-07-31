@@ -12,7 +12,7 @@ using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
-
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 
 using System.Collections.Generic;
@@ -32,87 +32,273 @@ namespace Epsitec.Aider.Processors.Pdf
 			var setup   = this.GetSetup ();
 			var report  = this.GetReport (setup);
 			var act     = officeReport.Event;
-			var lines = new List<string> ();
-
-			switch (act.Type)
-			{
-				case Enumerations.EventType.Blessing:
-					this.WriteBlessingAct (act, lines);
-					break;
-			}
-
+			
+			// header
 			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
 			var topLogo	      = string.Format (@"<img src=""{0}"" />", topLogoPath);
 			var headerContent = new FormattedText (topLogo);
-			switch (act.Type)
-			{
-				case Enumerations.EventType.Blessing:
-					headerContent += new FormattedText ("<b>Registre des bénédictions</b><br/><br/>Acte n°" + officeReport.EventNumber);
-					break;
-			}
 
-			var footerContent = TextFormatter.FormatText ("Extrait d'AIDER le", Date.Today.ToShortDateString ());
+			headerContent += new FormattedText ("<b>Extrait du " + act.GetRegitryName () + "</b><br/><br/>");
+			headerContent += new FormattedText ("<b>Acte N°" + officeReport.EventNumber + "</b><br/>");
+			headerContent += new FormattedText (officeReport.Office.OfficeName + "<br/>");
 			report.AddTopLeftLayer (headerContent, 50);
-			var formattedContent = new FormattedText (string.Concat (lines));
+		
+			// footer
+			var footerContent = TextFormatter.FormatText ("Extrait d'AIDER le", Date.Today.ToShortDateString ());
 			report.AddBottomRightLayer (footerContent, 100);
+
+
+			// content
+			var lines = new List<string> ();
+			this.WriteGroupAct (act, lines);
+			var formattedContent = new FormattedText (string.Concat (string.Join ("<br/>", lines)));
+
 			report.GeneratePdf (stream, formattedContent);
 		}
 
-		private void WriteEventPlaceAndDateLine (AiderEventEntity act, List<string> lines)
+		private void WriteGroupAct (AiderEventEntity act, List<string> lines)
 		{
-			var placeAndDate = act.Place.Name + " le, " + act.Date.Value.ToShortDateString () + "<br/>";
-			lines.Add (placeAndDate);
-		}
-
-		private void WriteMinisterLine(AiderEventEntity act, List<string> lines)
-		{
-			var minister = "Ministre officiant: " + act.GetMinister ().GetFullName () + "<br/>";
-			lines.Add (minister);
-		}
-
-		private void WriteBlessingAct (AiderEventEntity act, List<string> lines)
-		{
-			var blessedPerson = act.GetMainActors ();
-			lines.Add ("<b>Bénédiction</b><br/>");
-			this.WriteEventPlaceAndDateLine (act, lines);
-			foreach (var actor in blessedPerson)
+			var actors = act.GetMainActors ();
+			
+			switch (act.Kind)
 			{
-				lines.Add ("<br/><tab/><b>" + actor.GetFullName () + "</b><br/>");
-				this.WriteSonOf (actor, act, lines);
+				case Enumerations.EventKind.Branches:
+					lines.Add ("<b>Rameaux " + act.Date.Value.Year + "</b><br/>");
+					break;
+				case Enumerations.EventKind.CultOfTheAlliance:
+					lines.Add ("<b>Culte de l'alliance " + act.Date.Value.Year + "</b><br/>");
+					break;
+				case Enumerations.EventKind.Other:
+					lines.Add ("<b>" + act.Comment + " " + act.Date.Value.Year + "</b><br/>");
+					break;
 			}
-			this.WriteMinisterLine (act, lines);
+			
+			foreach (var actor in actors)
+			{
+				this.AddActorHeaderLines (act, actor, lines);
+			}
+	
+			switch (act.Type)
+			{
+				case Enumerations.EventType.Blessing:
+					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
+						"a été béni", 
+						"a été bénie", 
+						"ont étés bénis"
+					), lines);
+					break;
+				case Enumerations.EventType.Baptism:
+					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
+						"a été baptisé",
+						"a été baptisée",
+						"ont étés baptisés"
+					), lines);
+					break;
+				case Enumerations.EventType.Confirmation:
+					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
+						"a effectué sa confirmation",
+						"a effectué sa confirmation",
+						"ont effectués leurs confirmations"
+					), lines);
+					break;
+				case Enumerations.EventType.EndOfCatechism:
+					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
+						"a effectué sa fin de catéchisme",
+						"a effectué sa fin de catéchisme",
+						"ont effectués leurs fin de catéchisme"
+					), lines);
+					break;
+			}
+			
+			this.AddActFooterLines (act, lines);
 		}
 
-		private void WriteSonOf(AiderPersonEntity person, AiderEventEntity act, List<string> lines)
+		/// <summary>
+		/// Formulas Triple Item:
+		/// Item1: For male actor
+		/// Item2: For female actor
+		/// Item3:For multi actors
+		/// </summary>
+		/// <param name="actors"></param>
+		/// <param name="formulas"></param>
+		private void AddContentLines(List<AiderPersonEntity> actors, System.Tuple<string, string, string> formulas, List<string> lines)
 		{
-			var filiation = "fils de ";
-
-			if (person.eCH_Person.PersonSex == Enumerations.PersonSex.Female)
+			if (actors.Count > 1)
 			{
-				filiation = "fille de ";
+				lines.Add ("<br/><br/><tab/><b>" + formulas.Item3 + "</b><br/><br/>");
+			}
+			else
+			{
+				if (this.IsFemale (actors[0]))
+				{
+					lines.Add ("<br/><br/><tab/><b>" + formulas.Item2 + "</b><br/><br/>");
+				}
+				else
+				{
+					lines.Add ("<br/><br/><tab/><b>" + formulas.Item1 + "</b><br/><br/>");
+				}
+			}
+		}
+
+		private void AddActFooterLines(AiderEventEntity act, List<string> lines)
+		{
+			lines.Add (this.GetWhen (act) + this.Tabs () + "lieu:<tab/>" + act.Place.Name);
+			lines.Add (this.GetMinisterLine (act));
+			lines.Add (this.GetGodFatherLine (act) + this.Tabs () + this.GetGodMotherLine (act));
+			lines.Add ("<br/><i>Acte visé par:<tab/>" + act.Validator.DisplayName + "</i>");
+		}
+
+		private void AddActorHeaderLines(AiderEventEntity act, AiderPersonEntity actor, List<string> lines)
+		{
+			lines.Add (this.GetLastNameLine (actor) + this.Tabs () + this.GetFirstNameLine (actor));
+			lines.Add (this.GetBirthDateLine (actor) + this.Tabs () + this.GetTownLine (actor));
+			lines.Add (this.GetParishLine (actor));
+			lines.Add (this.GetSonOfLine (actor, act));
+		}
+
+		private string Tabs ()
+		{
+			return "<tab/>";
+		}
+
+		private string GetWhen(AiderEventEntity act)
+		{
+			return  "le:<tab/>" + act.Date.Value.ToDateTime ().ToString ("dd MMMM yyyy");
+		}
+
+		private string GetMinisterLine(AiderEventEntity act)
+		{
+			var line = "par:<tab/>";
+			var minister = act.GetMinister ();
+			if (minister.Employee.IsNotNull ())
+			{
+				var position = minister.Employee.EmployeeType.ToString ();
+				line += minister.GetFullName () + " (" + position + ")";
+			}
+			else
+			{
+				line += minister.GetFullName ();
+			}
+			return line;
+		}
+
+		private string GetGodFatherLine(AiderEventEntity act)
+		{
+			var line = "Parrain:<tab/>";
+			var gotFather = act.GetActor (Enumerations.EventParticipantRole.GodFather);
+			if (gotFather.IsNotNull ())
+			{
+				line += gotFather.GetFullName ();
+			}
+			else
+			{
+				return "";
+			}
+
+			return line;
+		}
+
+		private string GetGodMotherLine(AiderEventEntity act)
+		{
+			var line = "Marraine:<tab/>";
+			var gotMother = act.GetActor (Enumerations.EventParticipantRole.GodMother);
+			if (gotMother.IsNotNull ())
+			{
+				line += gotMother.GetFullName ();
+			}
+			else
+			{
+				return "";
+			}
+
+			return line;
+		}
+		
+		private string GetParishLine(AiderPersonEntity person)
+		{
+			var parish = "Paroisse:<tab/>";
+			parish += person.ParishGroup.Name;
+			return parish;
+		}
+
+		private string GetBirthDateLine(AiderPersonEntity person)
+		{
+			var bd = "Né le:<tab/>";
+			if (this.IsFemale (person))
+			{
+				bd = "Née le:<tab/>";
+			}
+
+			bd += person.eCH_Person.PersonDateOfBirth.Value.ToShortDateString ();
+			return bd;
+		}
+
+		private string GetFirstNameLine(AiderPersonEntity person)
+		{
+			var firstName = "Prénom:<tab/><b>";
+			var names = person.eCH_Person.PersonFirstNames.Split (' ');
+			firstName += names[0] + "</b> " + string.Join (" ", names.Skip (1));
+			return firstName;
+		}
+
+		private string GetLastNameLine(AiderPersonEntity person)
+		{
+			var firstName = "Nom:<tab/><b>";
+			firstName += person.eCH_Person.PersonOfficialName + "</b>";
+			return firstName;
+		}
+
+		private string GetTownLine(AiderPersonEntity person)
+		{
+			var from = "Domicilié à:<tab/>";
+			if (this.IsFemale (person))
+			{
+				from = "Domiciliée à:<tab/>";
+			}
+
+			if (person.IsGovernmentDefined)
+			{
+				from += person.eCH_Person.GetAddress ().Town;				
+			}
+			else
+			{
+				from += person.MainContact.GetAddress ().Town.Name;
+			}
+
+			return from;
+		}
+
+		private string GetSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		{
+			var filiation = "Fils de:<tab/>";
+			if (this.IsFemale (person))
+			{
+				filiation = "Fille de:<tab/>";
 			}
 
 			var father = act.GetActor (Enumerations.EventParticipantRole.Father);
 			var mother = act.GetActor (Enumerations.EventParticipantRole.Mother);
 			if (father != null && mother != null)
 			{
-				lines.Add (filiation + father.GetFullName () + " et de " + mother.GetFullName () + "<br/>");
-				return;
+				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
 			}
 
 			if (father != null && mother == null)
 			{
-				lines.Add (filiation + father.GetFullName () + "<br/>");
-				return;
+				return filiation + father.GetFullName ();
 			}
 
 			if (father == null && mother != null)
 			{
-				lines.Add (filiation + mother.GetFullName () + "<br/>");
-				return;
+				return filiation + mother.GetFullName ();
 			}
 
-			lines.Add (filiation + "<i>(non-renseigné)</i>"  + "<br/>");
+			return "";
+		}
+
+		private bool IsFemale (AiderPersonEntity person)
+		{
+			return person.eCH_Person.PersonSex == Enumerations.PersonSex.Female;
 		}
 
 		private ListingDocument GetReport(ListingDocumentSetup setup)
@@ -133,10 +319,9 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup = new ListingDocumentSetup ();
 
-			setup.TextStyle.TabInsert (new TextStyle.Tab (5.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
-			setup.TextStyle.TabInsert (new TextStyle.Tab (10.0.Millimeters (), TextTabType.DecimalDot, TextTabLine.None));
-			setup.TextStyle.TabInsert (new TextStyle.Tab (120.0.Millimeters (), TextTabType.Left, TextTabLine.None));
-
+			setup.TextStyle.TabInsert (new TextStyle.Tab (15.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (90.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (110.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
 			setup.TextStyle.FontSize = 9.0.Points ();
 			

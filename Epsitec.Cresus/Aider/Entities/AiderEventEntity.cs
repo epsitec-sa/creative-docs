@@ -140,6 +140,54 @@ namespace Epsitec.Aider.Entities
 			return actors;
 		}
 
+		public string GetRegitryName()
+		{
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					return "Registre des baptêmes";
+				case Enumerations.EventType.Blessing:
+					return "Registre des bénédictions";
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					return "Registre des célébrations pour partenaires enregistrés";
+				case Enumerations.EventType.Confirmation:
+					return "Registre des confirmations";
+				case Enumerations.EventType.EndOfCatechism:
+					return "Registre des fins de catéchisme";
+				case Enumerations.EventType.FuneralService:
+					return "Registre des services funèbres";
+				case Enumerations.EventType.Marriage:
+					return "Registre des bénédictions de mariage";
+				case Enumerations.EventType.None:
+				default:
+					return "";
+			}
+		}
+
+		public string GetRegitryActName()
+		{
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					return "Baptême";
+				case Enumerations.EventType.Blessing:
+					return "Bénédiction";
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					return "Partenariat enregistré";
+				case Enumerations.EventType.Confirmation:
+					return "Confirmation";
+				case Enumerations.EventType.EndOfCatechism:
+					return "Fin de catéchisme";
+				case Enumerations.EventType.FuneralService:
+					return "Service funèbre";
+				case Enumerations.EventType.Marriage:
+					return "Mariage";
+				case Enumerations.EventType.None:
+				default:
+					return "";
+			}
+		}
+
 		public AiderPersonEntity GetMinister ()
 		{
 			AiderPersonEntity minister;
@@ -309,7 +357,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (main.IsGovernmentDefined)
 				{
-					if (main.eCH_Person.Address1.IsNull () && main.eCH_Person.Address2.IsNull ())
+					if (main.eCH_Person.GetAddress ().IsNull ())
 					{
 						error = main.GetShortFullName () + ": adresse non renseignée";
 						return false;
