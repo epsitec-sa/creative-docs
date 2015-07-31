@@ -269,7 +269,7 @@ namespace Epsitec.Aider.Entities
 						error = "Type de célébration non renseigné (Rameaux etc.)";
 						return false;
 					}
-					if (this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant))
+					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant))
 					{
 						error = "Aucunes personnes à confirmer";
 						return false;
