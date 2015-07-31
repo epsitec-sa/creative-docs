@@ -405,13 +405,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
 
 				case Column.Decreases:
-					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Decreases.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip.ToString ();
 
 				case Column.Increases:
-					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Increases.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Increases.Indirect.Tooltip.ToString ();
 
 				case Column.Adjust:
-					return Res.Strings.Enum.MCH2Summary.Column.Adjust.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Adjust.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
