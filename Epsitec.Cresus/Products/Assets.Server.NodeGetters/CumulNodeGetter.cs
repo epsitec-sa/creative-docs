@@ -96,6 +96,50 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
 						var v = this.extractionEngine.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, hiddenTreeNode.Ratio, field);
+#if true
+						if (v != null)
+						{
+							if (v is decimal?)
+							{
+								var d = v as decimal?;
+
+								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
+								{
+									cumuls[field] = cumuls[field].Merge (new DecimalCumulValue (d));
+								}
+								else  // première valeur ?
+								{
+									cumuls[field] = new DecimalCumulValue (d);
+								}
+							}
+							else if (v is System.DateTime?)
+							{
+								var d = v as System.DateTime?;
+
+								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
+								{
+									cumuls[field] = cumuls[field].Merge (new DateCumulValue (d));
+								}
+								else  // première valeur ?
+								{
+									cumuls[field] = new DateCumulValue (d);
+								}
+							}
+							else if (v is string)
+							{
+								var s = v as string;
+
+								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
+								{
+									cumuls[field] = cumuls[field].Merge (new StringCumulValue (s));
+								}
+								else  // première valeur ?
+								{
+									cumuls[field] = new StringCumulValue (s);
+								}
+							}
+						}
+#else
 						if (v.HasValue)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
@@ -109,6 +153,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 								//?cumuls[field] = v.Value;
 							}
 						}
+#endif
 					}
 				}
 			}

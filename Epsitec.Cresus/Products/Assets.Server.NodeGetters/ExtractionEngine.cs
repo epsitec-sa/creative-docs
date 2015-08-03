@@ -25,12 +25,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
+		public object GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ, en tenant compte du ratio.
 			if (obj != null)
 			{
-				decimal? m = null;
+				object m = null;
 
 				if (field == ObjectField.MainValue)
 				{
@@ -65,23 +65,36 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					}
 				}
 
-				if (m.HasValue)
+				if (m is decimal?)
 				{
-					if (ratio.HasValue)  // y a-t-il un ratio ?
+					var d = m as decimal?;
+
+					if (d.HasValue)
 					{
-						return m.Value * ratio.Value;
+						if (ratio.HasValue)  // y a-t-il un ratio ?
+						{
+							return d.Value * ratio.Value;
+						}
+						else
+						{
+							return m;
+						}
 					}
-					else
-					{
-						return m;
-					}
+				}
+				else if (m is System.DateTime)
+				{
+					return m;
+				}
+				else if (m is string)
+				{
+					return m;
 				}
 			}
 
 			return null;
 		}
 
-		private static decimal? GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static object GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
 			if (obj != null)
@@ -202,14 +215,35 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private static decimal? GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static object GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo, 0);
-			var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
 
-			if (p != null)
 			{
-				return p.Value.FinalAmount;
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
+
+				if (p != null)
+				{
+					return p.Value.FinalAmount;
+				}
+			}
+
+			{
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataDateProperty;
+
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			{
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataStringProperty;
+
+				if (p != null)
+				{
+					return p.Value;
+				}
 			}
 
 			return null;

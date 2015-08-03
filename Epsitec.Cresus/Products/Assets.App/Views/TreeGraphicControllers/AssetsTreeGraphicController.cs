@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 			{
 				//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 				//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-				var v = nodeGetter.GetValue (obj, node, field);
+				var v = (decimal?) nodeGetter.GetValue (obj, node, field);
 				if (v.HasValue)
 				{
 					return TreeGraphicValue.CreateAmount (v.Value);
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 			{
 				//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 				//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-				var v = nodeGetter.GetValue (obj, node, field);
+				var v = (decimal?) nodeGetter.GetValue (obj, node, field);
 				if (v.HasValue)
 				{
 					return TreeGraphicValue.CreateAmount (v.Value);

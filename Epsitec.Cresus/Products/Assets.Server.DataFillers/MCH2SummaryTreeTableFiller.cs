@@ -149,7 +149,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					else
 					{
 						var value = this.GetColumnValue (node, obj, column);
-						cell = new TreeTableCellDecimal (value, cellState2);
+						var columnType = this.GetColumnType (column);
+
+						switch (columnType)
+						{
+							case TreeTableColumnType.Date:
+								cell = new TreeTableCellDate ((System.DateTime?) value, cellState2);
+								break;
+
+							case TreeTableColumnType.String:
+								cell = new TreeTableCellString ((string) value, cellState2);
+								break;
+
+							case TreeTableColumnType.Amount:
+								cell = new TreeTableCellDecimal ((decimal?) value, cellState2);
+								break;
+
+							default:
+								throw new System.InvalidOperationException (string.Format ("Unknown TreeTableColumnType {0}", columnType.ToString ()));
+						}
 					}
 
 					content.Columns[columnRank++].AddRow (cell);
@@ -160,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private decimal? GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
+		private object GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
 			ObjectField field;
@@ -177,15 +195,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-			var v = this.NodeGetter.GetValue (obj, node, field);
-			if (v.HasValue)
-			{
-				return v.Value;
-			}
-			else
-			{
-				return null;
-			}
+			return this.NodeGetter.GetValue (obj, node, field);
 		}
 
 
@@ -320,9 +330,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private TreeTableColumnType GetColumnType(Column column)
 		{
-			if (column == MCH2SummaryTreeTableFiller.Column.Name)
+			if (column == Column.Name)
 			{
 				return TreeTableColumnType.Tree;
+			}
+			else if (column >= Column.User)
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+
+				switch (userColumn.Type)
+				{
+					case FieldType.Date:
+						return TreeTableColumnType.Date;
+
+					case FieldType.String:
+						return TreeTableColumnType.String;
+
+					default:
+						return TreeTableColumnType.Amount;
+				}
 			}
 			else
 			{
@@ -573,7 +599,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				if (userField.MCH2SummaryOrder.HasValue)
 				{
-					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name);
+					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name, userField.Type);
 					this.userColumns.Add(userColumn);
 				}
 			}
@@ -582,16 +608,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private class UserColumn
 		{
-			public UserColumn(ObjectField field, Column column, string name)
+			public UserColumn(ObjectField field, Column column, string name, FieldType type)
 			{
 				this.Field  = field;
 				this.Column = column;
 				this.Name   = name;
+				this.Type   = type;
 			}
 
 			public readonly ObjectField			Field;
 			public readonly Column				Column;
 			public readonly string				Name;
+			public readonly FieldType			Type;
 		}
 
 

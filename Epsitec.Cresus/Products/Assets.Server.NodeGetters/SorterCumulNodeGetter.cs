@@ -65,19 +65,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return -1;
 		}
 
-		public decimal? GetValue(SortableCumulNode node, ObjectField field)
+		public object GetValue(SortableCumulNode node, ObjectField field)
 		{
 			AbstractCumulValue value;
 			if (node.Cumuls != null && node.Cumuls.TryGetValue (field, out value))
 			{
-				if (value is DecimalCumulValue)
-				{
-					return (decimal?) value.Value;
-				}
-				else
-				{
-					return null;
-				}
+				return value.Value;
 			}
 			else
 			{

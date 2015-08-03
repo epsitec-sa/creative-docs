@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						{
 							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-							var v = this.NodeGetter.GetValue (obj, node, userField.Field);
+							var v = (decimal?) this.NodeGetter.GetValue (obj, node, userField.Field);
 							if (v.HasValue)
 							{
 								var ca = new ComputedAmount (v);
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						{
 							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-							var v = this.NodeGetter.GetValue (obj, node, userField.Field);
+							var v = (decimal?) this.NodeGetter.GetValue (obj, node, userField.Field);
 							if (v.HasValue)
 							{
 								var aa = new AmortizedAmount (v);
