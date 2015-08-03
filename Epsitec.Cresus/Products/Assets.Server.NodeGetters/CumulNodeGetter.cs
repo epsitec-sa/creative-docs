@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private void ComputeCumuls(Dictionary<ObjectField, decimal> cumuls, TreeNode[] hiddenTreeNodes)
+		private void ComputeCumuls(Dictionary<ObjectField, AbstractCumulValue> cumuls, TreeNode[] hiddenTreeNodes)
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
@@ -100,11 +100,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
 							{
-								cumuls[field] += v.Value;  // addition
+								cumuls[field] = cumuls[field].Merge (new DecimalCumulValue (v));
+								//?cumuls[field] += v.Value;  // addition
 							}
 							else  // première valeur ?
 							{
-								cumuls[field] = v.Value;
+								cumuls[field] = new DecimalCumulValue (v);
+								//?cumuls[field] = v.Value;
 							}
 						}
 					}

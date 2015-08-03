@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private ComparableData GetComparableData(CumulNode node, ObjectField field)
 		{
-			decimal value;
+			AbstractCumulValue value;
 			if (node.Cumuls.TryGetValue (field, out value))
 			{
 				return new ComparableData (value);
