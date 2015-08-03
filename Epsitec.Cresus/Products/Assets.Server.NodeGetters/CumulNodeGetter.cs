@@ -60,13 +60,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
-		{
-			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.extractionEngine.GetValue (obj, node, field);
-		}
-
-
 		private void Compute()
 		{
 			//	Lorsque des groupes sont compactés, ils peuvent cacher des objets.

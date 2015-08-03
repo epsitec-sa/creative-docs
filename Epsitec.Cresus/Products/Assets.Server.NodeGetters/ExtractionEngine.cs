@@ -25,31 +25,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
-		{
-			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			if (obj != null)
-			{
-				if (node.BaseType == BaseType.Assets)
-				{
-					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-					return this.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, node.Ratio, field);
-				}
-				else
-				{
-					//	S'il s'agit d'un groupe et qu'il est compacté, on retourne le total cumulé.
-					decimal v;
-					if (node.Cumuls.TryGetValue (field, out v))
-					{
-						return v;
-					}
-				}
-			}
-
-			return null;
-		}
-
-
 		public decimal? GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ, en tenant compte du ratio.
