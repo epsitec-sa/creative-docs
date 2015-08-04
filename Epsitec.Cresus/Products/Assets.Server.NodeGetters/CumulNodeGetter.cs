@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
 						var v = this.extractionEngine.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, hiddenTreeNode.Ratio, field);
-#if true
+
 						if (v != null)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
@@ -108,21 +108,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 								cumuls[field] = v;
 							}
 						}
-#else
-						if (v.HasValue)
-						{
-							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
-							{
-								cumuls[field] = cumuls[field].Merge (new DecimalCumulValue (v));
-								//?cumuls[field] += v.Value;  // addition
-							}
-							else  // première valeur ?
-							{
-								cumuls[field] = new DecimalCumulValue (v);
-								//?cumuls[field] = v.Value;
-							}
-						}
-#endif
 					}
 				}
 			}

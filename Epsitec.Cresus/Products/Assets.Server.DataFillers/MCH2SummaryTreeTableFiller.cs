@@ -154,15 +154,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						switch (columnType)
 						{
 							case TreeTableColumnType.Date:
-								cell = new TreeTableCellDate ((System.DateTime?) value, cellState2);
+								cell = new TreeTableCellDate ((value == null) ? null : (System.DateTime?) value.Value, cellState2);
 								break;
 
 							case TreeTableColumnType.String:
-								cell = new TreeTableCellString ((string) value, cellState2);
+								cell = new TreeTableCellString ((value == null) ? null : (string) value.Value, cellState2);
 								break;
 
 							case TreeTableColumnType.Amount:
-								cell = new TreeTableCellDecimal ((decimal?) value, cellState2);
+								cell = new TreeTableCellDecimal ((value == null) ? null : (decimal?) value.Value, cellState2);
 								break;
 
 							default:
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private object GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
+		private AbstractCumulValue GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
 			ObjectField field;
