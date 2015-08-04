@@ -108,6 +108,13 @@ namespace Epsitec.Aider.Processors.Pdf
 						"ont effectués leurs fin de catéchisme"
 					), lines);
 					break;
+				case Enumerations.EventType.FuneralService:
+					lines.Add ("<br/><br/><tab/><b>les funérailles ont eu lieu</b><br/><br/>");
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+				case Enumerations.EventType.Marriage:
+					lines.Add ("<br/><br/><tab/><b>se sont mariés</b><br/><br/>");
+					break;
 			}
 			
 			this.AddActFooterLines (act, lines);
@@ -144,7 +151,18 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			lines.Add (this.GetWhen (act) + this.Tabs () + "lieu:<tab/>" + act.Place.Name);
 			lines.Add (this.GetMinisterLine (act));
-			lines.Add (this.GetGodFatherLine (act) + this.Tabs () + this.GetGodMotherLine (act));
+			switch (act.Type)
+			{
+				case Enumerations.EventType.Blessing:
+				case Enumerations.EventType.Baptism:
+					lines.Add (this.GetGodFatherLine (act) + this.Tabs () + this.GetGodMotherLine (act));
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+				case Enumerations.EventType.Marriage:
+					lines.Add (this.GetFirstWitnessLine (act) + this.Tabs () + this.GetSecondWitnessLine (act));
+					break;
+			}
+			
 			lines.Add ("<br/><i>Acte visé par:<tab/>" + act.Validator.DisplayName + "</i>");
 		}
 
@@ -153,7 +171,27 @@ namespace Epsitec.Aider.Processors.Pdf
 			lines.Add (this.GetLastNameLine (actor) + this.Tabs () + this.GetFirstNameLine (actor));
 			lines.Add (this.GetBirthDateLine (actor) + this.Tabs () + this.GetTownLine (actor));
 			lines.Add (this.GetParishLine (actor));
-			lines.Add (this.GetSonOfLine (actor, act));
+			switch (act.Type)
+			{
+				case Enumerations.EventType.Blessing:
+				case Enumerations.EventType.Baptism:
+				case Enumerations.EventType.Confirmation:
+				case Enumerations.EventType.EndOfCatechism:
+				case Enumerations.EventType.FuneralService:
+					lines.Add (this.GetSonOfLine (actor, act));
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+				case Enumerations.EventType.Marriage:
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Husband).Person == actor)
+					{
+						lines.Add (this.GetHusbandSonOfLine (actor, act));
+					}
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Spouse).Person == actor)
+					{
+						lines.Add (this.GetSpouseSonOfLine (actor, act));
+					}
+					break;
+			}
 		}
 
 		private string Tabs ()
@@ -179,6 +217,38 @@ namespace Epsitec.Aider.Processors.Pdf
 			{
 				line += minister.GetFullName ();
 			}
+			return line;
+		}
+
+		private string GetFirstWitnessLine(AiderEventEntity act)
+		{
+			var line = "Premier témoin:<tab/>";
+			var witness = act.GetActor (Enumerations.EventParticipantRole.Witness);
+			if (witness.IsNotNull ())
+			{
+				line += witness.GetFullName ();
+			}
+			else
+			{
+				return "";
+			}
+
+			return line;
+		}
+
+		private string GetSecondWitnessLine(AiderEventEntity act)
+		{
+			var line = "Second témoin:<tab/>";
+			var witness = act.GetActor (Enumerations.EventParticipantRole.SecondWitness);
+			if (witness.IsNotNull ())
+			{
+				line += witness.GetFullName ();
+			}
+			else
+			{
+				return "";
+			}
+
 			return line;
 		}
 
@@ -278,6 +348,62 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			var father = act.GetActor (Enumerations.EventParticipantRole.Father);
 			var mother = act.GetActor (Enumerations.EventParticipantRole.Mother);
+			if (father != null && mother != null)
+			{
+				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
+			}
+
+			if (father != null && mother == null)
+			{
+				return filiation + father.GetFullName ();
+			}
+
+			if (father == null && mother != null)
+			{
+				return filiation + mother.GetFullName ();
+			}
+
+			return "";
+		}
+
+		private string GetHusbandSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		{
+			var filiation = "Fils de:<tab/>";
+			if (this.IsFemale (person))
+			{
+				filiation = "Fille de:<tab/>";
+			}
+
+			var father = act.GetActor (Enumerations.EventParticipantRole.HusbandFather);
+			var mother = act.GetActor (Enumerations.EventParticipantRole.HusbandMother);
+			if (father != null && mother != null)
+			{
+				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
+			}
+
+			if (father != null && mother == null)
+			{
+				return filiation + father.GetFullName ();
+			}
+
+			if (father == null && mother != null)
+			{
+				return filiation + mother.GetFullName ();
+			}
+
+			return "";
+		}
+
+		private string GetSpouseSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		{
+			var filiation = "Fils de:<tab/>";
+			if (this.IsFemale (person))
+			{
+				filiation = "Fille de:<tab/>";
+			}
+
+			var father = act.GetActor (Enumerations.EventParticipantRole.SpouseFather);
+			var mother = act.GetActor (Enumerations.EventParticipantRole.SpouseMother);
 			if (father != null && mother != null)
 			{
 				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
