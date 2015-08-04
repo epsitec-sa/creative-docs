@@ -99,44 +99,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 #if true
 						if (v != null)
 						{
-							if (v is decimal?)
+							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
 							{
-								var d = v as decimal?;
-
-								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
-								{
-									cumuls[field] = cumuls[field].Merge (new DecimalCumulValue (d));
-								}
-								else  // première valeur ?
-								{
-									cumuls[field] = new DecimalCumulValue (d);
-								}
+								cumuls[field] = cumuls[field].Merge (v);
 							}
-							else if (v is System.DateTime?)
+							else  // première valeur ?
 							{
-								var d = v as System.DateTime?;
-
-								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
-								{
-									cumuls[field] = cumuls[field].Merge (new DateCumulValue (d));
-								}
-								else  // première valeur ?
-								{
-									cumuls[field] = new DateCumulValue (d);
-								}
-							}
-							else if (v is string)
-							{
-								var s = v as string;
-
-								if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
-								{
-									cumuls[field] = cumuls[field].Merge (new StringCumulValue (s));
-								}
-								else  // première valeur ?
-								{
-									cumuls[field] = new StringCumulValue (s);
-								}
+								cumuls[field] = v;
 							}
 						}
 #else
