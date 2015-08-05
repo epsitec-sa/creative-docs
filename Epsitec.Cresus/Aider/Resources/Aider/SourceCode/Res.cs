@@ -3018,6 +3018,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PlaceName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 169);
 				//	designer:cap/LVO853
 				public static readonly global::Epsitec.Common.Support.Druid PlaceType = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 168);
+				//	designer:cap/LVO873
+				public static readonly global::Epsitec.Common.Support.Druid Report = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 232);
 				//	designer:cap/LVOF53
 				public static readonly global::Epsitec.Common.Support.Druid State = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 175);
 				//	designer:cap/LVOA53
@@ -3039,6 +3041,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 204);
 				//	designer:cap/LVOD63
 				public static readonly global::Epsitec.Common.Support.Druid EventNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 205);
+				//	designer:cap/LVO773
+				public static readonly global::Epsitec.Common.Support.Druid IsValidated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 231);
 			}
 			
 			public static class AiderEventParticipant

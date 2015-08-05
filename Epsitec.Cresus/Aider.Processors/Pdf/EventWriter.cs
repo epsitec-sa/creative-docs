@@ -60,6 +60,11 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var actors = act.GetMainActors ();
 			
+			if (act.State != Enumerations.EventState.Validated)
+			{
+				lines.Add ("<b>Acte à valider:</b><br/>");
+			}
+
 			switch (act.Kind)
 			{
 				case Enumerations.EventKind.Branches:
@@ -163,7 +168,10 @@ namespace Epsitec.Aider.Processors.Pdf
 					break;
 			}
 			
-			lines.Add ("<br/><i>Acte visé par:<tab/>" + act.Validator.DisplayName + "</i>");
+			if (act.State == Enumerations.EventState.Validated)
+			{
+				lines.Add ("<br/><i>Acte visé par:<tab/>" + act.Validator.DisplayName + "</i>");
+			}
 		}
 
 		private void AddActorHeaderLines(AiderEventEntity act, AiderPersonEntity actor, List<string> lines)

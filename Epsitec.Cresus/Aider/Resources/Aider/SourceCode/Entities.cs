@@ -3421,6 +3421,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Report</c> field.
+		///	designer:fld/LVA93/LVO873
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO873]")]
+		public global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity Report
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity> ("[LVO873]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity oldValue = this.Report;
+				if (oldValue != value || !this.IsFieldDefined("[LVO873]"))
+				{
+					this.OnReportChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity> ("[LVO873]", oldValue, value);
+					this.OnReportChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
@@ -3444,6 +3466,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPlaceChanged(global::Epsitec.Aider.Entities.AiderEventPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderEventPlaceEntity newValue);
 		partial void OnValidatorChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
 		partial void OnValidatorChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnReportChanging(global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity oldValue, global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity newValue);
+		partial void OnReportChanged(global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity oldValue, global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity newValue);
 		
 		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		
@@ -11109,11 +11133,35 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>IsValidated</c> field.
+		///	designer:fld/LVOB63/LVO773
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO773]")]
+		public bool IsValidated
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVO773]");
+			}
+			set
+			{
+				bool oldValue = this.IsValidated;
+				if (oldValue != value || !this.IsFieldDefined("[LVO773]"))
+				{
+					this.OnIsValidatedChanging (oldValue, value);
+					this.SetField<bool> ("[LVO773]", oldValue, value);
+					this.OnIsValidatedChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnEventNumberChanging(string oldValue, string newValue);
 		partial void OnEventNumberChanged(string oldValue, string newValue);
 		partial void OnEventChanging(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
+		partial void OnIsValidatedChanging(bool oldValue, bool newValue);
+		partial void OnIsValidatedChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
