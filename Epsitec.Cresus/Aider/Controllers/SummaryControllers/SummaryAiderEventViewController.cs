@@ -50,7 +50,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (currentEvent.State == Enumerations.EventState.ToValidate)
 			{
-				var previewReports = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
 				wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
 					.Title ("Acte à valider")
