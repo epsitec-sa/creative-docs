@@ -133,6 +133,12 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var nextEvent = AssetCalculator.GetNextEvent (obj, timestamp);
 
 				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
+					(nextEvent == TerminalEvent.None || nextEvent == TerminalEvent.In))
+				{
+					yield return EventType.PreInput;
+				}
+
+				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.Out) &&
 					nextEvent == TerminalEvent.None)
 				{
 					yield return EventType.Input;
@@ -194,6 +200,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (eventType)
 			{
+				case EventType.PreInput:
+					return TerminalEvent.PreIn;
+
 				case EventType.Input:
 					return TerminalEvent.In;
 
@@ -208,6 +217,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private enum TerminalEvent
 		{
 			None,
+			PreIn,
 			In,
 			Out,
 			Other,

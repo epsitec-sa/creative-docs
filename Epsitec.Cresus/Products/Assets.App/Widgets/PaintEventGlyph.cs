@@ -38,6 +38,14 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 
+				case TimelineGlyphShape.SquareHoles:
+					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
+
+					graphics.AddFilledRectangle (r);
+					graphics.AddFilledCircle (rect.Center, rect.Height*0.15);
+					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
+					break;
+
 				case TimelineGlyphShape.OutlinedSquare:
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 					r.Deflate (0.5);

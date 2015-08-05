@@ -37,7 +37,7 @@
   <data name="Enum.ObjectField.UserFieldTopMargin" id="K71">Marge supérieure</data>
   <data name="Enum.ObjectField.GroupSuggestedDuringCreation" id="K81">Groupe proposé lors de la création d'un objet d'immobilisation</data>
   <data name="Enum.ObjectField.UserFieldType" id="K91">Type</data>
-  <data name="Enum.EventType.Input" id="KA1">Entrée</data>
+  <data name="Enum.EventType.Input" id="KA1">Entrée (mise en service)</data>
   <data name="Enum.EventType.Modification" id="KB1">Modification générale</data>
   <data name="Enum.EventType.Increase" id="KC1">Augmentation</data>
   <data name="Enum.EventType.Decrease" id="KD1">Diminution</data>
@@ -78,4 +78,8 @@
   <data name="Enum.ObjectField.AccountPurchaseVatCode" id="KI2">TVA achat</data>
   <data name="Enum.ObjectField.AccountSaleVatCode" id="KJ2">TVA vente</data>
   <data name="Enum.ObjectField.UserFieldMCH2SummaryOrder" id="KK2">Ordre MCH2</data>
+  <data name="Enum.EventType.PreInput" id="KL2">Entrée (fiinancement préalable)</data>
+  <data name="Enum.ObjectField.AccountPreInputCredit" id="KM2">Crédit finan. préa.</data>
+  <data name="Enum.ObjectField.AccountPreInputDebit" id="KN2">Débit finan. préa.</data>
+  <data name="Enum.ObjectField.AccountPreInputVatCode" id="KO2">TVA finan. préa.</data>
 </bundle>

@@ -41,6 +41,9 @@ namespace Epsitec.Cresus.Assets.Data
 		ArgumentVariable,
 		ArgumentDefault,
 
+		AccountPreInputDebit,
+		AccountPreInputCredit,
+		AccountPreInputVatCode,
 		AccountPurchaseDebit,
 		AccountPurchaseCredit,
 		AccountPurchaseVatCode,

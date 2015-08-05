@@ -219,6 +219,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			switch (amount.EntryScenario)
 			{
+				case EntryScenario.PreInput:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPreInputDebit);
+					return entryAccouts[ObjectField.AccountPreInputDebit];
+
 				case EntryScenario.Purchase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPurchaseDebit);
 					return entryAccouts[ObjectField.AccountPurchaseDebit];
@@ -277,6 +281,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			switch (amount.EntryScenario)
 			{
+				case EntryScenario.PreInput:
+					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPreInputCredit);
+					return entryAccouts[ObjectField.AccountPreInputCredit];
+
 				case EntryScenario.Purchase:
 					tooltip = DataDescriptions.GetObjectFieldDescription (ObjectField.AccountPurchaseCredit);
 					return entryAccouts[ObjectField.AccountPurchaseCredit];
@@ -401,6 +409,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			switch (amount.EntryScenario)
 			{
+				case EntryScenario.PreInput:
 				case EntryScenario.Purchase:
 					return amount.FinalAmount.GetValueOrDefault ();
 
@@ -450,6 +459,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 			switch (amount.EntryScenario)
 			{
+				case EntryScenario.PreInput:
+					return entryAccouts[ObjectField.AccountPreInputVatCode];
+
 				case EntryScenario.Purchase:
 					return entryAccouts[ObjectField.AccountPurchaseVatCode];
 
