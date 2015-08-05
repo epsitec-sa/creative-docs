@@ -355,7 +355,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				if (main.IsGovernmentDefined)
+				if (main.IsGovernmentDefined && main.IsDeclared)
 				{
 					if (main.eCH_Person.GetAddress ().IsNull ())
 					{

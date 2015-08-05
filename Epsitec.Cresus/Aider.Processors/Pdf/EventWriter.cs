@@ -334,7 +334,7 @@ namespace Epsitec.Aider.Processors.Pdf
 				from = "Domiciliée à:<tab/>";
 			}
 
-			if (person.IsGovernmentDefined)
+			if (person.IsGovernmentDefined && person.IsDeclared)
 			{
 				from += person.eCH_Person.GetAddress ().Town;				
 			}
