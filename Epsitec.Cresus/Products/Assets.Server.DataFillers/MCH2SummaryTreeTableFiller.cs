@@ -156,21 +156,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							case TreeTableColumnType.Date:
 								{
 									var v = value as DateCumulValue;
-									cell = new TreeTableCellDate ((v == null) ? null : v.TypedValue, cellState2);
+									cell = new TreeTableCellDate ((v == null) ? null : v.Value, cellState2);
 								}
 								break;
 
 							case TreeTableColumnType.String:
 								{
 									var v = value as StringCumulValue;
-									cell = new TreeTableCellString ((v == null) ? null : v.TypedValue, cellState2);
+									cell = new TreeTableCellString ((v == null) ? null : v.Value, cellState2);
 								}
 								break;
 
 							case TreeTableColumnType.Amount:
 								{
 									var v = value as DecimalCumulValue;
-									cell = new TreeTableCellDecimal ((v == null) ? null : v.TypedValue, cellState2);
+									cell = new TreeTableCellDecimal ((v == null) ? null : v.Value, cellState2);
 								}
 								break;
 

@@ -9,11 +9,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	public class StringCumulValue : AbstractCumulValue
 	{
 		public StringCumulValue(string value)
-			: base (value)
+			: base ()
 		{
+			this.value = value;
 		}
 
-		public string							TypedValue
+		public string							Value
 		{
 			get
 			{
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return !string.IsNullOrEmpty (this.TypedValue);
+				return !string.IsNullOrEmpty (this.value);
 			}
 		}
 
@@ -56,5 +57,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			return new StringCumulValue (null);
 		}
+
+
+		private readonly string					value;
 	}
 }

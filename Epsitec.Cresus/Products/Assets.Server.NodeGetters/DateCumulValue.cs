@@ -9,15 +9,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	public class DateCumulValue : AbstractCumulValue
 	{
 		public DateCumulValue(System.DateTime? value)
-			: base (value)
+			: base ()
 		{
+			this.value = value;
 		}
 
-		public System.DateTime?					TypedValue
+		public System.DateTime?					Value
 		{
 			get
 			{
-				return (System.DateTime?) this.value;
+				return this.value;
 			}
 		}
 
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.TypedValue.HasValue;
+				return this.value.HasValue;
 			}
 		}
 
@@ -51,5 +52,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			return new DateCumulValue (null);
 		}
+
+
+		private readonly System.DateTime?		value;
 	}
 }
