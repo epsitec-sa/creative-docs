@@ -118,7 +118,7 @@ namespace Epsitec.Aider.Processors.Pdf
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
 				case Enumerations.EventType.Marriage:
-					lines.Add ("<br/><br/><tab/><b>se sont mariés</b><br/><br/>");
+					lines.Add ("<br/><br/><tab/><b>ont été mariés</b><br/><br/>");
 					break;
 			}
 			
@@ -231,7 +231,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		private string GetFirstWitnessLine(AiderEventEntity act)
 		{
 			var line = "Premier témoin:<tab/>";
-			var witness = act.GetActor (Enumerations.EventParticipantRole.Witness);
+			var witness = act.GetActor (Enumerations.EventParticipantRole.FirstWitness);
 			if (witness.IsNotNull ())
 			{
 				line += witness.GetFullName ();
