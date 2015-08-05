@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 				else
 				{
+					//	La fusion de deux chaînes différentes affiche "...".
 					return new StringCumulValue ("...");
 				}
 			}
