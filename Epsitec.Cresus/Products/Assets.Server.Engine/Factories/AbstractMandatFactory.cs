@@ -33,9 +33,8 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 		protected virtual void AddAssetsSettings()
 		{
 #if true
-			this.fieldAssetName      = this.AddSettings (BaseType.AssetsUserFields, "Nom",           FieldType.String, true,  200, 380, 1,    1,  0);
-			this.fieldAssetNumber    = this.AddSettings (BaseType.AssetsUserFields, "Numéro",        FieldType.String, false,  70,  90, 1, null,  0);
-			this.fieldAssetEntryDate = this.AddSettings (BaseType.AssetsUserFields, "Date d'entrée", FieldType.Date,   false,  70,  90, 1, null,  0);
+			this.fieldAssetName   = this.AddSettings (BaseType.AssetsUserFields, "Nom",    FieldType.String, true,  200, 380, 1,    1,  0);
+			this.fieldAssetNumber = this.AddSettings (BaseType.AssetsUserFields, "Numéro", FieldType.String, false,  70,  90, 1, null,  0);
 #else
 			var t1 = new Epsitec.Common.Types.MultilingualText ();
 			t1.SetText ("fr", "Nom");
@@ -94,7 +93,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			e.AddProperty (new DataStringProperty (ObjectField.OneShotNumber, (++this.eventNumber).ToString ()));
 
 			this.AddField (e, this.fieldAssetNumber, number);
-			this.AddField (e, this.fieldAssetEntryDate, date);
 			this.AddAssetAmortizedAmount (e, value);
 
 			this.AddAssetComputedAmount (e, this.fieldAssetValue1, value1);
@@ -544,7 +542,6 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected ObjectField					fieldAssetName;
 		protected ObjectField					fieldAssetNumber;
-		protected ObjectField					fieldAssetEntryDate;
 		protected ObjectField					fieldAssetDesc;
 		protected ObjectField					fieldAssetValue1;
 		protected ObjectField					fieldAssetValue2;
