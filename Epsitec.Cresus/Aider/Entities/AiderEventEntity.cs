@@ -145,19 +145,19 @@ namespace Epsitec.Aider.Entities
 			switch (this.Type)
 			{
 				case Enumerations.EventType.Baptism:
-					return "Registre des baptêmes";
+					return Res.Commands.Base.ShowAiderEventBaptims.Caption.DefaultLabel;
 				case Enumerations.EventType.Blessing:
-					return "Registre des bénédictions";
+					return Res.Commands.Base.ShowAiderEventBlessing.Caption.DefaultLabel;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
-					return "Registre des célébrations pour partenaires enregistrés";
+					return Res.Commands.Base.ShowAiderEventCelebrationRegisteredPartners.Caption.DefaultLabel;
 				case Enumerations.EventType.Confirmation:
-					return "Registre des confirmations";
+					return Res.Commands.Base.ShowAiderEventConfirmation.Caption.DefaultLabel;
 				case Enumerations.EventType.EndOfCatechism:
-					return "Registre des fins de catéchisme";
+					return Res.Commands.Base.ShowAiderEventEndOfCatechism.Caption.DefaultLabel;
 				case Enumerations.EventType.FuneralService:
-					return "Registre des services funèbres";
+					return Res.Commands.Base.ShowAiderEventFuneralService.Caption.DefaultLabel;
 				case Enumerations.EventType.Marriage:
-					return "Registre des bénédictions de mariage";
+					return Res.Commands.Base.ShowAiderEventMarriage.Caption.DefaultLabel;
 				case Enumerations.EventType.None:
 				default:
 					return "";

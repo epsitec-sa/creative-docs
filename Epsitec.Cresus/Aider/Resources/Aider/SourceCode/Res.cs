@@ -35,6 +35,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobAIDERUsersOnly = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 207));
 				//	designer:cap/LVOR53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
+				//	designer:cap/LVOA73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBlessing = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 234));
+				//	designer:cap/LVOB73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventCelebrationRegisteredPartners = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 235));
+				//	designer:cap/LVOC73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventConfirmation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 236));
+				//	designer:cap/LVOD73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventEndOfCatechism = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 237));
+				//	designer:cap/LVOE73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventFuneralService = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 238));
+				//	designer:cap/LVOF73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventMarriage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 239));
 				//	designer:cap/LVOI53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 178));
 				//	designer:cap/LVOR63
@@ -116,6 +128,18 @@ namespace Epsitec.Aider
 				public const long ShowAiderEmployeeJobAIDERUsersOnly = 0x3F5000780000CFL;
 				//	designer:cap/LVOR53
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
+				//	designer:cap/LVOA73
+				public const long ShowAiderEventBlessing = 0x3F5000780000EAL;
+				//	designer:cap/LVOB73
+				public const long ShowAiderEventCelebrationRegisteredPartners = 0x3F5000780000EBL;
+				//	designer:cap/LVOC73
+				public const long ShowAiderEventConfirmation = 0x3F5000780000ECL;
+				//	designer:cap/LVOD73
+				public const long ShowAiderEventEndOfCatechism = 0x3F5000780000EDL;
+				//	designer:cap/LVOE73
+				public const long ShowAiderEventFuneralService = 0x3F5000780000EEL;
+				//	designer:cap/LVOF73
+				public const long ShowAiderEventMarriage = 0x3F5000780000EFL;
 				//	designer:cap/LVOI53
 				public const long ShowAiderEventParticipants = 0x3F5000780000B2L;
 				//	designer:cap/LVOR63
@@ -214,6 +238,14 @@ namespace Epsitec.Aider
 						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 421));
 					}
 				}
+				//	designer:cap/LVO973
+				public static global::Epsitec.Common.Types.Caption Registry
+				{
+					get
+					{
+						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 233));
+					}
+				}
 			}
 			
 		}
@@ -230,6 +262,8 @@ namespace Epsitec.Aider
 				public const long Mailing = 0x3F5000780000BAL;
 				//	designer:cap/LVA5D
 				public const long Misc = 0x3F50000A0001A5L;
+				//	designer:cap/LVO973
+				public const long Registry = 0x3F5000780000E9L;
 			}
 			
 		}
