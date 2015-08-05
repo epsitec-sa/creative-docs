@@ -29,16 +29,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			{
 				if (this.Value == aa.Value)
 				{
-					return new DateCumulValue (this.TypedValue);
+					return this;
 				}
 			}
 			else if (this.IsExist)
 			{
-				return new DateCumulValue (this.TypedValue);
+				return this;
 			}
 			else if (aa.IsExist)
 			{
-				return new DateCumulValue (aa.TypedValue);
+				return aa;
 			}
 
 			return new DateCumulValue (null);

@@ -31,11 +31,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 			else if (this.IsExist)
 			{
-				return new DecimalCumulValue (this.TypedValue);
+				return this;
 			}
 			else if (aa.IsExist)
 			{
-				return new DecimalCumulValue (aa.TypedValue);
+				return aa;
 			}
 			else
 			{
