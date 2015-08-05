@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 			}
 
+			//	Une colonne date peut parfois contenir un string. Lorsqu'il s'agit de représenter
+			//	un intervalle de dates provenant de DateCumulValue, on affiche "...".
 			if (c is TreeTableCellString)
 			{
 				var cell = c as TreeTableCellString;
