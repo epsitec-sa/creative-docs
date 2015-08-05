@@ -31,6 +31,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				{
 					return this;
 				}
+				else
+				{
+					return new StringCumulValue ("...");
+				}
 			}
 			else if (this.IsExist)
 			{
