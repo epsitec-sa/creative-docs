@@ -74,6 +74,30 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Template ()
 					.End ();
 			}
+
+			if (currentEvent.State == Enumerations.EventState.Validated)
+			{
+				wall.AddBrick ()
+					.Icon ("Data.AiderEvent")
+					.Title (x => "Acte N° " + x.Report.EventNumber)
+					.Text (x => x.GetSummary ())
+					.Attribute (BrickMode.DefaultToNoSubView);
+
+				if (this.Entity.Report.IsNotNull ())
+				{
+					wall.AddBrick (x => x.Report)
+					.Attribute (BrickMode.DefaultToNoSubView);
+				}
+
+
+				wall.AddBrick (x => x.Participants)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Template ()
+					.End ();
+			}
 			
 		}
 	}
