@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.Value = value;
 		}
 
-		public object Value
+		public object							Value
 		{
 			set
 			{
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public virtual bool IsExist
+		public virtual bool						IsExist
 		{
 			get
 			{
@@ -36,6 +36,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public abstract AbstractCumulValue Merge(AbstractCumulValue a);
 
 
-		protected object								value;
+		protected object						value;
 	}
 }

@@ -13,7 +13,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 		}
 
-		public override bool IsExist
+		public decimal?							TypedValue
+		{
+			get
+			{
+				return (decimal?) this.value;
+			}
+		}
+
+		public override bool					IsExist
 		{
 			get
 			{
@@ -40,15 +48,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			else
 			{
 				return new DecimalCumulValue (null);
-			}
-		}
-
-
-		private decimal? TypedValue
-		{
-			get
-			{
-				return (decimal?) this.value;
 			}
 		}
 	}

@@ -13,7 +13,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 		}
 
-		public override bool IsExist
+		public string							TypedValue
+		{
+			get
+			{
+				return (string) this.value;
+			}
+		}
+
+		public override bool					IsExist
 		{
 			get
 			{
@@ -47,15 +55,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return new StringCumulValue (null);
-		}
-
-
-		private string TypedValue
-		{
-			get
-			{
-				return (string) this.value;
-			}
 		}
 	}
 }

@@ -154,15 +154,24 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						switch (columnType)
 						{
 							case TreeTableColumnType.Date:
-								cell = new TreeTableCellDate ((value == null) ? null : (System.DateTime?) value.Value, cellState2);
+								{
+									var v = value as DateCumulValue;
+									cell = new TreeTableCellDate ((v == null) ? null : v.TypedValue, cellState2);
+								}
 								break;
 
 							case TreeTableColumnType.String:
-								cell = new TreeTableCellString ((value == null) ? null : (string) value.Value, cellState2);
+								{
+									var v = value as StringCumulValue;
+									cell = new TreeTableCellString ((v == null) ? null : v.TypedValue, cellState2);
+								}
 								break;
 
 							case TreeTableColumnType.Amount:
-								cell = new TreeTableCellDecimal ((value == null) ? null : (decimal?) value.Value, cellState2);
+								{
+									var v = value as DecimalCumulValue;
+									cell = new TreeTableCellDecimal ((v == null) ? null : v.TypedValue, cellState2);
+								}
 								break;
 
 							default:

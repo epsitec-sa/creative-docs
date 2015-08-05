@@ -13,7 +13,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 		}
 
-		public override bool IsExist
+		public System.DateTime?					TypedValue
+		{
+			get
+			{
+				return (System.DateTime?) this.value;
+			}
+		}
+
+		public override bool					IsExist
 		{
 			get
 			{
@@ -42,15 +50,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			return new DateCumulValue (null);
-		}
-
-
-		private System.DateTime? TypedValue
-		{
-			get
-			{
-				return (System.DateTime?) this.value;
-			}
 		}
 	}
 }

@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							var v = this.NodeGetter.GetValue (obj, node, userField.Field) as DecimalCumulValue;
 							if (v != null)
 							{
-								var ca = new ComputedAmount ((decimal) v.Value);
+								var ca = new ComputedAmount (v.TypedValue);
 								cell = new TreeTableCellComputedAmount (ca, cellState2);
 							}
 							else
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							var v = this.NodeGetter.GetValue (obj, node, userField.Field) as DecimalCumulValue;
 							if (v != null)
 							{
-								var aa = new AmortizedAmount ((decimal) v.Value);
+								var aa = new AmortizedAmount (v.TypedValue);
 								cell = new TreeTableCellAmortizedAmount (aa, cellState2);
 							}
 							else
