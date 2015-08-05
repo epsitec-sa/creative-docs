@@ -11,14 +11,41 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public DateCumulValue(System.DateTime? value)
 			: base ()
 		{
-			this.value = value;
+			this.minValue = value;
+			this.maxValue = value;
 		}
 
-		public System.DateTime?					Value
+		private DateCumulValue(System.DateTime? minValue, System.DateTime? maxValue)
+			: base ()
+		{
+			this.minValue = minValue;
+			this.maxValue = maxValue;
+		}
+
+
+		public System.DateTime? MinValue
 		{
 			get
 			{
-				return this.value;
+				return this.minValue;
+			}
+		}
+
+		public System.DateTime?					MaxValue
+		{
+			get
+			{
+				return this.maxValue;
+			}
+		}
+
+		public bool								IsRange
+		{
+			get
+			{
+				return this.minValue.HasValue &&
+					   this.maxValue.HasValue &&
+					   this.minValue.Value != this.maxValue.Value;
 			}
 		}
 
@@ -26,7 +53,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.value.HasValue;
+				return this.minValue.HasValue;
 			}
 		}
 
@@ -36,9 +63,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (this.IsExist && aa.IsExist)
 			{
-				if (this.Value == aa.Value)
+				if (!this.IsRange && !aa.IsRange && this.MinValue == aa.MinValue)
 				{
 					return this;
+				}
+				else
+				{
+					var min = DateCumulValue.Min (this.minValue.Value, aa.minValue.Value);
+					var max = DateCumulValue.Max (this.maxValue.Value, aa.maxValue.Value);
+					return new DateCumulValue (min, max);
 				}
 			}
 			else if (this.IsExist)
@@ -50,10 +83,36 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				return aa;
 			}
 
-			return new DateCumulValue (null);
+			return new DateCumulValue (null, null);
 		}
 
 
-		private readonly System.DateTime?		value;
+		private static System.DateTime Min(System.DateTime d1, System.DateTime d2)
+		{
+			if (d1 < d2)
+			{
+				return d1;
+			}
+			else
+			{
+				return d2;
+			}
+		}
+
+		private static System.DateTime Max(System.DateTime d1, System.DateTime d2)
+		{
+			if (d1 > d2)
+			{
+				return d1;
+			}
+			else
+			{
+				return d2;
+			}
+		}
+
+
+		private readonly System.DateTime?		minValue;
+		private readonly System.DateTime?		maxValue;
 	}
 }

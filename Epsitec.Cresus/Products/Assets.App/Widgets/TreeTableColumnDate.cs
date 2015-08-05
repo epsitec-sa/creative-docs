@@ -16,15 +16,28 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 	{
 		protected override void PaintCell(Graphics graphics, Rectangle rect, int y, AbstractTreeTableCell c)
 		{
-			var cell = c as TreeTableCellDate;
-			System.Diagnostics.Debug.Assert (cell != null);
-
-			if (cell.Value.HasValue)
+			if (c is TreeTableCellDate)
 			{
-				var textRect = this.GetContentDeflateRectangle (rect);
-				string text = TypeConverters.DateToString (cell.Value);
+				var cell = c as TreeTableCellDate;
 
-				this.PaintText (graphics, textRect, text);
+				if (cell.Value.HasValue)
+				{
+					var textRect = this.GetContentDeflateRectangle (rect);
+					string text = TypeConverters.DateToString (cell.Value);
+
+					this.PaintText (graphics, textRect, text);
+				}
+			}
+
+			if (c is TreeTableCellString)
+			{
+				var cell = c as TreeTableCellString;
+
+				if (!string.IsNullOrEmpty (cell.Value))
+				{
+					var textRect = this.GetContentDeflateRectangle (rect);
+					this.PaintText (graphics, textRect, cell.Value);
+				}
 			}
 		}
 

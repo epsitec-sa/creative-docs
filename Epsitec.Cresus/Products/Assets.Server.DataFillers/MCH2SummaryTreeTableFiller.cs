@@ -156,7 +156,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							case TreeTableColumnType.Date:
 								{
 									var v = value as DateCumulValue;
-									cell = new TreeTableCellDate ((v == null) ? null : v.Value, cellState2);
+									if (v != null && v.IsRange)
+									{
+										cell = new TreeTableCellString ("...", cellState2);
+									}
+									else
+									{
+										cell = new TreeTableCellDate ((v == null) ? null : v.MinValue, cellState2);
+									}
 								}
 								break;
 
