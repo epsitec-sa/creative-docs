@@ -293,6 +293,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			switch (e.Type)
 			{
+				case EventType.PreInput:
+					entryScenario = EntryScenario.PreInput;
+					break;
+
 				case EventType.Input:
 					entryScenario = EntryScenario.Purchase;
 					break;
@@ -513,6 +517,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static IEnumerable<ObjectField> GetAccountAndVatCodeFields(bool vatCode)
 		{
+			yield return ObjectField.AccountPreInputDebit;
+			yield return ObjectField.AccountPreInputCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountPreInputVatCode;
+			}
+
 			yield return ObjectField.AccountPurchaseDebit;
 			yield return ObjectField.AccountPurchaseCredit;
 			if (vatCode)

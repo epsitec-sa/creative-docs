@@ -67,11 +67,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 				if (v is DecimalCumulValue)
 				{
-					if (v.Value != null)
+					var d = v as DecimalCumulValue;
+
+					if (d.IsExist)
 					{
 						if (ratio.HasValue)  // y a-t-il un ratio ?
 						{
-							return new DecimalCumulValue (((decimal) v.Value) * ratio.Value);
+							return new DecimalCumulValue (d.Value * ratio.Value);
 						}
 						else
 						{

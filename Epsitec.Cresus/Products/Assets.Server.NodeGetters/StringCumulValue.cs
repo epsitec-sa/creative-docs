@@ -9,15 +9,24 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	public class StringCumulValue : AbstractCumulValue
 	{
 		public StringCumulValue(string value)
-			: base (value)
+			: base ()
 		{
+			this.value = value;
 		}
 
-		public override bool IsExist
+		public string							Value
 		{
 			get
 			{
-				return !string.IsNullOrEmpty (this.TypedValue);
+				return (string) this.value;
+			}
+		}
+
+		public override bool					IsExist
+		{
+			get
+			{
+				return !string.IsNullOrEmpty (this.value);
 			}
 		}
 
@@ -29,28 +38,27 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			{
 				if (this.Value == aa.Value)
 				{
-					return new StringCumulValue (this.TypedValue);
+					return this;
+				}
+				else
+				{
+					//	La fusion de deux chaînes différentes affiche "...".
+					return new StringCumulValue ("...");
 				}
 			}
 			else if (this.IsExist)
 			{
-				return new StringCumulValue (this.TypedValue);
+				return this;
 			}
 			else if (aa.IsExist)
 			{
-				return new StringCumulValue (aa.TypedValue);
+				return aa;
 			}
 
 			return new StringCumulValue (null);
 		}
 
 
-		private string TypedValue
-		{
-			get
-			{
-				return (string) this.value;
-			}
-		}
+		private readonly string					value;
 	}
 }

@@ -204,6 +204,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddCat ("Immobilier", null, "10", "Durée linéaire", Periodicity.Annual,
 				".14040.01", ".10020.01",
+				".14040.01", ".10020.01",
 				".10010.01", ".14040.01",
 				"0290.3300.40", ".14040.01",
 				"0290.3300.40", ".14040.01",
@@ -213,6 +214,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				null, 20.0m, 1.0m, 1.0m);
 
 			this.AddCat ("Véhicules", null, "20", "Durée linéaire", Periodicity.Annual,
+				".14040.01", ".10020.01",
 				".14040.01", ".10020.01",
 				".10010.01", ".14060.01",
 				"0290.3300.60", ".14060.01",

@@ -9,7 +9,8 @@ namespace Epsitec.Cresus.Assets.Data
 	public enum EventType
 	{
 		Unknown,
-		Input,					// entrée dans l'inventaire, acquisition
+		PreInput,				// entrée inactive dans l'inventaire, par exemple construction
+		Input,					// entrée active dans l'inventaire, par exemple acquisition
 		Modification,			// modification de diverses informations (sauf valeur comptable)
 		Increase,				// augmentation de la valeur comptable (revalorisation)
 		Decrease,				// diminution de la valeur comptable (réévaluation)

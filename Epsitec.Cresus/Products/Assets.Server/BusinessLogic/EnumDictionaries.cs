@@ -184,6 +184,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EntryScenario.None:
 					return Res.Strings.Enum.EntryScenario.None.ToString ();
 
+				case EntryScenario.PreInput:
+					return Res.Strings.Enum.EntryScenario.PreInput.ToString ();
+
 				case EntryScenario.Purchase:
 					return Res.Strings.Enum.EntryScenario.Purchase.ToString ();
 
@@ -214,6 +217,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (type)
 			{
+				case EntryScenario.PreInput:
+					return Res.Strings.Enum.EntryScenario.Title.PreInput.ToString ();
+
 				case EntryScenario.Purchase:
 					return Res.Strings.Enum.EntryScenario.Title.Purchase.ToString ();
 
@@ -405,6 +411,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			get
 			{
 				yield return EntryScenario.None;
+				yield return EntryScenario.PreInput;
 				yield return EntryScenario.Purchase;
 				yield return EntryScenario.Sale;
 				yield return EntryScenario.AmortizationAuto;

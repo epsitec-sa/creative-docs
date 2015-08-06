@@ -602,6 +602,14 @@ namespace Epsitec.Cresus.Assets.Server
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544362));
 						}
 					}
+					//	designer:str/IUKL301
+					public static global::Epsitec.Common.Types.FormattedText PreInput
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544437));
+						}
+					}
 					//	designer:str/IUKB101
 					public static global::Epsitec.Common.Types.FormattedText Purchase
 					{
@@ -658,6 +666,14 @@ namespace Epsitec.Cresus.Assets.Server
 							get
 							{
 								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544372));
+							}
+						}
+						//	designer:str/IUKM301
+						public static global::Epsitec.Common.Types.FormattedText PreInput
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544438));
 							}
 						}
 						//	designer:str/IUKL101
@@ -1659,6 +1675,14 @@ namespace Epsitec.Cresus.Assets.Server
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544362);
 						}
 					}
+					//	designer:str/IUKL301
+					public static global::Epsitec.Common.Support.Druid PreInput
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544437);
+						}
+					}
 					//	designer:str/IUKB101
 					public static global::Epsitec.Common.Support.Druid Purchase
 					{
@@ -1715,6 +1739,14 @@ namespace Epsitec.Cresus.Assets.Server
 							get
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544372);
+							}
+						}
+						//	designer:str/IUKM301
+						public static global::Epsitec.Common.Support.Druid PreInput
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335544438);
 							}
 						}
 						//	designer:str/IUKL101

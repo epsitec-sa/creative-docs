@@ -9,15 +9,24 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	public class DecimalCumulValue : AbstractCumulValue
 	{
 		public DecimalCumulValue(decimal? value)
-			: base (value)
+			: base ()
 		{
+			this.value = value;
 		}
 
-		public override bool IsExist
+		public decimal?							Value
 		{
 			get
 			{
-				return this.TypedValue.HasValue;
+				return (decimal?) this.value;
+			}
+		}
+
+		public override bool					IsExist
+		{
+			get
+			{
+				return this.value.HasValue;
 			}
 		}
 
@@ -27,15 +36,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (this.IsExist && aa.IsExist)
 			{
-				return new DecimalCumulValue (this.TypedValue + aa.TypedValue);
+				return new DecimalCumulValue (this.Value + aa.Value);
 			}
 			else if (this.IsExist)
 			{
-				return new DecimalCumulValue (this.TypedValue);
+				return this;
 			}
 			else if (aa.IsExist)
 			{
-				return new DecimalCumulValue (aa.TypedValue);
+				return aa;
 			}
 			else
 			{
@@ -44,12 +53,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private decimal? TypedValue
-		{
-			get
-			{
-				return (decimal?) this.value;
-			}
-		}
+		private readonly decimal?				value;
 	}
 }

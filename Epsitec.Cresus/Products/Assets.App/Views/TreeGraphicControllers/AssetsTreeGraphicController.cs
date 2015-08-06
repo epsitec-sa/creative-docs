@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 				var v = nodeGetter.GetValue (obj, node, field) as DecimalCumulValue;
 				if (v != null)
 				{
-					return TreeGraphicValue.CreateAmount ((decimal) v.Value);
+					return TreeGraphicValue.CreateAmount (v.Value);
 				}
 			}
 			else if (type == FieldType.AmortizedAmount)
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 				var v = nodeGetter.GetValue (obj, node, field) as DecimalCumulValue;
 				if (v != null)
 				{
-					return TreeGraphicValue.CreateAmount ((decimal) v.Value);
+					return TreeGraphicValue.CreateAmount (v.Value);
 				}
 			}
 			else

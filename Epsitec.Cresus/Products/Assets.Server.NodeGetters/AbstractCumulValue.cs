@@ -8,34 +8,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public abstract class AbstractCumulValue
 	{
-		public AbstractCumulValue(object value)
+		public AbstractCumulValue()
 		{
-			this.Value = value;
 		}
 
-		public object Value
+		public abstract bool IsExist
 		{
-			set
-			{
-				this.value = value;
-			}
-			get
-			{
-				return this.value;
-			}
-		}
-
-		public virtual bool IsExist
-		{
-			get
-			{
-				return true;
-			}
+			get;
 		}
 
 		public abstract AbstractCumulValue Merge(AbstractCumulValue a);
-
-
-		protected object								value;
 	}
 }
