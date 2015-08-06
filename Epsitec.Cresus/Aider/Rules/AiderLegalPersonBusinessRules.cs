@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Rules
 {
@@ -67,18 +69,39 @@ namespace Epsitec.Aider.Rules
 
 		private void UpdateParish(AiderLegalPersonEntity legal)
 		{
+			var businessContext = this.GetBusinessContext ();
 			if (legal.ParishGroup.IsNull ())
 			{
 				var parishRepository = ParishAddressRepository.Current;
-				var businessContext = this.GetBusinessContext ();
-
 				ParishAssigner.AssignToParish (parishRepository, businessContext, legal);
 			}
 			else
 			{
-				// TODO Should we create a warning or silently update the parish. For now we don't
-				// have the possibility to create a warning for somethint else than a person.
+				if (AiderLegalPersonBusinessRules.IsReassignNeeded (businessContext, legal))
+				{
+					AiderLegalPersonBusinessRules.AssignParish (businessContext, legal);
+				}
 			}
+
+		}
+
+		private static bool IsReassignNeeded(BusinessContext context, AiderLegalPersonEntity person)
+		{
+			if (ParishAssigner.IsInNoParishGroup (person))
+			{
+				return true;
+			}
+			if (ParishAssigner.IsInValidParish (ParishAddressRepository.Current, person))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		private static void AssignParish(BusinessContext context, AiderLegalPersonEntity person)
+		{
+			ParishAssigner.AssignToParish (ParishAddressRepository.Current, context, person);
 		}
 	}
 }
