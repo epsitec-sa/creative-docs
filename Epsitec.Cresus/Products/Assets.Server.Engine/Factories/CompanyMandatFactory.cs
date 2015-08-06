@@ -202,6 +202,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddCat ("Immobilier", null, "10", "Taux linéaire", Periodicity.Annual,
 				"1600", "1000",
+				"1600", "1000",
 				"1010", "1600",
 				"6930", "1600",
 				"6930", "1600",
@@ -211,6 +212,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				0.1m, null, 1.0m, 1.0m);
 
 			this.AddCat ("Véhicules", null, "20", "Taux linéaire", Periodicity.Annual,
+				"1600", "1000",
 				"1600", "1000",
 				"1010", "1530",
 				"6920", "1530",

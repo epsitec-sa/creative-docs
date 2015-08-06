@@ -272,6 +272,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 		protected void AddCat(string name, string desc, string number,
 			string methodName, Periodicity periodicity,
+			string accountPreInputDebit = null, string accountPreInputCredit = null,
 			string accountPurchaseDebit = null, string accountPurchaseCredit = null,
 			string accountSaleDebit = null, string accountSaleCredit = null,
 			string accountAmortizationAutoDebit = null, string accountAmortizationAutoCredit = null,
@@ -297,6 +298,9 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			this.AddField (e, ObjectField.Number,                          number);
 			this.AddField (e, ObjectField.MethodGuid,                      method.Guid);
 			this.AddField (e, ObjectField.Periodicity,                     (int) periodicity);
+			this.AddField (e, ObjectField.AccountPreInputDebit,            accountPreInputDebit);
+			this.AddField (e, ObjectField.AccountPreInputCredit,	       accountPreInputCredit);
+			this.AddField (e, ObjectField.AccountPreInputVatCode,	       DataStringProperty.WithoutVat);
 			this.AddField (e, ObjectField.AccountPurchaseDebit,            accountPurchaseDebit);
 			this.AddField (e, ObjectField.AccountPurchaseCredit,	       accountPurchaseCredit);
 			this.AddField (e, ObjectField.AccountPurchaseVatCode,	       DataStringProperty.WithoutVat);
@@ -430,6 +434,11 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			{
 				e.AddProperty (new DataGuidProperty (field, value));
 			}
+		}
+
+		protected void AddField(DataEvent e, ObjectField field, System.DateTime value)
+		{
+			e.AddProperty (new DataDateProperty (field, value));
 		}
 
 

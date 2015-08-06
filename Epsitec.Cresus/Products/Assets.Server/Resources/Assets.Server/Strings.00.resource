@@ -108,4 +108,6 @@
   <data name="VatCodesLogic.CodeDoesNotExist" id="KI3">Ce code n'existe pas</data>
   <data name="AccountsImport.WithoutVat" id="KJ3">Pas de TVA</data>
   <data name="MethodsLogic.NoArgument" id="KK3">Aucun argument</data>
+  <data name="Enum.EntryScenario.PreInput" id="KL3">Financement préalable</data>
+  <data name="Enum.EntryScenario.Title.PreInput" id="KM3">Financement préalable {0}</data>
 </bundle>

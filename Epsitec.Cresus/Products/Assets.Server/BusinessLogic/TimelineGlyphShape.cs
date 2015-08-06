@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		FilledSquare,
 		OutlinedSquare,
+		SquareHoles,
 
 		FilledDiamond,
 		PlusDiamond,

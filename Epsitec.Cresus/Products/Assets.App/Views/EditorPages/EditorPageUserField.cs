@@ -130,7 +130,9 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 			if (mch2OrderController != null)
 			{
-				if (this.FieldType == FieldType.ComputedAmount)
+				if (this.FieldType == FieldType.ComputedAmount ||
+					this.FieldType == FieldType.String ||
+					this.FieldType == FieldType.Date)
 				{
 					this.mch2OrderController.IsReadOnly = false;
 				}

@@ -60,13 +60,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
-		{
-			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.extractionEngine.GetValue (obj, node, field);
-		}
-
-
 		private void Compute()
 		{
 			//	Lorsque des groupes sont compactés, ils peuvent cacher des objets.
@@ -90,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private void ComputeCumuls(Dictionary<ObjectField, decimal> cumuls, TreeNode[] hiddenTreeNodes)
+		private void ComputeCumuls(Dictionary<ObjectField, AbstractCumulValue> cumuls, TreeNode[] hiddenTreeNodes)
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
@@ -103,15 +96,16 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
 					{
 						var v = this.extractionEngine.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, hiddenTreeNode.Ratio, field);
-						if (v.HasValue)
+
+						if (v != null)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
 							{
-								cumuls[field] += v.Value;  // addition
+								cumuls[field] = cumuls[field].Merge (v);
 							}
 							else  // première valeur ?
 							{
-								cumuls[field] = v.Value;
+								cumuls[field] = v;
 							}
 						}
 					}

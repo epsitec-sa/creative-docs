@@ -22,10 +22,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.Type       = type;
 			this.GroupIndex = groupIndex;
 
-			this.cumuls = new Dictionary<ObjectField, decimal> ();
+			this.cumuls = new Dictionary<ObjectField, AbstractCumulValue> ();
 		}
 
-		public Dictionary<ObjectField, decimal> Cumuls
+		public Dictionary<ObjectField, AbstractCumulValue> Cumuls
 		{
 			get
 			{
@@ -52,6 +52,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public readonly NodeType			Type;
 		public readonly int?				GroupIndex;
 
-		private readonly Dictionary<ObjectField, decimal> cumuls;
+		private readonly Dictionary<ObjectField, AbstractCumulValue> cumuls;
 	}
 }

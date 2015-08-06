@@ -46,9 +46,9 @@
   <data name="Enum.MCH2Summary.Column.Reorganizations.Text" id="KO1">Réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Reorganizations.Tooltip" id="KP1">Variations dues aux réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Text" id="KQ1">Réévaluations</data>
-  <data name="Enum.MCH2Summary.Column.Decreases.Tooltip" id="KR1">Valeurs après réévaluations (diminutions)</data>
+  <data name="Enum.MCH2Summary.Column.Decreases.Direct.Tooltip" id="KR1">Valeurs après réévaluations (diminutions)</data>
   <data name="Enum.MCH2Summary.Column.Increases.Text" id="KS1">Revalorisations</data>
-  <data name="Enum.MCH2Summary.Column.Increases.Tooltip" id="KT1">Valeurs après revalorisations (augmentations)</data>
+  <data name="Enum.MCH2Summary.Column.Increases.Direct.Tooltip" id="KT1">Valeurs après revalorisations (augmentations)</data>
   <data name="Enum.MCH2Summary.Column.Outputs.Text" id="KU1">Sorties</data>
   <data name="Enum.MCH2Summary.Column.Outputs.Tooltip" id="KV1">Variations dues aux sorties</data>
   <data name="Enum.MCH2Summary.Column.AmortizationsAuto.Text" id="K02">Amort. ord.</data>
@@ -69,7 +69,7 @@
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2">
   </data>
   <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
-  <data name="Enum.MCH2Summary.Column.Adjust.Tooltip" id="KG2">Valeurs après corrections</data>
+  <data name="Enum.MCH2Summary.Column.Adjust.Direct.Tooltip" id="KG2">Valeurs après corrections</data>
   <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
   <data name="SingleCategoriesTreeTableFiller.Method" id="KK2">Méthode</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
@@ -93,4 +93,7 @@
   <data name="EntriesTreeTableFiller.VatCode" id="K73">Code TVA</data>
   <data name="UserFieldsTreeTableFiller.MCH2SummaryOrder" id="K83">Ds MCH2</data>
   <data name="Enum.MCH2Summary.Column.UserColumn.Tooltip" id="K93">{0} le {1}</data>
+  <data name="Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip" id="KA3">Variations dues aux corrections</data>
+  <data name="Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip" id="KB3">Variations dues aux réévaluations (diminutions)</data>
+  <data name="Enum.MCH2Summary.Column.Increases.Indirect.Tooltip" id="KC3">Variations dues aux revalorisations (augmentations)</data>
 </bundle>

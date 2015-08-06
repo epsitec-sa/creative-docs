@@ -262,12 +262,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544399));
 								}
 							}
-							//	designer:str/KUKG201
-							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKG201
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
 								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544400));
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544400));
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKA301
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544426));
+									}
 								}
 							}
 						}
@@ -342,12 +357,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544378));
 								}
 							}
-							//	designer:str/KUKR101
-							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKR101
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
 								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379));
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKB301
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544427));
+									}
 								}
 							}
 						}
@@ -382,12 +412,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544380));
 								}
 							}
-							//	designer:str/KUKT101
-							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKT101
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
 								{
-									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381));
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKC301
+								public static global::Epsitec.Common.Types.FormattedText Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544428));
+									}
 								}
 							}
 						}
@@ -1167,12 +1212,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544399);
 								}
 							}
-							//	designer:str/KUKG201
-							public static global::Epsitec.Common.Support.Druid Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKG201
+								public static global::Epsitec.Common.Support.Druid Tooltip
 								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKA301
+								public static global::Epsitec.Common.Support.Druid Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544426);
+									}
 								}
 							}
 						}
@@ -1247,12 +1307,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544378);
 								}
 							}
-							//	designer:str/KUKR101
-							public static global::Epsitec.Common.Support.Druid Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKR101
+								public static global::Epsitec.Common.Support.Druid Tooltip
 								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544379);
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKB301
+								public static global::Epsitec.Common.Support.Druid Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544427);
+									}
 								}
 							}
 						}
@@ -1287,12 +1362,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544380);
 								}
 							}
-							//	designer:str/KUKT101
-							public static global::Epsitec.Common.Support.Druid Tooltip
+							public static class Direct
 							{
-								get
+								//	designer:str/KUKT101
+								public static global::Epsitec.Common.Support.Druid Tooltip
 								{
-									return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544381);
+									}
+								}
+							}
+							
+							public static class Indirect
+							{
+								//	designer:str/KUKC301
+								public static global::Epsitec.Common.Support.Druid Tooltip
+								{
+									get
+									{
+										return global::Epsitec.Common.Support.Druid.FromFieldId (335544428);
+									}
 								}
 							}
 						}

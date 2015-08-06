@@ -25,37 +25,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
-		{
-			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			if (obj != null)
-			{
-				if (node.BaseType == BaseType.Assets)
-				{
-					//	S'il s'agit d'un objet, on retourne le montant en tenant compte du ratio.
-					return this.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, node.Ratio, field);
-				}
-				else
-				{
-					//	S'il s'agit d'un groupe et qu'il est compacté, on retourne le total cumulé.
-					decimal v;
-					if (node.Cumuls.TryGetValue (field, out v))
-					{
-						return v;
-					}
-				}
-			}
-
-			return null;
-		}
-
-
-		public decimal? GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
+		public AbstractCumulValue GetValueAccordingToRatio(DataAccessor accessor, DataObject obj, Timestamp? timestamp, decimal? ratio, ObjectField field)
 		{
 			//	Retourne la valeur d'un champ, en tenant compte du ratio.
 			if (obj != null)
 			{
-				decimal? m = null;
+				AbstractCumulValue v = null;
 
 				if (field == ObjectField.MainValue)
 				{
@@ -67,7 +42,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						var aa = value.Value.FinalAmount;
 						if (aa.HasValue)
 						{
-							m = aa.Value;
+							v = new DecimalCumulValue (aa.Value);
 						}
 					}
 				}
@@ -76,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
 					//	(ObjectField.MCH2Report+n).
 					var ei = this.extractionInstructions.Where (x => x.ResultField == field).FirstOrDefault ();
-					m = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
+					v = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
 				}
 				else
 				{
@@ -86,27 +61,36 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					if (value.HasValue && value.Value.FinalAmount.HasValue)
 					{
-						m = value.Value.FinalAmount.Value;
+						v = new DecimalCumulValue (value.Value.FinalAmount.Value);
 					}
 				}
 
-				if (m.HasValue)
+				if (v is DecimalCumulValue)
 				{
-					if (ratio.HasValue)  // y a-t-il un ratio ?
+					var d = v as DecimalCumulValue;
+
+					if (d.IsExist)
 					{
-						return m.Value * ratio.Value;
+						if (ratio.HasValue)  // y a-t-il un ratio ?
+						{
+							return new DecimalCumulValue (d.Value * ratio.Value);
+						}
+						else
+						{
+							return v;
+						}
 					}
-					else
-					{
-						return m;
-					}
+				}
+				else
+				{
+					return v;
 				}
 			}
 
 			return null;
 		}
 
-		private static decimal? GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
 			if (obj != null)
@@ -116,14 +100,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					case ExtractionAmount.StateAt:
 						return ExtractionEngine.GetStateAt (accessor, obj, extractionInstructions);
 
-					case ExtractionAmount.DeltaFiltered:
-						return ExtractionEngine.GetDeltaFiltered (accessor, obj, extractionInstructions);
-
 					case ExtractionAmount.LastFiltered:
 						return ExtractionEngine.GetLastFiltered (accessor, obj, extractionInstructions);
 
-					case ExtractionAmount.Amortizations:
-						return ExtractionEngine.GetAmortizations (accessor, obj, extractionInstructions);
+					case ExtractionAmount.DeltaSum:
+						return ExtractionEngine.GetDeltaSum (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.UserColumn:
 						return ExtractionEngine.GetUserColumn (accessor, obj, extractionInstructions);
@@ -136,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static decimal? GetStateAt(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetStateAt(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne la valeur définie à la fin de la période, ou antérieurement.
 			var timestamp = new Timestamp(extractionInstructions.Range.ExcludeTo, 0);
@@ -144,54 +125,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			if (p != null)
 			{
-				return p.Value.FinalAmount;
+				return new DecimalCumulValue (p.Value.FinalAmount);
 			}
 
 			return null;
 		}
 
-		private static decimal? GetDeltaFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
-		{
-			//	Pour une période donnée, retourne la variation d'une valeur suite à un
-			//	type d'événement donné (début - fin, donc une valeur qui diminue suite
-			//	à un amortissement par exemple retourne une valeur positive).
-			decimal? lastValue = null;
-			decimal? value = null;
-
-			foreach (var e in obj.Events)
-			{
-				var p = e.GetProperty (ObjectField.MainValue) as DataAmortizedAmountProperty;
-				if (p != null)
-				{
-					var aa = p.Value.FinalAmount;
-					if (aa.HasValue)
-					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
-							extractionInstructions.Range.IsInside (e.Timestamp.Date))
-						{
-							if (lastValue.HasValue)
-							{
-								value = lastValue.Value - aa.Value;
-							}
-							else
-							{
-								value = aa.Value;
-							}
-						}
-
-						lastValue = aa.Value;
-					}
-				}
-			}
-
-			return value;
-		}
-
-		private static decimal? GetLastFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetLastFiltered(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Pour une période donnée, retourne la dernière valeur définie dans un événement
 			//	d'un type donné.
-			decimal? value = null;
+			DecimalCumulValue value = null;
 
 			foreach (var e in obj.Events)
 			{
@@ -204,7 +148,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
-							value = aa.Value;
+							value = new DecimalCumulValue (aa.Value);
 						}
 					}
 				}
@@ -213,9 +157,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return value;
 		}
 
-		private static decimal? GetAmortizations(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetDeltaSum(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
-			//	Retourne le total des amortissements effectués dans une période donnée.
+			//	Retourne le total des variations effectuées par un événement donné dans une période donnée.
+			//	La baisse d'une valeur retourne un montant négatif si Inverted est false.
 			decimal? lastValue = null;
 			decimal? sum = null;
 
@@ -234,7 +179,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 							if (lastValue.HasValue)
 							{
-								value = lastValue.Value - aa.Value;
+								value = aa.Value - lastValue.Value;
 							}
 							else
 							{
@@ -256,17 +201,45 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 
-			return sum;
+			if (sum.HasValue)
+			{
+				return new DecimalCumulValue (extractionInstructions.Inverted ? -sum : sum);
+			}
+			else
+			{
+				return new DecimalCumulValue (sum);
+			}
 		}
 
-		private static decimal? GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo, 0);
-			var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
 
-			if (p != null)
 			{
-				return p.Value.FinalAmount;
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
+
+				if (p != null)
+				{
+					return new DecimalCumulValue (p.Value.FinalAmount);
+				}
+			}
+
+			{
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataDateProperty;
+
+				if (p != null)
+				{
+					return new DateCumulValue (p.Value);
+				}
+			}
+
+			{
+				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataStringProperty;
+
+				if (p != null)
+				{
+					return new StringCumulValue (p.Value);
+				}
 			}
 
 			return null;

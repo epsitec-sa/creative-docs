@@ -152,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Enumère les scénarios montrés en exemple, dans l'ordre souhaité.
 			get
 			{
+				yield return EntryScenario.PreInput;
 				yield return EntryScenario.Purchase;
 				yield return EntryScenario.AmortizationAuto;
 				yield return EntryScenario.AmortizationExtra;

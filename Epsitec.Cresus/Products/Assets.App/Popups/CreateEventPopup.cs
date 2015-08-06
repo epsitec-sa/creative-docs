@@ -183,6 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
+				yield return EventType.PreInput;
 				yield return EventType.Input;
 				yield return EventType.Modification;
 				yield return EventType.Increase;
@@ -202,6 +203,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			switch (type)
 			{
+				case EventType.PreInput:
+					return new ButtonDescription (type,
+						Res.Strings.Event.PreInput.ShortName.ToString (),
+						Res.Strings.Event.PreInput.Help.ToString (),
+						enable);
+
 				case EventType.Input:
 					return new ButtonDescription (type,
 						Res.Strings.Event.Input.ShortName.ToString (),

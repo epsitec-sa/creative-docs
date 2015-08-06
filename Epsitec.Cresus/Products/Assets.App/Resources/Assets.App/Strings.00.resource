@@ -55,7 +55,7 @@
   <data name="Popup.CreateCategory.Name" id="KM1">Nom</data>
   <data name="Popup.CreateCategory.Model" id="KN1">Selon un modèle</data>
   <data name="Popup.CreateEvent.Title" id="KO1">Création d'un nouvel événement</data>
-  <data name="Event.Input.ShortName" id="KP1">Entrée</data>
+  <data name="Event.Input.ShortName" id="KP1">Entrée (mise en service)</data>
   <data name="Event.Modification.ShortName" id="KQ1">Modification générale</data>
   <data name="Event.Decrease.ShortName" id="KR1">Diminution</data>
   <data name="Event.Increase.ShortName" id="KS1">Augmentation</data>
@@ -491,4 +491,6 @@
   <data name="Popup.MCH2SummaryReport.DirectMode" id="KIL">Méthode directe (montants cumulés)</data>
   <data name="ReportParams.MCH2Direct" id="KJL">Direct</data>
   <data name="ReportParams.MCH2Indirect" id="KKL">Indirect</data>
+  <data name="Event.PreInput.Help" id="KLL">Entrée dans l'inventaire, construction</data>
+  <data name="Event.PreInput.ShortName" id="KML">Entrée (financement préalable)</data>
 </bundle>

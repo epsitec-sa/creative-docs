@@ -58,8 +58,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			this.dataFiller.Title = this.Title;
-			this.DataFiller.DateRange = this.Params.DateRange;
+			this.dataFiller.Title      = this.Title;
+			this.DataFiller.DateRange  = this.Params.DateRange;
+			this.DataFiller.DirectMode = this.Params.DirectMode;
 
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
 			//	peuvent avoir changé, et les colonnes doivent afficher "Etat 01.01.2014" et

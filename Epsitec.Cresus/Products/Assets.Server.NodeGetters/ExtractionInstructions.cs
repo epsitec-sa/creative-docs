@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, EventType filteredEventType)
+		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, EventType filteredEventType, bool directMode, bool inverted)
 		{
 			switch (extractionAmount)
 			{
@@ -23,15 +23,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
 					break;
 
-				case ExtractionAmount.DeltaFiltered:
-					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
-					break;
-
 				case ExtractionAmount.LastFiltered:
 					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
 					break;
 
-				case ExtractionAmount.Amortizations:
+				case ExtractionAmount.DeltaSum:
 					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
 					break;
 
@@ -47,6 +43,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.ExtractionAmount  = extractionAmount;
 			this.Range             = range;
 			this.FilteredEventType = filteredEventType;
+			this.DirectMode        = directMode;
+			this.Inverted          = inverted;
 		}
 
 		public bool IsEmpty
@@ -57,11 +55,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, EventType.Unknown);
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, EventType.Unknown, true, false);
 
 		public readonly ObjectField				ResultField;
 		public readonly ExtractionAmount		ExtractionAmount;
 		public readonly DateRange				Range;
 		public readonly EventType				FilteredEventType;
+		public readonly bool					DirectMode;
+		public readonly bool					Inverted;
 	}
 }

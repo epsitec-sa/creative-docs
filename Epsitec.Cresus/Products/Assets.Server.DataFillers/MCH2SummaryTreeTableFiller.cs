@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		public DateRange						DateRange;
+		public bool								DirectMode;
 
 
 		public override SortingInstructions		DefaultSorting
@@ -148,7 +149,41 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					else
 					{
 						var value = this.GetColumnValue (node, obj, column);
-						cell = new TreeTableCellDecimal (value, cellState2);
+						var columnType = this.GetColumnType (column);
+
+						switch (columnType)
+						{
+							case TreeTableColumnType.Date:
+								{
+									var v = value as DateCumulValue;
+									if (v != null && v.IsRange)
+									{
+										cell = new TreeTableCellString ("...", cellState2);
+									}
+									else
+									{
+										cell = new TreeTableCellDate ((v == null) ? null : v.MinValue, cellState2);
+									}
+								}
+								break;
+
+							case TreeTableColumnType.String:
+								{
+									var v = value as StringCumulValue;
+									cell = new TreeTableCellString ((v == null) ? null : v.Value, cellState2);
+								}
+								break;
+
+							case TreeTableColumnType.Amount:
+								{
+									var v = value as DecimalCumulValue;
+									cell = new TreeTableCellDecimal ((v == null) ? null : v.Value, cellState2);
+								}
+								break;
+
+							default:
+								throw new System.InvalidOperationException (string.Format ("Unknown TreeTableColumnType {0}", columnType.ToString ()));
+						}
 					}
 
 					content.Columns[columnRank++].AddRow (cell);
@@ -159,7 +194,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		private decimal? GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
+		private AbstractCumulValue GetColumnValue(SortableCumulNode node, DataObject obj, Column column)
 		{
 			//	Calcule la valeur d'une colonne.
 			ObjectField field;
@@ -176,15 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 			//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-			var v = this.NodeGetter.GetValue (obj, node, field);
-			if (v.HasValue)
-			{
-				return v.Value;
-			}
-			else
-			{
-				return null;
-			}
+			return this.NodeGetter.GetValue (obj, node, field);
 		}
 
 
@@ -198,7 +225,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructions (userColumn.Field,
 						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode,
+						inverted: false);
 			}
 
 			var field = ObjectField.MCH2Report + (int) column;
@@ -211,61 +240,81 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Input);
+						EventType.Input,
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Modification);
+						EventType.Modification,
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Decrease);
+						EventType.Decrease,
+						this.DirectMode,
+						inverted: true);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Increase);
+						EventType.Increase,
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,  // le type DeltaFiltered semble mal adapté ?
+						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Adjust);
+						EventType.Adjust,
+						this.DirectMode,
+						inverted: false);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaFiltered,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Output);
+						EventType.Output,
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationAuto);
+						EventType.AmortizationAuto,
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationExtra);
+						EventType.AmortizationExtra,
+						this.DirectMode,
+						inverted: true);
 
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.Amortizations,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationSuppl);
+						EventType.AmortizationSuppl,
+						this.DirectMode,
+						inverted: true);
 
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
@@ -274,7 +323,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown);
+						EventType.Unknown,
+						this.DirectMode,
+						inverted: false);
 
 				default:
 					return ExtractionInstructions.Empty;
@@ -295,9 +346,25 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private TreeTableColumnType GetColumnType(Column column)
 		{
-			if (column == MCH2SummaryTreeTableFiller.Column.Name)
+			if (column == Column.Name)
 			{
 				return TreeTableColumnType.Tree;
+			}
+			else if (column >= Column.User)
+			{
+				var userColumn = this.userColumns[(column-Column.User)];
+
+				switch (userColumn.Type)
+				{
+					case FieldType.Date:
+						return TreeTableColumnType.Date;
+
+					case FieldType.String:
+						return TreeTableColumnType.String;
+
+					default:
+						return TreeTableColumnType.Amount;
+				}
 			}
 			else
 			{
@@ -380,13 +447,19 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
 
 				case Column.Decreases:
-					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Decreases.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip.ToString ();
 
 				case Column.Increases:
-					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Increases.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Increases.Indirect.Tooltip.ToString ();
 
 				case Column.Adjust:
-					return Res.Strings.Enum.MCH2Summary.Column.Adjust.Tooltip.ToString ();
+					return this.DirectMode ?
+						Res.Strings.Enum.MCH2Summary.Column.Adjust.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -542,7 +615,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				if (userField.MCH2SummaryOrder.HasValue)
 				{
-					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name);
+					var userColumn = new UserColumn (userField.Field, Column.User + (i++), userField.Name, userField.Type);
 					this.userColumns.Add(userColumn);
 				}
 			}
@@ -551,16 +624,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private class UserColumn
 		{
-			public UserColumn(ObjectField field, Column column, string name)
+			public UserColumn(ObjectField field, Column column, string name, FieldType type)
 			{
 				this.Field  = field;
 				this.Column = column;
 				this.Name   = name;
+				this.Type   = type;
 			}
 
 			public readonly ObjectField			Field;
 			public readonly Column				Column;
 			public readonly string				Name;
+			public readonly FieldType			Type;
 		}
 
 

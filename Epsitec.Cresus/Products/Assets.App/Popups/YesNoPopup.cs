@@ -41,13 +41,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			YesNoPopup.Show (target, Res.Strings.Popup.YesNo.DeleteEventQuestion.ToString (), action);
 		}
 
-		public static void Show(Widget target, string question, System.Action action, int width = 200)
+		public static void Show(Widget target, string question, System.Action action, int width = 200, bool leftOrRight = true)
 		{
 			if (target != null)
 			{
 				var popup = new YesNoPopup (question, width);
 
-				popup.Create (target, leftOrRight: true);
+				popup.Create (target, leftOrRight);
 
 				popup.ButtonClicked += delegate (object sender, string name)
 				{

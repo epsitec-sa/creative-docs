@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Assets.Data
 	{
 		None,
 
+		PreInput,			// financement préalable
 		Purchase,			// achat
 		Sale,				// vente
 		AmortizationAuto,

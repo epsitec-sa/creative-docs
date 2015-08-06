@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public struct SortableCumulNode
 	{
-		public SortableCumulNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type, int? groupIndex, Dictionary<ObjectField, decimal> cumuls, ComparableData primarySortValue, ComparableData secondarySortValue)
+		public SortableCumulNode(Guid guid, BaseType baseType, int level, decimal? ratio, NodeType type, int? groupIndex, Dictionary<ObjectField, AbstractCumulValue> cumuls, ComparableData primarySortValue, ComparableData secondarySortValue)
 		{
 			this.Guid               = guid;
 			this.BaseType           = baseType;
@@ -42,6 +42,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public readonly int?				GroupIndex;
 		public readonly ComparableData		PrimarySortValue;
 		public readonly ComparableData		SecondarySortValue;
-		public readonly Dictionary<ObjectField, decimal> Cumuls;
+		public readonly Dictionary<ObjectField, AbstractCumulValue> Cumuls;
 	}
 }

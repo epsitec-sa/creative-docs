@@ -18,6 +18,15 @@ namespace Epsitec.Cresus.Assets.Data
 
 			switch (field)
 			{
+				case ObjectField.AccountPreInputDebit:
+					return Res.Strings.Enum.ObjectField.AccountPreInputDebit.ToString ();
+
+				case ObjectField.AccountPreInputCredit:
+					return Res.Strings.Enum.ObjectField.AccountPreInputCredit.ToString ();
+
+				case ObjectField.AccountPreInputVatCode:
+					return Res.Strings.Enum.ObjectField.AccountPreInputVatCode.ToString ();
+
 				case ObjectField.AccountPurchaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountPurchaseDebit.ToString ();
 
@@ -195,6 +204,9 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			switch (type)
 			{
+				case EventType.PreInput:
+					return Res.Strings.Enum.EventType.PreInput.ToString ();
+
 				case EventType.Input:
 					return Res.Strings.Enum.EventType.Input.ToString ();
 
