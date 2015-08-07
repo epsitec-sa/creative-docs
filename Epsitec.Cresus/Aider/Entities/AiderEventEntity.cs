@@ -396,6 +396,33 @@ namespace Epsitec.Aider.Entities
 			return result;
 		}
 
+		/// <summary>
+		/// Keep names and town of participants on the participation
+		/// </summary>
+		public void ApplyParticipantsInfo()
+		{
+			foreach(var participant in this.participants)
+			{
+				if (participant.IsExternal == false)
+				{
+					var person = participant.Person;
+					var from   = "";
+					participant.FirstNameEx = person.eCH_Person.PersonFirstNames;
+					participant.LastNameEx  = person.eCH_Person.PersonOfficialName;
+					if (person.IsGovernmentDefined && person.IsDeclared)
+					{
+						from += person.eCH_Person.GetAddress ().Town;				
+					}
+					else
+					{
+						from += person.MainContact.GetAddress ().Town.Name;
+					}
+					participant.TownEx      = from;
+				}
+				
+			}
+		}
+
 		public void RemoveParticipant(BusinessContext context, AiderEventParticipantEntity participant)
 		{
 			participant.Delete (context);

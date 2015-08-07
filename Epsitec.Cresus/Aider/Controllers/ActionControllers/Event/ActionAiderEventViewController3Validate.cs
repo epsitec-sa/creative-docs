@@ -52,6 +52,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				{
 					a.Events.Add (this.Entity);
 				});
+				this.Entity.ApplyParticipantsInfo ();
 				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
 				this.BusinessContext.DeleteEntity (previousAct);
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
