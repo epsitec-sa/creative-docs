@@ -315,11 +315,6 @@ namespace Epsitec.Aider.Entities
 						error = "Aucun défunt";
 						return false;
 					}
-					if (main.IsAlive)
-					{
-						error = "La personne est encore en vie dans AIDER";
-						return false;
-					}
 					if(!this.CheckActorValidity (main, out error))
 					{
 						return false;

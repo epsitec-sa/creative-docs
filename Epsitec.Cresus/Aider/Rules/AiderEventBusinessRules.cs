@@ -24,6 +24,38 @@ namespace Epsitec.Aider.Rules
 				{
 					Logic.BusinessRuleException ("L'acte n'est pas validable en l'état:\n" + error);
 				}
+
+				//Side-effects
+				switch (entity.Type)
+				{
+					case Enumerations.EventType.FuneralService:
+						entity.GetMainActors ().ForEach ((actor) =>
+						{
+							if (actor.IsAlive)
+							{
+								actor.KillPerson (this.GetBusinessContext (), entity.Date.Value, true);
+							}
+						});
+						break;
+					case Enumerations.EventType.CelebrationRegisteredPartners:
+						entity.GetMainActors ().ForEach ((actor) =>
+						{
+							if (actor.eCH_Person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
+							{
+								actor.eCH_Person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Pacs;
+							}
+						});
+						break;
+					case Enumerations.EventType.Marriage:
+						entity.GetMainActors ().ForEach ((actor) =>
+						{
+							if (actor.eCH_Person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Married)
+							{
+								actor.eCH_Person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Married;
+							}
+						});
+						break;
+				}
 			}
 		}
 	}

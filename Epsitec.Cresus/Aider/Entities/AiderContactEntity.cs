@@ -169,13 +169,13 @@ namespace Epsitec.Aider.Entities
 			switch (this.ContactType)
 			{
 				case ContactType.None:
-				case ContactType.Deceased:
 					return null;
 
 				case ContactType.Legal:
 					return this.LegalPerson.Address;
 
 				case ContactType.PersonAddress:
+				case ContactType.Deceased:
 					return this.Address;
 
 				case ContactType.PersonHousehold:
@@ -361,9 +361,8 @@ namespace Epsitec.Aider.Entities
 			var contact = AiderContactEntity.Create (businessContext, ContactType.Deceased);
 
 			contact.Person      = person;
-			contact.Address     = person.Address;
+			contact.Address     = AiderAddressEntity.Create (businessContext, person.Address);
 			contact.AddressType = AddressType.LastKnow;
-
 			person.AddContactInternal (contact);
 
 			return contact;
