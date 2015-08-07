@@ -201,7 +201,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private static void CheckAsset(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e)
 		{
 			//	Cherche toutes les erreurs liées à un événement d'un objet d'immobilisation.
-			if (e.Type == EventType.Input)
+			if (e.Type == EventType.PreInput ||
+				e.Type == EventType.Input)
 			{
 				//	On cherche si la valeur comptable est indéfinie à l'entrée.
 				WarningsLogic.CheckEmpty (warnings, accessor, asset, e, ObjectField.MainValue);
@@ -413,7 +414,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Pour un type d'événement, indique si on a accès aux définitions des
 			//	comptes (donc si l'onglet "Amortissement" est présent).
 			//	Doit être en accord avec ObjectEditor.GetAssetAvailablePages !
-			return type == EventType.Input
+			return type == EventType.PreInput
+				|| type == EventType.Input
 				|| type == EventType.Modification
 				|| type == EventType.Output;
 		}

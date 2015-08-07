@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 					r = PaintEventGlyph.GetGlyphSquare (rect, 0.25);
 
 					graphics.AddFilledRectangle (r);
-					graphics.AddFilledCircle (rect.Center, rect.Height*0.15);
+					graphics.AddFilledCircle (rect.Center, rect.Height*0.12);
 					graphics.RenderSolid (PaintEventGlyph.MainColor (glyph));
 					break;
 

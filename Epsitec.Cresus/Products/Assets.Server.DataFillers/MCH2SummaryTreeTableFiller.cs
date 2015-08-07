@@ -244,6 +244,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						this.DirectMode,
 						inverted: false);
 
+				case Column.PreInputs:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						this.DateRange,
+						EventType.PreInput,
+						this.DirectMode,
+						inverted: false);
+
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -388,6 +396,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.InitialState:
 					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Text.ToString (), this.InitialDate);
 
+				case Column.PreInputs:
+					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Text.ToString ();
+
 				case Column.Inputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Text.ToString ();
 
@@ -439,6 +450,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.InitialState:
 					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDateTooltip);
+
+				case Column.PreInputs:
+					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Tooltip.ToString ();
 
 				case Column.Inputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
@@ -550,6 +564,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				yield return Column.Name;
 				yield return Column.InitialState;
+				yield return Column.PreInputs;
 				yield return Column.Inputs;
 //?				yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
 				yield return Column.Decreases;
@@ -581,6 +596,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			Name,
 
 			InitialState,
+			PreInputs,
 			Inputs,
 			Reorganizations,
 			Decreases,

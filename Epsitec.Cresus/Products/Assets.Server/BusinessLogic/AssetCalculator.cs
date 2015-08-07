@@ -68,7 +68,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var e = a[i];
 
-					if (e.Type == EventType.Input)
+					if ((e.Type == EventType.PreInput ||
+						 e.Type == EventType.Input) &&
+						isOutOfBounds)
 					{
 						var li = new OutOfBoundsInterval
 						{
@@ -121,8 +123,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var prevEvent = AssetCalculator.GetPrevEvent (obj, timestamp);
 			var nextEvent = AssetCalculator.GetNextEvent (obj, timestamp);
 
-			return !((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
-					 nextEvent != TerminalEvent.In);
+			return !((prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+					 (nextEvent != TerminalEvent.PreIn && nextEvent != TerminalEvent.In));
 		}
 
 		public static IEnumerable<EventType> GetPlausibleEventTypes(DataObject obj, Timestamp timestamp)

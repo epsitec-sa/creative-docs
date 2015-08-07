@@ -42,7 +42,7 @@
   <data name="Enum.MCH2Summary.Column.InitialState.Text" id="KK1">Etat {0}</data>
   <data name="Enum.MCH2Summary.Column.InitialState.Tooltip" id="KL1">Etat initial le {0}</data>
   <data name="Enum.MCH2Summary.Column.Inputs.Text" id="KM1">Entrées</data>
-  <data name="Enum.MCH2Summary.Column.Inputs.Tooltip" id="KN1">Variations dues aux entrées</data>
+  <data name="Enum.MCH2Summary.Column.Inputs.Tooltip" id="KN1">Variations dues aux entrées de mises en service</data>
   <data name="Enum.MCH2Summary.Column.Reorganizations.Text" id="KO1">Réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Reorganizations.Tooltip" id="KP1">Variations dues aux réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Text" id="KQ1">Réévaluations</data>
@@ -96,4 +96,6 @@
   <data name="Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip" id="KA3">Variations dues aux corrections</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip" id="KB3">Variations dues aux réévaluations (diminutions)</data>
   <data name="Enum.MCH2Summary.Column.Increases.Indirect.Tooltip" id="KC3">Variations dues aux revalorisations (augmentations)</data>
+  <data name="Enum.MCH2Summary.Column.PreInputs.Text" id="KD3">Financements</data>
+  <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Variations dues aux entrées de financement préalable</data>
 </bundle>
