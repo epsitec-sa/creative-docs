@@ -22,6 +22,19 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
+		public FormattedText GetTypeSummary()
+		{
+			var type = this.GetTypeCaption ();
+			return TextFormatter.FormatText (type);
+		}
+
+		public FormattedText GetActSummary()
+		{
+			var when  = "le " + this.Date.Value.ToDateTime ().ToString ("dd MMMM yyyy") + "\n";
+			var where = this.Place.Name + "\n"; 
+			return TextFormatter.FormatText (when + where);
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			var type = this.GetTypeCaption (); 

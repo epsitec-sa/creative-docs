@@ -90,13 +90,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				}
 
 
-				wall.AddBrick (x => x.Participants)
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.DefaultToSummarySubView)
-					.Template ()
-					.End ();
+				wall.AddBrick ()
+					.Title ("Participants")
+					.Text (p => p.GetParticipantsSummary ())
+					.Attribute (BrickMode.DefaultToSetSubView)
+					.WithSpecialController (typeof (SetAiderEventViewController0Participants));
 			}
 			
 		}

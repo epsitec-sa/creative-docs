@@ -1325,6 +1325,18 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Events</c> field.
+		///	designer:fld/LVAF/LVOG73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOG73]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventEntity> Events
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVOG73]");
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);

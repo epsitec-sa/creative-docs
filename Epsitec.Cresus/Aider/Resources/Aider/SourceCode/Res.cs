@@ -3620,6 +3620,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
 				//	designer:cap/LVAMK
 				public static readonly global::Epsitec.Common.Support.Druid Employee = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 662);
+				//	designer:cap/LVOG73
+				public static readonly global::Epsitec.Common.Support.Druid Events = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 240);
 				//	designer:cap/LVOH13
 				public static readonly global::Epsitec.Common.Support.Druid GeoParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 49);
 				//	designer:cap/LVAR8

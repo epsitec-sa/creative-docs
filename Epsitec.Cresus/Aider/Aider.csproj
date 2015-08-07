@@ -261,9 +261,10 @@
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventPlaceViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventPlaceViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController1Person.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController2WithoutContact.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController1ReadOnly.cs" />

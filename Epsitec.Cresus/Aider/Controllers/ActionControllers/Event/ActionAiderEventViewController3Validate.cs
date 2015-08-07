@@ -48,6 +48,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				this.Entity.State     = Enumerations.EventState.Validated;
 				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
+				this.Entity.GetMainActors ().ForEach ((a) =>
+				{
+					a.Events.Add (this.Entity);
+				});
 				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
 				this.BusinessContext.DeleteEntity (previousAct);
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
