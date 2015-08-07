@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var prevEvent = AssetCalculator.GetPrevEvent (obj, timestamp);
 				var nextEvent = AssetCalculator.GetNextEvent (obj, timestamp);
 
-				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
+				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.Out) &&
 					(nextEvent == TerminalEvent.None || nextEvent == TerminalEvent.In))
 				{
 					yield return EventType.PreInput;
