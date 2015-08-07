@@ -380,17 +380,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
+			CreateAssetPopup.Show (target, this.accessor, delegate (bool preInput, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 			{
-				this.CreateAsset (date, requiredProperties, value, cat);
+				this.CreateAsset (preInput, date, requiredProperties, value, cat);
 			});
 		}
 
-		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
+		private void CreateAsset(bool preInput, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			this.accessor.UndoManager.Start ();
 
-			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
+			var asset = AssetsLogic.CreateAsset (preInput, this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
 
 			this.UpdateData ();

@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.accessor.UndoManager.Start ();
 
 			var date = this.accessor.Mandat.StartDate;
-			var guid = this.accessor.CreateObject (BaseType.Persons, date, Guid.Empty, requiredProperties.ToArray ());
+			var guid = this.accessor.CreateObject (BaseType.Persons, date, Guid.Empty, false, requiredProperties.ToArray ());
 			var obj = this.accessor.GetObject (BaseType.Persons, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
 

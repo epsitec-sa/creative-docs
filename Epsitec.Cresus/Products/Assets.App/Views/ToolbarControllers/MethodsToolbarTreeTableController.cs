@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 
 			var date = this.accessor.Mandat.StartDate;
 			var p1 = new DataStringProperty (ObjectField.Name, name);
-			var guid = this.accessor.CreateObject (BaseType.Methods, date, Guid.Empty, p1);
+			var guid = this.accessor.CreateObject (BaseType.Methods, date, Guid.Empty, false, p1);
 
 			var obj = this.accessor.GetObject (BaseType.Methods, guid);
 			System.Diagnostics.Debug.Assert (obj != null);
