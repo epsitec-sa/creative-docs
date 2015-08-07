@@ -35,6 +35,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobAIDERUsersOnly = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 207));
 				//	designer:cap/LVOR53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
+				//	designer:cap/LVOA73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBlessing = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 234));
+				//	designer:cap/LVOB73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventCelebrationRegisteredPartners = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 235));
+				//	designer:cap/LVOC73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventConfirmation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 236));
+				//	designer:cap/LVOD73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventEndOfCatechism = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 237));
+				//	designer:cap/LVOE73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventFuneralService = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 238));
+				//	designer:cap/LVOF73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventMarriage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 239));
 				//	designer:cap/LVOI53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventParticipants = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 178));
 				//	designer:cap/LVOR63
@@ -116,6 +128,18 @@ namespace Epsitec.Aider
 				public const long ShowAiderEmployeeJobAIDERUsersOnly = 0x3F5000780000CFL;
 				//	designer:cap/LVOR53
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
+				//	designer:cap/LVOA73
+				public const long ShowAiderEventBlessing = 0x3F5000780000EAL;
+				//	designer:cap/LVOB73
+				public const long ShowAiderEventCelebrationRegisteredPartners = 0x3F5000780000EBL;
+				//	designer:cap/LVOC73
+				public const long ShowAiderEventConfirmation = 0x3F5000780000ECL;
+				//	designer:cap/LVOD73
+				public const long ShowAiderEventEndOfCatechism = 0x3F5000780000EDL;
+				//	designer:cap/LVOE73
+				public const long ShowAiderEventFuneralService = 0x3F5000780000EEL;
+				//	designer:cap/LVOF73
+				public const long ShowAiderEventMarriage = 0x3F5000780000EFL;
 				//	designer:cap/LVOI53
 				public const long ShowAiderEventParticipants = 0x3F5000780000B2L;
 				//	designer:cap/LVOR63
@@ -214,6 +238,14 @@ namespace Epsitec.Aider
 						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 421));
 					}
 				}
+				//	designer:cap/LVO973
+				public static global::Epsitec.Common.Types.Caption Registry
+				{
+					get
+					{
+						return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 233));
+					}
+				}
 			}
 			
 		}
@@ -230,6 +262,8 @@ namespace Epsitec.Aider
 				public const long Mailing = 0x3F5000780000BAL;
 				//	designer:cap/LVA5D
 				public const long Misc = 0x3F50000A0001A5L;
+				//	designer:cap/LVO973
+				public const long Registry = 0x3F5000780000E9L;
 			}
 			
 		}
@@ -465,6 +499,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 190));
+						}
+					}
+					//	designer:cap/LVO673
+					public static global::Epsitec.Common.Types.Caption LastKnow
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 230));
 						}
 					}
 					//	designer:cap/LVA4B
@@ -3010,6 +3052,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid PlaceName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 169);
 				//	designer:cap/LVO853
 				public static readonly global::Epsitec.Common.Support.Druid PlaceType = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 168);
+				//	designer:cap/LVO873
+				public static readonly global::Epsitec.Common.Support.Druid Report = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 232);
 				//	designer:cap/LVOF53
 				public static readonly global::Epsitec.Common.Support.Druid State = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 175);
 				//	designer:cap/LVOA53
@@ -3031,6 +3075,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 204);
 				//	designer:cap/LVOD63
 				public static readonly global::Epsitec.Common.Support.Druid EventNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 205);
+				//	designer:cap/LVO773
+				public static readonly global::Epsitec.Common.Support.Druid IsValidated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 231);
 			}
 			
 			public static class AiderEventParticipant
@@ -3574,6 +3620,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid eCH_Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62);
 				//	designer:cap/LVAMK
 				public static readonly global::Epsitec.Common.Support.Druid Employee = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 662);
+				//	designer:cap/LVOG73
+				public static readonly global::Epsitec.Common.Support.Druid Events = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 240);
 				//	designer:cap/LVOH13
 				public static readonly global::Epsitec.Common.Support.Druid GeoParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 49);
 				//	designer:cap/LVAR8

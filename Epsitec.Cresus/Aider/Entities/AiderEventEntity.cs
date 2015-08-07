@@ -22,6 +22,19 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
+		public FormattedText GetTypeSummary()
+		{
+			var type = this.GetTypeCaption ();
+			return TextFormatter.FormatText (type);
+		}
+
+		public FormattedText GetActSummary()
+		{
+			var when  = "le " + this.Date.Value.ToDateTime ().ToString ("dd MMMM yyyy") + "\n";
+			var where = this.Place.Name + "\n"; 
+			return TextFormatter.FormatText (when + where);
+		}
+
 		public override FormattedText GetCompactSummary()
 		{
 			var type = this.GetTypeCaption (); 
@@ -71,6 +84,29 @@ namespace Epsitec.Aider.Entities
 			return newEvent;
 		}
 
+		public static string FindNextNumber (BusinessContext context, Enumerations.EventType type)
+		{
+			var nextEvent  = 1;
+			var eventStyle = new AiderEventEntity ()
+			{
+				Type = type,
+				State = Enumerations.EventState.Validated
+			};
+			var example   = new AiderEventOfficeReportEntity ()
+			{
+				Event = eventStyle
+			};
+
+			var reports        = context.GetByExample <AiderEventOfficeReportEntity> (example);
+			var thisYearEvents = reports.Where (r => r.Event.Date.Value.Year == System.DateTime.Now.Year);
+			if (thisYearEvents.Any ())
+			{
+				nextEvent = thisYearEvents.Max (r => System.Convert.ToInt32 (r.EventNumber.Split ('/')[1])) + 1;
+			}
+
+			return System.DateTime.Now.Year.ToString () + "/" + nextEvent.ToString ();
+		}
+
 		public void Delete(BusinessContext context)
 		{
 			foreach (var participant in this.Participants)
@@ -83,7 +119,7 @@ namespace Epsitec.Aider.Entities
 
 		public List<AiderPersonEntity> GetMainActors ()
 		{
-			List<AiderPersonEntity> actors = new List<AiderPersonEntity> ();
+			var actors = new List<AiderPersonEntity> ();
 			switch (this.Type)
 			{
 			case Enumerations.EventType.Baptism:
@@ -117,13 +153,250 @@ namespace Epsitec.Aider.Entities
 			return actors;
 		}
 
-		public int CountRole (Enumerations.EventParticipantRole role)
+		public string GetRegitryName()
+		{
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					return Res.Commands.Base.ShowAiderEventBaptims.Caption.DefaultLabel;
+				case Enumerations.EventType.Blessing:
+					return Res.Commands.Base.ShowAiderEventBlessing.Caption.DefaultLabel;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					return Res.Commands.Base.ShowAiderEventCelebrationRegisteredPartners.Caption.DefaultLabel;
+				case Enumerations.EventType.Confirmation:
+					return Res.Commands.Base.ShowAiderEventConfirmation.Caption.DefaultLabel;
+				case Enumerations.EventType.EndOfCatechism:
+					return Res.Commands.Base.ShowAiderEventEndOfCatechism.Caption.DefaultLabel;
+				case Enumerations.EventType.FuneralService:
+					return Res.Commands.Base.ShowAiderEventFuneralService.Caption.DefaultLabel;
+				case Enumerations.EventType.Marriage:
+					return Res.Commands.Base.ShowAiderEventMarriage.Caption.DefaultLabel;
+				case Enumerations.EventType.None:
+				default:
+					return "";
+			}
+		}
+
+		public string GetRegitryActName()
+		{
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					return "Baptême";
+				case Enumerations.EventType.Blessing:
+					return "Bénédiction";
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					return "Partenariat enregistré";
+				case Enumerations.EventType.Confirmation:
+					return "Confirmation";
+				case Enumerations.EventType.EndOfCatechism:
+					return "Fin de catéchisme";
+				case Enumerations.EventType.FuneralService:
+					return "Service funèbre";
+				case Enumerations.EventType.Marriage:
+					return "Mariage";
+				case Enumerations.EventType.None:
+				default:
+					return "";
+			}
+		}
+
+		public AiderPersonEntity GetMinister ()
+		{
+			AiderPersonEntity minister;
+			this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister);
+			return minister;
+		}
+
+		public AiderPersonEntity GetActor (Enumerations.EventParticipantRole role)
+		{
+			AiderPersonEntity actor;
+			this.TryAddActorWithRole (out actor, role);
+			return actor;
+		}
+
+		public bool IsCurrentEventValid(out string error)
+		{
+			error = "";
+
+			if (this.Office.ParishGroup.IsNoParish ())
+			{
+				error = "Cette gestion n'est pas liée à une paroisse, aucun acte ne peut y être généré";
+				return false;
+			}
+
+			if (this.Place.IsNull ())
+			{
+				error = "La lieu de célébration n'est pas renseigné";
+				return false;
+			}
+
+			if (this.Town.IsNull ())
+			{
+				error = "La localité de célébration n'est pas renseignée";
+				return false;
+			}
+
+			if (this.Date.Value == null)
+			{
+				error = "La date de célébration n'est pas renseignée";
+				return false;
+			}
+
+			var minister   = new AiderPersonEntity ();
+			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
+			{
+				error = "Il manque le ministre officiant";
+				return false;
+			}
+
+			var main   = new AiderPersonEntity ();
+			var actors = new List<AiderPersonEntity> ();
+			switch (this.Type)
+			{
+				case Enumerations.EventType.Baptism:
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.ChildBatise))
+					{
+						error = "Aucun enfant à baptisé dans les participants";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.Blessing:
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.BlessedChild))
+					{
+						error = "Aucune personne à bénir";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.Confirmation:
+					if (this.Kind == null)
+					{
+						error = "Type de célébration non renseigné (Rameaux etc.)";
+						return false;
+					}
+					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Confirmant))
+					{
+						error = "Aucunes personnes à confirmer";
+						return false;
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}
+					break;
+				case Enumerations.EventType.EndOfCatechism:
+					if (!this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Catechumen))
+					{
+						error = "Aucunes personnes pour la fin de caté.";
+						return false;
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}
+					break;
+				case Enumerations.EventType.FuneralService:
+					if (!this.TryAddActorWithRole (out main, Enumerations.EventParticipantRole.DeceasedPerson))
+					{
+						error = "Aucun défunt";
+						return false;
+					}
+					if(!this.CheckActorValidity (main, out error))
+					{
+						return false;
+					}
+					break;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+				case Enumerations.EventType.Marriage:
+					if (!(this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband)
+						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse))
+					)
+					{
+						error = "Aucune personnes à célébrer";
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}	
+					break;
+				case Enumerations.EventType.None:
+					break;
+			}
+
+			return true;
+		}
+
+		public bool CheckActorValidity(AiderPersonEntity main, out string error)
+		{
+			error = "";
+
+			if (main.Age == null)
+			{
+				error = main.GetShortFullName () + ": date de naissance non renseignée";
+				return false;
+			}
+
+			if (main.IsDeceased)
+			{
+				if (!main.Contacts.Where (c => c.AddressType == Enumerations.AddressType.LastKnow).Any ())
+				{
+					error = main.GetShortFullName () + ": adresse non renseignée";
+					return false;
+				}
+			}
+			else
+			{
+				if (main.IsGovernmentDefined && main.IsDeclared)
+				{
+					if (main.eCH_Person.GetAddress ().IsNull ())
+					{
+						error = main.GetShortFullName () + ": adresse non renseignée";
+						return false;
+					}
+				}
+				else
+				{
+					if (main.MainContact.GetAddress ().IsNull ())
+					{
+						error = main.GetShortFullName () + ": adresse non renseignée";
+						return false;
+					}
+
+					if (main.MainContact.GetAddress ().IsNull ())
+					{
+						error = main.GetShortFullName () + ": domicile de l'adresse non renseigné";
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		public int CountRole(Enumerations.EventParticipantRole role)
 		{
 			var result = this.Participants.Count (p => p.Role == role);
 			return result;
 		}
 
-		public void RemoveParticipant (BusinessContext context, AiderEventParticipantEntity participant)
+		public void RemoveParticipant(BusinessContext context, AiderEventParticipantEntity participant)
 		{
 			participant.Delete (context);
 		}
@@ -133,23 +406,36 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
-		private void TryAddActorWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		private bool TryAddActorWithRole(out AiderPersonEntity actor, Enumerations.EventParticipantRole role)
 		{
+			actor = null;
 			var participant = this.Participants
-										.SingleOrDefault (p => p.Role == role && p.IsExternal == false);
+										.SingleOrDefault (p => p.Role == role);
 			if (participant.IsNotNull ()) {
-				actors.Add (participant.Person);
+				if (participant.IsExternal == false)
+				{
+					actor = participant.Person;
+				}
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
-		private void TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		private bool TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
 		{
 			var participants = this.Participants
-										.Where (p => p.Role == role && p.IsExternal == false)
-										.Select (p => p.Person);
+										.Where (p => p.Role == role);
 			if (participants.Any ())
 			{
-				actors.AddRange (participants);
+				actors.AddRange (participants.Where (p => p.IsExternal == false).Select (p => p.Person));
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

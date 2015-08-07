@@ -81,6 +81,27 @@ namespace Epsitec.Aider.Entities
 			return  canViewDetails || ministerBypass;
 		}
 
+		public bool CanValidateEvents ()
+		{
+			var isMinister = false;
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					switch (employee.EmployeeType)
+					{
+						case Enumerations.EmployeeType.Diacre:
+						case Enumerations.EmployeeType.Pasteur:
+							isMinister = true;
+							break;
+					}
+				}
+			}
+
+			return isMinister;
+		}
+
 		public bool CanRemoveMailing()
 		{
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);

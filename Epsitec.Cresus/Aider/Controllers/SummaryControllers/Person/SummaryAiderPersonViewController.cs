@@ -32,10 +32,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
 
-			bool showEmployeeTile   = this.Entity.Employee.IsNotNull ();
-			bool showEmployeeAction = (showEmployeeTile == false) && user.CanEditEmployee ();
-			bool canEditEmployee	= user.CanEditEmployee () || user.CanEditReferee ();
-			bool canRemoveEmployee	= showEmployeeTile && user.CanEditEmployee ();
+			var showEmployeeTile   = this.Entity.Employee.IsNotNull ();
+			var showEventsTile     = this.Entity.Events.Count > 0;
+			var showEmployeeAction = (showEmployeeTile == false) && user.CanEditEmployee ();
+			var canEditEmployee	   = user.CanEditEmployee () || user.CanEditReferee ();
+			var canRemoveEmployee  = showEmployeeTile && user.CanEditEmployee ();
 
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
@@ -62,6 +63,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Text (x => x.GetEmployeeSummary ())
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.WithSpecialController (type);
+			}
+
+			if (showEventsTile)
+			{
+				wall.AddBrick (x => x.Events)
+					.Title ("Actes ecclésiastiques")
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.WithSpecialController (typeof (SummaryAiderEventViewController1Person))
+					.Template ()
+						.Text (x => x.GetTypeSummary ())
+					.End ();
 			}
 
 			wall.AddBrick ()

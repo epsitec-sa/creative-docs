@@ -33,6 +33,15 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool								IsDeclared
+		{
+			get
+			{
+				return (this.eCH_Person.IsNotNull ())
+					&& (this.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Declared);
+			}
+		}
+
 		public bool								IsAlive
 		{
 			get
