@@ -95,6 +95,7 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController9PreviewReport.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController8AddParticipantExternal.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController7AddParticipant.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
@@ -260,9 +261,10 @@
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventPlaceViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventPlaceViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController1Person.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController2WithoutContact.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController1ReadOnly.cs" />
@@ -485,6 +487,7 @@
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeJobBusinessRules.cs" />
+    <Compile Include="Rules\AiderEventBusinessRules.cs" />
     <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />
     <Compile Include="Rules\AiderEventParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeBusinessRules.cs" />

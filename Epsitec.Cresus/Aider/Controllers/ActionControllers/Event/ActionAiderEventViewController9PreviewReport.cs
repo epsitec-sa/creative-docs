@@ -20,8 +20,8 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (3)]
-	public sealed class ActionAiderEventViewController3Validate : ActionViewController<AiderEventEntity>
+	[ControllerSubType (9)]
+	public sealed class ActionAiderEventViewController9PreviewReport : ActionViewController<AiderEventEntity>
 	{
 		public override bool IsEnabled
 		{
@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Valider définitivement l'acte");
+			return Resources.Text ("Prévisualiser l'acte");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -46,22 +46,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			if (user.CanValidateEvents () || user.IsAdmin ())
 			{
-				this.Entity.State     = Enumerations.EventState.Validated;
-				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
-				this.Entity.GetMainActors ().ForEach ((a) =>
-				{
-					a.Events.Add (this.Entity);
-				});
-				this.Entity.ApplyParticipantsInfo ();
-				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
-				this.BusinessContext.DeleteEntity (previousAct);
+				// Trigger validation rules
+				this.Entity.State     = Enumerations.EventState.ToValidate;
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
-
-				var nextNumber = AiderEventEntity.FindNextNumber (this.BusinessContext, this.Entity.Type);
-				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, nextNumber, this.Entity, true);
+				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, "(à valider)", this.Entity, false);
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
-				this.Entity.Report = act;
+				this.Entity.Report      = act;
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 			}
 			else

@@ -91,6 +91,31 @@ namespace Epsitec.Aider.Entities
 			return name;
 		}
 
+		public eCH_AddressEntity GetAddress ()
+		{
+			if (this.Address1.IsNotNull ())
+			{
+				return this.Address1;
+			}
+
+			if (this.Address2.IsNotNull ())
+			{
+				return this.Address2;
+			}
+
+			if (this.ReportedPerson1.IsNotNull ())
+			{
+				return this.ReportedPerson1.Address;
+			}
+
+			if (this.ReportedPerson2.IsNotNull ())
+			{
+				return this.ReportedPerson2.Address;
+			}
+
+			return null;
+		}
+
 		public IEnumerable<eCH_ReportedPersonEntity> ReportedPersons
 		{
 			get

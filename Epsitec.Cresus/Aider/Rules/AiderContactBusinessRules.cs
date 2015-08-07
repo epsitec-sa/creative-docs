@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Rules
 				businessContext.Register (legalPerson);
 			}
 
-			if (entity.ContactType == ContactType.PersonAddress)
+			if (entity.ContactType == ContactType.PersonAddress || entity.ContactType == ContactType.Deceased)
 			{
 				//	We don't register the address in other cases, as it is owned by another entity
 				//	like an household or a legal person, and it will therefore be registered through

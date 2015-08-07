@@ -9,6 +9,7 @@ submenuBonneNouvelle = [LVG732]
 submenuDefs = [LVA4D]
 submenuMisc = [LVA5D]
 submenuMailing = [LVOQ53]
+submenuRegistry = [LVO973]
 AiderContact = [LVARD]
 AiderPerson = [LVAF]
 AiderGroup = [LVA54]
@@ -454,6 +455,13 @@ AiderEventPlace = [LVOL63]
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderLegalPerson:[LVADF].[LVAA8].[LVA88]" title="Commentaire (adresse)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
+      </col>
+    </t>
+
+    <t eid="@AiderEvent" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVO873].[LVOD63]" title="Acte N°" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
       </col>
     </t>
 
@@ -2231,6 +2239,7 @@ AiderEventPlace = [LVOL63]
         <disp m="Visible" />
       </col>
     </t>
+
     <t eid="@AiderEventPlace" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventPlace:[LVOM63]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
@@ -2428,6 +2437,91 @@ AiderEventPlace = [LVOL63]
         <l t="Adresse aux parents de..." f="1"/>
       </L>
     </d>
+
+    <d cid="[LVOA73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/1" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOR53]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/2" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOB73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/6" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOC73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/3" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+     <d cid="[LVOD73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/4" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOE73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/7" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOF73]" teid="@AiderEvent" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEvent">
+        <C>
+	    <!-- type event -->
+	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/5" /></v></c>
+	    <!-- doit être validé -->
+	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+    
 
     <d cid="[LVOI53]" teid="@AiderEventParticipant" tn="default" df="false" d="false" ec="false" ed="false" dg="">
       <R><r>@user</r></R>
