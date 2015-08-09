@@ -570,7 +570,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			if (textField != null)
 			{
-				if (AmortizedAmountController.GetAmount (textField) != value)
+				//	Si la valeur n'existe pas, il faut toujours effacer le champ.
+				//	Si elle existe, on ne met à jour le champ que si elle a changé.
+				if (value == null ||
+					AmortizedAmountController.GetAmount (textField) != value)
 				{
 					textField.Text = TypeConverters.AmountToString (value);
 				}
