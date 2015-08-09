@@ -24,6 +24,17 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					(nextEvent.Type == EventType.PreInput ||
 					 nextEvent.Type == EventType.Input))
 				{
+					//	Copie la valeur comptable.
+					{
+						var p = nextEvent.GetProperty (ObjectField.MainValue);
+
+						if (p != null)
+						{
+							e.AddProperty (p);
+						}
+					}
+
+					//	Copie tous les champs définis par l'utilisateur (Nom, Numéro, etc.).
 					var fields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields);
 
 					foreach (var field in fields)
