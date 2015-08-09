@@ -11,6 +11,35 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
+		public static void AdjustPreInput(DataAccessor accessor, DataObject obj, DataEvent e)
+		{
+			//	Si un événement d'entrée de financement préalable EventType.PreInput est déjà suivi
+			//	d'un événement d'entrée de mise en service EventType.Input, on reprend tout ce qui
+			//	est possible.
+			if (e.Type == EventType.PreInput)
+			{
+				var nextEvent = obj.GetNextEvent (e.Timestamp);
+
+				if (nextEvent != null &&
+					(nextEvent.Type == EventType.PreInput ||
+					 nextEvent.Type == EventType.Input))
+				{
+					var fields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields);
+
+					foreach (var field in fields)
+					{
+						var p = nextEvent.GetProperty (field.Field);
+
+						if (p != null)
+						{
+							e.AddProperty (p);
+						}
+					}
+				}
+			}
+		}
+
+
 		public static IEnumerable<Guid> GetReferencedPersons(DataAccessor accessor, Guid personGuid)
 		{
 			//	Vérifie quels sont les objets d'immobilisations qui référencent une

@@ -238,6 +238,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.AddDateOperation (e);
 				this.AddMainValue (obj, ts, e);
 
+				AssetsLogic.AdjustPreInput (this, obj, e);
 				Amortizations.UpdateAmounts (this, obj);
 				return e;
 			}
