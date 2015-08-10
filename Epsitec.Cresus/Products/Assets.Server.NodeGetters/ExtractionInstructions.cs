@@ -15,30 +15,30 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, bool directMode, bool inverted, params EventType[] filteredEventType)
+		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, bool directMode, bool inverted, params EventType[] filteredEventTypes)
 		{
 			switch (extractionAmount)
 			{
 				case ExtractionAmount.StateAt:
 				case ExtractionAmount.UserColumn:
-					System.Diagnostics.Debug.Assert (filteredEventType == null);
+					System.Diagnostics.Debug.Assert (filteredEventTypes == null);
 					break;
 
 				case ExtractionAmount.LastFiltered:
 				case ExtractionAmount.DeltaSum:
-					System.Diagnostics.Debug.Assert (filteredEventType != null);
+					System.Diagnostics.Debug.Assert (filteredEventTypes != null);
 					break;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionAmount));
 			}
 
-			this.ResultField       = resultField;
-			this.ExtractionAmount  = extractionAmount;
-			this.Range             = range;
-			this.FilteredEventType = filteredEventType;
-			this.DirectMode        = directMode;
-			this.Inverted          = inverted;
+			this.ResultField        = resultField;
+			this.ExtractionAmount   = extractionAmount;
+			this.Range              = range;
+			this.FilteredEventTypes = filteredEventTypes;
+			this.DirectMode         = directMode;
+			this.Inverted           = inverted;
 		}
 
 		public bool IsEmpty
@@ -56,6 +56,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public readonly DateRange				Range;
 		public readonly bool					DirectMode;
 		public readonly bool					Inverted;
-		public readonly EventType[]				FilteredEventType;
+		public readonly EventType[]				FilteredEventTypes;
 	}
 }

@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
 							value = new DecimalCumulValue (aa.Value);
@@ -172,7 +172,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
 							decimal value;
