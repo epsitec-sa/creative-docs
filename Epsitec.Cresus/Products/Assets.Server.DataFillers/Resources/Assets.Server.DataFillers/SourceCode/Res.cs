@@ -382,6 +382,46 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 						}
 						
+						public static class DeltaDecreasesIncreases
+						{
+							//	designer:str/KUKK301
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544436));
+								}
+							}
+							//	designer:str/KUKJ301
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544435));
+								}
+							}
+						}
+						
+						public static class DeltaModifications
+						{
+							//	designer:str/KUKH301
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544433));
+								}
+							}
+							//	designer:str/KUKI301
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544434));
+								}
+							}
+						}
+						
 						public static class FinalState
 						{
 							//	designer:str/KUK4201
@@ -553,6 +593,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544377));
+								}
+							}
+						}
+						
+						public static class ReplacementValues
+						{
+							//	designer:str/KUKG301
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544432));
+								}
+							}
+							//	designer:str/KUKF301
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544431));
 								}
 							}
 						}
@@ -1352,6 +1412,46 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 						}
 						
+						public static class DeltaDecreasesIncreases
+						{
+							//	designer:str/KUKK301
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544436);
+								}
+							}
+							//	designer:str/KUKJ301
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544435);
+								}
+							}
+						}
+						
+						public static class DeltaModifications
+						{
+							//	designer:str/KUKH301
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544433);
+								}
+							}
+							//	designer:str/KUKI301
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544434);
+								}
+							}
+						}
+						
 						public static class FinalState
 						{
 							//	designer:str/KUK4201
@@ -1523,6 +1623,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544377);
+								}
+							}
+						}
+						
+						public static class ReplacementValues
+						{
+							//	designer:str/KUKG301
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544432);
+								}
+							}
+							//	designer:str/KUKF301
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544431);
 								}
 							}
 						}

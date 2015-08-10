@@ -98,4 +98,10 @@
   <data name="Enum.MCH2Summary.Column.Increases.Indirect.Tooltip" id="KC3">Variations dues aux revalorisations (augmentations)</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Text" id="KD3">Financements</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Variations dues aux entrées de financement préalable</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeur à neuf</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Valeur à neuf</data>
+  <data name="Enum.MCH2Summary.Column.DeltaModifications.Text" id="KH3">Modifications</data>
+  <data name="Enum.MCH2Summary.Column.DeltaModifications.Tooltip" id="KI3">Modifications de valeur</data>
+  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip" id="KJ3">Ajustements</data>
+  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text" id="KK3">Ajustements</data>
 </bundle>

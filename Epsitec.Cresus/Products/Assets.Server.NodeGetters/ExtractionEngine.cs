@@ -245,17 +245,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static bool CompareEventTypes(EventType extractionType, EventType eventType)
+		private static bool CompareEventTypes(EventType[] extractionTypes, EventType eventType)
 		{
-			if (extractionType == EventType.AmortizationAuto)
-			{
-				return eventType == extractionType
-					|| eventType == EventType.AmortizationPreview;
-			}
-			else
-			{
-				return eventType == extractionType;
-			}
+			return extractionTypes.Where (x => x == eventType).Any ();
 		}
 
 

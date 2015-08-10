@@ -225,9 +225,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructions (userColumn.Field,
 						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown,
 						this.DirectMode,
-						inverted: false);
+						false);
 			}
 
 			var field = ObjectField.MCH2Report + (int) column;
@@ -240,89 +239,112 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
-						EventType.Unknown,
 						this.DirectMode,
-						inverted: false);
+						false);
 
 				case Column.PreInputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.PreInput,
 						this.DirectMode,
-						inverted: false);
+						false,
+						EventType.PreInput);
 
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Input,
 						this.DirectMode,
-						inverted: false);
+						false,
+						EventType.Input);
+
+				case Column.ReplacementValues:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						this.DateRange,
+						this.DirectMode,
+						false,
+						EventType.Input);
+
+				case Column.DeltaModifications:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						this.DateRange,
+						this.DirectMode,
+						false,
+						EventType.Input);
+
+				case Column.DeltaDecreasesIncreases:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						this.DateRange,
+						this.DirectMode,
+						false,
+						EventType.Input);
 
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Modification,
 						this.DirectMode,
-						inverted: false);
+						false,
+						EventType.Modification);
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Decrease,
 						this.DirectMode,
-						inverted: true);
+						true,
+						EventType.Decrease);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Increase,
 						this.DirectMode,
-						inverted: false);
+						false,
+						EventType.Increase);
 
 				case Column.Adjust:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Adjust,
 						this.DirectMode,
-						inverted: false);
+						false,
+						EventType.Adjust);
 
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.Output,
 						this.DirectMode,
-						inverted: true);
+						true,
+						EventType.Output);
 
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationAuto,
 						this.DirectMode,
-						inverted: true);
+						true,
+						EventType.AmortizationAuto, EventType.AmortizationPreview);
 
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationExtra,
 						this.DirectMode,
-						inverted: true);
+						true,
+						EventType.AmortizationExtra);
 
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						EventType.AmortizationSuppl,
 						this.DirectMode,
-						inverted: true);
+						true,
+						EventType.AmortizationSuppl);
 
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
@@ -331,9 +353,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						EventType.Unknown,
 						this.DirectMode,
-						inverted: false);
+						false);
 
 				default:
 					return ExtractionInstructions.Empty;
@@ -402,6 +423,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Inputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Text.ToString ();
 
+				case Column.ReplacementValues:
+					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
+
+				case Column.DeltaModifications:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaModifications.Text.ToString ();
+
+				case Column.DeltaDecreasesIncreases:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text.ToString ();
+
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Text.ToString ();
 
@@ -456,6 +486,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Inputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
+
+				case Column.ReplacementValues:
+					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
+
+				case Column.DeltaModifications:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaModifications.Tooltip.ToString ();
+
+				case Column.DeltaDecreasesIncreases:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip.ToString ();
 
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
@@ -562,19 +601,39 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	Retourne les colonnes visibles, dans le bon ordre.
 			get
 			{
-				yield return Column.Name;
-				yield return Column.InitialState;
-				yield return Column.PreInputs;
-				yield return Column.Inputs;
-//?				yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
-				yield return Column.Decreases;
-				yield return Column.Increases;
-				yield return Column.Adjust;
-				yield return Column.Outputs;
-				yield return Column.AmortizationsAuto;
-				yield return Column.AmortizationsExtra;
-				yield return Column.AmortizationsSuppl;
-				yield return Column.FinalState;
+				if (this.DirectMode)
+				{
+					yield return Column.Name;
+					yield return Column.InitialState;
+					yield return Column.PreInputs;
+					yield return Column.Inputs;
+//?					yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
+					yield return Column.Decreases;
+					yield return Column.Increases;
+					yield return Column.Adjust;
+					yield return Column.Outputs;
+					yield return Column.AmortizationsAuto;
+					yield return Column.AmortizationsExtra;
+					yield return Column.AmortizationsSuppl;
+					yield return Column.FinalState;
+				}
+				else
+				{
+					yield return Column.Name;
+					yield return Column.InitialState;
+					yield return Column.PreInputs;
+					yield return Column.ReplacementValues;
+					yield return Column.DeltaModifications;
+					yield return Column.DeltaDecreasesIncreases;
+					yield return Column.Decreases;
+					yield return Column.Increases;
+					yield return Column.Adjust;
+					yield return Column.Outputs;
+					yield return Column.AmortizationsAuto;
+					yield return Column.AmortizationsExtra;
+					yield return Column.AmortizationsSuppl;
+					yield return Column.FinalState;
+				}
 
 				foreach (var userField in this.userColumns)
 				{
@@ -598,6 +657,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			InitialState,
 			PreInputs,
 			Inputs,
+			ReplacementValues,
+			DeltaModifications,
+			DeltaDecreasesIncreases,
 			Reorganizations,
 			Decreases,
 			Increases,
