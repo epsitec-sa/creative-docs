@@ -33,6 +33,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 								.Attribute (BrickMode.AutoGroup)
 								.Attribute (BrickMode.HideAddButton)
 								.Attribute (BrickMode.HideRemoveButton)
+								.EnableActionMenu <ActionAiderOfficeManagementViewController7DuplicateEvent> ()
+								.EnableActionMenu<ActionAiderOfficeManagementViewController8DeleteEvent> ()
 								.Template ()
 									.Title ("Actes en préparations")
 									.Text (x => x.GetSummary ())								

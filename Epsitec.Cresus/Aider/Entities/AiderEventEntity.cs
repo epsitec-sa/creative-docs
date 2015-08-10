@@ -67,6 +67,7 @@ namespace Epsitec.Aider.Entities
 		public static AiderEventEntity Create(
 			BusinessContext context,
 			Enumerations.EventType type,
+			Enumerations.EventKind? kind,
 			AiderOfficeManagementEntity office,
 			AiderTownEntity town,
 			AiderEventPlaceEntity place,
@@ -79,7 +80,7 @@ namespace Epsitec.Aider.Entities
 			newEvent.Office = office;
 			newEvent.Town = town;
 			newEvent.Place = place;
-
+			newEvent.Kind  = kind != null ? kind : Enumerations.EventKind.None;
 			newEvent.Date = celebrationDate;
 			return newEvent;
 		}
@@ -109,9 +110,19 @@ namespace Epsitec.Aider.Entities
 
 		public void Delete(BusinessContext context)
 		{
+			if (this.State == Enumerations.EventState.Validated)
+			{
+				throw new BusinessRuleException ("Impossible de supprimer un acte validé");
+			}
+
 			foreach (var participant in this.Participants)
 			{
 				participant.Delete (context);
+			}
+
+			if (this.Report.IsNotNull ())
+			{
+				context.DeleteEntity (this.Report);
 			}
 
 			context.DeleteEntity (this);
