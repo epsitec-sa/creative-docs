@@ -230,6 +230,12 @@ namespace Epsitec.Aider.Entities
 		{
 			error = "";
 
+			if (this.Participants.Any (p => p.Role == Enumerations.EventParticipantRole.None))
+			{
+				error = "Il manque un rôle pour un des participants";
+				return false;
+			}
+
 			if (this.Office.ParishGroup.IsNoParish ())
 			{
 				error = "Cette gestion n'est pas liée à une paroisse, aucun acte ne peut y être généré";
