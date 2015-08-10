@@ -43,8 +43,6 @@
   <data name="Enum.MCH2Summary.Column.InitialState.Tooltip" id="KL1">Etat initial le {0}</data>
   <data name="Enum.MCH2Summary.Column.Inputs.Text" id="KM1">Entrées</data>
   <data name="Enum.MCH2Summary.Column.Inputs.Tooltip" id="KN1">Variations dues aux entrées de mises en service</data>
-  <data name="Enum.MCH2Summary.Column.Reorganizations.Text" id="KO1">Réorganisations</data>
-  <data name="Enum.MCH2Summary.Column.Reorganizations.Tooltip" id="KP1">Variations dues aux réorganisations</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Text" id="KQ1">Réévaluations</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Direct.Tooltip" id="KR1">Valeurs après réévaluations (diminutions)</data>
   <data name="Enum.MCH2Summary.Column.Increases.Text" id="KS1">Revalorisations</data>
@@ -100,10 +98,12 @@
   <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Variations dues aux entrées de financement préalable</data>
   <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeurs à neuf</data>
   <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Valeurs à neuf</data>
-  <data name="Enum.MCH2Summary.Column.DeltaAdjusts.Text" id="KH3">Somme correct.</data>
-  <data name="Enum.MCH2Summary.Column.DeltaAdjusts.Tooltip" id="KI3">Somme de toutes les corrections</data>
-  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip" id="KJ3">Somme de toutes les réévaluations et revalorisations</data>
-  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text" id="KK3">Somme ajust.</data>
-  <data name="Enum.MCH2Summary.Column.DeltaAmortizations.Text" id="KL3">Somme amort.</data>
-  <data name="Enum.MCH2Summary.Column.DeltaAmortizations.Tooltip" id="KM3">Somme de tous les amortissements</data>
+  <data name="Enum.MCH2Summary.Column.PostAdjusts.Text" id="KH3">Correct. post.</data>
+  <data name="Enum.MCH2Summary.Column.PostAdjusts.Tooltip" id="KI3">Somme de toutes les corrections postérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostDecreases.Tooltip" id="KJ3">Somme de toutes les réévaluations (diminutions) postérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostIncreases.Text" id="KK3">Reval. post.</data>
+  <data name="Enum.MCH2Summary.Column.PostAmortizations.Text" id="KL3">Amort. post.</data>
+  <data name="Enum.MCH2Summary.Column.PostAmortizations.Tooltip" id="KM3">Somme de tous les amortissements postérieurs au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostDecreases.Text" id="KN3">Rééval. post.</data>
+  <data name="Enum.MCH2Summary.Column.PostIncreases.Tooltip" id="KO3">Somme de toutes les revalorisations (augmentations) postérieures au {0}</data>
 </bundle>

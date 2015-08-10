@@ -266,43 +266,43 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						EventType.Input);
 
 				//	Mode indirect: Somme des réévaluations et revalorisations.
-				case Column.DeltaDecreasesIncreases:
+				case Column.PostDecreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						true,
-						EventType.Increase, EventType.Decrease);
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						EventType.Decrease);
+
+				//	Mode indirect: Somme des réévaluations et revalorisations.
+				case Column.PostIncreases:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						EventType.Increase);
 
 				//	Mode indirect: Somme des corrections.
-				case Column.DeltaAdjusts:
+				case Column.PostAdjusts:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						true,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
 						EventType.Adjust);
 
 				//	Mode indirect: Somme des amortissements.
-				case Column.DeltaAmortizations:
+				case Column.PostAmortizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						true,
-						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl);
-
-				//	Normalement plus utilisé.
-				case Column.Reorganizations:
-					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
-						this.DateRange,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Modification);
+						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl);
 
 				//	Mode direct: Réévaluations.
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						true,
+						false,
 						EventType.Decrease);
 
 				//	Mode direct: Revaloristions.
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						true,
+						false,
 						EventType.Output);
 
 				//	Mode direct: Amortissements automatiques.
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						true,
+						false,
 						EventType.AmortizationAuto, EventType.AmortizationPreview);
 
 				//	Mode direct: Amortissements extraordinaires.
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						true,
+						false,
 						EventType.AmortizationExtra);
 
 				//	Mode direct: Amortissements supplémentaires.
@@ -350,7 +350,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						true,
+						false,
 						EventType.AmortizationSuppl);
 
 				//	Mode direct et indirect: Valeurs finales.
@@ -433,17 +433,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.ReplacementValues:
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
 
-				case Column.DeltaAdjusts:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaAdjusts.Text.ToString ();
+				case Column.PostAdjusts:
+					return Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Text.ToString ();
 
-				case Column.DeltaDecreasesIncreases:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text.ToString ();
+				case Column.PostDecreases:
+					return Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Text.ToString ();
 
-				case Column.DeltaAmortizations:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaAmortizations.Text.ToString ();
+				case Column.PostIncreases:
+					return Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Text.ToString ();
 
-				case Column.Reorganizations:
-					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Text.ToString ();
+				case Column.PostAmortizations:
+					return Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Text.ToString ();
 
 				case Column.Decreases:
 					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Text.ToString ();
@@ -500,17 +500,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.ReplacementValues:
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
 
-				case Column.DeltaAdjusts:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaAdjusts.Tooltip.ToString ();
+				case Column.PostAdjusts:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDateTooltip);
 
-				case Column.DeltaDecreasesIncreases:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip.ToString ();
+				case Column.PostDecreases:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDateTooltip);
 
-				case Column.DeltaAmortizations:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaAmortizations.Tooltip.ToString ();
+				case Column.PostIncreases:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDateTooltip);
 
-				case Column.Reorganizations:
-					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
+				case Column.PostAmortizations:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDateTooltip);
 
 				case Column.Decreases:
 					return this.DirectMode ?
@@ -619,7 +619,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					yield return Column.Name;
 					yield return Column.InitialState;
 					yield return Column.PreInputs;
+
 					yield return Column.Inputs;
+
 //?					yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
 					yield return Column.Decreases;
 					yield return Column.Increases;
@@ -634,10 +636,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					yield return Column.Name;
 					yield return Column.PreInputs;
+
 					yield return Column.ReplacementValues;
-					yield return Column.DeltaDecreasesIncreases;
-					yield return Column.DeltaAdjusts;
-					yield return Column.DeltaAmortizations;
+					yield return Column.PostDecreases;
+					yield return Column.PostIncreases;
+					yield return Column.PostAdjusts;
+					yield return Column.PostAmortizations;
+
+					yield return Column.Decreases;
+					yield return Column.Increases;
+					yield return Column.Adjusts;
 					yield return Column.Outputs;
 					yield return Column.AmortizationsAuto;
 					yield return Column.AmortizationsExtra;
@@ -668,10 +676,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PreInputs,
 			Inputs,
 			ReplacementValues,
-			DeltaAdjusts,
-			DeltaDecreasesIncreases,
-			DeltaAmortizations,
-			Reorganizations,
+			PostAdjusts,
+			PostDecreases,
+			PostIncreases,
+			PostAmortizations,
 			Decreases,
 			Increases,
 			Adjusts,
