@@ -104,6 +104,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 				.LabelExports
 				.Select (s => new LabelExportItem (s.TextFactoryId, s.Text));
 
+			var reportExportItems = dataSet
+				.ReportExports
+				.Select (s => new ReportExportItem (s.Text));
+
 			var enableCreate = dataSet.EnableCreate;
 			var enableDelete = dataSet.EnableDelete;
 			var creationViewId = dataSet.CreationViewId;
@@ -111,7 +115,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			return new Database
 			(
-				dataSet, columns, sorters, menuItems, labelExportItems, enableCreate,
+				dataSet, columns, sorters, menuItems, labelExportItems, reportExportItems, enableCreate,
 				enableDelete, creationViewId, deletionViewId
 			);
 		}

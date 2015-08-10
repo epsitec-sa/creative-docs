@@ -2548,6 +2548,9 @@ AiderEventPlace = [LVOL63]
 
     <d cid="[LVOH73]" teid="@AiderEventParticipant" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
       <R><r>@user</r></R>
+      <Reports>
+	<report t="Extraits complets" />
+      </Reports>
       <f id="@AiderEventParticipant">
         <C>
 	    <!-- doit être validé -->

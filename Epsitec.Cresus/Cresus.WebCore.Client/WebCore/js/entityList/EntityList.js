@@ -14,6 +14,7 @@ Ext.require([
   'Epsitec.cresus.webcore.tools.Tools',
   'Epsitec.cresus.webcore.ui.ArrayExportWindow',
   'Epsitec.cresus.webcore.ui.LabelExportWindow',
+  'Epsitec.cresus.webcore.ui.ReportExportWindow',
   'Epsitec.cresus.webcore.ui.SortWindow',
   'Epsitec.cresus.webcore.ui.SearchWindow',
   'Epsitec.cresus.webcore.ui.querybuilder.QueryWindow',
@@ -708,6 +709,16 @@ function() {
         });
       }
 
+      if (!Ext.isEmpty(options.reportExportDefinitions)) {
+          items.push({
+              text: Epsitec.Texts.getExportReportLabel(),
+              listeners: {
+                  click: function () { this.onExportHandler('report'); },
+                  scope: this
+              }
+          });
+      }
+
       return items;
     },
 
@@ -889,6 +900,13 @@ function() {
         case 'label':
           exportWindow = Ext.create('Epsitec.LabelExportWindow', {
             labelExportDefinitions: this.labelExportDefinitions,
+            exportUrl: exportUrl
+          });
+          break;
+
+        case 'report':
+          exportWindow = Ext.create('Epsitec.ReportExportWindow', {
+            reportExportDefinitions: this.reportExportDefinitions,
             exportUrl: exportUrl
           });
           break;

@@ -115,6 +115,7 @@
     <Compile Include="Core\Databases\AbstractMenuItem.cs" />
     <Compile Include="Core\Databases\DatabaseMenuItem.cs" />
     <Compile Include="Core\Databases\DatabaseManager.cs" />
+    <Compile Include="Core\Databases\ReportExportItem.cs" />
     <Compile Include="Core\Databases\LabelExportItem.cs" />
     <Compile Include="Core\Databases\SubMenuItem.cs" />
     <Compile Include="Core\Databases\Sorter.cs" />
