@@ -43,6 +43,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventConfirmation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 236));
 				//	designer:cap/LVOD73
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventEndOfCatechism = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 237));
+				//	designer:cap/LVOH73
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventExtractions = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 241));
 				//	designer:cap/LVOE73
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventFuneralService = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 238));
 				//	designer:cap/LVOF73
@@ -136,6 +138,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderEventConfirmation = 0x3F5000780000ECL;
 				//	designer:cap/LVOD73
 				public const long ShowAiderEventEndOfCatechism = 0x3F5000780000EDL;
+				//	designer:cap/LVOH73
+				public const long ShowAiderEventExtractions = 0x3F5000780000F1L;
 				//	designer:cap/LVOE73
 				public const long ShowAiderEventFuneralService = 0x3F5000780000EEL;
 				//	designer:cap/LVOF73

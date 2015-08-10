@@ -463,14 +463,38 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVAQ3]" title="Date" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
     </t>
 
     <t eid="@AiderEventParticipant" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAC3].[LVAEH].[LVACE]" title="Intitulé" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVA04]" title="Registre" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVO873].[LVOD63]" title="Acte N°" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVAQ3]" title="Date" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAD3]" title="Rôle" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO473]" title="Nom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO373]" title="Prénom" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO573]" title="Domicile" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -2518,6 +2542,16 @@ AiderEventPlace = [LVOL63]
 	    <c id="[LVA04]"><v><comp c="1" v="e[LVAT3]/5" /></v></c>
 	    <!-- doit être validé -->
 	    <c id="[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
+	</C>
+      </f>
+    </d>
+
+    <d cid="[LVOH73]" teid="@AiderEventParticipant" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuRegistry">
+      <R><r>@user</r></R>
+      <f id="@AiderEventParticipant">
+        <C>
+	    <!-- doit être validé -->
+	    <c id="[LVAB3].[LVOF53]"><v><comp c="1" v="e[LVOB53]/2" /></v></c>
 	</C>
       </f>
     </d>
