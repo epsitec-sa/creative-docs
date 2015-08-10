@@ -68,8 +68,8 @@
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationYes" id="KD2">Oui</data>
   <data name="GroupsTreeTableFiller.GroupUsedDuringCreationNo" id="KE2">
   </data>
-  <data name="Enum.MCH2Summary.Column.Adjust.Text" id="KF2">Corrections</data>
-  <data name="Enum.MCH2Summary.Column.Adjust.Direct.Tooltip" id="KG2">Valeurs après corrections</data>
+  <data name="Enum.MCH2Summary.Column.Adjusts.Text" id="KF2">Corrections</data>
+  <data name="Enum.MCH2Summary.Column.Adjusts.Direct.Tooltip" id="KG2">Valeurs après corrections</data>
   <data name="SingleGroupsTreeTableFiller.Number" id="KH2">Numéro</data>
   <data name="SingleCategoriesTreeTableFiller.Method" id="KK2">Méthode</data>
   <data name="SingleCategoriesTreeTableFiller.AmortizationYearCount" id="KL2">Nb années</data>
@@ -93,15 +93,17 @@
   <data name="EntriesTreeTableFiller.VatCode" id="K73">Code TVA</data>
   <data name="UserFieldsTreeTableFiller.MCH2SummaryOrder" id="K83">Ds MCH2</data>
   <data name="Enum.MCH2Summary.Column.UserColumn.Tooltip" id="K93">{0} le {1}</data>
-  <data name="Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip" id="KA3">Variations dues aux corrections</data>
+  <data name="Enum.MCH2Summary.Column.Adjusts.Indirect.Tooltip" id="KA3">Variations dues aux corrections</data>
   <data name="Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip" id="KB3">Variations dues aux réévaluations (diminutions)</data>
   <data name="Enum.MCH2Summary.Column.Increases.Indirect.Tooltip" id="KC3">Variations dues aux revalorisations (augmentations)</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Text" id="KD3">Financements</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Variations dues aux entrées de financement préalable</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeur à neuf</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Valeur à neuf</data>
-  <data name="Enum.MCH2Summary.Column.DeltaModifications.Text" id="KH3">Modifications</data>
-  <data name="Enum.MCH2Summary.Column.DeltaModifications.Tooltip" id="KI3">Modifications de valeur</data>
-  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip" id="KJ3">Ajustements</data>
-  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text" id="KK3">Ajustements</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeurs à neuf</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Valeurs à neuf</data>
+  <data name="Enum.MCH2Summary.Column.DeltaAdjusts.Text" id="KH3">Somme correct.</data>
+  <data name="Enum.MCH2Summary.Column.DeltaAdjusts.Tooltip" id="KI3">Somme de toutes les corrections</data>
+  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip" id="KJ3">Somme de toutes les réévaluations et revalorisations</data>
+  <data name="Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text" id="KK3">Somme ajust.</data>
+  <data name="Enum.MCH2Summary.Column.DeltaAmortizations.Text" id="KL3">Somme amort.</data>
+  <data name="Enum.MCH2Summary.Column.DeltaAmortizations.Tooltip" id="KM3">Somme de tous les amortissements</data>
 </bundle>

@@ -225,7 +225,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructions (userColumn.Field,
 						ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						this.DirectMode,
 						false);
 			}
 
@@ -233,119 +232,128 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			switch (column)
 			{
+				//	Mode direct: Etat d'entrée.
 				case Column.InitialState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état avant
 					//	le premier janvier, donc au 31.12.2013 23:59:59.
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
-						this.DirectMode,
 						false);
 
+				//	Mode direct et indirect: Valeur selon les événements d'entrée de financement préalable.
 				case Column.PreInputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						false,
 						EventType.PreInput);
 
+				//	Mode direct: Entrées de mises en service.
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						false,
 						EventType.Input);
 
+				//	Mode indirect: Valeurs à neuf.
 				case Column.ReplacementValues:
 					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
-						this.DateRange,
-						this.DirectMode,
+						ExtractionAmount.LastFiltered,
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						false,
 						EventType.Input);
 
-				case Column.DeltaModifications:
-					return new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
-						this.DateRange,
-						this.DirectMode,
-						false,
-						EventType.Input);
-
+				//	Mode indirect: Somme des réévaluations et revalorisations.
 				case Column.DeltaDecreasesIncreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
-						this.DateRange,
-						this.DirectMode,
-						false,
-						EventType.Input);
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						true,
+						EventType.Increase, EventType.Decrease);
 
+				//	Mode indirect: Somme des corrections.
+				case Column.DeltaAdjusts:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						true,
+						EventType.Adjust);
+
+				//	Mode indirect: Somme des amortissements.
+				case Column.DeltaAmortizations:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						true,
+						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl);
+
+				//	Normalement plus utilisé.
 				case Column.Reorganizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						false,
 						EventType.Modification);
 
+				//	Mode direct: Réévaluations.
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						true,
 						EventType.Decrease);
 
+				//	Mode direct: Revaloristions.
 				case Column.Increases:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						false,
 						EventType.Increase);
 
-				case Column.Adjust:
+				//	Mode direct: Corrections.
+				case Column.Adjusts:
 					return new ExtractionInstructions (field,
 						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						false,
 						EventType.Adjust);
 
+				//	Mode direct et indirect: Sorties.
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						true,
 						EventType.Output);
 
+				//	Mode direct: Amortissements automatiques.
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						true,
 						EventType.AmortizationAuto, EventType.AmortizationPreview);
 
+				//	Mode direct: Amortissements extraordinaires.
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						true,
 						EventType.AmortizationExtra);
 
+				//	Mode direct: Amortissements supplémentaires.
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
 						this.DateRange,
-						this.DirectMode,
 						true,
 						EventType.AmortizationSuppl);
 
+				//	Mode direct et indirect: Valeurs finales.
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
 					//	le 31 décembre. Comme la date "au" est exclue dans un DateRange, la date
@@ -353,7 +361,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						this.DirectMode,
 						false);
 
 				default:
@@ -426,11 +433,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.ReplacementValues:
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
 
-				case Column.DeltaModifications:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaModifications.Text.ToString ();
+				case Column.DeltaAdjusts:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaAdjusts.Text.ToString ();
 
 				case Column.DeltaDecreasesIncreases:
 					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Text.ToString ();
+
+				case Column.DeltaAmortizations:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaAmortizations.Text.ToString ();
 
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Text.ToString ();
@@ -441,8 +451,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.Increases:
 					return Res.Strings.Enum.MCH2Summary.Column.Increases.Text.ToString ();
 
-				case Column.Adjust:
-					return Res.Strings.Enum.MCH2Summary.Column.Adjust.Text.ToString ();
+				case Column.Adjusts:
+					return Res.Strings.Enum.MCH2Summary.Column.Adjusts.Text.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
@@ -490,11 +500,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.ReplacementValues:
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
 
-				case Column.DeltaModifications:
-					return Res.Strings.Enum.MCH2Summary.Column.DeltaModifications.Tooltip.ToString ();
+				case Column.DeltaAdjusts:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaAdjusts.Tooltip.ToString ();
 
 				case Column.DeltaDecreasesIncreases:
 					return Res.Strings.Enum.MCH2Summary.Column.DeltaDecreasesIncreases.Tooltip.ToString ();
+
+				case Column.DeltaAmortizations:
+					return Res.Strings.Enum.MCH2Summary.Column.DeltaAmortizations.Tooltip.ToString ();
 
 				case Column.Reorganizations:
 					return Res.Strings.Enum.MCH2Summary.Column.Reorganizations.Tooltip.ToString ();
@@ -509,10 +522,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						Res.Strings.Enum.MCH2Summary.Column.Increases.Direct.Tooltip.ToString () :
 						Res.Strings.Enum.MCH2Summary.Column.Increases.Indirect.Tooltip.ToString ();
 
-				case Column.Adjust:
+				case Column.Adjusts:
 					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Adjust.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Adjust.Indirect.Tooltip.ToString ();
+						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Direct.Tooltip.ToString () :
+						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Indirect.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -601,7 +614,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	Retourne les colonnes visibles, dans le bon ordre.
 			get
 			{
-				if (this.DirectMode)
+				if (this.DirectMode)  // mode direct ?
 				{
 					yield return Column.Name;
 					yield return Column.InitialState;
@@ -610,24 +623,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 //?					yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
 					yield return Column.Decreases;
 					yield return Column.Increases;
-					yield return Column.Adjust;
+					yield return Column.Adjusts;
 					yield return Column.Outputs;
 					yield return Column.AmortizationsAuto;
 					yield return Column.AmortizationsExtra;
 					yield return Column.AmortizationsSuppl;
 					yield return Column.FinalState;
 				}
-				else
+				else  // mode indirect ?
 				{
 					yield return Column.Name;
-					yield return Column.InitialState;
 					yield return Column.PreInputs;
 					yield return Column.ReplacementValues;
-					yield return Column.DeltaModifications;
 					yield return Column.DeltaDecreasesIncreases;
-					yield return Column.Decreases;
-					yield return Column.Increases;
-					yield return Column.Adjust;
+					yield return Column.DeltaAdjusts;
+					yield return Column.DeltaAmortizations;
 					yield return Column.Outputs;
 					yield return Column.AmortizationsAuto;
 					yield return Column.AmortizationsExtra;
@@ -658,12 +668,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PreInputs,
 			Inputs,
 			ReplacementValues,
-			DeltaModifications,
+			DeltaAdjusts,
 			DeltaDecreasesIncreases,
+			DeltaAmortizations,
 			Reorganizations,
 			Decreases,
 			Increases,
-			Adjust,
+			Adjusts,
 			Outputs,
 			AmortizationsAuto,
 			AmortizationsExtra,
