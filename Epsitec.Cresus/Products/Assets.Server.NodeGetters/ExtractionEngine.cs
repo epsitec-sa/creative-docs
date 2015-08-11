@@ -120,7 +120,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private static AbstractCumulValue GetStateAt(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne la valeur définie à la fin de la période, ou antérieurement.
-			var timestamp = new Timestamp(extractionInstructions.Range.ExcludeTo, 0);
+			//	Comme la date de fin est 'ExcludeTo', il faut chercher l'événement daté un poil avant !
+			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo.AddTicks (-1), 0);
 			var p = obj.GetSyntheticProperty (timestamp, ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 			if (p != null)
