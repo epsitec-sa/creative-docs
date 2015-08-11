@@ -298,21 +298,21 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Decrease);
 
 				case Column.Increases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Increase);
 
 				case Column.Adjusts:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Adjust);
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				//	Retourne le tooltip d'une colonne supplémentaire, par exemple "Valeur fiscale le 31.12.2015 à 23h59".
 				var userColumn = this.userColumns[(column-Column.User)];
-				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.FinalDateTooltip);
+				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.JustDeforeFinalDate);
 			}
 
 			switch (column)
@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.Name.Tooltip.ToString ();
 
 				case Column.InitialState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PreInputs:
 					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Tooltip.ToString ();
@@ -495,34 +495,28 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
 
 				case Column.PostAdjusts:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostDecreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostIncreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostOutputs:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostAmortizations:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDate);
 
 				case Column.Decreases:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Decreases.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
 
 				case Column.Increases:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Increases.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Increases.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
 
 				case Column.Adjusts:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Adjusts.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -537,7 +531,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip.ToString ();
 
 				case Column.FinalState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.FinalDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.JustDeforeFinalDate);
 
 				default:
 					return null;
@@ -574,24 +568,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private string InitialDateTooltip
+		private string JustDeforeFinalDate
 		{
-			get
-			{
-				if (this.DateRange.IsEmpty)
-				{
-					return "?";
-				}
-				else
-				{
-					var date = TypeConverters.DateToString (this.DateRange.IncludeFrom.AddDays (-1));
-					return string.Format (Res.Strings.MCH2SummaryTreeTableFiller.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
-				}
-			}
-		}
-
-		private string FinalDateTooltip
-		{
+			//	A partir de la date 01.01.2016, retourne le texte "31.12.15 à 23h59".
 			get
 			{
 				if (this.DateRange.IsEmpty)
