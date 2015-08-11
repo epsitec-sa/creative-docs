@@ -35,16 +35,16 @@ namespace Epsitec.Aider.Processors.Pdf
 			
 			// header
 			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
-			var topLogo	      = string.Format (@"<img src=""{0}"" />", topLogoPath);
-			var headerContent = new FormattedText (topLogo);
+			var topLogo	      = new FormattedText (string.Format (@"<img src=""{0}"" />", topLogoPath));
+			report.AddTopLeftLayer (topLogo, 100, 100);
 
-			headerContent += new FormattedText ("<b>Extrait du " + act.GetRegitryName () + "</b><br/><br/>");
-			headerContent += new FormattedText ("<b>Acte N°" + officeReport.EventNumber + "</b><br/>");
-			headerContent += new FormattedText (officeReport.Office.OfficeName + "<br/>");
-			report.AddTopLeftLayer (headerContent, 50);
+			var headerContent = new FormattedText ("<b>Extrait du " + act.GetRegitryName () + "</b><br/>");
+			headerContent += new FormattedText ("<b>de la " + officeReport.Office.OfficeName + "</b><br/><br/>");
+
+			report.AddTopLeftLayer (headerContent, 200, 500);
 		
 			// footer
-			var footerContent = TextFormatter.FormatText ("Extrait d'AIDER le", Date.Today.ToShortDateString ());
+			var footerContent = TextFormatter.FormatText ("Extrait du registre informatique de l'EERV le ", Date.Today.ToShortDateString ());
 			report.AddBottomRightLayer (footerContent, 100);
 
 
@@ -59,10 +59,15 @@ namespace Epsitec.Aider.Processors.Pdf
 		private void WriteGroupAct (AiderEventEntity act, List<string> lines)
 		{
 			var actors = act.GetMainActors ();
+
 			
 			if (act.State != Enumerations.EventState.Validated)
 			{
-				lines.Add ("<b>Acte à valider:</b><br/>");
+				lines.Add ("<b>Acte à valider :</b><br/>");
+			}
+			else
+			{
+				lines.Add ("<b>Acte N°" + act.Report.EventNumber + "</b><br/>");
 			}
 
 			switch (act.Kind)
@@ -154,7 +159,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private void AddActFooterLines(AiderEventEntity act, List<string> lines)
 		{
-			lines.Add (this.GetWhen (act) + this.Tabs () + "lieu:<tab/>" + act.Place.Name);
+			lines.Add (this.GetWhen (act) + this.Tabs () + "lieu :<tab/>" + act.Place.Name);
 			lines.Add (this.GetMinisterLine (act));
 			switch (act.Type)
 			{
@@ -170,7 +175,12 @@ namespace Epsitec.Aider.Processors.Pdf
 			
 			if (act.State == Enumerations.EventState.Validated)
 			{
-				lines.Add ("<br/><i>Acte visé par:<tab/>" + act.Validator.DisplayName + "</i>");
+				lines.Add ("<br/>Visa :<tab/>" + act.Validator.DisplayName);
+				lines.Add ("<br/><br/><br/><br/><br/><br/>");
+				lines.Add ("<tab/><tab/>Extrait certifié conforme à l'original.<br/>");
+				lines.Add ("<tab/><tab/>Lieu :<tab/>…………………………………………………………………<br/>");
+				lines.Add ("<tab/><tab/>Date :<tab/>…………………………………………………………………<br/>");
+				lines.Add ("<tab/><tab/>Signature :<tab/>…………………………………………………………………<br/>");
 			}
 		}
 
@@ -209,12 +219,12 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetWhen(AiderEventEntity act)
 		{
-			return  "le:<tab/>" + act.Date.Value.ToDateTime ().ToString ("dd MMMM yyyy");
+			return  "le :<tab/>" + act.Date.Value.ToDateTime ().ToString ("dd MMMM yyyy");
 		}
 
 		private string GetMinisterLine(AiderEventEntity act)
 		{
-			var line = "par:<tab/>";
+			var line = "par :<tab/>";
 			var minister = act.GetMinister ();
 			if (minister.Employee.IsNotNull ())
 			{
@@ -230,7 +240,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetFirstWitnessLine(AiderEventEntity act)
 		{
-			var line = "Premier témoin:<tab/>";
+			var line = "Premier témoin :<tab/>";
 			var witness = act.GetActor (Enumerations.EventParticipantRole.FirstWitness);
 			if (witness.IsNotNull ())
 			{
@@ -246,7 +256,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetSecondWitnessLine(AiderEventEntity act)
 		{
-			var line = "Second témoin:<tab/>";
+			var line = "Second témoin :<tab/>";
 			var witness = act.GetActor (Enumerations.EventParticipantRole.SecondWitness);
 			if (witness.IsNotNull ())
 			{
@@ -262,7 +272,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetGodFatherLine(AiderEventEntity act)
 		{
-			var line = "Parrain:<tab/>";
+			var line = "Parrain :<tab/>";
 			var gotFather = act.GetActor (Enumerations.EventParticipantRole.GodFather);
 			if (gotFather.IsNotNull ())
 			{
@@ -278,7 +288,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetGodMotherLine(AiderEventEntity act)
 		{
-			var line = "Marraine:<tab/>";
+			var line = "Marraine :<tab/>";
 			var gotMother = act.GetActor (Enumerations.EventParticipantRole.GodMother);
 			if (gotMother.IsNotNull ())
 			{
@@ -294,17 +304,17 @@ namespace Epsitec.Aider.Processors.Pdf
 		
 		private string GetParishLine(AiderPersonEntity person)
 		{
-			var parish = "Paroisse:<tab/>";
+			var parish = "Paroisse :<tab/>";
 			parish += person.ParishGroup.Name;
 			return parish;
 		}
 
 		private string GetBirthDateLine(AiderPersonEntity person)
 		{
-			var bd = "Né le:<tab/>";
+			var bd = "Né le :<tab/>";
 			if (this.IsFemale (person))
 			{
-				bd = "Née le:<tab/>";
+				bd = "Née le :<tab/>";
 			}
 
 			bd += person.eCH_Person.PersonDateOfBirth.Value.ToShortDateString ();
@@ -313,7 +323,7 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetFirstNameLine(AiderPersonEntity person)
 		{
-			var firstName = "Prénom:<tab/><b>";
+			var firstName = "Prénom :<tab/><b>";
 			var names = person.eCH_Person.PersonFirstNames.Split (' ');
 			firstName += names[0] + "</b> " + string.Join (" ", names.Skip (1));
 			return firstName;
@@ -321,17 +331,17 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetLastNameLine(AiderPersonEntity person)
 		{
-			var firstName = "Nom:<tab/><b>";
+			var firstName = "Nom :<tab/><b>";
 			firstName += person.eCH_Person.PersonOfficialName + "</b>";
 			return firstName;
 		}
 
 		private string GetTownLine(AiderPersonEntity person)
 		{
-			var from = "Domicilié à:<tab/>";
+			var from = "Domicilié à :<tab/>";
 			if (this.IsFemale (person))
 			{
-				from = "Domiciliée à:<tab/>";
+				from = "Domiciliée à :<tab/>";
 			}
 
 			if (person.IsGovernmentDefined && person.IsDeclared)
@@ -348,10 +358,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetSonOfLine(AiderPersonEntity person, AiderEventEntity act)
 		{
-			var filiation = "Fils de:<tab/>";
+			var filiation = "Fils de :<tab/>";
 			if (this.IsFemale (person))
 			{
-				filiation = "Fille de:<tab/>";
+				filiation = "Fille de :<tab/>";
 			}
 
 			var father = act.GetActor (Enumerations.EventParticipantRole.Father);
@@ -376,10 +386,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetHusbandSonOfLine(AiderPersonEntity person, AiderEventEntity act)
 		{
-			var filiation = "Fils de:<tab/>";
+			var filiation = "Fils de :<tab/>";
 			if (this.IsFemale (person))
 			{
-				filiation = "Fille de:<tab/>";
+				filiation = "Fille de :<tab/>";
 			}
 
 			var father = act.GetActor (Enumerations.EventParticipantRole.HusbandFather);
@@ -404,10 +414,10 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private string GetSpouseSonOfLine(AiderPersonEntity person, AiderEventEntity act)
 		{
-			var filiation = "Fils de:<tab/>";
+			var filiation = "Fils de :<tab/>";
 			if (this.IsFemale (person))
 			{
-				filiation = "Fille de:<tab/>";
+				filiation = "Fille de :<tab/>";
 			}
 
 			var father = act.GetActor (Enumerations.EventParticipantRole.SpouseFather);
@@ -453,7 +463,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var setup = new ListingDocumentSetup ();
 
-			setup.TextStyle.TabInsert (new TextStyle.Tab (15.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
+			setup.TextStyle.TabInsert (new TextStyle.Tab (20.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
 			setup.TextStyle.TabInsert (new TextStyle.Tab (90.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
 			setup.TextStyle.TabInsert (new TextStyle.Tab (110.0.Millimeters (), TextTabType.Left, TextTabLine.Dot));
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
