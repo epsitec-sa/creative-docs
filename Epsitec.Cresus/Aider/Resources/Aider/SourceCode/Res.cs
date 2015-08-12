@@ -3077,19 +3077,25 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOC63
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 204);
-				//	designer:cap/LVOD63
-				public static readonly global::Epsitec.Common.Support.Druid EventNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 205);
+				//	designer:cap/LVOQ73
+				public static readonly global::Epsitec.Common.Support.Druid EventCode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 250);
+				//	designer:cap/LVOO73
+				public static readonly global::Epsitec.Common.Support.Druid EventNumberByYearAndRegistry = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 248);
 				//	designer:cap/LVO773
 				public static readonly global::Epsitec.Common.Support.Druid IsValidated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 231);
+				//	designer:cap/LVOR73
+				public static readonly global::Epsitec.Common.Support.Druid Year = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 251);
 			}
 			
 			public static class AiderEventParticipant
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderEventParticipant.Event, null);
+					global::System.Object.Equals (AiderEventParticipant.BirthDate, null);
 				}
 				
+				//	designer:cap/LVON73
+				public static readonly global::Epsitec.Common.Support.Druid BirthDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 247);
 				//	designer:cap/LVAB3
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 107);
 				//	designer:cap/LVOI73
@@ -3098,6 +3104,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid IsExternal = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 226);
 				//	designer:cap/LVOJ73
 				public static readonly global::Epsitec.Common.Support.Druid LastName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 243);
+				//	designer:cap/LVOM73
+				public static readonly global::Epsitec.Common.Support.Druid ParishName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 246);
 				//	designer:cap/LVAC3
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 108);
 				//	designer:cap/LVAD3

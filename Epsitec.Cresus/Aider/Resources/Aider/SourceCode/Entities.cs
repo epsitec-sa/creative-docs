@@ -3709,6 +3709,50 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParishName</c> field.
+		///	designer:fld/LVAA3/LVOM73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOM73]")]
+		public string ParishName
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOM73]");
+			}
+			set
+			{
+				string oldValue = this.ParishName;
+				if (oldValue != value || !this.IsFieldDefined("[LVOM73]"))
+				{
+					this.OnParishNameChanging (oldValue, value);
+					this.SetField<string> ("[LVOM73]", oldValue, value);
+					this.OnParishNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BirthDate</c> field.
+		///	designer:fld/LVAA3/LVON73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVON73]")]
+		public global::Epsitec.Common.Types.Date? BirthDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVON73]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.BirthDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVON73]"))
+				{
+					this.OnBirthDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVON73]", oldValue, value);
+					this.OnBirthDateChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Enumerations.EventParticipantRole oldValue, global::Epsitec.Aider.Enumerations.EventParticipantRole newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Enumerations.EventParticipantRole oldValue, global::Epsitec.Aider.Enumerations.EventParticipantRole newValue);
@@ -3726,6 +3770,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnSexChanged(global::Epsitec.Aider.Enumerations.PersonSex oldValue, global::Epsitec.Aider.Enumerations.PersonSex newValue);
 		partial void OnTownChanging(string oldValue, string newValue);
 		partial void OnTownChanged(string oldValue, string newValue);
+		partial void OnParishNameChanging(string oldValue, string newValue);
+		partial void OnParishNameChanged(string oldValue, string newValue);
+		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -11126,28 +11174,6 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderEventOfficeReportEntity : global::Epsitec.Aider.Entities.AiderOfficeReportEntity
 	{
 		///	<summary>
-		///	The <c>EventNumber</c> field.
-		///	designer:fld/LVOB63/LVOD63
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVOD63]")]
-		public string EventNumber
-		{
-			get
-			{
-				return this.GetField<string> ("[LVOD63]");
-			}
-			set
-			{
-				string oldValue = this.EventNumber;
-				if (oldValue != value || !this.IsFieldDefined("[LVOD63]"))
-				{
-					this.OnEventNumberChanging (oldValue, value);
-					this.SetField<string> ("[LVOD63]", oldValue, value);
-					this.OnEventNumberChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Event</c> field.
 		///	designer:fld/LVOB63/LVOC63
 		///	</summary>
@@ -11191,14 +11217,88 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	Par année et registre
+		///	designer:fld/LVOB63/LVOO73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOO73]")]
+		public int EventNumberByYearAndRegistry
+		{
+			get
+			{
+				return this.GetField<int> ("[LVOO73]");
+			}
+			set
+			{
+				int oldValue = this.EventNumberByYearAndRegistry;
+				if (oldValue != value || !this.IsFieldDefined("[LVOO73]"))
+				{
+					this.OnEventNumberByYearAndRegistryChanging (oldValue, value);
+					this.SetField<int> ("[LVOO73]", oldValue, value);
+					this.OnEventNumberByYearAndRegistryChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EventCode</c> field.
+		///	designer:fld/LVOB63/LVOQ73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOQ73]", IsVirtual=true)]
+		public string EventCode
+		{
+			get
+			{
+				string value = default (string);
+				this.GetEventCode (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.EventCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVOQ73]"))
+				{
+					this.OnEventCodeChanging (oldValue, value);
+					this.SetEventCode (value);
+					this.OnEventCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Year</c> field.
+		///	designer:fld/LVOB63/LVOR73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOR73]")]
+		public int Year
+		{
+			get
+			{
+				return this.GetField<int> ("[LVOR73]");
+			}
+			set
+			{
+				int oldValue = this.Year;
+				if (oldValue != value || !this.IsFieldDefined("[LVOR73]"))
+				{
+					this.OnYearChanging (oldValue, value);
+					this.SetField<int> ("[LVOR73]", oldValue, value);
+					this.OnYearChanged (oldValue, value);
+				}
+			}
+		}
 		
-		partial void OnEventNumberChanging(string oldValue, string newValue);
-		partial void OnEventNumberChanged(string oldValue, string newValue);
 		partial void OnEventChanging(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnIsValidatedChanging(bool oldValue, bool newValue);
 		partial void OnIsValidatedChanged(bool oldValue, bool newValue);
+		partial void OnEventNumberByYearAndRegistryChanging(int oldValue, int newValue);
+		partial void OnEventNumberByYearAndRegistryChanged(int oldValue, int newValue);
+		partial void OnEventCodeChanging(string oldValue, string newValue);
+		partial void OnEventCodeChanged(string oldValue, string newValue);
+		partial void OnYearChanging(int oldValue, int newValue);
+		partial void OnYearChanged(int oldValue, int newValue);
 		
+		partial void GetEventCode(ref string value);
+		partial void SetEventCode(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

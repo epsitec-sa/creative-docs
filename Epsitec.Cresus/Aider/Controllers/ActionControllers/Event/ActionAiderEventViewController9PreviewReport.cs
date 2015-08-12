@@ -49,7 +49,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				// Trigger validation rules
 				this.Entity.State     = Enumerations.EventState.ToValidate;
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
-				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, "(à valider)", this.Entity, false);
+				var act        = AiderEventOfficeReportEntity.CreatePreview (this.BusinessContext, this.Entity);
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
 				this.Entity.Report      = act;

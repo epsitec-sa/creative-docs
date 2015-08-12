@@ -18,6 +18,7 @@ using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Data.Common;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -67,7 +68,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 			else
 			{
-				lines.Add ("<b>Acte N°" + act.Report.EventNumber + "</b><br/>");
+				lines.Add ("<b>Acte N°" + act.Report.GetEventNumber () + "</b><br/>");
 			}
 
 			switch (act.Kind)

@@ -85,29 +85,6 @@ namespace Epsitec.Aider.Entities
 			return newEvent;
 		}
 
-		public static string FindNextNumber (BusinessContext context, Enumerations.EventType type)
-		{
-			var nextEvent  = 1;
-			var eventStyle = new AiderEventEntity ()
-			{
-				Type = type,
-				State = Enumerations.EventState.Validated
-			};
-			var example   = new AiderEventOfficeReportEntity ()
-			{
-				Event = eventStyle
-			};
-
-			var reports        = context.GetByExample <AiderEventOfficeReportEntity> (example);
-			var thisYearEvents = reports.Where (r => r.Event.Date.Value.Year == System.DateTime.Now.Year);
-			if (thisYearEvents.Any ())
-			{
-				nextEvent = thisYearEvents.Max (r => System.Convert.ToInt32 (r.EventNumber.Split ('/')[1])) + 1;
-			}
-
-			return System.DateTime.Now.Year.ToString () + "/" + nextEvent.ToString ();
-		}
-
 		public void Delete(BusinessContext context)
 		{
 			if (this.State == Enumerations.EventState.Validated)

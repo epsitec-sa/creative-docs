@@ -459,7 +459,11 @@ AiderEventPlace = [LVOL63]
     </t>
 
     <t eid="@AiderEvent" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVO873].[LVOD63]" title="Acte N°" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVO873].[LVOR73]" title="Année" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVO873].[LVOO73]" title="Acte N°" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -474,7 +478,11 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVO873].[LVOD63]" title="Acte N°" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVO873].[LVOR73]" title="Année" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVO873].[LVOO73]" title="Acte N°" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
