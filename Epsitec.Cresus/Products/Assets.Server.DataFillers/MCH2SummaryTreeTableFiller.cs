@@ -232,16 +232,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 			switch (column)
 			{
-				//	Mode direct: Etat d'entrée.
 				case Column.InitialState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état avant
 					//	le premier janvier, donc au 31.12.2013 23:59:59.
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
-						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom.AddTicks (-1)),
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false);
 
-				//	Mode direct et indirect: Valeur selon les événements d'entrée de financement préalable.
 				case Column.PreInputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -249,7 +247,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.PreInput);
 
-				//	Mode direct: Entrées de mises en service.
 				case Column.Inputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -257,15 +254,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.Input);
 
-				//	Mode indirect: Valeurs à neuf.
 				case Column.ReplacementValues:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.LastFiltered,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false,
 						EventType.Input);
 
-				//	Mode indirect: Somme des réévaluations et revalorisations.
 				case Column.PostDecreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -273,7 +268,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.Decrease);
 
-				//	Mode indirect: Somme des réévaluations et revalorisations.
 				case Column.PostIncreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -281,7 +275,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.Increase);
 
-				//	Mode indirect: Somme des corrections.
 				case Column.PostAdjusts:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -289,7 +282,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.Adjust);
 
-				//	Mode indirect: Somme des amortissements.
+				case Column.PostOutputs:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						EventType.Output);
+
 				case Column.PostAmortizations:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -297,31 +296,27 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl);
 
-				//	Mode direct: Réévaluations.
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Decrease);
 
-				//	Mode direct: Revaloristions.
 				case Column.Increases:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Increase);
 
-				//	Mode direct: Corrections.
 				case Column.Adjusts:
 					return new ExtractionInstructions (field,
-						this.DirectMode ? ExtractionAmount.LastFiltered : ExtractionAmount.DeltaSum,
+						ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Adjust);
 
-				//	Mode direct et indirect: Sorties.
 				case Column.Outputs:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -329,7 +324,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.Output);
 
-				//	Mode direct: Amortissements automatiques.
 				case Column.AmortizationsAuto:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -337,7 +331,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.AmortizationAuto, EventType.AmortizationPreview);
 
-				//	Mode direct: Amortissements extraordinaires.
 				case Column.AmortizationsExtra:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -345,7 +338,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.AmortizationExtra);
 
-				//	Mode direct: Amortissements supplémentaires.
 				case Column.AmortizationsSuppl:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -353,14 +345,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.AmortizationSuppl);
 
-				//	Mode direct et indirect: Valeurs finales.
 				case Column.FinalState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
 					//	le 31 décembre. Comme la date "au" est exclue dans un DateRange, la date
 					//	ExcludeTo vaut 01.01.2015. On cherche donc l'état au 31.12.2014 23:59:59.
 					return new ExtractionInstructions (field,
 						ExtractionAmount.StateAt,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
+						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false);
 
 				default:
@@ -442,6 +433,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.PostIncreases:
 					return Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Text.ToString ();
 
+				case Column.PostOutputs:
+					return Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Text.ToString ();
+
 				case Column.PostAmortizations:
 					return Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Text.ToString ();
 
@@ -480,7 +474,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				//	Retourne le tooltip d'une colonne supplémentaire, par exemple "Valeur fiscale le 31.12.2015 à 23h59".
 				var userColumn = this.userColumns[(column-Column.User)];
-				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.FinalDateTooltip);
+				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.JustDeforeFinalDate);
 			}
 
 			switch (column)
@@ -489,7 +483,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.Name.Tooltip.ToString ();
 
 				case Column.InitialState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PreInputs:
 					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Tooltip.ToString ();
@@ -501,31 +495,28 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
 
 				case Column.PostAdjusts:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostDecreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostIncreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDate);
+
+				case Column.PostOutputs:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Tooltip.ToString (), this.InitialDate);
 
 				case Column.PostAmortizations:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDate);
 
 				case Column.Decreases:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Decreases.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Decreases.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
 
 				case Column.Increases:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Increases.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Increases.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
 
 				case Column.Adjusts:
-					return this.DirectMode ?
-						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Direct.Tooltip.ToString () :
-						Res.Strings.Enum.MCH2Summary.Column.Adjusts.Indirect.Tooltip.ToString ();
+					return Res.Strings.Enum.MCH2Summary.Column.Adjusts.Tooltip.ToString ();
 
 				case Column.Outputs:
 					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
@@ -540,7 +531,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip.ToString ();
 
 				case Column.FinalState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.FinalDateTooltip);
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.JustDeforeFinalDate);
 
 				default:
 					return null;
@@ -577,24 +568,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
-		private string InitialDateTooltip
+		private string JustDeforeFinalDate
 		{
-			get
-			{
-				if (this.DateRange.IsEmpty)
-				{
-					return "?";
-				}
-				else
-				{
-					var date = TypeConverters.DateToString (this.DateRange.IncludeFrom.AddDays (-1));
-					return string.Format (Res.Strings.MCH2SummaryTreeTableFiller.DateOneMinuteToMidnight.ToString (), date);  // 31.12.xx à 23h59
-				}
-			}
-		}
-
-		private string FinalDateTooltip
-		{
+			//	A partir de la date 01.01.2016, retourne le texte "31.12.15 à 23h59".
 			get
 			{
 				if (this.DateRange.IsEmpty)
@@ -622,7 +598,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					yield return Column.Inputs;
 
-//?					yield return Column.Reorganizations;  // l'événement de modification ne modifie jamais la valeur comptable
 					yield return Column.Decreases;
 					yield return Column.Increases;
 					yield return Column.Adjusts;
@@ -641,6 +616,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					yield return Column.PostDecreases;
 					yield return Column.PostIncreases;
 					yield return Column.PostAdjusts;
+					yield return Column.PostOutputs;
 					yield return Column.PostAmortizations;
 
 					yield return Column.Decreases;
@@ -679,6 +655,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PostAdjusts,
 			PostDecreases,
 			PostIncreases,
+			PostOutputs,
 			PostAmortizations,
 			Decreases,
 			Increases,
