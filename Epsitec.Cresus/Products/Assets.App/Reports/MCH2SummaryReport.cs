@@ -78,6 +78,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.NodeGetter.SetLevel (this.Params.Level.Value);
 			}
 
+			//?? new
+			this.DataFiller.ComputeExistingData ();
+			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+			//?? new
+
 			this.UpdateTreeTable ();
 
 			this.OnParamsChanged ();
