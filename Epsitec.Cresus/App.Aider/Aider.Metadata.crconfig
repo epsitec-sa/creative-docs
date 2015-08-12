@@ -486,15 +486,15 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO473]" title="Nom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOJ73]" title="Nom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO373]" title="Prénom" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOI73]" title="Prénom" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVO573]" title="Domicile" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOL73]" title="Domicile" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>

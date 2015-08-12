@@ -3092,18 +3092,20 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAB3
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 107);
-				//	designer:cap/LVO373
-				public static readonly global::Epsitec.Common.Support.Druid FirstNameEx = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 227);
+				//	designer:cap/LVOI73
+				public static readonly global::Epsitec.Common.Support.Druid FirstName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 242);
 				//	designer:cap/LVO273
 				public static readonly global::Epsitec.Common.Support.Druid IsExternal = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 226);
-				//	designer:cap/LVO473
-				public static readonly global::Epsitec.Common.Support.Druid LastNameEx = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 228);
+				//	designer:cap/LVOJ73
+				public static readonly global::Epsitec.Common.Support.Druid LastName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 243);
 				//	designer:cap/LVAC3
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 108);
 				//	designer:cap/LVAD3
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 109);
-				//	designer:cap/LVO573
-				public static readonly global::Epsitec.Common.Support.Druid TownEx = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 229);
+				//	designer:cap/LVOK73
+				public static readonly global::Epsitec.Common.Support.Druid Sex = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 244);
+				//	designer:cap/LVOL73
+				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 245);
 			}
 			
 			public static class AiderEventPlace

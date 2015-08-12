@@ -67,9 +67,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					AiderEventParticipantEntity.CreateForExternal (
 						this.BusinessContext, 
 						duplicat, 
-						participant.FirstNameEx, 
-						participant.LastNameEx, 
-						participant.TownEx, 
+						participant.FirstName, 
+						participant.LastName, 
+						participant.Town, 
 						participant.Role
 					);
 				}

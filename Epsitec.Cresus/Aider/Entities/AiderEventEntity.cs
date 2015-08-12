@@ -51,7 +51,7 @@ namespace Epsitec.Aider.Entities
 			var others = this.GetParticipations ()
 				.Where (p => p.IsExternal == true)
 				.Select (
-				p => p.FirstNameEx + " " + p.LastNameEx + "\n"
+				p => p.FirstName + " " + p.LastName + "\n"
 			);
 			lines.Concat (others);
 			return TextFormatter.FormatText (lines);
@@ -424,8 +424,8 @@ namespace Epsitec.Aider.Entities
 				{
 					var person = participant.Person;
 					var from   = "";
-					participant.FirstNameEx = person.eCH_Person.PersonFirstNames;
-					participant.LastNameEx  = person.eCH_Person.PersonOfficialName;
+					participant.FirstName = person.eCH_Person.PersonFirstNames;
+					participant.LastName  = person.eCH_Person.PersonOfficialName;
 					if (person.IsGovernmentDefined && person.IsDeclared)
 					{
 						from += person.eCH_Person.GetAddress ().Town;				
@@ -434,7 +434,7 @@ namespace Epsitec.Aider.Entities
 					{
 						from += person.MainContact.GetAddress ().Town.Name;
 					}
-					participant.TownEx      = from;
+					participant.Town      = from;
 				}
 				
 			}

@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 			var role = this.GetRoleCaption ();
 			if (this.IsExternal == true)
 			{
-				var personSummary = this.FirstNameEx + " " + this.LastNameEx;
+				var personSummary = this.FirstName + " " + this.LastName;
 				return TextFormatter.FormatText (role + ": " + personSummary);
 			}
 			else
@@ -57,9 +57,9 @@ namespace Epsitec.Aider.Entities
 			newParticipant.Event       = targetEvent;
 			newParticipant.Role        = role;
 			newParticipant.IsExternal  = true;
-			newParticipant.FirstNameEx = firstName;
-			newParticipant.LastNameEx  = lastName;
-			newParticipant.TownEx      = town;
+			newParticipant.FirstName   = firstName;
+			newParticipant.LastName    = lastName;
+			newParticipant.Town        = town;
 			return newParticipant;
 		}
 
