@@ -139,7 +139,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		/// </summary>
 		/// <param name="actors"></param>
 		/// <param name="formulas"></param>
-		private void AddContentLines(List<AiderPersonEntity> actors, System.Tuple<string, string, string> formulas, List<string> lines)
+		private void AddContentLines(List<AiderEventParticipantEntity> actors, System.Tuple<string, string, string> formulas, List<string> lines)
 		{
 			if (actors.Count > 1)
 			{
@@ -147,7 +147,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 			else
 			{
-				if (this.IsFemale (actors[0]))
+				if (actors[0].GetSex () == PersonSex.Female)
 				{
 					lines.Add ("<br/><br/><tab/><b>" + formulas.Item2 + "</b><br/><br/>");
 				}
@@ -166,11 +166,11 @@ namespace Epsitec.Aider.Processors.Pdf
 			{
 				case Enumerations.EventType.Blessing:
 				case Enumerations.EventType.Baptism:
-					lines.Add (this.GetGodFatherLine (act) + this.Tabs () + this.GetGodMotherLine (act));
+					lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother));
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
 				case Enumerations.EventType.Marriage:
-					lines.Add (this.GetFirstWitnessLine (act) + this.Tabs () + this.GetSecondWitnessLine (act));
+					lines.Add (this.GetParticipantLine (act, EventParticipantRole.FirstWitness) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.SecondWitness));
 					break;
 			}
 			
@@ -185,7 +185,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 		}
 
-		private void AddActorHeaderLines(AiderEventEntity act, AiderPersonEntity actor, List<string> lines)
+		private void AddActorHeaderLines(AiderEventEntity act, AiderEventParticipantEntity actor, List<string> lines)
 		{
 			lines.Add (this.GetLastNameLine (actor) + this.Tabs () + this.GetFirstNameLine (actor));
 			lines.Add (this.GetBirthDateLine (actor) + this.Tabs () + this.GetTownLine (actor));
@@ -193,21 +193,29 @@ namespace Epsitec.Aider.Processors.Pdf
 			switch (act.Type)
 			{
 				case Enumerations.EventType.Blessing:
+					lines.Add (this.GetSonOfLine (act, EventParticipantRole.BlessedChild));
+					break;
 				case Enumerations.EventType.Baptism:
+					lines.Add (this.GetSonOfLine (act, EventParticipantRole.ChildBatise));
+					break;
 				case Enumerations.EventType.Confirmation:
+					lines.Add (this.GetSonOfLine (act, EventParticipantRole.Confirmant));
+					break;
 				case Enumerations.EventType.EndOfCatechism:
+					lines.Add (this.GetSonOfLine (act, EventParticipantRole.Catechumen));
+					break;
 				case Enumerations.EventType.FuneralService:
-					lines.Add (this.GetSonOfLine (actor, act));
+					lines.Add (this.GetSonOfLine (act, EventParticipantRole.DeceasedPerson));
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
 				case Enumerations.EventType.Marriage:
-					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Husband).Person == actor)
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Husband) == actor)
 					{
-						lines.Add (this.GetHusbandSonOfLine (actor, act));
+						lines.Add (this.GetHusbandSonOfLine (act));
 					}
-					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Spouse).Person == actor)
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Spouse) == actor)
 					{
-						lines.Add (this.GetSpouseSonOfLine (actor, act));
+						lines.Add (this.GetSpouseSonOfLine (act));
 					}
 					break;
 			}
@@ -227,9 +235,9 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 			var line = "par :<tab/>";
 			var minister = act.GetMinister ();
-			if (minister.Employee.IsNotNull ())
+			if (minister.IsExternal == false && minister.Person.Employee.IsNotNull ())
 			{
-				var position = minister.Employee.EmployeeType.ToString ();
+				var position = minister.Person.Employee.EmployeeType.ToString ();
 				line += minister.GetFullName () + " (" + position + ")";
 			}
 			else
@@ -239,211 +247,150 @@ namespace Epsitec.Aider.Processors.Pdf
 			return line;
 		}
 
-		private string GetFirstWitnessLine(AiderEventEntity act)
+		private string GetParticipantLine(AiderEventEntity act, Enumerations.EventParticipantRole role)
 		{
-			var line = "Premier témoin :<tab/>";
-			var witness = act.GetActor (Enumerations.EventParticipantRole.FirstWitness);
-			if (witness.IsNotNull ())
-			{
-				line += witness.GetFullName ();
-			}
-			else
-			{
-				return "";
-			}
-
+			var line = this.GetRoleLabel (role);
+			line += act.GetActorFullName (role);
 			return line;
 		}
 
-		private string GetSecondWitnessLine(AiderEventEntity act)
+		private string GetRoleLabel(Enumerations.EventParticipantRole role)
 		{
-			var line = "Second témoin :<tab/>";
-			var witness = act.GetActor (Enumerations.EventParticipantRole.SecondWitness);
-			if (witness.IsNotNull ())
-			{
-				line += witness.GetFullName ();
-			}
-			else
-			{
-				return "";
-			}
-
-			return line;
+			return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (role).Caption.DefaultLabel + " :<tab/>";
 		}
 
-		private string GetGodFatherLine(AiderEventEntity act)
-		{
-			var line = "Parrain :<tab/>";
-			var gotFather = act.GetActor (Enumerations.EventParticipantRole.GodFather);
-			if (gotFather.IsNotNull ())
-			{
-				line += gotFather.GetFullName ();
-			}
-			else
-			{
-				return "";
-			}
-
-			return line;
-		}
-
-		private string GetGodMotherLine(AiderEventEntity act)
-		{
-			var line = "Marraine :<tab/>";
-			var gotMother = act.GetActor (Enumerations.EventParticipantRole.GodMother);
-			if (gotMother.IsNotNull ())
-			{
-				line += gotMother.GetFullName ();
-			}
-			else
-			{
-				return "";
-			}
-
-			return line;
-		}
-		
-		private string GetParishLine(AiderPersonEntity person)
+		private string GetParishLine(AiderEventParticipantEntity person)
 		{
 			var parish = "Paroisse :<tab/>";
-			parish += person.ParishGroup.Name;
+			parish += person.GetParishName ();
 			return parish;
 		}
 
-		private string GetBirthDateLine(AiderPersonEntity person)
+		private string GetBirthDateLine(AiderEventParticipantEntity person)
 		{
 			var bd = "Né le :<tab/>";
-			if (this.IsFemale (person))
+			if (person.GetSex () == PersonSex.Female)
 			{
 				bd = "Née le :<tab/>";
 			}
 
-			bd += person.eCH_Person.PersonDateOfBirth.Value.ToShortDateString ();
+			bd += person.GetBirthDate ().Value.ToShortDateString ();
 			return bd;
 		}
 
-		private string GetFirstNameLine(AiderPersonEntity person)
+		private string GetFirstNameLine(AiderEventParticipantEntity person)
 		{
 			var firstName = "Prénom :<tab/><b>";
-			var names = person.eCH_Person.PersonFirstNames.Split (' ');
+			var names = person.GetFirstName ().Split (' ');
 			firstName += names[0] + "</b> " + string.Join (" ", names.Skip (1));
 			return firstName;
 		}
 
-		private string GetLastNameLine(AiderPersonEntity person)
+		private string GetLastNameLine(AiderEventParticipantEntity person)
 		{
-			var firstName = "Nom :<tab/><b>";
-			firstName += person.eCH_Person.PersonOfficialName + "</b>";
-			return firstName;
+			var lastName = "Nom :<tab/><b>";
+			lastName += person.GetLastName () + "</b>";
+			return lastName;
 		}
 
-		private string GetTownLine(AiderPersonEntity person)
+		private string GetTownLine(AiderEventParticipantEntity person)
 		{
 			var from = "Domicilié à :<tab/>";
-			if (this.IsFemale (person))
+			if (person.GetSex () == PersonSex.Female)
 			{
 				from = "Domiciliée à :<tab/>";
 			}
 
-			if (person.IsGovernmentDefined && person.IsDeclared)
-			{
-				from += person.eCH_Person.GetAddress ().Town;				
-			}
-			else
-			{
-				from += person.MainContact.GetAddress ().Town.Name;
-			}
+			from += person.GetTown ();
 
 			return from;
 		}
 
-		private string GetSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		private string GetSonOfLine(AiderEventEntity act, EventParticipantRole role)
 		{
+			var actorSex = act.GetActorSex (role);
 			var filiation = "Fils de :<tab/>";
-			if (this.IsFemale (person))
+			if (actorSex == PersonSex.Female)
 			{
 				filiation = "Fille de :<tab/>";
 			}
 
-			var father = act.GetActor (Enumerations.EventParticipantRole.Father);
-			var mother = act.GetActor (Enumerations.EventParticipantRole.Mother);
-			if (father != null && mother != null)
+			var father = act.GetActorFullName (EventParticipantRole.Father);
+			var mother = act.GetActorFullName (EventParticipantRole.Mother);
+			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
+				return filiation + father + " et " + mother;
 			}
 
-			if (father != null && mother == null)
+			if (!string.IsNullOrWhiteSpace (father) && string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName ();
+				return filiation + father;
 			}
 
-			if (father == null && mother != null)
+			if (string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + mother.GetFullName ();
+				return filiation + mother;
 			}
 
 			return "";
 		}
 
-		private string GetHusbandSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		private string GetHusbandSonOfLine(AiderEventEntity act)
 		{
+			var spouseSex = act.GetActorSex (EventParticipantRole.Husband);
 			var filiation = "Fils de :<tab/>";
-			if (this.IsFemale (person))
+			if (spouseSex == PersonSex.Female)
 			{
 				filiation = "Fille de :<tab/>";
 			}
 
-			var father = act.GetActor (Enumerations.EventParticipantRole.HusbandFather);
-			var mother = act.GetActor (Enumerations.EventParticipantRole.HusbandMother);
-			if (father != null && mother != null)
+			var father = act.GetActorFullName (EventParticipantRole.HusbandFather);
+			var mother = act.GetActorFullName (EventParticipantRole.HusbandMother);
+			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
+				return filiation + father + " et " + mother;
 			}
 
-			if (father != null && mother == null)
+			if (!string.IsNullOrWhiteSpace (father) && string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName ();
+				return filiation + father;
 			}
 
-			if (father == null && mother != null)
+			if (string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + mother.GetFullName ();
+				return filiation + mother;
 			}
 
 			return "";
 		}
 
-		private string GetSpouseSonOfLine(AiderPersonEntity person, AiderEventEntity act)
+		private string GetSpouseSonOfLine(AiderEventEntity act)
 		{
+			var spouseSex = act.GetActorSex (EventParticipantRole.Spouse);
 			var filiation = "Fils de :<tab/>";
-			if (this.IsFemale (person))
+			if (spouseSex == PersonSex.Female)
 			{
 				filiation = "Fille de :<tab/>";
 			}
 
-			var father = act.GetActor (Enumerations.EventParticipantRole.SpouseFather);
-			var mother = act.GetActor (Enumerations.EventParticipantRole.SpouseMother);
-			if (father != null && mother != null)
+			var father = act.GetActorFullName (EventParticipantRole.SpouseFather);
+			var mother = act.GetActorFullName (EventParticipantRole.SpouseMother);
+			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName () + " et " + mother.GetFullName ();
+				return filiation + father + " et " + mother;
 			}
 
-			if (father != null && mother == null)
+			if (!string.IsNullOrWhiteSpace (father) && string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + father.GetFullName ();
+				return filiation + father;
 			}
 
-			if (father == null && mother != null)
+			if (string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
-				return filiation + mother.GetFullName ();
+				return filiation + mother;
 			}
 
 			return "";
-		}
-
-		private bool IsFemale (AiderPersonEntity person)
-		{
-			return person.eCH_Person.PersonSex == Enumerations.PersonSex.Female;
 		}
 
 		private ListingDocument GetReport(ListingDocumentSetup setup)

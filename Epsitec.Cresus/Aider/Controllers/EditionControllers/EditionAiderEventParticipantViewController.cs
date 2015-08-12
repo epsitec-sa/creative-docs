@@ -39,7 +39,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.Role)
 						.Field (x => x.FirstName)
 						.Field (x => x.LastName)
+						.Field (x => x.BirthDate)
 						.Field (x => x.Town)
+						.Field (x => x.ParishName)
 					.End ();
 			}
 		}
