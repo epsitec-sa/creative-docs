@@ -93,16 +93,16 @@
   <data name="Enum.MCH2Summary.Column.Increases.Tooltip" id="KC3">Variations dues aux revalorisations (augmentations)</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Text" id="KD3">Financements</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Variations dues aux entrées de financement préalable</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeurs lors de la mise en service</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Mise en service</data>
-  <data name="Enum.MCH2Summary.Column.PostAdjusts.Text" id="KH3">Correct. post.</data>
-  <data name="Enum.MCH2Summary.Column.PostAdjusts.Tooltip" id="KI3">Somme de toutes les corrections postérieures au {0}</data>
-  <data name="Enum.MCH2Summary.Column.PostDecreases.Tooltip" id="KJ3">Somme de toutes les réévaluations (diminutions) postérieures au {0}</data>
-  <data name="Enum.MCH2Summary.Column.PostIncreases.Text" id="KK3">Reval. post.</data>
-  <data name="Enum.MCH2Summary.Column.PostAmortizations.Text" id="KL3">Amort. post.</data>
-  <data name="Enum.MCH2Summary.Column.PostAmortizations.Tooltip" id="KM3">Somme de tous les amortissements postérieurs au {0}</data>
-  <data name="Enum.MCH2Summary.Column.PostDecreases.Text" id="KN3">Rééval. post.</data>
-  <data name="Enum.MCH2Summary.Column.PostIncreases.Tooltip" id="KO3">Somme de toutes les revalorisations (augmentations) postérieures au {0}</data>
-  <data name="Enum.MCH2Summary.Column.PostOutputs.Text" id="KP3">Sorties post.</data>
-  <data name="Enum.MCH2Summary.Column.PostOutputs.Tooltip" id="KQ3">Somme de toutes les sorties postérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeurs d'acquisitions</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Acquisition</data>
+  <data name="Enum.MCH2Summary.Column.PostAdjusts.Text" id="KH3">Correct. ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostAdjusts.Tooltip" id="KI3">Somme de toutes les corrections antérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostDecreases.Tooltip" id="KJ3">Somme de toutes les réévaluations (diminutions) antérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostIncreases.Text" id="KK3">Reval. ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostAmortizations.Text" id="KL3">Amort. ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostAmortizations.Tooltip" id="KM3">Somme de tous les amortissements antérieurs au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostDecreases.Text" id="KN3">Rééval. ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostIncreases.Tooltip" id="KO3">Somme de toutes les revalorisations (augmentations) antérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostOutputs.Text" id="KP3">Sorties ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostOutputs.Tooltip" id="KQ3">Somme de toutes les sorties antérieures au {0}</data>
 </bundle>
