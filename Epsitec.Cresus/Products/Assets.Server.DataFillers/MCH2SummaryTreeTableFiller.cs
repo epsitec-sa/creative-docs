@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			this.userColumns = new List<UserColumn> ();
 			this.InitializeUserColumns ();
 
-			this.existingRows    = new HashSet<int> ();
-			this.existingColumns = new HashSet<Column> ();
+			this.visibleRows    = new HashSet<int> ();
+			this.visibleColumns = new HashSet<Column> ();
 		}
 
 
@@ -197,11 +197,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		}
 
 
-		public void ComputeExistingData()
+		public void ComputeVisibleData()
 		{
-			this.existingRows   .Clear ();
-			this.existingColumns.Clear ();
+			//	Cherche toutes les lignes et les colonnes visibles.
+			this.visibleRows   .Clear ();
+			this.visibleColumns.Clear ();
 
+			//	Ajoute toutes les lignes et les colonnes directement visibles.
 			for (int row=0; row<this.nodeGetter.Count; row++)
 			{
 				var node     = this.nodeGetter[row];
@@ -216,10 +218,33 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					if (value != null && value.IsExist)
 					{
-						this.existingRows   .Add (row);
-						this.existingColumns.Add (column);
+						this.visibleRows   .Add (row);
+						this.visibleColumns.Add (column);
 					}
 				}
+			}
+
+			//	Ajoute tous les parents des lignes directement visibles.
+			var parentRows = new HashSet<int> ();
+
+			foreach (int row in this.visibleRows)
+			{
+				int level = this.nodeGetter[row].Level;
+
+				int r = row;
+				while (--r >= 0 && level >= 0)
+				{
+					if (this.nodeGetter[r].Level == level-1)
+					{
+						parentRows.Add (r);
+						level--;
+					}
+				}
+			}
+
+			foreach (int row in parentRows)
+			{
+				this.visibleRows.Add (row);
 			}
 		}
 
@@ -619,12 +644,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				if (this.existingColumns.Any ())
+				if (this.visibleColumns.Any ())
 				{
 					foreach (var column in this.OrderedColumns)
 					{
 						if (column == Column.Name ||
-							this.existingColumns.Contains (column))
+							this.visibleColumns.Contains (column))
 						{
 							yield return column;
 						}
@@ -769,7 +794,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		private readonly List<UserColumn>		userColumns;
-		private readonly HashSet<int>			existingRows;
-		private readonly HashSet<Column>		existingColumns;
+		private readonly HashSet<int>			visibleRows;
+		private readonly HashSet<Column>		visibleColumns;
 	}
 }
