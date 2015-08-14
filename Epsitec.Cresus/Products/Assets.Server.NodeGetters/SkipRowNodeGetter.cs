@@ -24,23 +24,21 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		public void SetParams(HashSet<int> visibleRows)
 		{
+			//	Donne les index des lignes visibles.
 			if (visibleRows == null)
 			{
 				this.filterEnable = false;
 			}
 			else
 			{
-				var list = new List<int> ();
+				this.visibleRows.Clear ();
 
 				foreach (var row in visibleRows)
 				{
-					list.Add (row);
+					this.visibleRows.Add (row);
 				}
 
-				list.Sort ();
-
-				this.visibleRows.Clear ();
-				this.visibleRows.AddRange (list);
+				this.visibleRows.Sort ();
 
 				this.filterEnable = true;
 			}
