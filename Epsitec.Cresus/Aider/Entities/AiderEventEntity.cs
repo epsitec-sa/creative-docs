@@ -485,8 +485,14 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPlaceText()
 		{
-			var placeType = Res.Types.Enum.EventPlaceType.FindValueFromEnumValue (this.PlaceType).Caption.DefaultLabel;
-			return placeType + " " + this.PlaceName;
+			if (this.Place.IsNotNull ())
+			{
+				return this.Place.Name;
+			}
+			else
+			{
+				return "Lieu de célébration non renseigné";
+			}		
 		}
 
 		private IList<AiderEventParticipantEntity> GetParticipations()
