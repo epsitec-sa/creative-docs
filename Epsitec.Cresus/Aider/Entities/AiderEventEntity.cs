@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
-			var actors = this.GetMainActors ().Select (p => this.GetActorFullName (p.Role)).Join ("\n");
+			var actors = this.GetMainActors ().Select (p => p.GetFullName ()).Join ("\n");
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
@@ -267,7 +267,7 @@ namespace Epsitec.Aider.Entities
 			var minister   = new AiderEventParticipantEntity ();
 			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
 			{
-				error = "Il manque le ministre officiant";
+				error = "Il manque un ministre officiant";
 				return false;
 			}
 
@@ -485,8 +485,14 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPlaceText()
 		{
-			var placeType = Res.Types.Enum.EventPlaceType.FindValueFromEnumValue (this.PlaceType).Caption.DefaultLabel;
-			return placeType + " " + this.PlaceName;
+			if (this.Place.IsNotNull ())
+			{
+				return this.Place.Name;
+			}
+			else
+			{
+				return "Lieu de célébration non renseigné";
+			}		
 		}
 
 		private IList<AiderEventParticipantEntity> GetParticipations()

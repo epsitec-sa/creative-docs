@@ -68,8 +68,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 						this.BusinessContext, 
 						duplicat, 
 						participant.FirstName, 
-						participant.LastName, 
+						participant.LastName,
+ 						participant.BirthDate,
 						participant.Town, 
+						participant.ParishName,
+						participant.Confession,
 						participant.Role
 					);
 				}
