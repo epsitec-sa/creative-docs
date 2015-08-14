@@ -353,6 +353,23 @@ namespace Epsitec.Aider.Entities
 			return businessContext.GetByRequest<AiderEventPlaceEntity> (request).ToList ();
 		}
 
+		public static List<AiderPersonEntity> GetOfficeMinisters(BusinessContext businessContext, AiderOfficeManagementEntity office)
+		{
+			var employees     = office.Employees.Where (e => e.IsMinister () == true).Select (e => e.Person);
+			var officeEvent = new AiderEventEntity ()
+			{
+				Office = office
+			};
+			var example = new AiderEventParticipantEntity ()
+			{
+				Event = officeEvent,
+				Role = EventParticipantRole.Minister
+			};
+			var lastMinisters = businessContext.GetByExample<AiderEventParticipantEntity> (example).Select (p => p.Person).Distinct ();
+
+			return lastMinisters.Union (lastMinisters).ToList ();
+		}
+
 		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()
 		{
 			yield return System.Tuple.Create ("formation et accompagnement ", "SFA ", OfficeType.RegionFA);

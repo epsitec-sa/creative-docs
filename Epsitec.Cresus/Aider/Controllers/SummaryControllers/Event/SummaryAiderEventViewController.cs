@@ -41,6 +41,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.EnableActionButton<ActionAiderEventViewController0AddParticipantsFromBag> ()
 					.EnableActionButton<ActionAiderEventViewController8AddParticipantExternal> ()
 					.EnableActionButton<ActionAiderEventViewController7AddParticipant> ()
+					.EnableActionButton<ActionAiderEventViewController10AddMinister> ()
 					.EnableActionButton<ActionAiderEventViewController6RemoveParticipant> ()
 					.EnableActionMenu<ActionAiderEventViewController5AddParticipantFromScratch> ()
 					.EnableActionMenu<ActionAiderEventViewController8AddParticipantExternal> ()

@@ -89,13 +89,7 @@ namespace Epsitec.Aider.Entities
 				if (this.Contact.Person.Employee.IsNotNull ())
 				{
 					var employee = this.Contact.Person.Employee;
-					switch (employee.EmployeeType)
-					{
-						case Enumerations.EmployeeType.Diacre:
-						case Enumerations.EmployeeType.Pasteur:
-							isMinister = true;
-							break;
-					}
+					isMinister = employee.IsMinister ();
 				}
 			}
 
