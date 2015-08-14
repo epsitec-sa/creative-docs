@@ -45,16 +45,9 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetParticipantsSummary()
 		{
 			var lines = this.GetParticipations ()
-				.Where (p => p.IsExternal == false)
 				.Select (
-				p => p.Person.GetDisplayName () + "\n"
+				p => p.GetFullName () + "\n"
 			);
-			var others = this.GetParticipations ()
-				.Where (p => p.IsExternal == true)
-				.Select (
-				p => p.FirstName + " " + p.LastName + "\n"
-			);
-			lines.Concat (others);
 			return TextFormatter.FormatText (lines);
 		}
 
@@ -190,11 +183,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public AiderEventParticipantEntity GetMinister()
+		public List<AiderEventParticipantEntity> GetMinisters()
 		{
-			AiderEventParticipantEntity minister;
-			this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister);
-			return minister;
+			var ministers = new List<AiderEventParticipantEntity> ();
+			this.TryAddActorsWithRole (ministers, Enumerations.EventParticipantRole.Minister);
+			return ministers;
 		}
 
 		public AiderEventParticipantEntity GetActor (Enumerations.EventParticipantRole role)
@@ -264,8 +257,8 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			var minister   = new AiderEventParticipantEntity ();
-			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
+			var ministers   = new List<AiderEventParticipantEntity> ();
+			if (!this.TryAddActorsWithRole (ministers, Enumerations.EventParticipantRole.Minister))
 			{
 				error = "Il manque un ministre officiant";
 				return false;
@@ -368,53 +361,29 @@ namespace Epsitec.Aider.Entities
 		{
 			error = "";
 			var main = participant.Person;
-			if (main.Age == null)
+
+			if (participant.GetBirthDate ()== null)
 			{
-				error = main.GetShortFullName () + ": date de naissance non renseignée";
+				error = main.GetFullName () + ": date de naissance non renseignée";
 				return false;
 			}
 
-			if (main.IsDeceased)
+			if (participant.GetTown ().IsNullOrWhiteSpace ())
 			{
-				if (!main.Contacts.Where (c => c.AddressType == Enumerations.AddressType.LastKnow).Any ())
-				{
-					error = main.GetShortFullName () + ": adresse non renseignée";
-					return false;
-				}
+				error = main.GetFullName () + ": adresse non renseignée";
+				return false;
 			}
-			else
-			{
-				if (main.IsGovernmentDefined && main.IsDeclared)
-				{
-					if (main.eCH_Person.GetAddress ().IsNull ())
-					{
-						error = main.GetShortFullName () + ": adresse non renseignée";
-						return false;
-					}
-				}
-				else
-				{
-					if (main.MainContact.IsNotNull ())
-					{
-						if (main.MainContact.GetAddress ().IsNull ())
-						{
-							error = main.GetShortFullName () + ": adresse non renseignée";
-							return false;
-						}
 
-						if (main.MainContact.GetAddress ().Town.IsNull ())
-						{
-							error = main.GetShortFullName () + ": domicile de l'adresse non renseigné";
-							return false;
-						}
-					}
-					else
-					{
-						error = main.GetShortFullName () + ": adresse non renseignée";
-						return false;
-					}
-					
-				}
+			if (participant.GetSex () == Enumerations.PersonSex.Unknown)
+			{
+				error = main.GetFullName () + ": sexe non renseigné";
+				return false;
+			}
+
+			if (participant.GetParishName ().IsNullOrWhiteSpace ())
+			{
+				error = main.GetFullName () + ": paroisse non renseignée";
+				return false;
 			}
 
 			return true;

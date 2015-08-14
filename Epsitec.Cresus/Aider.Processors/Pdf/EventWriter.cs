@@ -239,17 +239,34 @@ namespace Epsitec.Aider.Processors.Pdf
 		private string GetMinisterLine(AiderEventEntity act)
 		{
 			var line = "par :<tab/>";
-			var minister = act.GetMinister ();
-			if (minister.IsExternal == false && minister.Person.Employee.IsNotNull ())
+			var ministers = act.GetMinisters ();
+			if (ministers.Count > 1)
 			{
-				var position = minister.Person.Employee.EmployeeType.ToString ();
-				line += minister.GetFullName () + " (" + position + ")";
+				var ministersInfo = new List<string> ();
+				foreach (var minister in ministers)
+				{
+					ministersInfo.Add (this.GetMinisterInfo (minister));
+				}
+				line += string.Join (" et ", ministersInfo);
 			}
 			else
 			{
-				line += minister.GetFullName ();
-			}
+				line += this.GetMinisterInfo (ministers[0]);
+			}			
 			return line;
+		}
+
+		private string GetMinisterInfo (AiderEventParticipantEntity minister)
+		{
+			if (minister.IsExternal == false && minister.Person.Employee.IsNotNull ())
+			{
+				var position = minister.Person.Employee.EmployeeType.ToString ();
+				return minister.GetFullName () + " (" + position + ")";
+			}
+			else
+			{
+				return minister.GetFullName ();
+			}
 		}
 
 		private string GetParticipantLine(AiderEventEntity act, Enumerations.EventParticipantRole role)
