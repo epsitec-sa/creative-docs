@@ -32,12 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			else
 			{
 				this.visibleRows.Clear ();
-
-				foreach (var row in visibleRows)
-				{
-					this.visibleRows.Add (row);
-				}
-
+				this.visibleRows.AddRange (visibleRows);
 				this.visibleRows.Sort ();
 
 				this.filterEnable = true;
