@@ -488,11 +488,13 @@
   <data name="Popup.AccountsImport.Report" id="KFL">Fichier comptable à importer :&lt;br/&gt;{0}&lt;br/&gt;&lt;br/&gt;</data>
   <data name="FieldControllers.Decimal.Compute" id="KGL">Calculer</data>
   <data name="EditorPages.UserFields.MCH2Summary" id="KHL">Dans le tableau des immobilisations MCH2:</data>
-  <data name="Popup.MCH2SummaryReport.DirectMode" id="KIL">Méthode directe (montants cumulés)</data>
+  <data name="Popup.MCH2SummaryReport.SummaryType" id="KIL">Type</data>
   <data name="ReportParams.MCH2Direct" id="KJL">Direct</data>
   <data name="ReportParams.MCH2Indirect" id="KKL">Indirect</data>
   <data name="Event.PreInput.Help" id="KLL">Entrée dans l'inventaire, construction</data>
   <data name="Event.PreInput.ShortName" id="KML">Entrée (financement préalable)</data>
   <data name="Popup.CreateAsset.PreInput" id="KNL">Créer l'objet dans l'état "financement préalable"</data>
   <data name="Popup.MCH2SummaryReport.SkipHiddenRows" id="KOL">Cache les lignes et les colonnes vides</data>
+  <data name="MCH2SummaryType.Direct" id="KPL">Direct</data>
+  <data name="MCH2SummaryType.Indirect" id="KQL">Indirect</data>
 </bundle>

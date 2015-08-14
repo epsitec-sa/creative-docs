@@ -10,14 +10,14 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class MCH2SummaryParams : AbstractReportParams
 	{
-		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid, bool directMode, bool skipHiddenRows)
+		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid, MCH2SummaryType summaryType, bool skipHiddenRows)
 			: base (customTitle)
 		{
 			this.DateRange      = dateRange;
 			this.RootGuid       = rootGuid;
 			this.Level          = level;
 			this.FilterGuid     = filterGuid;
-			this.DirectMode     = directMode;
+			this.SummaryType    = summaryType;
 			this.SkipHiddenRows = skipHiddenRows;
 		}
 
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				&& this.RootGuid       == o.RootGuid
 				&& this.Level          == o.Level
 				&& this.FilterGuid     == o.FilterGuid
-				&& this.DirectMode     == o.DirectMode
+				&& this.SummaryType    == o.SummaryType
 				&& this.SkipHiddenRows == o.SkipHiddenRows;
 		}
 
@@ -96,19 +96,19 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				^  this.RootGuid.GetHashCode ()
 				^  this.Level.GetHashCode ()
 				^  this.FilterGuid.GetHashCode ()
-				^  this.DirectMode.GetHashCode ()
+				^  this.SummaryType.GetHashCode ()
 				^  this.SkipHiddenRows.GetHashCode ();
 		}
 
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
-			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipHiddenRows);
+			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid, this.SummaryType, this.SkipHiddenRows);
 		}
 
 		public override AbstractReportParams ChangeCustomTitle(string customTitle)
 		{
-			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipHiddenRows);
+			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid, this.SummaryType, this.SkipHiddenRows);
 		}
 
 
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public readonly Guid					RootGuid;
 		public readonly int?					Level;
 		public readonly Guid					FilterGuid;
-		public readonly bool					DirectMode;
+		public readonly MCH2SummaryType			SummaryType;
 		public readonly bool					SkipHiddenRows;
 	}
 }

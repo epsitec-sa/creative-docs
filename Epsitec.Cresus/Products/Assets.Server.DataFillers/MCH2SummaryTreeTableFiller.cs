@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Core.Helpers;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Data.Reports;
 using Epsitec.Cresus.Assets.Server.BusinessLogic;
 using Epsitec.Cresus.Assets.Server.NodeGetters;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		public DateRange						DateRange;
-		public bool								DirectMode;
+		public MCH2SummaryType					SummaryType;
 
 
 		public override SortingInstructions		DefaultSorting
@@ -686,43 +687,47 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	Retourne les colonnes visibles, dans le bon ordre.
 			get
 			{
-				if (this.DirectMode)  // mode direct ?
+				switch (this.SummaryType)
 				{
-					yield return Column.Name;
-					yield return Column.InitialState;
-					yield return Column.PreInputs;
+					case MCH2SummaryType.Direct:
+						yield return Column.Name;
+						yield return Column.InitialState;
+						yield return Column.PreInputs;
 
-					yield return Column.Inputs;
+						yield return Column.Inputs;
 
-					yield return Column.Decreases;
-					yield return Column.Increases;
-					yield return Column.Adjusts;
-					yield return Column.Outputs;
-					yield return Column.AmortizationsAuto;
-					yield return Column.AmortizationsExtra;
-					yield return Column.AmortizationsSuppl;
-					yield return Column.FinalState;
-				}
-				else  // mode indirect ?
-				{
-					yield return Column.Name;
-					yield return Column.PreInputs;
+						yield return Column.Decreases;
+						yield return Column.Increases;
+						yield return Column.Adjusts;
+						yield return Column.Outputs;
+						yield return Column.AmortizationsAuto;
+						yield return Column.AmortizationsExtra;
+						yield return Column.AmortizationsSuppl;
+						yield return Column.FinalState;
 
-					yield return Column.ReplacementValues;
-					yield return Column.PostDecreases;
-					yield return Column.PostIncreases;
-					yield return Column.PostAdjusts;
-					yield return Column.PostOutputs;
-					yield return Column.PostAmortizations;
+						break;
 
-					yield return Column.Decreases;
-					yield return Column.Increases;
-					yield return Column.Adjusts;
-					yield return Column.Outputs;
-					yield return Column.AmortizationsAuto;
-					yield return Column.AmortizationsExtra;
-					yield return Column.AmortizationsSuppl;
-					yield return Column.FinalState;
+					case MCH2SummaryType.Indirect:
+						yield return Column.Name;
+						yield return Column.PreInputs;
+
+						yield return Column.ReplacementValues;
+						yield return Column.PostDecreases;
+						yield return Column.PostIncreases;
+						yield return Column.PostAdjusts;
+						yield return Column.PostOutputs;
+						yield return Column.PostAmortizations;
+
+						yield return Column.Decreases;
+						yield return Column.Increases;
+						yield return Column.Adjusts;
+						yield return Column.Outputs;
+						yield return Column.AmortizationsAuto;
+						yield return Column.AmortizationsExtra;
+						yield return Column.AmortizationsSuppl;
+						yield return Column.FinalState;
+
+						break;
 				}
 
 				foreach (var userField in this.userColumns)
