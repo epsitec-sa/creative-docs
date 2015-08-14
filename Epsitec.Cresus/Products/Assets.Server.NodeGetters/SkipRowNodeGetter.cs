@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// <summary>
 	/// Permet de ne rendre accessible que certaines lignes. Les autres sont cachées.
 	/// </summary>
-	public class SkipRowNodeGetter : INodeGetter<SortableCumulNode>  // outputNodes
+	public class SkipRowNodeGetter : INodeGetter<SortableCumulNode>, IBaseRows  // outputNodes
 	{
 		public SkipRowNodeGetter(DataAccessor accessor, INodeGetter<SortableCumulNode> objectNodes)
 		{
@@ -103,8 +103,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
+		#region IBaseRows
 		public int GetBaseRow(int index)
 		{
+			//	Retourne l'index de la ligne, tel qu'il serait si toutes les lignes étaient visibles.
 			if (this.filterEnable == false)
 			{
 				if (index >= 0 && index < this.objectNodes.Count)
@@ -128,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 				}
 			}
 		}
+		#endregion
 
 
 		private readonly DataAccessor					accessor;

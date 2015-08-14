@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
+	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter, IBaseRows  // outputNodes
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
@@ -113,12 +113,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					return SortableCumulNode.Empty;
 				}
 			}
-		}
-
-
-		public int GetBaseRow(int index)
-		{
-			return this.skipRowNodeGetter.GetBaseRow (index);
 		}
 
 
@@ -225,6 +219,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public int AllToVisible(int index)
 		{
 			return index;
+		}
+		#endregion
+
+
+		#region IBaseRows
+		public int GetBaseRow(int index)
+		{
+			//	Retourne l'index de la ligne, tel qu'il serait si toutes les lignes étaient visibles.
+			return this.skipRowNodeGetter.GetBaseRow (index);
 		}
 		#endregion
 

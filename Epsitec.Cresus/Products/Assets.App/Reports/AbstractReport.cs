@@ -103,12 +103,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
-			if (this.nodeGetter is ObjectsNodeGetter)  // beurk, à refactorer d'urgence !!!
-			{
-				var n = this.nodeGetter as ObjectsNodeGetter;
-				row = n.GetBaseRow (row);
-			}
-
+			row = this.GetBaseRow (row);
 			this.nodeGetter.CompactOrExpand (row);
 			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
@@ -164,6 +159,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 			get
 			{
 				return this.nodeGetter != null && !this.nodeGetter.IsAllExpanded;
+			}
+		}
+
+
+		private int GetBaseRow(int row)
+		{
+			//	Retourne l'index de la ligne, tel qu'il serait si toutes les lignes étaient visibles.
+			if (this.nodeGetter is IBaseRows)
+			{
+				var n = this.nodeGetter as IBaseRows;
+				return n.GetBaseRow (row);
+			}
+			else
+			{
+				return row;
 			}
 		}
 
