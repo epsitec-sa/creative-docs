@@ -74,6 +74,7 @@ namespace Epsitec.Aider.Entities
 			var eventStyle = new AiderEventEntity ()
 			{
 				Type = eventBase.Type,
+				Office = eventBase.Office,
 				State = Enumerations.EventState.Validated
 			};
 			var example   = new AiderEventOfficeReportEntity ()
