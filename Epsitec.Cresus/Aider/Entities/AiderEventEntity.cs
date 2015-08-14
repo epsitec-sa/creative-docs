@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
-			var actors = this.GetMainActors ().Select (p => this.GetActorFullName (p.Role)).Join ("\n");
+			var actors = this.GetMainActors ().Select (p => p.GetFullName ()).Join ("\n");
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
