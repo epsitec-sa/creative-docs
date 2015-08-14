@@ -2,6 +2,6 @@
 <ModuleInfo id="2004" name="Assets.Server.DataFillers" layer="A" textMode="FormattedText" assemblies="Assets.Server.DataFillers" namespace="Epsitec.Cresus.Assets.Server.DataFillers">
   <Versions>
     <Version id="1" build="1" date="2014-09-02T18:19:44.5174365Z" />
-    <Version id="2" build="91" date="2015-08-11T11:53:29.4883250Z" />
+    <Version id="2" build="92" date="2015-08-12T14:46:37.4961702Z" />
   </Versions>
 </ModuleInfo>

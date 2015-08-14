@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public System.DateTime? MinValue
+		public System.DateTime?					MinValue
 		{
 			get
 			{

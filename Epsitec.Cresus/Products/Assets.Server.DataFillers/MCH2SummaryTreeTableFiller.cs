@@ -18,6 +18,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			this.userColumns = new List<UserColumn> ();
 			this.InitializeUserColumns ();
+
+			this.visibleRows    = new HashSet<int> ();
+			this.visibleColumns = new HashSet<Column> ();
 		}
 
 
@@ -64,7 +67,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				foreach (var column in this.OrderedColumns)
+				foreach (var column in this.ExistingOrderedColumns)
 				{
 					ObjectField field;
 
@@ -101,7 +104,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			foreach (var column in this.OrderedColumns)
+			foreach (var column in this.ExistingOrderedColumns)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -125,7 +128,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var cellState2 = cellState1 | (type == NodeType.Final ? CellState.None : CellState.Unavailable);
 
 				int columnRank = 0;
-				foreach (var column in this.OrderedColumns)
+				foreach (var column in this.ExistingOrderedColumns)
 				{
 					AbstractTreeTableCell cell;
 
@@ -191,6 +194,58 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 
 			return content;
+		}
+
+
+		public void ComputeVisibleData()
+		{
+			//	Cherche toutes les lignes et les colonnes visibles.
+			this.visibleRows   .Clear ();
+			this.visibleColumns.Clear ();
+
+			//	Ajoute toutes les lignes et les colonnes directement visibles.
+			for (int row=0; row<this.nodeGetter.Count; row++)
+			{
+				var node     = this.nodeGetter[row];
+				var guid     = node.Guid;
+				var baseType = node.BaseType;
+
+				var obj = this.accessor.GetObject (baseType, guid);
+
+				foreach (var column in this.OrderedColumns)
+				{
+					var value = this.GetColumnValue (node, obj, column);
+
+					if (value != null && value.IsExist)
+					{
+						this.visibleRows   .Add (row);
+						this.visibleColumns.Add (column);
+					}
+				}
+			}
+
+			//	Ajoute tous les parents des lignes directement visibles.
+			var parentRows = new HashSet<int> ();
+
+			foreach (int row in this.visibleRows)
+			{
+				int level = this.nodeGetter[row].Level;
+
+				int r = row;
+				while (--r >= 0 && level >= 0)
+				{
+					if (this.nodeGetter[r].Level == level-1)
+					{
+						parentRows.Add (r);
+						level--;
+					}
+				}
+			}
+
+			foreach (int row in parentRows)
+			{
+				this.visibleRows.Add (row);
+			}
 		}
 
 
@@ -585,6 +640,31 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+		private IEnumerable<Column> ExistingOrderedColumns
+		{
+			get
+			{
+				if (this.visibleColumns.Any ())
+				{
+					foreach (var column in this.OrderedColumns)
+					{
+						if (column == Column.Name ||
+							this.visibleColumns.Contains (column))
+						{
+							yield return column;
+						}
+					}
+				}
+				else
+				{
+					foreach (var column in this.OrderedColumns)
+					{
+						yield return column;
+					}
+				}
+			}
+		}
+
 		private IEnumerable<Column> OrderedColumns
 		{
 			//	Retourne les colonnes visibles, dans le bon ordre.
@@ -714,5 +794,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		private readonly List<UserColumn>		userColumns;
+		private readonly HashSet<int>			visibleRows;
+		private readonly HashSet<Column>		visibleColumns;
 	}
 }
