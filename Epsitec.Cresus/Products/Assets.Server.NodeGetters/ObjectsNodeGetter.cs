@@ -45,6 +45,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  SortableCumulNode
 	///     V
+	/// SkipRowNodeGetter
+	///     |
+	///     o  SortableCumulNode
+	///     V
 	/// 
 	/// </summary>
 	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
@@ -62,12 +66,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.sortableNodeGetter = new SortableCumulNodeGetter (this.cumulNodeGetter, accessor, BaseType.Assets);
 			this.sorterNodeGetter   = new SorterCumulNodeGetter (this.sortableNodeGetter);
+			this.skipRowNodeGetter  = new SkipRowNodeGetter (accessor, this.sorterNodeGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
 
 
-		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null, HashSet<int> visibleRows = null)
 		{
 			//	La liste des instructions d'extraction est utile pour la production de rapports.
 			this.timestamp              = timestamp;
@@ -75,6 +80,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.filterGuid             = filterGuid;
 			this.sortingInstructions    = instructions;
 			this.extractionInstructions = extractionInstructions;
+			this.visibleRows            = visibleRows;
 
 			this.UpdateData ();
 		}
@@ -84,7 +90,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.sorterNodeGetter.Count;
+				return this.skipRowNodeGetter.Count;
 			}
 		}
 
@@ -92,9 +98,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.sorterNodeGetter.Count)
+				if (index >= 0 && index < this.skipRowNodeGetter.Count)
 				{
-					return this.sorterNodeGetter[index];
+					return this.skipRowNodeGetter[index];
 				}
 				else
 				{
@@ -107,7 +113,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public AbstractCumulValue GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.sorterNodeGetter.GetValue (node, field);
+			return this.skipRowNodeGetter.GetValue (node, field);
 		}
 
 
@@ -124,6 +130,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.sortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
 			this.sorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.skipRowNodeGetter.SetParams (this.visibleRows);
 		}
 
 
@@ -218,11 +225,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly CumulNodeGetter			cumulNodeGetter;
 		private readonly SortableCumulNodeGetter	sortableNodeGetter;
 		private readonly SorterCumulNodeGetter		sorterNodeGetter;
+		private readonly SkipRowNodeGetter			skipRowNodeGetter;
 
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;
 		private Guid								filterGuid;
 		private SortingInstructions					sortingInstructions;
 		private List<ExtractionInstructions>		extractionInstructions;
+		private HashSet<int>						visibleRows;
 	}
 }

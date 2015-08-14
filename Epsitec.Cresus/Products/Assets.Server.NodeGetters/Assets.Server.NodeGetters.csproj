@@ -45,6 +45,7 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="SkipRowNodeGetter.cs" />
     <Compile Include="StringCumulValue.cs" />
     <Compile Include="DateCumulValue.cs" />
     <Compile Include="DecimalCumulValue.cs" />
