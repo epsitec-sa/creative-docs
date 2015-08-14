@@ -93,6 +93,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				Label                 = Res.Strings.Popup.MCH2SummaryReport.DirectMode.ToString (),
 			});
 
+			list.Add (new StackedControllerDescription  // 10
+			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.SkipRows.ToString (),
+			});
+
 			this.SetDescriptions (list);
 
 			this.defaultAcceptButtonName = Res.Strings.Popup.Button.Show.ToString ();
@@ -104,7 +110,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.DirectMode);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipRows);
 			}
 			set
 			{
@@ -116,6 +122,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.FilterGuid  = value.FilterGuid;
 				this.Level       = value.Level;
 				this.DirectMode  = value.DirectMode;
+				this.SkipRows    = value.SkipRows;
 			}
 		}
 
@@ -289,6 +296,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private bool							SkipRows
+		{
+			get
+			{
+				return this.SkipRowsController.Value;
+			}
+			set
+			{
+				this.SkipRowsController.Value = value;
+			}
+		}
+
 
 		protected override void CreateUI()
 		{
@@ -448,6 +467,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
+		private BoolStackedController SkipRowsController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.SkipRowsRank) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
 
 		private System.DateTime? ComputeFinalDate()
 		{
@@ -516,6 +545,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private const int FilterEnableRank = 7;
 		private const int FilterGuidRank   = 8;
 		private const int DirectModeRank   = 9;
+		private const int SkipRowsRank     = 10;
 
 
 		private string initialCustomTitle;

@@ -494,4 +494,5 @@
   <data name="Event.PreInput.Help" id="KLL">Entrée dans l'inventaire, construction</data>
   <data name="Event.PreInput.ShortName" id="KML">Entrée (financement préalable)</data>
   <data name="Popup.CreateAsset.PreInput" id="KNL">Créer l'objet dans l'état "financement préalable"</data>
+  <data name="Popup.MCH2SummaryReport.SkipRows" id="KOL">Cache les lignes et les colonnes vides</data>
 </bundle>

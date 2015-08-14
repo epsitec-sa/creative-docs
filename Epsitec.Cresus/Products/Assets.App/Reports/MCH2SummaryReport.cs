@@ -78,11 +78,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.NodeGetter.SetLevel (this.Params.Level.Value);
 			}
 
-			//?? new
-			this.DataFiller.ComputeVisibleData ();
-			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
-			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei, this.DataFiller.VisibleRows);
-			//?? new
+			//	Si les lignes/colonnes vides sont cachées, on initialise tout ce qu'il faut.
+			if (this.Params.SkipRows)
+			{
+				this.DataFiller.ComputeVisibleData ();
+				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei, this.DataFiller.VisibleRows);
+			}
+			else
+			{
+				this.DataFiller.ClearVisibleData ();
+				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei, null);
+			}
 
 			this.UpdateTreeTable ();
 
