@@ -116,6 +116,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
+		public int GetBaseRow(int index)
+		{
+			return this.skipRowNodeGetter.GetBaseRow (index);
+		}
+
+
 		public AbstractCumulValue GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.

@@ -103,6 +103,33 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
+		public int GetBaseRow(int index)
+		{
+			if (this.filterEnable == false)
+			{
+				if (index >= 0 && index < this.objectNodes.Count)
+				{
+					return index;
+				}
+				else
+				{
+					return -1;
+				}
+			}
+			else
+			{
+				if (index >= 0 && index < this.visibleRows.Count)
+				{
+					return this.visibleRows[index];
+				}
+				else
+				{
+					return -1;
+				}
+			}
+		}
+
+
 		private readonly DataAccessor					accessor;
 		private readonly INodeGetter<SortableCumulNode>	objectNodes;
 		private readonly List<int>						visibleRows;
