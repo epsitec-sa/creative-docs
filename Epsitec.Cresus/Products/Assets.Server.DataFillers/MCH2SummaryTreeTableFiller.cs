@@ -61,6 +61,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+		public HashSet<int>						VisibleRows
+		{
+			get
+			{
+				return this.visibleRows;
+			}
+		}
+
 		public override TreeTableColumnDescription[] Columns
 		{
 			get

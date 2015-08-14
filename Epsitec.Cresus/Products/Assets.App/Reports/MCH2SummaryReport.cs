@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//?? new
 			this.DataFiller.ComputeVisibleData ();
 			TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei, this.DataFiller.VisibleRows);
 			//?? new
 
 			this.UpdateTreeTable ();
