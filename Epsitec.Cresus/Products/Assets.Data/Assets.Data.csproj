@@ -62,6 +62,7 @@
     <Compile Include="MandatInfo.cs" />
     <Compile Include="IViewState.cs" />
     <Compile Include="Periodicity.cs" />
+    <Compile Include="Reports\MCH2SummaryType.cs" />
     <Compile Include="SaveMandatMode.cs" />
     <Compile Include="Serialization\X.cs" />
     <Compile Include="UndoableDictionary.cs" />

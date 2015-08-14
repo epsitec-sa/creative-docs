@@ -89,8 +89,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 9
 			{
+				StackedControllerType = StackedControllerType.Combo,
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.SummaryType.ToString (),
+				MultiLabels           = MCH2SummaryTypeHelpers.Labels,
+				Width                 = GroupGuidStackedController.ControllerWidth,
+			});
+
+			list.Add (new StackedControllerDescription  // 10
+			{
 				StackedControllerType = StackedControllerType.Bool,
-				Label                 = Res.Strings.Popup.MCH2SummaryReport.DirectMode.ToString (),
+				Label                 = Res.Strings.Popup.MCH2SummaryReport.SkipHiddenRows.ToString (),
 			});
 
 			this.SetDescriptions (list);
@@ -104,18 +112,19 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.DirectMode);
+				return new MCH2SummaryParams (this.CustomTitle, this.DateRange, this.GroupGuid, this.Level, this.FilterGuid, this.SummaryType, this.SkipHiddenRows);
 			}
 			set
 			{
 				this.initialCustomTitle = value.CustomTitle;
 
-				this.CustomTitle = value.CustomTitle;
-				this.DateRange   = value.DateRange;
-				this.GroupGuid   = value.RootGuid;
-				this.FilterGuid  = value.FilterGuid;
-				this.Level       = value.Level;
-				this.DirectMode  = value.DirectMode;
+				this.CustomTitle    = value.CustomTitle;
+				this.DateRange      = value.DateRange;
+				this.GroupGuid      = value.RootGuid;
+				this.FilterGuid     = value.FilterGuid;
+				this.Level          = value.Level;
+				this.SummaryType    = value.SummaryType;
+				this.SkipHiddenRows = value.SkipHiddenRows;
 			}
 		}
 
@@ -277,15 +286,27 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private bool							DirectMode
+		private MCH2SummaryType					SummaryType
 		{
 			get
 			{
-				return this.DirectModeController.Value;
+				return MCH2SummaryTypeHelpers.IntToType (this.SummaryTypeController.Value);
 			}
 			set
 			{
-				this.DirectModeController.Value = value;
+				this.SummaryTypeController.Value = MCH2SummaryTypeHelpers.TypeToInt (value);
+			}
+		}
+
+		private bool							SkipHiddenRows
+		{
+			get
+			{
+				return this.SkipHiddenRowsController.Value;
+			}
+			set
+			{
+				this.SkipHiddenRowsController.Value = value;
 			}
 		}
 
@@ -438,11 +459,21 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		private BoolStackedController DirectModeController
+		private ComboStackedController SummaryTypeController
 		{
 			get
 			{
-				var controller = this.GetController (MCH2SummaryReportPopup.DirectModeRank) as BoolStackedController;
+				var controller = this.GetController (MCH2SummaryReportPopup.SummaryTypeRank) as ComboStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller;
+			}
+		}
+
+		private BoolStackedController SkipHiddenRowsController
+		{
+			get
+			{
+				var controller = this.GetController (MCH2SummaryReportPopup.SkipHiddenRowsRank) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller;
 			}
@@ -506,16 +537,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#endregion
 
 
-		private const int CustomTitleRank  = 0;
-		private const int InitialDateRank  = 1;
-		private const int MonthCountRank   = 2;
-		private const int FinalDateRank    = 3;
-		private const int GroupEnableRank  = 4;
-		private const int GroupGuidRank    = 5;
-		private const int LevelRank        = 6;
-		private const int FilterEnableRank = 7;
-		private const int FilterGuidRank   = 8;
-		private const int DirectModeRank   = 9;
+		private const int CustomTitleRank    = 0;
+		private const int InitialDateRank    = 1;
+		private const int MonthCountRank     = 2;
+		private const int FinalDateRank      = 3;
+		private const int GroupEnableRank    = 4;
+		private const int GroupGuidRank      = 5;
+		private const int LevelRank          = 6;
+		private const int FilterEnableRank   = 7;
+		private const int FilterGuidRank     = 8;
+		private const int SummaryTypeRank    = 9;
+		private const int SkipHiddenRowsRank = 10;
 
 
 		private string initialCustomTitle;

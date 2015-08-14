@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				yield return "<LEVEL>";
 				yield return "<FILTER>";
 				yield return "<FIX>";
-				yield return "<DIRECTMODE>";
+				yield return "<SUMMARYTYPE>";
 			}
 		}
 
@@ -239,8 +239,21 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case "<FILTER>":
 					return GroupsLogic.GetShortName (accessor, reportParams.FilterGuid);
 
-				case "<DIRECTMODE>":
-					return reportParams.DirectMode ? Res.Strings.ReportParams.MCH2Direct.ToString () : Res.Strings.ReportParams.MCH2Indirect.ToString ();
+				case "<SUMMARYTYPE>":
+					switch (reportParams.SummaryType)
+					{
+						case MCH2SummaryType.IndirectShort:
+							return Res.Strings.ReportParams.MCH2IndirectShort.ToString ();
+
+						case MCH2SummaryType.IndirectDetailed:
+							return Res.Strings.ReportParams.MCH2IndirectDetailed.ToString ();
+
+						case MCH2SummaryType.Direct:
+							return Res.Strings.ReportParams.MCH2Direct.ToString ();
+
+						default:
+							return "?";
+					}
 
 				default:
 					return null;

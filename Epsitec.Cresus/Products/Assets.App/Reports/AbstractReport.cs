@@ -103,7 +103,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected void OnCompactOrExpand(int row)
 		{
 			//	Etend ou compacte une ligne (inverse son mode actuel).
+			row = this.GetBaseRow (row);
 			this.nodeGetter.CompactOrExpand (row);
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -112,6 +114,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Compacte toutes les lignes.
 			this.nodeGetter.CompactAll ();
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -120,6 +123,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Compacte une ligne.
 			this.nodeGetter.CompactOne ();
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -128,6 +132,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend une ligne.
 			this.nodeGetter.ExpandOne ();
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -136,6 +141,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend toutes les lignes.
 			this.nodeGetter.ExpandAll ();
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -156,6 +162,25 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+
+		private int GetBaseRow(int row)
+		{
+			//	Retourne l'index de la ligne, tel qu'il serait si toutes les lignes étaient visibles.
+			if (this.nodeGetter is IBaseRows)
+			{
+				var n = this.nodeGetter as IBaseRows;
+				return n.GetBaseRow (row);
+			}
+			else
+			{
+				return row;
+			}
+		}
+
+
+		protected virtual void UpdateSkipHiddenRows()
+		{
+		}
 
 		protected virtual void UpdateTreeTable()
 		{
