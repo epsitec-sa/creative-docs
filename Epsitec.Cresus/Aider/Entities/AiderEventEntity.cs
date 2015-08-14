@@ -267,7 +267,7 @@ namespace Epsitec.Aider.Entities
 			var minister   = new AiderEventParticipantEntity ();
 			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
 			{
-				error = "Il manque le ministre officiant";
+				error = "Il manque un ministre officiant";
 				return false;
 			}
 
