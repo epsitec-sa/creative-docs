@@ -49,7 +49,16 @@ namespace Epsitec.Aider.Entities
 			return newParticipant;
 		}
 
-		public static AiderEventParticipantEntity CreateForExternal(BusinessContext context, AiderEventEntity targetEvent, string firstName, string lastName, string town, Enumerations.EventParticipantRole role)
+		public static AiderEventParticipantEntity CreateForExternal(
+			BusinessContext context, 
+			AiderEventEntity targetEvent, 
+			string firstName, 
+			string lastName, 
+			Date? birthDate,
+			string town, 
+			string parishName, 
+			Enumerations.PersonConfession confession,
+			Enumerations.EventParticipantRole role)
 		{
 			var newParticipant         = context.CreateAndRegisterEntity<AiderEventParticipantEntity> ();
 			newParticipant.Event       = targetEvent;
@@ -58,6 +67,9 @@ namespace Epsitec.Aider.Entities
 			newParticipant.FirstName   = firstName;
 			newParticipant.LastName    = lastName;
 			newParticipant.Town        = town;
+			newParticipant.ParishName  = parishName;
+			newParticipant.BirthDate   = birthDate;
+			newParticipant.Confession  = confession;
 			return newParticipant;
 		}
 
@@ -166,6 +178,18 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public Enumerations.PersonConfession GetConfession(bool fromModel = false)
+		{
+			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
+			{
+				return this.Confession;
+			}
+			else
+			{
+				return this.Person.Confession;
+			}
+		}
+
 		public void UpdateActDataFromModel()
 		{
 			this.FirstName  = this.GetFirstName (true);
@@ -174,6 +198,7 @@ namespace Epsitec.Aider.Entities
 			this.BirthDate  = this.GetBirthDate (true);
 			this.Town       = this.GetTown (true);
 			this.ParishName = this.GetParishName (true);
+			this.Confession = this.GetConfession (true);
 		}
 
 		public string GetRoleCaption()

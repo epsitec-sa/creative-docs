@@ -3052,10 +3052,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 179);
 				//	designer:cap/LVOQ63
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 218);
-				//	designer:cap/LVO953
-				public static readonly global::Epsitec.Common.Support.Druid PlaceName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 169);
-				//	designer:cap/LVO853
-				public static readonly global::Epsitec.Common.Support.Druid PlaceType = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 168);
 				//	designer:cap/LVO873
 				public static readonly global::Epsitec.Common.Support.Druid Report = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 232);
 				//	designer:cap/LVOF53
@@ -3096,6 +3092,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVON73
 				public static readonly global::Epsitec.Common.Support.Druid BirthDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 247);
+				//	designer:cap/LVOS73
+				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 252);
 				//	designer:cap/LVAB3
 				public static readonly global::Epsitec.Common.Support.Druid Event = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 107);
 				//	designer:cap/LVOI73

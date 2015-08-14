@@ -3310,50 +3310,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PlaceType</c> field.
-		///	designer:fld/LVA93/LVO853
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO853]")]
-		public global::Epsitec.Aider.Enumerations.EventPlaceType PlaceType
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.EventPlaceType> ("[LVO853]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.EventPlaceType oldValue = this.PlaceType;
-				if (oldValue != value || !this.IsFieldDefined("[LVO853]"))
-				{
-					this.OnPlaceTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.EventPlaceType> ("[LVO853]", oldValue, value);
-					this.OnPlaceTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PlaceName</c> field.
-		///	designer:fld/LVA93/LVO953
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVO953]")]
-		public string PlaceName
-		{
-			get
-			{
-				return this.GetField<string> ("[LVO953]");
-			}
-			set
-			{
-				string oldValue = this.PlaceName;
-				if (oldValue != value || !this.IsFieldDefined("[LVO953]"))
-				{
-					this.OnPlaceNameChanging (oldValue, value);
-					this.SetField<string> ("[LVO953]", oldValue, value);
-					this.OnPlaceNameChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Participants</c> field.
 		///	designer:fld/LVA93/LVOJ53
 		///	</summary>
@@ -3468,10 +3424,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		partial void OnTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
-		partial void OnPlaceTypeChanging(global::Epsitec.Aider.Enumerations.EventPlaceType oldValue, global::Epsitec.Aider.Enumerations.EventPlaceType newValue);
-		partial void OnPlaceTypeChanged(global::Epsitec.Aider.Enumerations.EventPlaceType oldValue, global::Epsitec.Aider.Enumerations.EventPlaceType newValue);
-		partial void OnPlaceNameChanging(string oldValue, string newValue);
-		partial void OnPlaceNameChanged(string oldValue, string newValue);
 		partial void OnKindChanging(global::Epsitec.Aider.Enumerations.EventKind? oldValue, global::Epsitec.Aider.Enumerations.EventKind? newValue);
 		partial void OnKindChanged(global::Epsitec.Aider.Enumerations.EventKind? oldValue, global::Epsitec.Aider.Enumerations.EventKind? newValue);
 		partial void OnPlaceChanging(global::Epsitec.Aider.Entities.AiderEventPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderEventPlaceEntity newValue);
@@ -3753,6 +3705,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Confession</c> field.
+		///	designer:fld/LVAA3/LVOS73
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOS73]")]
+		public global::Epsitec.Aider.Enumerations.PersonConfession Confession
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.PersonConfession> ("[LVOS73]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.PersonConfession oldValue = this.Confession;
+				if (oldValue != value || !this.IsFieldDefined("[LVOS73]"))
+				{
+					this.OnConfessionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.PersonConfession> ("[LVOS73]", oldValue, value);
+					this.OnConfessionChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnRoleChanging(global::Epsitec.Aider.Enumerations.EventParticipantRole oldValue, global::Epsitec.Aider.Enumerations.EventParticipantRole newValue);
 		partial void OnRoleChanged(global::Epsitec.Aider.Enumerations.EventParticipantRole oldValue, global::Epsitec.Aider.Enumerations.EventParticipantRole newValue);
@@ -3774,6 +3748,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnParishNameChanged(string oldValue, string newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnConfessionChanging(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
+		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
