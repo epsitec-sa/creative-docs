@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			this.visibleRows.Clear ();
 			this.visibleColumns.Clear ();
 
-			this.NodeGetter.ClearSkipRows ();
+			this.NodeGetter.ClearSkipHiddenRows ();
 		}
 
 		public void ComputeVisibleData()

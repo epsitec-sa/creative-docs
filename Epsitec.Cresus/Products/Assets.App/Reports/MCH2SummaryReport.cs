@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.NodeGetter.SetLevel (this.Params.Level.Value);
 			}
 
-			this.UpdateSkipRows ();
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 
 			this.OnParamsChanged ();
@@ -106,12 +106,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 		}
 
 
-		protected override void UpdateSkipRows()
+		protected override void UpdateSkipHiddenRows()
 		{
 			//	Si les lignes/colonnes vides sont cachées, on initialise tout ce qu'il faut.
 			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
 
-			if (this.Params.SkipRows)
+			if (this.Params.SkipHiddenRows)
 			{
 				this.DataFiller.ComputeVisibleData ();
 				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");

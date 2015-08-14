@@ -4773,7 +4773,7 @@ namespace Epsitec.Cresus.Assets.App
 						}
 					}
 					//	designer:str/JUKOL01
-					public static global::Epsitec.Common.Types.FormattedText SkipRows
+					public static global::Epsitec.Common.Types.FormattedText SkipHiddenRows
 					{
 						get
 						{
@@ -9498,7 +9498,7 @@ namespace Epsitec.Cresus.Assets.App
 						}
 					}
 					//	designer:str/JUKOL01
-					public static global::Epsitec.Common.Support.Druid SkipRows
+					public static global::Epsitec.Common.Support.Druid SkipHiddenRows
 					{
 						get
 						{

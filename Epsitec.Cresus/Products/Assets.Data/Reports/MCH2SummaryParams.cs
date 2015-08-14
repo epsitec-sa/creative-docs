@@ -10,15 +10,15 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public class MCH2SummaryParams : AbstractReportParams
 	{
-		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid, bool directMode, bool skipRows)
+		public MCH2SummaryParams(string customTitle, DateRange dateRange, Guid rootGuid, int? level, Guid filterGuid, bool directMode, bool skipHiddenRows)
 			: base (customTitle)
 		{
-			this.DateRange  = dateRange;
-			this.RootGuid   = rootGuid;
-			this.Level      = level;
-			this.FilterGuid = filterGuid;
-			this.DirectMode = directMode;
-			this.SkipRows   = skipRows;
+			this.DateRange      = dateRange;
+			this.RootGuid       = rootGuid;
+			this.Level          = level;
+			this.FilterGuid     = filterGuid;
+			this.DirectMode     = directMode;
+			this.SkipHiddenRows = skipHiddenRows;
 		}
 
 		public MCH2SummaryParams(System.Xml.XmlReader reader)
@@ -80,12 +80,12 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			var o = other as MCH2SummaryParams;
 
 			return !object.ReferenceEquals (o, null)
-				&& this.DateRange  == o.DateRange
-				&& this.RootGuid   == o.RootGuid
-				&& this.Level      == o.Level
-				&& this.FilterGuid == o.FilterGuid
-				&& this.DirectMode == o.DirectMode
-				&& this.SkipRows   == o.SkipRows;
+				&& this.DateRange      == o.DateRange
+				&& this.RootGuid       == o.RootGuid
+				&& this.Level          == o.Level
+				&& this.FilterGuid     == o.FilterGuid
+				&& this.DirectMode     == o.DirectMode
+				&& this.SkipHiddenRows == o.SkipHiddenRows;
 		}
 
 		public override int GetHashCode()
@@ -97,18 +97,18 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 				^  this.Level.GetHashCode ()
 				^  this.FilterGuid.GetHashCode ()
 				^  this.DirectMode.GetHashCode ()
-				^  this.SkipRows.GetHashCode ();
+				^  this.SkipHiddenRows.GetHashCode ();
 		}
 
 
 		public override AbstractReportParams ChangePeriod(int direction)
 		{
-			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipRows);
+			return new MCH2SummaryParams (this.CustomTitle, this.DateRange.ChangePeriod (direction), this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipHiddenRows);
 		}
 
 		public override AbstractReportParams ChangeCustomTitle(string customTitle)
 		{
-			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipRows);
+			return new MCH2SummaryParams (customTitle, this.DateRange, this.RootGuid, this.Level, this.FilterGuid, this.DirectMode, this.SkipHiddenRows);
 		}
 
 
@@ -136,6 +136,6 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 		public readonly int?					Level;
 		public readonly Guid					FilterGuid;
 		public readonly bool					DirectMode;
-		public readonly bool					SkipRows;
+		public readonly bool					SkipHiddenRows;
 	}
 }
