@@ -160,7 +160,8 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		private void AddActFooterLines(AiderEventEntity act, List<string> lines)
 		{
-			lines.Add (this.GetWhen (act) + this.Tabs () + "lieu :<tab/>" + act.Place.Name);
+			lines.Add (this.GetWhen (act));
+			lines.Add ("lieu :<tab/>" + act.Place.Name + this.Tabs () + "à :<tab/>" + act.Town.Name);
 			lines.Add (this.GetMinisterLine (act));
 			switch (act.Type)
 			{
@@ -205,10 +206,13 @@ namespace Epsitec.Aider.Processors.Pdf
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.Catechumen));
 					break;
 				case Enumerations.EventType.FuneralService:
+					lines.Add (this.GetConfessionLine (actor));
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.DeceasedPerson));
+					
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
 				case Enumerations.EventType.Marriage:
+					lines.Add (this.GetConfessionLine (actor));
 					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Husband) == actor)
 					{
 						lines.Add (this.GetHusbandSonOfLine (act));
@@ -217,6 +221,7 @@ namespace Epsitec.Aider.Processors.Pdf
 					{
 						lines.Add (this.GetSpouseSonOfLine (act));
 					}
+					
 					break;
 			}
 		}
@@ -276,6 +281,12 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			bd += person.GetBirthDate ().Value.ToShortDateString ();
 			return bd;
+		}
+
+		private string GetConfessionLine(AiderEventParticipantEntity person)
+		{
+			var confession = Res.Types.Enum.PersonConfession.FindValueFromEnumValue (person.GetConfession ()).Caption.DefaultLabel;
+			return "Confession :<tab/>" + confession;
 		}
 
 		private string GetFirstNameLine(AiderEventParticipantEntity person)
