@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			//	Donne les index des lignes visibles.
 			if (visibleRows == null)
 			{
+				this.visibleRows.Clear ();
+
 				this.filterEnable = false;
 			}
 			else

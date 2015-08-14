@@ -210,13 +210,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	Rend toutes les lignes et les colonnes visibles.
 			this.visibleRows.Clear ();
 			this.visibleColumns.Clear ();
+
+			this.NodeGetter.ClearSkipRows ();
 		}
 
 		public void ComputeVisibleData()
 		{
 			//	Cherche toutes les lignes et les colonnes visibles.
-			this.visibleRows   .Clear ();
-			this.visibleColumns.Clear ();
+			this.ClearVisibleData  ();
 
 			//	Ajoute toutes les lignes et les colonnes directement visibles.
 			for (int row=0; row<this.nodeGetter.Count; row++)

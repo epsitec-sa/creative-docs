@@ -85,6 +85,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.UpdateData ();
 		}
 
+		public void ClearSkipRows()
+		{
+			this.visibleRows = null;
+			this.UpdateData ();
+		}
+
 
 		public int Count
 		{

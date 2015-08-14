@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Compacte toutes les lignes.
 			this.nodeGetter.CompactAll ();
+			this.UpdateSkipRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -120,6 +121,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Compacte une ligne.
 			this.nodeGetter.CompactOne ();
+			this.UpdateSkipRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -128,6 +130,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend une ligne.
 			this.nodeGetter.ExpandOne ();
+			this.UpdateSkipRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -136,6 +139,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		{
 			//	Etend toutes les lignes.
 			this.nodeGetter.ExpandAll ();
+			this.UpdateSkipRows ();
 			this.UpdateTreeTable ();
 			this.OnUpdateCommands ();
 		}
@@ -158,6 +162,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		protected virtual void UpdateTreeTable()
+		{
+		}
+
+		protected virtual void UpdateSkipRows()
 		{
 		}
 
