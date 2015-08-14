@@ -8,7 +8,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 {
 	public enum MCH2SummaryType
 	{
-		Indirect,
+		IndirectShort,
+		IndirectDetailed,
 		Direct,
 	}
 }

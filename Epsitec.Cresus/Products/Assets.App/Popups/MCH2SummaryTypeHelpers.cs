@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				}
 			}
 
-			return MCH2SummaryType.Indirect;
+			return MCH2SummaryType.IndirectDetailed;
 		}
 
 		public static int? TypeToInt(MCH2SummaryType type)
@@ -54,13 +54,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 		private static string GetTypeName(MCH2SummaryType type)
 		{
-			if (type == MCH2SummaryType.Direct)
+			if (type == MCH2SummaryType.IndirectShort)
+			{
+				return Res.Strings.MCH2SummaryType.IndirectShort.ToString ();
+			}
+			else if (type == MCH2SummaryType.IndirectDetailed)
+			{
+				return Res.Strings.MCH2SummaryType.IndirectDetailed.ToString ();
+			}
+			else if (type == MCH2SummaryType.Direct)
 			{
 				return Res.Strings.MCH2SummaryType.Direct.ToString ();
-			}
-			else if (type == MCH2SummaryType.Indirect)
-			{
-				return Res.Strings.MCH2SummaryType.Indirect.ToString ();
 			}
 			else
 			{
@@ -73,8 +77,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Retourne la liste des types supportés, dans l'ordre où ils apparaissent dans la UI.
 			get
 			{
+				yield return MCH2SummaryType.IndirectShort;
+				yield return MCH2SummaryType.IndirectDetailed;
 				yield return MCH2SummaryType.Direct;
-				yield return MCH2SummaryType.Indirect;
 			}
 		}
 	}

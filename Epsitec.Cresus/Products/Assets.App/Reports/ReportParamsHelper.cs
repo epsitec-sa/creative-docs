@@ -242,11 +242,14 @@ namespace Epsitec.Cresus.Assets.App.Views
 				case "<SUMMARYTYPE>":
 					switch (reportParams.SummaryType)
 					{
+						case MCH2SummaryType.IndirectShort:
+							return Res.Strings.ReportParams.MCH2IndirectShort.ToString ();
+
+						case MCH2SummaryType.IndirectDetailed:
+							return Res.Strings.ReportParams.MCH2IndirectDetailed.ToString ();
+
 						case MCH2SummaryType.Direct:
 							return Res.Strings.ReportParams.MCH2Direct.ToString ();
-
-						case MCH2SummaryType.Indirect:
-							return Res.Strings.ReportParams.MCH2Indirect.ToString ();
 
 						default:
 							return "?";

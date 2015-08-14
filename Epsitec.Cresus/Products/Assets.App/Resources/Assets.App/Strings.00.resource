@@ -490,11 +490,13 @@
   <data name="EditorPages.UserFields.MCH2Summary" id="KHL">Dans le tableau des immobilisations MCH2:</data>
   <data name="Popup.MCH2SummaryReport.SummaryType" id="KIL">Type</data>
   <data name="ReportParams.MCH2Direct" id="KJL">Direct</data>
-  <data name="ReportParams.MCH2Indirect" id="KKL">Indirect</data>
+  <data name="ReportParams.MCH2IndirectDetailed" id="KKL">Indirect détaillé</data>
   <data name="Event.PreInput.Help" id="KLL">Entrée dans l'inventaire, construction</data>
   <data name="Event.PreInput.ShortName" id="KML">Entrée (financement préalable)</data>
   <data name="Popup.CreateAsset.PreInput" id="KNL">Créer l'objet dans l'état "financement préalable"</data>
   <data name="Popup.MCH2SummaryReport.SkipHiddenRows" id="KOL">Cache les lignes et les colonnes vides</data>
-  <data name="MCH2SummaryType.Direct" id="KPL">Direct</data>
-  <data name="MCH2SummaryType.Indirect" id="KQL">Indirect</data>
+  <data name="MCH2SummaryType.Direct" id="KPL">Direct (montants cumulés)</data>
+  <data name="MCH2SummaryType.IndirectDetailed" id="KQL">Indirect détaillé (montants antérieurs séparés)</data>
+  <data name="ReportParams.MCH2IndirectShort" id="KRL">Indirect compacte</data>
+  <data name="MCH2SummaryType.IndirectShort" id="KSL">Indirect compact (montants antérieurs regroupés)</data>
 </bundle>

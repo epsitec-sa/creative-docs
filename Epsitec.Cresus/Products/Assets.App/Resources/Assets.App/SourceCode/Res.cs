@@ -3287,11 +3287,19 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				//	designer:str/JUKQL01
-				public static global::Epsitec.Common.Types.FormattedText Indirect
+				public static global::Epsitec.Common.Types.FormattedText IndirectDetailed
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545018));
+					}
+				}
+				//	designer:str/JUKSL01
+				public static global::Epsitec.Common.Types.FormattedText IndirectShort
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545020));
 					}
 				}
 			}
@@ -5414,11 +5422,19 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				//	designer:str/JUKKL01
-				public static global::Epsitec.Common.Types.FormattedText MCH2Indirect
+				public static global::Epsitec.Common.Types.FormattedText MCH2IndirectDetailed
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545012));
+					}
+				}
+				//	designer:str/JUKRL01
+				public static global::Epsitec.Common.Types.FormattedText MCH2IndirectShort
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545019));
 					}
 				}
 				//	designer:str/JUKDE01
@@ -8032,11 +8048,19 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				//	designer:str/JUKQL01
-				public static global::Epsitec.Common.Support.Druid Indirect
+				public static global::Epsitec.Common.Support.Druid IndirectDetailed
 				{
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335545018);
+					}
+				}
+				//	designer:str/JUKSL01
+				public static global::Epsitec.Common.Support.Druid IndirectShort
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545020);
 					}
 				}
 			}
@@ -10159,11 +10183,19 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				//	designer:str/JUKKL01
-				public static global::Epsitec.Common.Support.Druid MCH2Indirect
+				public static global::Epsitec.Common.Support.Druid MCH2IndirectDetailed
 				{
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335545012);
+					}
+				}
+				//	designer:str/JUKRL01
+				public static global::Epsitec.Common.Support.Druid MCH2IndirectShort
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545019);
 					}
 				}
 				//	designer:str/JUKDE01

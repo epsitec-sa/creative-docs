@@ -689,12 +689,16 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				switch (this.SummaryType)
 				{
-					case MCH2SummaryType.Direct:
+					case MCH2SummaryType.IndirectShort:
 						yield return Column.Name;
-						yield return Column.InitialState;
 						yield return Column.PreInputs;
 
-						yield return Column.Inputs;
+						yield return Column.ReplacementValues;  // TODO...
+						yield return Column.PostDecreases;
+						yield return Column.PostIncreases;
+						yield return Column.PostAdjusts;
+						yield return Column.PostOutputs;
+						yield return Column.PostAmortizations;
 
 						yield return Column.Decreases;
 						yield return Column.Increases;
@@ -707,7 +711,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 						break;
 
-					case MCH2SummaryType.Indirect:
+					case MCH2SummaryType.IndirectDetailed:
 						yield return Column.Name;
 						yield return Column.PreInputs;
 
@@ -717,6 +721,24 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						yield return Column.PostAdjusts;
 						yield return Column.PostOutputs;
 						yield return Column.PostAmortizations;
+
+						yield return Column.Decreases;
+						yield return Column.Increases;
+						yield return Column.Adjusts;
+						yield return Column.Outputs;
+						yield return Column.AmortizationsAuto;
+						yield return Column.AmortizationsExtra;
+						yield return Column.AmortizationsSuppl;
+						yield return Column.FinalState;
+
+						break;
+
+					case MCH2SummaryType.Direct:
+						yield return Column.Name;
+						yield return Column.InitialState;
+						yield return Column.PreInputs;
+
+						yield return Column.Inputs;
 
 						yield return Column.Decreases;
 						yield return Column.Increases;
