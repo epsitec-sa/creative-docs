@@ -41,5 +41,10 @@ namespace Epsitec.Aider.Processors.Reports
 
 			return report.Name + ".pdf";
 		}
+
+		protected override string GenerateDocuments(System.IO.Stream stream, BusinessContext businessContext, AiderOfficeSenderEntity settings, IEnumerable<T1> reports)
+		{
+			throw new System.NotImplementedException ();
+		}
 	}
 }

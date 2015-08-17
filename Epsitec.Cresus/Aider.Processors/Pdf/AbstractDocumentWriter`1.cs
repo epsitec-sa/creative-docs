@@ -25,6 +25,7 @@ namespace Epsitec.Aider.Processors.Pdf
 		}
 
 		public abstract void WriteStream(System.IO.Stream stream, T officeReport);
+		public abstract void WriteBatchStream(System.IO.Stream stream, IEnumerable<T> officeReports);
 
 		protected BusinessContext				context;
 		protected AiderOfficeSenderEntity		sender;

@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	using Database = Core.Databases.Database;
 	using Epsitec.Cresus.Core.Library;
+	using System.Collections.Concurrent;
+	using Epsitec.Common.Support;
+	using Epsitec.Cresus.WebCore.Server.Processors;
 
 	/// <summary>
 	/// This module is used to retrieve data about the databases, such as the list of defined
@@ -34,6 +37,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public DatabaseModule(CoreServer coreServer)
 			: base (coreServer, "/database")
 		{
+			var instances  = InterfaceImplementationResolver<IReportingProcessor>.CreateInstances (coreServer);
+			var processors = instances.Select (x => new KeyValuePair<string, IReportingProcessor> (x.Name, x));
+
+			this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor> (processors);
+
 			// Gets the databases that should be displayed in the top menu of the application. They
 			// are returned as a tree that represents the structure of this menu. The data returned
 			// for each database is limited to its id, title and icon.
@@ -97,21 +105,22 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var type = "inconnu";
 				CoreJob job	 = null;
+				var typeInfo = new Dictionary<string, string> ()
+				{
+					{"label", "Export fichier PDF"},
+					{"array", "Export fichier CSV"},
+					{"bag",   "Export dans le panier"},
+					{"report","Export en batch"},
+				};
 
-				if(this.Request.Query.type == "label")
+				if (!typeInfo.TryGetValue (this.Request.Query.type, out type))
 				{
-					type = "Export fichier PDF";
+					return new Response ()
+					{
+						StatusCode = HttpStatusCode.BadRequest
+					};
 				}
-				if(this.Request.Query.type == "array")
-				{
-					type = "Export fichier CSV";
-				}
-				if (this.Request.Query.type == "bag")
-				{
-					type = "Export dans le panier";
-					
-				}
-
+				
 				this.Execute (b => this.CreateJob (b, type, true, out job));
 				this.Enqueue (job, context => this.LongRunningExport (context, job, p));
 
@@ -168,7 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
-		internal static Response Export(Caches caches, EntityExtractor extractor, dynamic query)
+		internal static Response Export(BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
 		{
 			var itemCount = extractor.Accessor.GetItemCount ();
 
@@ -177,7 +186,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				throw new System.InvalidOperationException ("Too many items in extractor: " + itemCount.ToString ());
 			}
 
-			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
+			EntityWriter writer = DatabaseModule.GetEntityWriter (context, caches, extractor, query);
 
 			var filename = writer.GetFilename ();
 			var stream   = writer.GetStream ();
@@ -185,11 +194,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.CreateStreamResponse (stream, filename);
 		}
 
-		internal static void ExportToDisk(string filename, Caches caches, EntityExtractor extractor, dynamic query)
+		internal static void ExportToDisk(string filename, BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
 		{
 			var itemCount = extractor.Accessor.GetItemCount ();
 
-			EntityWriter writer = DatabaseModule.GetEntityWriter (caches, extractor, query);
+			EntityWriter writer = DatabaseModule.GetEntityWriter (context, caches, extractor, query);
 
 			var stream   = writer.GetStream ();
 			var depotPath = CoreContext.GetFileDepotPath ("downloads");
@@ -276,7 +285,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
-				return DatabaseModule.Export (caches, extractor, this.Request.Query);
+				return DatabaseModule.Export (businessContext, caches, extractor, this.Request.Query);
 			}
 		}
 
@@ -363,7 +372,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 				{
-					DatabaseModule.ExportToDisk (fileName, caches, extractor, this.Request.Query);
+					this.ExportToDisk (fileName, businessContext, caches, extractor, this.Request.Query);
 				}
 			}
 			catch
@@ -476,7 +485,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 		
-		private static EntityWriter GetEntityWriter(Caches caches, EntityExtractor extractor, dynamic query)
+		private EntityWriter GetEntityWriter(BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
 		{
 			string type = query.type;
 
@@ -488,12 +497,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				case "label":
 					return DatabaseModule.GetLabelWriter (extractor, query);
 
+				case "report":
+					return DatabaseModule.GetReportWriter (context, extractor, query);
+
 				default:
 					throw new NotImplementedException ();
 			}
 		}
 
-		private static EntityWriter GetArrayWriter(Caches caches, EntityExtractor extractor, dynamic query)
+		private EntityWriter GetArrayWriter(Caches caches, EntityExtractor extractor, dynamic query)
 		{
 			string rawColumns = query.columns;
 
@@ -510,7 +522,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 		}
 
-		private static EntityWriter GetLabelWriter(EntityExtractor extractor, dynamic query)
+		private EntityWriter GetLabelWriter(EntityExtractor extractor, dynamic query)
 		{
 			string rawLayout        = query.layout;
 			int    rawTextFactoryId = query.text;
@@ -528,22 +540,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			};
 		}
 
-		private static EntityWriter GetReportWriter(EntityExtractor extractor, dynamic query)
+		private EntityWriter GetReportWriter(BusinessContext context, EntityExtractor extractor, dynamic query)
 		{
-			string rawLayout        = query.layout;
-			int    rawTextFactoryId = query.text;
+			var metaData       = extractor.Metadata;
+			var accessor       = extractor.Accessor;
+			var processorName  = (string) query.text;
 
-			var metaData = extractor.Metadata;
-			var accessor = extractor.Accessor;
-
-			var layout      = (LabelLayout) Enum.Parse (typeof (LabelLayout), rawLayout);
-			var entitytype  = metaData.EntityTableMetadata.EntityType;
-			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
-
-			return new LabelWriter (metaData, accessor, textFactory, layout)
+			IReportingProcessor processor;
+			if (this.processors.TryGetValue (processorName, out processor))
 			{
-				RemoveDuplicates = true
-			};
+				return new ReportWriter (metaData, accessor, context, query, processor);
+			}
+
+			return null;
 		}
+
+		private readonly ConcurrentDictionary<string, IReportingProcessor> processors;
 	}
 }

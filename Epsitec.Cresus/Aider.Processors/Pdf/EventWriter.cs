@@ -27,6 +27,10 @@ namespace Epsitec.Aider.Processors.Pdf
 		public EventWriter()
 		{
 		}
+		public override void WriteBatchStream(System.IO.Stream stream, IEnumerable<AiderEventOfficeReportEntity> officeReports)
+		{
+			throw new System.NotImplementedException ();
+		}
 
 		public override void WriteStream(System.IO.Stream stream, AiderEventOfficeReportEntity officeReport)
 		{

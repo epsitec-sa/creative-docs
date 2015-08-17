@@ -27,9 +27,16 @@ namespace Epsitec.Aider.Processors.Reports
 			var letter  = EntityIO.ResolveEntity (businessContext, reportId) as T;
 
 			return this.GenerateDocument (stream, businessContext, settings, letter);
+		}
+
+		public override string CreateReports(System.IO.Stream stream, BusinessContext businessContext, dynamic parameters)
+		{
+			string settingsId	= parameters.settings;
 			
+			return this.GenerateDocuments (stream, businessContext, settings, entities);
 		}
 
 		protected abstract string GenerateDocument(System.IO.Stream stream, BusinessContext businessContext, AiderOfficeSenderEntity settings, T letter);
+		protected abstract string GenerateDocuments(System.IO.Stream stream, BusinessContext businessContext, AiderOfficeSenderEntity settings, IEnumerable<T> reports);
 	}
 }

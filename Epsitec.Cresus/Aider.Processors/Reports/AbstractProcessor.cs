@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Processors.Reports
 		#region IReportingProcessor Members
 
 		public abstract string CreateReport(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
-
+		public abstract string CreateReports(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
 		#endregion
 
 		#region IName Members

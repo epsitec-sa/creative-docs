@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (ISetViewController controller = this.GetController (businessContext, parameters))
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 			{
-				return DatabaseModule.Export (caches, extractor, this.Request.Query);
+				return DatabaseModule.Export (businessContext, caches, extractor, this.Request.Query);
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				using (ISetViewController controller = this.GetController (businessContext, parameters))
 				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 				{
-					DatabaseModule.ExportToDisk (filename, caches, extractor, this.Request.Query);
+					DatabaseModule.ExportToDisk (filename, businessContext, caches, extractor, this.Request.Query);
 				}
 			}
 			catch

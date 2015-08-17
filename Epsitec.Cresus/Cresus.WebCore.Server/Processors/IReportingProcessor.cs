@@ -9,12 +9,14 @@ using Epsitec.Cresus.WebCore.Server.Core;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.WebCore.Server.Processors
 {
 	public interface IReportingProcessor : IName
 	{
 		string CreateReport(System.IO.Stream stream, BusinessContext businessContext, dynamic parameters);
+		string CreateReports(System.IO.Stream stream, BusinessContext businessContext, IEnumerable<AbstractEntity>, dynamic parameters);
 	}
 }
 

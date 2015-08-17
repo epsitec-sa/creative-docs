@@ -19,5 +19,10 @@ namespace Epsitec.Aider.Processors.Reports
 			: base (coreServer)
 		{
 		}
+
+		protected override string GenerateDocuments(System.IO.Stream stream, BusinessContext businessContext, AiderOfficeSenderEntity settings, IEnumerable<AiderEventOfficeReportEntity> reports)
+		{
+			throw new System.NotImplementedException ();
+		}
 	}
 }
