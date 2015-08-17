@@ -51,14 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			//	retrouve InitialTimestamp et FinalTimestamp.
 			get
 			{
-				foreach (var column in this.OrderedColumns)
-				{
-					var ei = this.GetExtractionInstructions (column);
-					if (!ei.IsEmpty)
-					{
-						yield return ei;
-					}
-				}
+				return this.OrderedColumns.Select (x => this.GetExtractionInstructions (x)).Where (x => !x.IsEmpty);
 			}
 		}
 
@@ -368,6 +361,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						false,
 						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl);
 
+				case Column.PostSummaries:
+					return new ExtractionInstructions (field,
+						ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						EventType.Input, EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output);
+
 				case Column.Decreases:
 					return new ExtractionInstructions (field,
 						ExtractionAmount.DeltaSum,
@@ -511,6 +511,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.PostAmortizations:
 					return Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Text.ToString ();
 
+				case Column.PostSummaries:
+					return Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Text.ToString ();
+
 				case Column.Decreases:
 					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Text.ToString ();
 
@@ -580,6 +583,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.PostAmortizations:
 					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDate);
+
+				case Column.PostSummaries:
+					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Tooltip.ToString (), this.InitialDate);
 
 				case Column.Decreases:
 					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
@@ -693,11 +699,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						yield return Column.Name;
 						yield return Column.PreInputs;
 
-						yield return Column.ReplacementValues;  // TODO...
-						yield return Column.PostDecreases;
-						yield return Column.PostIncreases;
-						yield return Column.PostAdjusts;
-						yield return Column.PostOutputs;
+						yield return Column.PostSummaries;
 						yield return Column.PostAmortizations;
 
 						yield return Column.Decreases;
@@ -780,6 +782,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PostIncreases,
 			PostOutputs,
 			PostAmortizations,
+			PostSummaries,
 			Decreases,
 			Increases,
 			Adjusts,
