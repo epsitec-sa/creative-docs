@@ -113,6 +113,32 @@ namespace Epsitec.Aider.Entities
 					&& this.IsOfficeDefined ();
 		}
 
+		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
+		{
+			if ((this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return true;
+			}
+			else
+			{
+				if (this.Office.IsNotNull ())
+				{
+					if (derogationParishGroup == this.Office.ParishGroup)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
 		public bool IsParishLevelUser()
 		{
 			var isNotHighLevelEditor = !(this.EnableGroupEditionRegion || this.EnableGroupEditionCanton);
