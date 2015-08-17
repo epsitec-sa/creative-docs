@@ -2200,6 +2200,10 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVQ002]" title="Chemin" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderPerson" n="default">
