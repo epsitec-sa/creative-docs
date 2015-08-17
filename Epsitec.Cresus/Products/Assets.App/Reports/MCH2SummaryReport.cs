@@ -69,9 +69,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Il faut utiliser ToTimestamp.JustBefore pour afficher les noms des objets tels
 			//	qu'ils sont définis le 31.12.xx à 23h59.
-			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
+			var eia = this.DataFiller.UsedExtractionInstructionsArray.ToList ();
 			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
-				this.sortingInstructions, ei);
+				this.sortingInstructions, eia);
 
 			this.dataFiller.Timestamp = this.Params.DateRange.ToTimestamp.JustBefore;
 
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateSkipHiddenRows()
 		{
 			//	Si les lignes/colonnes vides sont cachées, on initialise tout ce qu'il faut.
-			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
+			var eia = this.DataFiller.UsedExtractionInstructionsArray.ToList ();
 
 			if (this.Params.SkipHiddenRows)
 			{
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
 				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
-					this.sortingInstructions, ei, this.DataFiller.VisibleRows);
+					this.sortingInstructions, eia, this.DataFiller.VisibleRows);
 			}
 			else
 			{
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
 
 				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
-					this.sortingInstructions, ei, null);
+					this.sortingInstructions, eia, null);
 			}
 		}
 
