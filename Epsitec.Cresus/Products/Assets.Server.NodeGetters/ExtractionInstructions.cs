@@ -15,36 +15,29 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, EventType filteredEventType, bool directMode, bool inverted)
+		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, bool inverted, params EventType[] filteredEventTypes)
 		{
 			switch (extractionAmount)
 			{
 				case ExtractionAmount.StateAt:
-					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
+				case ExtractionAmount.UserColumn:
+					System.Diagnostics.Debug.Assert (filteredEventTypes == null || filteredEventTypes.Length == 0);
 					break;
 
 				case ExtractionAmount.LastFiltered:
-					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
-					break;
-
 				case ExtractionAmount.DeltaSum:
-					System.Diagnostics.Debug.Assert (filteredEventType != EventType.Unknown);
-					break;
-
-				case ExtractionAmount.UserColumn:
-					System.Diagnostics.Debug.Assert (filteredEventType == EventType.Unknown);
+					System.Diagnostics.Debug.Assert (filteredEventTypes != null && filteredEventTypes.Length != 0);
 					break;
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionAmount));
 			}
 
-			this.ResultField       = resultField;
-			this.ExtractionAmount  = extractionAmount;
-			this.Range             = range;
-			this.FilteredEventType = filteredEventType;
-			this.DirectMode        = directMode;
-			this.Inverted          = inverted;
+			this.ResultField        = resultField;
+			this.ExtractionAmount   = extractionAmount;
+			this.Range              = range;
+			this.FilteredEventTypes = filteredEventTypes;
+			this.Inverted           = inverted;
 		}
 
 		public bool IsEmpty
@@ -55,13 +48,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, EventType.Unknown, true, false);
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, false);
 
 		public readonly ObjectField				ResultField;
 		public readonly ExtractionAmount		ExtractionAmount;
 		public readonly DateRange				Range;
-		public readonly EventType				FilteredEventType;
-		public readonly bool					DirectMode;
 		public readonly bool					Inverted;
+		public readonly EventType[]				FilteredEventTypes;
 	}
 }

@@ -120,7 +120,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private static AbstractCumulValue GetStateAt(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
 		{
 			//	Retourne la valeur définie à la fin de la période, ou antérieurement.
-			var timestamp = new Timestamp(extractionInstructions.Range.ExcludeTo, 0);
+			//	Comme la date de fin est 'ExcludeTo', il faut chercher l'événement daté un poil avant !
+			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo.AddTicks (-1), 0);
 			var p = obj.GetSyntheticProperty (timestamp, ObjectField.MainValue) as DataAmortizedAmountProperty;
 
 			if (p != null)
@@ -145,7 +146,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
 							value = new DecimalCumulValue (aa.Value);
@@ -172,7 +173,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
-						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventType, e.Type) &&
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
 							decimal value;
@@ -245,17 +246,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static bool CompareEventTypes(EventType extractionType, EventType eventType)
+		private static bool CompareEventTypes(EventType[] extractionTypes, EventType eventType)
 		{
-			if (extractionType == EventType.AmortizationAuto)
-			{
-				return eventType == extractionType
-					|| eventType == EventType.AmortizationPreview;
-			}
-			else
-			{
-				return eventType == extractionType;
-			}
+			return extractionTypes.Where (x => x == eventType).Any ();
 		}
 
 

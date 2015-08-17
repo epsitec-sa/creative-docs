@@ -37,9 +37,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				wall.AddBrick ()
 					.Input ()
 						.Field (x => x.Role)
-						.Field (x => x.FirstNameEx)
-						.Field (x => x.LastNameEx)
-						.Field (x => x.TownEx)
+						.Field (x => x.FirstName)
+						.Field (x => x.LastName)
+						.Field (x => x.BirthDate)
+						.Field (x => x.Town)
+						.Field (x => x.ParishName)
+						.Field (x => x.Confession)
 					.End ();
 			}
 		}

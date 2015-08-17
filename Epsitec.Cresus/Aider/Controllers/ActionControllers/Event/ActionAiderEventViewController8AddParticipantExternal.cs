@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, string, string, Enumerations.EventParticipantRole> (this.Execute);
+			return ActionExecutor.Create<string, string, string, Enumerations.PersonConfession, Enumerations.EventParticipantRole> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
@@ -51,6 +51,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<string> ()
 					.Title ("Localité")
 				.End ()
+				.Field<Enumerations.PersonConfession> ()
+					.Title ("Confession")
+					.InitialValue (Enumerations.PersonConfession.Protestant)
+				.End ()
 				.Field<Enumerations.EventParticipantRole> ()
 					.Title ("Rôle")
 				.End ()
@@ -60,7 +64,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(
 			string lastName,
 			string firstName,
-			string town, 
+			string town,
+			Enumerations.PersonConfession confession,
 			Enumerations.EventParticipantRole role
 		)
 		{
@@ -74,12 +79,20 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("La localité est obligatoire");
 			}
 
+			if (role == Enumerations.EventParticipantRole.None)
+			{
+				throw new BusinessRuleException ("Un rôle est obligatoire");
+			}
+
 			AiderEventParticipantEntity.CreateForExternal (
 				this.BusinessContext, 
 				this.Entity, 
 				firstName, 
-				lastName, 
+				lastName,
+				null,
 				town, 
+				null,
+				confession,
 				role
 			);
 		}

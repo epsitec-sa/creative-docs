@@ -75,6 +75,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{		
 			var person = this.Entity;
 			var currentParishGroup = person.ParishGroup;
+			var user   = AiderUserManager.Current.AuthenticatedUser;
+
+			if (user.CanDerogateTo (derogationParishGroup))
+			{
+				throw new BusinessRuleException ("Vos droits ne vous permettent pas de déroger vers cette paroisse");
+			}
 
 			System.Diagnostics.Trace.WriteLine ("Derogating from " + currentParishGroup.Name);
 

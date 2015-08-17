@@ -50,7 +50,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
 				this.Entity.GetMainActors ().ForEach ((a) =>
 				{
-					a.Events.Add (this.Entity);
+					if (a.IsExternal == false)
+					{
+						a.Person.Events.Add (this.Entity);
+					}		
 				});
 				this.Entity.ApplyParticipantsInfo ();
 				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
@@ -60,8 +63,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				}
 				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
 
-				var nextNumber = AiderEventEntity.FindNextNumber (this.BusinessContext, this.Entity.Type);
-				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, nextNumber, this.Entity, true);
+				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, this.Entity);
 				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
 				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
 				this.Entity.Report = act;

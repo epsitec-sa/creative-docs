@@ -103,6 +103,7 @@
     <Compile Include="NodeGetters\ReportsNodeGetter.cs" />
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
+    <Compile Include="Popups\MCH2SummaryTypeHelpers.cs" />
     <Compile Include="Popups\VatCodesPopup.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />

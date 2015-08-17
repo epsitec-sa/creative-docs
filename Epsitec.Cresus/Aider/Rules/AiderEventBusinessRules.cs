@@ -31,28 +31,43 @@ namespace Epsitec.Aider.Rules
 					case Enumerations.EventType.FuneralService:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.IsAlive)
+							if (actor.IsExternal == false)
 							{
-								actor.KillPerson (this.GetBusinessContext (), entity.Date.Value, true);
+								var person = actor.Person;
+								if (person.IsAlive)
+								{
+									person.KillPerson (this.GetBusinessContext (), entity.Date.Value, true);
+								}
 							}
+							
 						});
 						break;
 					case Enumerations.EventType.CelebrationRegisteredPartners:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.eCH_Person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
+							if(actor.IsExternal == false)
 							{
-								actor.eCH_Person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Pacs;
+								var person = actor.Person.eCH_Person;
+								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
+								{
+									person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Pacs;
+								}
 							}
+
 						});
 						break;
 					case Enumerations.EventType.Marriage:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.eCH_Person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Married)
+							if (actor.IsExternal == false)
 							{
-								actor.eCH_Person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Married;
+								var person = actor.Person.eCH_Person;
+								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Married)
+								{
+									person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Married;
+								}
 							}
+							
 						});
 						break;
 				}

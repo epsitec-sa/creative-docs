@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Rules
 				}
 				else
 				{
-					Logic.BusinessRuleException ("L'utilisateur n'a pas de contact associé!");
+					entity.User.Contact = entity.PersonContact;
 				}
 			}
 			else

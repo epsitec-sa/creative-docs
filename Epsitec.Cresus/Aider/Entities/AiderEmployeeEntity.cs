@@ -81,6 +81,18 @@ namespace Epsitec.Aider.Entities
 			}			
 		}
 
+		public bool IsMinister()
+		{
+			switch (this.EmployeeType)
+			{
+				case Enumerations.EmployeeType.Diacre:
+				case Enumerations.EmployeeType.Pasteur:
+					return true;
+			}
+
+			return false;
+		}
+
 		private IList<AiderEmployeeJobEntity>		jobs;
 		private IList<AiderRefereeEntity>			refereeEntries;
 	}

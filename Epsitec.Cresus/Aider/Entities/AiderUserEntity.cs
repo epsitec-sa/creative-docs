@@ -89,13 +89,7 @@ namespace Epsitec.Aider.Entities
 				if (this.Contact.Person.Employee.IsNotNull ())
 				{
 					var employee = this.Contact.Person.Employee;
-					switch (employee.EmployeeType)
-					{
-						case Enumerations.EmployeeType.Diacre:
-						case Enumerations.EmployeeType.Pasteur:
-							isMinister = true;
-							break;
-					}
+					isMinister = employee.IsMinister ();
 				}
 			}
 
@@ -117,6 +111,32 @@ namespace Epsitec.Aider.Entities
 			return ((this.Role.Name == AiderUserRoleEntity.RegionRole)  || 
 					this.HasPowerLevel (UserPowerLevel.Administrator))
 					&& this.IsOfficeDefined ();
+		}
+
+		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
+		{
+			if ((this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return true;
+			}
+			else
+			{
+				if (this.Office.IsNotNull ())
+				{
+					if (derogationParishGroup == this.Office.ParishGroup)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
 		}
 
 		public bool IsParishLevelUser()

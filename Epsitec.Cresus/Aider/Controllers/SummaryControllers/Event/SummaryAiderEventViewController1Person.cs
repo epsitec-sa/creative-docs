@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			wall.AddBrick ()
 					.Icon ("Data.AiderEvent")
-					.Title (x => "Acte N° " + x.Report.EventNumber)
+					.Title (x => "Acte N° " + x.Report.EventNumberByYearAndRegistry)
 					.Text (x => x.GetActSummary ())
 					.Attribute (BrickMode.DefaultToNoSubView);
 

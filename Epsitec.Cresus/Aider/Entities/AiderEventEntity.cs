@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Entities
 {
@@ -18,7 +19,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var type = this.GetTypeCaption ();
 			var place = this.GetPlaceText ();
-			var actors = this.GetMainActors ().Select (p => p.GetDisplayName ()).Join ("\n");
+			var actors = this.GetMainActors ().Select (p => p.GetFullName ()).Join ("\n");
 			return TextFormatter.FormatText (type + "\n"+ actors + "\n" + place + "\n" + this.Date + "\n" + this.Description);
 		}
 
@@ -44,16 +45,9 @@ namespace Epsitec.Aider.Entities
 		public FormattedText GetParticipantsSummary()
 		{
 			var lines = this.GetParticipations ()
-				.Where (p => p.IsExternal == false)
 				.Select (
-				p => p.Person.GetDisplayName () + "\n"
+				p => p.GetFullName () + "\n"
 			);
-			var others = this.GetParticipations ()
-				.Where (p => p.IsExternal == true)
-				.Select (
-				p => p.FirstNameEx + " " + p.LastNameEx + "\n"
-			);
-			lines.Concat (others);
 			return TextFormatter.FormatText (lines);
 		}
 
@@ -85,29 +79,6 @@ namespace Epsitec.Aider.Entities
 			return newEvent;
 		}
 
-		public static string FindNextNumber (BusinessContext context, Enumerations.EventType type)
-		{
-			var nextEvent  = 1;
-			var eventStyle = new AiderEventEntity ()
-			{
-				Type = type,
-				State = Enumerations.EventState.Validated
-			};
-			var example   = new AiderEventOfficeReportEntity ()
-			{
-				Event = eventStyle
-			};
-
-			var reports        = context.GetByExample <AiderEventOfficeReportEntity> (example);
-			var thisYearEvents = reports.Where (r => r.Event.Date.Value.Year == System.DateTime.Now.Year);
-			if (thisYearEvents.Any ())
-			{
-				nextEvent = thisYearEvents.Max (r => System.Convert.ToInt32 (r.EventNumber.Split ('/')[1])) + 1;
-			}
-
-			return System.DateTime.Now.Year.ToString () + "/" + nextEvent.ToString ();
-		}
-
 		public void Delete(BusinessContext context)
 		{
 			if (this.State == Enumerations.EventState.Validated)
@@ -128,9 +99,9 @@ namespace Epsitec.Aider.Entities
 			context.DeleteEntity (this);
 		}
 
-		public List<AiderPersonEntity> GetMainActors ()
+		public List<AiderEventParticipantEntity> GetMainActors ()
 		{
-			var actors = new List<AiderPersonEntity> ();
+			var actors = new List<AiderEventParticipantEntity> ();
 			switch (this.Type)
 			{
 			case Enumerations.EventType.Baptism:
@@ -212,18 +183,44 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public AiderPersonEntity GetMinister ()
+		public List<AiderEventParticipantEntity> GetMinisters()
 		{
-			AiderPersonEntity minister;
-			this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister);
-			return minister;
+			var ministers = new List<AiderEventParticipantEntity> ();
+			this.TryAddActorsWithRole (ministers, Enumerations.EventParticipantRole.Minister);
+			return ministers;
 		}
 
-		public AiderPersonEntity GetActor (Enumerations.EventParticipantRole role)
+		public AiderEventParticipantEntity GetActor (Enumerations.EventParticipantRole role)
 		{
-			AiderPersonEntity actor;
+			AiderEventParticipantEntity actor;
 			this.TryAddActorWithRole (out actor, role);
 			return actor;
+		}
+
+		public string GetActorFullName(Enumerations.EventParticipantRole role)
+		{
+			var participant = this.Participants.Where (p => p.Role == role).FirstOrDefault ();
+			if (participant.IsNotNull ())
+			{
+				return participant.GetFullName ();
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public Enumerations.PersonSex GetActorSex(Enumerations.EventParticipantRole role)
+		{
+			var participant = this.Participants.Where (p => p.Role == role).FirstOrDefault ();
+			if (participant.IsNotNull ())
+			{
+				return participant.GetSex ();
+			}
+			else
+			{
+				return Enumerations.PersonSex.Unknown;
+			}
 		}
 
 		public bool IsCurrentEventValid(out string error)
@@ -260,15 +257,15 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			var minister   = new AiderPersonEntity ();
-			if (!this.TryAddActorWithRole (out minister, Enumerations.EventParticipantRole.Minister))
+			var ministers   = new List<AiderEventParticipantEntity> ();
+			if (!this.TryAddActorsWithRole (ministers, Enumerations.EventParticipantRole.Minister))
 			{
-				error = "Il manque le ministre officiant";
+				error = "Il manque un ministre officiant";
 				return false;
 			}
 
-			var main   = new AiderPersonEntity ();
-			var actors = new List<AiderPersonEntity> ();
+			var main   = new AiderEventParticipantEntity ();
+			var actors = new List<AiderEventParticipantEntity> ();
 			switch (this.Type)
 			{
 				case Enumerations.EventType.Baptism:
@@ -360,48 +357,33 @@ namespace Epsitec.Aider.Entities
 			return true;
 		}
 
-		public bool CheckActorValidity(AiderPersonEntity main, out string error)
+		public bool CheckActorValidity(AiderEventParticipantEntity participant, out string error)
 		{
 			error = "";
+			var main = participant.Person;
 
-			if (main.Age == null)
+			if (participant.GetBirthDate ()== null)
 			{
-				error = main.GetShortFullName () + ": date de naissance non renseignée";
+				error = main.GetFullName () + ": date de naissance non renseignée";
 				return false;
 			}
 
-			if (main.IsDeceased)
+			if (participant.GetTown ().IsNullOrWhiteSpace ())
 			{
-				if (!main.Contacts.Where (c => c.AddressType == Enumerations.AddressType.LastKnow).Any ())
-				{
-					error = main.GetShortFullName () + ": adresse non renseignée";
-					return false;
-				}
+				error = main.GetFullName () + ": adresse non renseignée";
+				return false;
 			}
-			else
-			{
-				if (main.IsGovernmentDefined && main.IsDeclared)
-				{
-					if (main.eCH_Person.GetAddress ().IsNull ())
-					{
-						error = main.GetShortFullName () + ": adresse non renseignée";
-						return false;
-					}
-				}
-				else
-				{
-					if (main.MainContact.GetAddress ().IsNull ())
-					{
-						error = main.GetShortFullName () + ": adresse non renseignée";
-						return false;
-					}
 
-					if (main.MainContact.GetAddress ().IsNull ())
-					{
-						error = main.GetShortFullName () + ": domicile de l'adresse non renseigné";
-						return false;
-					}
-				}
+			if (participant.GetSex () == Enumerations.PersonSex.Unknown)
+			{
+				error = main.GetFullName () + ": sexe non renseigné";
+				return false;
+			}
+
+			if (participant.GetParishName ().IsNullOrWhiteSpace ())
+			{
+				error = main.GetFullName () + ": paroisse non renseignée";
+				return false;
 			}
 
 			return true;
@@ -414,29 +396,13 @@ namespace Epsitec.Aider.Entities
 		}
 
 		/// <summary>
-		/// Keep names and town of participants on the participation
+		/// Keep important data of participants on the participation
 		/// </summary>
 		public void ApplyParticipantsInfo()
 		{
 			foreach(var participant in this.participants)
 			{
-				if (participant.IsExternal == false)
-				{
-					var person = participant.Person;
-					var from   = "";
-					participant.FirstNameEx = person.eCH_Person.PersonFirstNames;
-					participant.LastNameEx  = person.eCH_Person.PersonOfficialName;
-					if (person.IsGovernmentDefined && person.IsDeclared)
-					{
-						from += person.eCH_Person.GetAddress ().Town;				
-					}
-					else
-					{
-						from += person.MainContact.GetAddress ().Town.Name;
-					}
-					participant.TownEx      = from;
-				}
-				
+				participant.UpdateActDataFromModel ();
 			}
 		}
 
@@ -450,16 +416,14 @@ namespace Epsitec.Aider.Entities
 			value = this.GetParticipations ().AsReadOnlyCollection ();
 		}
 
-		private bool TryAddActorWithRole(out AiderPersonEntity actor, Enumerations.EventParticipantRole role)
+		private bool TryAddActorWithRole(out AiderEventParticipantEntity actor, Enumerations.EventParticipantRole role)
 		{
 			actor = null;
 			var participant = this.Participants
 										.SingleOrDefault (p => p.Role == role);
-			if (participant.IsNotNull ()) {
-				if (participant.IsExternal == false)
-				{
-					actor = participant.Person;
-				}
+			if (participant.IsNotNull ()) 
+			{
+				actor = participant;
 				return true;
 			}
 			else
@@ -468,13 +432,13 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		private bool TryAddActorsWithRole(List<AiderPersonEntity> actors, Enumerations.EventParticipantRole role)
+		private bool TryAddActorsWithRole(List<AiderEventParticipantEntity> actors, Enumerations.EventParticipantRole role)
 		{
 			var participants = this.Participants
 										.Where (p => p.Role == role);
 			if (participants.Any ())
 			{
-				actors.AddRange (participants.Where (p => p.IsExternal == false).Select (p => p.Person));
+				actors.AddRange (participants);
 				return true;
 			}
 			else
@@ -490,8 +454,14 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPlaceText()
 		{
-			var placeType = Res.Types.Enum.EventPlaceType.FindValueFromEnumValue (this.PlaceType).Caption.DefaultLabel;
-			return placeType + " " + this.PlaceName;
+			if (this.Place.IsNotNull ())
+			{
+				return this.Place.Name;
+			}
+			else
+			{
+				return "Lieu de célébration non renseigné";
+			}		
 		}
 
 		private IList<AiderEventParticipantEntity> GetParticipations()
