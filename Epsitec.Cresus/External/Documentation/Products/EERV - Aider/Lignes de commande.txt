@@ -712,3 +712,8 @@ Création des vues nécessaires à la main dans IBExpert.
 -echupdate -newechfile:S:\eerv\eerv-2015-07-13.xml -oldechfile:S:\eerv\eerv-2015-07-06.xml -output:s:\eerv\ech-diff-2015-07-13.md
 -echupdate -newechfile:S:\eerv\eerv-2015-07-20.xml -oldechfile:S:\eerv\eerv-2015-07-13.xml -output:s:\eerv\ech-diff-2015-07-20.md
 -admin2muni
+
+
+
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-07-20.xml
+
