@@ -18,10 +18,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(Timestamp? timestamp, List<ExtractionInstructions> extractionInstructions)
+		public void SetParams(Timestamp? timestamp, List<ExtractionInstructionsArray> extractionInstructionsArray)
 		{
-			this.timestamp              = timestamp;
-			this.extractionInstructions = extractionInstructions;
+			this.timestamp                   = timestamp;
+			this.extractionInstructionsArray = extractionInstructionsArray;
 		}
 
 
@@ -46,12 +46,27 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						}
 					}
 				}
-				else if (this.extractionInstructions.Select (x => x.ResultField).Contains (field))
+				else if (this.extractionInstructionsArray.Select (x => x.ResultField).Contains (field))
 				{
 					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
 					//	(ObjectField.MCH2Report+n).
-					var ei = this.extractionInstructions.Where (x => x.ResultField == field).FirstOrDefault ();
-					v = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
+					var eia = this.extractionInstructionsArray.Where (x => x.ResultField == field).FirstOrDefault ();
+
+					foreach (var ei in eia.Array)
+					{
+						if (!ei.IsEmpty)
+						{
+							var x = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
+							if (v == null)
+							{
+								v = x;
+							}
+							else
+							{
+								v = v.Merge (x);
+							}
+						}
+					}
 				}
 				else
 				{
@@ -252,8 +267,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly DataAccessor			accessor;
-		private Timestamp?						timestamp;
-		private List<ExtractionInstructions>	extractionInstructions;
+		private readonly DataAccessor				accessor;
+		private Timestamp?							timestamp;
+		private List<ExtractionInstructionsArray>	extractionInstructionsArray;
 	}
 }

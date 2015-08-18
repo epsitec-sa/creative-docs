@@ -105,4 +105,6 @@
   <data name="Enum.MCH2Summary.Column.PostIncreases.Tooltip" id="KO3">Somme de toutes les revalorisations (augmentations) antérieures au {0}</data>
   <data name="Enum.MCH2Summary.Column.PostOutputs.Text" id="KP3">Sorties ant.</data>
   <data name="Enum.MCH2Summary.Column.PostOutputs.Tooltip" id="KQ3">Somme de toutes les sorties antérieures au {0}</data>
+  <data name="Enum.MCH2Summary.Column.PostSummaries.Text" id="KR3">Val. antérieures</data>
+  <data name="Enum.MCH2Summary.Column.PostSummaries.Tooltip" id="KS3">Sommes de toutes les valeurs antérieures au {0}</data>
 </bundle>

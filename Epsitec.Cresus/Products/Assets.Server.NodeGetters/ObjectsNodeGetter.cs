@@ -72,15 +72,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null, HashSet<int> visibleRows = null)
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructionsArray> extractionInstructionsArray = null, HashSet<int> visibleRows = null)
 		{
 			//	La liste des instructions d'extraction est utile pour la production de rapports.
-			this.timestamp              = timestamp;
-			this.rootGuid               = rootGuid;
-			this.filterGuid             = filterGuid;
-			this.sortingInstructions    = instructions;
-			this.extractionInstructions = extractionInstructions;
-			this.visibleRows            = visibleRows;
+			this.timestamp                   = timestamp;
+			this.rootGuid                    = rootGuid;
+			this.filterGuid                  = filterGuid;
+			this.sortingInstructions         = instructions;
+			this.extractionInstructionsArray = extractionInstructionsArray;
+			this.visibleRows                 = visibleRows;
 
 			this.UpdateData ();
 		}
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.mergeNodeGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructionsArray);
 
 			this.sortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
 			this.sorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private Guid								rootGuid;
 		private Guid								filterGuid;
 		private SortingInstructions					sortingInstructions;
-		private List<ExtractionInstructions>		extractionInstructions;
+		private List<ExtractionInstructionsArray>	extractionInstructionsArray;
 		private HashSet<int>						visibleRows;
 	}
 }
