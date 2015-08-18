@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// Les instructions d'extraction permettent de définir des montants calculés
 	/// par CumulNodeGetter, en vue de la production de rapports.
 	/// Ces montants sont inclus dans une période temporelle et peuvent concerner un
-	/// seul type d'événement.
+	/// ou plusieurs types d'événements.
 	/// </summary>
 	public struct ExtractionInstructions
 	{

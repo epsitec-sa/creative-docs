@@ -7,6 +7,11 @@ using Epsitec.Cresus.Assets.Data;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
+	/// <summary>
+	/// Cette classe contient une collection d'instructions d'extraction permettent de définir des
+	/// montants calculés par CumulNodeGetter, en vue de la production de rapports.
+	/// Le montant est toujours égal à la somme des instructions individuelles.
+	/// </summary>
 	public struct ExtractionInstructionsArray
 	{
 		public ExtractionInstructionsArray(ObjectField resultField, params ExtractionInstructions[] instructions)

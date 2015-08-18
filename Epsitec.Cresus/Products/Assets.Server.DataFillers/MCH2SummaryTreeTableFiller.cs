@@ -374,10 +374,12 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.PostSummaries:
 					return new ExtractionInstructionsArray (field,
+						// Somme de Column.ReplacementValues...
 						new ExtractionInstructions (ExtractionAmount.LastFiltered,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false,
 						EventType.Input),
+						// ...et Column.PostDecreases, Column.PostIncreases, Column.PostAdjusts et Column.PostOutputs
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
