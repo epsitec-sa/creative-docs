@@ -190,20 +190,32 @@ namespace Epsitec.Aider.Data.Job
 								}
 								else
 								{
-									var echHousehold    = echData.ByAdult1Id[personId];
+									var echHousehold = echData.FindAdult (personId);
 									var eChHouseholdEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
 
-									household = HouseholdsFix.CreateAiderHousehold (businessContext, aiderPerson, echHousehold, aiderPerson.eCH_Person.ReportedPerson1);
+									if (echHousehold == null)
+									{
+										//	This should never happen!
+
+										System.Diagnostics.Debug.WriteLine ("Damn: person " + personId + " cannot be found in echData // HouseholdsFix.cs");
+										
+										household = null;
+									}
+									else
+									{
+										household = HouseholdsFix.CreateAiderHousehold (businessContext, aiderPerson, echHousehold, aiderPerson.eCH_Person.ReportedPerson1);
+									}
 								}
 
-								foreach (var contact in contactToFix)
+								if (household != null)
 								{
-									contact.Household = household;
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+									foreach (var contact in contactToFix)
+									{
+										contact.Household = household;
+										HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+									}
 								}
 							}
-							
-
 						}
 					}
 				);
@@ -388,39 +400,68 @@ namespace Epsitec.Aider.Data.Job
 			{
 				throw new BusinessRuleException ("Cannot create household: missing refAiderPerson");
 			}
-			else
+
+			if (refAiderPerson.eCH_Person.PersonId == echHousehold.Adult1.Id)
 			{
-				if (refAiderPerson.eCH_Person.PersonId != echHousehold.Adult1.Id)
+				if (householdEntity.IsNull ())
 				{
-					throw new BusinessRuleException ("Cannot create household: bad refAiderPerson entity provided (id mismatch)");
+					householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
 				}
+
+				var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
+				var newHousehold    = AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+				EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, true, false);
+
+				if (echHousehold.Adult2 != null)
+				{
+					var person2      = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult2);
+					var aiderPerson2 = EChDataHelpers.GetAiderPersonEntity (businessContext, person2);
+					EChDataHelpers.SetupHousehold (businessContext, aiderPerson2, newHousehold, householdEntity, false, true);
+				}
+
+				foreach (var child in echHousehold.Children)
+				{
+					var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
+					var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
+					EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
+				}
+
+				return newHousehold;
 			}
 
-			if (householdEntity.IsNull ())
+			if (refAiderPerson.eCH_Person.PersonId == echHousehold.Adult2.Id)
 			{
-				householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
+				if (householdEntity.IsNull ())
+				{
+					householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
+				}
+
+				var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
+				var newHousehold    = AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+				if (echHousehold.Adult1 == null)
+				{
+					throw new BusinessRuleException ("Cannot create household: Adult2 provided but no Adult1 found");
+				}
+
+				var person1      = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult1);
+				var aiderPerson1 = EChDataHelpers.GetAiderPersonEntity (businessContext, person1);
+				EChDataHelpers.SetupHousehold (businessContext, aiderPerson1, newHousehold, householdEntity, true, false);
+
+				EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, false, true);
+
+				foreach (var child in echHousehold.Children)
+				{
+					var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
+					var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
+					EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
+				}
+
+				return newHousehold;
 			}
 
-			var addressTemplate         = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
-			var newHousehold            = AiderHouseholdEntity.Create (businessContext, addressTemplate);
-
-			EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, true, false);
-
-			if (echHousehold.Adult2 != null)
-			{
-				var person2       = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult2);
-				var aiderPerson2 = EChDataHelpers.GetAiderPersonEntity (businessContext, person2);
-				EChDataHelpers.SetupHousehold (businessContext, aiderPerson2, newHousehold, householdEntity, false, true);
-			}
-
-			foreach (var child in echHousehold.Children)
-			{
-				var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
-				var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
-				EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
-			}
-
-			return newHousehold;
+			throw new BusinessRuleException ("Cannot create household: bad refAiderPerson entity provided (id mismatch)");
 		}
 
 		public static bool ExecuteIfInHousehold(AiderHouseholdEntity household, string personId, System.Action<AiderPersonEntity> action)
