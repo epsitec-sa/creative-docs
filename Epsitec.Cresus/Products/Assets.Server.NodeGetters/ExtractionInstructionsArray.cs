@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Assets.Data;
+using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
 namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
@@ -16,38 +17,53 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	{
 		public ExtractionInstructionsArray(ObjectField resultField, params ExtractionInstructions[] instructions)
 		{
-			this.resultFieldield = resultField;
-			this.array           = instructions.ToArray ();
+			this.resultField            = resultField;
+			this.extractionInstructions = instructions.ToArray ();
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
-				return this.resultFieldield == ObjectField.Unknown || this.array == null || this.array.Length == 0;
+				return this.resultField == ObjectField.Unknown || this.extractionInstructions == null || this.extractionInstructions.Length == 0;
 			}
 		}
 
-		public IEnumerable<ExtractionInstructions> Array
+		public ObjectField						ResultField
 		{
 			get
 			{
-				return this.array;
+				return this.resultField;
 			}
 		}
 
-		public ObjectField ResultField
+		public AbstractCumulValue GetSum(DataAccessor accessor, DataObject obj,
+			System.Func<DataAccessor, DataObject, ObjectField, ExtractionInstructions, AbstractCumulValue> action)
 		{
-			get
+			//	Retourne la somme des toutes les instructions contenues.
+			AbstractCumulValue v = null;
+
+			if (!this.IsEmpty)
 			{
-				return this.resultFieldield;
+				foreach (var ei in this.extractionInstructions)
+				{
+					var x = action (accessor, obj, this.resultField, ei);
+					if (v == null)
+					{
+						v = x;
+					}
+					else
+					{
+						v = v.Merge (x);
+					}
+				}
 			}
+
+			return v;
 		}
 
 
-		public static ExtractionInstructionsArray Empty = new ExtractionInstructionsArray ();
-
-		private readonly ObjectField				resultFieldield;
-		private readonly ExtractionInstructions[]	array;
+		private readonly ObjectField				resultField;
+		private readonly ExtractionInstructions[]	extractionInstructions;
 	}
 }

@@ -51,22 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
 					//	(ObjectField.MCH2Report+n).
 					var eia = this.extractionInstructionsArray.Where (x => x.ResultField == field).FirstOrDefault ();
-
-					if (!eia.IsEmpty)
-					{
-						foreach (var ei in eia.Array)
-						{
-							var x = ExtractionEngine.GetExtractionInstructions (accessor, obj, eia.ResultField, ei);
-							if (v == null)
-							{
-								v = x;
-							}
-							else
-							{
-								v = v.Merge (x);
-							}
-						}
-					}
+					v = eia.GetSum (accessor, obj, ExtractionEngine.GetExtractionInstructions);
 				}
 				else
 				{
