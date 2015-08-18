@@ -536,6 +536,11 @@ namespace Epsitec.Aider.Data.Job
 
 		public static eCH_ReportedPersonEntity GetEchReportedPersonEntity(BusinessContext businessContext, EChReportedPerson reportedPerson)
 		{
+			if (reportedPerson == null)
+			{
+				return null;
+			}
+
 			var reportedPersonExample = new eCH_ReportedPersonEntity ();
 			var req = new Request ();
 			if (reportedPerson.Adult1 != null && reportedPerson.Adult2 != null)
