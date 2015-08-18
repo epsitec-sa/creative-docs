@@ -52,7 +52,21 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 				{
-					explanationsValue = AccountsLogic.AddError (number, Res.Strings.AccountsLogic.InvalidDate.ToString ());
+					if (accessor.Mandat.AccountsDateRanges.Any ())
+					{
+						//	S'il n'y a pas de plan comptable, il vaut mieux afficher sur fond orange "1000 - Caisse"
+						//	que "1000 - Aucun plan comptable à cette date". Pour cela, on utilise le dernier plan
+						//	comptable connu.
+						date = accessor.Mandat.AccountsDateRanges.LastOrDefault ().IncludeFrom;
+						baseType = accessor.Mandat.GetAccountsBase (date);
+						var summary = AccountsLogic.GetSummary (accessor, baseType, number);
+						explanationsValue = summary;  // par exemple "1000 Caisse"
+					}
+					else
+					{
+						explanationsValue = AccountsLogic.AddError (number, Res.Strings.AccountsLogic.InvalidDate.ToString ());
+					}
+
 					hasError = true;
 					gotoVisible = false;
 				}
