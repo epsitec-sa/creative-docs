@@ -29,6 +29,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			list.Add (new StackedControllerDescription  // 0
 			{
+				StackedControllerType = StackedControllerType.Bool,
+				Label                 = Res.Strings.Popup.CreateAsset.PreInput.ToString (),
+			});
+
+			list.Add (new StackedControllerDescription  // 1
+			{
 				StackedControllerType = StackedControllerType.Date,
 				DateRangeCategory     = DateRangeCategory.Mandat,
 				Label                 = Res.Strings.Popup.CreateAsset.Date.ToString (),
@@ -172,17 +178,33 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private System.DateTime?				ObjectDate
+		private bool							PreInput
 		{
 			get
 			{
-				var controller = this.GetController (0) as DateStackedController;
+				var controller = this.GetController (0) as BoolStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				return controller.Value;
 			}
 			set
 			{
-				var controller = this.GetController (0) as DateStackedController;
+				var controller = this.GetController (0) as BoolStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				controller.Value = value;
+			}
+		}
+
+		private System.DateTime?				ObjectDate
+		{
+			get
+			{
+				var controller = this.GetController (1) as DateStackedController;
+				System.Diagnostics.Debug.Assert (controller != null);
+				return controller.Value;
+			}
+			set
+			{
+				var controller = this.GetController (1) as DateStackedController;
 				System.Diagnostics.Debug.Assert (controller != null);
 				controller.Value = value;
 			}
@@ -249,7 +271,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.SetEnable (this.userFieldsCount+3, this.UseCategory);
 
 			this.okButton.Enable = this.ObjectDate.HasValue
-								&& this.RequiredProperties.Count == this.userFieldsCount + this.groupsDict.Count
+								&& this.RequiredProperties.Count == this.userFieldsCount - 1 + this.groupsDict.Count
 								&& (!this.UseCategory || !this.ObjectCategory.IsEmpty)
 								&& !this.HasError;
 		}
@@ -297,7 +319,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 	
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, System.Action<System.DateTime, IEnumerable<AbstractDataProperty>, decimal?, Guid> action)
+		public static void Show(Widget target, DataAccessor accessor, System.Action<bool, System.DateTime, IEnumerable<AbstractDataProperty>, decimal?, Guid> action)
 		{
 			if (target != null)
 			{
@@ -321,7 +343,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 						}
 
 						popup.MemorizeDefaultGroups ();
-						action (popup.ObjectDate.Value, popup.RequiredProperties, popup.MainValue, popup.ObjectCategory);
+						action (popup.PreInput, popup.ObjectDate.Value, popup.RequiredProperties, popup.MainValue, popup.ObjectCategory);
 					}
 				};
 			}

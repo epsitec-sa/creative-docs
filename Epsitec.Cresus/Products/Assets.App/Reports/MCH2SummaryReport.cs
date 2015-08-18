@@ -58,8 +58,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				return;
 			}
 
-			this.dataFiller.Title = this.Title;
-			this.DataFiller.DateRange = this.Params.DateRange;
+			this.dataFiller.Title       = this.Title;
+			this.DataFiller.DateRange   = this.Params.DateRange;
+			this.DataFiller.SummaryType = this.Params.SummaryType;
 
 			//	On réinitialise ici les colonnes, car les dates InitialTimestamp et FinalTimestamp
 			//	peuvent avoir changé, et les colonnes doivent afficher "Etat 01.01.2014" et
@@ -68,8 +69,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			//	Il faut utiliser ToTimestamp.JustBefore pour afficher les noms des objets tels
 			//	qu'ils sont définis le 31.12.xx à 23h59.
-			var ei = this.DataFiller.UsedExtractionInstructions.ToList ();
-			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid, this.sortingInstructions, ei);
+			var eia = this.DataFiller.UsedExtractionInstructionsArray.ToList ();
+			this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
+				this.sortingInstructions, eia);
+
 			this.dataFiller.Timestamp = this.Params.DateRange.ToTimestamp.JustBefore;
 
 			if (this.Params.Level.HasValue)
@@ -77,6 +80,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.NodeGetter.SetLevel (this.Params.Level.Value);
 			}
 
+			this.UpdateSkipHiddenRows ();
 			this.UpdateTreeTable ();
 
 			this.OnParamsChanged ();
@@ -99,6 +103,30 @@ namespace Epsitec.Cresus.Assets.App.Views
 		protected override void UpdateTreeTable()
 		{
 			TreeTableFiller<SortableCumulNode>.FillContent (this.treeTableController, this.dataFiller, this.visibleSelectedRow, crop: true);
+		}
+
+
+		protected override void UpdateSkipHiddenRows()
+		{
+			//	Si les lignes/colonnes vides sont cachées, on initialise tout ce qu'il faut.
+			var eia = this.DataFiller.UsedExtractionInstructionsArray.ToList ();
+
+			if (this.Params.SkipHiddenRows)
+			{
+				this.DataFiller.ComputeVisibleData ();
+				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+
+				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
+					this.sortingInstructions, eia, this.DataFiller.VisibleRows);
+			}
+			else
+			{
+				this.DataFiller.ClearVisibleData ();
+				TreeTableFiller<SortableCumulNode>.FillColumns (this.treeTableController, this.dataFiller, "View.Report.MCH2Summary");
+
+				this.NodeGetter.SetParams (this.Params.DateRange.ToTimestamp.JustBefore, this.Params.RootGuid, this.Params.FilterGuid,
+					this.sortingInstructions, eia, null);
+			}
 		}
 
 

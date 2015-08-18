@@ -204,6 +204,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 
 			this.AddCat ("Immobilier", null, "10", "Durée linéaire", Periodicity.Annual,
 				".14040.01", ".10020.01",
+				".14040.01", ".10020.01",
 				".10010.01", ".14040.01",
 				"0290.3300.40", ".14040.01",
 				"0290.3300.40", ".14040.01",
@@ -213,6 +214,7 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 				null, 20.0m, 1.0m, 1.0m);
 
 			this.AddCat ("Véhicules", null, "20", "Durée linéaire", Periodicity.Annual,
+				".14040.01", ".10020.01",
 				".14040.01", ".10020.01",
 				".10010.01", ".14060.01",
 				"0290.3300.60", ".14060.01",
@@ -230,18 +232,18 @@ namespace Epsitec.Cresus.Assets.Server.Engine
 			var initialTimestamp = new Timestamp (this.accessor.Mandat.StartDate, 0);
 			var finalTimestamp   = new Timestamp (new System.DateTime (2099, 12, 31), 0);
 
-			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty));
+			this.accessor.Mandat.Reports.Add (new MCH2SummaryParams (null, dateRange, Guid.Empty, 1, Guid.Empty, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 
 			{
 				var group  = this.GetGroup ("Catégories MCH2");
 				var filter = this.GetGroup ("Patrimoine administratif");
-				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine administratif MCH2 &lt;DATE&gt;", dateRange, group.Guid, 1, filter.Guid));
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine administratif MCH2 &lt;DATE&gt; &lt;SUMMARYTYPE&gt;", dateRange, group.Guid, 1, filter.Guid, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 			}
 
 			{
 				var group  = this.GetGroup ("Catégories MCH2");
 				var filter = this.GetGroup ("Patrimoine financier");
-				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine financier MCH2 &lt;DATE&gt;", dateRange, group.Guid, 1, filter.Guid));
+				this.accessor.Mandat.Reports.Add (new MCH2SummaryParams ("Patrimoine financier MCH2 &lt;DATE&gt; &lt;SUMMARYTYPE&gt;", dateRange, group.Guid, 1, filter.Guid, summaryType: MCH2SummaryType.IndirectShort, skipHiddenRows: true));
 			}
 
 			this.accessor.Mandat.Reports.Add (new AssetsParams ("Etat initial au &lt;DATE&gt;", initialTimestamp, Guid.Empty, null));

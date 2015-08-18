@@ -642,17 +642,17 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private void ShowCreatePopup(Widget target)
 		{
-			CreateAssetPopup.Show (target, this.accessor, delegate (System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
+			CreateAssetPopup.Show (target, this.accessor, delegate (bool preInput, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 			{
-				this.CreateAsset (date, requiredProperties, value, cat);
+				this.CreateAsset (preInput, date, requiredProperties, value, cat);
 			});
 		}
 
-		private void CreateAsset(System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
+		private void CreateAsset(bool preInput, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			this.accessor.UndoManager.Start ();
 
-			var asset = AssetsLogic.CreateAsset (this.accessor, date, requiredProperties, value, cat);
+			var asset = AssetsLogic.CreateAsset (preInput, this.accessor, date, requiredProperties, value, cat);
 			var guid = asset.Guid;
 
 			this.UpdateData ();
@@ -764,9 +764,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.SelectedTimestamp = t;
 				},
-				action: delegate (System.DateTime date, string name)
+				action: delegate (System.DateTime date, EventType type)
 				{
-					this.CreateEvent (date, name);
+					this.CreateEvent (date, type);
 				});
 			}
 		}
@@ -1084,14 +1084,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 		#endregion
 
 
-		private void CreateEvent(System.DateTime date, string buttonName)
+		private void CreateEvent(System.DateTime date, EventType type)
 		{
 			var obj = this.accessor.GetObject (BaseType.Assets, this.SelectedGuid);
 			if (obj != null)
 			{
 				this.accessor.UndoManager.Start ();
 
-				var type = TimelinesArrayController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (obj, date, type);
 
 				if (e != null)
@@ -1110,13 +1109,6 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.accessor.UndoManager.SetDescription (desc);
 				this.accessor.UndoManager.SetAfterViewState ();
 			}
-		}
-
-		private static EventType ParseEventType(string text)
-		{
-			var type = EventType.Unknown;
-			System.Enum.TryParse<EventType> (text, out type);
-			return type;
 		}
 
 

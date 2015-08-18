@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 				else if (cell.Glyphs.Count > 3)
 				{
-					//	S'il y a plus de 2 événements dans la cellule, on affiche juste le
+					//	S'il y a plus de 3 événements dans la cellule, on affiche juste le
 					//	nombre d'événements.
 					var text = string.Format ("... ({0})", cell.Glyphs.Count);
 					graphics.Color = ColorManager.TextColor;

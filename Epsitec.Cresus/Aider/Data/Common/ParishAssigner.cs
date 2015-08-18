@@ -335,8 +335,29 @@ namespace Epsitec.Aider.Data.Common
 			return ParishAssigner.GetNoParishGroupParticipations (person).Any ();
 		}
 
+		public static bool IsInNoParishGroup(AiderLegalPersonEntity person)
+		{
+			return ParishAssigner.GetNoParishGroupParticipations (person).Any ();
+		}
+
+
 		private static IEnumerable<AiderGroupParticipantEntity> GetNoParishGroupParticipations(AiderPersonEntity person)
 		{
+			if (person.Groups == null)
+			{
+				return Enumerable.Empty<AiderGroupParticipantEntity> ();
+			}
+
+			return person.Groups.Where (g => g.Group.IsNoParish ());
+		}
+
+		private static IEnumerable<AiderGroupParticipantEntity> GetNoParishGroupParticipations(AiderLegalPersonEntity person)
+		{
+			if (person.Groups == null)
+			{
+				return Enumerable.Empty <AiderGroupParticipantEntity>();
+			}
+
 			return person.Groups.Where (g => g.Group.IsNoParish ());
 		}
 

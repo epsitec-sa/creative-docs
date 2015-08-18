@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			var p1 = new DataStringProperty (ObjectField.Name, name);
 			var p2 = new DataIntProperty (ObjectField.ArgumentType, (int) ArgumentType.Amount);
 			var p3 = new DataIntProperty (ObjectField.ArgumentField, (int) ArgumentsLogic.GetUnusedField (this.accessor));
-			var guid = this.accessor.CreateObject (BaseType.Arguments, date, Guid.Empty, p1, p2, p3);
+			var guid = this.accessor.CreateObject (BaseType.Arguments, date, Guid.Empty, false, p1, p2, p3);
 
 			var obj = this.accessor.GetObject (BaseType.Arguments, guid);
 			System.Diagnostics.Debug.Assert (obj != null);

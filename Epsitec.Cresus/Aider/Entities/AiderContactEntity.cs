@@ -168,7 +168,6 @@ namespace Epsitec.Aider.Entities
 		{
 			switch (this.ContactType)
 			{
-				case ContactType.Deceased:
 				case ContactType.None:
 					return null;
 
@@ -176,6 +175,7 @@ namespace Epsitec.Aider.Entities
 					return this.LegalPerson.Address;
 
 				case ContactType.PersonAddress:
+				case ContactType.Deceased:
 					return this.Address;
 
 				case ContactType.PersonHousehold:
@@ -360,8 +360,9 @@ namespace Epsitec.Aider.Entities
 
 			var contact = AiderContactEntity.Create (businessContext, ContactType.Deceased);
 
-			contact.Person = person;
-
+			contact.Person      = person;
+			contact.Address     = AiderAddressEntity.Create (businessContext, person.Address);
+			contact.AddressType = AddressType.LastKnow;
 			person.AddContactInternal (contact);
 
 			return contact;
@@ -553,6 +554,35 @@ namespace Epsitec.Aider.Entities
 				
 			}
 			
+		}
+
+		public static void DeleteBadContact(BusinessContext businessContext, AiderContactEntity goodContact, AiderContactEntity badContact)
+		{
+			var participationsBackup = new List<AiderGroupParticipantEntity> ();
+
+			if (badContact.participations != null)
+			{
+				participationsBackup.AddRange (badContact.participations);
+			}
+			AiderContactEntity.Delete (businessContext, badContact);
+	
+			// restore backuped participations
+			foreach (var participation in participationsBackup)
+			{
+
+				if (goodContact.participations != null)
+				{
+					if (!goodContact.participations.Contains (participation))
+					{
+						goodContact.AddParticipationInternal (participation);
+					}
+				}
+				else
+				{
+					goodContact.AddParticipationInternal (participation);
+				}
+
+			}
 		}
 
 

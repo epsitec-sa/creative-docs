@@ -11,6 +11,46 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class AssetsLogic
 	{
+		public static void AdjustPreInput(DataAccessor accessor, DataObject obj, DataEvent e)
+		{
+			//	Si un événement d'entrée de financement préalable EventType.PreInput est déjà suivi
+			//	d'un événement d'entrée de mise en service EventType.Input, on reprend tout ce qui
+			//	est possible.
+			if (e.Type == EventType.PreInput)
+			{
+				var nextEvent = obj.GetNextEvent (e.Timestamp);
+
+				if (nextEvent != null &&
+					(nextEvent.Type == EventType.PreInput ||
+					 nextEvent.Type == EventType.Input))
+				{
+					//	Copie la valeur comptable.
+					{
+						var p = nextEvent.GetProperty (ObjectField.MainValue);
+
+						if (p != null)
+						{
+							e.AddProperty (p);
+						}
+					}
+
+					//	Copie tous les champs définis par l'utilisateur (Nom, Numéro, etc.).
+					var fields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields);
+
+					foreach (var field in fields)
+					{
+						var p = nextEvent.GetProperty (field.Field);
+
+						if (p != null)
+						{
+							e.AddProperty (p);
+						}
+					}
+				}
+			}
+		}
+
+
 		public static IEnumerable<Guid> GetReferencedPersons(DataAccessor accessor, Guid personGuid)
 		{
 			//	Vérifie quels sont les objets d'immobilisations qui référencent une
@@ -171,10 +211,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static DataObject CreateAsset(DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
+		public static DataObject CreateAsset(bool preInput, DataAccessor accessor, System.DateTime date, IEnumerable<AbstractDataProperty> requiredProperties, decimal? value, Guid cat)
 		{
 			//	Crée un nouvel objet d'immobilisation.
-			var guid = accessor.CreateObject (BaseType.Assets, date, Guid.Empty, requiredProperties.ToArray ());
+			var guid = accessor.CreateObject (BaseType.Assets, date, Guid.Empty, preInput, requiredProperties.ToArray ());
 			var asset = accessor.GetObject (BaseType.Assets, guid);
 			System.Diagnostics.Debug.Assert (asset != null);
 

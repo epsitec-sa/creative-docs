@@ -20,24 +20,24 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			this.inputNodes = inputNodes;
 
 			this.outputNodes = new List<CumulNode> ();
-			this.extractionInstructions = new List<ExtractionInstructions> ();
+			this.extractionInstructionsArray = new List<ExtractionInstructionsArray> ();
 
 			this.extractionEngine = new ExtractionEngine (this.accessor);
 		}
 
 
-		public void SetParams(Timestamp? timestamp, List<ExtractionInstructions> extractionInstructions)
+		public void SetParams(Timestamp? timestamp, List<ExtractionInstructionsArray> extractionInstructionsArray)
 		{
 			//	La liste des instructions d'extraction est utile pour la production de rapports.
 			this.timestamp = timestamp;
 
-			this.extractionInstructions.Clear ();
-			if (extractionInstructions != null)
+			this.extractionInstructionsArray.Clear ();
+			if (extractionInstructionsArray != null)
 			{
-				this.extractionInstructions.AddRange (extractionInstructions);
+				this.extractionInstructionsArray.AddRange (extractionInstructionsArray);
 			}
 
-			this.extractionEngine.SetParams (this.timestamp, this.extractionInstructions);
+			this.extractionEngine.SetParams (this.timestamp, this.extractionInstructionsArray);
 
 			this.Compute ();
 		}
@@ -57,13 +57,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			{
 				return this.outputNodes[index];
 			}
-		}
-
-
-		public decimal? GetValue(DataObject obj, CumulNode node, ObjectField field)
-		{
-			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.extractionEngine.GetValue (obj, node, field);
 		}
 
 
@@ -90,7 +83,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private void ComputeCumuls(Dictionary<ObjectField, decimal> cumuls, TreeNode[] hiddenTreeNodes)
+		private void ComputeCumuls(Dictionary<ObjectField, AbstractCumulValue> cumuls, TreeNode[] hiddenTreeNodes)
 		{
 			foreach (var hiddenTreeNode in hiddenTreeNodes)
 			{
@@ -100,18 +93,19 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 					//	On prend toutes les valeurs définies pour la base des Assets (ValueFields),
 					//	ainsi que les valeurs à extraire en vue d'un rapport.
-					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructions.Select (x => x.ResultField)))
+					foreach (var field in this.accessor.AssetValueFields.Union (this.extractionInstructionsArray.Select (x => x.ResultField)))
 					{
 						var v = this.extractionEngine.GetValueAccordingToRatio (this.accessor, obj, this.timestamp, hiddenTreeNode.Ratio, field);
-						if (v.HasValue)
+
+						if (v != null)
 						{
 							if (cumuls.ContainsKey (field))  // deuxième et suivante valeur ?
 							{
-								cumuls[field] += v.Value;  // addition
+								cumuls[field] = cumuls[field].Merge (v);
 							}
 							else  // première valeur ?
 							{
-								cumuls[field] = v.Value;
+								cumuls[field] = v;
 							}
 						}
 					}
@@ -120,12 +114,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		private readonly DataAccessor			accessor;
-		private readonly TreeObjectsNodeGetter	inputNodes;
-		private readonly List<CumulNode>		outputNodes;
-		private readonly List<ExtractionInstructions> extractionInstructions;
-		private readonly ExtractionEngine		extractionEngine;
+		private readonly DataAccessor						accessor;
+		private readonly TreeObjectsNodeGetter				inputNodes;
+		private readonly List<CumulNode>					outputNodes;
+		private readonly List<ExtractionInstructionsArray>	extractionInstructionsArray;
+		private readonly ExtractionEngine					extractionEngine;
 
-		private Timestamp?						timestamp;
+		private Timestamp?									timestamp;
 	}
 }

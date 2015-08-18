@@ -45,9 +45,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	///     |
 	///     o  SortableCumulNode
 	///     V
+	/// SkipRowNodeGetter
+	///     |
+	///     o  SortableCumulNode
+	///     V
 	/// 
 	/// </summary>
-	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter  // outputNodes
+	public class ObjectsNodeGetter : INodeGetter<SortableCumulNode>, ITreeFunctions, IObjectsNodeGetter, IBaseRows  // outputNodes
 	{
 		public ObjectsNodeGetter(DataAccessor accessor, INodeGetter<GuidNode> groupNodes, INodeGetter<GuidNode> objectNodes)
 		{
@@ -62,20 +66,28 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.sortableNodeGetter = new SortableCumulNodeGetter (this.cumulNodeGetter, accessor, BaseType.Assets);
 			this.sorterNodeGetter   = new SorterCumulNodeGetter (this.sortableNodeGetter);
+			this.skipRowNodeGetter  = new SkipRowNodeGetter (accessor, this.sorterNodeGetter);
 
 			this.sortingInstructions = SortingInstructions.Empty;
 		}
 
 
-		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructions> extractionInstructions = null)
+		public void SetParams(Timestamp? timestamp, Guid rootGuid, Guid filterGuid, SortingInstructions instructions, List<ExtractionInstructionsArray> extractionInstructionsArray = null, HashSet<int> visibleRows = null)
 		{
 			//	La liste des instructions d'extraction est utile pour la production de rapports.
-			this.timestamp              = timestamp;
-			this.rootGuid               = rootGuid;
-			this.filterGuid             = filterGuid;
-			this.sortingInstructions    = instructions;
-			this.extractionInstructions = extractionInstructions;
+			this.timestamp                   = timestamp;
+			this.rootGuid                    = rootGuid;
+			this.filterGuid                  = filterGuid;
+			this.sortingInstructions         = instructions;
+			this.extractionInstructionsArray = extractionInstructionsArray;
+			this.visibleRows                 = visibleRows;
 
+			this.UpdateData ();
+		}
+
+		public void ClearSkipHiddenRows()
+		{
+			this.visibleRows = null;
 			this.UpdateData ();
 		}
 
@@ -84,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				return this.sorterNodeGetter.Count;
+				return this.skipRowNodeGetter.Count;
 			}
 		}
 
@@ -92,9 +104,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (index >= 0 && index < this.sorterNodeGetter.Count)
+				if (index >= 0 && index < this.skipRowNodeGetter.Count)
 				{
-					return this.sorterNodeGetter[index];
+					return this.skipRowNodeGetter[index];
 				}
 				else
 				{
@@ -104,10 +116,10 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		}
 
 
-		public decimal? GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
+		public AbstractCumulValue GetValue(DataObject obj, SortableCumulNode node, ObjectField field)
 		{
 			//	Retourne une valeur, en tenant compte des cumuls et des ratios.
-			return this.sorterNodeGetter.GetValue (node, field);
+			return this.skipRowNodeGetter.GetValue (node, field);
 		}
 
 
@@ -120,10 +132,11 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.mergeNodeGetter.SetParams (this.timestamp);
 			this.treeObjectsGetter.SetParams (inputIsMerge: true);
-			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructions);
+			this.cumulNodeGetter.SetParams (this.timestamp, this.extractionInstructionsArray);
 
 			this.sortableNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
 			this.sorterNodeGetter.SetParams (this.timestamp, this.sortingInstructions);
+			this.skipRowNodeGetter.SetParams (this.visibleRows);
 		}
 
 
@@ -210,6 +223,15 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		#endregion
 
 
+		#region IBaseRows
+		public int GetBaseRow(int index)
+		{
+			//	Retourne l'index de la ligne, tel qu'il serait si toutes les lignes étaient visibles.
+			return this.skipRowNodeGetter.GetBaseRow (index);
+		}
+		#endregion
+
+
 		private readonly FilterNodeGetter			filterNodeGetter;
 		private readonly GroupParentNodeGetter		groupNodeGetter1;
 		private readonly GroupLevelNodeGetter		groupNodeGetter2;
@@ -218,11 +240,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		private readonly CumulNodeGetter			cumulNodeGetter;
 		private readonly SortableCumulNodeGetter	sortableNodeGetter;
 		private readonly SorterCumulNodeGetter		sorterNodeGetter;
+		private readonly SkipRowNodeGetter			skipRowNodeGetter;
 
 		private Timestamp?							timestamp;
 		private Guid								rootGuid;
 		private Guid								filterGuid;
 		private SortingInstructions					sortingInstructions;
-		private List<ExtractionInstructions>		extractionInstructions;
+		private List<ExtractionInstructionsArray>	extractionInstructionsArray;
+		private HashSet<int>						visibleRows;
 	}
 }

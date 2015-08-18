@@ -287,6 +287,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				case EventType.Unknown:
 					return TimelineGlyph.Empty;
 
+				case EventType.PreInput:
+					return new TimelineGlyph (TimelineGlyphShape.SquareHoles, mode);
+
 				case EventType.Input:
 					return new TimelineGlyph (TimelineGlyphShape.FilledSquare, mode);
 

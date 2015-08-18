@@ -81,6 +81,21 @@ namespace Epsitec.Aider.Entities
 			return  canViewDetails || ministerBypass;
 		}
 
+		public bool CanValidateEvents ()
+		{
+			var isMinister = false;
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					isMinister = employee.IsMinister ();
+				}
+			}
+
+			return isMinister;
+		}
+
 		public bool CanRemoveMailing()
 		{
 			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
@@ -96,6 +111,32 @@ namespace Epsitec.Aider.Entities
 			return ((this.Role.Name == AiderUserRoleEntity.RegionRole)  || 
 					this.HasPowerLevel (UserPowerLevel.Administrator))
 					&& this.IsOfficeDefined ();
+		}
+
+		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
+		{
+			if ((this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
+			{
+				return true;
+			}
+			else
+			{
+				if (this.Office.IsNotNull ())
+				{
+					if (derogationParishGroup == this.Office.ParishGroup)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
 		}
 
 		public bool IsParishLevelUser()

@@ -95,7 +95,12 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController01AddJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController10AddMinister.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController9PreviewReport.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController8AddParticipantExternal.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController7AddParticipant.cs" />
+    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController8DeleteEvent.cs" />
+    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController7DuplicateEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
@@ -259,15 +264,17 @@
     <Compile Include="Controllers\SetControllers\SetAiderGroupViewController1Contact.cs" />
     <Compile Include="Controllers\SpecialFieldControllers\AiderGroupDefSpecialField.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeJobViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventParticipantViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventPlaceViewController.cs" />
-    <Compile Include="Controllers\SummaryControllers\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventParticipantViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventPlaceViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Event\SummaryAiderEventViewController1Person.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingQueryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController2WithoutContact.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController1ReadOnly.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
     <Compile Include="Controllers\SummaryControllers\Group\SummaryAiderGroupViewController1OfficeManagement.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingViewController2Build.cs" />
+    <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController5Members.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController4EventsToValidate.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController3EventsInPreparation.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController2Documents.cs" />
@@ -467,6 +474,11 @@
     <Compile Include="Entities\AiderUserEntity.cs" />
     <Compile Include="Entities\AiderUserRoleEntity.cs" />
     <Compile Include="Entities\AiderUserScopeEntity.cs" />
+    <Compile Include="Properties\SqlRepository.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SqlRepository.resx</DependentUpon>
+    </Compile>
     <Compile Include="Reporting\AbstractContent`1.cs" />
     <Compile Include="Reporting\ContentFormatterAttribute.cs" />
     <Compile Include="Reporting\ContentFormatterFactory.cs" />
@@ -479,6 +491,7 @@
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeJobBusinessRules.cs" />
+    <Compile Include="Rules\AiderEventBusinessRules.cs" />
     <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />
     <Compile Include="Rules\AiderEventParticipantBusinessRules.cs" />
     <Compile Include="Rules\AiderEmployeeBusinessRules.cs" />
@@ -587,11 +600,16 @@
     <Compile Include="Tools\NamePatchEngine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\Job\SqlQueries-DuplicatedContactInHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-EchPersonWithHouseholds.sql" />
     <Content Include="Data\Job\SqlViews-SubscriptionRefusals.sql" />
     <Content Include="Data\Job\SqlViews-Subscriptions.sql" />
     <Content Include="Data\Job\SqlViews-Households.sql" />
     <Content Include="firebird view creation.sql" />
+    <EmbeddedResource Include="Properties\SqlRepository.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SqlRepository.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Xsd\eCH-0006-2-0.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>

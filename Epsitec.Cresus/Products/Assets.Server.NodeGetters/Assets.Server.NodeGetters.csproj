@@ -45,7 +45,14 @@
     <Compile Include="..\..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ExtractionInstructionsArray.cs" />
+    <Compile Include="IBaseRows.cs" />
+    <Compile Include="SkipRowNodeGetter.cs" />
+    <Compile Include="StringCumulValue.cs" />
+    <Compile Include="DateCumulValue.cs" />
+    <Compile Include="DecimalCumulValue.cs" />
     <Compile Include="BypassNodeGetter.cs" />
+    <Compile Include="AbstractCumulValue.cs" />
     <Compile Include="FilterNodeGetter.cs" />
     <Compile Include="WarningNodeGetter.cs" />
     <Compile Include="ExtractionEngine.cs" />

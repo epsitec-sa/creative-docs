@@ -9,9 +9,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	public enum ExtractionAmount
 	{
 		StateAt,			// état à la fin d'une période
-		DeltaFiltered,		// variation durant une période (début - fin)
 		LastFiltered,		// état à la fin d'une période pour un événement donné
-		Amortizations,		// amortissements durant une période
+		DeltaSum,			// somme des variations durant une période
 		UserColumn,			// colonne supplémentaire définie à partir de ObjectField.UserFieldMCH2SummaryOrder
 	}
 }

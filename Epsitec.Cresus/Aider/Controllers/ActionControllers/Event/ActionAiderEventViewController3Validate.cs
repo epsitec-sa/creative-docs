@@ -43,7 +43,36 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.State = Enumerations.EventState.Validated;
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			if (user.CanValidateEvents () || user.IsAdmin ())
+			{
+				this.Entity.State     = Enumerations.EventState.Validated;
+				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
+				this.Entity.GetMainActors ().ForEach ((a) =>
+				{
+					if (a.IsExternal == false)
+					{
+						a.Person.Events.Add (this.Entity);
+					}		
+				});
+				this.Entity.ApplyParticipantsInfo ();
+				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
+				if(previousAct.IsNotNull ())
+				{
+					this.BusinessContext.DeleteEntity (previousAct);
+				}
+				this.BusinessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.None);
+
+				var act        = AiderEventOfficeReportEntity.Create (this.BusinessContext, this.Entity);
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+				act.ProcessorUrl		= act.GetProcessorUrl (this.BusinessContext, "eventofficereport");
+				this.Entity.Report = act;
+				this.BusinessContext.SaveChanges (LockingPolicy.ReleaseLock);
+			}
+			else
+			{
+				Logic.BusinessRuleException ("Vous n'avez pas le droit de valider un acte");
+			}
 		}
 	}
 }

@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Aider.Data.ECh;
+using Epsitec.Aider.Properties;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -33,6 +34,19 @@ namespace Epsitec.Aider.Data.Job
 				var dataContext = businessContext.DataContext;
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("////:::DATAQUALITY JOB STARTED::://///");
+				var fixedPersons = new List<AiderPersonEntity> ();
+				var badEchStatus = new List<AiderPersonEntity> ();
+				var unfixable    = new List<System.Tuple<AiderPersonEntity, string>> ();
+
+				if (!SqlHelpers.ViewExist (businessContext, "ECH_PERSON_WITH_HOUSEHOLDS"))
+				{
+					Logger.LogToConsole ("//////////////////////////////////////");
+					Logger.LogToConsole ("// CREATE VIEW");
+					var createViewSqlCommand = SqlRepository.SqlViews_EchPersonWithHouseholds;
+					var result = SqlHelpers.CommitTransaction (businessContext, createViewSqlCommand);
+					Logger.LogToConsole (string.Format ("// Done! {0} view created", result));
+				}
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CLEAN BAD ECH HOUSEHOLDS");
 				SqlHelpers.SelectDbIds (
@@ -52,16 +66,14 @@ namespace Epsitec.Aider.Data.Job
 				);
 				Logger.LogToConsole ("// Done!");
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// LOADING ECH REPOSITORY FROM XML...");
-				var echData    = new EChReportedPersonRepository (currentEchFile);
-				
+				var echData    = new EChReportedPersonRepository (currentEchFile);		
 				Logger.LogToConsole ("// Done!");
+
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// CHECK PERSON WITH EMPTY HOUSEHOLDS");
-				var fixedPersons = new List<AiderPersonEntity> ();
-				var badEchStatus = new List<AiderPersonEntity> ();
-				var unfixable    = new List<AiderPersonEntity> ();
 				SqlHelpers.SelectColumn (
 					businessContext,
 					"a.PERSON_ECHID",
@@ -123,7 +135,25 @@ namespace Epsitec.Aider.Data.Job
 							
 							var aiderPerson                = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
 							var refAdultId                 = aiderPerson.eCH_Person.ReportedPerson1.Adult1.PersonId;
-							
+							if (aiderPerson.eCH_Person.RemovalReason != Enumerations.RemovalReason.None)
+							{
+								var person = aiderPerson.eCH_Person;
+								switch (person.RemovalReason)
+								{
+									case Enumerations.RemovalReason.Unknown:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+										break;
+									case Enumerations.RemovalReason.Departed:
+									case Enumerations.RemovalReason.Deceased:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+										break;
+									default:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+										break;
+								}
+								badEchStatus.Add (aiderPerson);
+								continue;
+							}
 							
 							var contactToFix    = aiderPerson.Contacts.Where (c => c.Household.IsNull ());
 							if (contactToFix.Any ())
@@ -131,50 +161,202 @@ namespace Epsitec.Aider.Data.Job
 								AiderHouseholdEntity household = null;
 								if (personId != refAdultId)
 								{
-									var refPerson   = EChDataHelpers.GetAiderPersonEntity (businessContext, aiderPerson.eCH_Person.ReportedPerson1.Adult1);
-									if (refPerson.HouseholdContact.IsNotNull ())
+									var echHousehold       = echData.LookupByMemberId[personId].ElementAtOrDefault (0);
+																									
+									if (personIds.Contains (echHousehold.Adult1.Id))
 									{
-										household = refPerson.HouseholdContact.Household;
+										// Ensure save changes before requesting entities
+										businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+									}
+
+									var eChHouseholdEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
+									var refAiderPerson     = EChDataHelpers.GetAiderPersonEntity (businessContext, eChHouseholdEntity.Adult1);
+									if (refAiderPerson.IsDeceased)
+									{
+										var message = "Ref person is deceased and declared in ECh registry";
+										unfixable.Add (System.Tuple.Create (aiderPerson,message));
+										continue;
+									}
+
+									if (refAiderPerson.HouseholdContact.IsNotNull ())
+									{
+										household = refAiderPerson.HouseholdContact.Household;
 									}
 									else
 									{
-										var echHousehold    = echData.ByAdult1Id[refPerson.eCH_Person.PersonId];
-										household = HouseholdsFix.CreateAiderHousehold (businessContext, refPerson, echHousehold, refPerson.eCH_Person.ReportedPerson1);
+										household = HouseholdsFix.CreateAiderHousehold (businessContext, refAiderPerson, echHousehold, eChHouseholdEntity);			
 									}
+									
 								}
 								else
 								{
-									var echHousehold    = echData.ByAdult1Id[personId];
-									household = HouseholdsFix.CreateAiderHousehold (businessContext, aiderPerson, echHousehold, aiderPerson.eCH_Person.ReportedPerson1);
+									var echHousehold = echData.FindAdult (personId);
+									var eChHouseholdEntity = EChDataHelpers.GetEchReportedPersonEntity (businessContext, echHousehold);
+
+									if (echHousehold == null)
+									{
+										//	This should never happen!
+
+										System.Diagnostics.Debug.WriteLine ("Damn: person " + personId + " cannot be found in echData // HouseholdsFix.cs");
+										
+										household = null;
+									}
+									else
+									{
+										household = HouseholdsFix.CreateAiderHousehold (businessContext, aiderPerson, echHousehold, aiderPerson.eCH_Person.ReportedPerson1);
+									}
 								}
 
-								foreach (var contact in contactToFix)
+								if (household != null)
 								{
-									contact.Household = household;
-									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+									foreach (var contact in contactToFix)
+									{
+										contact.Household = household;
+										HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+									}
 								}
 							}
-							
-
 						}
 					}
 				);
-
+				Logger.LogToConsole ("// Done!");
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
 
-				foreach(var person in fixedPersons)
-				{
-					var household = person.HouseholdContact.Household;
-					if (household.IsNotNull ())
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// FIX MISSING ADDRESSES");
+				SqlHelpers.SelectColumn (
+					businessContext,
+					"a.PERSON_ECHID",
+					"ECH_PERSON_WITH_HOUSEHOLDS a", "ECH_STATUS = 1 and a.CONTACT_ADDRESS_CRID IS NULL",
+					(personIds) =>
 					{
-						AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
+						foreach (var personId in personIds)
+						{
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var address     = aiderPerson.HouseholdContact.Household.Address;
+							if (address.IsNotNull ())
+							{
+								aiderPerson.HouseholdContact.Address = address;
+							}
+						}
 					}
-				}
-
+				);
+				Logger.LogToConsole ("// Done!");
 				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+
+				Logger.LogToConsole ("//////////////////////////////////////");
+				Logger.LogToConsole ("// DUPLICATED HOUSEHOLD CONTACT");
+				var query = SqlRepository.SqlQueries_DuplicatedContactInHouseholds;
+				SqlHelpers.Select (
+					businessContext,
+					query,
+					(personIds) =>
+					{
+						foreach (var personId in personIds)
+						{
+							var aiderPerson = EChDataHelpers.GetAiderPersonEntityById (businessContext, personId);
+							var housholdInfo = echData.GetHouseholdsInfo (personId);
+							if (housholdInfo.Any ())
+							{
+
+								var fixes = new List<System.Tuple<AiderContactEntity, List<AiderContactEntity>>> ();
+								housholdInfo.ForEach ((info) =>
+								{
+									AiderContactEntity goodContact  = null;
+									var badContacts                 = new List<AiderContactEntity> ();
+									var household                   = info.Item1;
+									var address   = household.Address;
+									var familyKey = household.FamilyKey;
+									foreach (var contact in aiderPerson.Contacts)
+									{
+										var sameFamily  = HouseholdsFix.BuildFamilyKey (contact.Household.Members) == familyKey;
+										if (contact.Address.IsNull ())
+										{
+											contact.Address = contact.Household.Address;
+										}
+										var sameaddress = EChDataHelpers.AddressComparator (contact.Address, address);
+										if (sameaddress && sameFamily)
+										{
+											if (goodContact == null)
+											{
+												goodContact = contact;
+											}
+											else
+											{
+												badContacts.Add (contact);
+											}
+										}
+										else
+										{
+											badContacts.Add (contact);
+										}
+									}
+
+									if (goodContact != null)
+									{
+										var fix = System.Tuple.Create (goodContact, badContacts);
+										fixes.Add (fix);
+									}
+								});
+
+								var goodContacts = fixes.Select (f => f.Item1).ToList ();
+								var fixApplied   = false;
+								foreach (var fix in fixes)
+								{
+									var goodContact = fix.Item1;
+									var badContacts = fix.Item2.Where (c => !goodContacts.Contains (c));
+									if (badContacts.Any ())
+									{
+										foreach (var badContact in badContacts)
+										{
+											AiderContactEntity.DeleteBadContact (businessContext, goodContact, badContact);
+											fixApplied = true;
+										}
+									}
+								}
+
+								if (fixApplied)
+								{
+									HouseholdsFix.SetPersonAsFixed (fixedPersons, aiderPerson);
+								}
+								else
+								{
+									unfixable.Add (System.Tuple.Create (aiderPerson, "No good contact found for ech household"));
+								}
+							}
+							else
+							{
+								var person = aiderPerson.eCH_Person;
+								switch (person.RemovalReason)
+								{
+									case Enumerations.RemovalReason.Unknown:
+									case Enumerations.RemovalReason.None:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Undefined;
+										break;
+									case Enumerations.RemovalReason.Departed:
+									case Enumerations.RemovalReason.Deceased:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.Removed;
+										break;
+									default:
+										person.DeclarationStatus = Enumerations.PersonDeclarationStatus.NotDeclared;
+										break;
+								}
+								badEchStatus.Add (aiderPerson);
+							}
+						}
+					}
+				);
+				Logger.LogToConsole ("// Saving... please wait...");
+				businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+				Logger.LogToConsole ("// Done!");
 				Logger.LogToConsole ("//////////////////////////////////////");
 				Logger.LogToConsole ("// BadEchStatusFixed: " + badEchStatus.Count ());
 				Logger.LogToConsole ("// HousholdFixed: " + fixedPersons.Count ());
+				Logger.LogToConsole ("// Unfixable: ");
+				foreach (var entry in unfixable)
+				{
+					Logger.LogToConsole (string.Format ("// {0}: {1}",entry.Item1.DisplayName, entry.Item2));
+				}
 				Logger.LogToConsole ("~             DONE!             ~");
 			}
 		}
@@ -218,39 +400,68 @@ namespace Epsitec.Aider.Data.Job
 			{
 				throw new BusinessRuleException ("Cannot create household: missing refAiderPerson");
 			}
-			else
+
+			if (refAiderPerson.eCH_Person.PersonId == echHousehold.Adult1.Id)
 			{
-				if (refAiderPerson.eCH_Person.PersonId != echHousehold.Adult1.Id)
+				if (householdEntity.IsNull ())
 				{
-					throw new BusinessRuleException ("Cannot create household: bad refAiderPerson entity provided (id mismatch)");
+					householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
 				}
+
+				var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
+				var newHousehold    = AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+				EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, true, false);
+
+				if (echHousehold.Adult2 != null)
+				{
+					var person2      = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult2);
+					var aiderPerson2 = EChDataHelpers.GetAiderPersonEntity (businessContext, person2);
+					EChDataHelpers.SetupHousehold (businessContext, aiderPerson2, newHousehold, householdEntity, false, true);
+				}
+
+				foreach (var child in echHousehold.Children)
+				{
+					var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
+					var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
+					EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
+				}
+
+				return newHousehold;
 			}
 
-			if (householdEntity.IsNull ())
+			if (refAiderPerson.eCH_Person.PersonId == echHousehold.Adult2.Id)
 			{
-				householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
+				if (householdEntity.IsNull ())
+				{
+					householdEntity = HouseholdsFix.CreateEchReportedPersonEntity (businessContext, echHousehold);
+				}
+
+				var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
+				var newHousehold    = AiderHouseholdEntity.Create (businessContext, addressTemplate);
+
+				if (echHousehold.Adult1 == null)
+				{
+					throw new BusinessRuleException ("Cannot create household: Adult2 provided but no Adult1 found");
+				}
+
+				var person1      = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult1);
+				var aiderPerson1 = EChDataHelpers.GetAiderPersonEntity (businessContext, person1);
+				EChDataHelpers.SetupHousehold (businessContext, aiderPerson1, newHousehold, householdEntity, true, false);
+
+				EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, false, true);
+
+				foreach (var child in echHousehold.Children)
+				{
+					var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
+					var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
+					EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
+				}
+
+				return newHousehold;
 			}
 
-			var addressTemplate         = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, householdEntity);
-			var newHousehold            = AiderHouseholdEntity.Create (businessContext, addressTemplate);
-
-			EChDataHelpers.SetupHousehold (businessContext, refAiderPerson, newHousehold, householdEntity, true, false);
-
-			if (echHousehold.Adult2 != null)
-			{
-				var person2       = EChDataHelpers.GetEchPersonEntity (businessContext, echHousehold.Adult2);
-				var aiderPerson2 = EChDataHelpers.GetAiderPersonEntity (businessContext, person2);
-				EChDataHelpers.SetupHousehold (businessContext, aiderPerson2, newHousehold, householdEntity, false, true);
-			}
-
-			foreach (var child in echHousehold.Children)
-			{
-				var childPerson = EChDataHelpers.GetEchPersonEntity (businessContext, child);
-				var aiderChild  = EChDataHelpers.GetAiderPersonEntity (businessContext, childPerson);
-				EChDataHelpers.SetupHousehold (businessContext, aiderChild, newHousehold, householdEntity, false, false);
-			}
-
-			return newHousehold;
+			throw new BusinessRuleException ("Cannot create household: bad refAiderPerson entity provided (id mismatch)");
 		}
 
 		public static bool ExecuteIfInHousehold(AiderHouseholdEntity household, string personId, System.Action<AiderPersonEntity> action)
@@ -320,7 +531,7 @@ namespace Epsitec.Aider.Data.Job
 				.Select (m => m.eCH_Person.PersonId)
 				.OrderBy (id => id);
 
-			return string.Concat (sortedIds);
+			return string.Concat (sortedIds.Distinct ());
 		}
 
 		public static string BuildFamilyKey(IList<eCH_PersonEntity> members)
@@ -329,7 +540,7 @@ namespace Epsitec.Aider.Data.Job
 				.Select (m => m.PersonId)
 				.OrderBy (id => id);
 
-			return string.Concat (sortedIds);
+			return string.Concat (sortedIds.Distinct ());
 		}
 
 		public static DbId ToDbId (string crid)

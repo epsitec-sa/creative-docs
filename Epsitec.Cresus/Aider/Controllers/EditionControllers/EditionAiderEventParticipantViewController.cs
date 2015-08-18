@@ -19,16 +19,33 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			var currentUser = UserManager.Current.AuthenticatedUser;
 			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
-
-			wall.AddBrick ()
-				.Input ()
-					.Field (x => x.Role)
-					.Field (x => x.Person)
-				.End ()
-				.Input ()
-					.Field (x => x.Person.MainContact.Address.Town)
-						.WithFavorites (favorites)
-				.End ();
+			
+			if (this.Entity.IsExternal == false)
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Role)
+						.Field (x => x.Person)
+					.End ()
+					.Input ()
+						.Field (x => x.Person.MainContact.Address.Town)
+							.WithFavorites (favorites)
+					.End ();
+			}
+			else
+			{
+				wall.AddBrick ()
+					.Input ()
+						.Field (x => x.Role)
+						.Field (x => x.FirstName)
+						.Field (x => x.LastName)
+						.Field (x => x.BirthDate)
+						.Field (x => x.Town)
+						.Field (x => x.ParishName)
+						.Field (x => x.Confession)
+						.Field (x => x.Sex)
+					.End ();
+			}
 		}
 	}
 }

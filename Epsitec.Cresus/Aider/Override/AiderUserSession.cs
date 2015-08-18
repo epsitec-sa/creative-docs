@@ -179,6 +179,11 @@ namespace Epsitec.Aider.Override
 				return this.GetAiderGroupEntityFilter ((AiderGroupEntity) example, pattern + AiderGroupIds.SubgroupSqlWildcard);
 			}
 
+			if (entityType == typeof (AiderOfficeManagementEntity))
+			{
+				return this.GetAiderOfficeManagementFilter ((AiderOfficeManagementEntity) example, pattern + "%");
+			}
+
 			if (!string.IsNullOrEmpty (pattern))
 			{
 				if (entityType == typeof (AiderPersonEntity))
@@ -216,10 +221,6 @@ namespace Epsitec.Aider.Override
 				else if (entityType == typeof (AiderMailingCategoryEntity))
 				{
 					return this.GetAiderMailingCategoryFilter ((AiderMailingCategoryEntity) example, pattern + "%");
-				}
-				else if (entityType == typeof (AiderOfficeManagementEntity))
-				{
-					return this.GetAiderOfficeManagementFilter ((AiderOfficeManagementEntity) example, pattern + "%");
 				}
 				else if (entityType == typeof (AiderOfficeSenderEntity))
 				{
@@ -290,7 +291,23 @@ namespace Epsitec.Aider.Override
 
 		private IFilter GetAiderOfficeManagementFilter(AiderOfficeManagementEntity example, string pattern)
 		{
-			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+			var user = this.UserManager.AuthenticatedUser;
+
+			if (user.Office.IsNotNull ())
+			{
+				var offices = user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName).Distinct ();
+				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.IsInSet (x.OfficeName, offices));
+			}
+
+			if (user.IsAdmin ())
+			{
+				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));	
+			} 
+			else
+			{
+				var parishPath = user.ParishGroupPathCache;
+				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, parishPath));
+			}
 		}
 
 		private IFilter GetAiderOfficeSenderFilter(AiderOfficeSenderEntity example, string pattern)

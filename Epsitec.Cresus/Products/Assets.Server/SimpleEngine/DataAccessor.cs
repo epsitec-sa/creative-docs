@@ -139,20 +139,20 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			var field = this.GetMainStringField (baseType);
 			var p = new DataStringProperty (field, name);
 
-			return this.CreateObject (baseType, date, parent, p);
+			return this.CreateObject (baseType, date, parent, false, p);
 		}
 
-		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
+		public Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool preInput, params AbstractDataProperty[] requiredProperties)
 		{
-			return this.CreateObject (baseType, date, parent, false, requiredProperties);
+			return this.CreateObject (baseType, date, parent, false, preInput, requiredProperties);
 		}
 
 		public Guid CreateSimulationObject(BaseType baseType, System.DateTime date, Guid parent, params AbstractDataProperty[] requiredProperties)
 		{
-			return this.CreateObject (baseType, date, parent, true, requiredProperties);
+			return this.CreateObject (baseType, date, parent, true, false, requiredProperties);
 		}
 
-		private Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool simulation, params AbstractDataProperty[] requiredProperties)
+		private Guid CreateObject(BaseType baseType, System.DateTime date, Guid parent, bool simulation, bool preInput, params AbstractDataProperty[] requiredProperties)
 		{
 			var undoManager = simulation ? null : this.UndoManager;
 
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			this.mandat.GetData (baseType).Add (obj);
 
 			var timestamp = new Timestamp (date, 0);
-			var e = new DataEvent (undoManager, timestamp, EventType.Input);
+			var e = new DataEvent (undoManager, timestamp, preInput ? EventType.PreInput : EventType.Input);
 			obj.AddEvent (e);
 
 			//	Ajoute la date de l'opération.
@@ -238,6 +238,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				this.AddDateOperation (e);
 				this.AddMainValue (obj, ts, e);
 
+				AssetsLogic.AdjustPreInput (this, obj, e);
 				Amortizations.UpdateAmounts (this, obj);
 				return e;
 			}
@@ -293,6 +294,10 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 			switch (e.Type)
 			{
+				case EventType.PreInput:
+					entryScenario = EntryScenario.PreInput;
+					break;
+
 				case EventType.Input:
 					entryScenario = EntryScenario.Purchase;
 					break;
@@ -513,6 +518,13 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 		private static IEnumerable<ObjectField> GetAccountAndVatCodeFields(bool vatCode)
 		{
+			yield return ObjectField.AccountPreInputDebit;
+			yield return ObjectField.AccountPreInputCredit;
+			if (vatCode)
+			{
+				yield return ObjectField.AccountPreInputVatCode;
+			}
+
 			yield return ObjectField.AccountPurchaseDebit;
 			yield return ObjectField.AccountPurchaseCredit;
 			if (vatCode)

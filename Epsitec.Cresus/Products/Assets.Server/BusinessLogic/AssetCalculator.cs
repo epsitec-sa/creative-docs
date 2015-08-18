@@ -68,7 +68,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					var e = a[i];
 
-					if (e.Type == EventType.Input)
+					if ((e.Type == EventType.PreInput ||
+						 e.Type == EventType.Input) &&
+						isOutOfBounds)
 					{
 						var li = new OutOfBoundsInterval
 						{
@@ -121,8 +123,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var prevEvent = AssetCalculator.GetPrevEvent (obj, timestamp);
 			var nextEvent = AssetCalculator.GetNextEvent (obj, timestamp);
 
-			return !((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
-					 nextEvent != TerminalEvent.In);
+			return !((prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
+					 (nextEvent != TerminalEvent.PreIn && nextEvent != TerminalEvent.In));
 		}
 
 		public static IEnumerable<EventType> GetPlausibleEventTypes(DataObject obj, Timestamp timestamp)
@@ -132,7 +134,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var prevEvent = AssetCalculator.GetPrevEvent (obj, timestamp);
 				var nextEvent = AssetCalculator.GetNextEvent (obj, timestamp);
 
-				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.Out) &&
+				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.Out) &&
+					(nextEvent == TerminalEvent.None || nextEvent == TerminalEvent.In))
+				{
+					yield return EventType.PreInput;
+				}
+
+				if ((prevEvent == TerminalEvent.None || prevEvent == TerminalEvent.PreIn || prevEvent == TerminalEvent.Out) &&
 					nextEvent == TerminalEvent.None)
 				{
 					yield return EventType.Input;
@@ -194,6 +202,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			switch (eventType)
 			{
+				case EventType.PreInput:
+					return TerminalEvent.PreIn;
+
 				case EventType.Input:
 					return TerminalEvent.In;
 
@@ -208,6 +219,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		private enum TerminalEvent
 		{
 			None,
+			PreIn,
 			In,
 			Out,
 			Other,

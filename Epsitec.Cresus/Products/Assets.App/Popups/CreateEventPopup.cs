@@ -183,6 +183,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
+				yield return EventType.PreInput;
 				yield return EventType.Input;
 				yield return EventType.Modification;
 				yield return EventType.Increase;
@@ -202,6 +203,12 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 			switch (type)
 			{
+				case EventType.PreInput:
+					return new ButtonDescription (type,
+						Res.Strings.Event.PreInput.ShortName.ToString (),
+						Res.Strings.Event.PreInput.Help.ToString (),
+						enable);
+
 				case EventType.Input:
 					return new ButtonDescription (type,
 						Res.Strings.Event.Input.ShortName.ToString (),
@@ -278,6 +285,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			public readonly bool		Enable;
 		};
 
+		private static EventType ParseEventType(string text)
+		{
+			var type = EventType.Unknown;
+			System.Enum.TryParse<EventType> (text, out type);
+			return type;
+		}
+
 
 		#region Events handler
 		private void OnDateChanged(System.DateTime? dateTime)
@@ -293,7 +307,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		public static void Show(Widget target, DataAccessor accessor,
 			DataObject obj, Timestamp timestamp,
 			System.Action<Timestamp?> timestampChanged,
-			System.Action<System.DateTime, string> action)
+			System.Action<System.DateTime, EventType> action)
 		{
 			if (target != null)
 			{
@@ -324,7 +338,8 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				{
 					if (createDate.HasValue)
 					{
-						action (createDate.Value, name);
+						var type = CreateEventPopup.ParseEventType (name);
+						action (createDate.Value, type);
 					}
 				};
 			}

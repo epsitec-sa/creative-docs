@@ -21,20 +21,75 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderEventOfficeReportEntity
 	{
 
-		public static AiderEventOfficeReportEntity Create(BusinessContext context, string eventNumber, AiderEventEntity targetEvent, string templateName, IContent content)
+		public static AiderEventOfficeReportEntity Create(BusinessContext context, AiderEventEntity targetEvent)
 		{
 			var report = context.CreateAndRegisterEntity<AiderEventOfficeReportEntity> ();
 
-			report.Name			= eventNumber;
-			report.DataTemplate = templateName;
 			report.CreationDate	= Date.Today;
 			report.Office		= targetEvent.Office;
-			report.EventNumber  = eventNumber;
 			report.Event        = targetEvent;
-			report.SetContent (content);
-
+			report.Year         = targetEvent.Date.Value.Year;
+			report.IsValidated  = true;
+			report.EventNumberByYearAndRegistry  = AiderEventOfficeReportEntity.FindNextNumber (context, targetEvent);
+			report.Name			= targetEvent.GetRegitryActName () + " " + report.GetEventNumber ();
 			targetEvent.Office.AddDocumentInternal (report);
 			return report;
+		}
+
+		public static AiderEventOfficeReportEntity CreatePreview(BusinessContext context, AiderEventEntity targetEvent)
+		{
+			var report = context.CreateAndRegisterEntity<AiderEventOfficeReportEntity> ();
+
+			report.CreationDate	= Date.Today;
+			report.Office		= targetEvent.Office;
+			report.Event        = targetEvent;
+			report.IsValidated  = false;
+			report.Name			= targetEvent.GetRegitryActName () + " (à valider)";
+			return report;
+		}
+
+		public string GetEventNumber()
+		{
+			return StringUtils.Join ("/", this.Year, this.EventNumberByYearAndRegistry);
+		}
+
+		partial void GetEventCode(ref string value)
+		{
+			value = this.GetEventNumber ();
+		}
+
+		public static AiderEventOfficeReportEntity GetByEvent (BusinessContext context, AiderEventEntity entity)
+		{
+			var example = new AiderEventOfficeReportEntity ()
+			{
+				Event = entity
+			};
+
+			return context.GetByExample<AiderEventOfficeReportEntity> (example).FirstOrDefault ();
+		}
+
+		private static int FindNextNumber(BusinessContext context, AiderEventEntity eventBase)
+		{
+			var nextEvent  = 1;
+			var eventStyle = new AiderEventEntity ()
+			{
+				Type = eventBase.Type,
+				Office = eventBase.Office,
+				State = Enumerations.EventState.Validated
+			};
+			var example   = new AiderEventOfficeReportEntity ()
+			{
+				Event = eventStyle
+			};
+
+			var reports        = context.GetByExample<AiderEventOfficeReportEntity> (example);
+			var thisYearEvents = reports.Where (r => r.Year == eventBase.Date.Value.Year);
+			if (thisYearEvents.Any ())
+			{
+				nextEvent = thisYearEvents.Max (r => r.EventNumberByYearAndRegistry) + 1;
+			}
+
+			return nextEvent;
 		}
 	}
 }

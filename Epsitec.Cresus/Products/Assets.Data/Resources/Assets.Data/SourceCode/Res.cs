@@ -145,6 +145,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544371));
 						}
 					}
+					//	designer:str/HUKL201
+					public static global::Epsitec.Common.Types.FormattedText PreInput
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544405));
+						}
+					}
 				}
 				
 				public static class ObjectField
@@ -275,6 +283,30 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544401));
+						}
+					}
+					//	designer:str/HUKM201
+					public static global::Epsitec.Common.Types.FormattedText AccountPreInputCredit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544406));
+						}
+					}
+					//	designer:str/HUKN201
+					public static global::Epsitec.Common.Types.FormattedText AccountPreInputDebit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544407));
+						}
+					}
+					//	designer:str/HUKO201
+					public static global::Epsitec.Common.Types.FormattedText AccountPreInputVatCode
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544408));
 						}
 					}
 					//	designer:str/HUKI001
@@ -869,6 +901,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544371);
 						}
 					}
+					//	designer:str/HUKL201
+					public static global::Epsitec.Common.Support.Druid PreInput
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544405);
+						}
+					}
 				}
 				
 				public static class ObjectField
@@ -999,6 +1039,30 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544401);
+						}
+					}
+					//	designer:str/HUKM201
+					public static global::Epsitec.Common.Support.Druid AccountPreInputCredit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544406);
+						}
+					}
+					//	designer:str/HUKN201
+					public static global::Epsitec.Common.Support.Druid AccountPreInputDebit
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544407);
+						}
+					}
+					//	designer:str/HUKO201
+					public static global::Epsitec.Common.Support.Druid AccountPreInputVatCode
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544408);
 						}
 					}
 					//	designer:str/HUKI001

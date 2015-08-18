@@ -184,9 +184,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				{
 					this.SelectedTimestamp = t;
 				},
-				action: delegate (System.DateTime date, string name)
+				action: delegate (System.DateTime date, EventType type)
 				{
-					this.CreateEvent (date, name);
+					this.CreateEvent (date, type);
 				});
 			}
 		}
@@ -447,7 +447,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private void CreateEvent(System.DateTime date, string buttonName)
+		private void CreateEvent(System.DateTime date, EventType type)
 		{
 			var guid = this.objectGuid;
 
@@ -455,7 +455,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			{
 				this.accessor.UndoManager.Start ();
 
-				var type = AssetsToolbarTimelineController.ParseEventType (buttonName);
 				var e = this.accessor.CreateAssetEvent (this.obj, date, type);
 
 				if (e != null)
@@ -472,14 +471,6 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			}
 		}
 
-		private static EventType ParseEventType(string text)
-		{
-			var type = EventType.Unknown;
-			System.Enum.TryParse<EventType> (text, out type);
-			return type;
-		}
-
-	
 
 		private void CreateTimeline(Widget parent)
 		{

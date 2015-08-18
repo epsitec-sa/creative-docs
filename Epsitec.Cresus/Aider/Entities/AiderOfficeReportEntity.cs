@@ -65,6 +65,14 @@ namespace Epsitec.Aider.Entities
 			return string.Format ("/proxy/reporting/{0}/{1}/{2}", processorName, senderId, reportId);
 		}
 
+		public string GetProcessorUrl(BusinessContext context, string processorName)
+		{
+			var data = context.DataContext;
+			var reportId = AiderOfficeReportEntity.GetUrlEntityId (data, this);
+
+			return string.Format ("/proxy/reporting/{0}/null/{1}", processorName, reportId);
+		}
+
 		#region IContentTextProducer Members
 
 		FormattedText IContentTextProducer.GetFormattedText(string template)

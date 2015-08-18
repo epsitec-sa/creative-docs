@@ -126,10 +126,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						{
 							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-							var v = this.NodeGetter.GetValue (obj, node, userField.Field);
-							if (v.HasValue)
+							var v = this.NodeGetter.GetValue (obj, node, userField.Field) as DecimalCumulValue;
+							if (v != null)
 							{
-								var ca = new ComputedAmount (v);
+								var ca = new ComputedAmount (v.Value);
 								cell = new TreeTableCellComputedAmount (ca, cellState2);
 							}
 							else
@@ -141,10 +141,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						{
 							//	Pour obtenir la valeur, il faut procéder avec le NodeGetter,
 							//	pour tenir compte des cumuls (lorsque des lignes sont compactées).
-							var v = this.NodeGetter.GetValue (obj, node, userField.Field);
-							if (v.HasValue)
+							var v = this.NodeGetter.GetValue (obj, node, userField.Field) as DecimalCumulValue;
+							if (v != null)
 							{
-								var aa = new AmortizedAmount (v);
+								var aa = new AmortizedAmount (v.Value);
 								cell = new TreeTableCellAmortizedAmount (aa, cellState2);
 							}
 							else
