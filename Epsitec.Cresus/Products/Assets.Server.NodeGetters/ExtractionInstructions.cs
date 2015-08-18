@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ObjectField resultField, ExtractionAmount extractionAmount, DateRange range, bool inverted, params EventType[] filteredEventTypes)
+		public ExtractionInstructions(ExtractionAmount extractionAmount, DateRange range, bool inverted, params EventType[] filteredEventTypes)
 		{
 			switch (extractionAmount)
 			{
@@ -33,24 +33,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionAmount));
 			}
 
-			this.ResultField        = resultField;
 			this.ExtractionAmount   = extractionAmount;
 			this.Range              = range;
 			this.FilteredEventTypes = filteredEventTypes;
 			this.Inverted           = inverted;
 		}
 
-		public bool IsEmpty
-		{
-			get
-			{
-				return this.ResultField == ObjectField.Unknown;
-			}
-		}
+		public static ExtractionInstructions Empty = new ExtractionInstructions (ExtractionAmount.StateAt, DateRange.Empty, false);
 
-		public static ExtractionInstructions Empty = new ExtractionInstructions (ObjectField.Unknown, ExtractionAmount.StateAt, DateRange.Empty, false);
-
-		public readonly ObjectField				ResultField;
 		public readonly ExtractionAmount		ExtractionAmount;
 		public readonly DateRange				Range;
 		public readonly bool					Inverted;

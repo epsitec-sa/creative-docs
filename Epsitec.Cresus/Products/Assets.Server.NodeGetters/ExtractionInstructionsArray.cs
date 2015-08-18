@@ -9,16 +9,17 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 {
 	public struct ExtractionInstructionsArray
 	{
-		public ExtractionInstructionsArray(params ExtractionInstructions[] instructions)
+		public ExtractionInstructionsArray(ObjectField resultField, params ExtractionInstructions[] instructions)
 		{
-			this.array = instructions.ToArray ();
+			this.resultFieldield = resultField;
+			this.array           = instructions.ToArray ();
 		}
 
 		public bool IsEmpty
 		{
 			get
 			{
-				return this.array == null || this.array.Length == 0;
+				return this.resultFieldield == ObjectField.Unknown || this.array == null || this.array.Length == 0;
 			}
 		}
 
@@ -34,20 +35,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		{
 			get
 			{
-				if (this.IsEmpty)
-				{
-					return ObjectField.Unknown;
-				}
-				else
-				{
-					return this.array[0].ResultField;
-				}
+				return this.resultFieldield;
 			}
 		}
 
 
 		public static ExtractionInstructionsArray Empty = new ExtractionInstructionsArray ();
 
+		private readonly ObjectField				resultFieldield;
 		private readonly ExtractionInstructions[]	array;
 	}
 }
