@@ -713,7 +713,15 @@ Création des vues nécessaires à la main dans IBExpert.
 -echupdate -newechfile:S:\eerv\eerv-2015-07-20.xml -oldechfile:S:\eerv\eerv-2015-07-13.xml -output:s:\eerv\ech-diff-2015-07-20.md
 -admin2muni
 
+Lancé le 18.08.2015
+-------------------
 
+Mise à jour de la vue ECH_PERSON_WITH_HOUSEHOLDS
 
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-07-20.xml
-
+-echupdate -newechfile:S:\eerv\eerv-2015-07-27.xml -oldechfile:S:\eerv\eerv-2015-07-20.xml -output:s:\eerv\ech-diff-2015-07-27.md
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-07-20.xml
+-echupdate -newechfile:S:\eerv\eerv-2015-08-03.xml -oldechfile:S:\eerv\eerv-2015-07-27.xml -output:s:\eerv\ech-diff-2015-08-03.md
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-08-03.xml
+-echupdate -newechfile:S:\eerv\eerv-2015-08-10.xml -oldechfile:S:\eerv\eerv-2015-08-03.xml -output:s:\eerv\ech-diff-2015-08-10.md
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-08-10.xml
