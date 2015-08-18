@@ -86,9 +86,11 @@ function() {
     },
 
     onOkClick: function() {
-      var layoutId = this.layoutCombo.getValue();
+      var processor = this.layoutCombo.getValue();
       var url = this.exportUrl;
-      url = Epsitec.Tools.addParameterToUrl(url, 'layout', layoutId);
+      url = Epsitec.Tools.addParameterToUrl(url, 'type', 'report');
+      // en dur
+      url = Epsitec.Tools.addParameterToUrl(url, 'text', 'eventofficereport');
 
       //window.open(url);
       Ext.Ajax.request({

@@ -27,9 +27,42 @@ namespace Epsitec.Aider.Processors.Pdf
 		public EventWriter()
 		{
 		}
+
 		public override void WriteBatchStream(System.IO.Stream stream, IEnumerable<AiderEventOfficeReportEntity> officeReports)
 		{
-			throw new System.NotImplementedException ();
+			var setup   = this.GetSetup ();
+			var report  = this.GetReport (setup);
+
+			// header
+			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
+			var topLogo	      = new FormattedText (string.Format (@"<img src=""{0}"" />", topLogoPath));
+			report.AddTopLeftLayer (topLogo, 100, 100);
+
+			// footer
+			var footerContent = TextFormatter.FormatText ("Extrait du registre informatique de l'EERV le ", Date.Today.ToShortDateString ());
+			report.AddBottomRightLayer (footerContent, 100);
+
+			var lines = new List<string> ();
+			
+			var byParish = officeReports.GroupBy (r => r.Office, r => r.Event);
+			foreach (var parish in byParish)
+			{
+				lines.Add ("<b>" + parish.Key.OfficeName + "</b>");
+				var byRegistry = parish.GroupBy (e => e.Type, e => e);
+				foreach (var registry in byRegistry)
+				{
+					lines.Add ("<b>Extrait du " + AiderEventEntity.ResolveRegitryName (registry.Key) + "</b><br/>");
+					foreach (var act in registry.Select (e => e))
+					{
+						this.WriteGroupAct (act, lines);
+					}
+
+				}
+			}
+			
+
+			var formattedContent = new FormattedText (string.Concat (string.Join ("<br/>", lines)));
+			report.GeneratePdf (stream, formattedContent);
 		}
 
 		public override void WriteStream(System.IO.Stream stream, AiderEventOfficeReportEntity officeReport)
@@ -56,6 +89,17 @@ namespace Epsitec.Aider.Processors.Pdf
 			// content
 			var lines = new List<string> ();
 			this.WriteGroupAct (act, lines);
+			
+			if (act.State == Enumerations.EventState.Validated)
+			{
+				lines.Add ("<br/>Visa :<tab/>" + act.Validator.DisplayName);
+				lines.Add ("<br/><br/><br/><br/><br/><br/>");
+				lines.Add ("<tab/><tab/>Extrait certifié conforme à l'original.<br/>");
+				lines.Add ("<tab/><tab/>Lieu :<tab/>…………………………………………………………………<br/>");
+				lines.Add ("<tab/><tab/>Date :<tab/>…………………………………………………………………<br/>");
+				lines.Add ("<tab/><tab/>Signature :<tab/>…………………………………………………………………<br/>");
+			}
+
 			var formattedContent = new FormattedText (string.Concat (string.Join ("<br/>", lines)));
 
 			report.GeneratePdf (stream, formattedContent);
@@ -97,38 +141,44 @@ namespace Epsitec.Aider.Processors.Pdf
 			{
 				case Enumerations.EventType.Blessing:
 					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
-						"a été béni", 
-						"a été bénie", 
-						"ont étés bénis"
+						"a reçu la bénédiction des enfants",
+						"a reçu la bénédiction des enfants", 
+						"-"
 					), lines);
 					break;
 				case Enumerations.EventType.Baptism:
 					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
-						"a été baptisé",
-						"a été baptisée",
-						"ont étés baptisés"
+						"a reçu le baptême",
+						"a reçu le baptême",
+						"-"
 					), lines);
 					break;
 				case Enumerations.EventType.Confirmation:
 					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
-						"a effectué sa confirmation",
-						"a effectué sa confirmation",
-						"ont effectués leurs confirmations"
+						"a confirmé l’alliance de son baptême",
+						"a confirmé l’alliance de son baptême",
+						"ont confirmé l’alliance de leur baptême"
 					), lines);
 					break;
 				case Enumerations.EventType.EndOfCatechism:
 					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
-						"a effectué sa fin de catéchisme",
-						"a effectué sa fin de catéchisme",
-						"ont effectués leurs fin de catéchisme"
+						"a reçu la bénédiction des catéchumènes",
+						"a reçu la bénédiction des catéchumènes",
+						"ont reçu la bénédiction des catéchumènes"
 					), lines);
 					break;
 				case Enumerations.EventType.FuneralService:
-					lines.Add ("<br/><br/><tab/><b>les funérailles ont eu lieu</b><br/><br/>");
+					this.AddContentLines (actors, System.Tuple.Create<string, string, string> (
+						"a été remis à la miséricorde de Dieu",
+						"a été remise à la miséricorde de Dieu",
+						"-"
+					), lines);
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
+					lines.Add ("<br/><br/><tab/><b>ont vécu la célébration pour les partenaires enregistrés</b><br/><br/>");
+					break;
 				case Enumerations.EventType.Marriage:
-					lines.Add ("<br/><br/><tab/><b>ont été mariés</b><br/><br/>");
+					lines.Add ("<br/><br/><tab/><b>ont reçu la bénédiction de mariage</b><br/><br/>");
 					break;
 			}
 			
@@ -177,16 +227,6 @@ namespace Epsitec.Aider.Processors.Pdf
 				case Enumerations.EventType.Marriage:
 					lines.Add (this.GetParticipantLine (act, EventParticipantRole.FirstWitness) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.SecondWitness));
 					break;
-			}
-			
-			if (act.State == Enumerations.EventState.Validated)
-			{
-				lines.Add ("<br/>Visa :<tab/>" + act.Validator.DisplayName);
-				lines.Add ("<br/><br/><br/><br/><br/><br/>");
-				lines.Add ("<tab/><tab/>Extrait certifié conforme à l'original.<br/>");
-				lines.Add ("<tab/><tab/>Lieu :<tab/>…………………………………………………………………<br/>");
-				lines.Add ("<tab/><tab/>Date :<tab/>…………………………………………………………………<br/>");
-				lines.Add ("<tab/><tab/>Signature :<tab/>…………………………………………………………………<br/>");
 			}
 		}
 
@@ -428,8 +468,6 @@ namespace Epsitec.Aider.Processors.Pdf
 		private ListingDocument GetReport(ListingDocumentSetup setup)
 		{
 			var exportPdfInfo   = this.layout.GetExportPdfInfo ();
-			var labelPageLayout = this.layout.GetLabelPageLayout ();
-			var labelRenderer   = this.layout.GetLabelRenderer ();
 
 			var report = new ListingDocument (exportPdfInfo, setup);
 

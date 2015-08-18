@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 		protected override void WriteStream(Stream stream)
 		{
-			processor.CreateReport (stream, this.context, this.parameters);
+			processor.CreateReports (stream, this.context, accessor.GetAllItems (), parameters);
 		}
 
 		private IReportingProcessor processor;

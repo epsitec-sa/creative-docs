@@ -128,7 +128,6 @@
     <Compile Include="Core\Extraction\LabelLayoutExtensions.cs" />
     <Compile Include="Core\Extraction\LabelWriter.cs" />
     <Compile Include="Core\Extraction\ReportWriter.cs" />
-    <Compile Include="Core\Extraction\WriterFactory.cs" />
     <Compile Include="Core\IconSize.cs" />
     <Compile Include="Core\CoreWorker.cs" />
     <Compile Include="Core\IdCache.cs" />

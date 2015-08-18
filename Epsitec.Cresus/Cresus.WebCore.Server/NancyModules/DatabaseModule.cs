@@ -194,13 +194,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.CreateStreamResponse (stream, filename);
 		}
 
-		internal static void ExportToDisk(string filename, BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
+		internal static void ExportToDisk(string filename, EntityExtractor extractor, EntityWriter writer)
 		{
 			var itemCount = extractor.Accessor.GetItemCount ();
-
-			EntityWriter writer = DatabaseModule.GetEntityWriter (context, caches, extractor, query);
-
-			var stream   = writer.GetStream ();
+			var stream    = writer.GetStream ();
 			var depotPath = CoreContext.GetFileDepotPath ("downloads");
 			using (var fileStream = System.IO.File.Create (depotPath + "\\" + filename))
 			{
@@ -372,7 +369,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 				{
-					this.ExportToDisk (fileName, businessContext, caches, extractor, this.Request.Query);
+					var writer = this.GetEntityWriter (businessContext, caches, extractor, this.Request.Query);
+					DatabaseModule.ExportToDisk (fileName, extractor, writer);
 				}
 			}
 			catch
@@ -492,13 +490,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			switch (type)
 			{
 				case "array":
-					return DatabaseModule.GetArrayWriter (caches, extractor, query);
+					return this.GetArrayWriter (caches, extractor, query);
 
 				case "label":
-					return DatabaseModule.GetLabelWriter (extractor, query);
+					return this.GetLabelWriter (extractor, query);
 
 				case "report":
-					return DatabaseModule.GetReportWriter (context, extractor, query);
+					return this.GetReportWriter (context, extractor, query);
 
 				default:
 					throw new NotImplementedException ();

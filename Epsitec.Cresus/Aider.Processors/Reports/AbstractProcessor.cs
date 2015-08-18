@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Processors;
@@ -19,7 +20,7 @@ namespace Epsitec.Aider.Processors.Reports
 		#region IReportingProcessor Members
 
 		public abstract string CreateReport(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
-		public abstract string CreateReports(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, dynamic parameters);
+		public abstract string CreateReports(System.IO.Stream stream, Cresus.Core.Business.BusinessContext businessContext, IEnumerable<AbstractEntity> entities, dynamic parameters);
 		#endregion
 
 		#region IName Members
