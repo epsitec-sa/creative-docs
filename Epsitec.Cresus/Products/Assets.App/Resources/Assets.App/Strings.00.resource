@@ -500,4 +500,5 @@
   <data name="ReportParams.MCH2IndirectShort" id="KRL">Indirect compacte</data>
   <data name="MCH2SummaryType.IndirectShort" id="KSL">Indirect compact (montants antérieurs regroupés)</data>
   <data name="AmortizedAmountController.Decrease" id="KTL">Diminution</data>
+  <data name="AmortizedAmountController.Increase" id="KUL">Augmentation</data>
 </bundle>
