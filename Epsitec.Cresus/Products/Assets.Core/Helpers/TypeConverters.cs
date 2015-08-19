@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Assets.Core.Helpers
 			text = text.Replace ("—", "0");
 
 			decimal d;
-			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out d))
+			if (decimal.TryParse (text, System.Globalization.NumberStyles.Number, TypeConverters.numberFormatAmount, out d))
 			{
 				return d*neg;
 			}
