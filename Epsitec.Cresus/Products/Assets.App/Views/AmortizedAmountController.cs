@@ -599,7 +599,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				AmortizedAmountController.SetAmount (this.decreaseTextField, value);
+				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+				//	C'est Increase qui l'affichera, forcément en positif !
+				AmortizedAmountController.SetPositivAmount (this.decreaseTextField, value);
 			}
 		}
 
@@ -611,7 +613,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				AmortizedAmountController.SetAmount (this.increaseTextField, value);
+				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+				//	C'est Decrease qui l'affichera, forcément en positif !
+				AmortizedAmountController.SetPositivAmount (this.increaseTextField, value);
 			}
 		}
 
@@ -637,6 +641,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				return TypeConverters.ParseAmount (textField.Text);
+			}
+		}
+
+		private static void SetPositivAmount(TextField textField, decimal? value)
+		{
+			if (!value.HasValue || value.Value <= 0)
+			{
+				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+				AmortizedAmountController.SetAmount (textField, null);
+			}
+			else
+			{
+				AmortizedAmountController.SetAmount (textField, value);
 			}
 		}
 
