@@ -785,9 +785,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private bool IsDelta
 		{
+			//	Indique si les champs Diminution/Augmentation sont présents.
 			get
 			{
-				return this.eventType == EventType.Input
+				return this.eventType == EventType.PreInput
+					|| this.eventType == EventType.Input
 					|| this.eventType == EventType.Decrease
 					|| this.eventType == EventType.Increase
 					|| this.eventType == EventType.Adjust;
