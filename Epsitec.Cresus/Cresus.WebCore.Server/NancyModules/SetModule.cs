@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private void LongRunningExport(BusinessContext businessContext, CoreJob job, dynamic parameters)
 		{
 			var user	 = LoginModule.GetUserName (this);
-			var fileExt	 = this.Request.Query.type == "label" ? ".pdf" : ".csv";
+			var fileExt	 = this.Request.Query.type == "array" ? ".csv" : ".pdf";
 			var filename = DownloadsModule.GenerateFileNameForUser (user, fileExt);
 			var finishMetaData	= "<br><input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + filename + "\");' value='Télécharger' />";
 			var caches   = this.CoreServer.Caches;

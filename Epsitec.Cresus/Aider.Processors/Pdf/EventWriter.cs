@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Pdf.Array;
+using Epsitec.Common.Pdf.Engine;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -30,39 +32,41 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public override void WriteBatchStream(System.IO.Stream stream, IEnumerable<AiderEventOfficeReportEntity> officeReports)
 		{
-			var setup   = this.GetSetup ();
-			var report  = this.GetReport (setup);
+			var setup   = this.GetBatchSetup ();
+			var report  = this.GetBatchReport (setup);
+			var columns = new List<ColumnDefinition> ();
+			columns.Add (new ColumnDefinition ("Paroisse", ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Registre", ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Actes", ColumnType.Automatic));
 
-			// header
-			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
-			var topLogo	      = new FormattedText (string.Format (@"<img src=""{0}"" />", topLogoPath));
-			report.AddTopLeftLayer (topLogo, 100, 100);
-
-			// footer
-			var footerContent = TextFormatter.FormatText ("Extrait du registre informatique de l'EERV le ", Date.Today.ToShortDateString ());
-			report.AddBottomRightLayer (footerContent, 100);
-
-			var lines = new List<string> ();
-			
+			var contentArray = new CellContent[officeReports.Count (),3];
 			var byParish = officeReports.GroupBy (r => r.Office, r => r.Event);
+			var parishColumn   = 0;
+			var registryColumn = 1;
+			var actColumn      = 2;
+
+			var actIndex = 0;
 			foreach (var parish in byParish)
 			{
-				lines.Add ("<b>" + parish.Key.OfficeName + "</b>");
+				var parishInfo = new FormattedText ("<b>" + parish.Key.OfficeName + "</b>");
 				var byRegistry = parish.GroupBy (e => e.Type, e => e);
 				foreach (var registry in byRegistry)
 				{
-					lines.Add ("<b>Extrait du " + AiderEventEntity.ResolveRegitryName (registry.Key) + "</b><br/>");
+					var registryInfo = new FormattedText ("<b>" + registry.Key + "</b>");					
 					foreach (var act in registry.Select (e => e))
 					{
-						this.WriteGroupAct (act, lines);
+						contentArray[actIndex, parishColumn] = new CellContent (parishInfo);
+						contentArray[actIndex, registryColumn] = new CellContent (registryInfo);
+						contentArray[actIndex, actColumn] = new CellContent (act.Report.GetEventNumber ());
+						actIndex++;
 					}
-
 				}
 			}
-			
-
-			var formattedContent = new FormattedText (string.Concat (string.Join ("<br/>", lines)));
-			report.GeneratePdf (stream, formattedContent);
+	
+			report.GeneratePdf (stream, actIndex - 1, columns, (row, col) =>
+			{
+				return contentArray[row, col];
+			});
 		}
 
 		public override void WriteStream(System.IO.Stream stream, AiderEventOfficeReportEntity officeReport)
@@ -477,6 +481,18 @@ namespace Epsitec.Aider.Processors.Pdf
 			return report;
 		}
 
+		private Array GetBatchReport(ArraySetup setup)
+		{
+			var exportPdfInfo   = new ExportPdfInfo ()
+			{
+				PageSize =  new Size (2100, 2970)
+			};
+
+			var report = new Array (exportPdfInfo, setup);
+
+			return report;
+		}
+
 		private ListingDocumentSetup GetSetup()
 		{
 			var setup = new ListingDocumentSetup ();
@@ -487,6 +503,15 @@ namespace Epsitec.Aider.Processors.Pdf
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
 			setup.TextStyle.FontSize = 9.0.Points ();
 			
+			return setup;
+		}
+
+		private ArraySetup GetBatchSetup()
+		{
+			var setup = new ArraySetup ();
+			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
+			setup.TextStyle.FontSize = 9.0.Points ();
+
 			return setup;
 		}
 	}
