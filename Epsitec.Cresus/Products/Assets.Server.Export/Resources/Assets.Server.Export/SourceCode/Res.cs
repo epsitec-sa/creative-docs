@@ -48,6 +48,26 @@ namespace Epsitec.Cresus.Assets.Server.Export
 						}
 					}
 				}
+				
+				public static class MissingYears
+				{
+					//	designer:str/MUK8001
+					public static global::Epsitec.Common.Types.FormattedText One
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Export.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544328));
+						}
+					}
+					//	designer:str/MUK7001
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Server.Export.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544327));
+						}
+					}
+				}
 			}
 			
 			public static class ExportEntriesReport
@@ -165,6 +185,26 @@ namespace Epsitec.Cresus.Assets.Server.Export
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
+						}
+					}
+				}
+				
+				public static class MissingYears
+				{
+					//	designer:str/MUK8001
+					public static global::Epsitec.Common.Support.Druid One
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544328);
+						}
+					}
+					//	designer:str/MUK7001
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544327);
 						}
 					}
 				}

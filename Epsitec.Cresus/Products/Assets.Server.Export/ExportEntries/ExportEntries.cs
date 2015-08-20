@@ -52,7 +52,16 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 			}
 
-			return this.ReportsDescription;
+			var missingYearsReport = this.MissingYearsReport;
+
+			if (string.IsNullOrEmpty (missingYearsReport))
+			{
+				return this.ReportsDescription;
+			}
+			else
+			{
+				return string.Concat (this.ReportsDescription, Res.Strings.ExportEntries.MissingYears.Title, missingYearsReport);
+			}
 		}
 
 
@@ -68,6 +77,42 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				else
 				{
 					return Res.Strings.ExportEntries.Description.None.ToString ();
+				}
+			}
+		}
+
+		private string MissingYearsReport
+		{
+			//	Retourne un rapport sur les années pour lesquelles il manque le plan comptable.
+			get
+			{
+				var missingYears = new List<int> ();
+				var entries = this.accessor.Mandat.GetData (BaseType.Entries);
+
+				foreach (var entry in entries)
+				{
+					var date = ObjectProperties.GetObjectPropertyDate (entry, null, ObjectField.EntryDate);
+
+					if (date.HasValue)
+					{
+						if (!this.accessor.Mandat.AccountsDateRanges.Where (x => x.IsInside (date.Value)).Any ())
+						{
+							if (!missingYears.Contains (date.Value.Year))
+							{
+								missingYears.Add (date.Value.Year);
+							}
+						}
+					}
+				}
+
+				if (missingYears.Any ())
+				{
+					missingYears.Sort ();
+					return string.Join ("<br/>", missingYears.Select (x => string.Format (Res.Strings.ExportEntries.MissingYears.One.ToString (), x)));
+				}
+				else
+				{
+					return null;
 				}
 			}
 		}
