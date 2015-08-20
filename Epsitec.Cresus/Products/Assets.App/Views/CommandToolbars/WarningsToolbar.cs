@@ -66,6 +66,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			this.CreateButton (Res.Commands.Warnings.Hide, 1);
 			this.showAllButton =
 			this.CreateButton (Res.Commands.Warnings.ShowAll, 1);
+			this.CreateButton (Res.Commands.Warnings.ShowAccounts, 1);
 
 			this.CreateSeparator (1);
 

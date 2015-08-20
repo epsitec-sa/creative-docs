@@ -691,6 +691,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 167));
 				//	designer:cap/JUK8501
 				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168));
+				//	designer:cap/JUKD701
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAccounts = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 237));
 				//	designer:cap/JUKC601
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 204));
 			}
@@ -1252,6 +1254,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long Next = 0x7D3000140000A7L;
 				//	designer:cap/JUK8501
 				public const long Prev = 0x7D3000140000A8L;
+				//	designer:cap/JUKD701
+				public const long ShowAccounts = 0x7D3000140000EDL;
 				//	designer:cap/JUKC601
 				public const long ShowAll = 0x7D3000140000CCL;
 			}

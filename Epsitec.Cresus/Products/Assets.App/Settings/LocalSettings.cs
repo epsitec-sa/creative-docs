@@ -71,6 +71,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 			LocalSettings.SplitterAssetsEventPos    = 190;
 			LocalSettings.SplitterAssetsMultiplePos = 180;
 
+			LocalSettings.ShowAccountsWarnings = false;
+
 			LocalSettings.AccountCategories = AccountCategory.Actif |
 											  AccountCategory.Passif |
 											  AccountCategory.Charge |
@@ -196,7 +198,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public static IEnumerable<Warning> GetVisibleWarnings(DataAccessor accessor)
 		{
 			//	Retourne les avertissements, en masquant ceux qui sont cachés par l'utilisateur.
-			return WarningsLogic.GetWarnings (accessor)
+			return WarningsLogic.GetWarnings (accessor, LocalSettings.ShowAccountsWarnings)
 				.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
 		}
 
@@ -265,6 +267,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 			writer.WriteElementString (X.SplitterAssetsEventPos, LocalSettings.SplitterAssetsEventPos.ToStringIO ());
 			writer.WriteElementString (X.SplitterAssetsMultiplePos, LocalSettings.SplitterAssetsMultiplePos.ToStringIO ());
+
+			writer.WriteElementString (X.ShowAccountsWarnings, LocalSettings.ShowAccountsWarnings.ToStringIO ());
 
 			writer.WriteElementString (X.AccountCategories, LocalSettings.AccountCategories.ToStringIO ());
 
@@ -492,6 +496,10 @@ namespace Epsitec.Cresus.Assets.App.Settings
 							LocalSettings.SplitterAssetsMultiplePos = reader.ReadElementContentAsString ().ParseInt ();
 							break;
 
+						case X.ShowAccountsWarnings:
+							LocalSettings.ShowAccountsWarnings = reader.ReadElementContentAsString ().ParseBool ();
+							break;
+
 						case X.AccountCategories:
 							LocalSettings.AccountCategories = reader.ReadElementContentAsString ().ParseType<AccountCategory> ();
 							break;
@@ -613,6 +621,8 @@ namespace Epsitec.Cresus.Assets.App.Settings
 
 		public static int							SplitterAssetsEventPos;
 		public static int							SplitterAssetsMultiplePos;
+
+		public static bool							ShowAccountsWarnings;
 
 		public static AccountCategory				AccountCategories;
 

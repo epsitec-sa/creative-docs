@@ -54,11 +54,12 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			var missingYearsReport = this.MissingYearsReport;
 
-			if (string.IsNullOrEmpty (missingYearsReport))
+			if (string.IsNullOrEmpty (missingYearsReport))  // aucune année manquante ?
 			{
+				//	On retourne juste le rapport sur les écritures générées.
 				return this.ReportsDescription;
 			}
-			else
+			else  // il y a une ou plusieurs des années manquantes ?
 			{
 				//	Le rapport sur les écritures générées est complété par celui sur les années manquantes.
 				return string.Concat (this.ReportsDescription, Res.Strings.ExportEntries.MissingYears.Title, missingYearsReport);

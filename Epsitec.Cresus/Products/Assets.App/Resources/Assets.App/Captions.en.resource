@@ -46,4 +46,5 @@
   <data id="KK6">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="KD3">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
   <data id="KL3">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="KD7">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
 </bundle>

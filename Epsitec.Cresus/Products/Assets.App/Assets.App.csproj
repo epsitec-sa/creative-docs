@@ -562,6 +562,7 @@
     <EmbeddedResource Include="Images\Main.ExportEntries.icon" />
     <EmbeddedResource Include="Images\Main.SaveAs.icon" />
     <EmbeddedResource Include="Images\Main.File.icon" />
+    <EmbeddedResource Include="Images\Warning.ShowAccounts.icon" />
     <None Include="packages.config" />
     <Content Include="Resources\Assets.App\Strings.en.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

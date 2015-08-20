@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Assets.App.Settings
 		public const string SplitterAssetsEventPos = "SplitterAssetsEventPos";
 		public const string SplitterAssetsMultiplePos = "SplitterAssetsMultiplePos";
 		public const string UILanguage = "UILanguage";
+		public const string ShowAccountsWarnings = "ShowAccountsWarnings";
 		public const string Warning = "Warning";
 
 		//-----------------------------------------------------------
