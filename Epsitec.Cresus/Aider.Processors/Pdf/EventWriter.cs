@@ -21,6 +21,8 @@ using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Pdf.Array;
 using Epsitec.Common.Pdf.Engine;
+using System.IO;
+using Epsitec.Common.IO;
 
 namespace Epsitec.Aider.Processors.Pdf
 {
@@ -32,38 +34,112 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public override void WriteBatchStream(System.IO.Stream stream, IEnumerable<AiderEventOfficeReportEntity> officeReports)
 		{
-			var setup   = this.GetBatchSetup ();
-			var report  = this.GetBatchReport (setup);
+			Epsitec.Common.IO.ZipFile file = new Epsitec.Common.IO.ZipFile ();
+			var byParish = officeReports.GroupBy (r => r.Office, r => r.Event);
+			foreach (var parish in byParish)
+			{
+				var parishDirectory =  parish.Key.OfficeName;
+				var byRegistry = parish.GroupBy (e => e.Type, e => e);
+				foreach (var registry in byRegistry)
+				{
+					var registryDirectory =  parishDirectory + "/" + AiderEventEntity.ResolveRegitryName (registry.Key);
+					var byYear = registry.GroupBy (e => e.Report.Year, e => e);
+					foreach(var registryByYear in byYear)
+					{
+						var actDirectory =  registryDirectory + "/" + registryByYear.Key;
+						foreach (var act in registryByYear.Select (e => e))
+						{
+							var filename = act.Report.EventNumberByYearAndRegistry + ".pdf";
+							var actFile  = actDirectory + "/" + filename;
+							var tempAct  = System.IO.Path.GetTempPath () + System.Guid.NewGuid ().ToString () + ".pdf";
+							this.WriteToFile (tempAct, act.Report);
+							file.AddEntry (actFile, System.IO.File.ReadAllBytes (tempAct));
+							System.IO.File.Delete (tempAct);
+						}
+					}				
+				}
+			}
+			
+			//var tempIndexFile = System.IO.Path.GetTempPath () + System.Guid.NewGuid ().ToString () + ".pdf";
+			//this.WriteIndexFile (tempIndexFile, officeReports);
+			//file.AddEntry ("index.pdf", System.IO.File.ReadAllBytes (tempIndexFile));
+			//System.IO.File.Delete (tempIndexFile);
+
+			var tempZip  = System.IO.Path.GetTempPath () + System.Guid.NewGuid ().ToString () + ".zip";
+			file.SaveFile (tempZip);
+			using(var fileStream = System.IO.File.OpenRead (tempZip))
+			{
+				fileStream.CopyTo (stream);
+			}
+			System.IO.File.Delete (tempZip);
+		}
+
+		private void AddDirectoryToZipStream(System.IO.DirectoryInfo root, System.IO.Stream stream)
+		{
+			var directories = root.EnumerateDirectories ();
+			foreach (var dir in directories)
+			{
+				this.AddDirectoryToZipStream (dir, stream);
+			}
+			var files = root.EnumerateFiles ();
+			foreach (var file in files)
+			{
+				var fileContent = System.IO.File.ReadAllBytes (file.FullName);
+				stream.Write (fileContent, 0, fileContent.Length);
+			}
+		}
+
+		public void WriteIndexFile(string path, IEnumerable<AiderEventOfficeReportEntity> officeReports)
+		{
+			var setup   = this.GetArraySetup ();
+			var report  = this.GetArrayReport (setup);
 			var columns = new List<ColumnDefinition> ();
 			columns.Add (new ColumnDefinition ("Paroisse", ColumnType.Automatic));
 			columns.Add (new ColumnDefinition ("Registre", ColumnType.Automatic));
-			columns.Add (new ColumnDefinition ("Actes", ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Année",    ColumnType.Automatic));
+			columns.Add (new ColumnDefinition ("Acte N°",  ColumnType.Automatic));
 
-			var contentArray = new CellContent[officeReports.Count (),3];
+			var contentArray = new CellContent[officeReports.Count (), 4];
 			var byParish = officeReports.GroupBy (r => r.Office, r => r.Event);
 			var parishColumn   = 0;
 			var registryColumn = 1;
-			var actColumn      = 2;
+			var yearColumn     = 2;
+			var actColumn      = 3;
 
 			var actIndex = 0;
 			foreach (var parish in byParish)
 			{
-				var parishInfo = new FormattedText ("<b>" + parish.Key.OfficeName + "</b>");
+				var parishInfo = new FormattedText (parish.Key.OfficeName);
 				var byRegistry = parish.GroupBy (e => e.Type, e => e);
 				foreach (var registry in byRegistry)
 				{
-					var registryInfo = new FormattedText ("<b>" + registry.Key + "</b>");					
-					foreach (var act in registry.Select (e => e))
+					var registryInfo = new FormattedText (AiderEventEntity.ResolveRegitryName (registry.Key));
+					var byYear = registry.GroupBy (e => e.Report.Year, e => e);
+					foreach (var registryByYear in byYear)
 					{
-						contentArray[actIndex, parishColumn] = new CellContent (parishInfo);
-						contentArray[actIndex, registryColumn] = new CellContent (registryInfo);
-						contentArray[actIndex, actColumn] = new CellContent (act.Report.GetEventNumber ());
-						actIndex++;
+						var yearInfo = registryByYear.Key.ToString ();
+						var firstLineOfGroup = true;
+						foreach (var act in registryByYear.Select (e => e).OrderBy (e => e.Report.EventNumberByYearAndRegistry))
+						{
+							if (!firstLineOfGroup)
+							{
+								parishInfo = "";
+								registryInfo = "";
+								yearInfo = "";
+							}
+
+							contentArray[actIndex, parishColumn]   = new CellContent (parishInfo);
+							contentArray[actIndex, registryColumn] = new CellContent (registryInfo);
+							contentArray[actIndex, yearColumn]     = new CellContent (yearInfo);
+							contentArray[actIndex, actColumn]      = new CellContent (act.Report.EventNumberByYearAndRegistry.ToString ());
+							actIndex++;
+							firstLineOfGroup = false;
+						}
 					}
 				}
 			}
-	
-			report.GeneratePdf (stream, actIndex - 1, columns, (row, col) =>
+
+			report.GeneratePdf (path, actIndex - 1, columns, (row, col) =>
 			{
 				return contentArray[row, col];
 			});
@@ -71,29 +147,46 @@ namespace Epsitec.Aider.Processors.Pdf
 
 		public override void WriteStream(System.IO.Stream stream, AiderEventOfficeReportEntity officeReport)
 		{
-			var setup   = this.GetSetup ();
-			var report  = this.GetReport (setup);
-			var act     = officeReport.Event;
-			
+			var setup            = this.GetSetup ();
+			var report           = this.GetReport (setup);
+			this.PrepareReport (report, officeReport);
+			var formattedContent = this.GenerateContent (officeReport);
+			report.GeneratePdf (stream, formattedContent);
+		}
+
+		public void WriteToFile(string path, AiderEventOfficeReportEntity officeReport)
+		{
+			var setup            = this.GetSetup ();
+			var report           = this.GetReport (setup);
+			this.PrepareReport (report, officeReport);
+			var formattedContent = this.GenerateContent (officeReport);
+			report.GeneratePdf (path, formattedContent);
+		}
+
+		private void PrepareReport(ListingDocument report, AiderEventOfficeReportEntity officeReport)
+		{
 			// header
 			var topLogoPath   = CoreContext.GetFileDepotPath ("assets", "logo-eerv.png");
 			var topLogo	      = new FormattedText (string.Format (@"<img src=""{0}"" />", topLogoPath));
 			report.AddTopLeftLayer (topLogo, 100, 100);
 
-			var headerContent = new FormattedText ("<b>Extrait du " + act.GetRegitryName () + "</b><br/>");
+			var headerContent = new FormattedText ("<b>Extrait du " + officeReport.Event.GetRegitryName () + "</b><br/>");
 			headerContent += new FormattedText ("<b>de la " + officeReport.Office.OfficeName + "</b><br/><br/>");
 
 			report.AddTopLeftLayer (headerContent, 200, 500);
-		
+
 			// footer
 			var footerContent = TextFormatter.FormatText ("Extrait du registre informatique de l'EERV le ", Date.Today.ToShortDateString ());
 			report.AddBottomRightLayer (footerContent, 100);
+		}
 
-
+		private FormattedText GenerateContent(AiderEventOfficeReportEntity officeReport)
+		{
+			var act     = officeReport.Event;
 			// content
 			var lines = new List<string> ();
 			this.WriteGroupAct (act, lines);
-			
+
 			if (act.State == Enumerations.EventState.Validated)
 			{
 				lines.Add ("<br/>Visa :<tab/>" + act.Validator.DisplayName);
@@ -104,9 +197,7 @@ namespace Epsitec.Aider.Processors.Pdf
 				lines.Add ("<tab/><tab/>Signature :<tab/>…………………………………………………………………<br/>");
 			}
 
-			var formattedContent = new FormattedText (string.Concat (string.Join ("<br/>", lines)));
-
-			report.GeneratePdf (stream, formattedContent);
+			return new FormattedText (string.Concat (string.Join ("<br/>", lines)));
 		}
 
 		private void WriteGroupAct (AiderEventEntity act, List<string> lines)
@@ -481,7 +572,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			return report;
 		}
 
-		private Array GetBatchReport(ArraySetup setup)
+		private Array GetArrayReport(ArraySetup setup)
 		{
 			var exportPdfInfo   = new ExportPdfInfo ()
 			{
@@ -506,7 +597,7 @@ namespace Epsitec.Aider.Processors.Pdf
 			return setup;
 		}
 
-		private ArraySetup GetBatchSetup()
+		private ArraySetup GetArraySetup()
 		{
 			var setup = new ArraySetup ();
 			setup.TextStyle.Font = Font.GetFont ("Verdana", "");
