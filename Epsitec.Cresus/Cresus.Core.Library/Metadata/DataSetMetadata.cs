@@ -43,6 +43,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			this.userRoles = new List<string> ();
 			this.menuItems = new List<DataSetMenuItem> ();
 			this.labelExports = new List<LabelExport> ();
+			this.reportExports = new List<ReportExport> ();
 		}
 
 		public DataSetMetadata(IDictionary<string, string> data)
@@ -161,6 +162,14 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public IList<ReportExport>				ReportExports
+		{
+			get
+			{
+				return this.reportExports;
+			}
+		}
+
 		public Druid							DisplayGroupId
 		{
 			get
@@ -243,6 +252,10 @@ namespace Epsitec.Cresus.Core.Metadata
 				from labelExport in this.labelExports
 				select labelExport.Save ());
 
+			var reportExports = new XElement (Strings.ReportExports,
+				from reportExport in this.reportExports
+				select reportExport.Save ());
+
 			var filter = this.filter.Save (Strings.Filter);
 
 			return new XElement (xmlNodeName, attributes, roles, menuItems, labelExports, filter);
@@ -250,16 +263,18 @@ namespace Epsitec.Cresus.Core.Metadata
 
 		public static DataSetMetadata Restore(XElement xml, IEnumerable<EntityTableMetadata> tables)
 		{
-			var data         = Xml.GetAttributeBag (xml);
-			var roles        = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
-			var menuItems    = DataSetMetadata.RestoreChildren (xml, Strings.MenuItems, DataSetMenuItem.Restore);
-			var labelExports = DataSetMetadata.RestoreChildren (xml, Strings.LabelExports, LabelExport.Restore);
-			var filter       = xml.Element (Strings.Filter);
-			var metadata     = new DataSetMetadata (data);
+			var data          = Xml.GetAttributeBag (xml);
+			var roles         = xml.Element (Strings.UserRoles).Elements (Strings.UserRole).Select (x => x.Value);
+			var menuItems     = DataSetMetadata.RestoreChildren (xml, Strings.MenuItems, DataSetMenuItem.Restore);
+			var labelExports  = DataSetMetadata.RestoreChildren (xml, Strings.LabelExports, LabelExport.Restore);
+			var reportExports = DataSetMetadata.RestoreChildren (xml, Strings.ReportExports, ReportExport.Restore);
+			var filter        = xml.Element (Strings.Filter);
+			var metadata      = new DataSetMetadata (data);
 
 			metadata.userRoles.AddRange (roles);
 			metadata.menuItems.AddRange (menuItems);
 			metadata.labelExports.AddRange (labelExports);
+			metadata.reportExports.AddRange (reportExports);
 			metadata.DefineFilter (EntityFilter.Restore (filter));
 			metadata.DefineEntityTableMetadata (tables.Single (t => t.Name == metadata.TableName && t.EntityId == metadata.TableEntityId));
 
@@ -317,6 +332,7 @@ namespace Epsitec.Cresus.Core.Metadata
 			public static readonly string		Filter = "f";
 			public static readonly string		MenuItems = "M";
 			public static readonly string		LabelExports = "L";
+			public static readonly string		ReportExports = "Reports";
 		}
 
 		#endregion
@@ -334,6 +350,7 @@ namespace Epsitec.Cresus.Core.Metadata
 		private readonly int?					deletionViewId;
 		private readonly List<DataSetMenuItem>	menuItems;
 		private readonly List<LabelExport>		labelExports;
+		private readonly List<ReportExport>		reportExports;
 
 		private Druid							displayGroupCaptionId;
 		private EntityFilter					filter;
