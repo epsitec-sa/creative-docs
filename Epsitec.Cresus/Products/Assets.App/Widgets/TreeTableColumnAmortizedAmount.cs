@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				}
 
 				string text;
+
 				if (this.details)
 				{
 					text = TypeConverters.AmountToString (value);
