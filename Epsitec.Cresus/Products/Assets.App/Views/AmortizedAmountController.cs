@@ -600,10 +600,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
-				//	C'est Increase qui l'affichera, forcément en positif !
 				if (this.IsDelta)
 				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Increase qui l'affichera, forcément en positif !
 					AmortizedAmountController.SetPositivAmount (this.decreaseTextField, value);
 				}
 				else
@@ -621,10 +621,10 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
-				//	C'est Decrease qui l'affichera, forcément en positif !
 				if (this.IsDelta)
 				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Decrease qui l'affichera, forcément en positif !
 					AmortizedAmountController.SetPositivAmount (this.increaseTextField, value);
 				}
 				else
