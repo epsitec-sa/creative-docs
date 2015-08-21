@@ -145,6 +145,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				foreach (var userField in AssetsLogic.GetUserFields (this.accessor))
 				{
 					yield return userField;
+
+					if (userField.Field == ObjectField.MainValue)
+					{
+						//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+						//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+						yield return new UserField (-1, DataDescriptions.GetObjectFieldDescription (ObjectField.MainValueDelta), ObjectField.MainValueDelta, FieldType.AmortizedAmount, false, 120, null, null, null, 0, null);
+					}
 				}
 			}
 		}
