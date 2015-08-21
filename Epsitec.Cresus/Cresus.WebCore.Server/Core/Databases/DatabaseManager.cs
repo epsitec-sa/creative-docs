@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 
 			var reportExportItems = dataSet
 				.ReportExports
-				.Select (s => new ReportExportItem (s.Text));
+				.Select (s => new ReportExportItem (s.Text, s.Processor));
 
 			var enableCreate = dataSet.EnableCreate;
 			var enableDelete = dataSet.EnableDelete;

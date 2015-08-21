@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 				{
 					var writer = this.GetEntityWriter (businessContext, caches, extractor, this.Request.Query);
-					DatabaseModule.ExportToDisk (filename, extractor, this.Request.Query);
+					DatabaseModule.ExportToDisk (filename, extractor, writer);
 				}
 			}
 			catch

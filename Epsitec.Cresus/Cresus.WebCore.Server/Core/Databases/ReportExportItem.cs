@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 	/// </summary>
 	public sealed class ReportExportItem
 	{
-		public ReportExportItem(FormattedText text)
+		public ReportExportItem(FormattedText text, string processor)
 		{
 			this.text = text;
+			this.processor = processor;
 		}
 
 
@@ -23,9 +24,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 		{
 			return new Dictionary<string, object> ()
 			{
-				{ "text", this.text.ToString () }
+				{ "text", this.text.ToString () },
+				{ "processor", this.processor   }
 			};
 		}
 		public readonly FormattedText			text;
+		public readonly string                  processor;
 	}
 }

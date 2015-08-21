@@ -10,9 +10,10 @@ namespace Epsitec.Cresus.Core.Metadata
 {
 	public sealed class ReportExport
 	{
-		public ReportExport(FormattedText text)
+		public ReportExport(FormattedText text, string processor)
 		{
 			this.text = text;
+			this.processor = processor;
 		}
 
 		public FormattedText Text
@@ -23,13 +24,22 @@ namespace Epsitec.Cresus.Core.Metadata
 			}
 		}
 
+		public string Processor
+		{
+			get
+			{
+				return this.processor;
+			}
+		}
+
 		public XElement Save()
 		{
 			var attributes = new List<XAttribute> ();
 
 			var text = this.text.ToString ();
+			var proc = this.processor;
 			attributes.Add (new XAttribute (Strings.Text, text));
-
+			attributes.Add (new XAttribute (Strings.Processor, proc));
 			return new XElement (Strings.ReportExport, attributes);
 		}
 
@@ -42,8 +52,8 @@ namespace Epsitec.Cresus.Core.Metadata
 
 			var data = Xml.GetAttributeBag (xml);
 			var text = new FormattedText (data[Strings.Text]);
-
-			return new ReportExport (text);
+			var proc = data[Strings.Processor];
+			return new ReportExport (text, proc);
 		}
 
 		#region Strings Class
@@ -51,11 +61,13 @@ namespace Epsitec.Cresus.Core.Metadata
 		private static class Strings
 		{
 			public static readonly string		ReportExport = "report";
-			public static readonly string		Text = "t";
+			public static readonly string		Text         = "t";
+			public static readonly string		Processor    = "p";
 		}
 
 		#endregion
 
 		private readonly FormattedText			text;
+		private readonly string			        processor;
 	}
 }

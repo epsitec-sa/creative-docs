@@ -355,8 +355,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var user = LoginModule.GetUserName (this);
 
-			var fileExt  = this.Request.Query.type == "array" ? ".csv" : ".pdf";
-			var fileName = DownloadsModule.GenerateFileNameForUser (user, fileExt);
+			var fileNames = new Dictionary<string, string> ()
+			{
+				{"label",  DownloadsModule.GenerateFileNameForUser (user, ".pdf")},
+				{"array",  DownloadsModule.GenerateFileNameForUser (user, ".csv")},
+				{"report", DownloadsModule.GenerateFileNameForUser (user, ".zip")},
+			};
+
+			var fileName = fileNames[this.Request.Query.type];
 				
 			var message = "<br />"
 				/**/    + "<input type='button' onclick='Epsitec.Cresus.Core.app.downloadFile(\"" + fileName + "\");' value='Télécharger' />";
@@ -542,7 +548,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var metaData       = extractor.Metadata;
 			var accessor       = extractor.Accessor;
-			var processorName  = (string) query.text;
+			var processorName  = (string) query.processor;
 
 			IReportingProcessor processor;
 			if (this.processors.TryGetValue (processorName, out processor))

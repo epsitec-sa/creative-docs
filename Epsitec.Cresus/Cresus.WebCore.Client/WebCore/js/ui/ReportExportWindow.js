@@ -55,13 +55,13 @@ function() {
         labelWidth: 150,
         fieldLabel: Epsitec.Texts.getExportReportText(),
         store: Ext.create('Ext.data.Store', {
-          fields: ['text'],
+          fields: ['text','processor'],
           data: options.reportExportDefinitions
         }),
         queryMode: 'local',
         displayField: 'text',
-        valueField: 'text',
-        value: options.reportExportDefinitions[0].text
+        valueField: 'processor',
+        value: options.reportExportDefinitions[0].processor
       });
     },
 
@@ -90,7 +90,7 @@ function() {
       var url = this.exportUrl;
       url = Epsitec.Tools.addParameterToUrl(url, 'type', 'report');
       // en dur
-      url = Epsitec.Tools.addParameterToUrl(url, 'text', 'eventofficereport');
+      url = Epsitec.Tools.addParameterToUrl(url, 'processor', processor);
 
       //window.open(url);
       Ext.Ajax.request({

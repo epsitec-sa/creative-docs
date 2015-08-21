@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Processors.Reports
 			doc.WriteBatchStream (stream, reports);
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 
-			return "bacth.pdf";
+			return "exctraction_registre.zip";
 		}
 	}
 }
