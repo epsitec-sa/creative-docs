@@ -13,7 +13,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		protected override void CreateBricks(BrickWall<AiderOfficeReportEntity> wall)
 		{
 			wall.AddBrick ()
-				.EnableActionMenu<ActionAiderOfficeReportViewController0DeleteReport>()
 				.Input ()
 					.Field (x => x.Name)
 				.End ()
