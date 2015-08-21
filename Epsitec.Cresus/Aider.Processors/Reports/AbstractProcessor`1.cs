@@ -39,6 +39,12 @@ namespace Epsitec.Aider.Processors.Reports
 				var participants  = entities.Cast<AiderEventParticipantEntity> ();
 				var reports  = participants.Select (p => p.Event.Report).Distinct ().Cast<T> ();
 				return this.GenerateDocuments (stream, businessContext, settings, reports);
+			} 
+			else if (entities.First ().GetType () == typeof (AiderEventEntity))
+			{
+				var events  = entities.Cast<AiderEventEntity> ();
+				var reports  = events.Select (e => e.Report).Distinct ().Cast<T> ();
+				return this.GenerateDocuments (stream, businessContext, settings, reports);
 			}
 			else
 			{
