@@ -101,6 +101,7 @@ function() {
         columnDefinitions: json.content.columns,
         sorterDefinitions: json.content.sorters,
         labelExportDefinitions: json.content.labelItems,
+        reportExportDefinitions: json.content.reportItems,
         enableCreate: json.content.enableCreate,
         enableDelete: json.content.enableDelete,
         creationViewId: json.content.creationViewId,
@@ -149,7 +150,7 @@ function() {
         };
       }
     },
-    
+
     removeAllFilters: function() {
       if (this.entityList !== null) {
         this.entityList.filters.clearFilters();

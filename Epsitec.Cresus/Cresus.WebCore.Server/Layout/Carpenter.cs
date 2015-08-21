@@ -143,6 +143,7 @@ namespace Epsitec.Cresus.WebCore.Server.Layout
 					displayDatabase.Sorters,
 					displayDatabase.MenuItems,
 					displayDatabase.LabelExportItems,
+					displayDatabase.ReportExportItems,
 					overrideCreate ?? displayDatabase.EnableCreate,
 					overrideDelete ?? displayDatabase.EnableDelete,
 					displayDatabase.CreationViewId,
