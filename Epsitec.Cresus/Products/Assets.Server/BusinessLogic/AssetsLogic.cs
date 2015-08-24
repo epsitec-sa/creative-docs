@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor)
+		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor, bool delta = false)
 		{
 			//	Retourne les champs d'un objet d'immobilisation.
 			int index = 0;
@@ -249,6 +249,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	la valeur comptable.
 					//	Le Guid créé à la volée n'est pas utilisé !
 					yield return new UserField (-1, DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, false, 120, null, null, null, 0, null);
+
+					if (delta)
+					{
+						//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+						//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+						yield return new UserField (-1, DataDescriptions.GetObjectFieldDescription (ObjectField.MainValueDelta), ObjectField.MainValueDelta, FieldType.AmortizedAmount, false, 120, null, null, null, 0, null);
+					}
 				}
 
 				yield return userField;

@@ -651,6 +651,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
+				case ObjectField.MainValueDelta:
 					return FieldType.AmortizedAmount;
 
 				case ObjectField.EntryAmount:
