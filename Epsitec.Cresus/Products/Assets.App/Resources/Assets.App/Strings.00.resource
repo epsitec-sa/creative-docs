@@ -497,7 +497,7 @@
   <data name="Popup.MCH2SummaryReport.SkipHiddenRows" id="KOL">Cache les lignes et les colonnes vides</data>
   <data name="MCH2SummaryType.Direct" id="KPL">Direct (montants cumulés)</data>
   <data name="MCH2SummaryType.IndirectDetailed" id="KQL">Indirect détaillé (montants antérieurs séparés)</data>
-  <data name="ReportParams.MCH2IndirectShort" id="KRL">Indirect compacte</data>
+  <data name="ReportParams.MCH2IndirectShort" id="KRL">Indirect compact</data>
   <data name="MCH2SummaryType.IndirectShort" id="KSL">Indirect compact (montants antérieurs regroupés)</data>
   <data name="AmortizedAmountController.Decrease" id="KTL">Diminution</data>
   <data name="AmortizedAmountController.Increase" id="KUL">Augmentation</data>
