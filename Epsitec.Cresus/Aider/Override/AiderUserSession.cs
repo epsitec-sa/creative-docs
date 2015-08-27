@@ -293,21 +293,29 @@ namespace Epsitec.Aider.Override
 		{
 			var user = this.UserManager.AuthenticatedUser;
 
-			if (user.Office.IsNotNull ())
+			if ((user.Office.IsNotNull ()) ||
+				(user.IsAdmin ()))
 			{
-				var offices = user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName).Distinct ();
-				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.IsInSet (x.OfficeName, offices));
-			}
+				var list = new List<string> ();
 
-			if (user.IsAdmin ())
-			{
-				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));	
-			} 
-			else
-			{
-				var parishPath = user.ParishGroupPathCache;
-				return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, parishPath));
+				list.Add (user.Office.OfficeName);
+				list.AddRange (user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName));
+
+				//	Make sure the user sees at least his own offices, and all those he can
+				//	access through the active scope.
+				
+				var offices = list.Distinct ().ToList ();
+
+				return new LambdaFilter<AiderOfficeManagementEntity> (
+					x => SqlMethods.IsInSet (x.OfficeName, offices) ||
+						 SqlMethods.Like (x.ParishGroupPathCache, pattern));
 			}
+			
+			//	Users who don't have access to an office management entity should only see
+			//	their own parish, independently of the specified extraction pattern.
+			
+			var parishPath = user.ParishGroupPathCache;
+			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, parishPath));
 		}
 
 		private IFilter GetAiderOfficeSenderFilter(AiderOfficeSenderEntity example, string pattern)

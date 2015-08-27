@@ -50,22 +50,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			if (loggedIn)
 			{
 				this.SessionLogin (username);
-				this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (username);
-				this.CoreServer.AuthenticationManager.NotifyChangePasswordIfNeeded (username);
-				return CoreResponse.FormSuccess ();
-			}
-			else
-			{
-				this.SessionLogout ();
 
-				var errors = new Dictionary<string, object> ()
+				if (this.CoreServer.AuthenticationManager.NotifySuccessfulLogin (username))
 				{
-					{ "username" , Res.Strings.IncorrectUsername.ToSimpleText () },
-					{ "password" , Res.Strings.IncorrectPassword.ToSimpleText () },
-				};
-
-				return CoreResponse.FormFailure (errors);
+					this.CoreServer.AuthenticationManager.NotifyChangePasswordIfNeeded (username);
+					return CoreResponse.FormSuccess ();
+				}
 			}
+			
+			this.SessionLogout ();
+
+			var errors = new Dictionary<string, object> ()
+			{
+				{ "username" , Res.Strings.IncorrectUsername.ToSimpleText () },
+				{ "password" , Res.Strings.IncorrectPassword.ToSimpleText () },
+			};
+
+			return CoreResponse.FormFailure (errors);
 		}
 
 
