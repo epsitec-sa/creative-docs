@@ -137,6 +137,7 @@ function() {
             columnDefinitions: databaseDefinition.columns,
             sorterDefinitions: databaseDefinition.sorters,
             labelExportDefinitions: databaseDefinition.labelItems,
+            reportExportDefinitions: databaseDefinition.reportItems,
             menuItems: databaseDefinition.menuItems,
             multiSelect: true
           }

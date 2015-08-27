@@ -26,10 +26,7 @@ namespace Epsitec.Aider.Processors.Reports
 		protected override string GenerateDocument(System.IO.Stream stream, BusinessContext context, AiderOfficeSenderEntity sender, T1 report)
 		{
 			var workerApp = WorkerApp.Current;
-			var userManager = workerApp.UserManager;
-
-			//	Do something with this entity...
-			
+			var userManager = workerApp.UserManager;		
 			var layout = LabelLayout.Sheet_A4_Simple;
 			var doc    = new T2 ();
 			
@@ -40,6 +37,20 @@ namespace Epsitec.Aider.Processors.Reports
 			context.SaveChanges (LockingPolicy.ReleaseLock);
 
 			return report.Name + ".pdf";
+		}
+
+		protected override string GenerateDocuments(System.IO.Stream stream, BusinessContext context, AiderOfficeSenderEntity sender, IEnumerable<T1> reports)
+		{
+			var workerApp = WorkerApp.Current;
+			var userManager = workerApp.UserManager;
+			var layout = LabelLayout.Sheet_A4_Simple;
+			var doc    = new T2 ();
+			doc.Setup (context, sender, layout);
+
+			doc.WriteBatchStream (stream, reports);
+			context.SaveChanges (LockingPolicy.ReleaseLock);
+
+			return "exctraction_registre.zip";
 		}
 	}
 }

@@ -52,12 +52,24 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				}
 			}
 
-			return this.ReportsDescription;
+			var missingYearsReport = this.MissingYearsReport;
+
+			if (string.IsNullOrEmpty (missingYearsReport))  // aucune année manquante ?
+			{
+				//	On retourne juste le rapport sur les écritures générées.
+				return this.ReportsDescription;
+			}
+			else  // il y a une ou plusieurs des années manquantes ?
+			{
+				//	Le rapport sur les écritures générées est complété par celui sur les années manquantes.
+				return string.Concat (this.ReportsDescription, Res.Strings.ExportEntries.MissingYears.Title, missingYearsReport);
+			}
 		}
 
 
 		private string ReportsDescription
 		{
+			//	Retourne un rapport sur les écritures générées.
 			get
 			{
 				if (this.reports.Any ())
@@ -68,6 +80,43 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				else
 				{
 					return Res.Strings.ExportEntries.Description.None.ToString ();
+				}
+			}
+		}
+
+		private string MissingYearsReport
+		{
+			//	Retourne un rapport sur les années pour lesquelles il manque le plan comptable.
+			get
+			{
+				var missingYears = new List<int> ();
+				var entries = this.accessor.Mandat.GetData (BaseType.Entries);
+
+				//	On passe en revue toutes les écritures.
+				foreach (var entry in entries)
+				{
+					var date = ObjectProperties.GetObjectPropertyDate (entry, null, ObjectField.EntryDate);
+
+					if (date.HasValue)
+					{
+						if (!this.accessor.Mandat.AccountsDateRanges.Where (x => x.IsInside (date.Value)).Any ())  // pas de plan comptable cette année ?
+						{
+							if (!missingYears.Contains (date.Value.Year))  // pas encore connu ?
+							{
+								missingYears.Add (date.Value.Year);
+							}
+						}
+					}
+				}
+
+				if (missingYears.Any ())
+				{
+					missingYears.Sort ();  // affiche les années chronologiquement
+					return string.Join ("<br/>", missingYears.Select (x => string.Format (Res.Strings.ExportEntries.MissingYears.One.ToString (), x)));
+				}
+				else
+				{
+					return null;
 				}
 			}
 		}

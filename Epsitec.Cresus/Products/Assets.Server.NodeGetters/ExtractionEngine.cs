@@ -51,22 +51,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					//	Traite le cas des valeurs supplémentaires extraites pour les rapports
 					//	(ObjectField.MCH2Report+n).
 					var eia = this.extractionInstructionsArray.Where (x => x.ResultField == field).FirstOrDefault ();
-
-					foreach (var ei in eia.Array)
-					{
-						if (!ei.IsEmpty)
-						{
-							var x = ExtractionEngine.GetExtractionInstructions (accessor, obj, ei);
-							if (v == null)
-							{
-								v = x;
-							}
-							else
-							{
-								v = v.Merge (x);
-							}
-						}
-					}
+					v = eia.GetSum (accessor, obj, ExtractionEngine.GetExtractionInstructions);
 				}
 				else
 				{
@@ -105,7 +90,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			return null;
 		}
 
-		private static AbstractCumulValue GetExtractionInstructions(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetExtractionInstructions(DataAccessor accessor, DataObject obj, ObjectField field, ExtractionInstructions extractionInstructions)
 		{
 			//	Calcule un montant à extraire des données, selon les instructions ExtractionInstructions.
 			if (obj != null)
@@ -122,7 +107,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 						return ExtractionEngine.GetDeltaSum (accessor, obj, extractionInstructions);
 
 					case ExtractionAmount.UserColumn:
-						return ExtractionEngine.GetUserColumn (accessor, obj, extractionInstructions);
+						return ExtractionEngine.GetUserColumn (accessor, obj, field, extractionInstructions);
 
 					default:
 						throw new System.InvalidOperationException (string.Format ("Unknown ExtractionAmount {0}", extractionInstructions.ExtractionAmount));
@@ -227,12 +212,12 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 		}
 
-		private static AbstractCumulValue GetUserColumn(DataAccessor accessor, DataObject obj, ExtractionInstructions extractionInstructions)
+		private static AbstractCumulValue GetUserColumn(DataAccessor accessor, DataObject obj, ObjectField field, ExtractionInstructions extractionInstructions)
 		{
 			var timestamp = new Timestamp (extractionInstructions.Range.ExcludeTo, 0);
 
 			{
-				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataComputedAmountProperty;
+				var p = obj.GetSyntheticProperty (timestamp, field) as DataComputedAmountProperty;
 
 				if (p != null)
 				{
@@ -241,7 +226,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			{
-				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataDateProperty;
+				var p = obj.GetSyntheticProperty (timestamp, field) as DataDateProperty;
 
 				if (p != null)
 				{
@@ -250,7 +235,7 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 			}
 
 			{
-				var p = obj.GetSyntheticProperty (timestamp, extractionInstructions.ResultField) as DataStringProperty;
+				var p = obj.GetSyntheticProperty (timestamp, field) as DataStringProperty;
 
 				if (p != null)
 				{

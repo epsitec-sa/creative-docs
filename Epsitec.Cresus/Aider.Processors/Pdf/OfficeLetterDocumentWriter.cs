@@ -20,6 +20,10 @@ namespace Epsitec.Aider.Processors.Pdf
 		{
 		}
 
+		public override void WriteBatchStream(System.IO.Stream stream, System.Collections.Generic.IEnumerable<AiderOfficeLetterReportEntity> officeReports)
+		{
+			throw new System.NotImplementedException ();
+		}
 
 		public override void WriteStream(System.IO.Stream stream, AiderOfficeLetterReportEntity letter)
 		{

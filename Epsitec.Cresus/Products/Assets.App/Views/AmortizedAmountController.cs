@@ -146,6 +146,18 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 
 			{
+				int y = AmortizedAmountController.DecreaseLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Decrease.ToString ());
+				this.decreaseTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeDecrease);
+			}
+
+			{
+				int y = AmortizedAmountController.IncreaseLine;
+				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.Increase.ToString ());
+				this.increaseTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeIncrease);
+			}
+
+			{
 				int y = AmortizedAmountController.FinalValueLine;
 				this.CreateLabel (this.lines[y], 100, Res.Strings.AmortizedAmountController.FinalValue.ToString ());
 				this.finalAmountTextField = this.CreateTextField (this.lines[y], AmortizedAmountController.AmountWidth, null, "CHF", this.ChangeFinalAmount);
@@ -418,9 +430,11 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 				if (this.value.HasValue)
 				{
-					this.InitialAmount = this.value.Value.InitialAmount;
-					this.Amortization  = this.value.Value.Amortization;
-					this.FinalAmount   = this.value.Value.FinalAmount;
+					this.InitialAmount =  this.value.Value.InitialAmount;
+					this.Amortization  =  this.value.Value.Amortization;
+					this.Decrease      =  this.value.Value.Amortization;
+					this.Increase      = -this.value.Value.Amortization;
+					this.FinalAmount   =  this.value.Value.FinalAmount;
 					this.traceTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Trace);
 					this.errorTextField.Text = ExpressionSimulationTreeTableFiller.ConvertTraceToSingleLine (this.value.Value.Error);
 
@@ -432,6 +446,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				{
 					this.InitialAmount = null;
 					this.Amortization  = null;
+					this.Decrease      = null;
+					this.Increase      = null;
 					this.FinalAmount   = null;
 					this.traceTextField.Text = null;
 					this.errorTextField.Text = null;
@@ -456,15 +472,22 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				this.UpdateField (this.initialAmountTextField, true);
-				this.UpdateField (this.amortizationTextField, !isFinalEnable);
-				this.UpdateField (this.finalAmountTextField,  !isFinalEnable);
+				bool isDecrease = this.IsDecrease && isFinalEnable && this.InitialAmount.HasValue;
+				bool isIncrease = this.IsIncrease && isFinalEnable && this.InitialAmount.HasValue;
+
+				this.UpdateField (this.initialAmountTextField, isReadOnly: true);
+				this.UpdateField (this.amortizationTextField,  isReadOnly: !isFinalEnable);
+				this.UpdateField (this.decreaseTextField,      isReadOnly: !isDecrease);
+				this.UpdateField (this.increaseTextField,      isReadOnly: !isIncrease);
+				this.UpdateField (this.finalAmountTextField,   isReadOnly: !isFinalEnable);
 				this.unlockButton.Visibility = unlockEnable;
-				this.UpdateField (this.traceTextField, true);
-				this.UpdateField (this.errorTextField, true);
-				this.UpdateField (this.scenarioFieldCombo, false);
+				this.UpdateField (this.traceTextField,         isReadOnly: true);
+				this.UpdateField (this.errorTextField,         isReadOnly: true);
+				this.UpdateField (this.scenarioFieldCombo,     isReadOnly: false);
 
 				this.lines[AmortizedAmountController.AmortizationLine].Visibility = this.IsAmortization;
+				this.lines[AmortizedAmountController.DecreaseLine    ].Visibility = this.IsDecrease;
+				this.lines[AmortizedAmountController.IncreaseLine    ].Visibility = this.IsIncrease;
 				this.lines[AmortizedAmountController.TraceLine       ].Visibility = this.IsAmortizationAuto;
 				this.lines[AmortizedAmountController.ErrorLine       ].Visibility = this.IsAmortizationAuto;
 
@@ -498,7 +521,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.Amortization = this.value.Value.Amortization;
+				this.Amortization =  this.value.Value.Amortization;
+				this.Decrease     =  this.value.Value.Amortization;
+				this.Increase     = -this.value.Value.Amortization;
 			}
 
 			this.OnValueEdited ();
@@ -513,6 +538,32 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.FinalAmount = this.value.Value.FinalAmount;
 			}
 			
+			this.OnValueEdited ();
+		}
+
+		private void ChangeDecrease()
+		{
+			this.value = AmortizedAmount.SetFinalAmount (this.value.Value, this.InitialAmount.GetValueOrDefault () - this.Decrease.GetValueOrDefault ());
+
+			using (this.ignoreChanges.Enter ())
+			{
+				this.FinalAmount =  this.value.Value.FinalAmount;
+				this.Increase    = -this.value.Value.Amortization;
+			}
+
+			this.OnValueEdited ();
+		}
+
+		private void ChangeIncrease()
+		{
+			this.value = AmortizedAmount.SetFinalAmount (this.value.Value, this.InitialAmount.GetValueOrDefault () + this.Increase.GetValueOrDefault ());
+
+			using (this.ignoreChanges.Enter ())
+			{
+				this.FinalAmount = this.value.Value.FinalAmount;
+				this.Decrease    = this.value.Value.Amortization;
+			}
+
 			this.OnValueEdited ();
 		}
 
@@ -541,6 +592,48 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private decimal? Decrease
+		{
+			get
+			{
+				return AmortizedAmountController.GetAmount (this.decreaseTextField);
+			}
+			set
+			{
+				if (this.IsDelta)
+				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Increase qui l'affichera, forcément en positif !
+					AmortizedAmountController.SetPositivAmount (this.decreaseTextField, value);
+				}
+				else
+				{
+					AmortizedAmountController.SetAmount (this.decreaseTextField, value);
+				}
+			}
+		}
+
+		private decimal? Increase
+		{
+			get
+			{
+				return AmortizedAmountController.GetAmount (this.increaseTextField);
+			}
+			set
+			{
+				if (this.IsDelta)
+				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Decrease qui l'affichera, forcément en positif !
+					AmortizedAmountController.SetPositivAmount (this.increaseTextField, value);
+				}
+				else
+				{
+					AmortizedAmountController.SetAmount (this.increaseTextField, value);
+				}
+			}
+		}
+
 		private decimal? FinalAmount
 		{
 			get
@@ -563,6 +656,19 @@ namespace Epsitec.Cresus.Assets.App.Views
 			else
 			{
 				return TypeConverters.ParseAmount (textField.Text);
+			}
+		}
+
+		private static void SetPositivAmount(TextField textField, decimal? value)
+		{
+			if (!value.HasValue || value.Value <= 0)
+			{
+				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+				AmortizedAmountController.SetAmount (textField, null);
+			}
+			else
+			{
+				AmortizedAmountController.SetAmount (textField, value);
 			}
 		}
 
@@ -692,6 +798,39 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 		}
 
+		private bool IsDelta
+		{
+			//	Indique si les champs Diminution/Augmentation sont présents.
+			get
+			{
+				return this.IsDecrease && this.IsIncrease;
+			}
+		}
+
+		private bool IsDecrease
+		{
+			//	Indique si le champ Diminution est présent.
+			get
+			{
+				return this.eventType == EventType.PreInput
+					|| this.eventType == EventType.Input
+					|| this.eventType == EventType.Decrease
+					|| this.eventType == EventType.Adjust;
+			}
+		}
+
+		private bool IsIncrease
+		{
+			//	Indique si le champ Augmentation est présent.
+			get
+			{
+				return this.eventType == EventType.PreInput
+					|| this.eventType == EventType.Input
+					|| this.eventType == EventType.Increase
+					|| this.eventType == EventType.Adjust;
+			}
+		}
+
 		private EntryScenario EntryScenario
 		{
 			get
@@ -783,10 +922,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private const int InitialValueLine = 0;
 		private const int AmortizationLine = 1;
-		private const int FinalValueLine   = 2;
-		private const int TraceLine        = 3;
-		private const int ErrorLine        = 4;
-		private const int LineCount        = 6;
+		private const int DecreaseLine     = 2;
+		private const int IncreaseLine     = 3;
+		private const int FinalValueLine   = 4;
+		private const int TraceLine        = 5;
+		private const int ErrorLine        = 6;
+		private const int LineCount        = 8;
 
 		private const int AmountWidth = 80;
 
@@ -804,6 +945,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 		private TextField						initialAmountTextField;
 		private TextField						amortizationTextField;
+		private TextField						decreaseTextField;
+		private TextField						increaseTextField;
 		private TextField						finalAmountTextField;
 		private Button							unlockButton;
 		private TextField						traceTextField;

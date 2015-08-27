@@ -43,6 +43,18 @@ function() {
         return this.texts.exportLabelLayout;
       },
 
+      getExportReport: function() {
+        return this.texts.exportReport;
+      },
+
+      getExportReportText: function() {
+        return this.texts.exportReportText;
+      },
+
+      getExportReportLabel: function() {
+        return this.texts.exportReportLabel;
+      },
+
       getSearchLabel: function() {
         return this.texts.searchLabel;
       },

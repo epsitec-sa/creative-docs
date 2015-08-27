@@ -82,4 +82,5 @@
   <data name="Enum.ObjectField.AccountPreInputCredit" id="KM2">Crédit finan. préa.</data>
   <data name="Enum.ObjectField.AccountPreInputDebit" id="KN2">Débit finan. préa.</data>
   <data name="Enum.ObjectField.AccountPreInputVatCode" id="KO2">TVA finan. préa.</data>
+  <data name="Enum.ObjectField.MainValueDelta" id="KP2">Différence</data>
 </bundle>

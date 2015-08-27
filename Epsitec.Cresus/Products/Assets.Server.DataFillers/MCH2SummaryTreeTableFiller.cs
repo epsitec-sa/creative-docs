@@ -287,9 +287,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var userColumn = this.userColumns[(column-Column.User)];
 
-				return new ExtractionInstructionsArray (
-					new ExtractionInstructions (userColumn.Field,
-						ExtractionAmount.UserColumn,
+				return new ExtractionInstructionsArray (userColumn.Field,
+					new ExtractionInstructions (ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
 						false)
 						);
@@ -302,157 +301,142 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.InitialState:
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état avant
 					//	le premier janvier, donc au 31.12.2013 23:59:59.
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (
 						ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false)
 						);
 
 				case Column.PreInputs:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.PreInput)
 						);
 
 				case Column.Inputs:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Input)
 						);
 
 				case Column.ReplacementValues:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.LastFiltered,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false,
 						EventType.Input)
 						);
 
 				case Column.PostDecreases:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Decrease)
 						);
 
 				case Column.PostIncreases:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Increase)
 						);
 
 				case Column.PostAdjusts:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Adjust)
 						);
 
 				case Column.PostOutputs:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Output)
 						);
 
 				case Column.PostAmortizations:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl)
 						);
 
 				case Column.PostSummaries:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.LastFiltered,
+					return new ExtractionInstructionsArray (field,
+						// Somme de Column.ReplacementValues...
+						new ExtractionInstructions (ExtractionAmount.LastFiltered,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false,
 						EventType.Input),
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+						// ...et Column.PostDecreases, Column.PostIncreases, Column.PostAdjusts et Column.PostOutputs
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output)
 						);
 
 				case Column.Decreases:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Decrease)
 						);
 
 				case Column.Increases:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Increase)
 						);
 
 				case Column.Adjusts:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Adjust)
 						);
 
 				case Column.Outputs:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.Output)
 						);
 
 				case Column.AmortizationsAuto:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.AmortizationAuto, EventType.AmortizationPreview)
 						);
 
 				case Column.AmortizationsExtra:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.AmortizationExtra)
 						);
 
 				case Column.AmortizationsSuppl:
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.DeltaSum,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
 						EventType.AmortizationSuppl)
@@ -462,15 +446,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					//	Avec une période du 01.01.2014 au 31.12.2014, on cherche l'état après
 					//	le 31 décembre. Comme la date "au" est exclue dans un DateRange, la date
 					//	ExcludeTo vaut 01.01.2015. On cherche donc l'état au 31.12.2014 23:59:59.
-					return new ExtractionInstructionsArray (
-						new ExtractionInstructions (field,
-						ExtractionAmount.StateAt,
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.StateAt,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
 						false)
 						);
 
 				default:
-					return new ExtractionInstructionsArray (ExtractionInstructions.Empty);
+					return new ExtractionInstructionsArray (ObjectField.Unknown, ExtractionInstructions.Empty);
 			}
 		}
 

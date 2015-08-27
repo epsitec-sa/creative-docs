@@ -195,7 +195,7 @@
   <data name="EditorPages.ColorsExplanation.Defined.Tooltip" id="KS8">Cette couleur indique un champ défini par cet événement</data>
   <data name="EditorPages.ColorsExplanation.Readonly.Description" id="KT8">Ne peut pas être défini</data>
   <data name="EditorPages.ColorsExplanation.Readonly.Tooltip" id="KU8">Cette couleur indique un champ ne pouvant pas&lt;br/&gt;être défini par cet événement</data>
-  <data name="EditorPages.ColorsExplanation.Result.Description" id="KV8">Résultat d'un calcul</data>
+  <data name="EditorPages.ColorsExplanation.Result.Description" id="KV8">Non modifiable</data>
   <data name="EditorPages.ColorsExplanation.Result.Tooltip" id="K09">Cette couleur indique le résultat d'un calcul&lt;br/&gt;ne pouvant pas être modifié</data>
   <data name="EditorPages.ColorsExplanation.Error.Description" id="K19">Erreur</data>
   <data name="EditorPages.ColorsExplanation.Error.Tooltip" id="K29">Cette couleur indique un champ incorrectement rempli</data>
@@ -499,4 +499,6 @@
   <data name="MCH2SummaryType.IndirectDetailed" id="KQL">Indirect détaillé (montants antérieurs séparés)</data>
   <data name="ReportParams.MCH2IndirectShort" id="KRL">Indirect compacte</data>
   <data name="MCH2SummaryType.IndirectShort" id="KSL">Indirect compact (montants antérieurs regroupés)</data>
+  <data name="AmortizedAmountController.Decrease" id="KTL">Diminution</data>
+  <data name="AmortizedAmountController.Increase" id="KUL">Augmentation</data>
 </bundle>

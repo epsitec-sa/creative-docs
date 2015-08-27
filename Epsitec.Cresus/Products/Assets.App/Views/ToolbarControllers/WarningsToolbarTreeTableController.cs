@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Met à jour l'interface qui remplace le TreeTable par une grande icône :-)
 			//	et un texte montrant que tout est parfait.
-			var fullList = WarningsLogic.GetWarnings (this.accessor);
+			var fullList = WarningsLogic.GetWarnings (this.accessor, LocalSettings.ShowAccountsWarnings);
 			var visibleList = fullList.Where (x => !LocalSettings.IsHiddenWarnings (x.PersistantUniqueId));
 			int hiddenCount = fullList.Count - visibleList.Count ();
 
@@ -398,6 +398,17 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.OnUpdateView ();
 		}
 
+		[Command (Res.CommandIds.Warnings.ShowAccounts)]
+		protected void OnShowAccounts()
+		{
+			LocalSettings.ShowAccountsWarnings = !LocalSettings.ShowAccountsWarnings;
+
+			this.SelectedRow = -1;
+			this.accessor.WarningsDirty = true;
+			this.UpdateData ();
+			this.OnUpdateView ();
+		}
+
 		[Command (Res.CommandIds.Warnings.Deselect)]
 		protected void OnDeselect()
 		{
@@ -434,6 +445,8 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Warnings.ShowAll,  LocalSettings.HasHiddenWarnings ());
 			this.toolbar.SetEnable (Res.Commands.Warnings.Deselect, this.VisibleSelectedRow != -1);
 			this.toolbar.SetEnable (Res.Commands.Warnings.Goto,     this.VisibleSelectedRow != -1);
+
+			this.toolbar.SetActiveState (Res.Commands.Warnings.ShowAccounts, LocalSettings.ShowAccountsWarnings);
 		}
 
 

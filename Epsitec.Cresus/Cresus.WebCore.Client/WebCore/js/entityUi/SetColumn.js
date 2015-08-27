@@ -52,6 +52,7 @@ function() {
           columnDefinitions: options.displayDatabase.columns,
           sorterDefinitions: options.displayDatabase.sorters,
           labelExportDefinitions: options.displayDatabase.labelItems,
+          reportExportDefinitions: options.displayDatabase.reportItems,
           enableCreate: options.displayDatabase.enableCreate,
           enableDelete: options.displayDatabase.enableDelete,
           pickDatabaseDefinition: options.pickDatabase,

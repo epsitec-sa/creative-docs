@@ -24,27 +24,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					(nextEvent.Type == EventType.PreInput ||
 					 nextEvent.Type == EventType.Input))
 				{
-					//	Copie la valeur comptable.
+					//	Copie absolument tous les champs de l'événement suivant.
+					foreach (var nextProperty in nextEvent.Properties)
 					{
-						var p = nextEvent.GetProperty (ObjectField.MainValue);
+						var property = AbstractDataProperty.Copy (nextProperty);
 
-						if (p != null)
+						if (property.Field == ObjectField.MainValue)
 						{
-							e.AddProperty (p);
+							//	Le champ ObjectField.MainValue (valeur comptable) détermine la nature de l'écriture
+							//	qui sera passée. Il faut modifier cette nature, pour passer de EntryScenario.Input
+							//	à EntryScenario.PreInput.
+							var amortizedAmountProperty = property as DataAmortizedAmountProperty;
+							var amortizedAmount = AmortizedAmount.SetEntryScenario (amortizedAmountProperty.Value, EntryScenario.PreInput);
+
+							property = new DataAmortizedAmountProperty (ObjectField.MainValue, amortizedAmount);
 						}
-					}
 
-					//	Copie tous les champs définis par l'utilisateur (Nom, Numéro, etc.).
-					var fields = accessor.UserFieldsAccessor.GetUserFields (BaseType.AssetsUserFields);
-
-					foreach (var field in fields)
-					{
-						var p = nextEvent.GetProperty (field.Field);
-
-						if (p != null)
-						{
-							e.AddProperty (p);
-						}
+						e.AddProperty (property);
 					}
 				}
 			}
@@ -240,7 +236,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor)
+		public static IEnumerable<UserField> GetUserFields(DataAccessor accessor, bool delta = false)
 		{
 			//	Retourne les champs d'un objet d'immobilisation.
 			int index = 0;
@@ -253,6 +249,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					//	la valeur comptable.
 					//	Le Guid créé à la volée n'est pas utilisé !
 					yield return new UserField (-1, DataDescriptions.GetObjectFieldDescription (ObjectField.MainValue), ObjectField.MainValue, FieldType.AmortizedAmount, false, 120, null, null, null, 0, null);
+
+					if (delta)
+					{
+						//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+						//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+						yield return new UserField (-1, DataDescriptions.GetObjectFieldDescription (ObjectField.MainValueDelta), ObjectField.MainValueDelta, FieldType.AmortizedAmount, false, 120, null, null, null, 0, null);
+					}
 				}
 
 				yield return userField;

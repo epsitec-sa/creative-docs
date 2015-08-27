@@ -32,7 +32,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 			System.Func<UserManager, bool> function = userManager =>
 			{
 				var user = userManager.FindUser (userName);
+
+				if (user == null)
+				{
+					return false;
+				}
+
 				userManager.NotifySusccessfulLogin (user);
+				
 				return true;
 			};
 

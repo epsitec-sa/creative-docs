@@ -77,13 +77,13 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetError(DataAccessor accessor, DataObject asset, DataEvent e, ObjectField field)
+		public static string GetError(DataAccessor accessor, DataObject asset, DataEvent e, ObjectField field, bool showAccounts)
 		{
 			//	Retourne l'éventuelle erreur liée à un champ d'un événement d'un objet d'immobilisation.
 			var warnings = new List<Warning> ();
 
 			//	Cherche l'ensemble des erreurs pour l'événement de l'objet.
-			WarningsLogic.CheckAsset (warnings, accessor, asset, e);
+			WarningsLogic.CheckAsset (warnings, accessor, asset, e, showAccounts);
 
 			//	On s'intéresse uniquement à la première erreur qui concerne le champ.
 			var warning = warnings.Where (x => x.Field == field).FirstOrDefault ();
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static List<Warning> GetWarnings(DataAccessor accessor)
+		public static List<Warning> GetWarnings(DataAccessor accessor, bool showAccounts)
 		{
 			//	Retourne la liste de tous les warnings actuels.
 			var warnings = new List<Warning> ();
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				foreach (var e in asset.Events)
 				{
-					WarningsLogic.CheckAsset (warnings, accessor, asset, e);
+					WarningsLogic.CheckAsset (warnings, accessor, asset, e, showAccounts);
 				}
 			}
 
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return warnings;
 		}
 
-		private static void CheckAsset(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e)
+		private static void CheckAsset(List<Warning> warnings, DataAccessor accessor, DataObject asset, DataEvent e, bool showAccounts)
 		{
 			//	Cherche toutes les erreurs liées à un événement d'un objet d'immobilisation.
 			if (e.Type == EventType.PreInput ||
@@ -223,16 +223,22 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				ObjectField.MethodGuid,
 				ObjectField.Periodicity);
 
-				//	On cherche les comptes indéfinis.
-				bool skip = false;
-				foreach (var field in DataAccessor.AccountFields)
+				if (showAccounts)
 				{
-					WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, field, ref skip);
+					//	On cherche les comptes indéfinis.
+					bool skip = false;
+					foreach (var field in DataAccessor.AccountFields)
+					{
+						WarningsLogic.CheckAssetAccount (warnings, accessor, asset, e, field, ref skip);
+					}
 				}
 			}
 
-			//	On cherche les comptes incorrects dans les écritures.
-			WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
+			if (showAccounts)
+			{
+				//	On cherche les comptes incorrects dans les écritures.
+				WarningsLogic.CheckAssetEntry (warnings, accessor, asset, e);
+			}
 
 			//	On cherche les groupes avec des ratios dont la somme n'est pas 100%.
 			var guid = GroupsGuidRatioLogic.GetPercentErrorGroupGuid (accessor, e);

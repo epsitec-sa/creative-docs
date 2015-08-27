@@ -159,6 +159,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public static string ResolveRegitryName(Enumerations.EventType type)
+		{
+			switch (type)
+			{
+				case Enumerations.EventType.Baptism:
+					return Res.Commands.Base.ShowAiderEventBaptims.Caption.DefaultLabel;
+				case Enumerations.EventType.Blessing:
+					return Res.Commands.Base.ShowAiderEventBlessing.Caption.DefaultLabel;
+				case Enumerations.EventType.CelebrationRegisteredPartners:
+					return Res.Commands.Base.ShowAiderEventCelebrationRegisteredPartners.Caption.DefaultLabel;
+				case Enumerations.EventType.Confirmation:
+					return Res.Commands.Base.ShowAiderEventConfirmation.Caption.DefaultLabel;
+				case Enumerations.EventType.EndOfCatechism:
+					return Res.Commands.Base.ShowAiderEventEndOfCatechism.Caption.DefaultLabel;
+				case Enumerations.EventType.FuneralService:
+					return Res.Commands.Base.ShowAiderEventFuneralService.Caption.DefaultLabel;
+				case Enumerations.EventType.Marriage:
+					return Res.Commands.Base.ShowAiderEventMarriage.Caption.DefaultLabel;
+				case Enumerations.EventType.None:
+				default:
+					return "";
+			}
+		}
+
 		public string GetRegitryActName()
 		{
 			switch (this.Type)

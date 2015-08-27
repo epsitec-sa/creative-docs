@@ -6,6 +6,7 @@ using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Assets.App.Helpers;
+using Epsitec.Cresus.Assets.App.Settings;
 using Epsitec.Cresus.Assets.App.Views.EditorPages;
 using Epsitec.Cresus.Assets.App.Views.Editors;
 using Epsitec.Cresus.Assets.App.Widgets;
@@ -416,7 +417,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				var e = asset.GetEvent (timestamp.Value);
 				if (e != null)
 				{
-					return WarningsLogic.GetError (this.accessor, asset, e, field);
+					return WarningsLogic.GetError (this.accessor, asset, e, field, LocalSettings.ShowAccountsWarnings);
 				}
 			}
 

@@ -8,4 +8,6 @@
   <data name="ExportEntriesReport.Description.Summary" id="K4">Du {0} au {1} — {2} — {3}</data>
   <data name="ExportEntriesReport.Description.Many" id="K5">{0} écritures</data>
   <data name="ExportEntriesReport.Description.Same" id="K6">Aucun changement</data>
+  <data name="ExportEntries.MissingYears.Title" id="K7">&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;Les problèmes suivants ont été détectés:&lt;br/&gt;&lt;br/&gt;</data>
+  <data name="ExportEntries.MissingYears.One" id="K8">Pas de plan comptable pour l'année {0}</data>
 </bundle>
