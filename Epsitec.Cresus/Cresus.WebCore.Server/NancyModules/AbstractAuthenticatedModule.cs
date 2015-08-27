@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -16,8 +16,6 @@ using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-
-
 	/// <summary>
 	/// This is the base class for all modules that requires the user to be logged in. It is thus
 	/// the base class of all modules except the LoginModule. It adds checks to ensure that the
@@ -59,19 +57,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			this.CoreServer.CoreWorkerQueue.Enqueue (task.Id, task.Username, task.SessionId, action);
 		}
 
-		protected CoreJob GetJob(string jobId)
+		protected CoreJob FindJob(string jobId)
 		{
-			return this.CoreServer.Jobs[jobId];
+			CoreJob job;
+			this.CoreServer.Jobs.TryGetValue (jobId, out job);
+			return job;
 		}
 
-		protected IEnumerable<CoreJob> GetJobs()
+		protected ICollection<CoreJob> GetJobs()
 		{
-			return this.CoreServer.Jobs.Select (j => j.Value);
+			return this.CoreServer.Jobs.Values;
 		}
 
-		protected bool RemoveJob(string jobId)
+		private bool RemoveJob(string jobId)
 		{
-			var job = this.GetJob (jobId);
+			var job = this.FindJob (jobId);
+
+			if (job == null)
+			{
+				return false;
+			}
+
 			if (job.Status == CoreJobStatus.Waiting)
 			{
 				this.CancelJob (job);
@@ -83,14 +89,33 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				CoreJob removedJob;
 				return this.CoreServer.Jobs.TryRemove (jobId, out removedJob);
 			}
+
 			return false;
 		}
 
-		protected void CancelJob(CoreJob job)
+		protected bool RemoveJob(CoreJob job)
 		{
-			job.Cancel ();			
+			if (job == null)
+			{
+				return false;
+			}
+			else
+			{
+				return this.RemoveJob (job.Id);
+			}
+		}
+
+		protected bool CancelJob(CoreJob job)
+		{
+			if (job == null)
+			{
+				return false;
+			}
+			
+			job.Cancel ();
 			this.CoreServer.CoreWorkerQueue.Cancel (job.Id);
-			this.RemoveJob (job.Id);
+			
+			return this.RemoveJob (job.Id);
 		}
 
 		private Response Execute(System.Func<CoreWorkerPool, string, string, Response> function)
