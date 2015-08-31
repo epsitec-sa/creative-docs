@@ -67,7 +67,9 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string RootGuid = "RootGuid";
 
 		public const string SaveMandatMode = "SaveMandatMode";
+		public const string SkipHiddenRows = "SkipHiddenRows";
 		public const string SoftwareLanguage = "SoftwareLanguage";
+		public const string SummaryType = "SummaryType";
 
 		public const string Timestamp = "Timestamp";
 		public const string Type = "Type";

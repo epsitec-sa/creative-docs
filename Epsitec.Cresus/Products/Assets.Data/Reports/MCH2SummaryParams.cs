@@ -50,6 +50,16 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 							s = reader.ReadElementContentAsString ();
 							this.FilterGuid = s.ParseGuid ();
 							break;
+
+						case X.SummaryType:
+							s = reader.ReadElementContentAsString ();
+							this.SummaryType = s.ParseType<MCH2SummaryType> ();
+							break;
+
+						case X.SkipHiddenRows:
+							s = reader.ReadElementContentAsString ();
+							this.SkipHiddenRows = s.ParseBool ();
+							break;
 					}
 				}
 				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
@@ -126,6 +136,8 @@ namespace Epsitec.Cresus.Assets.Data.Reports
 			}
 
 			writer.WriteElementString (X.FilterGuid, this.FilterGuid.ToStringIO ());
+			writer.WriteElementString (X.SummaryType, this.SummaryType.ToStringIO ());
+			writer.WriteElementString (X.SkipHiddenRows, this.SkipHiddenRows.ToStringIO ());
 
 			writer.WriteEndElement ();
 		}
