@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case Column.ReplacementValues:
 					return new ExtractionInstructionsArray (field,
 						new ExtractionInstructions (ExtractionAmount.LastFiltered,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
 						EventType.Input)
 						);
@@ -374,12 +374,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 				case Column.PostSummaries:
 					return new ExtractionInstructionsArray (field,
-						// Somme de Column.ReplacementValues...
-						new ExtractionInstructions (ExtractionAmount.LastFiltered,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
-						false,
-						EventType.Input),
-						// ...et Column.PostDecreases, Column.PostIncreases, Column.PostAdjusts et Column.PostOutputs
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
@@ -725,6 +719,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						yield return Column.Name;
 						yield return Column.PreInputs;
 
+						yield return Column.ReplacementValues;
+						yield return Column.Inputs;
 						yield return Column.PostSummaries;
 						yield return Column.PostAmortizations;
 
@@ -744,6 +740,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						yield return Column.PreInputs;
 
 						yield return Column.ReplacementValues;
+						yield return Column.Inputs;
 						yield return Column.PostDecreases;
 						yield return Column.PostIncreases;
 						yield return Column.PostAdjusts;
