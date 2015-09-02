@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructionsArray (userColumn.Field,
 					new ExtractionInstructions (ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						false)
+						false, null, null)
 						);
 			}
 
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.PreInput)
+						new EventType[] { EventType.PreInput })
 						);
 
 				case Column.ReplacementValues:
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.LastFiltered,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Input)
+						new EventType[] { EventType.Input })
 						);
 
 				case Column.Inputs:
@@ -329,15 +329,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Input)
+						new EventType[] { EventType.Input })
 						);
 
 				case Column.PostPreInputs:
+					//	Si la période contient un événement d'entrée Input, il faut considérer les
+					//	financements préalables comme nuls.
 					return new ExtractionInstructionsArray (field,
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.PreInput)
+						filteredEventTypes: new EventType[] { EventType.PreInput },
+						stoppedEventTypes:  new EventType[] { EventType.Input })
 						);
 
 				case Column.PostDecreases:
@@ -345,7 +348,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Decrease)
+						new EventType[] { EventType.Decrease })
 						);
 
 				case Column.PostIncreases:
@@ -353,7 +356,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Increase)
+						new EventType[] { EventType.Increase })
 						);
 
 				case Column.PostAdjusts:
@@ -361,7 +364,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Adjust)
+						new EventType[] { EventType.Adjust })
 						);
 
 				case Column.PostOutputs:
@@ -369,7 +372,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Output)
+						new EventType[] { EventType.Output })
 						);
 
 				case Column.PostAmortizations:
@@ -377,7 +380,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl)
+						new EventType[] { EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl })
 						);
 
 				case Column.PostSummaries:
@@ -385,7 +388,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output)
+						new EventType[] { EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output })
 						);
 
 				case Column.Decreases:
@@ -393,7 +396,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Decrease)
+						new EventType[] { EventType.Decrease })
 						);
 
 				case Column.Increases:
@@ -401,7 +404,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Increase)
+						new EventType[] { EventType.Increase })
 						);
 
 				case Column.Adjusts:
@@ -409,7 +412,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Adjust)
+						new EventType[] { EventType.Adjust })
 						);
 
 				case Column.Outputs:
@@ -417,7 +420,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Output)
+						new EventType[] { EventType.Output })
 						);
 
 				case Column.AmortizationsAuto:
@@ -425,7 +428,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationAuto, EventType.AmortizationPreview)
+						new EventType[] { EventType.AmortizationAuto, EventType.AmortizationPreview })
 						);
 
 				case Column.AmortizationsExtra:
@@ -433,7 +436,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationExtra)
+						new EventType[] { EventType.AmortizationExtra })
 						);
 
 				case Column.AmortizationsSuppl:
@@ -441,7 +444,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationSuppl)
+						new EventType[] { EventType.AmortizationSuppl })
 						);
 
 				case Column.FinalState:
