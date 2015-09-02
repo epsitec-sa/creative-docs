@@ -173,6 +173,18 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
+						//	Si on cherche les financements préalables PreInput, et que la période contient un événement
+						//	d'entrée Input, il faut considérer les financements préalables comme nuls.
+						//	C'est une exception qu'il ne me plait pas de programmer ici...
+						//	...en attendant un éventuel refactoring !
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, EventType.PreInput) &&
+							e.Type == EventType.Input &&
+							extractionInstructions.Range.IsInside (e.Timestamp.Date))
+						{
+							sum = null;
+							break;
+						}
+
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
