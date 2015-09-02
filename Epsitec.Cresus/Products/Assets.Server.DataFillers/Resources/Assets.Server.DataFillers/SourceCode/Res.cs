@@ -572,6 +572,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 							}
 						}
 						
+						public static class PostPreInputs
+						{
+							//	designer:str/KUKU301
+							public static global::Epsitec.Common.Types.FormattedText Text
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544446));
+								}
+							}
+							//	designer:str/KUKV301
+							public static global::Epsitec.Common.Types.FormattedText Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544447));
+								}
+							}
+						}
+						
 						public static class PostSummaries
 						{
 							//	designer:str/KUKR301
@@ -1621,6 +1641,26 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 								get
 								{
 									return global::Epsitec.Common.Support.Druid.FromFieldId (335544442);
+								}
+							}
+						}
+						
+						public static class PostPreInputs
+						{
+							//	designer:str/KUKU301
+							public static global::Epsitec.Common.Support.Druid Text
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544446);
+								}
+							}
+							//	designer:str/KUKV301
+							public static global::Epsitec.Common.Support.Druid Tooltip
+							{
+								get
+								{
+									return global::Epsitec.Common.Support.Druid.FromFieldId (335544447);
 								}
 							}
 						}

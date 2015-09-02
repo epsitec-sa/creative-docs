@@ -93,8 +93,8 @@
   <data name="Enum.MCH2Summary.Column.Increases.Tooltip" id="KC3">Revalorisations (augmentations) durant la période &amp;lt;RANGE&amp;gt;</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Text" id="KD3">Financements</data>
   <data name="Enum.MCH2Summary.Column.PreInputs.Tooltip" id="KE3">Entrées de financement préalable durant la période &amp;lt;RANGE&amp;gt;</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Valeurs d'acquisitions avant le &amp;lt;INITIAL&amp;gt;</data>
-  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Acquisition</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Tooltip" id="KF3">Acquisitions antérieures au &amp;lt;INITIAL&amp;gt;</data>
+  <data name="Enum.MCH2Summary.Column.ReplacementValues.Text" id="KG3">Acquisitions ant.</data>
   <data name="Enum.MCH2Summary.Column.PostAdjusts.Text" id="KH3">Correct. ant.</data>
   <data name="Enum.MCH2Summary.Column.PostAdjusts.Tooltip" id="KI3">Corrections antérieures au &amp;lt;INITIAL&amp;gt;</data>
   <data name="Enum.MCH2Summary.Column.PostDecreases.Tooltip" id="KJ3">Réévaluations (diminutions) antérieures au &amp;lt;INITIAL&amp;gt;</data>
@@ -105,7 +105,9 @@
   <data name="Enum.MCH2Summary.Column.PostIncreases.Tooltip" id="KO3">Revalorisations (augmentations) antérieures au &amp;lt;INITIAL&amp;gt;</data>
   <data name="Enum.MCH2Summary.Column.PostOutputs.Text" id="KP3">Sorties ant.</data>
   <data name="Enum.MCH2Summary.Column.PostOutputs.Tooltip" id="KQ3">Sorties antérieures au &amp;lt;INITIAL&amp;gt;</data>
-  <data name="Enum.MCH2Summary.Column.PostSummaries.Text" id="KR3">Val. antérieures</data>
+  <data name="Enum.MCH2Summary.Column.PostSummaries.Text" id="KR3">Valeurs ant.</data>
   <data name="Enum.MCH2Summary.Column.PostSummaries.Tooltip" id="KS3">Valeurs antérieures au &amp;lt;INITIAL&amp;gt;</data>
   <data name="MCH2SummaryTreeTableFiller.FromTo" id="KT3">du {0} au {1}</data>
+  <data name="Enum.MCH2Summary.Column.PostPreInputs.Text" id="KU3">Financ. ant.</data>
+  <data name="Enum.MCH2Summary.Column.PostPreInputs.Tooltip" id="KV3">Entrées de financement préalable antérieures au &amp;lt;INITIAL&amp;gt;</data>
 </bundle>

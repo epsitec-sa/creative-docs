@@ -332,6 +332,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						EventType.Input)
 						);
 
+				case Column.PostPreInputs:
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						EventType.PreInput)
+						);
+
 				case Column.PostDecreases:
 					return new ExtractionInstructionsArray (field,
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
@@ -524,6 +532,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						text = Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
 						break;
 
+					case Column.PostPreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostPreInputs.Text.ToString ();
+						break;
+
 					case Column.PostAdjusts:
 						text = Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Text.ToString ();
 						break;
@@ -613,6 +625,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					case Column.Inputs:
 						text = Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
+						break;
+
+					case Column.PostPreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostPreInputs.Tooltip.ToString ();
 						break;
 
 					case Column.ReplacementValues:
@@ -834,13 +850,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					case MCH2SummaryType.IndirectShort:
 						yield return Column.Name;
-						yield return Column.PreInputs;
 
+						yield return Column.PostPreInputs;
 						yield return Column.ReplacementValues;
-						yield return Column.Inputs;
 						yield return Column.PostSummaries;
 						yield return Column.PostAmortizations;
 
+						yield return Column.PreInputs;
+						yield return Column.Inputs;
 						yield return Column.Decreases;
 						yield return Column.Increases;
 						yield return Column.Adjusts;
@@ -854,16 +871,17 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					case MCH2SummaryType.IndirectDetailed:
 						yield return Column.Name;
-						yield return Column.PreInputs;
 
+						yield return Column.PostPreInputs;
 						yield return Column.ReplacementValues;
-						yield return Column.Inputs;
 						yield return Column.PostDecreases;
 						yield return Column.PostIncreases;
 						yield return Column.PostAdjusts;
 						yield return Column.PostOutputs;
 						yield return Column.PostAmortizations;
 
+						yield return Column.PreInputs;
+						yield return Column.Inputs;
 						yield return Column.Decreases;
 						yield return Column.Increases;
 						yield return Column.Adjusts;
@@ -917,6 +935,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PreInputs,
 			Inputs,
 			ReplacementValues,
+			PostPreInputs,
 			PostAdjusts,
 			PostDecreases,
 			PostIncreases,
