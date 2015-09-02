@@ -820,6 +820,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544352));
 					}
 				}
+				//	designer:str/KUKT301
+				public static global::Epsitec.Common.Types.FormattedText FromTo
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.DataFillers.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544445));
+					}
+				}
 			}
 			
 			public static class SingleAccountTreeTableFiller
@@ -1863,6 +1871,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544352);
+					}
+				}
+				//	designer:str/KUKT301
+				public static global::Epsitec.Common.Support.Druid FromTo
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544445);
 					}
 				}
 			}
