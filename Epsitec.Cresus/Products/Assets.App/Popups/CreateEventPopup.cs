@@ -347,7 +347,17 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							{
 								//	Pose la question de confirmation
 								//	"Voulez-vous supprimer les 7 événements postérieurs au jeudi 31 décembre 2015 ?"
-								string question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.ToString (), n.ToString (), createDate.Value.ToFull ());
+								string question;
+
+								if (n == 1)
+								{
+									question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.One.ToString (), createDate.Value.ToFull ());
+								}
+								else
+								{
+									question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.Many.ToString (), n.ToString (), createDate.Value.ToFull ());
+								}
+
 								YesNoPopup.Show (target, question, delegate
 								{
 									action (createDate.Value, type);
