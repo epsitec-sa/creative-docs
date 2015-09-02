@@ -501,4 +501,5 @@
   <data name="MCH2SummaryType.IndirectShort" id="KSL">Indirect compact (montants antérieurs regroupés)</data>
   <data name="AmortizedAmountController.Decrease" id="KTL">Diminution</data>
   <data name="AmortizedAmountController.Increase" id="KUL">Augmentation</data>
+  <data name="Popup.CreateEvent.RemovePostOutput" id="KVL">Voulez-vous supprimer les {0} événements postérieurs au {1} ?</data>
 </bundle>

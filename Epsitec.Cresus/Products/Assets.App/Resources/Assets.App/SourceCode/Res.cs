@@ -4017,6 +4017,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class CreateEvent
 				{
+					//	designer:str/JUKVL01
+					public static global::Epsitec.Common.Types.FormattedText RemovePostOutput
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545023));
+						}
+					}
 					//	designer:str/JUKO101
 					public static global::Epsitec.Common.Types.FormattedText Title
 					{
@@ -8794,6 +8802,14 @@ namespace Epsitec.Cresus.Assets.App
 				
 				public static class CreateEvent
 				{
+					//	designer:str/JUKVL01
+					public static global::Epsitec.Common.Support.Druid RemovePostOutput
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545023);
+						}
+					}
 					//	designer:str/JUKO101
 					public static global::Epsitec.Common.Support.Druid Title
 					{

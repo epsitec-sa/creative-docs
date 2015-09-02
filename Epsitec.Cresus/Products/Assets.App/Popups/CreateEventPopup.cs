@@ -345,7 +345,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 							int n = AssetCalculator.GetPostCount (obj, new Timestamp (createDate.Value, 0));
 							if (n > 0)
 							{
-								string question = string.Format ("Voulez-vous supprimer les {0} événements postérieurs au {1} ?", n.ToString (), createDate.Value.ToFull ());
+								//	Pose la question de confirmation
+								//	"Voulez-vous supprimer les 7 événements postérieurs au jeudi 31 décembre 2015 ?"
+								string question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.ToString (), n.ToString (), createDate.Value.ToFull ());
 								YesNoPopup.Show (target, question, delegate
 								{
 									action (createDate.Value, type);
