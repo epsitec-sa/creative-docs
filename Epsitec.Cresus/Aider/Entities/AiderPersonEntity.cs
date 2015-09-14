@@ -352,7 +352,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public void RemoveFromHousehold(BusinessContext context, AiderHouseholdEntity household)
+		public void RemoveFromThisHousehold(BusinessContext context, AiderHouseholdEntity household)
 		{
 			if (household.IsNull ())
 			{

@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var person    = this.AdditionalEntity;
 			var household = this.Entity.Household;
 
-			person.RemoveFromHousehold (context, household);
+			person.RemoveFromThisHousehold (context, household);
 		}
 	}
 }
