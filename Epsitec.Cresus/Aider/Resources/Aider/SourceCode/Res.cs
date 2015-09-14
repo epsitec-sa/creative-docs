@@ -1632,7 +1632,7 @@ namespace Epsitec.Aider
 						}
 					}
 					//	designer:cap/LVO083
-					public static global::Epsitec.Common.Types.Caption ByHouseholdUsingParticipant
+					public static global::Epsitec.Common.Types.Caption ByHouseholdUsingParticipants
 					{
 						get
 						{

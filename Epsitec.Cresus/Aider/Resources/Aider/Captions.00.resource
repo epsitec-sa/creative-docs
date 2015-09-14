@@ -843,6 +843,6 @@
   <data name="Fld.AiderEventParticipant.Confession" id="OS73">&lt;s:data id="_0" f:Name="Confession" f:Labels="{Collection {Text 'Confession'}}" /&gt;</data>
   <data name="Val.Enum.MailingGroupMode.ByContact" id="OU73">&lt;s:data id="_0" f:Name="ByContact" f:Labels="{Collection {Text 'Par contact'}}" /&gt;</data>
   <data name="Val.Enum.MailingGroupMode.ByHouseholdUsingDesc" id="OV73">&lt;s:data id="_0" f:Name="ByHouseholdUsingDesc" f:Labels="{Collection {Text 'Par ménage en utilisant l\'intitulé'}}" /&gt;</data>
-  <data name="Val.Enum.MailingGroupMode.ByHouseholdUsingParticipant" id="O083">&lt;s:data id="_0" f:Name="ByHouseholdUsingParticipant" f:Labels="{Collection {Text 'Par ménage en utilisant les participants'}}" /&gt;</data>
+  <data name="Val.Enum.MailingGroupMode.ByHouseholdUsingParticipants" id="O083">&lt;s:data id="_0" f:Name="ByHouseholdUsingParticipants" f:Labels="{Collection {Text 'Par ménage en utilisant les participants'}}" /&gt;</data>
   <data name="Typ.Enum.MailingGroupMode" id="OT73">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.MailingGroupMode" f:_1.SystemType="E:Epsitec.Aider.Enumerations.MailingGroupMode, Aider" f:_2.EnumValues="{Collection {Text '0 [LVOU73]'}, {Text '1 [LVOV73]'}, {Text '2 [LVO083]'}}" f:Labels="{Collection {Text 'Mode de regroupement'}}" /&gt;</data>
 </bundle>
