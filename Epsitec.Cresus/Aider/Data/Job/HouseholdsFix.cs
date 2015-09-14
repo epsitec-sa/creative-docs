@@ -580,7 +580,7 @@ namespace Epsitec.Aider.Data.Job
 							Logger.LogToConsole (string.Format ("Household members: {0}", household.GetMembersSummary ()));
 							Logger.LogToConsole (string.Format ("removing: {0}", person.GetCompactSummary ()));
 							Logger.LogToConsole (string.Format ("cause: {0}", person.Visibility));
-							person.RemoveFromHousehold (businessContext, household);
+							person.RemoveFromHouseholds (businessContext);
 							AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household.ToEnumerable (), true);
 							household.RefreshCache ();
 							Logger.LogToConsole ("~             -next-             ~");

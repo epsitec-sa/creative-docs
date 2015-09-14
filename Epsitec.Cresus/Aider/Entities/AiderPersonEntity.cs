@@ -408,7 +408,7 @@ namespace Epsitec.Aider.Entities
 
 				if (household.IsNotNull ())
 				{
-					this.RemoveFromHousehold (businessContext, household);
+					this.RemoveFromHouseholds (businessContext);
 					AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household.ToEnumerable (), true);
 					household.RefreshCache ();
 				}		
