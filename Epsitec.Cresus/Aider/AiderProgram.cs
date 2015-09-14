@@ -936,7 +936,11 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
-				HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
+
+				// nettoyage requis suite à l'introduction bug de sortie lors des warnings 
+				HouseholdsFix.RemoveHiddenPersonFromHouseholds (coreData);
+				
+				//HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
