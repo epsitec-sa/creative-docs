@@ -472,12 +472,13 @@ namespace Epsitec.Cresus.Assets.App.Views
 					}
 				}
 
-				bool isDelta = this.IsDelta && isFinalEnable && this.InitialAmount.HasValue;
+				bool isDecrease = this.IsDecrease && isFinalEnable && this.InitialAmount.HasValue;
+				bool isIncrease = this.IsIncrease && isFinalEnable && this.InitialAmount.HasValue;
 
 				this.UpdateField (this.initialAmountTextField, isReadOnly: true);
 				this.UpdateField (this.amortizationTextField,  isReadOnly: !isFinalEnable);
-				this.UpdateField (this.decreaseTextField,      isReadOnly: !isDelta);
-				this.UpdateField (this.increaseTextField,      isReadOnly: !isDelta);
+				this.UpdateField (this.decreaseTextField,      isReadOnly: !isDecrease);
+				this.UpdateField (this.increaseTextField,      isReadOnly: !isIncrease);
 				this.UpdateField (this.finalAmountTextField,   isReadOnly: !isFinalEnable);
 				this.unlockButton.Visibility = unlockEnable;
 				this.UpdateField (this.traceTextField,         isReadOnly: true);
@@ -485,8 +486,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdateField (this.scenarioFieldCombo,     isReadOnly: false);
 
 				this.lines[AmortizedAmountController.AmortizationLine].Visibility = this.IsAmortization;
-				this.lines[AmortizedAmountController.DecreaseLine    ].Visibility = this.IsDelta;
-				this.lines[AmortizedAmountController.IncreaseLine    ].Visibility = this.IsDelta;
+				this.lines[AmortizedAmountController.DecreaseLine    ].Visibility = this.IsDecrease;
+				this.lines[AmortizedAmountController.IncreaseLine    ].Visibility = this.IsIncrease;
 				this.lines[AmortizedAmountController.TraceLine       ].Visibility = this.IsAmortizationAuto;
 				this.lines[AmortizedAmountController.ErrorLine       ].Visibility = this.IsAmortizationAuto;
 
@@ -599,9 +600,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
-				//	C'est Increase qui l'affichera, forcément en positif !
-				AmortizedAmountController.SetPositivAmount (this.decreaseTextField, value);
+				if (this.IsDelta)
+				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Increase qui l'affichera, forcément en positif !
+					AmortizedAmountController.SetPositivAmount (this.decreaseTextField, value);
+				}
+				else
+				{
+					AmortizedAmountController.SetAmount (this.decreaseTextField, value);
+				}
 			}
 		}
 
@@ -613,9 +621,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 			}
 			set
 			{
-				//	Une valeur plus petite ou égale à zéro n'est pas affichée.
-				//	C'est Decrease qui l'affichera, forcément en positif !
-				AmortizedAmountController.SetPositivAmount (this.increaseTextField, value);
+				if (this.IsDelta)
+				{
+					//	Une valeur plus petite ou égale à zéro n'est pas affichée.
+					//	C'est Decrease qui l'affichera, forcément en positif !
+					AmortizedAmountController.SetPositivAmount (this.increaseTextField, value);
+				}
+				else
+				{
+					AmortizedAmountController.SetAmount (this.increaseTextField, value);
+				}
 			}
 		}
 
@@ -788,9 +803,29 @@ namespace Epsitec.Cresus.Assets.App.Views
 			//	Indique si les champs Diminution/Augmentation sont présents.
 			get
 			{
+				return this.IsDecrease && this.IsIncrease;
+			}
+		}
+
+		private bool IsDecrease
+		{
+			//	Indique si le champ Diminution est présent.
+			get
+			{
 				return this.eventType == EventType.PreInput
 					|| this.eventType == EventType.Input
 					|| this.eventType == EventType.Decrease
+					|| this.eventType == EventType.Adjust;
+			}
+		}
+
+		private bool IsIncrease
+		{
+			//	Indique si le champ Augmentation est présent.
+			get
+			{
+				return this.eventType == EventType.PreInput
+					|| this.eventType == EventType.Input
 					|| this.eventType == EventType.Increase
 					|| this.eventType == EventType.Adjust;
 			}

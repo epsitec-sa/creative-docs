@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Drawing;
 using Epsitec.Cresus.Assets.Core.Helpers;
+using Epsitec.Cresus.Assets.Data;
 using Epsitec.Cresus.Assets.Server.DataFillers;
 using Epsitec.Cresus.Assets.Server.SimpleEngine;
 
@@ -31,15 +32,33 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 			{
 				var textRect = this.GetContentDeflateRectangle (rect);
 
-				string text;
-				if (this.details)
+				decimal? value = null;
+
+				if (this.Field == ObjectField.MainValueDelta)
 				{
-					//text = TypeConverters.ComputedAmountToString (cell.Value);  // TODO...
-					text = TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
+					//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+					//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+					//	Amortization retourne une valeur positive lorsque la valeur finale a diminué. Il faut donc
+					//	prendre -Amortization pour avoir la différence.
+					if (cell.Value.Value.Amortization.HasValue)
+					{
+						value = -cell.Value.Value.Amortization.Value;
+					}
 				}
 				else
 				{
-					text = TypeConverters.AmountToString (cell.Value.Value.FinalAmount);
+					value = cell.Value.Value.FinalAmount;
+				}
+
+				string text;
+
+				if (this.details)
+				{
+					text = TypeConverters.AmountToString (value);
+				}
+				else
+				{
+					text = TypeConverters.AmountToString (value);
 				}
 
 				this.PaintText (graphics, textRect, text);

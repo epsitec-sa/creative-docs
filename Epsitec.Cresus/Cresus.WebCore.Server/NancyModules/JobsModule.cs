@@ -1,23 +1,11 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Favorites;
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.Extraction;
-using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Nancy;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public class JobsModule : AbstractAuthenticatedModule
 	{
 		public JobsModule(CoreServer coreServer)
@@ -25,20 +13,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => Response.AsJson (this.GetJobs ());
 
-			Get["/cancel/{job}"] = (p =>
+			Get["/cancel/{job}"] = p =>
 			{
-				var job = this.GetJob (p.job);
-				this.CancelJob (job);
-				return new Response ()
-				{
-					StatusCode = HttpStatusCode.Accepted
-				};
-			});
+				var jobId = (string) p.job;
+				var job   = this.FindJob (jobId);
 
-			Get["/delete/{job}"] = (p =>
-			{
-				var job = this.GetJob (p.job);
-				if (this.RemoveJob (job.Id))
+				if (this.CancelJob (job))
 				{
 					return new Response ()
 					{
@@ -52,8 +32,28 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 						StatusCode = HttpStatusCode.InternalServerError
 					};
 				}
-				
-			});
+			};
+
+			Get["/delete/{job}"] = p =>
+			{
+				var jobId = (string) p.job;
+				var job   = this.FindJob (jobId);
+
+				if (this.RemoveJob (job))
+				{
+					return new Response ()
+					{
+						StatusCode = HttpStatusCode.Accepted
+					};
+				}
+				else
+				{
+					return new Response ()
+					{
+						StatusCode = HttpStatusCode.InternalServerError
+					};
+				}
+			};
 		}
 	}
 }

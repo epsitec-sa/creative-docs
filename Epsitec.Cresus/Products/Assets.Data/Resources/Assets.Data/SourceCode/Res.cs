@@ -493,6 +493,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544330));
 						}
 					}
+					//	designer:str/HUKP201
+					public static global::Epsitec.Common.Types.FormattedText MainValueDelta
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544409));
+						}
+					}
 					//	designer:str/HUK7201
 					public static global::Epsitec.Common.Types.FormattedText Method
 					{
@@ -1247,6 +1255,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544330);
+						}
+					}
+					//	designer:str/HUKP201
+					public static global::Epsitec.Common.Support.Druid MainValueDelta
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544409);
 						}
 					}
 					//	designer:str/HUK7201

@@ -4025,6 +4025,25 @@ namespace Epsitec.Cresus.Assets.App
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544376));
 						}
 					}
+					public static class RemovePostOutput
+					{
+						//	designer:str/JUKVL01
+						public static global::Epsitec.Common.Types.FormattedText Many
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545023));
+							}
+						}
+						//	designer:str/JUK0M01
+						public static global::Epsitec.Common.Types.FormattedText One
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545024));
+							}
+						}
+					}
 				}
 				
 				public static class CreateGroup
@@ -8800,6 +8819,25 @@ namespace Epsitec.Cresus.Assets.App
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544376);
+						}
+					}
+					public static class RemovePostOutput
+					{
+						//	designer:str/JUKVL01
+						public static global::Epsitec.Common.Support.Druid Many
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545023);
+							}
+						}
+						//	designer:str/JUK0M01
+						public static global::Epsitec.Common.Support.Druid One
+						{
+							get
+							{
+								return global::Epsitec.Common.Support.Druid.FromFieldId (335545024);
+							}
 						}
 					}
 				}

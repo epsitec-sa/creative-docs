@@ -112,6 +112,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		#endregion
 
 
+		#region Post count logic
+		public static int GetPostCount(DataObject obj, Timestamp timestamp)
+		{
+			//	Retourne le nombre d'événements existants après un timestamp donné.
+			if (obj == null)
+			{
+				return 0;
+			}
+			else
+			{
+				var a = obj.Events;
+				return a.Where (x => x.Timestamp > timestamp).Count ();
+			}
+		}
+		#endregion
+
+
 		#region Plausible event logic
 		public static bool IsOutOfBoundsEvent(DataObject obj, Timestamp timestamp)
 		{
@@ -158,8 +175,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					yield return EventType.Locked;
 				}
 
-				if ((prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other) &&
-					nextEvent == TerminalEvent.None)
+				if (prevEvent == TerminalEvent.In || prevEvent == TerminalEvent.Other)
 				{
 					yield return EventType.Output;
 				}

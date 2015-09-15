@@ -339,6 +339,35 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					if (createDate.HasValue)
 					{
 						var type = CreateEventPopup.ParseEventType (name);
+
+						if (type == EventType.Output)
+						{
+							int n = AssetCalculator.GetPostCount (obj, new Timestamp (createDate.Value, 0));
+							if (n > 0)
+							{
+								//	Pose la question de confirmation
+								//	"Voulez-vous supprimer les 7 événements postérieurs au jeudi 31 décembre 2015 ?"
+								string question;
+
+								if (n == 1)
+								{
+									question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.One.ToString (), createDate.Value.ToFull ());
+								}
+								else
+								{
+									question = string.Format (Res.Strings.Popup.CreateEvent.RemovePostOutput.Many.ToString (), n.ToString (), createDate.Value.ToFull ());
+								}
+
+								YesNoPopup.Show (target, question, delegate
+								{
+									action (createDate.Value, type);
+								},
+								width: 300, leftOrRight: false);
+
+								return;
+							}
+						}
+
 						action (createDate.Value, type);
 					}
 				};

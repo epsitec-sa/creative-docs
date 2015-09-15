@@ -15,7 +15,8 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 	/// </summary>
 	public struct ExtractionInstructions
 	{
-		public ExtractionInstructions(ExtractionAmount extractionAmount, DateRange range, bool inverted, params EventType[] filteredEventTypes)
+		public ExtractionInstructions(ExtractionAmount extractionAmount, DateRange range, bool inverted,
+			EventType[] filteredEventTypes = null, EventType[] stoppedEventTypes = null)
 		{
 			switch (extractionAmount)
 			{
@@ -35,8 +36,9 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 			this.ExtractionAmount   = extractionAmount;
 			this.Range              = range;
-			this.FilteredEventTypes = filteredEventTypes;
 			this.Inverted           = inverted;
+			this.FilteredEventTypes = filteredEventTypes;
+			this.StoppedEventTypes  = stoppedEventTypes;
 		}
 
 		public static ExtractionInstructions Empty = new ExtractionInstructions (ExtractionAmount.StateAt, DateRange.Empty, false);
@@ -45,5 +47,6 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 		public readonly DateRange				Range;
 		public readonly bool					Inverted;
 		public readonly EventType[]				FilteredEventTypes;
+		public readonly EventType[]				StoppedEventTypes;
 	}
 }

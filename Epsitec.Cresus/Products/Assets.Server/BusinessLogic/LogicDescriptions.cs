@@ -61,7 +61,25 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 						var aa = ObjectProperties.GetObjectPropertyAmortizedAmount (obj, timestamp, field, false);
 						if (aa.HasValue)
 						{
-							line = TypeConverters.AmountToString (aa.Value.FinalAmount);
+							if (field == ObjectField.MainValueDelta)
+							{
+								//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+								//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+								//	Amortization retourne une valeur positive lorsque la valeur finale a diminué. Il faut donc
+								//	prendre -Amortization pour avoir la différence.
+								if (aa.Value.Amortization.HasValue)
+								{
+									line = TypeConverters.AmountToString (-aa.Value.Amortization.Value);
+								}
+								else
+								{
+									continue;
+								}
+							}
+							else
+							{
+								line = TypeConverters.AmountToString (aa.Value.FinalAmount);
+							}
 						}
 						break;
 
@@ -196,7 +214,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			yield return ObjectField.OneShotComment;
 			yield return ObjectField.OneShotDocuments;
 
-			foreach (var userField in AssetsLogic.GetUserFields (accessor))
+			foreach (var userField in AssetsLogic.GetUserFields (accessor, delta: true))
 			{
 				yield return userField.Field;
 			}

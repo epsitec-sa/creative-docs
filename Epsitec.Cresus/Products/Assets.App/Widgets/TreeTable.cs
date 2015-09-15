@@ -892,7 +892,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			LocalSettings.SetColumnsState (this.treeTableName, this.columnsState);
+			LocalSettings.SetColumnsState (this.SettingsName, this.columnsState);
 		}
 
 		private void RestoreSettings()
@@ -902,7 +902,7 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				return;
 			}
 
-			var cs = LocalSettings.GetColumnsState (this.treeTableName);
+			var cs = LocalSettings.GetColumnsState (this.SettingsName);
 			if (!cs.IsEmpty)
 			{
 				//	On utilise les réglages désérialisés seulement si le nombre de colonnes
@@ -912,6 +912,32 @@ namespace Epsitec.Cresus.Assets.App.Widgets
 				{
 					this.columnsState = cs;
 				}
+			}
+		}
+
+		private string SettingsName
+		{
+			//	Retourne le nom à utiliser pour la sérialisation des réglages. Lorsque les colonnes vides sont
+			//	ignorées, il faut affectuer une sauvegarde pour chaque configuration de colonnes existante.
+			get
+			{
+				return string.Concat (this.treeTableName, "-", this.Id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+		}
+
+		private int Id
+		{
+			//	Retourne un identificateur unique qui correspond aux colonnes utilisées.
+			get
+			{
+				int hash = 0;
+
+				foreach (var column in this.columnDescriptions)
+				{
+					hash ^= column.Field.GetHashCode ();
+				}
+
+				return hash;
 			}
 		}
 

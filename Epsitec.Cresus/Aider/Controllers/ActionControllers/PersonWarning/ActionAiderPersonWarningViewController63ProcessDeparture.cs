@@ -60,9 +60,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				foreach (var member in members)
 				{
-					member.HidePerson (this.BusinessContext);
 					member.DeleteParishGroupParticipation (this.BusinessContext);
 					member.DeleteNonParishGroupParticipations (this.BusinessContext);
+					member.HidePerson (this.BusinessContext);
 				}
 			}
 			else

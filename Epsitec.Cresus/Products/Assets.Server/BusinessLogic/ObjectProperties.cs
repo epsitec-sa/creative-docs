@@ -54,6 +54,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static AmortizedAmount? GetObjectPropertyAmortizedAmount(DataObject obj, Timestamp? timestamp, ObjectField field, bool synthetic = true)
 		{
+			if (field == ObjectField.MainValueDelta)
+			{
+				//	ObjectField.MainValueDelta permet d'obtenir la même valeur que ObjectField.MainValue, mais
+				//	on obtient la différence (-Amortization), plutôt que la valeur finale (FinalAmount).
+				//	Ici, il suffit de retourner la valeur composite AmortizedAmount résultant de ObjectField.MainValue,
+				//	qui contient Amortization et FinalAmount.
+				field = ObjectField.MainValue;
+			}
+
 			var p = ObjectProperties.GetObjectProperty (obj, timestamp, field, synthetic) as DataAmortizedAmountProperty;
 
 			if (p == null)

@@ -138,6 +138,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.MainValue:
 					return Res.Strings.Enum.ObjectField.MainValue.ToString ();
 
+				case ObjectField.MainValueDelta:
+					return Res.Strings.Enum.ObjectField.MainValueDelta.ToString ();
+
 				case ObjectField.Name:
 					return Res.Strings.Enum.ObjectField.Name.ToString ();
 

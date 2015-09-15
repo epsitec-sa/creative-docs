@@ -231,6 +231,24 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 					AssetCalculator.RemoveLockedEvent (obj);
 				}
 
+				if (type == EventType.Output)
+				{
+					//	Supprime tous les événements postérieurs à l'événement de sortie.
+					while (true)
+					{
+						var le = obj.Events.LastOrDefault ();
+
+						if (le != null && le.Timestamp.Date > date)
+						{
+							obj.RemoveEvent (le);
+						}
+						else
+						{
+							break;
+						}
+					}
+				}
+
 				var ts = obj.GetNewTimestamp (date);
 				var e = new DataEvent (this.UndoManager, ts, type);
 				obj.AddEvent (e);
@@ -651,6 +669,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
+				case ObjectField.MainValueDelta:
 					return FieldType.AmortizedAmount;
 
 				case ObjectField.EntryAmount:

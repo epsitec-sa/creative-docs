@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Number,
 		Description,
 		MainValue,
+		MainValueDelta,
 
 		//	Définitions d'une catégorie.
 		CategoryName,
