@@ -8811,6 +8811,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>GroupMode</c> field.
+		///	designer:fld/LVOA03/LVO183
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO183]")]
+		public global::Epsitec.Aider.Enumerations.MailingGroupMode GroupMode
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.MailingGroupMode> ("[LVO183]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.MailingGroupMode oldValue = this.GroupMode;
+				if (oldValue != value || !this.IsFieldDefined("[LVO183]"))
+				{
+					this.OnGroupModeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.MailingGroupMode> ("[LVO183]", oldValue, value);
+					this.OnGroupModeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>RecipientQuery</c> field.
 		///	designer:fld/LVOA03/LVO243
 		///	</summary>
@@ -8885,6 +8907,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSharingChanged(global::Epsitec.Aider.Enumerations.SharingType oldValue, global::Epsitec.Aider.Enumerations.SharingType newValue);
 		partial void OnIsGroupedByHouseholdChanging(bool oldValue, bool newValue);
 		partial void OnIsGroupedByHouseholdChanged(bool oldValue, bool newValue);
+		partial void OnGroupModeChanging(global::Epsitec.Aider.Enumerations.MailingGroupMode oldValue, global::Epsitec.Aider.Enumerations.MailingGroupMode newValue);
+		partial void OnGroupModeChanged(global::Epsitec.Aider.Enumerations.MailingGroupMode oldValue, global::Epsitec.Aider.Enumerations.MailingGroupMode newValue);
 		partial void OnRecipientQueryChanging(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnRecipientQueryChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnRecipientQueryNameChanging(string oldValue, string newValue);

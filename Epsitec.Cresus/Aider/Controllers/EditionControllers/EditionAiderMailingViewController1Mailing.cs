@@ -24,6 +24,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.IsReady)
 					.Field (x => x.Sharing)
 					.Field (x => x.Description)
+					.Field (x => x.GroupMode)
 				.End ();
 		}
 	}

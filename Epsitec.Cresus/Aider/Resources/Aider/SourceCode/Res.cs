@@ -3417,6 +3417,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Exclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 13);
 				//	designer:cap/LVO513
 				public static readonly global::Epsitec.Common.Support.Druid GroupExclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 37);
+				//	designer:cap/LVO183
+				public static readonly global::Epsitec.Common.Support.Druid GroupMode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 257);
 				//	designer:cap/LVOT33
 				public static readonly global::Epsitec.Common.Support.Druid IsGroupedByHousehold = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 125);
 				//	designer:cap/LVOC03
