@@ -50,8 +50,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetRecipientsTitleSummary ())
 				.Text (p => p.GetRecipientsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
-				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact))
-				.EnableActionButton<ActionAiderMailingViewController17ToggleHouseholdGrouping> ();
+				.WithSpecialController (typeof (SetAiderMailingViewController0RecipientsContact));
 
 
 			wall.AddBrick ()
