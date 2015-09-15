@@ -704,15 +704,7 @@ AiderEventPlace = [LVOL63]
     </t>
 
     <t eid="@AiderMailingParticipant" n="default">
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVASH]" title="T" dw="15" canSort="True" canFilter="True">
-        <sort o="None" />
-        <disp m="Visible" />
-      </col>
-      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVACE]" title="Intitulé" canSort="True" canFilter="True">
-        <sort o="Ascending" />
-        <disp m="Visible" />
-      </col>
-       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVO173]" title="Intitulé Personalisé" canSort="True" canFilter="True">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVO173]" title="Destinataire" canSort="True" canFilter="True">
         <sort o="Ascending" />
         <disp m="Visible" />
       </col>
