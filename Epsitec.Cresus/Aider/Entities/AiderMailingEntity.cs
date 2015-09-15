@@ -312,12 +312,6 @@ namespace Epsitec.Aider.Entities
 			return FormattedText.Join (FormattedText.FromSimpleText ("\n"), recipients);
 		}
 
-		public void ApplyCustomRecipientText(AiderMailingParticipantEntity participant)
-		{
-			// TODO: Apply user needs
-			participant.CustomRecipient = participant.Contact.Household.GetAddressName ();		
-		}
-
 		public IList<AiderContactEntity> GetExcludedRecipients(DataContext context = null)
 		{
 			if (context == null)

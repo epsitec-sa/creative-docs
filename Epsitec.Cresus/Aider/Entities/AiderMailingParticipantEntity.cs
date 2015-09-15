@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Entities
 			participant.Contact = contact;
 			participant.Mailing = mailing;
 			participant.ParticipantType = MailingParticipantType.Contact;
-			mailing.ApplyCustomRecipientText (participant);
+	
 			
 			return participant;
 		}
@@ -89,7 +89,6 @@ namespace Epsitec.Aider.Entities
 			participant.Contact			   = participation.Contact;
 			participant.GroupParticipation = participation;
 			participant.ParticipantType    = MailingParticipantType.Group;
-			mailing.ApplyCustomRecipientText (participant);
 
 			return participant;
 		}
@@ -108,7 +107,6 @@ namespace Epsitec.Aider.Entities
 			participant.Contact  = household.Contacts.First ();
 			participant.Houshold = household;
 			participant.ParticipantType = MailingParticipantType.Household;
-			mailing.ApplyCustomRecipientText (participant);
 
 			return participant;
 		}
@@ -123,7 +121,6 @@ namespace Epsitec.Aider.Entities
 				participant.Contact = participation.Contact;
 				participant.GroupParticipation = participation;
 				participant.ParticipantType = MailingParticipantType.Group;
-				mailing.ApplyCustomRecipientText (participant);
 				created.Add (participant);
 			}
 
@@ -142,7 +139,6 @@ namespace Epsitec.Aider.Entities
 				participant.Contact			   = participation.Contact;
 				participant.GroupParticipation = participation;
 				participant.ParticipantType    = MailingParticipantType.GroupExtraction;
-				mailing.ApplyCustomRecipientText (participant);
 				created.Add (participant);
 			}
 
