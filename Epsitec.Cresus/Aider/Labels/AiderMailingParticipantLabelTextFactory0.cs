@@ -16,10 +16,14 @@ namespace Epsitec.Aider.Labels
 
 		public override FormattedText GetLabelText(AiderMailingParticipantEntity entity)
 		{
-			if (entity.Houshold.IsNotNull ())
-				return entity.Houshold.GetAddressLabelText ();		
+			if (entity.Mailing.GroupMode != Enumerations.MailingGroupMode.ByContact)
+			{
+				return entity.Contact.GetCustomAddressLabelText (entity.CustomRecipient);
+			}	
 			else
+			{
 				return entity.Contact.GetAddressLabelText ();
+			}
 		}
 		
 	}

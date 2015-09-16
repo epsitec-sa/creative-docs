@@ -51,7 +51,12 @@ namespace Epsitec.Aider.Entities
 			return this.GetAddressLabelText (this.GetAddressRecipientText (), type);
 		}
 
-		private string GetAddressRecipientText()
+		public FormattedText GetCustomAddressLabelText(string customRecipient, PostalAddressType type = PostalAddressType.Default)
+		{
+			return this.GetAddressLabelText (customRecipient, type);
+		}
+
+		public string GetAddressRecipientText()
 		{
 			switch (this.ContactType)
 			{
