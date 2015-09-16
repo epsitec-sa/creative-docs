@@ -53,6 +53,7 @@ namespace Epsitec.Aider.Entities
 			int householdCount       = this.RecipientHouseholds.Count;
 			int queriesCount         = this.Queries.Count;
 			return TextFormatter.FormatText (totalCount, "destinataires", "\n",
+				/**/						 this.GroupMode, "\n",
 				/**/						 contactCount, contactCount > 1 ? "contacts individuels" : "contact individuel", "\n",
 				/**/						 groupCount, groupCount > 1 ? "groupes" : "groupe", "\n",
 				/**/						 groupExtractionCount, groupExtractionCount > 1 ? " groupes transversaux" : "groupe transversal", "\n",
@@ -262,7 +263,7 @@ namespace Epsitec.Aider.Entities
 			var count =  this.GetParticipantCount ();
 			var type  = "contact";
 
-			if (this.IsGroupedByHousehold)
+			if (this.GroupMode != MailingGroupMode.ByContact)
 			{
 				type = "ménage";
 			}
