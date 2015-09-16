@@ -598,7 +598,7 @@ namespace Epsitec.Aider.Entities
 					case MailingGroupMode.ByHouseholdUsingDesc:
 					case MailingGroupMode.ByHouseholdUsingParticipants:
 					var households = this.GetParticipantsByHousehold (businessContext.DataContext);
-					var excludedHouseholds = households.Where (h => exclude.Household == h);
+					var excludedHouseholds = households.Where (h => exclude.Household == h && exclude.Household.IsNotNull ());
 					foreach (var household in excludedHouseholds)
 					{
 						// Exclude Contact[0] (the same used when grouped by household)
