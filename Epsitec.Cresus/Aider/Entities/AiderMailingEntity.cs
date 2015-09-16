@@ -536,7 +536,7 @@ namespace Epsitec.Aider.Entities
 				case MailingGroupMode.ByContact:
 				created.ForEach (p =>
 				{
-					p.CustomRecipient = p.Contact.GetDisplayName ();
+					p.CustomRecipient = p.Contact.GetAddressRecipientText ();
 				});			
 				break;
 
@@ -552,18 +552,22 @@ namespace Epsitec.Aider.Entities
 				created.ForEach (p =>
 				{
 					var contacts   = contactsByHousehold[p.Contact.Household];
-					var byName     = contacts.ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c.Person.CallNameDisplay);
+					var contactsByName     = contacts.ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
 					var recipients = new List<string> ();
- 					byName.ForEach (n => 
+ 					contactsByName.ForEach (n => 
 					{
-						if (n.Count () <= 2)
+						if (n.Count () == 1)
 						{
-							recipients.Add (string.Join (" et ", n) + " " + n.Key);
+							recipients.Add (n.First ().GetAddressRecipientText ());
+						}
+						else if (n.Count () == 2)
+						{
+							recipients.Add (string.Join (" et ", n.Select (c => c.Person.CallNameDisplay)) + " " + n.Key);
 						} 
 						else
 						{
-							var last = n.Last ();
-							var firsts = n.Take (n.Count () - 1);
+							var last = n.Last ().Person.CallNameDisplay;
+							var firsts = n.Take (n.Count () - 1).Select (c => c.Person.CallNameDisplay);
 							recipients.Add (string.Join (", ", firsts) + " et " + last + " " + n.Key);
 						}				
 					});
