@@ -352,7 +352,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public void RemoveFromHousehold(BusinessContext context, AiderHouseholdEntity household)
+		public void RemoveFromThisHousehold(BusinessContext context, AiderHouseholdEntity household)
 		{
 			if (household.IsNull ())
 			{
@@ -408,7 +408,7 @@ namespace Epsitec.Aider.Entities
 
 				if (household.IsNotNull ())
 				{
-					this.RemoveFromHousehold (businessContext, household);
+					this.RemoveFromHouseholds (businessContext);
 					AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household.ToEnumerable (), true);
 					household.RefreshCache ();
 				}		
@@ -421,6 +421,7 @@ namespace Epsitec.Aider.Entities
 			{
 				var parishGroup = participation.Group.IsParish ();
 				var regionGroup = participation.Group.IsRegion ();
+				
 				if (!parishGroup && !regionGroup)
 				{
 					this.MainContact.RemoveParticipationInternal (participation);
@@ -431,8 +432,7 @@ namespace Epsitec.Aider.Entities
 
 		public void DeleteParishGroupParticipation(BusinessContext businessContext)
 		{
-			var participation = this.GetParticipations ().Where (p => p.Group == this.ParishGroup).SingleOrDefault ();
-			if (participation != null)
+			foreach (var participation in this.GetParticipations ().Where (p => p.Group == this.ParishGroup))
 			{
 				this.MainContact.RemoveParticipationInternal (participation);
 				businessContext.DeleteEntity (participation);

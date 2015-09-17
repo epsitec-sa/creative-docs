@@ -403,6 +403,7 @@
     <Compile Include="Enumerations\EventPlaceType.cs" />
     <Compile Include="Enumerations\EventState.cs" />
     <Compile Include="Enumerations\EventKind.cs" />
+    <Compile Include="Enumerations\MailingGroupMode.cs" />
     <Compile Include="Enumerations\PersonMrMrsTitle.cs" />
     <Compile Include="Enumerations\Region.cs" />
     <Compile Include="Enumerations\EmployeeType.cs" />

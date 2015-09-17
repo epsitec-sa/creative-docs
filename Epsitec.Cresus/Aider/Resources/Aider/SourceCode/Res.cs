@@ -328,6 +328,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType Language = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 244));
 				//	designer:cap/LVA27
 				public static readonly Epsitec.Common.Types.EnumType LegalPersonType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 226));
+				//	designer:cap/LVOT73
+				public static readonly Epsitec.Common.Types.EnumType MailingGroupMode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 253));
 				//	designer:cap/LVAMH
 				public static readonly Epsitec.Common.Types.EnumType MailingParticipantType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 566));
 				//	designer:cap/LVATA
@@ -1607,6 +1609,34 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 541));
+						}
+					}
+				}
+				
+				public static class MailingGroupMode
+				{
+					//	designer:cap/LVOU73
+					public static global::Epsitec.Common.Types.Caption ByContact
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 254));
+						}
+					}
+					//	designer:cap/LVOV73
+					public static global::Epsitec.Common.Types.Caption ByHouseholdUsingDesc
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 255));
+						}
+					}
+					//	designer:cap/LVO083
+					public static global::Epsitec.Common.Types.Caption ByHouseholdUsingParticipants
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 256));
 						}
 					}
 				}
@@ -3387,6 +3417,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Exclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 13);
 				//	designer:cap/LVO513
 				public static readonly global::Epsitec.Common.Support.Druid GroupExclusions = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 37);
+				//	designer:cap/LVO183
+				public static readonly global::Epsitec.Common.Support.Druid GroupMode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 257);
 				//	designer:cap/LVOT33
 				public static readonly global::Epsitec.Common.Support.Druid IsGroupedByHousehold = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 125);
 				//	designer:cap/LVOC03

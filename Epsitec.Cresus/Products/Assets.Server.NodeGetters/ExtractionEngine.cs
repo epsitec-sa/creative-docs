@@ -173,6 +173,13 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 					var aa = p.Value.FinalAmount;
 					if (aa.HasValue)
 					{
+						if (ExtractionEngine.CompareEventTypes (extractionInstructions.StoppedEventTypes, e.Type) &&
+							extractionInstructions.Range.IsInside (e.Timestamp.Date))
+						{
+							sum = null;
+							break;
+						}
+
 						if (ExtractionEngine.CompareEventTypes (extractionInstructions.FilteredEventTypes, e.Type) &&
 							extractionInstructions.Range.IsInside (e.Timestamp.Date))
 						{
@@ -248,7 +255,14 @@ namespace Epsitec.Cresus.Assets.Server.NodeGetters
 
 		private static bool CompareEventTypes(EventType[] extractionTypes, EventType eventType)
 		{
-			return extractionTypes.Where (x => x == eventType).Any ();
+			if (extractionTypes == null)
+			{
+				return false;
+			}
+			else
+			{
+				return extractionTypes.Where (x => x == eventType).Any ();
+			}
 		}
 
 

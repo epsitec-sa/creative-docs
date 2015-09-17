@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				return new ExtractionInstructionsArray (userColumn.Field,
 					new ExtractionInstructions (ExtractionAmount.UserColumn,
 						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date.AddTicks (-1)),
-						false)
+						false, null, null)
 						);
 			}
 
@@ -313,7 +313,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.PreInput)
+						new EventType[] { EventType.PreInput })
+						);
+
+				case Column.ReplacementValues:
+					return new ExtractionInstructionsArray (field,
+						new ExtractionInstructions (ExtractionAmount.LastFiltered,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
+						false,
+						new EventType[] { EventType.Input })
 						);
 
 				case Column.Inputs:
@@ -321,15 +329,18 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Input)
+						new EventType[] { EventType.Input })
 						);
 
-				case Column.ReplacementValues:
+				case Column.PostPreInputs:
+					//	Si la période contient un événement d'entrée Input, il faut considérer les
+					//	financements préalables comme nuls.
 					return new ExtractionInstructionsArray (field,
-						new ExtractionInstructions (ExtractionAmount.LastFiltered,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
+						new ExtractionInstructions (ExtractionAmount.DeltaSum,
+						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Input)
+						filteredEventTypes: new EventType[] { EventType.PreInput },
+						stoppedEventTypes:  new EventType[] { EventType.Input })
 						);
 
 				case Column.PostDecreases:
@@ -337,7 +348,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Decrease)
+						new EventType[] { EventType.Decrease })
 						);
 
 				case Column.PostIncreases:
@@ -345,7 +356,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Increase)
+						new EventType[] { EventType.Increase })
 						);
 
 				case Column.PostAdjusts:
@@ -353,7 +364,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Adjust)
+						new EventType[] { EventType.Adjust })
 						);
 
 				case Column.PostOutputs:
@@ -361,7 +372,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Output)
+						new EventType[] { EventType.Output })
 						);
 
 				case Column.PostAmortizations:
@@ -369,21 +380,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl)
+						new EventType[] { EventType.AmortizationAuto, EventType.AmortizationExtra, EventType.AmortizationPreview, EventType.AmortizationSuppl })
 						);
 
 				case Column.PostSummaries:
 					return new ExtractionInstructionsArray (field,
-						// Somme de Column.ReplacementValues...
-						new ExtractionInstructions (ExtractionAmount.LastFiltered,
-						new DateRange (System.DateTime.MinValue, this.DateRange.ExcludeTo.Date),
-						false,
-						EventType.Input),
-						// ...et Column.PostDecreases, Column.PostIncreases, Column.PostAdjusts et Column.PostOutputs
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						new DateRange (System.DateTime.MinValue, this.DateRange.IncludeFrom),
 						false,
-						EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output)
+						new EventType[] { EventType.Decrease, EventType.Increase, EventType.Adjust, EventType.Output })
 						);
 
 				case Column.Decreases:
@@ -391,7 +396,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Decrease)
+						new EventType[] { EventType.Decrease })
 						);
 
 				case Column.Increases:
@@ -399,7 +404,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Increase)
+						new EventType[] { EventType.Increase })
 						);
 
 				case Column.Adjusts:
@@ -407,7 +412,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Adjust)
+						new EventType[] { EventType.Adjust })
 						);
 
 				case Column.Outputs:
@@ -415,7 +420,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.Output)
+						new EventType[] { EventType.Output })
 						);
 
 				case Column.AmortizationsAuto:
@@ -423,7 +428,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationAuto, EventType.AmortizationPreview)
+						new EventType[] { EventType.AmortizationAuto, EventType.AmortizationPreview })
 						);
 
 				case Column.AmortizationsExtra:
@@ -431,7 +436,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationExtra)
+						new EventType[] { EventType.AmortizationExtra })
 						);
 
 				case Column.AmortizationsSuppl:
@@ -439,7 +444,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						new ExtractionInstructions (ExtractionAmount.DeltaSum,
 						this.DateRange,
 						false,
-						EventType.AmortizationSuppl)
+						new EventType[] { EventType.AmortizationSuppl })
 						);
 
 				case Column.FinalState:
@@ -499,146 +504,238 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		private string GetColumnName(Column column)
 		{
+			string text = null;
+
 			if (column >= Column.User)
 			{
 				//	Retourne le nom d'une colonne supplémentaire.
-				return this.userColumns[(column-Column.User)].Name;
+				text = this.userColumns[(column-Column.User)].Name;
 			}
-
-			switch (column)
+			else
 			{
-				case Column.Name:
-					return Res.Strings.Enum.MCH2Summary.Column.Name.Text.ToString ();
+				switch (column)
+				{
+					case Column.Name:
+						text = Res.Strings.Enum.MCH2Summary.Column.Name.Text.ToString ();
+						break;
 
-				case Column.InitialState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Text.ToString (), this.InitialDate);
+					case Column.InitialState:
+						text = Res.Strings.Enum.MCH2Summary.Column.InitialState.Text.ToString ();
+						break;
 
-				case Column.PreInputs:
-					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Text.ToString ();
+					case Column.PreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PreInputs.Text.ToString ();
+						break;
 
-				case Column.Inputs:
-					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Text.ToString ();
+					case Column.Inputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.Inputs.Text.ToString ();
+						break;
 
-				case Column.ReplacementValues:
-					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
+					case Column.ReplacementValues:
+						text = Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Text.ToString ();
+						break;
 
-				case Column.PostAdjusts:
-					return Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Text.ToString ();
+					case Column.PostPreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostPreInputs.Text.ToString ();
+						break;
 
-				case Column.PostDecreases:
-					return Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Text.ToString ();
+					case Column.PostAdjusts:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Text.ToString ();
+						break;
 
-				case Column.PostIncreases:
-					return Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Text.ToString ();
+					case Column.PostDecreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Text.ToString ();
+						break;
 
-				case Column.PostOutputs:
-					return Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Text.ToString ();
+					case Column.PostIncreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Text.ToString ();
+						break;
 
-				case Column.PostAmortizations:
-					return Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Text.ToString ();
+					case Column.PostOutputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Text.ToString ();
+						break;
 
-				case Column.PostSummaries:
-					return Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Text.ToString ();
+					case Column.PostAmortizations:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Text.ToString ();
+						break;
 
-				case Column.Decreases:
-					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Text.ToString ();
+					case Column.PostSummaries:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Text.ToString ();
+						break;
 
-				case Column.Increases:
-					return Res.Strings.Enum.MCH2Summary.Column.Increases.Text.ToString ();
+					case Column.Decreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.Decreases.Text.ToString ();
+						break;
 
-				case Column.Adjusts:
-					return Res.Strings.Enum.MCH2Summary.Column.Adjusts.Text.ToString ();
+					case Column.Increases:
+						text = Res.Strings.Enum.MCH2Summary.Column.Increases.Text.ToString ();
+						break;
 
-				case Column.Outputs:
-					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
+					case Column.Adjusts:
+						text = Res.Strings.Enum.MCH2Summary.Column.Adjusts.Text.ToString ();
+						break;
 
-				case Column.AmortizationsAuto:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Text.ToString ();
+					case Column.Outputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.Outputs.Text.ToString ();
+						break;
 
-				case Column.AmortizationsExtra:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Text.ToString ();
+					case Column.AmortizationsAuto:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Text.ToString ();
+						break;
 
-				case Column.AmortizationsSuppl:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Text.ToString ();
+					case Column.AmortizationsExtra:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Text.ToString ();
+						break;
 
-				case Column.FinalState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Text.ToString (), this.FinalDate);
+					case Column.AmortizationsSuppl:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Text.ToString ();
+						break;
 
-				default:
-					return null;
+					case Column.FinalState:
+						text = Res.Strings.Enum.MCH2Summary.Column.FinalState.Text.ToString ();
+						break;
+				}
 			}
+
+			return this.ReplaceTags (text);
 		}
 
 		private string GetColumnTooltip(Column column)
 		{
+			string text = null;
+
 			if (column >= Column.User)
 			{
 				//	Retourne le tooltip d'une colonne supplémentaire, par exemple "Valeur fiscale le 31.12.2015 à 23h59".
 				var userColumn = this.userColumns[(column-Column.User)];
-				return string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name, this.JustDeforeFinalDate);
+				text = string.Format (Res.Strings.Enum.MCH2Summary.Column.UserColumn.Tooltip.ToString (), userColumn.Name);
+			}
+			else
+			{
+				switch (column)
+				{
+					case Column.Name:
+						text = Res.Strings.Enum.MCH2Summary.Column.Name.Tooltip.ToString ();
+						break;
+
+					case Column.InitialState:
+						text = Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString ();
+						break;
+
+					case Column.PreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PreInputs.Tooltip.ToString ();
+						break;
+
+					case Column.Inputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
+						break;
+
+					case Column.PostPreInputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostPreInputs.Tooltip.ToString ();
+						break;
+
+					case Column.ReplacementValues:
+						text = Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
+						break;
+
+					case Column.PostAdjusts:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString ();
+						break;
+
+					case Column.PostDecreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString ();
+						break;
+
+					case Column.PostIncreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString ();
+						break;
+
+					case Column.PostOutputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Tooltip.ToString ();
+						break;
+
+					case Column.PostAmortizations:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString ();
+						break;
+
+					case Column.PostSummaries:
+						text = Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Tooltip.ToString ();
+						break;
+
+					case Column.Decreases:
+						text = Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
+						break;
+
+					case Column.Increases:
+						text = Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
+						break;
+
+					case Column.Adjusts:
+						text = Res.Strings.Enum.MCH2Summary.Column.Adjusts.Tooltip.ToString ();
+						break;
+
+					case Column.Outputs:
+						text = Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
+						break;
+
+					case Column.AmortizationsAuto:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Tooltip.ToString ();
+						break;
+
+					case Column.AmortizationsExtra:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Tooltip.ToString ();
+						break;
+
+					case Column.AmortizationsSuppl:
+						text = Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip.ToString ();
+						break;
+
+					case Column.FinalState:
+						text = Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString ();
+						break;
+				}
 			}
 
-			switch (column)
+			return this.ReplaceTags(text);
+		}
+
+		private string ReplaceTags(string text)
+		{
+			//	Remplace les tags par les valeurs correspondantes.
+			//	Pour la période allant du 01.01.2015 (inclu) au 01.01.2016 (exclu), cela donne:
+			//	<RANGE>             2015
+			//	<INITIAL>           01.01.2015
+			//	<FINAL>             01.01.2016
+			//	<JUSTBEFOREFINAL>   31.12.2015 à 23h59
+
+			if (!string.IsNullOrEmpty (text))
 			{
-				case Column.Name:
-					return Res.Strings.Enum.MCH2Summary.Column.Name.Tooltip.ToString ();
+				text = text.Replace ("&lt;RANGE&gt;",           this.RangeDate);
+				text = text.Replace ("&lt;INITIAL&gt;",         this.InitialDate);
+				text = text.Replace ("&lt;FINAL&gt;",           this.FinalDate);
+				text = text.Replace ("&lt;JUSTBEFOREFINAL&gt;", this.JustDeforeFinalDate);
 
-				case Column.InitialState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.InitialState.Tooltip.ToString (), this.InitialDate);
+				if (text.Contains ("&lt;"))  // reste un tag inconnu ?
+				{
+					throw new System.InvalidOperationException (string.Format ("Unknown tag in {0}", text));
+				}
+			}
 
-				case Column.PreInputs:
-					return Res.Strings.Enum.MCH2Summary.Column.PreInputs.Tooltip.ToString ();
+			return text;
+		}
 
-				case Column.Inputs:
-					return Res.Strings.Enum.MCH2Summary.Column.Inputs.Tooltip.ToString ();
-
-				case Column.ReplacementValues:
-					return Res.Strings.Enum.MCH2Summary.Column.ReplacementValues.Tooltip.ToString ();
-
-				case Column.PostAdjusts:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAdjusts.Tooltip.ToString (), this.InitialDate);
-
-				case Column.PostDecreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostDecreases.Tooltip.ToString (), this.InitialDate);
-
-				case Column.PostIncreases:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostIncreases.Tooltip.ToString (), this.InitialDate);
-
-				case Column.PostOutputs:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostOutputs.Tooltip.ToString (), this.InitialDate);
-
-				case Column.PostAmortizations:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostAmortizations.Tooltip.ToString (), this.InitialDate);
-
-				case Column.PostSummaries:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.PostSummaries.Tooltip.ToString (), this.InitialDate);
-
-				case Column.Decreases:
-					return Res.Strings.Enum.MCH2Summary.Column.Decreases.Tooltip.ToString ();
-
-				case Column.Increases:
-					return Res.Strings.Enum.MCH2Summary.Column.Increases.Tooltip.ToString ();
-
-				case Column.Adjusts:
-					return Res.Strings.Enum.MCH2Summary.Column.Adjusts.Tooltip.ToString ();
-
-				case Column.Outputs:
-					return Res.Strings.Enum.MCH2Summary.Column.Outputs.Tooltip.ToString ();
-
-				case Column.AmortizationsAuto:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsAuto.Tooltip.ToString ();
-
-				case Column.AmortizationsExtra:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsExtra.Tooltip.ToString ();
-
-				case Column.AmortizationsSuppl:
-					return Res.Strings.Enum.MCH2Summary.Column.AmortizationsSuppl.Tooltip.ToString ();
-
-				case Column.FinalState:
-					return string.Format (Res.Strings.Enum.MCH2Summary.Column.FinalState.Tooltip.ToString (), this.JustDeforeFinalDate);
-
-				default:
-					return null;
+		private string RangeDate
+		{
+			get
+			{
+				if (this.DateRange.IsEmpty)
+				{
+					return "?";
+				}
+				else
+				{
+					return MCH2SummaryTreeTableFiller.ToNiceString (this.DateRange);
+				}
 			}
 		}
 
@@ -689,6 +786,39 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			}
 		}
 
+
+		private static string ToNiceString(DateRange range)
+		{
+			//	Retourne une jolie description d'une période, sous la forme
+			//	"2014" ou "du 01.01.2014 au 31.03.2014".
+
+			if (range.IsEmpty)
+			{
+				return "ø";
+			}
+			else
+			{
+				var f = range.IncludeFrom;
+				var t = range.ExcludeTo.AddDays (-1);  // date de fin inclue
+
+				if (f.Day   ==  1 &&
+					f.Month ==  1 &&	// du premier janvier ?
+					t.Day   == 31 &&
+					t.Month == 12 &&	// au 31 décembre ?
+					f.Year  == t.Year)	// de la même année ?
+				{
+					return f.Year.ToString ();
+				}
+				else
+				{
+					return string.Format (Res.Strings.MCH2SummaryTreeTableFiller.FromTo.ToString (),
+						TypeConverters.DateToString (f),
+						TypeConverters.DateToString (t));
+				}
+			}
+		}
+	
+		
 		private IEnumerable<Column> ExistingOrderedColumns
 		{
 			get
@@ -723,11 +853,14 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				{
 					case MCH2SummaryType.IndirectShort:
 						yield return Column.Name;
-						yield return Column.PreInputs;
 
+						yield return Column.PostPreInputs;
+						yield return Column.ReplacementValues;
 						yield return Column.PostSummaries;
 						yield return Column.PostAmortizations;
 
+						yield return Column.PreInputs;
+						yield return Column.Inputs;
 						yield return Column.Decreases;
 						yield return Column.Increases;
 						yield return Column.Adjusts;
@@ -741,8 +874,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 					case MCH2SummaryType.IndirectDetailed:
 						yield return Column.Name;
-						yield return Column.PreInputs;
 
+						yield return Column.PostPreInputs;
 						yield return Column.ReplacementValues;
 						yield return Column.PostDecreases;
 						yield return Column.PostIncreases;
@@ -750,6 +883,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						yield return Column.PostOutputs;
 						yield return Column.PostAmortizations;
 
+						yield return Column.PreInputs;
+						yield return Column.Inputs;
 						yield return Column.Decreases;
 						yield return Column.Increases;
 						yield return Column.Adjusts;
@@ -803,6 +938,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			PreInputs,
 			Inputs,
 			ReplacementValues,
+			PostPreInputs,
 			PostAdjusts,
 			PostDecreases,
 			PostIncreases,
