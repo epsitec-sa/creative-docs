@@ -6,14 +6,14 @@ var app = angular.module("webCoreQueryBuilder", [
 
 app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreServices',
   function($scope, $timeout, $location, webCoreServices) {
-    var druid = $location.path().replace('/', '');
+    var dbDruid = $location.path().replace('/', '');
     $scope.fields = [];
     $scope.columns = [];
     $scope.availableQueries = [];
     $scope.selectableColumns = [];
 
     var loadAvailableQueries = function() {
-      webCoreServices.loadQueries(druid).success(function(data, status,
+      webCoreServices.loadQueries(dbDruid).success(function(data, status,
         headers) {
           data.shift();
           $scope.availableQueries = data;
@@ -22,7 +22,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
 
     loadAvailableQueries();
 
-    webCoreServices.database(druid).success(function(data, status, headers) {
+    webCoreServices.database(dbDruid).success(function(data, status, headers) {
       $scope.database = data.content;
       $scope.filter = {
         group: {
@@ -113,7 +113,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
         return c.name;
       }).join(';');
 
-      webCoreServices.query(druid, columns, JSON.stringify(query)).success(
+      webCoreServices.query(dbDruid, columns, JSON.stringify(query)).success(
         function(data, status, headers) {
           $scope.total = data.content.total;
           $scope.displayTotal = true;
@@ -132,14 +132,14 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
 
       query.push($scope.filter.group);
 
-      webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
+      webCoreServices.saveQuery(dbDruid, queryName, columns, JSON.stringify(
         query)).success(function() {
             loadAvailableQueries();
         });
     };
 
     $scope.deleteQuery = function(queryName) {
-      webCoreServices.deleteQuery(druid, queryName).success(function() {
+      webCoreServices.deleteQuery(dbDruid, queryName).success(function() {
         loadAvailableQueries();
       });
     };

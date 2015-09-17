@@ -52,7 +52,6 @@ function() {
     isReloading: false,
     beforeReloadEntityId: null,
     selectedColumnId: null,
-
     /* Constructor */
 
     constructor: function(options) {
