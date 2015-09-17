@@ -44,6 +44,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
           $scope.fields.push({
             name: column.title,
             id: column.name,
+            druid: column.druid,
             type: column.type.type,
             enumId: column.type.enumerationName
           });
@@ -72,6 +73,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
             $scope.fields.push({
               name: column.title,
               id: column.name,
+              druid: column.druid,
               type: column.type.type,
               enumId: column.type.enumerationName
             });
@@ -110,7 +112,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       var query = [];
       query.push($scope.filter.group);
       var columns = $scope.columns.map(function(c) {
-        return c.name;
+        return c.druid;
       }).join(';');
 
       webCoreServices.query(dbDruid, columns, JSON.stringify(query)).success(
@@ -125,7 +127,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       var query = [], columns;
 
       columns = $scope.columns.map(function(c) {
-        return c.name;
+        return c.druid;
       }).join(';');
 
       $scope.filter.group.columns = columns;
@@ -156,7 +158,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
         //for each database columns
         angular.forEach($scope.database.columns, function(col) {
           //if column is in query
-          if (columnsId.indexOf(col.name) !== -1) {
+          if (columnsId.indexOf(col.druid) !== -1) {
             //add column to displayed
             $scope.columns.push(col);
           } else {

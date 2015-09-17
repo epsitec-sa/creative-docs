@@ -238,6 +238,7 @@ function() {
       var column = {
         text: columnDefinition.title,
         dataIndex: columnDefinition.name,
+        druid: columnDefinition.druid,
         sortable: columnDefinition.sortable,
         hidden: columnDefinition.hidden,
         filter: this.createFilter(columnDefinition)
@@ -576,8 +577,8 @@ function() {
 
               if (columns !== undefined) {
                 Ext.Array.each(this.columns, function(col) {
-                  if (col.hasOwnProperty('dataIndex')) {
-                    if (columns.indexOf(col.dataIndex) !== -1) {
+                  if (col.hasOwnProperty('druid')) {
+                    if (columns.indexOf(col.druid) !== -1) {
                       col.show();
                     } else {
                       col.hide();
