@@ -123,8 +123,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					//Create simple filter and add it to existing filter node
 					var field = (string) type["field"];
 					var entityFilter = new EntityFilter (entityId, FilterCombineMode.And);
-
-					var column = ColumnIO.ParseColumn (caches, database, field);
+					var column = database.Columns.First (c => c.Name == field);
 					var columnId = column.MetaData.Id;
 					var columnFilter = FilterIO.ParseColumnFilter (businessContext, caches, column, type);
 					var columnRef = new ColumnRef<EntityColumnFilter> (columnId, columnFilter);
