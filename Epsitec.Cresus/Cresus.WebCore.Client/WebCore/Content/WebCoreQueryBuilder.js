@@ -167,6 +167,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
           }
         });
 
+
         var filter = {
           group: group
         };
@@ -186,36 +187,10 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       }
     };
 
-    function htmlEntities(str) {
-      return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    function computedForHuman(group) {
-      if (!group) return "";
-      for (var str = "(", i = 0; i < group.rules.length; i++) {
-
-        if (i > 0) {
-          str += " <strong>" + group.operator + "</strong> ";
-        }
-        if (group.rules[i].group) {
-          str += computedForHuman(group.rules[i].group);
-        } else {
-          str += group.rules[i].field +
-                " " +
-                htmlEntities(group.rules[i].comparison) +
-                " " +
-                group.rules[i].value;
-        }
-      }
-
-      return str + ")";
-    }
-
     $scope.json = null;
 
     $scope.$watch('filter', function(newValue) {
       if (newValue !== undefined) {
-        $scope.humanOutput = computedForHuman(newValue.group);
       }
     }, true);
   }

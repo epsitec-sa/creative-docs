@@ -552,7 +552,6 @@ function() {
       if (epsitecConfig.featureQueryBuilder &&
            this.queryStore !== null) {
         var buttons = [];
-
         buttons.push(Ext.create("Ext.form.field.ComboBox", {
           hideLabel: true,
           store: this.queryStore,
