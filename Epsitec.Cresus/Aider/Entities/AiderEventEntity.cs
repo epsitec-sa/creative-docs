@@ -76,6 +76,7 @@ namespace Epsitec.Aider.Entities
 			newEvent.Place = place;
 			newEvent.Kind  = kind != null ? kind : Enumerations.EventKind.None;
 			newEvent.Date = celebrationDate;
+			newEvent.ParishGroupPathCache = office.ParishGroupPathCache;
 			return newEvent;
 		}
 
