@@ -113,16 +113,6 @@ namespace Epsitec.Aider.Override
 			}		
 		}
 
-		private IFilter GetAiderEventEntityFilter(AiderEventEntity example, string pattern)
-		{
-			return new LambdaFilter<AiderEventEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
-		}
-
-		private IFilter GetAiderEventParticipantEntityFilter(AiderEventParticipantEntity example, string pattern)
-		{
-			return new LambdaFilter<AiderEventParticipantEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
-		}
-
 		private IFilter GetAiderGroupDefEntityFilter(AiderGroupDefEntity example)
 		{
 			return new LambdaFilter<AiderGroupDefEntity> (x => x.Level == AiderGroupIds.TopLevel);
@@ -351,6 +341,16 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderOfficeSenderFilter(AiderOfficeSenderEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderEventEntityFilter(AiderEventEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderEventEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderEventParticipantEntityFilter(AiderEventParticipantEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderEventParticipantEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
 
