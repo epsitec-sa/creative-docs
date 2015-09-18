@@ -298,9 +298,21 @@ namespace Epsitec.Aider.Override
 			{
 				var list = new List<string> ();
 
-				list.Add (user.Office.OfficeName);
-				list.AddRange (user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName));
+				// hack for root user case,
+				// SqlMethods.IsInSet (x.OfficeName, offices) needs one entry in the list of offices
 
+				list.Add ("n0where");
+
+				if (user.Office.IsNotNull ())
+				{
+					list.Add (user.Office.OfficeName);
+				}
+
+				if (user.Contact.IsNotNull ())
+				{
+					list.AddRange (user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName));
+				}
+				
 				//	Make sure the user sees at least his own offices, and all those he can
 				//	access through the active scope.
 				
