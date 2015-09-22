@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Labels
 					return entity.Contact.GetCustomAddressLabelText ("Aux parents de\n" + entity.CustomRecipient);
 				case Enumerations.MailingGroupMode.ByContact:
 				default:
-					return entity.Contact.GetAddressLabelText ();
+					return entity.Contact.GetAddressOfParentsLabelText ();
 			}	
 		}
 
