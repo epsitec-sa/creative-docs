@@ -543,7 +543,7 @@ namespace Epsitec.Aider.Entities
 				case MailingGroupMode.ByHouseholdUsingDesc:
 				created.ForEach (p =>
 				{
-					p.CustomRecipient = p.Contact.Household.GetAddressName ();
+					p.CustomRecipient = p.Contact.Household.GetAddressLabelText ().ToSimpleText ();
 				});	
 				break;
 
