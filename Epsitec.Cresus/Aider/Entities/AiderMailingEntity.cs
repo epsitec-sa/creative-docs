@@ -526,16 +526,19 @@ namespace Epsitec.Aider.Entities
 				{
 					if (household.Contacts.Any ())
 					{
-						if (household.Contacts.Count == 1)
+						var excludedMembers = 0;
+						var members         = household.Contacts.Count;
+						household.Contacts.ForEach (c =>
 						{
-							if (excludedContacts.Contains (household.Contacts.Single ()))
+							if (excludedContacts.Contains (c))
 							{
-								// we don't create participation in this case
-								continue;
+								excludedMembers++;
 							}
-						}
-
-						created.Add (AiderMailingParticipantEntity.Create (businessContext, this, household));
+						});
+						if (excludedMembers != members)
+						{
+							created.Add (AiderMailingParticipantEntity.Create (businessContext, this, household));
+						}				
 					}
 				}
 
