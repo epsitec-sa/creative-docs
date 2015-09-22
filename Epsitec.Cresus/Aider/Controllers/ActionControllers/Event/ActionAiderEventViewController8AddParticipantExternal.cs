@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<string, string, string, Enumerations.PersonConfession, Enumerations.EventParticipantRole> (this.Execute);
+			return ActionExecutor.Create<string, string, string, Enumerations.PersonConfession, Date?, Enumerations.EventParticipantRole> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
@@ -55,6 +55,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Confession")
 					.InitialValue (Enumerations.PersonConfession.Protestant)
 				.End ()
+				.Field<Date?> ()
+					.Title ("Date de naissance")
+				.End ()
 				.Field<Enumerations.EventParticipantRole> ()
 					.Title ("Rôle")
 				.End ()
@@ -66,6 +69,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			string firstName,
 			string town,
 			Enumerations.PersonConfession confession,
+			Date? birthDate,
 			Enumerations.EventParticipantRole role
 		)
 		{
@@ -89,7 +93,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				this.Entity, 
 				firstName, 
 				lastName,
-				null,
+				birthDate,
 				town, 
 				null,
 				confession,
