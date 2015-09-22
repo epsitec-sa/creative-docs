@@ -38,6 +38,18 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
             value: 'gt'
           }];
 
+          // prefetch all enum values
+          angular.forEach(scope.fields, function(field) {
+            if (field.enumId) {
+              webCoreServices
+                .fieldValues (field.enumId)
+                .success (function (data, status, headers) {
+                  scope.fieldEnumMap[field.druid] = field.enumId;
+                  scope.enum[field.enumId] = data.content.values;
+                });
+            }
+          });
+
           scope.addCondition = function() {
             scope.group.rules.push({
               field: '',
@@ -65,14 +77,6 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
             angular.forEach(scope.fields, function(field) {
               if (field.druid === rule.field) {
                 rule.type = field.type;
-
-                if (rule.type === 'list') {
-                  webCoreServices.fieldValues(field.enumId).success(
-                    function(data, status, headers) {
-                      scope.fieldEnumMap[field.druid] = field.enumId;
-                      scope.enum[field.enumId] = data.content.values;
-                    });
-                }
               }
             });
           };
