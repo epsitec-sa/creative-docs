@@ -56,6 +56,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					}		
 				});
 				this.Entity.ApplyParticipantsInfo ();
+				this.Entity.BuildMainActorsSummary ();
 				var previousAct = AiderEventOfficeReportEntity.GetByEvent (this.BusinessContext, this.Entity);
 				if(previousAct.IsNotNull ())
 				{

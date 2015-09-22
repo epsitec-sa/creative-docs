@@ -513,7 +513,8 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				EventsGroupPathCache.InitGroupPathCacheIfNeeded (coreData);
+				AiderEvents.InitGroupPathCacheIfNeeded (coreData);
+				AiderEvents.RebuildMainActorsOnValidatedEvents (coreData);
 			});
 		}
 

@@ -3433,6 +3433,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>MainActorsSummary</c> field.
+		///	designer:fld/LVA93/LVO583
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO583]")]
+		public string MainActorsSummary
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO583]");
+			}
+			set
+			{
+				string oldValue = this.MainActorsSummary;
+				if (oldValue != value || !this.IsFieldDefined("[LVO583]"))
+				{
+					this.OnMainActorsSummaryChanging (oldValue, value);
+					this.SetField<string> ("[LVO583]", oldValue, value);
+					this.OnMainActorsSummaryChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
@@ -3456,6 +3478,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnReportChanged(global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity oldValue, global::Epsitec.Aider.Entities.AiderEventOfficeReportEntity newValue);
 		partial void OnParishGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnParishGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnMainActorsSummaryChanging(string oldValue, string newValue);
+		partial void OnMainActorsSummaryChanged(string oldValue, string newValue);
 		
 		partial void GetParticipants(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		

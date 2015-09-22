@@ -3076,6 +3076,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
 				//	designer:cap/LVO163
 				public static readonly global::Epsitec.Common.Support.Druid Kind = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 193);
+				//	designer:cap/LVO583
+				public static readonly global::Epsitec.Common.Support.Druid MainActorsSummary = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 261);
 				//	designer:cap/LVO253
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 162);
 				//	designer:cap/LVO283

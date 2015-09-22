@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Data.Groups
 	/// <summary>
 	/// Init ParishGroupPathCache for already created events and participants
 	/// </summary>
-	public static class EventsGroupPathCache
+	public static class AiderEvents
 	{		
 		public static void InitGroupPathCacheIfNeeded(CoreData coreData)
 		{
@@ -35,6 +35,25 @@ namespace Epsitec.Aider.Data.Groups
 					var pathCache = e.Office.ParishGroupPathCache;
 					e.ParishGroupPathCache = pathCache;
 					e.Participants.ForEach (p => p.ParishGroupPathCache = pathCache);
+				});
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				Console.WriteLine ("Done! press any key...");
+				Console.ReadLine ();
+			}
+		}
+
+		public static void RebuildMainActorsOnValidatedEvents(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var example = new AiderEventEntity ()
+				{
+					State = EventState.Validated
+				};
+				businessContext.GetByExample<AiderEventEntity> (example).ForEach (e =>
+				{
+					e.BuildMainActorsSummary ();
 				});
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
