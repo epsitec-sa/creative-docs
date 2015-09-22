@@ -99,6 +99,7 @@
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController9PreviewReport.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController8AddParticipantExternal.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController7AddParticipant.cs" />
+    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController26AddHouseholdExclusion.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController8DeleteEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController7DuplicateEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
@@ -132,7 +133,6 @@
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController20AddJobQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController19RemoveContactQuery.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController18AddContactQuery.cs" />
-    <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController17ToggleHouseholdGrouping.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController2RemoveSettings.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController3AddEmployeeAndJob.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController5PrepareEvent.cs" />

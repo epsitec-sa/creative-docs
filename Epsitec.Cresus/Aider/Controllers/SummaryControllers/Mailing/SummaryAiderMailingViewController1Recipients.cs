@@ -58,6 +58,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetExclusionsTitleSummary ())
 				.Text (p => p.GetExclusionsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
+				.EnableActionMenu<ActionAiderMailingViewController26AddHouseholdExclusion> ()
 				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
 		}
 	}

@@ -219,6 +219,19 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public void ExcludeHousehold(BusinessContext businessContext, AiderHouseholdEntity householdToExclude)
+		{
+			foreach (var contact in householdToExclude.Contacts)
+			{
+				if (!this.Exclusions.Contains (contact))
+				{
+					this.UpdateLastUpdateDate ();
+					this.Exclusions.Add (contact);
+					AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
+				}
+			}
+		}
+
 		public void ExludeContacts(BusinessContext businessContext, IEnumerable<AiderContactEntity> contactsToExclude)
 		{		
 			foreach (var contact in contactsToExclude)
