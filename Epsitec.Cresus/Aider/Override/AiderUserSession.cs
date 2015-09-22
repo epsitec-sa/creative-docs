@@ -234,6 +234,14 @@ namespace Epsitec.Aider.Override
 				{
 					return this.GetAiderEmployeeJobEntityFilter ((AiderEmployeeJobEntity) example, pattern + "%");
 				}
+				else if (entityType == typeof (AiderEventEntity))
+				{
+					return this.GetAiderEventEntityFilter ((AiderEventEntity) example, pattern + "%");
+				}
+				else if (entityType == typeof (AiderEventParticipantEntity))
+				{
+					return this.GetAiderEventParticipantEntityFilter ((AiderEventParticipantEntity) example, pattern + "%");
+				}
 			}
 
 			return null;
@@ -298,9 +306,21 @@ namespace Epsitec.Aider.Override
 			{
 				var list = new List<string> ();
 
-				list.Add (user.Office.OfficeName);
-				list.AddRange (user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName));
+				// hack for root user case,
+				// SqlMethods.IsInSet (x.OfficeName, offices) needs one entry in the list of offices
 
+				list.Add ("n0where");
+
+				if (user.Office.IsNotNull ())
+				{
+					list.Add (user.Office.OfficeName);
+				}
+
+				if (user.Contact.IsNotNull ())
+				{
+					list.AddRange (user.Contact.Person.Employee.EmployeeJobs.Select (j => j.Office.OfficeName));
+				}
+				
 				//	Make sure the user sees at least his own offices, and all those he can
 				//	access through the active scope.
 				
@@ -321,6 +341,16 @@ namespace Epsitec.Aider.Override
 		private IFilter GetAiderOfficeSenderFilter(AiderOfficeSenderEntity example, string pattern)
 		{
 			return new LambdaFilter<AiderOfficeManagementEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderEventEntityFilter(AiderEventEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderEventEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
+		}
+
+		private IFilter GetAiderEventParticipantEntityFilter(AiderEventParticipantEntity example, string pattern)
+		{
+			return new LambdaFilter<AiderEventParticipantEntity> (x => SqlMethods.Like (x.ParishGroupPathCache, pattern));
 		}
 
 

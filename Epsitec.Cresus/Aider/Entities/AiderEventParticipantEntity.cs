@@ -46,6 +46,7 @@ namespace Epsitec.Aider.Entities
 			newParticipant.Event = targetEvent;
 			newParticipant.Role = role;
 			newParticipant.Person = person;
+			newParticipant.ParishGroupPathCache = targetEvent.ParishGroupPathCache;
 			return newParticipant;
 		}
 
@@ -70,6 +71,7 @@ namespace Epsitec.Aider.Entities
 			newParticipant.ParishName  = parishName;
 			newParticipant.BirthDate   = birthDate;
 			newParticipant.Confession  = confession;
+			newParticipant.ParishGroupPathCache = targetEvent.ParishGroupPathCache;
 			return newParticipant;
 		}
 

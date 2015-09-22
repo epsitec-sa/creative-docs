@@ -6,14 +6,14 @@ var app = angular.module("webCoreQueryBuilder", [
 
 app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreServices',
   function($scope, $timeout, $location, webCoreServices) {
-    var druid = $location.path().replace('/', '');
+    var dbDruid = $location.path().replace('/', '');
     $scope.fields = [];
     $scope.columns = [];
     $scope.availableQueries = [];
     $scope.selectableColumns = [];
 
     var loadAvailableQueries = function() {
-      webCoreServices.loadQueries(druid).success(function(data, status,
+      webCoreServices.loadQueries(dbDruid).success(function(data, status,
         headers) {
           data.shift();
           $scope.availableQueries = data;
@@ -22,7 +22,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
 
     loadAvailableQueries();
 
-    webCoreServices.database(druid).success(function(data, status, headers) {
+    webCoreServices.database(dbDruid).success(function(data, status, headers) {
       $scope.database = data.content;
       $scope.filter = {
         group: {
@@ -44,6 +44,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
           $scope.fields.push({
             name: column.title,
             id: column.name,
+            druid: column.druid,
             type: column.type.type,
             enumId: column.type.enumerationName
           });
@@ -72,6 +73,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
             $scope.fields.push({
               name: column.title,
               id: column.name,
+              druid: column.druid,
               type: column.type.type,
               enumId: column.type.enumerationName
             });
@@ -110,10 +112,10 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       var query = [];
       query.push($scope.filter.group);
       var columns = $scope.columns.map(function(c) {
-        return c.name;
+        return c.druid;
       }).join(';');
 
-      webCoreServices.query(druid, columns, JSON.stringify(query)).success(
+      webCoreServices.query(dbDruid, columns, JSON.stringify(query)).success(
         function(data, status, headers) {
           $scope.total = data.content.total;
           $scope.displayTotal = true;
@@ -125,21 +127,21 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       var query = [], columns;
 
       columns = $scope.columns.map(function(c) {
-        return c.name;
+        return c.druid;
       }).join(';');
 
       $scope.filter.group.columns = columns;
 
       query.push($scope.filter.group);
 
-      webCoreServices.saveQuery(druid, queryName, columns, JSON.stringify(
+      webCoreServices.saveQuery(dbDruid, queryName, columns, JSON.stringify(
         query)).success(function() {
             loadAvailableQueries();
         });
     };
 
     $scope.deleteQuery = function(queryName) {
-      webCoreServices.deleteQuery(druid, queryName).success(function() {
+      webCoreServices.deleteQuery(dbDruid, queryName).success(function() {
         loadAvailableQueries();
       });
     };
@@ -156,7 +158,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
         //for each database columns
         angular.forEach($scope.database.columns, function(col) {
           //if column is in query
-          if (columnsId.indexOf(col.name) !== -1) {
+          if (columnsId.indexOf(col.druid) !== -1) {
             //add column to displayed
             $scope.columns.push(col);
           } else {
@@ -164,6 +166,7 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
             $scope.selectableColumns.push(col);
           }
         });
+
 
         var filter = {
           group: group
@@ -184,36 +187,10 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
       }
     };
 
-    function htmlEntities(str) {
-      return String(str).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    }
-
-    function computedForHuman(group) {
-      if (!group) return "";
-      for (var str = "(", i = 0; i < group.rules.length; i++) {
-
-        if (i > 0) {
-          str += " <strong>" + group.operator + "</strong> ";
-        }
-        if (group.rules[i].group) {
-          str += computedForHuman(group.rules[i].group);
-        } else {
-          str += group.rules[i].field +
-                " " +
-                htmlEntities(group.rules[i].comparison) +
-                " " +
-                group.rules[i].value;
-        }
-      }
-
-      return str + ")";
-    }
-
     $scope.json = null;
 
     $scope.$watch('filter', function(newValue) {
       if (newValue !== undefined) {
-        $scope.humanOutput = computedForHuman(newValue.group);
       }
     }, true);
   }
