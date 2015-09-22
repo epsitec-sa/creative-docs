@@ -506,6 +506,8 @@ namespace Epsitec.Aider.Entities
 
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
 			var created = new List<AiderMailingParticipantEntity> ();
+			var excludedContacts     = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
+
 			switch (this.GroupMode)
 			{
 				case MailingGroupMode.ByContact:
@@ -524,6 +526,15 @@ namespace Epsitec.Aider.Entities
 				{
 					if (household.Contacts.Any ())
 					{
+						if (household.Contacts.Count == 1)
+						{
+							if (excludedContacts.Contains (household.Contacts.Single ()))
+							{
+								// we don't create participation in this case
+								continue;
+							}
+						}
+
 						created.Add (AiderMailingParticipantEntity.Create (businessContext, this, household));
 					}
 				}
@@ -552,7 +563,7 @@ namespace Epsitec.Aider.Entities
 				created.ForEach (p =>
 				{
 					var contacts   = contactsByHousehold[p.Contact.Household];
-					var contactsByName     = contacts.ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
+					var contactsByName     = contacts.Where (c => !excludedContacts.Contains (c)).ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
 					var recipients = new List<string> ();
  					contactsByName.ForEach (n => 
 					{
@@ -589,30 +600,17 @@ namespace Epsitec.Aider.Entities
 			var excludedContacts     = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
 			var participants         = new HashSet<AiderContactEntity> (AiderMailingParticipantEntity.GetAllParticipants (dataContext, this).Select (p => p.Contact));
 
-			foreach (var exclude in excludedContacts)
+			if (this.GroupMode == MailingGroupMode.ByContact)
 			{
-				switch (this.GroupMode)
+				foreach (var exclude in excludedContacts)
 				{
-					case MailingGroupMode.ByContact:
 					if (participants.Contains (exclude))
 					{
 						AiderMailingParticipantEntity.ExcludeContact (businessContext, this, exclude);
 					}
-					break;
-
-					case MailingGroupMode.ByHouseholdUsingDesc:
-					case MailingGroupMode.ByHouseholdUsingParticipants:
-					var households = this.GetParticipantsByHousehold (businessContext.DataContext);
-					var excludedHouseholds = households.Where (h => exclude.Household == h && exclude.Household.IsNotNull ());
-					foreach (var household in excludedHouseholds)
-					{
-						// Exclude Contact[0] (the same used when grouped by household)
-						AiderMailingParticipantEntity.ExcludeContact (businessContext, this, household.Contacts[0]);
-					}
-					break;
 				}
 			}
-
+			
 			this.UpdateLastUpdateDate ();
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
