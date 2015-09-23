@@ -14,6 +14,7 @@ using System.Data;
 using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Data.ECh;
 
 
 
@@ -21,11 +22,56 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class EChPersonFixer
 	{
-		public static void CreateMissingContact(CoreData coreData)
+		public static void FixHiddenPersons(CoreData coreData, string currentEchFile)
 		{
+			var echData    = new EChReportedPersonRepository (currentEchFile);	
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
-				
+				var echExample = new eCH_PersonEntity ()
+				{
+					DeclarationStatus = PersonDeclarationStatus.Declared
+				};
+
+				var example = new AiderPersonEntity ()
+				{
+					Visibility = PersonVisibilityStatus.Hidden,
+					eCH_Person = echExample
+				};
+
+				businessContext.GetByExample<AiderPersonEntity> (example).ForEach (p =>
+				{
+					p.Visibility = PersonVisibilityStatus.Default;
+					EChPersonFixer.LogToConsole (p.DisplayName + " fixed");
+					EChPersonFixer.CreateWarning (businessContext, p, WarningType.ParishArrival, "Correction RCH", "Cette personne n'avait pas été réintégrée correctement");
+				});
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+				// check for removed
+				echExample.DeclarationStatus = PersonDeclarationStatus.Removed;
+				businessContext.GetByExample<AiderPersonEntity> (example).Distinct ().ForEach (p =>
+				{
+					var householdInfo = echData.GetHouseholdsInfo (p.eCH_Person.PersonId);
+					if (householdInfo.Any ())
+					{
+						p.Visibility = PersonVisibilityStatus.Default;
+						p.eCH_Person.DeclarationStatus = PersonDeclarationStatus.Declared;
+						p.eCH_Person.RemovalReason    = RemovalReason.None;
+						var secondHousehold = false;
+						householdInfo.ForEach ((info) =>
+						{
+							var household    = info.Item1;
+							var isHead1      = info.Item2;
+							var isHead2      = info.Item3;
+							HouseholdsFix.FixPersonHousehold (businessContext, p, household, null, isHead1, isHead2, secondHousehold);
+							secondHousehold = true;
+						});
+
+						EChPersonFixer.LogToConsole (p.DisplayName + " fixed");
+						EChPersonFixer.CreateWarning (businessContext, p, WarningType.ParishArrival, "Correction RCH", "Cette personne n'avait pas été réintégrée correctement");
+						businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+					}
+				});
 			}
 		}
 
@@ -173,7 +219,7 @@ namespace Epsitec.Aider.Data.Job
 				System.Console.ForegroundColor = System.ConsoleColor.Red;
 			}
 
-			System.Console.WriteLine ("ContactFixer: {0}", message);
+			System.Console.WriteLine ("EchFixer: {0}", message);
 			System.Console.ResetColor ();
 
 			var time = new System.Diagnostics.Stopwatch ();
@@ -183,17 +229,11 @@ namespace Epsitec.Aider.Data.Job
 			return time;
 		}
 
-		private static void CreateWarning(BusinessContext context, AiderPersonEntity person, string parishGroupPath,
-								   WarningType warningType, FormattedText title, FormattedText description, AiderWarningSourceEntity source)
+		private static void CreateWarning(BusinessContext context, AiderPersonEntity person, 
+								   WarningType warningType, FormattedText title, FormattedText description)
 		{
 			var personId = person.eCH_Person.PersonId;
-
-			if (string.IsNullOrEmpty (personId))
-			{
-				personId = context.DataContext.GetNormalizedEntityKey (person).ToString ();
-			}
-
-			AiderPersonWarningEntity.Create (context, person, parishGroupPath, warningType, title, description, source);
+			AiderPersonWarningEntity.Create (context, person, person.ParishGroupPathCache, warningType, title, description);
 		}
 	}
 }
