@@ -471,10 +471,18 @@ AiderEventPlace = [LVOL63]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEvent:[LVO583]" title="Concerne" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
     </t>
 
     <t eid="@AiderEventParticipant" n="default">
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVA04]" title="Registre" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVO253].[LVARK]" title="Paroisse" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>

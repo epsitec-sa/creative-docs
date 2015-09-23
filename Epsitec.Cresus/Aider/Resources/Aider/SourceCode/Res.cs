@@ -3076,8 +3076,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
 				//	designer:cap/LVO163
 				public static readonly global::Epsitec.Common.Support.Druid Kind = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 193);
+				//	designer:cap/LVO583
+				public static readonly global::Epsitec.Common.Support.Druid MainActorsSummary = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 261);
 				//	designer:cap/LVO253
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 162);
+				//	designer:cap/LVO283
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 258);
 				//	designer:cap/LVOJ53
 				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 179);
 				//	designer:cap/LVOQ63
@@ -3132,6 +3136,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid IsExternal = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 226);
 				//	designer:cap/LVOJ73
 				public static readonly global::Epsitec.Common.Support.Druid LastName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 243);
+				//	designer:cap/LVO383
+				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 259);
 				//	designer:cap/LVOM73
 				public static readonly global::Epsitec.Common.Support.Druid ParishName = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 246);
 				//	designer:cap/LVAC3

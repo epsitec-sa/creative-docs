@@ -16,14 +16,16 @@ namespace Epsitec.Aider.Labels
 
 		public override FormattedText GetLabelText(AiderMailingParticipantEntity entity)
 		{
-			if (entity.Mailing.GroupMode != Enumerations.MailingGroupMode.ByContact)
+			switch (entity.Mailing.GroupMode)
 			{
-				return entity.Contact.GetCustomAddressLabelText ("Aux parents de\n" + entity.CustomRecipient);
-			}
-			else
-			{
-				return entity.Contact.GetAddressOfParentsLabelText ();
-			}			
+				case Enumerations.MailingGroupMode.ByHouseholdUsingDesc:
+					return TextFormatter.FormatText ("Aux parents de\n" + entity.CustomRecipient);
+				case Enumerations.MailingGroupMode.ByHouseholdUsingParticipants:
+					return entity.Contact.GetCustomAddressLabelText ("Aux parents de\n" + entity.CustomRecipient);
+				case Enumerations.MailingGroupMode.ByContact:
+				default:
+					return entity.Contact.GetAddressOfParentsLabelText ();
+			}	
 		}
 
 

@@ -76,6 +76,7 @@ namespace Epsitec.Aider.Entities
 			newEvent.Place = place;
 			newEvent.Kind  = kind != null ? kind : Enumerations.EventKind.None;
 			newEvent.Date = celebrationDate;
+			newEvent.ParishGroupPathCache = office.ParishGroupPathCache;
 			return newEvent;
 		}
 
@@ -438,6 +439,11 @@ namespace Epsitec.Aider.Entities
 		partial void GetParticipants(ref IList<AiderEventParticipantEntity> value)
 		{
 			value = this.GetParticipations ().AsReadOnlyCollection ();
+		}
+
+		public void BuildMainActorsSummary()
+		{
+			this.MainActorsSummary = this.GetMainActors ().Select (p => p.LastName + ", " + p.FirstName.Split (' ')[0]).Join (" / ");
 		}
 
 		private bool TryAddActorWithRole(out AiderEventParticipantEntity actor, Enumerations.EventParticipantRole role)

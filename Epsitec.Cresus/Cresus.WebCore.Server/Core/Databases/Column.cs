@@ -125,6 +125,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Databases
 			{
 				{ "title", this.Title },
 				{ "name", this.GetId (caches) },
+				{ "druid", this.Name},
 				{ "type", this.GetColumnTypeData (caches) },
 				{ "hidden", this.Hidden },
 				{ "width", this.Width },

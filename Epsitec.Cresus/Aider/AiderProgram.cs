@@ -123,7 +123,11 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				
+				if (args.Contains ("-initevents"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.InitEvents (args));
+					return;
+				}
 
 				if (args.Contains ("-populateusergroups"))
 				{
@@ -502,6 +506,15 @@ namespace Epsitec.Aider
 				DerogationGroups.CreateIfNeeded (coreData);
 				AiderUsersGroups.InitParishUserGroups (coreData);
 				AiderUsersGroups.InitRegionalUserGroups (coreData);
+			});
+		}
+
+		private static void InitEvents(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				AiderEvents.InitGroupPathCacheIfNeeded (coreData);
+				AiderEvents.RebuildMainActorsOnValidatedEvents (coreData);
 			});
 		}
 

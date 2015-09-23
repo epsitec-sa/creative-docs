@@ -725,3 +725,36 @@ Mise à jour de la vue ECH_PERSON_WITH_HOUSEHOLDS
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-08-03.xml
 -echupdate -newechfile:S:\eerv\eerv-2015-08-10.xml -oldechfile:S:\eerv\eerv-2015-08-03.xml -output:s:\eerv\ech-diff-2015-08-10.md
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-08-10.xml
+
+Lancé le 20.08.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-08-17.xml -oldechfile:S:\eerv\eerv-2015-08-10.xml -output:s:\eerv\ech-diff-2015-08-17.md
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-08-17.xml
+
+-exportsubscriptions -output:export-2015-08-27.txt -error:error-2015-08-27.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-08-27.txt -publicationdate:2015-08-27 -response:tamedia-2015-08-27.log
+
+Lancé le 27.08.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-08-24.xml -oldechfile:S:\eerv\eerv-2015-08-17.xml -output:s:\eerv\ech-diff-2015-08-24.md
+-cleanhouseholds -echfile:S:\eerv\eerv-2015-08-24.xml
+
+Lancé le 06.09.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-08-31.xml -oldechfile:S:\eerv\eerv-2015-08-24.xml -output:s:\eerv\ech-diff-2015-08-31.md
+
+Lancé le 16.09.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-09-07.xml -oldechfile:S:\eerv\eerv-2015-08-31.xml -output:s:\eerv\ech-diff-2015-09-07.md
+-echupdate -newechfile:S:\eerv\eerv-2015-09-14.xml -oldechfile:S:\eerv\eerv-2015-09-07.xml -output:s:\eerv\ech-diff-2015-09-14.md
+
+// -cleanhouseholds -echfile:S:\eerv\eerv-2015-09-14.xml
+
+Lancé le 22.09.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-09-21.xml -oldechfile:S:\eerv\eerv-2015-09-14.xml -output:s:\eerv\ech-diff-2015-09-21.md

@@ -28,7 +28,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderMailingEntity> wall)
 		{
 			var user = AiderUserManager.Current.AuthenticatedUser;
-			
+
+			if (Date.FromObject (this.Entity.LastUpdate.Value.AddMonths (1)) < Date.Today)
+			{
+				var userName = user.LoginName;
+				var message  = new NotificationMessage ()
+				{
+					Title = "Mise à jour du mailing requise",
+					Body  = "Ce mailing n'a pas été mis à jour depuis plus d'un mois"
+				};
+
+				NotificationManager.GetCurrentNotificationManager ().Notify (userName, message, When.Now);
+			}
+
 			wall.AddBrick ()
 				.Icon ("Data.AiderMailing")
 				.Title ("Détails du publipostage")
@@ -58,6 +70,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title (p => p.GetExclusionsTitleSummary ())
 				.Text (p => p.GetExclusionsSummary ())
 				.Attribute (BrickMode.DefaultToSetSubView)
+				.EnableActionMenu<ActionAiderMailingViewController26AddHouseholdExclusion> ()
 				.WithSpecialController (typeof (SetAiderMailingViewController1ExcludedContact));
 		}
 	}
