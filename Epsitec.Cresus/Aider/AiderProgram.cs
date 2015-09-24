@@ -343,6 +343,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixrolecacheparticipations")) //-fixrolecacheparticipations
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixRoleCacheParticipations (args));
+					return;
+				}
+
 				if (args.Contains ("-initrolecache")) //-initrolecache
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.InitRoleCache (args));
@@ -921,6 +927,17 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				RoleCache.InitBaseSet (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void FixRoleCacheParticipations(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				RoleCache.FixParticipations (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
