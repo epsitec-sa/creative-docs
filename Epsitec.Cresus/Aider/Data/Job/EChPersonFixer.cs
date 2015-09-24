@@ -22,6 +22,13 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class EChPersonFixer
 	{
+		public static void FixBadLocatedPersons(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+			}
+		}
+
 		public static void FixHiddenPersons(CoreData coreData, string currentEchFile)
 		{
 			var echData    = new EChReportedPersonRepository (currentEchFile);	

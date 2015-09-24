@@ -132,6 +132,7 @@ namespace Epsitec.Aider.Data.Job
 								this.LogToConsole ("Info: {0} changes detected",changes.Count);
 								AiderPersonBusinessRules.UpdatePersonOfficialName (aiderPerson);
 								AiderPersonBusinessRules.UpdatePersonSex (aiderPerson);
+								AiderPersonBusinessRules.FixMrMrsBasedOnSex (aiderPerson, aiderPerson.eCH_Person);
 								AiderPersonBusinessRules.UpdateVisibility (aiderPerson);
 								this.LogToConsole ("Info: Refresh entity cache");
 								aiderPerson.RefreshCache ();
