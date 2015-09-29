@@ -17,15 +17,14 @@ queryBuilder.directive('parseDate', function(){
               var month  = parseInt(tokens[1], 10) - 1;
               var year   = parseInt(tokens[2], 10);
               var date   = new Date (year, month, day);
-              console.log ('parseDate:' + date);
               return date;
             });
             ngModel.$parsers.push(function(value){
-              var day   = formatNumber (value.getDate (), 2);
-              var month = formatNumber (value.getMonth () + 1, 2);
-              var year  = value.getFullYear ();
-              var date  = day + '.' + month + '.' + year;
-              return date;
+                var day   = formatNumber (value.getDate (), 2);
+                var month = formatNumber (value.getMonth () + 1, 2);
+                var year  = value.getFullYear ();
+                var date  = day + '.' + month + '.' + year;
+                return date;
             });
         }
     };

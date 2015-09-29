@@ -4,7 +4,7 @@
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Resolvers;
-
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.WebCore.Server.Core;
 using Epsitec.Cresus.WebCore.Server.Core.Databases;
 using Epsitec.Cresus.WebCore.Server.Core.Extraction;
@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var database		= databaseManager.GetDatabase (databaseId);
 			var dataset         = database.DataSetMetadata;
 			var settings        = userManager.ActiveSession.GetDataSetSettings (dataset);
+			var queries         = settings.AvailableQueries;
 
 			string rawQuery   = Tools.GetOptionalParameter (Request.Query.query);
 			string rawColumns = Request.Query.columns;
@@ -98,8 +99,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var query = FilterIO.ParseQuery (businessContext, caches, database, rawQuery);
 			query.Name = queryName;
 			query.Description = rawQuery;
-
-			settings.AvailableQueries.Add (query);
+			queries.RemoveAll (q => q.Name.ToSimpleText () == queryName);
+			queries.Add (query);
 			userManager.ActiveSession.SetDataSetSettings (dataset, settings);
 
 			return new Response ()
@@ -130,14 +131,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var database		= databaseManager.GetDatabase (databaseId);
 			var dataset         = database.DataSetMetadata;
 			var settings        = userManager.ActiveSession.GetDataSetSettings (dataset);
+			var queries         = settings.AvailableQueries;
 
-
-			var queryToDelete = settings.AvailableQueries.Where (q => q.Name.ToSimpleText () == queryName).FirstOrDefault ();
-			if(queryToDelete != null)
-			{
-				settings.AvailableQueries.Remove (queryToDelete);
-			}
-
+			queries.RemoveAll (q => q.Name.ToSimpleText () == queryName);
 			userManager.ActiveSession.SetDataSetSettings (dataset, settings);
 
 			return new Response ()
