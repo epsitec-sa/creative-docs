@@ -18,9 +18,8 @@ Ext.require(
 
         newOptions = {
           title: 'Editeur de requêtes',
-          width: 800,
-          height: 600,
-          header: 'false',
+          maximized: true,
+          header: true,
           constrain: true,
           renderTo: Ext.get(tabManager.getLayout().getActiveItem().el),
           layout: {
