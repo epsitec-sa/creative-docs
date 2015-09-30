@@ -2,6 +2,7 @@
 using Epsitec.Aider.Entities;
 
 using Epsitec.Common.IO;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
@@ -20,6 +21,37 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class RoleCache
 	{
+		public static void FixParticipations(CoreData coreData)
+		{
+			Logger.LogToConsole ("RoleCache -> Fixing participations");
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var nonDisabled = new AiderGroupDefEntity ()
+				{
+					RoleCacheDisabled = false
+				};
+
+				var link = new AiderGroupEntity ()
+				{
+					GroupDef = nonDisabled
+				};
+
+				var example = new AiderGroupParticipantEntity ()
+				{
+					RoleCacheDisabled = true,
+					Group = link
+				};
+
+				businessContext.GetByExample<AiderGroupParticipantEntity> (example).ForEach (p =>
+				{
+					p.RoleCacheDisabled = false;
+					Logger.LogToConsole (p.RoleCache);
+				});
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+			}
+		}
+
 		public static void InitBaseSet(CoreData coreData)
 		{
 			RoleCache.DisableForAll (coreData);

@@ -121,6 +121,7 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Classification = GroupClassification.Function;
 			aiderGroupDef.Mutability = mutability;
 			aiderGroupDef.Function = functionDef;
+			aiderGroupDef.RoleCacheDisabled = false;
 
 			//uplink
 			parent.Subgroups.Add (aiderGroupDef);
@@ -179,6 +180,7 @@ namespace Epsitec.Aider.Entities
 
 			aiderGroupDef.Classification = groupClass;
 			aiderGroupDef.Mutability = mutability;
+			aiderGroupDef.RoleCacheDisabled = false;
 
 			//uplink
 			parent.Subgroups.Add (aiderGroupDef);
@@ -228,6 +230,7 @@ namespace Epsitec.Aider.Entities
 			aiderGroupDef.Level = AiderGroupIds.TopLevel;
 			aiderGroupDef.SubgroupsAllowed = true;
 			aiderGroupDef.MembersAllowed = false;
+			aiderGroupDef.RoleCacheDisabled = false;
 
 			var prefixChar = 'D';
 			if ((groupClass == GroupClassification.Parish) || (groupClass == GroupClassification.ParishOfGermanLanguage))

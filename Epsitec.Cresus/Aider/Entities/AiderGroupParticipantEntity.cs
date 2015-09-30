@@ -84,12 +84,13 @@ namespace Epsitec.Aider.Entities
 
 			if (!group.GroupDef.RoleCacheDisabled)
 			{
-				participation.RoleCacheDisabled = true;
+				participation.RoleCacheDisabled = false;
 				participation.RoleCache = AiderParticipationsHelpers.BuildRoleFromParticipation (participation).GetRole (participation);
+				participation.RolePathCache = AiderParticipationsHelpers.GetRolePath (participation);
 			}
 			else
 			{
-				participation.RoleCacheDisabled = false;
+				participation.RoleCacheDisabled = true;
 			}
 
 			return participation;

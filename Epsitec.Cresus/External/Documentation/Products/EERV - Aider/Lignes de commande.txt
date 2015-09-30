@@ -752,9 +752,28 @@ Lancé le 16.09.2015
 -echupdate -newechfile:S:\eerv\eerv-2015-09-07.xml -oldechfile:S:\eerv\eerv-2015-08-31.xml -output:s:\eerv\ech-diff-2015-09-07.md
 -echupdate -newechfile:S:\eerv\eerv-2015-09-14.xml -oldechfile:S:\eerv\eerv-2015-09-07.xml -output:s:\eerv\ech-diff-2015-09-14.md
 
-// -cleanhouseholds -echfile:S:\eerv\eerv-2015-09-14.xml
-
 Lancé le 22.09.2015
 -------------------
 
+-initevents
 -echupdate -newechfile:S:\eerv\eerv-2015-09-21.xml -oldechfile:S:\eerv\eerv-2015-09-14.xml -output:s:\eerv\ech-diff-2015-09-21.md
+
+Lancé le 23.09.2015
+-------------------
+
+-fixechpersons -echfile:s:\eerv\eerv-2015-09-21.xml
+
+
+-exportsubscriptions -output:export-2015-10-01.txt -error:error-2015-10-01.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-10-01.txt -publicationdate:2015-10-01 -response:tamedia-2015-10-01.log
+
+
+Lancé le 29.09.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-09-28.xml -oldechfile:S:\eerv\eerv-2015-09-21.xml -output:s:\eerv\ech-diff-2015-09-28.md
+-fixrolecacheparticipations
+-buildrolecache
+
+
+// -cleanhouseholds -echfile:S:\eerv\eerv-2015-09-28.xml

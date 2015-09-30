@@ -1,4 +1,34 @@
+var formatNumber = function(num, length) {
+    var r = '' + num;
+    while (r.length < length) {
+        r = '0' + r;
+    }
+    return r;
+};
+
 var queryBuilder = angular.module("webCore.QueryBuilder", ['webCore.Services']);
+queryBuilder.directive('parseDate', function(){
+    return {
+        require: '?ngModel',
+        link: function(scope, element, attr, ngModel) {
+            ngModel.$formatters.push(function(value){
+              var tokens = value.split ('.');
+              var day    = parseInt(tokens[0], 10);
+              var month  = parseInt(tokens[1], 10) - 1;
+              var year   = parseInt(tokens[2], 10);
+              var date   = new Date (year, month, day);
+              return date;
+            });
+            ngModel.$parsers.push(function(value){
+                var day   = formatNumber (value.getDate (), 2);
+                var month = formatNumber (value.getMonth () + 1, 2);
+                var year  = value.getFullYear ();
+                var date  = day + '.' + month + '.' + year;
+                return date;
+            });
+        }
+    };
+});
 
 queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
   function($compile, webCoreServices) {

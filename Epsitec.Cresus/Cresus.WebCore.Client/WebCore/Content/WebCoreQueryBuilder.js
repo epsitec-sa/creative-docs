@@ -7,12 +7,16 @@ var app = angular.module("webCoreQueryBuilder", [
 app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreServices',
   function($scope, $timeout, $location, webCoreServices) {
     var dbDruid = $location.path().replace('/', '');
+    $scope.queryHasChanged  = false;
+    $scope.isNewQuery       = true;
+    $scope.canOveriddeQuery = false;
     $scope.fields = [];
     $scope.columns = [];
     $scope.availableQueries = [];
     $scope.selectableColumns = [];
 
     var loadAvailableQueries = function() {
+      $scope.availableQueries = [];
       webCoreServices.loadQueries(dbDruid).success(function(data, status,
         headers) {
           data.shift();
@@ -55,6 +59,9 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
     });
 
     $scope.resetQueryBuilder = function () {
+      $scope.queryHasChanged  = false;
+      $scope.canOveriddeQuery = false;
+      $scope.isNewQuery       = true;
       $scope.safeApply(function () {
         //clear lists
         $scope.columns.splice(0, $scope.columns.length);
@@ -136,18 +143,33 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
 
       webCoreServices.saveQuery(dbDruid, queryName, columns, JSON.stringify(
         query)).success(function() {
+            $scope.isNewQuery       = false;
+            $scope.canOveriddeQuery = true;
+            $scope.currentQueryName = queryName;
+            $scope.newQueryName     = null;
             loadAvailableQueries();
         });
     };
 
+    $scope.updateCurrentQuery = function() {
+      $scope.saveQuery ($scope.currentQueryName);
+    };
+
     $scope.deleteQuery = function(queryName) {
+      if($scope.currentQueryName == queryName) {
+        $scope.resetQueryBuilder ();
+      }
       webCoreServices.deleteQuery(dbDruid, queryName).success(function() {
         loadAvailableQueries();
       });
     };
 
-    $scope.loadQuery = function(query) {
-      var group = JSON.parse(query)[0];
+    $scope.loadQuery = function(name, rawQuery) {
+      $scope.currentQueryName = name;
+      $scope.isNewQuery       = false;
+      $scope.canOveriddeQuery = true;
+      var query = JSON.parse(rawQuery);
+      var group = query[0];
       var columnsId = group.columns.split(';');
       var toRemove = [];
       var toAdd = [];
@@ -173,7 +195,9 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
         };
 
         $scope.filter = filter;
+        $scope.queryHasChanged  = false;
       });
+
     };
 
     $scope.safeApply = function(fn) {
@@ -189,8 +213,9 @@ app.controller('CoreQueryBuilder', ['$scope', '$timeout', '$location', 'webCoreS
 
     $scope.json = null;
 
-    $scope.$watch('filter', function(newValue) {
-      if (newValue !== undefined) {
+    $scope.$watch('filter', function(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        $scope.queryHasChanged = true;
       }
     }, true);
   }

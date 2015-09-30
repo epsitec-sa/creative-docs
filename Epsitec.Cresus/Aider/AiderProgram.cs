@@ -283,7 +283,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-fixechpersons"))
+				if (args.Contains ("-fixechpersons")) // -fixechpersons -echfile:s:\eerv\last.xml 
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixEChPersons (args));
 					return;
@@ -340,6 +340,12 @@ namespace Epsitec.Aider
 				if (args.Contains ("-automergeduplicatedpersons")) //-automergeduplicatedpersons
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
+					return;
+				}
+
+				if (args.Contains ("-fixrolecacheparticipations")) //-fixrolecacheparticipations
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixRoleCacheParticipations (args));
 					return;
 				}
 
@@ -761,7 +767,12 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData
 			(
-				coreData => EChPersonFixer.TryFixAll (coreData)
+				coreData =>
+				{
+					var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
+					EChPersonFixer.FixHiddenPersons (coreData, echFilePath);
+					EChPersonFixer.TryFixAll (coreData);
+				}
 			);
 		}
 
@@ -916,6 +927,17 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				RoleCache.InitBaseSet (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void FixRoleCacheParticipations(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				RoleCache.FixParticipations (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

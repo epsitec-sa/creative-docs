@@ -197,7 +197,7 @@ namespace Epsitec.Aider.Entities
 				case Enumerations.EventType.Confirmation:
 					return "Confirmation";
 				case Enumerations.EventType.EndOfCatechism:
-					return "Fin de catéchisme";
+					return "Bénédictions des catéchumènes ";
 				case Enumerations.EventType.FuneralService:
 					return "Service funèbre";
 				case Enumerations.EventType.Marriage:
