@@ -376,6 +376,9 @@ namespace Epsitec.Aider.Entities
 				var example			   = new AiderContactEntity ();
 				request.RootEntity = example;
 				request.AddCondition (dataContext, example, queryFilter);
+				request.AddCondition (dataContext, example, c => c.DisplayVisibility != PersonVisibilityStatus.Hidden &&
+																 c.ContactType != ContactType.Deceased && 
+																 c.AddressType == AddressType.Default);
 				return request;
 			}
 
