@@ -518,16 +518,44 @@ namespace Epsitec.Aider.Entities
 			this.UpdateLastUpdateDate ();
 
 			AiderMailingParticipantEntity.DeleteByMailing (businessContext, this);
-			var created = new List<AiderMailingParticipantEntity> ();
+			var created              = new List<AiderMailingParticipantEntity> ();
 			var excludedContacts     = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
 
 			switch (this.GroupMode)
 			{
 				case MailingGroupMode.ByContact:
-				var contacts = this.GetParticipantsByContact (businessContext.DataContext);
-				foreach (var contact in contacts)
+				foreach (var query in this.Queries)
+				{
+					var request			   = this.GetContactRequestFromQuery (businessContext.DataContext, query);
+
+					var contactsFromQuery = businessContext.GetByRequest<AiderContactEntity> (request);
+					foreach (var contact in contactsFromQuery)
+					{
+						created.Add (AiderMailingParticipantEntity.Create (businessContext, this, contact));
+					}
+				}
+
+				foreach (var contact in this.RecipientContacts)
 				{
 					created.Add (AiderMailingParticipantEntity.Create (businessContext, this, contact));
+				}
+
+				foreach (var group in this.RecipientGroups)
+				{
+					created.AddRange (AiderMailingParticipantEntity.Create (businessContext, this, group));
+				}
+
+				foreach (var group in this.RecipientGroupExtractions)
+				{
+					created.AddRange (AiderMailingParticipantEntity.Create (businessContext, this, group));
+				}
+
+				foreach (var household in this.RecipientHouseholds)
+				{
+					if (household.Contacts.Any ())
+					{
+						created.Add (AiderMailingParticipantEntity.Create (businessContext, this, household));
+					}
 				}
 					
 				break;
