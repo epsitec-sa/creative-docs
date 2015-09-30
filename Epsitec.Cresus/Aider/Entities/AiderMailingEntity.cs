@@ -94,7 +94,7 @@ namespace Epsitec.Aider.Entities
 			{
 				this.UpdateLastUpdateDate ();
 				this.RecipientHouseholds.Add (householdToAdd);
-				AiderMailingParticipantEntity.Create (businessContext, this, householdToAdd);
+				this.UpdateRecipientLabel (businessContext, AiderMailingParticipantEntity.Create (businessContext, this, householdToAdd).ToEnumerable ().ToList ());
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Epsitec.Aider.Entities
 			{
 				this.UpdateLastUpdateDate ();
 				this.RecipientGroups.Add (groupToAdd);
-				AiderMailingParticipantEntity.Create (businessContext, this, groupToAdd);
+				this.UpdateRecipientLabel (businessContext, AiderMailingParticipantEntity.Create (businessContext, this, groupToAdd).ToList ());	
 			}
 		}
 
@@ -114,7 +114,7 @@ namespace Epsitec.Aider.Entities
 			{
 				this.UpdateLastUpdateDate ();
 				this.RecipientGroupExtractions.Add (groupExtractionToAdd);
-				AiderMailingParticipantEntity.Create (businessContext, this, groupExtractionToAdd);
+				this.UpdateRecipientLabel (businessContext, AiderMailingParticipantEntity.Create (businessContext, this, groupExtractionToAdd).ToList());
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace Epsitec.Aider.Entities
 			{
 				this.UpdateLastUpdateDate ();
 				this.RecipientContacts.Add (contactToAdd);
-				AiderMailingParticipantEntity.Create (businessContext, this, contactToAdd);
+				this.UpdateRecipientLabel (businessContext, AiderMailingParticipantEntity.Create (businessContext, this, contactToAdd).ToEnumerable ().ToList ());
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace Epsitec.Aider.Entities
 				{
 					this.UpdateLastUpdateDate ();
 					this.RecipientContacts.Add (contact);
-					AiderMailingParticipantEntity.Create (businessContext, this, contact);
+					this.UpdateRecipientLabel (businessContext, AiderMailingParticipantEntity.Create (businessContext, this, contact).ToEnumerable ().ToList ());
 				}
 			}
 		}
@@ -586,54 +586,61 @@ namespace Epsitec.Aider.Entities
 				break;
 			}
 
-			switch (this.GroupMode)
-			{
-				case MailingGroupMode.ByContact:
-				created.ForEach (p =>
-				{
-					p.CustomRecipient = p.Contact.GetAddressRecipientText ();
-				});			
-				break;
-
-				case MailingGroupMode.ByHouseholdUsingDesc:
-				created.ForEach (p =>
-				{
-					p.CustomRecipient = p.Contact.Household.GetAddressLabelText ().ToSimpleText ();
-				});	
-				break;
-
-				case MailingGroupMode.ByHouseholdUsingParticipants:
-				var contactsByHousehold = this.GetParticipantsByContact (businessContext.DataContext).ToLookup (c => c.Household);
-				created.ForEach (p =>
-				{
-					var contacts   = contactsByHousehold[p.Contact.Household];
-					var contactsByName     = contacts.Where (c => !excludedContacts.Contains (c)).ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
-					var recipients = new List<string> ();
- 					contactsByName.ForEach (n => 
-					{
-						if (n.Count () == 1)
-						{
-							recipients.Add (n.First ().GetAddressRecipientText ());
-						}
-						else if (n.Count () == 2)
-						{
-							recipients.Add (string.Join (" et ", n.Select (c => c.Person.CallNameDisplay)) + " " + n.Key);
-						} 
-						else
-						{
-							var last = n.Last ().Person.CallNameDisplay;
-							var firsts = n.Take (n.Count () - 1).Select (c => c.Person.CallNameDisplay);
-							recipients.Add (string.Join (", ", firsts) + " et " + last + " " + n.Key);
-						}				
-					});
-					p.CustomRecipient = string.Join (" et ", recipients);
-				});	
-				break;
-			}
+			this.UpdateRecipientLabel (businessContext, created);
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
+		private void UpdateRecipientLabel(BusinessContext businessContext, List<AiderMailingParticipantEntity> created)
+		{
+			var dataContext      = businessContext.DataContext;
+			var excludedContacts = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
+
+			switch (this.GroupMode)
+			{
+				case MailingGroupMode.ByContact:
+					created.ForEach (p =>
+					{
+						p.CustomRecipient = p.Contact.GetAddressRecipientText ();
+					});
+					break;
+
+				case MailingGroupMode.ByHouseholdUsingDesc:
+					created.ForEach (p =>
+					{
+						p.CustomRecipient = p.Contact.Household.GetAddressLabelText ().ToSimpleText ();
+					});
+					break;
+
+				case MailingGroupMode.ByHouseholdUsingParticipants:
+					var contactsByHousehold = this.GetParticipantsByContact (businessContext.DataContext).ToLookup (c => c.Household);
+					created.ForEach (p =>
+					{
+						var contacts   = contactsByHousehold[p.Contact.Household];
+						var contactsByName     = contacts.Where (c => !excludedContacts.Contains (c)).ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
+						var recipients = new List<string> ();
+						contactsByName.ForEach (n =>
+						{
+							if (n.Count () == 1)
+							{
+								recipients.Add (n.First ().GetAddressRecipientText ());
+							}
+							else if (n.Count () == 2)
+							{
+								recipients.Add (string.Join (" et ", n.Select (c => c.Person.CallNameDisplay)) + " " + n.Key);
+							}
+							else
+							{
+								var last = n.Last ().Person.CallNameDisplay;
+								var firsts = n.Take (n.Count () - 1).Select (c => c.Person.CallNameDisplay);
+								recipients.Add (string.Join (", ", firsts) + " et " + last + " " + n.Key);
+							}
+						});
+						p.CustomRecipient = string.Join (" et ", recipients);
+					});
+					break;
+			}
+		}
 		/// <summary>
 		/// Apply exclusions on participations 
 		/// </summary>
