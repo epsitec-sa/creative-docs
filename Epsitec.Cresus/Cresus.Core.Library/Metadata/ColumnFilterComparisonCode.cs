@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.Core.Metadata
 		GreaterThan,
 		LessThanOrEqual,
 		GreaterThanOrEqual,
+
+		EndsWith,								//  LIKE %x
+		EndsWithEscaped,	
 		
 		Contains,								//	LIKE %x%
 		ContainsEscaped,
