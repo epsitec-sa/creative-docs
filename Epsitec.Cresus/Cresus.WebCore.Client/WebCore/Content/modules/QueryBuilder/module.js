@@ -11,6 +11,7 @@ queryBuilder.directive('parseDate', function(){
     return {
         require: '?ngModel',
         link: function(scope, element, attr, ngModel) {
+            $(element).updatePolyfill();
             ngModel.$formatters.push(function(value){
               var tokens = value.split ('.');
               var day    = parseInt(tokens[0], 10);

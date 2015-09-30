@@ -5,11 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/webshim/1.15.10/dev/polyfiller.js"></script>
     <script src="/content/libs/angular.min.js"></script>
     <script src="/content/libs/angular-sanitize.min.js"></script>
     <script src="/content/WebCoreQueryBuilder.js"></script>
     <script src="/content/WebCoreServices.js"></script>
     <script src="/content/modules/QueryBuilder/module.js"></script>
+    <script>
+        $.webshim.activeLang ('fr');
+        $.webshim.polyfill ('es5 forms forms-ext');
+    </script>
 </head>
 <body style="background-color: rgb(223, 232, 246);">
     <div class="container" ng-controller="CoreQueryBuilder">
