@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				var userName = user.LoginName;
 				var message  = new NotificationMessage ()
 				{
-					Title = "Mise à jour du mailing requise",
+					Title = "Mise à jour du mailing recommandée",
 					Body  = "Ce mailing n'a pas été mis à jour depuis plus d'un mois"
 				};
 

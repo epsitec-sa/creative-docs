@@ -115,10 +115,12 @@ namespace Epsitec.Cresus.Core.Metadata
 
 				case ColumnFilterComparisonCode.Contains:
 				case ColumnFilterComparisonCode.StartsWith:
+				case ColumnFilterComparisonCode.EndsWith:
 					return Expression.Call (SqlMethods.LikeMethodInfo, parameter, expression);
 
 				case ColumnFilterComparisonCode.ContainsEscaped:
 				case ColumnFilterComparisonCode.StartsWithEscaped:
+				case ColumnFilterComparisonCode.EndsWithEscaped:
 					return Expression.Call (SqlMethods.EscapedLikeMethodInfo, parameter, expression);
 
 				case ColumnFilterComparisonCode.NotContains:

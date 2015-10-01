@@ -224,15 +224,32 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 			{
 				var text = value as string;
 
-				if ((text != null) &&
-					(text.StartsWith ("*")))
+				if (text != null)
 				{
-					value = text.Substring (1);
-					return ColumnFilterComparisonCode.ContainsEscaped;
+					if (text.StartsWith ("*") && !text.EndsWith ("*"))
+					{
+						value = text.Substring (1);
+						return ColumnFilterComparisonCode.EndsWithEscaped;
+					}
+
+					if (text.EndsWith ("*") && !text.StartsWith ("*"))
+					{
+						value = text.Substring (0, text.Length -1);
+						return ColumnFilterComparisonCode.StartsWithEscaped;
+					}
+
+					if (text.EndsWith ("*") && text.StartsWith ("*"))
+					{
+						var preValue = text.Substring (0, text.Length -1);
+						value = preValue.Substring (1);
+						return ColumnFilterComparisonCode.ContainsEscaped;
+					}
+
+					return ColumnFilterComparisonCode.Equal;
 				}
 				else
 				{
-					return ColumnFilterComparisonCode.StartsWithEscaped;
+					return ColumnFilterComparisonCode.Equal;
 				}
 			}
 
@@ -299,6 +316,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 
 					switch (comparison)
 					{
+						case ColumnFilterComparisonCode.EndsWith:
+						case ColumnFilterComparisonCode.EndsWithEscaped:
+							return ColumnFilterConstant.From ("%" + pattern);
+
 						case ColumnFilterComparisonCode.Contains:
 						case ColumnFilterComparisonCode.ContainsEscaped:
 						case ColumnFilterComparisonCode.NotContains:
