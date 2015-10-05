@@ -245,11 +245,18 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 						return ColumnFilterComparisonCode.ContainsEscaped;
 					}
 
-					return ColumnFilterComparisonCode.Equal;
+					if (text.EndsWith ("\"") && text.StartsWith ("\""))
+					{
+						var preValue = text.Substring (0, text.Length -1);
+						value = preValue.Substring (1);
+						return ColumnFilterComparisonCode.Equal;
+					}
+
+					return ColumnFilterComparisonCode.StartsWithEscaped;
 				}
-				else
+				else // By default we are not srict
 				{
-					return ColumnFilterComparisonCode.Equal;
+					return ColumnFilterComparisonCode.StartsWithEscaped;
 				}
 			}
 
