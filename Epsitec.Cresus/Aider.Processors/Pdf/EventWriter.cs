@@ -350,6 +350,17 @@ namespace Epsitec.Aider.Processors.Pdf
 					
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
+					lines.Add (this.GetConfessionLine (actor));
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.PartnerA) == actor)
+					{
+						lines.Add (this.GetPartnerASonOfLine (act));
+					}
+					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.PartnerB) == actor)
+					{
+						lines.Add (this.GetPartnerBSonOfLine (act));
+					}
+
+					break;
 				case Enumerations.EventType.Marriage:
 					lines.Add (this.GetConfessionLine (actor));
 					if (act.GetParticipantByRole (Enumerations.EventParticipantRole.Husband) == actor)
@@ -542,6 +553,64 @@ namespace Epsitec.Aider.Processors.Pdf
 
 			var father = act.GetActorFullName (EventParticipantRole.SpouseFather);
 			var mother = act.GetActorFullName (EventParticipantRole.SpouseMother);
+			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + father + " et " + mother;
+			}
+
+			if (!string.IsNullOrWhiteSpace (father) && string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + father;
+			}
+
+			if (string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + mother;
+			}
+
+			return "";
+		}
+
+		private string GetPartnerASonOfLine(AiderEventEntity act)
+		{
+			var partnerASex = act.GetActorSex (EventParticipantRole.PartnerA);
+			var filiation = "Fils de :<tab/>";
+			if (partnerASex == PersonSex.Female)
+			{
+				filiation = "Fille de :<tab/>";
+			}
+
+			var father = act.GetActorFullName (EventParticipantRole.PartnerAFather);
+			var mother = act.GetActorFullName (EventParticipantRole.PartnerAMother);
+			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + father + " et " + mother;
+			}
+
+			if (!string.IsNullOrWhiteSpace (father) && string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + father;
+			}
+
+			if (string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
+			{
+				return filiation + mother;
+			}
+
+			return "";
+		}
+
+		private string GetPartnerBSonOfLine(AiderEventEntity act)
+		{
+			var partnerBSex = act.GetActorSex (EventParticipantRole.PartnerB);
+			var filiation = "Fils de :<tab/>";
+			if (partnerBSex == PersonSex.Female)
+			{
+				filiation = "Fille de :<tab/>";
+			}
+
+			var father = act.GetActorFullName (EventParticipantRole.PartnerBFather);
+			var mother = act.GetActorFullName (EventParticipantRole.PartnerBMother);
 			if (!string.IsNullOrWhiteSpace (father) && !string.IsNullOrWhiteSpace (mother))
 			{
 				return filiation + father + " et " + mother;

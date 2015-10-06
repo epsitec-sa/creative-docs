@@ -1075,6 +1075,62 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 111));
 						}
 					}
+					//	designer:cap/LVO683
+					public static global::Epsitec.Common.Types.Caption Partner
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 262));
+						}
+					}
+					//	designer:cap/LVO783
+					public static global::Epsitec.Common.Types.Caption PartnerA
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 263));
+						}
+					}
+					//	designer:cap/LVO983
+					public static global::Epsitec.Common.Types.Caption PartnerAFather
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 265));
+						}
+					}
+					//	designer:cap/LVOA83
+					public static global::Epsitec.Common.Types.Caption PartnerAMother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 266));
+						}
+					}
+					//	designer:cap/LVO883
+					public static global::Epsitec.Common.Types.Caption PartnerB
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 264));
+						}
+					}
+					//	designer:cap/LVOB83
+					public static global::Epsitec.Common.Types.Caption PartnerBFather
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 267));
+						}
+					}
+					//	designer:cap/LVOC83
+					public static global::Epsitec.Common.Types.Caption PartnerBMother
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 268));
+						}
+					}
 					//	designer:cap/LVOP53
 					public static global::Epsitec.Common.Types.Caption SecondWitness
 					{
