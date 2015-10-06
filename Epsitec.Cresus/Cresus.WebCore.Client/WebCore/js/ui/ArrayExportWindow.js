@@ -86,7 +86,7 @@ function() {
 
     /* Methods */
     getLocalConfigKey : function () {
-      return this.exportUrl.split ('[')[1].substring (0,4);
+      return this.exportUrl.split ('[')[1].split (']')[0];
     },
 
     convertLocalStorageOldKeys: function () {
@@ -98,15 +98,15 @@ function() {
         var oldKey    = localStorage.key (i);
         // if old key found -> convert it
         if (oldKey.startsWith ('proxy')) {
-          var counter        = 0;
           var configurations = JSON.parse (localStorage.getItem (oldKey));
-          var newKey         = oldKey.split ('[')[1].substring (0,4);
+          var newKey         = oldKey.split ('[')[1].split (']')[0];
           var existingConfig = localStorage.getItem (newKey);
           if (existingConfig !== null) {
             // we have already converted this key
             // -> merge existingConfig with configurations
             var configToMerge = JSON.parse (existingConfig);
             for (var key in configurations) {
+              var counter       = 0;
               if (configurations.hasOwnProperty(key)) {
                  var config = configurations[key];
                  // a config with this name already exist ?
