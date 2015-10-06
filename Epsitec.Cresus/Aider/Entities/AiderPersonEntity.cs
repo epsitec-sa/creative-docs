@@ -430,6 +430,97 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public FormattedText GetParishGroupParticipationsNumberedSummary(BusinessContext businessContext)
+		{
+			var lines  = new List<string> ();
+			lines.Add ("Participations locales : ");
+
+			var parishParticipations = this.GetLocalParticipationsOrderedByName ();
+			if (!parishParticipations.Any ())
+			{
+				lines.Add ("Aucune");
+				return TextFormatter.FormatText (lines.Join ("\n"));
+			}
+
+			var index=1;
+			parishParticipations.ForEach (p =>
+			{
+				var key = index.ToString () + "# ";
+				if (!p.RolePathCache.IsNullOrWhiteSpace ())
+				{
+					lines.Add (key + p.RolePathCache);
+				}
+				else
+				{
+					lines.Add (key + p.Group.Name);
+				}
+				index++;
+			});
+
+			return TextFormatter.FormatText (lines.Join ("\n"));
+		}
+
+		public FormattedText GetNonParishGroupParticipationsNumberedSummary(BusinessContext businessContext)
+		{
+			var lines = new List<string> ();
+			lines.Add ("Participations globales : ");
+			var nonParishParticipations = this.GetGlobalParticipationsOrderedByName ();
+			if (!nonParishParticipations.Any ())
+			{
+				lines.Add ("Aucune");
+				return TextFormatter.FormatText (lines.Join ("\n"));
+			}
+			var index=1;
+			nonParishParticipations.ForEach (p => 
+			{
+				var key = index.ToString () + "# ";
+				if (!p.RolePathCache.IsNullOrWhiteSpace ())
+				{
+					lines.Add (key + p.RolePathCache);
+				}
+				else
+				{
+					lines.Add (key + p.Group.Name);
+				}
+				index++;
+			});
+
+			return TextFormatter.FormatText (lines.Join ("\n"));
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> GetLocalParticipationsOrderedByName ()
+		{
+			return this.GetParticipations ()
+									   .Where (p => p.Group == this.ParishGroup)
+									   .OrderBy (p => p.Group.Name);
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> GetGlobalParticipationsOrderedByName()
+		{
+			return this.GetParticipations ()
+										  .Where (p => !p.Group.IsParish () && !p.Group.IsRegion ())
+										  .OrderBy (p => p.Group.Name);
+		}
+
+		public void DeleteNumberedParticipationsNotInKeys(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations, string keyString)
+		{
+			var keys = keyString.Split (',');
+			var index=1;
+			participations.ForEach (p =>
+			{
+				if (!keys.Contains (InvariantConverter.ToString (index)))
+				{
+					this.MainContact.RemoveParticipationInternal (p);
+					businessContext.DeleteEntity (p);
+				}
+				else
+				{
+					// skipped
+				}
+				index++;
+			});
+		}
+
 		public void DeleteParishGroupParticipation(BusinessContext businessContext)
 		{
 			foreach (var participation in this.GetParticipations ().Where (p => p.Group == this.ParishGroup))

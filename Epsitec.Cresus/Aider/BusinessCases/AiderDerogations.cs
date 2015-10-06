@@ -301,10 +301,10 @@ namespace Epsitec.Aider.BusinessCases
 
 		private static void RemoveDerogationOutParticipations(BusinessContext businessContext, AiderGroupEntity parishGroup, AiderPersonEntity person)
 		{
-			var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
-			if (oldDerogationInGroup != null)
+			var oldDerogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
+			if (oldDerogationOutGroup != null)
 			{
-				AiderGroupEntity.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipationsByGroup (businessContext, person, oldDerogationInGroup));
+				AiderGroupEntity.RemoveParticipations (businessContext, oldDerogationOutGroup.FindParticipationsByGroup (businessContext, person, oldDerogationOutGroup));
 			}
 		}
 

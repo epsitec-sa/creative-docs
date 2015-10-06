@@ -367,7 +367,7 @@ namespace Epsitec.Aider.Entities
 			};
 			var lastMinisters = businessContext.GetByExample<AiderEventParticipantEntity> (example).Select (p => p.Person).Distinct ();
 
-			return lastMinisters.Union (employees).ToList ();
+			return lastMinisters.Union (employees).Where (m => m.IsNotNull ()).ToList ();
 		}
 
 		private static IEnumerable<System.Tuple<string, string, OfficeType>> GetShortNameReplacementTuples()
