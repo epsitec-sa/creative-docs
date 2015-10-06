@@ -70,7 +70,8 @@ function() {
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
-
+      // we need to convert user's configurations
+      this.convertLocalStorageOldKeys ();
       this.dataSetConfigs = JSON.parse(
                                   localStorage
                                   .getItem(this.getLocalConfigKey ()));
@@ -84,9 +85,51 @@ function() {
     },
 
     /* Methods */
-    getLocalConfigKey : function ()
-    {
-      return this.exportUrl.split('?')[0];
+    getLocalConfigKey : function () {
+      return this.exportUrl.split ('[')[1].substring (0,4);
+    },
+
+    convertLocalStorageOldKeys: function () {
+      var addStars = function (n) {
+          return new Array(1 + (n || 0)).join('*');
+      };
+
+      for (var i=0; i<localStorage.length;i++) {
+        var oldKey    = localStorage.key (i);
+        // if old key found -> convert it
+        if (oldKey.startsWith ('proxy')) {
+          var counter        = 0;
+          var configurations = JSON.parse (localStorage.getItem (oldKey));
+          var newKey         = oldKey.split ('[')[1].substring (0,4);
+          var existingConfig = localStorage.getItem (newKey);
+          if (existingConfig !== null) {
+            // we have already converted this key
+            // -> merge existingConfig with configurations
+            var configToMerge = JSON.parse (existingConfig);
+            for (var key in configurations) {
+              if (configurations.hasOwnProperty(key)) {
+                 var config = configurations[key];
+                 // a config with this name already exist ?
+                 if (configToMerge.hasOwnProperty (key)) {
+                   // we rename the existing config by adding stars
+                   var configToRename = configToMerge[key];
+                   counter++;
+                   configToRename.name += addStars (counter);
+                   configToMerge[configToRename.name] = configToRename;
+                 } else {
+                   configToMerge[key] = config;
+                 }
+              }
+            }
+            // insert mergedConfig at new key
+            localStorage.setItem (newKey, JSON.stringify (configToMerge));
+          } else {
+            localStorage.setItem (newKey, JSON.stringify (configurations));
+          }
+          // remove old key from localStorage
+          localStorage.removeItem (oldKey);
+        }
+      }
     },
 
     loadConfig: function (config) {
