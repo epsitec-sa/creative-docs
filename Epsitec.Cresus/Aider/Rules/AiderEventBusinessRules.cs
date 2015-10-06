@@ -24,8 +24,11 @@ namespace Epsitec.Aider.Rules
 				{
 					Logic.BusinessRuleException ("L'acte n'est pas validable en l'état:\n" + error);
 				}
+			}
 
-				//Side-effects
+			if (entity.State == Enumerations.EventState.Validated)
+			{
+				// Apply Side-effects
 				switch (entity.Type)
 				{
 					case Enumerations.EventType.FuneralService:
