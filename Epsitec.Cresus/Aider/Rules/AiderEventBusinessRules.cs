@@ -39,13 +39,13 @@ namespace Epsitec.Aider.Rules
 									person.KillPerson (this.GetBusinessContext (), entity.Date.Value, true);
 								}
 							}
-							
+
 						});
 						break;
 					case Enumerations.EventType.CelebrationRegisteredPartners:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if(actor.IsExternal == false)
+							if (actor.IsExternal == false)
 							{
 								var person = actor.Person.eCH_Person;
 								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
@@ -67,7 +67,7 @@ namespace Epsitec.Aider.Rules
 									person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Married;
 								}
 							}
-							
+
 						});
 						break;
 				}
