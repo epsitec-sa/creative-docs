@@ -303,33 +303,6 @@ namespace Epsitec.Aider.Entities
 		{
 			this.GeoParishGroupPathCache = "";
 		}
-		
-		
-		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
-		{
-			string suffix;
-
-			switch (personMrMrs)
-			{
-				case PersonMrMrs.Madame:
-				case PersonMrMrs.Mademoiselle:
-					suffix = ".AiderPerson.Female-";
-					break;
-				default:
-					suffix = ".AiderPerson.Male-";
-					break;
-			}
-
-			if (language == Enumerations.Language.German)
-			{
-				return prefix + suffix + "German";
-			}
-			else
-			{
-				return prefix + suffix + "French";
-			}
-		}
-
 
 		public void AssignNewHousehold(BusinessContext context, bool move)
 		{
@@ -686,6 +659,31 @@ namespace Epsitec.Aider.Entities
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 
 			return true;
+		}
+
+		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
+		{
+			string suffix;
+
+			switch (personMrMrs)
+			{
+				case PersonMrMrs.Madame:
+				case PersonMrMrs.Mademoiselle:
+					suffix = ".AiderPerson.Female-";
+					break;
+				default:
+					suffix = ".AiderPerson.Male-";
+					break;
+			}
+
+			if (language == Enumerations.Language.German)
+			{
+				return prefix + suffix + "German";
+			}
+			else
+			{
+				return prefix + suffix + "French";
+			}
 		}
 
 		private static void CopyAdditionalAddressInfos(AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)

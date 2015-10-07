@@ -112,8 +112,8 @@ namespace Epsitec.Aider.Entities
 				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.BlessedChild);
 				break;
 			case Enumerations.EventType.CelebrationRegisteredPartners:
-				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband);
-				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.PartnerA);
+				this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.PartnerB);
 				break;
 
 			case Enumerations.EventType.Confirmation:
@@ -360,12 +360,28 @@ namespace Epsitec.Aider.Entities
 					}
 					break;
 				case Enumerations.EventType.CelebrationRegisteredPartners:
+					if (!(this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.PartnerA)
+						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.PartnerB))
+					)
+					{
+						error = "Aucune personnes à célébrer";
+						return false;
+					}
+					foreach (var actor in actors)
+					{
+						if (!this.CheckActorValidity (actor, out error))
+						{
+							return false;
+						}
+					}	
+					break;
 				case Enumerations.EventType.Marriage:
 					if (!(this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Husband)
 						&& this.TryAddActorsWithRole (actors, Enumerations.EventParticipantRole.Spouse))
 					)
 					{
 						error = "Aucune personnes à célébrer";
+						return false;
 					}
 					foreach (var actor in actors)
 					{
