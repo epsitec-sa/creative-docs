@@ -554,6 +554,19 @@ namespace Epsitec.Aider.Entities
 			return dataContext.GetByRequest (request);
 		}
 
+		public static IList<AiderGroupEntity> FindGroupsAndSubGroupsFromPathPrefix(BusinessContext businessContext, string path)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, path + "%"));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
+
 		public static IList<AiderGroupEntity> FindGroupsGloballyVisibleToParishes(DataContext dataContext)
 		{
 			var example		 = new AiderGroupEntity ();

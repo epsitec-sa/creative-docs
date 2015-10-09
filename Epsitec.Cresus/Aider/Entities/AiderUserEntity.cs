@@ -81,6 +81,33 @@ namespace Epsitec.Aider.Entities
 			return  canViewDetails || ministerBypass;
 		}
 
+		public bool IsOfficeManager()
+		{
+			var isOfficeManager = false;
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					isOfficeManager = employee.IsOfficeManager ();
+				}
+			}
+
+			return isOfficeManager;
+		}
+
+		public IEnumerable<AiderGroupEntity> GetGroupsUnderManagement(BusinessContext businessContext)
+		{
+			if (!this.IsOfficeManager ())
+			{
+				return Enumerable.Empty<AiderGroupEntity> ();
+			}
+			var managerJobs = this.Contact.Person.Employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == Enumerations.EmployeeJobFunction.GestionnaireAIDER);
+			var offices     = managerJobs.Select (j => j.Office).Distinct ();
+			
+			return offices.SelectMany (o => AiderGroupEntity.FindGroupsAndSubGroupsFromPathPrefix (businessContext, o.ParishGroupPathCache)).Distinct ();
+		}
+
 		public bool CanValidateEvents ()
 		{
 			var isMinister = false;

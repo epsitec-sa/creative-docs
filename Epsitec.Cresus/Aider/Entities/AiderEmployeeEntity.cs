@@ -93,6 +93,16 @@ namespace Epsitec.Aider.Entities
 			return false;
 		}
 
+		public bool IsOfficeManager()
+		{
+			if (this.jobs == null)
+			{
+				this.GetEmployeeJobs (ref this.jobs);
+			}
+
+			return this.jobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER).Any ();
+		}
+
 		private IList<AiderEmployeeJobEntity>		jobs;
 		private IList<AiderRefereeEntity>			refereeEntries;
 	}

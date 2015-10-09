@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
@@ -57,6 +57,19 @@ namespace Epsitec.Aider.Entities
 			}
 			
 			businessContext.DeleteEntity (this);
+		}
+
+		public bool IsSystemTaggedOkForWarning ()
+		{
+			if (this.Comment.IsNotNull ())
+			{
+				if (this.Comment.SystemText != null)
+				{
+					return this.Comment.SystemText.StartsWith ("warning:ok");
+				}
+			}
+
+			return false;
 		}
 
 		public static AiderGroupParticipantEntity StartParticipation(BusinessContext businessContext, AiderGroupEntity group, ParticipationData participationData)
