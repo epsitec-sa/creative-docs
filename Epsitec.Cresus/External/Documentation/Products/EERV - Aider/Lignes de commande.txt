@@ -777,3 +777,9 @@ Lancé le 29.09.2015
 
 
 // -cleanhouseholds -echfile:S:\eerv\eerv-2015-09-28.xml
+
+
+Lancé le 06.10.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-10-05.xml -oldechfile:S:\eerv\eerv-2015-09-28.xml -output:s:\eerv\ech-diff-2015-10-05.md
