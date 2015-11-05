@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Entities
 
 		public string GetRolePathOrHierarchicalName ()
 		{
-			if (this.RolePathCache.IsNullOrWhiteSpace ())
+			if (string.IsNullOrWhiteSpace (this.RolePathCache))
 			{
 				return this.GetSummaryWithHierarchicalGroupName ().ToSimpleText ();
 			}

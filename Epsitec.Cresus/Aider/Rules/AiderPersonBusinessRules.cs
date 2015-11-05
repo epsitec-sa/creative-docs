@@ -274,7 +274,9 @@ namespace Epsitec.Aider.Rules
 			var description = TextFormatter.FormatText ("La paroisse ne correspondait pas à l'adresse\n",
 														"principale du ménage. La correction suivante\n",
 														"a été appliquée:\n \n",
-														oldParishName, "\n->\n", newParishName);
+														oldParishName, "\n->\n", newParishName,
+														"\nParticipations supprimée:\n \n",
+														removedParticipations.Join ("\n"));
 
 			if (notifyOldParish)
 			{

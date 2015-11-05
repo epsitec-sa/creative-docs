@@ -475,6 +475,12 @@ namespace Epsitec.Aider.Entities
 										  .OrderBy (p => p.Group.Name);
 		}
 
+		public IEnumerable<AiderGroupParticipantEntity> GetOtherParishLevelParticipations()
+		{
+			return this.GetParticipations ()
+									   .Where (p => p.Group.IsInTheSameParish (this.ParishGroup) && p.Group.Name != this.ParishGroup.Name);
+		}
+
 		public void DeleteNumberedParticipationsNotInKeys(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations, string keyString)
 		{
 			var keys = keyString.Split (',');

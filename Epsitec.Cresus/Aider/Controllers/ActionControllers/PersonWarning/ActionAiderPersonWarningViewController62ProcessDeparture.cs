@@ -69,6 +69,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			form
 				.Title (this.GetTitle ())
+				.Text (this.Entity.Person.GetNonParishGroupParticipationsNumberedSummary (this.BusinessContext))
 				.Field<bool> ()
 					.Title ("J'ai traité manuellement le déménagement")
 					.InitialValue (false)
