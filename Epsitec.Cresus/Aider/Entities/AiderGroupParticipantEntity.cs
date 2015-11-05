@@ -41,11 +41,22 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (name);
 		}
 
+		public string GetRolePathOrHierarchicalName ()
+		{
+			if (this.RolePathCache.IsNullOrWhiteSpace ())
+			{
+				return this.GetSummaryWithHierarchicalGroupName ().ToSimpleText ();
+			}
+			else
+			{
+				return this.RolePathCache;
+			}
+		}
+
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield break;
 		}
-
 		
 		public void Delete(BusinessContext businessContext)
 		{

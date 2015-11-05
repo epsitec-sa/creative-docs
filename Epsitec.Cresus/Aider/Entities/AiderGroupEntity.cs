@@ -55,6 +55,11 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsRegion ();
 		}
 
+		public bool IsInTheSameParish(AiderGroupEntity group)
+		{
+			return this.Path.StartsWith (group.Path.Substring (0, 6));
+		}
+
 		public bool IsParish()
 		{
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsParish ();
