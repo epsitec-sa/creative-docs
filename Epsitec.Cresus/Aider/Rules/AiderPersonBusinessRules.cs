@@ -235,9 +235,11 @@ namespace Epsitec.Aider.Rules
 
 		public static bool ReassignParish(BusinessContext context, AiderPersonEntity person)
 		{
-			var oldParishGroup	   = person.ParishGroup;
-			var oldParishName      = person.ParishGroup.Name;
-			var oldParishGroupPath = AiderGroupIds.DefaultToNoParish (person.ParishGroupPathCache);
+			var oldParishGroup	        = person.ParishGroup;
+			var oldParishName           = person.ParishGroup.Name;
+			var oldParishGroupPath      = AiderGroupIds.DefaultToNoParish (person.ParishGroupPathCache);
+			var oldParishParticipations = person.GetOtherParishLevelParticipations ().ToList (); 
+			
 
 			AiderPersonBusinessRules.AssignParish (context, person);
 
@@ -251,7 +253,16 @@ namespace Epsitec.Aider.Rules
 			}
 
 			var notifyOldParish = true;
-			
+
+			var removedParticipations = new List<string> ();
+			oldParishParticipations.ForEach (p =>
+			{
+				removedParticipations.Add (p.GetRolePathOrHierarchicalName ());
+				person.MainContact.RemoveParticipationInternal (p);
+				context.DeleteEntity (p);
+			});
+
+
 			if (person.HasDerogation)
 			{
 				AiderPersonBusinessRules.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
