@@ -303,33 +303,6 @@ namespace Epsitec.Aider.Entities
 		{
 			this.GeoParishGroupPathCache = "";
 		}
-		
-		
-		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
-		{
-			string suffix;
-
-			switch (personMrMrs)
-			{
-				case PersonMrMrs.Madame:
-				case PersonMrMrs.Mademoiselle:
-					suffix = ".AiderPerson.Female-";
-					break;
-				default:
-					suffix = ".AiderPerson.Male-";
-					break;
-			}
-
-			if (language == Enumerations.Language.German)
-			{
-				return prefix + suffix + "German";
-			}
-			else
-			{
-				return prefix + suffix + "French";
-			}
-		}
-
 
 		public void AssignNewHousehold(BusinessContext context, bool move)
 		{
@@ -348,7 +321,7 @@ namespace Epsitec.Aider.Entities
 
 			if (move)
 			{
-				AiderContactEntity.ChangeHousehold (context, this.HouseholdContact, newHousehold, isHead: true);
+				AiderContactEntity.ChangeHousehold (context, this.MainContact, newHousehold, isHead: true);
 			}
 		}
 
@@ -500,6 +473,12 @@ namespace Epsitec.Aider.Entities
 			return this.GetParticipations ()
 										  .Where (p => !p.Group.IsParish () && !p.Group.IsRegion ())
 										  .OrderBy (p => p.Group.Name);
+		}
+
+		public IEnumerable<AiderGroupParticipantEntity> GetOtherParishLevelParticipations()
+		{
+			return this.GetParticipations ()
+									   .Where (p => p.Group.IsInTheSameParish (this.ParishGroup) && p.Group.Name != this.ParishGroup.Name);
 		}
 
 		public void DeleteNumberedParticipationsNotInKeys(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations, string keyString)
@@ -686,6 +665,31 @@ namespace Epsitec.Aider.Entities
 			AiderPersonEntity.Delete (businessContext, otherPerson);
 
 			return true;
+		}
+
+		public static string GetIconName(string prefix, PersonMrMrs? personMrMrs, Language? language = null)
+		{
+			string suffix;
+
+			switch (personMrMrs)
+			{
+				case PersonMrMrs.Madame:
+				case PersonMrMrs.Mademoiselle:
+					suffix = ".AiderPerson.Female-";
+					break;
+				default:
+					suffix = ".AiderPerson.Male-";
+					break;
+			}
+
+			if (language == Enumerations.Language.German)
+			{
+				return prefix + suffix + "German";
+			}
+			else
+			{
+				return prefix + suffix + "French";
+			}
 		}
 
 		private static void CopyAdditionalAddressInfos(AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)

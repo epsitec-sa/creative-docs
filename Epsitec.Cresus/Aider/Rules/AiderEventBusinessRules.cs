@@ -24,8 +24,11 @@ namespace Epsitec.Aider.Rules
 				{
 					Logic.BusinessRuleException ("L'acte n'est pas validable en l'état:\n" + error);
 				}
+			}
 
-				//Side-effects
+			if (entity.State == Enumerations.EventState.Validated)
+			{
+				// Apply Side-effects
 				switch (entity.Type)
 				{
 					case Enumerations.EventType.FuneralService:
@@ -39,13 +42,13 @@ namespace Epsitec.Aider.Rules
 									person.KillPerson (this.GetBusinessContext (), entity.Date.Value, true);
 								}
 							}
-							
+
 						});
 						break;
 					case Enumerations.EventType.CelebrationRegisteredPartners:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if(actor.IsExternal == false)
+							if (actor.IsExternal == false)
 							{
 								var person = actor.Person.eCH_Person;
 								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
@@ -67,7 +70,7 @@ namespace Epsitec.Aider.Rules
 									person.AdultMaritalStatus = Enumerations.PersonMaritalStatus.Married;
 								}
 							}
-							
+
 						});
 						break;
 				}
