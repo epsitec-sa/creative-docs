@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {

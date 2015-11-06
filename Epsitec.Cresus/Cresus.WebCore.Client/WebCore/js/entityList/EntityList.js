@@ -767,7 +767,7 @@ function() {
       config = {
         type: 'string',
         dataIndex: columnName,
-        value: field.value,
+        value: field.value + '*',
         active: true
       };
       if (e.getKey() === e.ENTER) {
@@ -785,7 +785,7 @@ function() {
           );
         }
         else {
-          this.filters.getFilter(columnName).setValue(field.value);
+          this.filters.getFilter(columnName).setValue(field.value + '*');
           if (field.value !== '') {
             this.filters.getFilter(columnName).setActive(true);
           }

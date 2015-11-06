@@ -321,7 +321,7 @@ namespace Epsitec.Aider.Entities
 
 			if (move)
 			{
-				AiderContactEntity.ChangeHousehold (context, this.HouseholdContact, newHousehold, isHead: true);
+				AiderContactEntity.ChangeHousehold (context, this.MainContact, newHousehold, isHead: true);
 			}
 		}
 

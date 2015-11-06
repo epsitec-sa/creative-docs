@@ -20,6 +20,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
