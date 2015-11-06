@@ -338,7 +338,8 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatText (this.Name).ApplyBold (), "\n",
 				"Membres autorisés: ", this.CanHaveMembers ().ToYesOrNo (), "\n",
 				"Sous-groupes autorisés: ", this.CanHaveSubgroups ().ToYesOrNo (), "\n",
-				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n"
+				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n",
+				"Cache désactivé:", this.GroupDef.RoleCacheDisabled.ToYesOrNo (), "\n"
 			);
 		}
 
