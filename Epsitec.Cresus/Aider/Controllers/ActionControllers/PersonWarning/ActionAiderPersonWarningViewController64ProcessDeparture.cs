@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -21,18 +22,63 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Conserver la personne");
+			return Resources.FormattedText ("Traiter");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create (this.Execute);
+			return ActionExecutor.Create<string> (this.Execute);
 		}
 
-		private void Execute()
+		private void Execute(string keys)
 		{
-			this.ClearWarningAndRefreshCaches ();
-			this.ClearWarningAndRefreshCachesForAll (this.Entity.WarningType);
+			var currentUser	= AiderUserManager.Current.AuthenticatedUser;
+			var warning     = this.Entity;
+			var person      = warning.Person;
+
+			keys = keys.Trim ();
+			keys = keys.Replace ('.', ',');
+			person.DeleteNumberedParticipationsNotInKeys (this.BusinessContext, this.GetParticipationsToCheck (), keys, currentUser.LoginName);
+			BusinessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+			var remainingParticipationsToCheck = this.GetRemainingParticipations ();
+			var keepPerson                     = person.GetParticipations ().Any (p => p.IsSystemTaggedOkForWarning ());
+			if (remainingParticipationsToCheck == 0)
+			{
+				this.ClearWarningAndRefreshCaches ();
+				if (!keepPerson)
+				{
+					person.HidePerson (this.BusinessContext);
+				}
+			}
+		}
+
+		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
+		{
+			
+			var person      = this.Entity.Person;
+			var content     = this.Entity.Person.GetParticipationsNumberedSummary (this.BusinessContext, this.GetParticipationsToCheck ());
+			form
+				.Title (this.GetTitle ())
+				.Text (content)
+				.Field<string> ()
+					.Title ("N° des participations à conserver ? Ex. (1,3,4)")
+				.End ()
+			.End ();
+		}
+
+		private IEnumerable<AiderGroupParticipantEntity> GetParticipationsToCheck ()
+		{
+			var currentUser	= AiderUserManager.Current.AuthenticatedUser;
+			var person      = this.Entity.Person;
+			var groupsUnderUserManagement = currentUser.GetGroupsUnderManagement (this.BusinessContext);
+			return person.GetParticipations ().Where (p => groupsUnderUserManagement.Contains (p.Group));
+		}
+
+		private int GetRemainingParticipations ()
+		{
+			var person      = this.Entity.Person;
+			return person.GetParticipations (reload : true).Where (p => !p.IsSystemTaggedOkForWarning ()).Count ();
 		}
 	}
 }

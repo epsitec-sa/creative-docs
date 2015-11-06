@@ -419,14 +419,27 @@ namespace Epsitec.Aider.Entities
 			parishParticipations.ForEach (p =>
 			{
 				var key = index.ToString () + "# ";
-				if (!p.RolePathCache.IsNullOrWhiteSpace ())
-				{
-					lines.Add (key + p.RolePathCache);
-				}
-				else
-				{
-					lines.Add (key + p.Group.Name);
-				}
+				lines.Add (key + p.GetRolePathOrHierarchicalName ());
+				index++;
+			});
+
+			return TextFormatter.FormatText (lines.Join ("\n"));
+		}
+
+		public FormattedText GetParticipationsNumberedSummary(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations)
+		{
+			var lines = new List<string> ();
+			lines.Add ("Participations : ");
+			if (!participations.Any ())
+			{
+				lines.Add ("Aucune");
+				return TextFormatter.FormatText (lines.Join ("\n"));
+			}
+			var index=1;
+			participations.ForEach (p =>
+			{
+				var key = index.ToString () + "# ";
+				lines.Add (key + p.GetRolePathOrHierarchicalName ());
 				index++;
 			});
 
@@ -447,32 +460,18 @@ namespace Epsitec.Aider.Entities
 			nonParishParticipations.ForEach (p => 
 			{
 				var key = index.ToString () + "# ";
-				if (!p.RolePathCache.IsNullOrWhiteSpace ())
-				{
-					lines.Add (key + p.RolePathCache);
-				}
-				else
-				{
-					lines.Add (key + p.Group.Name);
-				}
+				lines.Add (key + p.GetRolePathOrHierarchicalName ());
 				index++;
 			});
 
 			return TextFormatter.FormatText (lines.Join ("\n"));
 		}
 
-		public IEnumerable<AiderGroupParticipantEntity> GetLocalParticipationsOrderedByName ()
+		public IEnumerable<AiderGroupParticipantEntity> GetLocalParticipationsOrderedByName()
 		{
 			return this.GetParticipations ()
-									   .Where (p => p.Group == this.ParishGroup)
+									   .Where (p => p.Group.IsInTheSameParish (this.ParishGroup))
 									   .OrderBy (p => p.Group.Name);
-		}
-
-		public IEnumerable<AiderGroupParticipantEntity> GetGlobalParticipationsOrderedByName()
-		{
-			return this.GetParticipations ()
-										  .Where (p => !p.Group.IsParish () && !p.Group.IsRegion ())
-										  .OrderBy (p => p.Group.Name);
 		}
 
 		public IEnumerable<AiderGroupParticipantEntity> GetOtherParishLevelParticipations()
@@ -481,7 +480,14 @@ namespace Epsitec.Aider.Entities
 									   .Where (p => p.Group.IsInTheSameParish (this.ParishGroup) && p.Group.Name != this.ParishGroup.Name);
 		}
 
-		public void DeleteNumberedParticipationsNotInKeys(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations, string keyString)
+		public IEnumerable<AiderGroupParticipantEntity> GetGlobalParticipationsOrderedByName()
+		{
+			return this.GetParticipations ()
+										  .Where (p => !p.Group.IsInTheSameParish (this.ParishGroup))
+										  .OrderBy (p => p.Group.Name);
+		}
+
+		public void DeleteNumberedParticipationsNotInKeys(BusinessContext businessContext, IEnumerable<AiderGroupParticipantEntity> participations, string keyString, string userLogin)
 		{
 			var keys = keyString.Split (',');
 			var index=1;
@@ -494,7 +500,7 @@ namespace Epsitec.Aider.Entities
 				}
 				else
 				{
-					// skipped
+					p.Comment.SystemText = "warning:ok participation conservée par " + userLogin;
 				}
 				index++;
 			});
@@ -831,6 +837,16 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
 		}
 
+		public IList<AiderGroupParticipantEntity> GetParticipations(bool reload = false)
+		{
+			if (this.participations == null || reload)
+			{
+				this.participations = this.ExecuteWithDataContext (d => this.FindParticipations (d), () => new List<AiderGroupParticipantEntity> ());
+			}
+
+			return this.participations;
+		}
+
 
 		internal void RefreshCache()
 		{
@@ -1095,16 +1111,6 @@ namespace Epsitec.Aider.Entities
 				this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
 
 			return defaultAddress;
-		}
-
-		private IList<AiderGroupParticipantEntity> GetParticipations()
-		{
-			if (this.participations == null)
-			{
-				this.participations = this.ExecuteWithDataContext (d => this.FindParticipations (d), () => new List<AiderGroupParticipantEntity> ());
-			}
-
-			return this.participations;
 		}
 
 		private ISet<AiderHouseholdEntity> GetHouseholds()
