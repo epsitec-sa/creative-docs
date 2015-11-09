@@ -138,6 +138,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController5PrepareEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
+    <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController15DeleteEmployee.cs" />
@@ -161,7 +162,6 @@
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController4ProcessNewHousehold.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController3ProcessParishDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController62ProcessDeparture.cs" />
-    <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController7ProcessArrival.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController8ProcessNewPerson.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController91ProcessAddressChange.cs" />
@@ -206,7 +206,6 @@
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController14AddGroupExclusion.cs" />
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController15RemoveGroupExclusion.cs" />
     <Compile Include="Controllers\ActionControllers\Subscription\ActionAiderSubscriptionViewController1FlagSuspended.cs" />
-    <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController65ProcessDepartureAndHide.cs" />
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />

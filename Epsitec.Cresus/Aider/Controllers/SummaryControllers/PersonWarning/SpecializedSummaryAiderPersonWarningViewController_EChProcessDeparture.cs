@@ -20,6 +20,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -27,18 +28,19 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
-			var warning = this.Entity;
-			var person  = warning.Person;
-
-			bool alive = person.IsAlive;
+			var warning     = this.Entity;
+			var person      = warning.Person;
+			var currentUser	= AiderUserManager.Current.AuthenticatedUser;
+			bool canProcess = currentUser.IsOfficeManager ();
+			bool alive      = person.IsAlive;
 
 			wall.AddBrick ()
 				.Title (x => x.WarningType)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
 				.EnableActionButton<ActionAiderPersonWarningViewController61ProcessDepartureDeceased> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (alive)
-				.EnableActionButton<ActionAiderPersonWarningViewController65ProcessDepartureAndHide> ().IfTrue (alive);
+				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (false); // Désacitivé pour le moment
+
 		}
 	}
 }

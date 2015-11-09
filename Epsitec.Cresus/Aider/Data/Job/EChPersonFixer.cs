@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Data.Job
 
 				// check for removed
 				echExample.DeclarationStatus = PersonDeclarationStatus.Removed;
-				businessContext.GetByExample<AiderPersonEntity> (example).Distinct ().ForEach (p =>
+				businessContext.GetByExample<AiderPersonEntity> (example).ForEach (p =>
 				{
 					var householdInfo = echData.GetHouseholdsInfo (p.eCH_Person.PersonId);
 					if (householdInfo.Any ())

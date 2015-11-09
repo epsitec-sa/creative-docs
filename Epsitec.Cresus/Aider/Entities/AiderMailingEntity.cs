@@ -718,8 +718,8 @@ namespace Epsitec.Aider.Entities
 				var created			   = new List<AiderMailingParticipantEntity> ();
 				var request			   = this.GetContactRequestFromQuery (dataContext, query);
 
-				contactsHouseholdsFromQuery = dataContext.GetByRequest<AiderContactEntity> (request)
-											.Select (c => c.Household);
+				contactsHouseholdsFromQuery = contactsHouseholdsFromQuery.Union (dataContext.GetByRequest<AiderContactEntity> (request)
+											.Select (c => c.Household));
 			}
 
 			var contactsHouseholds	 = this.RecipientContacts.Select (c => c.Household);
@@ -752,7 +752,7 @@ namespace Epsitec.Aider.Entities
 				var created			   = new List<AiderMailingParticipantEntity> ();
 				var request			   = this.GetContactRequestFromQuery (dataContext, query);
 
-				contactsFromQuery = dataContext.GetByRequest<AiderContactEntity> (request);
+				contactsFromQuery = contactsFromQuery.Union (dataContext.GetByRequest<AiderContactEntity> (request));
 			}
 
 			var householdsContacts	 = this.RecipientHouseholds.SelectMany (c => c.Contacts);

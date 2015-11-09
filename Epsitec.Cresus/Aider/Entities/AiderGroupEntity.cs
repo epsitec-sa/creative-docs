@@ -55,6 +55,11 @@ namespace Epsitec.Aider.Entities
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsRegion ();
 		}
 
+		public bool IsInTheSameParish(AiderGroupEntity group)
+		{
+			return this.Path.StartsWith (group.Path.Substring (0, 6));
+		}
+
 		public bool IsParish()
 		{
 			return this.GroupDef.IsNotNull () && this.GroupDef.IsParish ();
@@ -338,7 +343,8 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatText (this.Name).ApplyBold (), "\n",
 				"Membres autorisés: ", this.CanHaveMembers ().ToYesOrNo (), "\n",
 				"Sous-groupes autorisés: ", this.CanHaveSubgroups ().ToYesOrNo (), "\n",
-				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n"
+				"Sous-groupes modifiables: ", this.CanSubgroupsBeEdited ().ToYesOrNo (), "\n",
+				"Cache désactivé:", this.GroupDef.RoleCacheDisabled.ToYesOrNo (), "\n"
 			);
 		}
 
@@ -549,6 +555,19 @@ namespace Epsitec.Aider.Entities
 			var request = Request.Create (example);
 
 			request.AddCondition (dataContext, example, x => x.GroupLevel == level && SqlMethods.Like (x.Path, path));
+			request.AddSortClause (ValueField.Create (example, x => x.Name));
+
+			return dataContext.GetByRequest (request);
+		}
+
+		public static IList<AiderGroupEntity> FindGroupsAndSubGroupsFromPathPrefix(BusinessContext businessContext, string path)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var example = new AiderGroupEntity ();
+			var request = Request.Create (example);
+
+			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.Path, path + "%"));
 			request.AddSortClause (ValueField.Create (example, x => x.Name));
 
 			return dataContext.GetByRequest (request);
