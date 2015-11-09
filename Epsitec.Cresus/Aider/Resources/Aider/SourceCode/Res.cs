@@ -334,6 +334,10 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType MailingParticipantType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 566));
 				//	designer:cap/LVATA
 				public static readonly Epsitec.Common.Types.EnumType Mutability = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 349));
+				//	designer:cap/LVON83
+				public static readonly Epsitec.Common.Types.EnumType OfficeProcessStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 279));
+				//	designer:cap/LVOE83
+				public static readonly Epsitec.Common.Types.EnumType OfficeProcessType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 270));
 				//	designer:cap/LVASK
 				public static readonly Epsitec.Common.Types.EnumType OfficeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 668));
 				//	designer:cap/LVAJ5
@@ -435,10 +439,14 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeLetterReport = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 82));
 			//	designer:cap/LVO613
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeManagement = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 38));
+			//	designer:cap/LVOH83
+			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeProcess = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 273));
 			//	designer:cap/LVOE23
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeReport = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 78));
 			//	designer:cap/LVOA13
 			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeSender = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 42));
+			//	designer:cap/LVOD83
+			public static readonly Epsitec.Common.Types.StructuredType AiderOfficeTask = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 269));
 			//	designer:cap/LVAF
 			public static readonly Epsitec.Common.Types.StructuredType AiderPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 			//	designer:cap/LVAL8
@@ -1765,6 +1773,62 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 351));
+						}
+					}
+				}
+				
+				public static class OfficeProcessStatus
+				{
+					//	designer:cap/LVOQ83
+					public static global::Epsitec.Common.Types.Caption Canceled
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 282));
+						}
+					}
+					//	designer:cap/LVOR83
+					public static global::Epsitec.Common.Types.Caption Ended
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 283));
+						}
+					}
+					//	designer:cap/LVOP83
+					public static global::Epsitec.Common.Types.Caption InProgress
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 281));
+						}
+					}
+					//	designer:cap/LVOO83
+					public static global::Epsitec.Common.Types.Caption Started
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 280));
+						}
+					}
+				}
+				
+				public static class OfficeProcessType
+				{
+					//	designer:cap/LVOF83
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 271));
+						}
+					}
+					//	designer:cap/LVOG83
+					public static global::Epsitec.Common.Types.Caption PersonsOutputProcess
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 272));
 						}
 					}
 				}
@@ -3647,6 +3711,19 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RegionDeprecated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 119);
 			}
 			
+			public static class AiderOfficeProcess
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderOfficeProcess.Tasks, null);
+				}
+				
+				//	designer:cap/LVOJ83
+				public static readonly global::Epsitec.Common.Support.Druid Tasks = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 275);
+				//	designer:cap/LVOI83
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 274);
+			}
+			
 			public static class AiderOfficeReport
 			{
 				internal static void _Initialize()
@@ -3687,6 +3764,21 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficialContact = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 45);
 				//	designer:cap/LVO923
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 73);
+			}
+			
+			public static class AiderOfficeTask
+			{
+				internal static void _Initialize()
+				{
+					global::System.Object.Equals (AiderOfficeTask.IsDone, null);
+				}
+				
+				//	designer:cap/LVOM83
+				public static readonly global::Epsitec.Common.Support.Druid IsDone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 278);
+				//	designer:cap/LVOL83
+				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 277);
+				//	designer:cap/LVOK83
+				public static readonly global::Epsitec.Common.Support.Druid Process = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 276);
 			}
 			
 			public static class AiderPerson
@@ -4597,8 +4689,10 @@ namespace Epsitec.Aider
 			Fields.AiderOfficeGroupParticipantReport._Initialize ();
 			Fields.AiderOfficeLetterReport._Initialize ();
 			Fields.AiderOfficeManagement._Initialize ();
+			Fields.AiderOfficeProcess._Initialize ();
 			Fields.AiderOfficeReport._Initialize ();
 			Fields.AiderOfficeSender._Initialize ();
+			Fields.AiderOfficeTask._Initialize ();
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();
