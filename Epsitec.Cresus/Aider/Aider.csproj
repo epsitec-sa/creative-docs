@@ -274,6 +274,7 @@
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
     <Compile Include="Controllers\SummaryControllers\Group\SummaryAiderGroupViewController1OfficeManagement.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingViewController2Build.cs" />
+    <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController6Tasks.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController5Members.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController4EventsToValidate.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController3EventsInPreparation.cs" />
@@ -307,6 +308,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Tasks\SummaryAiderOfficeTask.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderWarningSourceViewController.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
@@ -377,6 +379,7 @@
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderMailingQueryEntity.cs" />
     <Compile Include="Entities\AiderEventOfficeReportEntity.cs" />
+    <Compile Include="Entities\AiderOfficeTaskEntity.cs" />
     <Compile Include="Entities\AiderOfficeProcessEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />

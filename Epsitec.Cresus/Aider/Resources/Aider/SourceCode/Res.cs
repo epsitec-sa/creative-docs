@@ -3709,6 +3709,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid RegionalReferees = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 676);
 				//	designer:cap/LVON33
 				public static readonly global::Epsitec.Common.Support.Druid RegionDeprecated = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 119);
+				//	designer:cap/LVOV83
+				public static readonly global::Epsitec.Common.Support.Druid Tasks = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 287);
 			}
 			
 			public static class AiderOfficeProcess

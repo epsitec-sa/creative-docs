@@ -9709,6 +9709,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Tasks</c> field.
+		///	designer:fld/LVO613/LVOV83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOV83]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> Tasks
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity>);
+				this.GetTasks (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>Employees</c> field.
 		///	designer:fld/LVO613/LVANK
 		///	</summary>
@@ -9862,6 +9876,7 @@ namespace Epsitec.Aider.Entities
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
+		partial void GetTasks(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> value);
 		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		partial void GetEventsInPreparation(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventEntity> value);

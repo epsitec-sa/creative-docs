@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			AiderPersonsExitProcess.StartProcess (this.BusinessContext, this.Entity.Person);		
-			this.ClearWarningAndRefreshCaches ();
+			//this.ClearWarningAndRefreshCaches ();
 		}
 	}
 }

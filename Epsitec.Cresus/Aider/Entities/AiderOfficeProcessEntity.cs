@@ -11,6 +11,7 @@ using Epsitec.Aider.Enumerations;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Aider.Entities
 {
@@ -28,6 +29,12 @@ namespace Epsitec.Aider.Entities
 
 		public AiderOfficeTaskEntity StartTaskInOffice(BusinessContext businessContext, AiderOfficeManagementEntity office)
 		{
+			// prevent double task per process in offices
+			if (this.Tasks.Where (t => t.Office == office).Any ())
+			{
+				return null;
+			}
+
 			var task = businessContext.CreateAndRegisterEntity<AiderOfficeTaskEntity> ();
 			task.Process = this;
 			task.Office  = office;
@@ -37,10 +44,10 @@ namespace Epsitec.Aider.Entities
 			return task;
 		}
 
-		public AiderEntity GetSourceEntity<AiderEntity>(BusinessContext businessContext)
+		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)
 			where AiderEntity : AbstractEntity
 		{
-			return (AiderEntity) businessContext.DataContext.GetPersistedEntity (this.SourceId);
+			return (AiderEntity) dataContext.GetPersistedEntity (this.SourceId);
 		}
 
 		public static AiderOfficeProcessEntity Create(BusinessContext businessContext, OfficeProcessType type, AbstractEntity source)

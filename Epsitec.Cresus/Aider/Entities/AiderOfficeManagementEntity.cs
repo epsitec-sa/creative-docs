@@ -431,6 +431,11 @@ namespace Epsitec.Aider.Entities
 			value = this.GetDocuments ().AsReadOnlyCollection ();
 		}
 
+		partial void GetTasks(ref IList<AiderOfficeTaskEntity> value)
+		{
+			value = this.GetTasks ().AsReadOnlyCollection ();
+		}
+
 		partial void GetEventsInPreparation(ref IList<AiderEventEntity> value)
 		{
 			value = this.GetEventsInPreparation ().AsReadOnlyCollection ();
@@ -497,6 +502,16 @@ namespace Epsitec.Aider.Entities
 			return this.documents;
 		}
 
+		private IList<AiderOfficeTaskEntity> GetTasks()
+		{
+			if (this.tasks == null)
+			{
+				this.tasks = this.ExecuteWithDataContext (t => this.FindTasks (t), () => new List<AiderOfficeTaskEntity> ());
+			}
+
+			return this.tasks;
+		}
+
 		private IList<AiderOfficeReportEntity> FindDocuments(DataContext dataContext)
 		{
 			var example = new AiderOfficeReportEntity
@@ -506,6 +521,17 @@ namespace Epsitec.Aider.Entities
 
 			return dataContext.GetByExample (example)
 							  .OrderBy (x => x.Name)
+							  .ToList ();
+		}
+
+		private IList<AiderOfficeTaskEntity> FindTasks(DataContext dataContext)
+		{
+			var example = new AiderOfficeTaskEntity
+			{
+				Office = this
+			};
+
+			return dataContext.GetByExample (example)
 							  .ToList ();
 		}
 
@@ -558,6 +584,7 @@ namespace Epsitec.Aider.Entities
 		
 		private IList<AiderOfficeSenderEntity>	senders;
 		private IList<AiderOfficeReportEntity>	documents;
+		private IList<AiderOfficeTaskEntity>	tasks;
 		private IList<AiderEventEntity>			eventsInPreparation;
 		private IList<AiderEventEntity>			eventsToValidate;
 		private IList<AiderEmployeeJobEntity>	employeeJobs;

@@ -21,19 +21,21 @@ namespace Epsitec.Aider.BusinessCases
 	{
 		public static void StartProcess(BusinessContext businessContext, AiderPersonEntity person)
 		{
-			/*var process = AiderOfficeProcessEntity
-							.Create (businessContext, OfficeProcessType.PersonsExitProcess, person);
-			*/
-			var officesGroups  = businessContext.GetAllEntities<AiderOfficeManagementEntity> ().Select (o => o.ParishGroup);
+			var process = AiderOfficeProcessEntity
+							.Create (businessContext, OfficeProcessType.PersonsOutputProcess, person);
+			
+			var offices        = businessContext.GetAllEntities<AiderOfficeManagementEntity> ();
+			var officesGroups  = offices.Select (o => o.ParishGroup);
 			var groups   = person.GetParticipations ().Select (p => p.Group);
 			
 			foreach (var group in groups)
 			{
-				var search = Enumerable.Repeat (group, 1).Union (group.Parents);
-				var office = search.Intersect (officesGroups);
-				if (office.Any ())
+				var searchPath = Enumerable.Repeat (group, 1).Union (group.Parents);
+				var matchingGroups = searchPath.Intersect (officesGroups);
+				if (matchingGroups.Any ())
 				{
-
+					var office = offices.Single (o => o.ParishGroup == matchingGroups.First ());
+					process.StartTaskInOffice (businessContext, office);
 				}
 				else
 				{
