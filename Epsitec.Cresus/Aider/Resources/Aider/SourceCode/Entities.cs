@@ -11669,9 +11669,33 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> ("[LVOJ83]");
 			}
 		}
+		///	<summary>
+		///	The <c>Status</c> field.
+		///	designer:fld/LVOH83/LVOS83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOS83]")]
+		public global::Epsitec.Aider.Enumerations.OfficeProcessStatus Status
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.OfficeProcessStatus> ("[LVOS83]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue = this.Status;
+				if (oldValue != value || !this.IsFieldDefined("[LVOS83]"))
+				{
+					this.OnStatusChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.OfficeProcessStatus> ("[LVOS83]", oldValue, value);
+					this.OnStatusChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
+		partial void OnStatusChanging(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
+		partial void OnStatusChanged(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

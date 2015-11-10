@@ -3715,9 +3715,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeProcess.Tasks, null);
+					global::System.Object.Equals (AiderOfficeProcess.Status, null);
 				}
 				
+				//	designer:cap/LVOS83
+				public static readonly global::Epsitec.Common.Support.Druid Status = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 284);
 				//	designer:cap/LVOJ83
 				public static readonly global::Epsitec.Common.Support.Druid Tasks = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 275);
 				//	designer:cap/LVOI83
