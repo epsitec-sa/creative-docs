@@ -3715,9 +3715,13 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeProcess.Status, null);
+					global::System.Object.Equals (AiderOfficeProcess.CreationDate, null);
 				}
 				
+				//	designer:cap/LVOU83
+				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 286);
+				//	designer:cap/LVOT83
+				public static readonly global::Epsitec.Common.Support.Druid SourceId = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 285);
 				//	designer:cap/LVOS83
 				public static readonly global::Epsitec.Common.Support.Druid Status = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 284);
 				//	designer:cap/LVOJ83

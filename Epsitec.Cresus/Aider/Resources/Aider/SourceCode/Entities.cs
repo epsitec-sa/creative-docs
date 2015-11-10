@@ -11636,6 +11636,28 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderOfficeProcessEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/LVOH83/LVOU83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOU83]")]
+		public global::System.DateTime CreationDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime> ("[LVOU83]");
+			}
+			set
+			{
+				global::System.DateTime oldValue = this.CreationDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVOU83]"))
+				{
+					this.OnCreationDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime> ("[LVOU83]", oldValue, value);
+					this.OnCreationDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Type</c> field.
 		///	designer:fld/LVOH83/LVOI83
 		///	</summary>
@@ -11691,11 +11713,37 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>SourceId</c> field.
+		///	designer:fld/LVOH83/LVOT83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOT83]")]
+		public string SourceId
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOT83]");
+			}
+			set
+			{
+				string oldValue = this.SourceId;
+				if (oldValue != value || !this.IsFieldDefined("[LVOT83]"))
+				{
+					this.OnSourceIdChanging (oldValue, value);
+					this.SetField<string> ("[LVOT83]", oldValue, value);
+					this.OnSourceIdChanged (oldValue, value);
+				}
+			}
+		}
 		
+		partial void OnCreationDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnCreationDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
 		partial void OnStatusChanging(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
 		partial void OnStatusChanged(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
+		partial void OnSourceIdChanging(string oldValue, string newValue);
+		partial void OnSourceIdChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
