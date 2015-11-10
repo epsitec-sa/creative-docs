@@ -18,12 +18,12 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.ProcessType);
+			return TextFormatter.FormatText (this.Type);
 		}
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.ProcessType);
+			return TextFormatter.FormatText (this.Type);
 		}
 
 		public AiderOfficeTaskEntity StartTaskInOffice(BusinessContext businessContext, AiderOfficeManagementEntity office)
@@ -47,7 +47,7 @@ namespace Epsitec.Aider.Entities
 		{
 			switch (type)
 			{
-				case OfficeProcessType.PersonsExitProcess:
+				case OfficeProcessType.PersonsOutputProcess:
 					if (source.GetType () != typeof (AiderPersonEntity))
 					{
 						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Entities
 
 			var process = businessContext.CreateAndRegisterEntity<AiderOfficeProcessEntity> ();
 			process.CreationDate = System.DateTime.Now;
-			process.ProcessType  = type;
+			process.Type  = type;
 			process.Status       = OfficeProcessStatus.Started;
 			process.SourceId     = businessContext.DataContext.GetPersistedId (source);
 			return process;
