@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
+    <Compile Include="BusinessCases\AiderPersonsExitProcess.cs" />
     <Compile Include="BusinessCases\AiderDerogations.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController0CreatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
@@ -494,6 +495,7 @@
     <Compile Include="Reporting\StaticContent.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderOfficeProcessRules.cs" />
     <Compile Include="Rules\AiderEmployeeJobBusinessRules.cs" />
     <Compile Include="Rules\AiderEventBusinessRules.cs" />
     <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />

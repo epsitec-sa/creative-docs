@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Override;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -32,7 +33,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			
+			AiderPersonsExitProcess.StartProcess (this.BusinessContext, this.Entity.Person);		
+			this.ClearWarningAndRefreshCaches ();
 		}
 	}
 }
