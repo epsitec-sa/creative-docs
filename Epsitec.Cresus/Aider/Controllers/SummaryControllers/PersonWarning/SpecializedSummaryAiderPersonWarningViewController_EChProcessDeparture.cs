@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
 				.EnableActionButton<ActionAiderPersonWarningViewController61ProcessDepartureDeceased> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (alive && canProcess);
+				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (false); // Désacitivé pour le moment
 
 		}
 	}
