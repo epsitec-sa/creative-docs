@@ -24,7 +24,15 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Type);
+			var subject = new FormattedText ();
+			switch (this.Type)
+			{
+				case OfficeProcessType.PersonsOutputProcess:
+					subject = this.GetSourceEntity<AiderPersonEntity> (this.GetDataContext ()).GetSummary ();
+					break;
+
+			}
+			return TextFormatter.FormatText (this.Type, "\n", subject);
 		}
 
 		public AiderOfficeTaskEntity StartTaskInOffice(

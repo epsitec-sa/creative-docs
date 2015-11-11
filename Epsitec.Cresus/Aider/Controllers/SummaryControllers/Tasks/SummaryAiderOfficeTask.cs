@@ -32,7 +32,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var task    = this.Entity;
 
 			wall.AddBrick ()
-				.Title ("Veuillez choisir une action")
+				.Title ("Choisir une action:")
+				.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
 				.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
 
 

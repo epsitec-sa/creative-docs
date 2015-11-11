@@ -74,8 +74,19 @@ namespace Epsitec.Aider.BusinessCases
 			var process       = task.Process;
 			var dataContext   = businessContext.DataContext;
 			var participation = task.GetSourceEntity<AiderGroupParticipantEntity> (dataContext);
-			task.IsDone = true;
+			task.IsDone       = true;
 			businessContext.DeleteEntity (participation);
+			process.SetNextStatus ();
+			if (process.Status == OfficeProcessStatus.Ended)
+			{
+				AiderPersonsExitProcess.EndProcess (businessContext, process);
+			}
+		}
+
+		public static void DoKeepParticipationTask(BusinessContext businessContext, AiderOfficeTaskEntity task)
+		{
+			var process = task.Process;
+			task.IsDone = true;
 			process.SetNextStatus ();
 			if (process.Status == OfficeProcessStatus.Ended)
 			{

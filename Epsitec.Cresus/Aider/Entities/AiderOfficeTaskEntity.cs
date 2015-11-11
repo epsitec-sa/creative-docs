@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Process.Type, ":\n", this.Kind);
+			return TextFormatter.FormatText (this.Process.GetSummary (), "\n", this.Kind);
 		}
 
 		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)
