@@ -51,6 +51,8 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVO543]", typeof (Epsitec.Aider.Entities.AiderMailingQueryEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOB63]", typeof (Epsitec.Aider.Entities.AiderEventOfficeReportEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVOL63]", typeof (Epsitec.Aider.Entities.AiderEventPlaceEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOD83]", typeof (Epsitec.Aider.Entities.AiderOfficeTaskEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVOH83]", typeof (Epsitec.Aider.Entities.AiderOfficeProcessEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -9707,6 +9709,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Tasks</c> field.
+		///	designer:fld/LVO613/LVOV83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOV83]", IsVirtual=true)]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> Tasks
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity>);
+				this.GetTasks (ref value);
+				return value;
+			}
+		}
+		///	<summary>
 		///	The <c>Employees</c> field.
 		///	designer:fld/LVO613/LVANK
 		///	</summary>
@@ -9860,6 +9876,7 @@ namespace Epsitec.Aider.Entities
 		
 		partial void GetOfficeSenders(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeSenderEntity> value);
 		partial void GetDocuments(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeReportEntity> value);
+		partial void GetTasks(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> value);
 		partial void GetEmployees(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeEntity> value);
 		partial void GetEmployeeJobs(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEmployeeJobEntity> value);
 		partial void GetEventsInPreparation(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventEntity> value);
@@ -11507,6 +11524,304 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderEventPlaceEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderOfficeTask Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderOfficeTask</c> entity.
+	///	designer:cap/LVOD83
+	///	</summary>
+	public partial class AiderOfficeTaskEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Office</c> field.
+		///	designer:fld/LVOD83/LVOL83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOL83]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeManagementEntity Office
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVOL83]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue = this.Office;
+				if (oldValue != value || !this.IsFieldDefined("[LVOL83]"))
+				{
+					this.OnOfficeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeManagementEntity> ("[LVOL83]", oldValue, value);
+					this.OnOfficeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Process</c> field.
+		///	designer:fld/LVOD83/LVOK83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOK83]")]
+		public global::Epsitec.Aider.Entities.AiderOfficeProcessEntity Process
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderOfficeProcessEntity> ("[LVOK83]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderOfficeProcessEntity oldValue = this.Process;
+				if (oldValue != value || !this.IsFieldDefined("[LVOK83]"))
+				{
+					this.OnProcessChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderOfficeProcessEntity> ("[LVOK83]", oldValue, value);
+					this.OnProcessChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Kind</c> field.
+		///	designer:fld/LVOD83/LVO493
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO493]")]
+		public global::Epsitec.Aider.Enumerations.OfficeTaskKind Kind
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.OfficeTaskKind> ("[LVO493]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.OfficeTaskKind oldValue = this.Kind;
+				if (oldValue != value || !this.IsFieldDefined("[LVO493]"))
+				{
+					this.OnKindChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.OfficeTaskKind> ("[LVO493]", oldValue, value);
+					this.OnKindChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IsDone</c> field.
+		///	designer:fld/LVOD83/LVOM83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOM83]")]
+		public bool IsDone
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOM83]");
+			}
+			set
+			{
+				bool oldValue = this.IsDone;
+				if (oldValue != value || !this.IsFieldDefined("[LVOM83]"))
+				{
+					this.OnIsDoneChanging (oldValue, value);
+					this.SetField<bool> ("[LVOM83]", oldValue, value);
+					this.OnIsDoneChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SourceId</c> field.
+		///	designer:fld/LVOD83/LVO593
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO593]")]
+		public string SourceId
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO593]");
+			}
+			set
+			{
+				string oldValue = this.SourceId;
+				if (oldValue != value || !this.IsFieldDefined("[LVO593]"))
+				{
+					this.OnSourceIdChanging (oldValue, value);
+					this.SetField<string> ("[LVO593]", oldValue, value);
+					this.OnSourceIdChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnProcessChanging(global::Epsitec.Aider.Entities.AiderOfficeProcessEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeProcessEntity newValue);
+		partial void OnProcessChanged(global::Epsitec.Aider.Entities.AiderOfficeProcessEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeProcessEntity newValue);
+		partial void OnKindChanging(global::Epsitec.Aider.Enumerations.OfficeTaskKind oldValue, global::Epsitec.Aider.Enumerations.OfficeTaskKind newValue);
+		partial void OnKindChanged(global::Epsitec.Aider.Enumerations.OfficeTaskKind oldValue, global::Epsitec.Aider.Enumerations.OfficeTaskKind newValue);
+		partial void OnIsDoneChanging(bool oldValue, bool newValue);
+		partial void OnIsDoneChanged(bool oldValue, bool newValue);
+		partial void OnSourceIdChanging(string oldValue, string newValue);
+		partial void OnSourceIdChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeTaskEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeTaskEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 269);	// [LVOD83]
+		public static readonly string EntityStructuredTypeKey = "[LVOD83]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeTaskEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderOfficeProcess Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderOfficeProcess</c> entity.
+	///	designer:cap/LVOH83
+	///	</summary>
+	public partial class AiderOfficeProcessEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>CreationDate</c> field.
+		///	designer:fld/LVOH83/LVOU83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOU83]")]
+		public global::System.DateTime CreationDate
+		{
+			get
+			{
+				return this.GetField<global::System.DateTime> ("[LVOU83]");
+			}
+			set
+			{
+				global::System.DateTime oldValue = this.CreationDate;
+				if (oldValue != value || !this.IsFieldDefined("[LVOU83]"))
+				{
+					this.OnCreationDateChanging (oldValue, value);
+					this.SetField<global::System.DateTime> ("[LVOU83]", oldValue, value);
+					this.OnCreationDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Type</c> field.
+		///	designer:fld/LVOH83/LVOI83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOI83]")]
+		public global::Epsitec.Aider.Enumerations.OfficeProcessType Type
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.OfficeProcessType> ("[LVOI83]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue = this.Type;
+				if (oldValue != value || !this.IsFieldDefined("[LVOI83]"))
+				{
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.OfficeProcessType> ("[LVOI83]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Tasks</c> field.
+		///	designer:fld/LVOH83/LVOJ83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOJ83]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> Tasks
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderOfficeTaskEntity> ("[LVOJ83]");
+			}
+		}
+		///	<summary>
+		///	The <c>Status</c> field.
+		///	designer:fld/LVOH83/LVOS83
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOS83]")]
+		public global::Epsitec.Aider.Enumerations.OfficeProcessStatus Status
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.OfficeProcessStatus> ("[LVOS83]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue = this.Status;
+				if (oldValue != value || !this.IsFieldDefined("[LVOS83]"))
+				{
+					this.OnStatusChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.OfficeProcessStatus> ("[LVOS83]", oldValue, value);
+					this.OnStatusChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SourceId</c> field.
+		///	designer:fld/LVOH83/LVO693
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO693]")]
+		public string SourceId
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO693]");
+			}
+			set
+			{
+				string oldValue = this.SourceId;
+				if (oldValue != value || !this.IsFieldDefined("[LVO693]"))
+				{
+					this.OnSourceIdChanging (oldValue, value);
+					this.SetField<string> ("[LVO693]", oldValue, value);
+					this.OnSourceIdChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnCreationDateChanging(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnCreationDateChanged(global::System.DateTime oldValue, global::System.DateTime newValue);
+		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
+		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.OfficeProcessType oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessType newValue);
+		partial void OnStatusChanging(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
+		partial void OnStatusChanged(global::Epsitec.Aider.Enumerations.OfficeProcessStatus oldValue, global::Epsitec.Aider.Enumerations.OfficeProcessStatus newValue);
+		partial void OnSourceIdChanging(string oldValue, string newValue);
+		partial void OnSourceIdChanged(string oldValue, string newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeProcessEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderOfficeProcessEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 120, 273);	// [LVOH83]
+		public static readonly string EntityStructuredTypeKey = "[LVOH83]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderOfficeProcessEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

@@ -98,7 +98,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			SummaryAiderOfficeManagementViewController.CreateBricksAssociatedGroups (wall, this.Entity);
-			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);	
+			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);
+			SummaryAiderOfficeManagementViewController.CreateBricksTasks (wall);
 		}
 
 		private void CreateBricksForParishCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
@@ -118,6 +119,17 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController2Documents));
 		}
+
+		private static void CreateBricksTasks(BrickWall<AiderOfficeManagementEntity> wall)
+		{
+			wall.AddBrick ()
+				.Icon ("Base.AiderGoup.Parish")
+				.Title (p => "Tâches")
+				.Text (p => p.GetTasksSummary ())
+				.Attribute (BrickMode.DefaultToSummarySubView)
+				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController6Tasks));
+		}
+
 
 		private static void CreateBricksEmployeesReadOnly(BrickWall<AiderOfficeManagementEntity> wall)
 		{
