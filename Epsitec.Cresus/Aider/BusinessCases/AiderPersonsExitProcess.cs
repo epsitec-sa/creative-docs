@@ -53,13 +53,12 @@ namespace Epsitec.Aider.BusinessCases
 				process.StartTaskInOffice (businessContext, OfficeTaskKind.CheckParticipation, office, participation);
 	
 			}
+
+			AiderPersonsExitProcess.Next (businessContext, process);
 		}
 
 		public static void EndProcess (BusinessContext businessContext, AiderOfficeProcessEntity process)
 		{
-			// persist last changes
-			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-
 			var dataContext   = businessContext.DataContext;
 			var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
 			// check remaining participations
@@ -74,6 +73,18 @@ namespace Epsitec.Aider.BusinessCases
 			}
 		}
 
+		public static void Next (BusinessContext businessContext, AiderOfficeProcessEntity process)
+		{
+			process.SetNextStatus ();
+			// persist last changes
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+			if (process.Status == OfficeProcessStatus.Ended)
+			{
+				AiderPersonsExitProcess.EndProcess (businessContext, process);
+			}
+		}
+
 		public static void DoRemoveParticipationTask (BusinessContext businessContext, AiderOfficeTaskEntity task)
 		{
 			var process       = task.Process;
@@ -81,22 +92,15 @@ namespace Epsitec.Aider.BusinessCases
 			var participation = task.GetSourceEntity<AiderGroupParticipantEntity> (dataContext);
 			task.IsDone       = true;
 			businessContext.DeleteEntity (participation);
-			process.SetNextStatus ();
-			if (process.Status == OfficeProcessStatus.Ended)
-			{
-				AiderPersonsExitProcess.EndProcess (businessContext, process);
-			}
+
+			AiderPersonsExitProcess.Next (businessContext, process);
 		}
 
 		public static void DoKeepParticipationTask(BusinessContext businessContext, AiderOfficeTaskEntity task)
 		{
 			var process = task.Process;
 			task.IsDone = true;
-			process.SetNextStatus ();
-			if (process.Status == OfficeProcessStatus.Ended)
-			{
-				AiderPersonsExitProcess.EndProcess (businessContext, process);
-			}
+			AiderPersonsExitProcess.Next (businessContext, process);
 		}
 	}
 }
