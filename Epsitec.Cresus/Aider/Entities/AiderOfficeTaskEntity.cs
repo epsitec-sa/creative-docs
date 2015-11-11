@@ -11,6 +11,7 @@ using Epsitec.Aider.Enumerations;
 using System.Linq;
 using System.Collections.Generic;
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Aider.Entities
 {
@@ -18,37 +19,45 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText ("Tâche");
+			return TextFormatter.FormatText (this.Kind);
 		}
 
 		public override FormattedText GetSummary()
 		{
-			switch (this.Process.Type)
+			return TextFormatter.FormatText (this.Process.Type, ":\n", this.Kind);
+		}
+
+		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)
+			where AiderEntity : AbstractEntity
+		{
+			return (AiderEntity) dataContext.GetPersistedEntity (this.SourceId);
+		}
+
+		public static AiderOfficeTaskEntity Create(
+			BusinessContext businessContext, 
+			OfficeTaskKind kind, 
+			AiderOfficeManagementEntity office, 
+			AiderOfficeProcessEntity process, 
+			AbstractEntity source)
+		{
+
+			switch (kind)
 			{
-				case OfficeProcessType.PersonsOutputProcess:
-					return this.GetExitProcessSummary ();
-
+				case OfficeTaskKind.CheckParticipation:
+					if (source.GetType () != typeof (AiderGroupParticipantEntity))
+					{
+						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au genre de tâche");
+					}
+					break;
 			}
-			return this.GetCompactSummary ();
-		}
 
-		public AiderPersonEntity GetExitProcessPerson()
-		{
-			return this.Process.GetSourceEntity<AiderPersonEntity> (this.GetDataContext ());
-		}
-
-		public IList<AiderGroupParticipantEntity> GetExitProcessParticipations()
-		{	
-			var person = this.GetExitProcessPerson ();
-			return person
-					.GetParticipations ()
-					.Where (p => p.Group.IsInTheSameParish (this.Office.ParishGroup)).ToList ();
-		}
-
-		private FormattedText GetExitProcessSummary ()
-		{
-			var person = this.GetExitProcessPerson ();
-			return TextFormatter.FormatText ("Sortie " + person.GetCompactSummary ());
+			var task = businessContext.CreateAndRegisterEntity<AiderOfficeTaskEntity> ();
+			task.Process  = process;
+			task.Office   = office;
+			task.Kind     = kind;
+			task.IsDone   = false;
+			task.SourceId = businessContext.DataContext.GetPersistedId (source);
+			return task;
 		}
 	}
 }

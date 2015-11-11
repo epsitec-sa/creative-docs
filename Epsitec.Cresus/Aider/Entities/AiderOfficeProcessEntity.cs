@@ -27,21 +27,34 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Type);
 		}
 
-		public AiderOfficeTaskEntity StartTaskInOffice(BusinessContext businessContext, AiderOfficeManagementEntity office)
+		public AiderOfficeTaskEntity StartTaskInOffice(
+			BusinessContext businessContext, 
+			OfficeTaskKind kind, 
+			AiderOfficeManagementEntity office,
+			AbstractEntity source)
 		{
-			// prevent double task per process in offices
-			if (this.Tasks.Where (t => t.Office == office).Any ())
+			var task = AiderOfficeTaskEntity.Create (businessContext, kind, office, this, source);
+			this.Tasks.Add (task);
+
+			return task;
+		}
+
+		public void SetNextStatus ()
+		{
+			if (this.Tasks.All (t => t.IsDone == false))
 			{
-				return null;
+				this.Status = OfficeProcessStatus.Started;
 			}
 
-			var task = businessContext.CreateAndRegisterEntity<AiderOfficeTaskEntity> ();
-			task.Process = this;
-			task.Office  = office;
-			task.IsDone  = false;
+			if (this.Tasks.Any (t => t.IsDone == true))
+			{
+				this.Status = OfficeProcessStatus.InProgress;
+			}
 
-			this.Tasks.Add (task);
-			return task;
+			if (this.Tasks.All (t => t.IsDone == true))
+			{
+				this.Status = OfficeProcessStatus.Ended;
+			}
 		}
 
 		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)

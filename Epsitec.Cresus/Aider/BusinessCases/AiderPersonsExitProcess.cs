@@ -26,23 +26,61 @@ namespace Epsitec.Aider.BusinessCases
 			
 			var offices        = businessContext.GetAllEntities<AiderOfficeManagementEntity> ();
 			var officesGroups  = offices.Select (o => o.ParishGroup);
-			var groups   = person.GetParticipations ().Select (p => p.Group);
+			var participations = person.GetParticipations ();
+			var groups         = participations.Select (p => p.Group);
+			var participationsByGroup = participations.ToDictionary (p => p.Group, p => p);
 			
 			foreach (var group in groups)
 			{
-				var searchPath = Enumerable.Repeat (group, 1).Union (group.Parents);
-				var matchingGroups = searchPath.Intersect (officesGroups);
-				if (matchingGroups.Any ())
+				AiderOfficeManagementEntity office = null;
+				if (group.IsParish ())
 				{
-					var office = offices.Single (o => o.ParishGroup == matchingGroups.First ());
-					process.StartTaskInOffice (businessContext, office);
+					office = offices.Single (o => o.ParishGroup == group);
 				}
 				else
 				{
-
+					var searchPath = Enumerable.Repeat (group, 1).Union (group.Parents);
+					var matchingGroups = searchPath.Intersect (officesGroups);
+					office = offices.Single (o => o.ParishGroup == matchingGroups.Last ());
 				}
-			}
 
+				var participation = participationsByGroup[group];
+				process.StartTaskInOffice (businessContext, OfficeTaskKind.CheckParticipation, office, participation);
+	
+			}
+		}
+
+		public static void EndProcess (BusinessContext businessContext, AiderOfficeProcessEntity process)
+		{
+			// persist last changes
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+			var dataContext   = businessContext.DataContext;
+			var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
+			// check remaining participations
+			if (person.GetParticipations ().Count == 0)
+			{
+				person.Visibility = PersonVisibilityStatus.Hidden;
+				businessContext.DeleteEntity (person.MainContact);
+				businessContext.DeleteEntity (person.HouseholdContact);
+				// persist last changes
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
+			}
+		}
+
+		public static void DoRemoveParticipationTask (BusinessContext businessContext, AiderOfficeTaskEntity task)
+		{
+			var process       = task.Process;
+			var dataContext   = businessContext.DataContext;
+			var participation = task.GetSourceEntity<AiderGroupParticipantEntity> (dataContext);
+			task.IsDone = true;
+			businessContext.DeleteEntity (participation);
+			process.SetNextStatus ();
+			if (process.Status == OfficeProcessStatus.Ended)
+			{
+				AiderPersonsExitProcess.EndProcess (businessContext, process);
+			}
 		}
 	}
 }

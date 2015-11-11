@@ -66,6 +66,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public FormattedText GetTasksSummary()
+		{
+			switch (this.Tasks.Count)
+			{
+				case 0:
+					return TextFormatter.FormatText ("Aucune");
+				case 1:
+					return TextFormatter.FormatText ("Une tâche");
+
+				default:
+					return TextFormatter.FormatText (this.Tasks.Count, "tâches");
+			}
+		}
+
 		public FormattedText GetEventsInPreparationSummary()
 		{
 			switch (this.EventsInPreparation.Count)
@@ -528,7 +542,8 @@ namespace Epsitec.Aider.Entities
 		{
 			var example = new AiderOfficeTaskEntity
 			{
-				Office = this
+				Office = this,
+				IsDone = false
 			};
 
 			return dataContext.GetByExample (example)

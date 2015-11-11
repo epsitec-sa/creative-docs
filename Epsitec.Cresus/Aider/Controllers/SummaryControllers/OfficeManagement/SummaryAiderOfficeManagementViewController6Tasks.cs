@@ -28,15 +28,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
+			// show all unfinished tasks
 			wall.AddBrick (p => p.Tasks)
-								.Attribute (BrickMode.DefaultToSummarySubView)
-								.Attribute (BrickMode.AutoGroup)
-								.Attribute (BrickMode.HideAddButton)
-								.Attribute (BrickMode.HideRemoveButton)
-								.Template ()
-									.Title ("Tâches")
-									.Text (x => x.GetSummary ())								
-								.End ();
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Template ()
+						.Title ("Tâches")
+						.Text (x => x.GetSummary ())								
+					.End ();
 								
 			
 		}

@@ -210,6 +210,7 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController10RemoveParticipation.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController2SetOffice.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController9GenerateOfficialReport.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController1JoinParish.cs" />
@@ -410,6 +411,7 @@
     <Compile Include="Enumerations\EventKind.cs" />
     <Compile Include="Enumerations\MailingGroupMode.cs" />
     <Compile Include="Enumerations\OfficeProcessStatus.cs" />
+    <Compile Include="Enumerations\OfficeTaskKind.cs" />
     <Compile Include="Enumerations\OfficeProcessType.cs" />
     <Compile Include="Enumerations\PersonMrMrsTitle.cs" />
     <Compile Include="Enumerations\Region.cs" />

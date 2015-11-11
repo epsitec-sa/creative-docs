@@ -5,6 +5,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Aider.Controllers.ActionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -14,38 +15,36 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var task    = this.Entity;
 			var process = task.Process;
-
-			switch (process.Type)
+			
+			if (!task.IsDone)
 			{
-				case Enumerations.OfficeProcessType.PersonsOutputProcess:
-					this.CreateBricksPersonExitProcess (wall);
-					break;
+				switch (process.Type)
+				{
+					case Enumerations.OfficeProcessType.PersonsOutputProcess:
+						this.CreateBrickForPersonsExitProcess (wall);
+						break;
+				}
 			}
-
 		}
 
-		private void CreateBricksPersonExitProcess(BrickWall<AiderOfficeTaskEntity> wall)
+		private void CreateBrickForPersonsExitProcess(BrickWall<AiderOfficeTaskEntity> wall)
 		{
-			wall.AddBrick (x => x.Process)
-							.Title ("Processus")
-							.Text (x => x.GetSummary ())
-							.Attribute (BrickMode.DefaultToNoSubView);
+			var task    = this.Entity;
 
-			wall.AddBrick (x => x.GetExitProcessPerson ())
-							.Title ("Personne concernée")
-							.Text (x => x.GetSummary ())
-							.Attribute (BrickMode.DefaultToSummarySubView);
+			wall.AddBrick ()
+				.Title ("Veuillez choisir une action")
+				.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
 
 
-			wall.AddBrick (x => x.GetExitProcessParticipations ())
-					.Attribute (BrickMode.HideAddButton)
-					.Attribute (BrickMode.HideRemoveButton)
-					.Attribute (BrickMode.AutoGroup)
-					.Attribute (BrickMode.DefaultToNoSubView)
-					.Template ()
-						.Title ("Participations concernée")
-						.Text (x => x.GetCompactSummary ())
-					.End ();
+			switch (task.Kind)
+			{
+				case Enumerations.OfficeTaskKind.CheckParticipation:
+					wall.AddBrick (x => x.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext))
+						.Title ("Participation à vérifier")
+						.Text (x => x.GetSummaryWithHierarchicalGroupName ())
+						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+					break;
+			}
 		}
 	}
 }

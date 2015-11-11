@@ -338,6 +338,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType OfficeProcessStatus = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 279));
 				//	designer:cap/LVOE83
 				public static readonly Epsitec.Common.Types.EnumType OfficeProcessType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 270));
+				//	designer:cap/LVO193
+				public static readonly Epsitec.Common.Types.EnumType OfficeTaskKind = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 289));
 				//	designer:cap/LVASK
 				public static readonly Epsitec.Common.Types.EnumType OfficeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 668));
 				//	designer:cap/LVAJ5
@@ -1829,6 +1831,26 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 272));
+						}
+					}
+				}
+				
+				public static class OfficeTaskKind
+				{
+					//	designer:cap/LVO393
+					public static global::Epsitec.Common.Types.Caption CheckParticipation
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 291));
+						}
+					}
+					//	designer:cap/LVO293
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 290));
 						}
 					}
 				}
@@ -3722,8 +3744,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOU83
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 286);
-				//	designer:cap/LVOT83
-				public static readonly global::Epsitec.Common.Support.Druid SourceId = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 285);
+				//	designer:cap/LVO693
+				public static readonly global::Epsitec.Common.Support.Druid SourceId = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 294);
 				//	designer:cap/LVOS83
 				public static readonly global::Epsitec.Common.Support.Druid Status = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 284);
 				//	designer:cap/LVOJ83
@@ -3783,10 +3805,14 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVOM83
 				public static readonly global::Epsitec.Common.Support.Druid IsDone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 278);
+				//	designer:cap/LVO493
+				public static readonly global::Epsitec.Common.Support.Druid Kind = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 292);
 				//	designer:cap/LVOL83
 				public static readonly global::Epsitec.Common.Support.Druid Office = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 277);
 				//	designer:cap/LVOK83
 				public static readonly global::Epsitec.Common.Support.Druid Process = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 276);
+				//	designer:cap/LVO593
+				public static readonly global::Epsitec.Common.Support.Druid SourceId = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 293);
 			}
 			
 			public static class AiderPerson

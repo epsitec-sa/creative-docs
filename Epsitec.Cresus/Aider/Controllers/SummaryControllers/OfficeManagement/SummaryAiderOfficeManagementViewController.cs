@@ -125,7 +125,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick ()
 				.Icon ("Base.AiderGoup.Parish")
 				.Title (p => "Tâches")
-				.Text (p => "...")
+				.Text (p => p.GetTasksSummary ())
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController6Tasks));
 		}
