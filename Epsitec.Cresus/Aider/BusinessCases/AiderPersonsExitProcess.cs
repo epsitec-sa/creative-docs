@@ -33,6 +33,11 @@ namespace Epsitec.Aider.BusinessCases
 			foreach (var group in groups)
 			{
 				AiderOfficeManagementEntity office = null;
+				if (group.IsNoParish ())
+				{
+					continue;
+				}
+
 				if (group.IsParish ())
 				{
 					office = offices.Single (o => o.ParishGroup == group);
