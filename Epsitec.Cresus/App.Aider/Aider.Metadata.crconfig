@@ -37,6 +37,7 @@ AiderReferee = [LVADJ]
 AiderEvent = [LVA93]
 AiderEventParticipant = [LVAA3]
 AiderEventPlace = [LVOL63]
+AiderOfficeTask = [LVOD83]
 
 <meta>
   <T>
@@ -2291,6 +2292,33 @@ AiderEventPlace = [LVOL63]
       </col>
     </t>
 
+    <t eid="@AiderOfficeTask" n="default">
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOL83].[LVO913]" title="Gestion" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVO493]" title="Tâche" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOM83]" title="Terminée?" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOK83].[LVOU83]" title="Date de lancement" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOK83].[LVOI83]" title="Processus" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOK83].[LVOS83]" title="État" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+    </t>
+
   </T>
 
   <!-- DATASETS COMMANDS (MENU ENTRY) -->
@@ -2458,6 +2486,10 @@ AiderEventPlace = [LVOL63]
     </d>
 
     <d cid="[LVA2D]" teid="@AiderGroupDef" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuDefs">
+      <R><r>@user</r></R>
+    </d>
+
+    <d cid="[LVO793]" teid="@AiderOfficeTask" tn="default" df="true" d="true" ec="false" ed="false" cvid="0" dvid="0" dg="@submenuDefs">
       <R><r>@user</r></R>
     </d>
 

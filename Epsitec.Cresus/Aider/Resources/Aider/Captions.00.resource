@@ -880,4 +880,5 @@
   <data name="Fld.AiderOfficeTask.Kind" id="O493">&lt;s:data id="_0" f:Name="Kind" /&gt;</data>
   <data name="Fld.AiderOfficeTask.SourceId" id="O593">&lt;s:data id="_0" f:Name="SourceId" /&gt;</data>
   <data name="Fld.AiderOfficeProcess.SourceId" id="O693">&lt;s:data id="_0" f:Name="SourceId" /&gt;</data>
+  <data name="Cmd.Base.ShowAiderOfficeTasks" id="O793">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Base.ShowAiderOfficeTasks" f:Description="Information sur les tâches et processus" f:Icon="manifest:Epsitec.Aider.Images.Base.AiderGroup.Parish.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Tâches'}}" /&gt;</data>
 </bundle>

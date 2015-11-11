@@ -85,6 +85,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderOfficeManagement = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 48));
 				//	designer:cap/LVO823
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderOfficeSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 72));
+				//	designer:cap/LVO793
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderOfficeTasks = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 295));
 				//	designer:cap/LVO003
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 0));
 				//	designer:cap/LVGK32
@@ -180,6 +182,8 @@ namespace Epsitec.Aider
 				public const long ShowAiderOfficeManagement = 0x3F500078000030L;
 				//	designer:cap/LVO823
 				public const long ShowAiderOfficeSettings = 0x3F500078000048L;
+				//	designer:cap/LVO793
+				public const long ShowAiderOfficeTasks = 0x3F500078000127L;
 				//	designer:cap/LVO003
 				public const long ShowAiderPerson = 0x3F500078000000L;
 				//	designer:cap/LVGK32
