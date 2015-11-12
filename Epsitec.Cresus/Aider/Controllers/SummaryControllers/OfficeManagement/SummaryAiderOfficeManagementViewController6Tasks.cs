@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Common.Support;
@@ -23,22 +23,21 @@ using Epsitec.Aider.Controllers.SetControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	[ControllerSubType (3)]
-	public sealed class SummaryAiderOfficeManagementViewController3EventsInPreparation : SummaryViewController<AiderOfficeManagementEntity>
+	[ControllerSubType (6)]
+	public sealed class SummaryAiderOfficeManagementViewController6Tasks : SummaryViewController<AiderOfficeManagementEntity>
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			wall.AddBrick (p => p.EventsInPreparation)
-								.Attribute (BrickMode.DefaultToSummarySubView)
-								.Attribute (BrickMode.AutoGroup)
-								.Attribute (BrickMode.HideAddButton)
-								.Attribute (BrickMode.HideRemoveButton)
-								.EnableActionMenu<ActionAiderOfficeManagementViewController7DuplicateEvent> ()
-								.EnableActionMenu<ActionAiderOfficeManagementViewController8DeleteEvent> ()
-								.Template ()
-									.Title ("Actes en préparations")
-									.Text (x => x.GetSummary ())								
-								.End ();
+			// show all unfinished tasks
+			wall.AddBrick (p => p.Tasks)
+					.Attribute (BrickMode.DefaultToSummarySubView)
+					.Attribute (BrickMode.AutoGroup)
+					.Attribute (BrickMode.HideAddButton)
+					.Attribute (BrickMode.HideRemoveButton)
+					.Template ()
+						.Title ("Tâches")
+						.Text (x => x.GetSummary ())								
+					.End ();
 								
 			
 		}

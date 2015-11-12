@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
+    <Compile Include="BusinessCases\AiderPersonsExitProcess.cs" />
     <Compile Include="BusinessCases\AiderDerogations.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController0CreatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController4RemoveMemberFromHousehold.cs" />
@@ -209,6 +210,8 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController11KeepParticipation.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController10RemoveParticipation.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController2SetOffice.cs" />
     <Compile Include="Controllers\ActionControllers\Group\ActionAiderGroupViewController9GenerateOfficialReport.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController1JoinParish.cs" />
@@ -273,6 +276,7 @@
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController3WithoutContactReadonly.cs" />
     <Compile Include="Controllers\SummaryControllers\Group\SummaryAiderGroupViewController1OfficeManagement.cs" />
     <Compile Include="Controllers\SummaryControllers\Mailing\SummaryAiderMailingViewController2Build.cs" />
+    <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController6Tasks.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController5Members.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController4EventsToValidate.cs" />
     <Compile Include="Controllers\SummaryControllers\OfficeManagement\SummaryAiderOfficeManagementViewController3EventsInPreparation.cs" />
@@ -306,6 +310,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderLegalPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderSubscriptionViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\Employee\SummaryAiderEmployeeViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\Tasks\SummaryAiderOfficeTask.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderWarningSourceViewController.cs" />
     <Compile Include="Data\Common\AddressChecker.cs" />
     <Compile Include="Data\Common\DataReader.cs" />
@@ -376,6 +381,8 @@
     <Compile Include="Entities\AiderLegalPersonEntity.cs" />
     <Compile Include="Entities\AiderMailingQueryEntity.cs" />
     <Compile Include="Entities\AiderEventOfficeReportEntity.cs" />
+    <Compile Include="Entities\AiderOfficeTaskEntity.cs" />
+    <Compile Include="Entities\AiderOfficeProcessEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningSourceEntity1.cs" />
     <Compile Include="Entities\AiderPlaParishGroupEntity.cs" />
@@ -404,6 +411,9 @@
     <Compile Include="Enumerations\EventState.cs" />
     <Compile Include="Enumerations\EventKind.cs" />
     <Compile Include="Enumerations\MailingGroupMode.cs" />
+    <Compile Include="Enumerations\OfficeProcessStatus.cs" />
+    <Compile Include="Enumerations\OfficeTaskKind.cs" />
+    <Compile Include="Enumerations\OfficeProcessType.cs" />
     <Compile Include="Enumerations\PersonMrMrsTitle.cs" />
     <Compile Include="Enumerations\Region.cs" />
     <Compile Include="Enumerations\EmployeeType.cs" />
@@ -491,6 +501,7 @@
     <Compile Include="Reporting\StaticContent.cs" />
     <Compile Include="Rules\AiderAddressBusinessRules.cs" />
     <Compile Include="Rules\AiderContactBusinessRules.cs" />
+    <Compile Include="Rules\AiderOfficeProcessRules.cs" />
     <Compile Include="Rules\AiderEmployeeJobBusinessRules.cs" />
     <Compile Include="Rules\AiderEventBusinessRules.cs" />
     <Compile Include="Rules\AiderEventPlaceBusinessRules.cs" />
