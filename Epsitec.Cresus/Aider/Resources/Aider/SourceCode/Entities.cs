@@ -11653,6 +11653,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>GroupPathCache</c> field.
+		///	designer:fld/LVOD83/LVO893
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO893]")]
+		public string GroupPathCache
+		{
+			get
+			{
+				return this.GetField<string> ("[LVO893]");
+			}
+			set
+			{
+				string oldValue = this.GroupPathCache;
+				if (oldValue != value || !this.IsFieldDefined("[LVO893]"))
+				{
+					this.OnGroupPathCacheChanging (oldValue, value);
+					this.SetField<string> ("[LVO893]", oldValue, value);
+					this.OnGroupPathCacheChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
@@ -11664,6 +11686,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnIsDoneChanged(bool oldValue, bool newValue);
 		partial void OnSourceIdChanging(string oldValue, string newValue);
 		partial void OnSourceIdChanged(string oldValue, string newValue);
+		partial void OnGroupPathCacheChanging(string oldValue, string newValue);
+		partial void OnGroupPathCacheChanged(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

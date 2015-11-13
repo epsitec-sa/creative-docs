@@ -166,6 +166,21 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public bool CanDoTaskInOffice(AiderOfficeManagementEntity office)
+		{
+			var canViewDetails = this.CanViewOfficeDetails ();
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					return employee.EmployeeJobs.Any (j => j.Office.ParishGroupPathCache == office.ParishGroupPathCache);
+				}
+			}
+
+			return canViewDetails;
+		}
+
 		public bool IsParishLevelUser()
 		{
 			var isNotHighLevelEditor = !(this.EnableGroupEditionRegion || this.EnableGroupEditionCanton);

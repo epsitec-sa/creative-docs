@@ -99,7 +99,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			SummaryAiderOfficeManagementViewController.CreateBricksAssociatedGroups (wall, this.Entity);
 			SummaryAiderOfficeManagementViewController.CreateBricksDocuments (wall);
-			SummaryAiderOfficeManagementViewController.CreateBricksTasks (wall);
 		}
 
 		private void CreateBricksForParishCollaborators(BrickWall<AiderOfficeManagementEntity> wall)
@@ -108,6 +107,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				SummaryAiderOfficeManagementViewController.CreateBricksEventsManagement (wall);
 			}
+
+			SummaryAiderOfficeManagementViewController.CreateBricksTasks (wall);
 		}
 
 		private static void CreateBricksDocuments(BrickWall<AiderOfficeManagementEntity> wall)

@@ -6,6 +6,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Aider.Controllers.ActionControllers;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -13,10 +14,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeTaskEntity> wall)
 		{
-			var task    = this.Entity;
-			var process = task.Process;
-			
-			if (!task.IsDone)
+			var task      = this.Entity;
+			var process   = task.Process;
+			var userCanDo = AiderUserManager.Current.AuthenticatedUser.CanDoTaskInOffice (this.Entity.Office);
+			if (!task.IsDone && userCanDo)
 			{
 				switch (process.Type)
 				{
@@ -31,12 +32,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		{
 			var task    = this.Entity;
 
-			wall.AddBrick ()
-				.Title ("Choisir une action:")
-				.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
-				.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
-
-
 			switch (task.Kind)
 			{
 				case Enumerations.OfficeTaskKind.CheckParticipation:
@@ -46,6 +41,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 					break;
 			}
+
+			wall.AddBrick ()
+				.Title ("Choisir une action:")
+				.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
+				.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
 		}
 	}
 }

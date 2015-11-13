@@ -57,6 +57,7 @@ namespace Epsitec.Aider.Entities
 			task.Kind     = kind;
 			task.IsDone   = false;
 			task.SourceId = businessContext.DataContext.GetPersistedId (source);
+			task.GroupPathCache = office.ParishGroupPathCache;
 			return task;
 		}
 	}

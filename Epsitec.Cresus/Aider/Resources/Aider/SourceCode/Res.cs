@@ -3804,9 +3804,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeTask.IsDone, null);
+					global::System.Object.Equals (AiderOfficeTask.GroupPathCache, null);
 				}
 				
+				//	designer:cap/LVO893
+				public static readonly global::Epsitec.Common.Support.Druid GroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 296);
 				//	designer:cap/LVOM83
 				public static readonly global::Epsitec.Common.Support.Druid IsDone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 278);
 				//	designer:cap/LVO493
