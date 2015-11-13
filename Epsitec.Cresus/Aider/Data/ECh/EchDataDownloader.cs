@@ -159,8 +159,10 @@ namespace Epsitec.Aider.Data.ECh
 			while (!string.IsNullOrEmpty (line))
 			{
 				var tokens = line.Split (' ');
-				
-				if (tokens.Length >= 13)
+
+				//	"-rw-rw----   1 zeervftp geervftp 440734119 Oct 26 21:26 eerv-2015-10-26.xml"
+
+				if (tokens.Length >= 11)
 				{
 					var name = tokens.Last ();
 
@@ -168,7 +170,7 @@ namespace Epsitec.Aider.Data.ECh
 					{
 						long size;
 						
-						if (InvariantConverter.Convert (tokens[8], out size))
+						if (InvariantConverter.Convert (tokens[6], out size))
 						{
 							this.ftpDirectoryDetails.Add (name, size);
 						}
