@@ -17,14 +17,14 @@ using Epsitec.Common.Support.Extensions;
 namespace Epsitec.Aider.BusinessCases
 {
 	/// <summary>
-	/// Exit Process Business Case
+	/// Parish Change Business Case
 	/// </summary>
-	public static class AiderPersonsExitProcess
+	public static class AiderParishChangeProcess
 	{
 		public static void StartProcess(BusinessContext businessContext, AiderPersonEntity person)
 		{
 			var process = AiderOfficeProcessEntity
-							.Create (businessContext, OfficeProcessType.PersonsOutputProcess, person);
+							.Create (businessContext, OfficeProcessType.PersonsParishChangeProcess, person);
 			
 			var offices        = businessContext.GetAllEntities<AiderOfficeManagementEntity> ();
 			var officesGroups  = offices.Select (o => o.ParishGroup);
@@ -76,23 +76,12 @@ namespace Epsitec.Aider.BusinessCases
 	
 			}
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderParishChangeProcess.Next (businessContext, process);
 		}
 
 		public static void EndProcess (BusinessContext businessContext, AiderOfficeProcessEntity process)
 		{
-			var dataContext   = businessContext.DataContext;
-			var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
-			// check remaining participations
-			if (person.GetParticipations ().Count == 0)
-			{
-				person.Visibility = PersonVisibilityStatus.Hidden;
-				businessContext.DeleteEntity (person.MainContact);
-				businessContext.DeleteEntity (person.HouseholdContact);
-				// persist last changes
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
-			}
+			// noting to do
 		}
 
 		public static void Next (BusinessContext businessContext, AiderOfficeProcessEntity process)
@@ -103,7 +92,7 @@ namespace Epsitec.Aider.BusinessCases
 
 			if (process.Status == OfficeProcessStatus.Ended)
 			{
-				AiderPersonsExitProcess.EndProcess (businessContext, process);
+				AiderParishChangeProcess.EndProcess (businessContext, process);
 			}
 		}
 
@@ -116,27 +105,16 @@ namespace Epsitec.Aider.BusinessCases
 			task.Actor        = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 			businessContext.DeleteEntity (participation);
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderParishChangeProcess.Next (businessContext, process);
 		}
 
 		public static void DoKeepParticipationTask(BusinessContext businessContext, AiderOfficeTaskEntity task)
 		{
 			var process = task.Process;
-			
-			// Add new address task if not alreay present
-			if (!process.Tasks.Any (t => t.Kind == OfficeTaskKind.EnterNewAddress))
-			{
-				var dataContext = businessContext.DataContext;
-				var person  = task.Process.GetSourceEntity<AiderPersonEntity> (dataContext);
-				var address = person.MainContact.Address;
-				process.StartTaskInOffice (businessContext, OfficeTaskKind.EnterNewAddress, task.Office, address);
-			}
-			
-
 			task.IsDone = true;
 			task.Actor  = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderParishChangeProcess.Next (businessContext, process);
 		}
 	}
 }

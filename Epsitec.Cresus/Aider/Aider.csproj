@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="AiderProgram.Test.cs" />
     <Compile Include="AiderProgramTestImportMode.cs" />
+    <Compile Include="BusinessCases\AiderParishChangeProcess.cs" />
     <Compile Include="BusinessCases\AiderPersonsExitProcess.cs" />
     <Compile Include="BusinessCases\AiderDerogations.cs" />
     <Compile Include="Controllers\ActionControllers\Contact\ActionAiderContactViewController0CreatePerson.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController0Done.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController11KeepParticipation.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController10RemoveParticipation.cs" />
     <Compile Include="Controllers\ActionControllers\User\ActionAiderUserViewController2SetOffice.cs" />

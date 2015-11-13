@@ -1837,6 +1837,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 272));
 						}
 					}
+					//	designer:cap/LVOA93
+					public static global::Epsitec.Common.Types.Caption PersonsParishChangeProcess
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 298));
+						}
+					}
 				}
 				
 				public static class OfficeTaskKind
@@ -1847,6 +1855,14 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 291));
+						}
+					}
+					//	designer:cap/LVOB93
+					public static global::Epsitec.Common.Types.Caption EnterNewAddress
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 299));
 						}
 					}
 					//	designer:cap/LVO293
@@ -3804,9 +3820,11 @@ namespace Epsitec.Aider
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (AiderOfficeTask.GroupPathCache, null);
+					global::System.Object.Equals (AiderOfficeTask.Actor, null);
 				}
 				
+				//	designer:cap/LVO993
+				public static readonly global::Epsitec.Common.Support.Druid Actor = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 297);
 				//	designer:cap/LVO893
 				public static readonly global::Epsitec.Common.Support.Druid GroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 296);
 				//	designer:cap/LVOM83

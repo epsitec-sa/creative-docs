@@ -11675,6 +11675,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Actor</c> field.
+		///	designer:fld/LVOD83/LVO993
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVO993]")]
+		public global::Epsitec.Aider.Entities.AiderUserEntity Actor
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVO993]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderUserEntity oldValue = this.Actor;
+				if (oldValue != value || !this.IsFieldDefined("[LVO993]"))
+				{
+					this.OnActorChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderUserEntity> ("[LVO993]", oldValue, value);
+					this.OnActorChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
@@ -11688,6 +11710,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSourceIdChanged(string oldValue, string newValue);
 		partial void OnGroupPathCacheChanging(string oldValue, string newValue);
 		partial void OnGroupPathCacheChanged(string oldValue, string newValue);
+		partial void OnActorChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnActorChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

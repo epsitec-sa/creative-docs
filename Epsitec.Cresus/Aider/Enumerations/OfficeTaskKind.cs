@@ -11,6 +11,8 @@ namespace Epsitec.Aider.Enumerations
 		None = 0,
 
 		CheckParticipation = 1,
+
+		EnterNewAddress = 2,
 	}
 }
 

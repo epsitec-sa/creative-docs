@@ -2305,6 +2305,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVO993].[AVA7]" title="Terminée par" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOK83].[LVOU83]" title="Date de lancement" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />

@@ -19,12 +19,12 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (11)]
-	public sealed class ActionAiderOfficeTaskViewController11KeepParticipation : ActionViewController<AiderOfficeTaskEntity>
+	[ControllerSubType (0)]
+	public sealed class ActionAiderOfficeTaskViewController0Done : ActionViewController<AiderOfficeTaskEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Conserver la participation");
+			return Resources.Text ("C'est fait!");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,13 +34,15 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
+			this.Entity.IsDone = true;
+			this.Entity.Actor  = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 			switch (this.Entity.Process.Type)
 			{
 				case Enumerations.OfficeProcessType.PersonsOutputProcess:
-					AiderPersonsExitProcess.DoKeepParticipationTask (this.BusinessContext, this.Entity);
+					AiderPersonsExitProcess.Next (this.BusinessContext, this.Entity.Process);
 					break;
 				case Enumerations.OfficeProcessType.PersonsParishChangeProcess:
-					AiderParishChangeProcess.DoKeepParticipationTask (this.BusinessContext, this.Entity);
+					AiderParishChangeProcess.Next (this.BusinessContext, this.Entity.Process);
 					break;
 			}
 		}

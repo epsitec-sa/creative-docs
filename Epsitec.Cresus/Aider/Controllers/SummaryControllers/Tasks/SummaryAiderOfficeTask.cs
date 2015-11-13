@@ -17,6 +17,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var task      = this.Entity;
 			var process   = task.Process;
 			var userCanDo = AiderUserManager.Current.AuthenticatedUser.CanDoTaskInOffice (this.Entity.Office);
+			wall.AddBrick (x => x.Process)
+						.Title ("Processus")
+						.Text (x => x.GetSummary ())
+						.Attribute (BrickMode.DefaultToNoSubView);
+
 			if (!task.IsDone && userCanDo)
 			{
 				switch (process.Type)
@@ -39,13 +44,23 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 						.Title ("Participation à vérifier")
 						.Text (x => x.GetSummaryWithHierarchicalGroupName ())
 						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+
+					wall.AddBrick ()
+						.Title ("Choisir une action:")
+						.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
+						.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
+					break;
+				case Enumerations.OfficeTaskKind.EnterNewAddress:
+					wall.AddBrick (x => x.GetSourceEntity<AiderAddressEntity> (this.DataContext))
+						.Title ("Nouvelle adresse")
+						.Text (x => "Actuelle: \n" + x.GetSummary ())
+						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+
+					wall.AddBrick ()
+						.Title ("Terminer la tâche")
+						.EnableActionButton<ActionAiderOfficeTaskViewController0Done> ();
 					break;
 			}
-
-			wall.AddBrick ()
-				.Title ("Choisir une action:")
-				.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
-				.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
 		}
 	}
 }

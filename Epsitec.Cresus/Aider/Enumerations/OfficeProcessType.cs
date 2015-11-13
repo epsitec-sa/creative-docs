@@ -11,6 +11,7 @@ namespace Epsitec.Aider.Enumerations
 		None = 0,
 
 		PersonsOutputProcess = 1,
+		PersonsParishChangeProcess = 2,
 	}
 }
 

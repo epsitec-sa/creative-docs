@@ -30,7 +30,8 @@ namespace Epsitec.Aider.Entities
 		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)
 			where AiderEntity : AbstractEntity
 		{
-			return (AiderEntity) dataContext.GetPersistedEntity (this.SourceId);
+			var entity = (AiderEntity) dataContext.GetPersistedEntity (this.SourceId);
+			return entity;
 		}
 
 		public static AiderOfficeTaskEntity Create(
@@ -43,6 +44,12 @@ namespace Epsitec.Aider.Entities
 
 			switch (kind)
 			{
+				case OfficeTaskKind.EnterNewAddress:
+					if (source.GetType () != typeof (AiderAddressEntity))
+					{
+						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au genre de tâche");
+					}
+					break;
 				case OfficeTaskKind.CheckParticipation:
 					if (source.GetType () != typeof (AiderGroupParticipantEntity))
 					{
