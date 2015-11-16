@@ -7,10 +7,12 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DeletionControllers;
 
 using System.Linq;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -36,7 +38,30 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		private void Execute(bool dummy)
 		{
-			AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
+			var subscription = this.Entity;
+			switch (subscription.SubscriptionType)
+			{
+			case SubscriptionType.Household:
+				if (this.Entity.Household.IsNotNull ())
+				{
+					if (this.Entity.Household.Members.Count > 0)
+					{
+						AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
+					}
+					else
+					{
+						AiderHouseholdEntity.DeleteEmptyHouseholds (this.BusinessContext, this.Entity.Household);
+					}
+				}
+				break;
+			case SubscriptionType.LegalPerson:
+				if (this.Entity.LegalPersonContact.IsNotNull ())
+				{
+					AiderSubscriptionRefusalEntity.Create (this.BusinessContext, this.Entity);
+				}
+				break;
+			}
+
 			AiderSubscriptionEntity.Delete (this.BusinessContext, this.Entity);
 		}
 	}
