@@ -17,6 +17,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Linq;
 using Epsitec.Cresus.Core.Business.UserManagement;
+using Epsitec.Aider.Override;
 
 namespace Epsitec.Aider.Controllers.CreationControllers
 {
@@ -74,8 +75,13 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		private AiderSubscriptionEntity Create(AiderHouseholdEntity receiver)
 		{
 			var businessContext = this.BusinessContext;
-
-			if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+			var user = AiderUserManager.Current.AuthenticatedUser;
+			
+			if (user.CanBypassSubscriptionCheck ())
+			{
+				//
+			}
+			else
 			{
 				AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
 			}
@@ -96,11 +102,17 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			}
 
 			var businessContext = this.BusinessContext;
+			var user = AiderUserManager.Current.AuthenticatedUser;
 
-			if (UserManager.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+			if (user.CanBypassSubscriptionCheck ())
+			{
+				//
+			}
+			else
 			{
 				AiderSubscriptionEntity.CheckSubscriptionDoesNotExist (businessContext, receiver);
 			}
+
 			AiderSubscriptionRefusalEntity.CheckRefusalDoesNotExist (businessContext, receiver);
 
 			var edition = this.GetEdition (receiver.Address);

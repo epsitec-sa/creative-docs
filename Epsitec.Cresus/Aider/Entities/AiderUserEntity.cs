@@ -140,6 +140,12 @@ namespace Epsitec.Aider.Entities
 					&& this.IsOfficeDefined ();
 		}
 
+		public bool CanBypassSubscriptionCheck()
+		{
+			return ((this.Role.Name == AiderUserRoleEntity.AleRole)  || 
+					this.HasPowerLevel (UserPowerLevel.Administrator));
+		}
+
 		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
 		{
 			if ((this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator))
