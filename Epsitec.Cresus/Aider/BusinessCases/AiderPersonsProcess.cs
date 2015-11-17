@@ -51,7 +51,22 @@ namespace Epsitec.Aider.BusinessCases
 					continue;
 				}
 
-				
+				var autoDeletedGroups = new List<string> ()
+				{
+					"Arrivées",
+					"Personnes importées"
+				};
+
+				if (autoDeletedGroups.Contains (group.Name))
+				{
+					participationsByGroup[group].ForEach (p =>
+					{
+						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+					});
+
+					continue;
+				}
+
 				var searchPath     = Enumerable.Repeat (group, 1).Union (group.Parents);
 				if (searchPath.Any (g => g.Name == "Archives"))
 				{
