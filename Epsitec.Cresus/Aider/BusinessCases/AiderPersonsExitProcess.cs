@@ -87,8 +87,15 @@ namespace Epsitec.Aider.BusinessCases
 			if (person.GetParticipations ().Count == 0)
 			{
 				person.Visibility = PersonVisibilityStatus.Hidden;
-				businessContext.DeleteEntity (person.MainContact);
-				businessContext.DeleteEntity (person.HouseholdContact);
+				if (person.MainContact.IsNotNull ())
+				{
+					businessContext.DeleteEntity (person.MainContact);
+				}
+				if (person.HouseholdContact.IsNotNull ())
+				{
+					businessContext.DeleteEntity (person.HouseholdContact);
+				}
+				
 				// persist last changes
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
