@@ -49,16 +49,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-		public bool CanViewConfidentialAddress()
-		{
-			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
-		}
-
-		public bool CanViewOfficeDetails()
-		{
-			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
-		}
-
 		public bool CanViewOfficeEvents()
 		{
 			var canViewDetails = this.CanViewOfficeDetails ();
@@ -123,27 +113,36 @@ namespace Epsitec.Aider.Entities
 			return isMinister;
 		}
 
+		public bool CanViewConfidentialAddress()
+		{
+			return (this.IsAle () || this.IsAdmin ());
+		}
+
+		public bool CanViewOfficeDetails()
+		{
+			return (this.IsAle () || this.IsAdmin ());
+		}
+
 		public bool CanRemoveMailing()
 		{
-			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
+			return (this.IsAle () || this.IsAdmin ());
 		}
 
 		public bool CanEditEmployee()
 		{
-			return (this.Role.Name == AiderUserRoleEntity.AleRole) || this.HasPowerLevel (UserPowerLevel.Administrator);
+			return (this.IsAle () || this.IsAdmin ());
+		}
+
+		public bool CanBypassSubscriptionCheck()
+		{
+			return (this.IsAle () || this.IsAdmin ());
 		}
 
 		public bool CanEditReferee()
 		{
 			return ((this.Role.Name == AiderUserRoleEntity.RegionRole)  || 
-					this.HasPowerLevel (UserPowerLevel.Administrator))
+					this.IsAdmin ())
 					&& this.IsOfficeDefined ();
-		}
-
-		public bool CanBypassSubscriptionCheck()
-		{
-			return ((this.Role.Name == AiderUserRoleEntity.AleRole)  || 
-					this.HasPowerLevel (UserPowerLevel.Administrator));
 		}
 
 		public bool CanDerogateTo(AiderGroupEntity derogationParishGroup)
@@ -175,6 +174,11 @@ namespace Epsitec.Aider.Entities
 		public bool CanDoTaskInOffice(AiderOfficeManagementEntity office)
 		{
 			var canViewDetails = this.CanViewOfficeDetails ();
+			if (canViewDetails)
+			{
+				return true;
+			}
+
 			if (this.Contact.IsNotNull ())
 			{
 				if (this.Contact.Person.Employee.IsNotNull ())
@@ -184,7 +188,7 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 
-			return canViewDetails;
+			return false;
 		}
 
 		public bool IsParishLevelUser()
@@ -203,6 +207,11 @@ namespace Epsitec.Aider.Entities
 		public bool IsAdmin()
 		{
 			return this.HasPowerLevel (UserPowerLevel.Administrator);
+		}
+
+		public bool IsAle()
+		{
+			return (this.Role.Name == AiderUserRoleEntity.AleRole);
 		}
 
 		public void SetPassword(string password, string confirmation)
