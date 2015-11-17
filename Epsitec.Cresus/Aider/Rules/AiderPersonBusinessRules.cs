@@ -285,8 +285,6 @@ namespace Epsitec.Aider.Rules
 
 			AiderPersonWarningEntity.Create (context, person, newParishGroupPath, WarningType.ParishArrival, title, description);
 
-			AiderParishChangeProcess.StartProcess (context, person);
-
 			return true;
 		}
 

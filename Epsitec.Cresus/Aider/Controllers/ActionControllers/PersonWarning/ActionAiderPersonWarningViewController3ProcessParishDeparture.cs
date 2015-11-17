@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -25,6 +26,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		protected override void Execute()
 		{
+			var context = this.BusinessContext;
+			var person  = this.Entity.Person;
+			AiderPersonsProcess.StartProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
 			this.ClearWarningAndRefreshCaches ();
 		}
 	}

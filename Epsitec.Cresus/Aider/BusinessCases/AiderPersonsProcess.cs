@@ -19,12 +19,12 @@ namespace Epsitec.Aider.BusinessCases
 	/// <summary>
 	/// Exit Process Business Case
 	/// </summary>
-	public static class AiderPersonsExitProcess
+	public static class AiderPersonsProcess
 	{
-		public static void StartProcess(BusinessContext businessContext, AiderPersonEntity person)
+		public static void StartProcess(BusinessContext businessContext, AiderPersonEntity person, OfficeProcessType type)
 		{
 			var process = AiderOfficeProcessEntity
-							.Create (businessContext, OfficeProcessType.PersonsOutputProcess, person);
+							.Create (businessContext, type, person);
 			
 			var offices        = businessContext.GetAllEntities<AiderOfficeManagementEntity> ();
 			var officesGroups  = offices.Select (o => o.ParishGroup);
@@ -76,29 +76,32 @@ namespace Epsitec.Aider.BusinessCases
 	
 			}
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderPersonsProcess.Next (businessContext, process);
 		}
 
 		public static void EndProcess (BusinessContext businessContext, AiderOfficeProcessEntity process)
 		{
-			var dataContext   = businessContext.DataContext;
-			var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
-			// check remaining participations
-			if (person.GetParticipations ().Count == 0)
+			if (process.Type == OfficeProcessType.PersonsOutputProcess)
 			{
-				person.Visibility = PersonVisibilityStatus.Hidden;
-				if (person.MainContact.IsNotNull ())
+				var dataContext   = businessContext.DataContext;
+				var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
+				// check remaining participations
+				if (person.GetParticipations ().Count == 0)
 				{
-					businessContext.DeleteEntity (person.MainContact);
+					person.Visibility = PersonVisibilityStatus.Hidden;
+					if (person.MainContact.IsNotNull ())
+					{
+						businessContext.DeleteEntity (person.MainContact);
+					}
+					if (person.HouseholdContact.IsNotNull ())
+					{
+						businessContext.DeleteEntity (person.HouseholdContact);
+					}
+
+					// persist last changes
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+					AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
 				}
-				if (person.HouseholdContact.IsNotNull ())
-				{
-					businessContext.DeleteEntity (person.HouseholdContact);
-				}
-				
-				// persist last changes
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
 			}
 		}
 
@@ -110,7 +113,7 @@ namespace Epsitec.Aider.BusinessCases
 
 			if (process.Status == OfficeProcessStatus.Ended)
 			{
-				AiderPersonsExitProcess.EndProcess (businessContext, process);
+				AiderPersonsProcess.EndProcess (businessContext, process);
 			}
 		}
 
@@ -123,7 +126,7 @@ namespace Epsitec.Aider.BusinessCases
 			task.Actor        = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 			businessContext.DeleteEntity (participation);
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderPersonsProcess.Next (businessContext, process);
 		}
 
 		public static void DoKeepParticipationTask(BusinessContext businessContext, AiderOfficeTaskEntity task)
@@ -143,7 +146,7 @@ namespace Epsitec.Aider.BusinessCases
 			task.IsDone = true;
 			task.Actor  = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
 
-			AiderPersonsExitProcess.Next (businessContext, process);
+			AiderPersonsProcess.Next (businessContext, process);
 		}
 	}
 }

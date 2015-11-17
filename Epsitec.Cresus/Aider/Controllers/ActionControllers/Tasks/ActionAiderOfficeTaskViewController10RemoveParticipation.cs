@@ -34,15 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			switch (this.Entity.Process.Type)
-			{
-				case Enumerations.OfficeProcessType.PersonsOutputProcess:
-				AiderPersonsExitProcess.DoRemoveParticipationTask (this.BusinessContext, this.Entity);
-				break;
-				case Enumerations.OfficeProcessType.PersonsParishChangeProcess:
-				AiderParishChangeProcess.DoRemoveParticipationTask (this.BusinessContext, this.Entity);
-				break;
-			}		
+			AiderPersonsProcess.DoRemoveParticipationTask (this.BusinessContext, this.Entity);	
 		}
 	}
 }

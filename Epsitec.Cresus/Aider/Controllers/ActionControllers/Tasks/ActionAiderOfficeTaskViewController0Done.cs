@@ -36,15 +36,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			this.Entity.IsDone = true;
 			this.Entity.Actor  = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			switch (this.Entity.Process.Type)
-			{
-				case Enumerations.OfficeProcessType.PersonsOutputProcess:
-					AiderPersonsExitProcess.Next (this.BusinessContext, this.Entity.Process);
-					break;
-				case Enumerations.OfficeProcessType.PersonsParishChangeProcess:
-					AiderParishChangeProcess.Next (this.BusinessContext, this.Entity.Process);
-					break;
-			}
+			AiderPersonsProcess.Next (this.BusinessContext, this.Entity.Process);
 		}
 	}
 }

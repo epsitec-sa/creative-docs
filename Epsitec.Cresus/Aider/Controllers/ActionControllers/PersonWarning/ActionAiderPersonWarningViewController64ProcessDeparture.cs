@@ -33,7 +33,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			AiderPersonsExitProcess.StartProcess (this.BusinessContext, this.Entity.Person);		
+			AiderPersonsProcess.StartProcess (this.BusinessContext, this.Entity.Person, OfficeProcessType.PersonsOutputProcess);		
 			this.ClearWarningAndRefreshCaches ();
 		}
 	}

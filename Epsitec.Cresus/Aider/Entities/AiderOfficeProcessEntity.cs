@@ -27,12 +27,16 @@ namespace Epsitec.Aider.Entities
 			var subject = new FormattedText ();
 			switch (this.Type)
 			{
+				case OfficeProcessType.PersonsParishChangeProcess:
 				case OfficeProcessType.PersonsOutputProcess:
 					subject = this.GetSourceEntity<AiderPersonEntity> (this.GetDataContext ()).GetSummary ();
 					break;
 
 			}
-			return TextFormatter.FormatText (this.Type, "\n", subject);
+
+			var finished   = this.Tasks.Count (t => t.IsDone);
+			var total      = this.Tasks.Count ();
+			return TextFormatter.FormatText (this.Type, "\n", subject, "\n", finished, "/", total);
 		}
 
 		public AiderOfficeTaskEntity StartTaskInOffice(

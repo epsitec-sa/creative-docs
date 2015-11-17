@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Override;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -26,6 +27,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				switch (process.Type)
 				{
+					case Enumerations.OfficeProcessType.PersonsParishChangeProcess:
 					case Enumerations.OfficeProcessType.PersonsOutputProcess:
 						this.CreateBrickForPersonsExitProcess (wall);
 						break;
@@ -40,15 +42,27 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			switch (task.Kind)
 			{
 				case Enumerations.OfficeTaskKind.CheckParticipation:
-					wall.AddBrick (x => x.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext))
-						.Title ("Participation à vérifier")
-						.Text (x => x.GetSummaryWithHierarchicalGroupName ())
-						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+					if (this.Entity.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext).IsNull ())
+					{
+						wall.AddBrick ()
+						.Title ("Terminer la tâche")
+						.Text ("")
+						.EnableActionButton<ActionAiderOfficeTaskViewController0Done> ();
+					}
+					else
+					{
+						wall.AddBrick (x => x.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext))
+							.Title ("Participation à vérifier")
+							.Text (x => x.GetSummaryWithHierarchicalGroupName ())
+							.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
-					wall.AddBrick ()
-						.Title ("Choisir une action:")
-						.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
-						.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
+						wall.AddBrick ()
+							.Title ("Choisir une action:")
+							.Text ("")
+							.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
+							.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
+					}
+
 					break;
 				case Enumerations.OfficeTaskKind.EnterNewAddress:
 					wall.AddBrick (x => x.GetSourceEntity<AiderAddressEntity> (this.DataContext))
@@ -58,6 +72,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 					wall.AddBrick ()
 						.Title ("Terminer la tâche")
+						.Text ("")
 						.EnableActionButton<ActionAiderOfficeTaskViewController0Done> ();
 					break;
 			}
