@@ -57,6 +57,10 @@ namespace Epsitec.Aider.Entities
 
 		public bool IsInTheSameParish(AiderGroupEntity group)
 		{
+			if (group.Path.Length < 7)
+			{
+				return false;
+			}
 			return this.Path.StartsWith (group.Path.Substring (0, 6));
 		}
 
