@@ -49,6 +49,20 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		public IEnumerable<AiderOfficeManagementEntity> GetOfficesByJobs()
+		{
+			if (this.Contact.IsNotNull ())
+			{
+				if (this.Contact.Person.Employee.IsNotNull ())
+				{
+					var employee = this.Contact.Person.Employee;
+					return employee.EmployeeJobs.Where (j => j.Office.IsNotNull ()).Select (j => j.Office);
+				}
+			}
+
+			return Enumerable.Empty<AiderOfficeManagementEntity> ();
+		}
+
 		public bool CanViewOfficeEvents()
 		{
 			var canViewDetails = this.CanViewOfficeDetails ();

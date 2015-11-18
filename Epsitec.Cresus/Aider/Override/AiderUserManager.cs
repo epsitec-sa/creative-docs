@@ -121,15 +121,33 @@ namespace Epsitec.Aider.Override
 		{
 			if (user.Office.IsNotNull ())
 			{
+				var office = user.Office;
 				notif.Notify (user.LoginName,
 				new NotificationMessage ()
 				{
-					Title = user.Office.OfficeName + ", bienvenue...",
-					Body = user.Office.OfficeUsersLoginMessage
+					Title = office.OfficeName + ", bienvenue...",
+					Body = office.OfficeUsersLoginMessage
 				},
 				When.OnConnect);
 			}
-			
+
+			var offices = user.GetOfficesByJobs ();
+			foreach (var office in offices)
+			{
+				if (office.Tasks.Count (t => t.IsDone == false) > 0)
+				{
+					var nbTasks = office.Tasks.Count (t => t.IsDone == false);
+					var message = new NotificationMessage ()
+					{
+						Title     = office.OfficeShortName,
+						Body      = "Il y a " + nbTasks + " tâches en suspens",
+						Dataset   = Res.CommandIds.Base.ShowAiderOfficeManagement,
+						EntityKey = this.BusinessContext.DataContext.GetNormalizedEntityKey (office).Value
+					};
+
+					notif.Notify (user.LoginName, message, When.OnConnect);
+				}
+			}
 
 			notif.NotifyAll (
 				new NotificationMessage ()
