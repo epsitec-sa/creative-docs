@@ -23,7 +23,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Démarrer un processus de sortie");
+			return Resources.FormattedText ("Traiter");
 		}
 
 		public override ActionExecutor GetExecutor()

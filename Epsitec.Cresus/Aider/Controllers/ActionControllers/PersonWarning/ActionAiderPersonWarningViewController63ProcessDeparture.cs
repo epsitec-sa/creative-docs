@@ -35,62 +35,25 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Tout le ménage a déménagé hors canton");
+			return Resources.FormattedText ("Traiter<br/>pour tout le ménage");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool, bool> (this.Execute);
+			return ActionExecutor.Create (this.Execute);
 		}
 
-		private void Execute(bool confirmAddress, bool hideHousehold)
+		private void Execute()
 		{
-			var warning    = this.Entity;
-			var person     = warning.Person;
-			var households = new HashSet<AiderHouseholdEntity> (person.Households);
-			var members    = households.SelectMany (x => x.Members).Distinct ().ToList ();
-
-			if (confirmAddress == hideHousehold)
+			var warning = this.Entity;
+			var person  = warning.Person;
+			var members = person.GetAllHouseholdMembers ();
+			foreach (var member in members)
 			{
-				var message = "Il faut choisir l'une des deux options...";
-
-				throw new BusinessRuleException (message);
+				AiderPersonsProcess.StartProcess (this.BusinessContext, member, OfficeProcessType.PersonsOutputProcess);
 			}
-			
-			if (hideHousehold)
-			{
-				foreach (var member in members)
-				{
-					member.DeleteParishGroupParticipation (this.BusinessContext);
-					member.DeleteNonParishGroupParticipations (this.BusinessContext);
-					member.HidePerson (this.BusinessContext);
-				}
-			}
-			else
-			{
-				foreach (var member in members)
-				{
-					member.eCH_Person.RemovalReason = RemovalReason.Departed;
-				}
-			}
-
 			this.ClearWarningAndRefreshCaches ();
-			this.ClearWarningAndRefreshCachesForAll (this.Entity.WarningType);
-		}
-
-		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-		{
-			form
-				.Title (this.GetTitle ())
-				.Field<bool> ()
-					.Title ("J'ai saisi la nouvelle adresse du ménage")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Cacher tous les membres du ménage")
-					.InitialValue (false)
-				.End ()
-			.End ();
+			this.ClearWarningAndRefreshCachesForAll (WarningType.ParishDeparture);
 		}
 	}
 }

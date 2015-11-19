@@ -46,15 +46,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (this.Entity.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext).IsNull ())
 					{
 						wall.AddBrick ()
-						.Title ("Terminer la tâche")
-						.Text ("Une erreur est survenue dans le processus")
-						.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
+							.Title ("Tâche annulée")
+							.Text ("Cette participation n'est plus à vérifier")
+							.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
 					}
 					else
 					{
 						wall.AddBrick (x => x.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext))
 							.Title ("Participation à vérifier")
-							.Text (x => x.GetSummaryWithHierarchicalGroupName ())
+							.Text (x => x.GetSummaryWithHierarchicalGroupName () + "</br>")
 							.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 						wall.AddBrick ()
@@ -69,8 +69,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					if (this.Entity.GetSourceEntity<AiderContactEntity> (this.DataContext).IsNull ())
 					{
 						wall.AddBrick ()
-							.Title ("Terminer la tâche")
-							.Text ("Une erreur est survenue dans le processus")
+							.Title ("Tâche annulée")
+							.Text ("Le contact n'est plus disponible pour cette personne")
 							.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
 					}
 					else

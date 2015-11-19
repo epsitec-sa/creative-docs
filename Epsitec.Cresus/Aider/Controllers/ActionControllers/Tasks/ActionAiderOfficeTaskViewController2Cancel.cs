@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Annuler la tâche");
+			return Resources.Text ("Terminer la tâche");
 		}
 
 		public override ActionExecutor GetExecutor()
