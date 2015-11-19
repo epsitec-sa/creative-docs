@@ -122,8 +122,8 @@ namespace Epsitec.Aider.BusinessCases
 
 		public static void Next (BusinessContext businessContext, AiderOfficeProcessEntity process)
 		{
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			process.SetNextStatus ();
-			// persist last changes
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 
 			if (process.Status == OfficeProcessStatus.Ended)
