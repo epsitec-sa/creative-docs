@@ -48,7 +48,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var members = person.GetAllHouseholdMembers ();
 			foreach (var member in members)
 			{
-				AiderPersonsProcess.StartProcess (this.BusinessContext, member, OfficeProcessType.PersonsParishChangeProcess);
+				if (!member.HasDerogation)
+				{
+					AiderPersonsProcess.StartProcess (this.BusinessContext, member, OfficeProcessType.PersonsParishChangeProcess);
+				}			
 			}
 			this.ClearWarningAndRefreshCaches ();
 			this.ClearWarningAndRefreshCachesForAll (WarningType.ParishDeparture);

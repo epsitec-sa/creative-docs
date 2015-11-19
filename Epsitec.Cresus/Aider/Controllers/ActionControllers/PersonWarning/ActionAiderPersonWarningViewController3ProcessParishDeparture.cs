@@ -28,7 +28,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var context = this.BusinessContext;
 			var person  = this.Entity.Person;
-			AiderPersonsProcess.StartProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
+
+			if (!person.HasDerogation)
+			{
+				AiderPersonsProcess.StartProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
+			}
+
 			this.ClearWarningAndRefreshCaches ();
 		}
 
