@@ -31,5 +31,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			AiderPersonsProcess.StartProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
 			this.ClearWarningAndRefreshCaches ();
 		}
+
+		public override FormattedText GetTitle()
+		{
+			return Resources.FormattedText ("Traiter");
+		}
 	}
 }

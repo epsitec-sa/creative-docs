@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("Marquer comme lu<br/>pour tout le ménage");
+			return Resources.FormattedText ("Traiter<br/>pour tout le ménage");
 		}
 
 		protected override void Execute()
