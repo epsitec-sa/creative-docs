@@ -790,7 +790,7 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetWarningsTitle()
 		{
-			return TextFormatter.FormatText ("Averstissements (" + this.Warnings.Count + ")");
+			return TextFormatter.FormatText ("Avertissements (" + this.Warnings.Count + ")");
 		}
 
 		public FormattedText GetWarningsDescription()
