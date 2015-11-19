@@ -81,11 +81,16 @@ namespace Epsitec.Aider.BusinessCases
 				var matchingGroups = searchPath.Intersect (officesGroups);
 				var officeGroup    = matchingGroups.Last ();
 				office = offices.Single (o => o.ParishGroup == officeGroup);
-				
 
+
+				var started = false;
 				participationsByGroup[group].ForEach (p =>
 				{
-					process.StartTaskInOffice (businessContext, OfficeTaskKind.CheckParticipation, office, p);
+					if (!started)
+					{
+						process.StartTaskInOffice (businessContext, OfficeTaskKind.CheckParticipation, office, p);
+						started = true;
+					}				
 				});
 				
 	
