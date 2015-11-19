@@ -158,7 +158,14 @@ namespace Epsitec.Aider.Entities
 				{
 					if (person.MainContact.IsNotNull ())
 					{
-						return person.MainContact.GetAddress ().Town.Name;
+						if (person.MainContact.GetAddress ().Town.IsNotNull ())
+						{
+							return person.MainContact.GetAddress ().Town.Name;
+						}
+						else
+						{
+							return person.MainContact.Address.Town.Name;
+						}
 					}
 					else
 					{
