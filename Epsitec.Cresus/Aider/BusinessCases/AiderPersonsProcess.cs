@@ -144,7 +144,7 @@ namespace Epsitec.Aider.BusinessCases
 			var participation = task.GetSourceEntity<AiderGroupParticipantEntity> (dataContext);
 			task.IsDone       = true;
 			task.Actor        = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			businessContext.DeleteEntity (participation);
+			AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);
 
 			AiderPersonsProcess.Next (businessContext, process);
 		}
