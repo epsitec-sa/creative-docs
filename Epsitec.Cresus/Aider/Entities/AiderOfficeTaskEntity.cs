@@ -45,7 +45,7 @@ namespace Epsitec.Aider.Entities
 			switch (kind)
 			{
 				case OfficeTaskKind.EnterNewAddress:
-					if (source.GetType () != typeof (AiderAddressEntity))
+					if (source.GetType () != typeof (AiderContactEntity))
 					{
 						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au genre de tâche");
 					}

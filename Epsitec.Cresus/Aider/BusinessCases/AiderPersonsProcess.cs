@@ -147,16 +147,21 @@ namespace Epsitec.Aider.BusinessCases
 		public static void DoKeepParticipationTask(BusinessContext businessContext, AiderOfficeTaskEntity task)
 		{
 			var process = task.Process;
-			
-			// Add new address task if not alreay present
-			if (!process.Tasks.Any (t => t.Kind == OfficeTaskKind.EnterNewAddress))
+			if (process.Type == OfficeProcessType.PersonsOutputProcess)
 			{
-				var dataContext = businessContext.DataContext;
-				var person  = task.Process.GetSourceEntity<AiderPersonEntity> (dataContext);
-				var address = person.MainContact.Address;
-				process.StartTaskInOffice (businessContext, OfficeTaskKind.EnterNewAddress, task.Office, address);
+				// Add new address task if not alreay present
+				if (!process.Tasks.Any (t => t.Kind == OfficeTaskKind.EnterNewAddress))
+				{
+					var dataContext = businessContext.DataContext;
+					var person  = task.Process.GetSourceEntity<AiderPersonEntity> (dataContext);
+					if (person.MainContact.IsNull ())
+					{
+						throw new BusinessRuleException ("Impossible de conserver la participation, la personne n'a plus de contact");
+					}
+					process.StartTaskInOffice (businessContext, OfficeTaskKind.EnterNewAddress, task.Office, person.MainContact);
+					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+				}
 			}
-			
 
 			task.IsDone = true;
 			task.Actor  = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
