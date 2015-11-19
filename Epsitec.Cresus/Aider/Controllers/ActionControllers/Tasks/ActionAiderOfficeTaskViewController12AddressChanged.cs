@@ -19,12 +19,12 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-	public sealed class ActionAiderOfficeTaskViewController0Done : ActionViewController<AiderOfficeTaskEntity>
+	[ControllerSubType (12)]
+	public sealed class ActionAiderOfficeTaskViewController12AddressChanged : ActionViewController<AiderOfficeTaskEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Terminer la tâche");
+			return Resources.Text ("J'ai changé l'adresse");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -36,6 +36,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			this.Entity.IsDone = true;
 			this.Entity.Actor  = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
+			// refresh person contact cache
+			var contacts = this.Entity.Process.GetSourceEntity<AiderPersonEntity> (this.BusinessContext.DataContext).Contacts;
+			foreach (var contact in contacts)
+			{
+				contact.RefreshCache ();
+			}
 			AiderPersonsProcess.Next (this.BusinessContext, this.Entity.Process);
 		}
 	}

@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Override;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Aider.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -46,8 +47,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick ()
 						.Title ("Terminer la tâche")
-						.Text ("")
-						.EnableActionButton<ActionAiderOfficeTaskViewController0Done> ();
+						.Text ("Une erreur est survenue dans le processus")
+						.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
 					}
 					else
 					{
@@ -65,15 +66,26 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 					break;
 				case Enumerations.OfficeTaskKind.EnterNewAddress:
-					wall.AddBrick (x => x.GetSourceEntity<AiderAddressEntity> (this.DataContext))
-						.Title ("Nouvelle adresse")
-						.Text (x => "Actuelle: \n" + x.GetSummary ())
-						.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
+					if (this.Entity.GetSourceEntity<AiderContactEntity> (this.DataContext).IsNull ())
+					{
+						wall.AddBrick ()
+							.Title ("Terminer la tâche")
+							.Text ("Une erreur est survenue dans le processus")
+							.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
+					}
+					else
+					{
+						wall.AddBrick (x => x.GetSourceEntity<AiderContactEntity> (this.DataContext))
+							.Title ("Nouvelle adresse")
+							.Text (x => "Actuelle: \n" + x.GetAddress ().GetSummary ())
+							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 
-					wall.AddBrick ()
-						.Title ("Terminer la tâche")
-						.Text ("")
-						.EnableActionButton<ActionAiderOfficeTaskViewController0Done> ();
+						wall.AddBrick ()
+							.Title ("Terminer la tâche")
+							.Text ("")
+							.EnableActionButton<ActionAiderOfficeTaskViewController12AddressChanged> ();
+					}
+
 					break;
 			}
 		}

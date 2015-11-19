@@ -19,12 +19,12 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (0)]
-	public sealed class ActionAiderOfficeTaskViewController0Done : ActionViewController<AiderOfficeTaskEntity>
+	[ControllerSubType (2)]
+	public sealed class ActionAiderOfficeTaskViewController2Cancel : ActionViewController<AiderOfficeTaskEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Terminer la tâche");
+			return Resources.Text ("Annuler la tâche");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -34,9 +34,10 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute()
 		{
-			this.Entity.IsDone = true;
-			this.Entity.Actor  = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			AiderPersonsProcess.Next (this.BusinessContext, this.Entity.Process);
+			var task    = this.Entity;
+			var process = task.Process;
+			this.BusinessContext.DeleteEntity (task);
+			AiderPersonsProcess.Next (this.BusinessContext, process);
 		}
 	}
 }
