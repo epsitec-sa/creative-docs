@@ -81,10 +81,17 @@ namespace Epsitec.Aider.Entities
 			{
 				case OfficeProcessType.PersonsOutputProcess:
 				case OfficeProcessType.PersonsParishChangeProcess:
-					if (source.GetType () != typeof (AiderPersonEntity))
-					{
-						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
-					}
+				if (source.GetType () != typeof (AiderPersonEntity))
+				{
+					throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
+				}
+				break;
+
+				case OfficeProcessType.HouseholdDeletionProcess:
+				if (source.GetType () != typeof (AiderHouseholdEntity))
+				{
+					throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
+				}
 				break;
 
 			}

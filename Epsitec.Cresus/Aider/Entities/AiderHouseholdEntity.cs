@@ -335,29 +335,36 @@ namespace Epsitec.Aider.Entities
 
 		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
-			if (household.Comment.IsNotNull ())
+			if (household.Members.Count == 0)
 			{
-				businessContext.DeleteEntity (household.Comment);
-			}
+				if (household.Comment.IsNotNull ())
+				{
+					businessContext.DeleteEntity (household.Comment);
+				}
 
-			if (household.Address.IsNotNull ())
+				if (household.Address.IsNotNull ())
+				{
+					businessContext.DeleteEntity (household.Address);
+				}
+
+				var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+				if (subscription.IsNotNull ())
+				{
+					businessContext.DeleteEntity (subscription);
+				}
+
+				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+				if (refusal.IsNotNull ())
+				{
+					businessContext.DeleteEntity (refusal);
+				}
+
+				businessContext.DeleteEntity (household);
+			}
+			else
 			{
-				businessContext.DeleteEntity (household.Address);
+				AiderPersonsProcess.StartHouseholdDeletionProcess (businessContext, household);
 			}
-
-			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
-			if (subscription.IsNotNull ())
-			{
-				businessContext.DeleteEntity (subscription);
-			}
-
-			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
-			if (refusal.IsNotNull ())
-			{
-				businessContext.DeleteEntity (refusal);
-			}
-
-			businessContext.DeleteEntity (household);
 		}
 
 		public static void DeleteEmptyHouseholds(BusinessContext businessContext, params AiderHouseholdEntity[] households)
@@ -369,7 +376,10 @@ namespace Epsitec.Aider.Entities
 		{
 			foreach (var household in households)
 			{
-				if (household.Members.Count == 0)
+				household.ClearContactsCache ();
+				household.ClearMemberCache ();
+				var members = household.GetMembers ();
+				if (members.Count == 0)
 				{
 					AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
 					AiderHouseholdEntity.Delete (businessContext, household);
@@ -556,6 +566,11 @@ namespace Epsitec.Aider.Entities
 		private void ClearMemberCache()
 		{
 			this.membersCache = null;
+		}
+
+		private void ClearContactsCache()
+		{
+			this.contactsCache = null;
 		}
 
 

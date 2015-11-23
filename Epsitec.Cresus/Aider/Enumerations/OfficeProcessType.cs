@@ -12,6 +12,7 @@ namespace Epsitec.Aider.Enumerations
 
 		PersonsOutputProcess = 1,
 		PersonsParishChangeProcess = 2,
+		HouseholdDeletionProcess = 3,
 	}
 }
 

@@ -53,6 +53,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (confirmed)
 			{
+
+				AiderPersonsProcess.StartExitProcess (this.BusinessContext, this.Entity, OfficeProcessType.PersonsOutputProcess);
 				var mainContact = this.Entity.MainContact;
 
 				if (mainContact.IsNotNull ())
@@ -82,6 +84,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 						AiderContactEntity.Delete (this.BusinessContext, mainContact, deleteParticipations: true);
 					}
 				}
+
+				// hide person
+				this.Entity.Visibility = PersonVisibilityStatus.Hidden;
 				
 				
 			}

@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				if (!member.HasDerogation)
 				{
-					AiderPersonsProcess.StartProcess (this.BusinessContext, member, OfficeProcessType.PersonsParishChangeProcess);
+					AiderPersonsProcess.StartExitProcess (this.BusinessContext, member, OfficeProcessType.PersonsParishChangeProcess);
 				}			
 			}
 			this.ClearWarningAndRefreshCaches ();

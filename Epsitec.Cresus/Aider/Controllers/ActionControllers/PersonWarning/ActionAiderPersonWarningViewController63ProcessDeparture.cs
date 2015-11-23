@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var members = person.GetAllHouseholdMembers ();
 			foreach (var member in members)
 			{
-				AiderPersonsProcess.StartProcess (this.BusinessContext, member, OfficeProcessType.PersonsOutputProcess);
+				AiderPersonsProcess.StartExitProcess (this.BusinessContext, member, OfficeProcessType.PersonsOutputProcess);
 			}
 			this.ClearWarningAndRefreshCaches ();
 			this.ClearWarningAndRefreshCachesForAll (WarningType.ParishDeparture);
