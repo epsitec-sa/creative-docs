@@ -1060,9 +1060,14 @@ namespace Epsitec.Aider.Data.Subscription
 
 		private static string GetZipCode(AiderTownEntity town)
 		{
-			return town.Country.IsSwitzerland ()
-				? Epsitec.Data.Platform.SwissPostFullZip.GetZipCode (town.SwissZipCode, town.SwissZipCodeAddOn)
-				: town.ZipCode;
+			if (town.Country.IsSwitzerland ())
+			{
+				return Epsitec.Data.Platform.SwissPostFullZip.GetZipCode (town.SwissZipCode, town.SwissZipCodeAddOn);
+			}
+			else
+			{
+				return town.ZipCode;
+			}
 		}
 
 

@@ -204,12 +204,12 @@ namespace Epsitec.Aider.Data.ECh
 		
 		private static System.Uri GetFtpUri()
 		{
-			return new System.Uri ("ftp://ftp.vd.ch/EERV/");
+			return new System.Uri ("ftp://ftp.vd.ch/data/EERV/");
 		}
 
 		private static System.Uri GetFtpUri(string name)
 		{
-			return new System.Uri ("ftp://ftp.vd.ch/EERV/" + name);
+			return new System.Uri ("ftp://ftp.vd.ch/data/EERV/" + name);
 		}
 
 		private static NetworkCredential GetCredentials()

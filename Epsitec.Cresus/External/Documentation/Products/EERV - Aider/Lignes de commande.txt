@@ -796,3 +796,14 @@ Lancé le 21.10.2015
 -uploadsubscriptions -input:export-2015-10-29.txt -publicationdate:2015-10-29 -response:tamedia-2015-10-29.log
 
 
+
+Lancé le 17.11.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-10-26.xml -oldechfile:S:\eerv\eerv-2015-10-19.xml -output:s:\eerv\ech-diff-2015-10-26.md
+-echupdate -newechfile:S:\eerv\eerv-2015-11-02.xml -oldechfile:S:\eerv\eerv-2015-10-26.xml -output:s:\eerv\ech-diff-2015-11-02.md
+-echupdate -newechfile:S:\eerv\eerv-2015-11-09.xml -oldechfile:S:\eerv\eerv-2015-11-02.xml -output:s:\eerv\ech-diff-2015-11-09.md
+-echupdate -newechfile:S:\eerv\eerv-2015-11-16.xml -oldechfile:S:\eerv\eerv-2015-11-09.xml -output:s:\eerv\ech-diff-2015-11-16.md
+
+-exportsubscriptions -output:export-2015-11-26.txt -error:error-2015-11-26.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2015-11-26.txt -publicationdate:2015-11-26 -response:tamedia-2015-11-26.log
