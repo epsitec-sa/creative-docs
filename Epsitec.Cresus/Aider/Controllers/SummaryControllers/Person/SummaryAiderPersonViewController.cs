@@ -38,6 +38,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var canEditEmployee	   = user.CanEditEmployee () || user.CanEditReferee ();
 			var canRemoveEmployee  = showEmployeeTile && user.CanEditEmployee ();
 
+			if (this.Entity.Visibility != Enumerations.PersonVisibilityStatus.Default)
+			{
+				wall.AddBrick ()
+					.Title ("Personne non-visible")
+					.Text ("Actions possibles: ");
+			}
+
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
 				.EnableActionMenu<ActionAiderPersonViewController5AddHousehold> ()

@@ -19,12 +19,53 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Kind);
+			return TextFormatter.FormatText (this.Kind, "pour ", this.Process.GetSubject ());
 		}
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Process.GetSummary (), "\n", this.Kind);
+			return TextFormatter.FormatText (this.Kind, "pour ", this.Process.GetSubject ());
+		}
+
+		public FormattedText GetTaskInfo()
+		{
+			var info = new FormattedText ("Information:\n");
+			switch (this.Kind)
+			{			
+				case OfficeTaskKind.EnterNewAddress:
+					info = info.AppendLine (this.Process.GetSubject ());
+					info = info.AppendLine ("Adresse en cours:");
+					info = info.AppendLine (this.GetSourceEntity<AiderContactEntity> (this.GetDataContext ()).GetAddress ().GetSummary ());
+					break;
+				case OfficeTaskKind.CheckParticipation:
+					var p = this.GetSourceEntity<AiderGroupParticipantEntity> (this.GetDataContext ());
+					info = info.AppendLine (this.Process.GetSubject ());
+					info = info.AppendLine ("Groupe concerné:");
+					info = info.AppendLine (p.GetSummaryWithHierarchicalGroupName ());	
+					info = info.AppendLine ("Chemin de la participation:");
+					info = info.AppendLine (p.Group.GetNameParishNameWithRegion ());
+					info = info.AppendLine ("\n.");
+					break;
+			}
+			return info;
+		}
+
+		public FormattedText GetTaskHelp()
+		{
+			var help = new FormattedText ("Aide:\n");
+			switch (this.Kind)
+			{
+				case OfficeTaskKind.EnterNewAddress:
+					help = help.AppendLine ("Appuyer sur <terminer> si vous avez renseigné la nouvelle adresse.");
+					help = help.AppendLine ("Vous pouvez choisir d'<annuler>, si vous avez conservé par erreur cette");
+					help = help.AppendLine ("participation.");
+					break;
+				case OfficeTaskKind.CheckParticipation:
+					help = help.AppendLine ("Si vous conserver la participation,");
+					help = help.AppendLine ("il faudra renseigner une nouvelle adresse pour cette personne.");
+					break;
+			}
+			return help;
 		}
 
 		public AiderEntity GetSourceEntity<AiderEntity>(DataContext dataContext)

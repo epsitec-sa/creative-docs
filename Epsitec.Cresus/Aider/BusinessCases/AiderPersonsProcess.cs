@@ -13,6 +13,8 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Common.Types;
 using Epsitec.Aider.Override;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 namespace Epsitec.Aider.BusinessCases
 {
@@ -21,26 +23,16 @@ namespace Epsitec.Aider.BusinessCases
 	/// </summary>
 	public static class AiderPersonsProcess
 	{
-		public static AiderOfficeProcessEntity StartHouseholdDeletionProcess(BusinessContext businessContext, AiderHouseholdEntity household)
-		{
-			var process = AiderOfficeProcessEntity
-							.Create (businessContext, OfficeProcessType.HouseholdDeletionProcess, household);
-			var members = household.Members.Distinct ();
-			foreach (var person in members)
-			{
-				AiderPersonsProcess.AddTasksForPerson (businessContext, process, person);
-			}
-
-			AiderPersonsProcess.Next (businessContext, process);
-			return process;
-		}
-
 		public static AiderOfficeProcessEntity StartExitProcess(BusinessContext businessContext, AiderPersonEntity person, OfficeProcessType type)
 		{
+			if (person.Employee.IsNotNull ())
+			{
+				throw new BusinessRuleException ("Impossible de démarrer le processus pour " + person.GetFullName () + ", la personne est employée");
+			}
 			var process = AiderOfficeProcessEntity
 							.Create (businessContext, type, person);
 
-			AiderPersonsProcess.AddTasksForPerson (businessContext, process, person);
+			AiderPersonsProcess.AddCheckParticipationTasksForPerson (businessContext, process, person);
 
 			AiderPersonsProcess.Next (businessContext, process);
 			return process;
@@ -53,22 +45,7 @@ namespace Epsitec.Aider.BusinessCases
 				var dataContext   = businessContext.DataContext;
 				var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
 				AiderPersonsProcess.PersonExitProcess (businessContext, person);
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
-			}
-
-			if (process.Type == OfficeProcessType.HouseholdDeletionProcess)
-			{
-				var household = process.GetSourceEntity<AiderHouseholdEntity> (businessContext.DataContext);
-				var members = household.Members.Distinct ();
-				foreach (var person in members)
-				{
-					AiderPersonsProcess.PersonExitProcess (businessContext, person);
-				}
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, household);
 			}
 		}
 
@@ -86,13 +63,22 @@ namespace Epsitec.Aider.BusinessCases
 
 		public static void DoRemoveParticipationTask (BusinessContext businessContext, AiderOfficeTaskEntity task)
 		{
+			// This action is redo'able!
 			var process       = task.Process;
 			var dataContext   = businessContext.DataContext;
 			var participation = task.GetSourceEntity<AiderGroupParticipantEntity> (dataContext);
 			task.IsDone       = true;
-			task.Actor        = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-			AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);
 
+			if (task.Actor.IsNull ()) // don't change actor name in case of redo
+			{
+				task.Actor = businessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
+			}
+			
+			if (participation.IsNotNull ())
+			{
+				AiderGroupParticipantEntity.StopParticipation (participation, Date.Today);
+				businessContext.DeleteEntity (participation);
+			}		
 			AiderPersonsProcess.Next (businessContext, process);
 		}
 
@@ -124,7 +110,7 @@ namespace Epsitec.Aider.BusinessCases
 		private static void PersonExitProcess (BusinessContext businessContext, AiderPersonEntity person)
 		{
 			// check remaining participations
-			if (person.GetParticipations ().Count == 0)
+			if (person.GetParticipations (reload: true).Count == 0)
 			{
 				person.Visibility = PersonVisibilityStatus.Hidden;
 				if (person.MainContact.IsNotNull ())
@@ -136,9 +122,13 @@ namespace Epsitec.Aider.BusinessCases
 					businessContext.DeleteEntity (person.HouseholdContact);
 				}
 			}
+
+			// prevent bindind side-effects during save
+			businessContext.ClearRegisteredEntities ();
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 		}
 
-		private static void AddTasksForPerson(BusinessContext businessContext, AiderOfficeProcessEntity process, AiderPersonEntity person)
+		public static void AddCheckParticipationTasksForPerson(BusinessContext businessContext, AiderOfficeProcessEntity process, AiderPersonEntity person)
 		{
 			var offices        = businessContext.GetAllEntities<AiderOfficeManagementEntity> ();
 			var officesGroups  = offices.Select (o => o.ParishGroup);
@@ -152,6 +142,11 @@ namespace Epsitec.Aider.BusinessCases
 				AiderOfficeManagementEntity office = null;
 				if (group.IsNoParish ())
 				{
+					participationsByGroup[group].ForEach (p =>
+					{
+						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+						businessContext.DeleteEntity (p);
+					});
 					continue;
 				}
 
@@ -160,8 +155,9 @@ namespace Epsitec.Aider.BusinessCases
 					participationsByGroup[group].ForEach (p =>
 					{
 						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+						businessContext.DeleteEntity (p);
 					});
-
+					
 					continue;
 				}
 
@@ -176,6 +172,7 @@ namespace Epsitec.Aider.BusinessCases
 					participationsByGroup[group].ForEach (p =>
 					{
 						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+						businessContext.DeleteEntity (p);
 					});
 
 					continue;
@@ -187,12 +184,22 @@ namespace Epsitec.Aider.BusinessCases
 					participationsByGroup[group].ForEach (p =>
 					{
 						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+						businessContext.DeleteEntity (p);
 					});
 					continue;
 				}
 
 
 				var matchingGroups = searchPath.Intersect (officesGroups);
+				if (matchingGroups.IsEmpty ())
+				{
+					throw new BusinessRuleException ("Processus de sortie des personnes:\nIl manque une gestion dans:\n " + 
+						group.GetRootName () + 
+						"\ngroupe:\n" + 
+						group.Name + 
+						"\nchemin du groupe:\n" + 
+					group.Path);
+				}
 				var officeGroup    = matchingGroups.Last ();
 				office = offices.Single (o => o.ParishGroup == officeGroup);
 
@@ -207,6 +214,10 @@ namespace Epsitec.Aider.BusinessCases
 					}
 				});
 			}
+
+			// prevent bindind side-effects during save
+			businessContext.ClearRegisteredEntities ();
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 		}
 	}
 }

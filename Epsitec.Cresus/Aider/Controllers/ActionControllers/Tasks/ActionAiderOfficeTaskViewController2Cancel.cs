@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Terminer la tâche");
+			return Resources.Text ("Annuler");
 		}
 
 		public override ActionExecutor GetExecutor()
@@ -36,8 +36,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var task    = this.Entity;
 			var process = task.Process;
+			
+			switch (task.Kind)
+			{
+				case Enumerations.OfficeTaskKind.EnterNewAddress:
+				// Redo all processed tasks in the same office
+				var toRedo = process.Tasks.Where (t => t.Kind == Enumerations.OfficeTaskKind.CheckParticipation && t.IsDone == true && t.Office == task.Office);
+				foreach (var pTask in toRedo)
+				{
+					AiderPersonsProcess.DoRemoveParticipationTask (this.BusinessContext, pTask);
+				}
+				break;
+			}
 			this.BusinessContext.DeleteEntity (task);
 			AiderPersonsProcess.Next (this.BusinessContext, process);
+			
 		}
 	}
 }

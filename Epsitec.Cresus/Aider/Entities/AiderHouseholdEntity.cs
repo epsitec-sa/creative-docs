@@ -15,6 +15,8 @@ using Epsitec.Cresus.DataLayer.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.BusinessCases;
+using Epsitec.Cresus.DataLayer.Loader;
 
 
 namespace Epsitec.Aider.Entities

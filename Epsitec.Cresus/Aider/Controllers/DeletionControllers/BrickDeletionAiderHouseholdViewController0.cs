@@ -14,9 +14,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 	{
 		protected override void GetForm(ActionBrick<AiderHouseholdEntity, SimpleBrick<AiderHouseholdEntity>> action)
 		{
+			var warning = new System.Text.StringBuilder ();
+			warning.AppendLine ("Êtes vous sûr de vouloir détruire ce ménage ?");
+			warning.AppendLine ("Les contacts et participations risquent d'êtres");
+			warning.AppendLine ("détruits automatiquement lors du traitement de sortie.");
+			warning.AppendLine ("Il est possible que le ménage soient conservé, si un de ces membres");
+			warning.AppendLine ("comporte des participations dans des groupes d'une autre gestion.");
+			warning.AppendLine ("Dans ce cas, vérifier les tâches en cours.");
 			action
 				.Title ("Détruire le ménage")
-				.Text ("Êtes vous sûr de vouloir détruire ce ménage ?")
+				.Text (warning.ToString ())
 				.Field<string> ()
 					.Title ("Intitulé")
 					.InitialValue (x => x.DisplayName)
