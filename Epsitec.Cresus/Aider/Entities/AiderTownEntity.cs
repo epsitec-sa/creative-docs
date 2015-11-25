@@ -188,7 +188,9 @@ namespace Epsitec.Aider.Entities
 					request.RootEntity = example;
 					if (scope.Name == "Paroisse")
 					{
-						request.AddCondition (businessContext.DataContext, example, p => p.ZipCode == parishInfo.ZipCode.ToString ());
+						var zips = parishRepo.GetParishZipCodes (parishInfo);
+						request.AddCondition (businessContext.DataContext, example, p => SqlMethods.IsInSet (p.ZipCode, zips));
+						//request.AddCondition (businessContext.DataContext, example, p => p.ZipCode == parishInfo.ZipCode.ToString ());
 					}
 					if (scope.Name == "Région")
 					{

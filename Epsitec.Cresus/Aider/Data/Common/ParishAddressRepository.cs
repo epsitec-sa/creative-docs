@@ -123,6 +123,22 @@ namespace Epsitec.Aider.Data.Common
 			return info;
 		}
 
+		public IEnumerable<string> GetParishZipCodes(ParishAddressInformation info)
+		{
+			var full = info.FullParishName;
+
+			var list = this.addresses.SelectMany (x => x.Value.FindAll ()).Where (x => x.FullParishName == full).Select (x => x.ZipCode).Distinct ().ToList ();
+
+			if (list.Contains (info.ZipCode) == false)
+			{
+				list.Add (info.ZipCode);
+			}
+
+			list.Sort ();
+
+			return list.Select (x => x.ToString ());
+		}
+
 		private string FindParishName(string key, string normalizedStreetName, int houseNumber)
 		{
 			var info = this.FindParishAddressInformation (key, normalizedStreetName, houseNumber);
