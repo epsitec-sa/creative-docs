@@ -47,6 +47,12 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
 		}
 
+		public void RefreshMembers()
+		{
+			this.ClearContactsCache ();
+			this.ClearMemberCache ();
+		}
+
 
 		public bool IsHead(AiderPersonEntity person)
 		{

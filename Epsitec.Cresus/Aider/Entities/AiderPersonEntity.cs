@@ -837,6 +837,11 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
 		}
 
+		public void ClearParticipationsCache ()
+		{
+			this.participations = null;
+		}
+
 		public IList<AiderGroupParticipantEntity> GetParticipations(bool reload = false)
 		{
 			if (this.participations == null || reload)
