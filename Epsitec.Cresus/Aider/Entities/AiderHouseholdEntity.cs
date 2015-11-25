@@ -371,7 +371,10 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				AiderPersonsProcess.StartHouseholdDeletionProcess (businessContext, household);
+				foreach(var person in household.Members)
+				{
+					AiderPersonsProcess.StartExitProcess (businessContext, person, OfficeProcessType.PersonsOutputProcess);
+				}
 			}
 		}
 
