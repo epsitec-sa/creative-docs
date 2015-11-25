@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			var person  = warning.Person;
 			var context = this.BusinessContext;
-
+			person.ClearCaches ();
 			person.Contacts.ForEach (x => x.RefreshCache ());
 			person.Households.ForEach (x => x.RefreshCache ());
 

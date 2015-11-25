@@ -847,6 +847,15 @@ namespace Epsitec.Aider.Entities
 			return this.participations;
 		}
 
+		public void ClearCaches ()
+		{
+			this.households = null;
+			this.contacts = null;
+			this.employees = null;
+			this.participations = null;
+			this.warnings = null;
+		}
+
 
 		internal void RefreshCache()
 		{
