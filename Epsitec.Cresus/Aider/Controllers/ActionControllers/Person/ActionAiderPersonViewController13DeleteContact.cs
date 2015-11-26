@@ -53,42 +53,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			if (confirmed)
 			{
-
-				AiderPersonsProcess.StartExitProcess (this.BusinessContext, this.Entity, OfficeProcessType.PersonsOutputProcess);
-				var mainContact = this.Entity.MainContact;
-
-				if (mainContact.IsNotNull ())
-				{
-					var currentHousehold = mainContact.Household;
-
-					AiderContactEntity.Delete (this.BusinessContext, mainContact, deleteParticipations: true);
-
-					if (currentHousehold.IsNotNull ())
-					{
-						currentHousehold.RefreshCache ();
-						
-						var currentSubscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, currentHousehold);
-
-						if (currentSubscription.IsNotNull ())
-						{
-							currentSubscription.RefreshCache ();
-						}
-					}
-				}
-				else
-				{
-					mainContact = this.Entity.Contacts.FirstOrDefault ();
-
-					if (mainContact.IsNotNull ())
-					{
-						AiderContactEntity.Delete (this.BusinessContext, mainContact, deleteParticipations: true);
-					}
-				}
-
-				// hide person
-				this.Entity.Visibility = PersonVisibilityStatus.Hidden;
-				
-				
+				AiderPersonsProcess.StartExitProcess (this.BusinessContext, this.Entity, OfficeProcessType.PersonsOutputProcess);				
 			}
 		}
 	}
