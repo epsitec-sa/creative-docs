@@ -158,16 +158,37 @@ namespace Epsitec.Aider.BusinessCases
 			foreach (var group in groups)
 			{
 				AiderOfficeManagementEntity office = null;
-				if (group.IsNoParish ())
+				
+				switch (process.Type)
 				{
-					participationsByGroup[group].ForEach (p =>
+					case OfficeProcessType.PersonsParishChangeProcess:
+					// skip current parish groups
+					if (group.IsInTheSameParish (person.ParishGroup))
 					{
-						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
-						businessContext.DeleteEntity (p);
-					});
-					continue;
+						continue;
+					}
+					// skip NOPA.
+					if (group.IsNoParish ())
+					{
+	
+						continue;
+					}
+					break;
+					case OfficeProcessType.PersonsOutputProcess:
+					// Clean NOPA.
+					if (group.IsNoParish ())
+					{
+						participationsByGroup[group].ForEach (p =>
+						{
+							AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
+							businessContext.DeleteEntity (p);
+						});
+						continue;
+					}
+					break;
 				}
 
+				// Clean Parish
 				if (group.IsParish ())
 				{
 					participationsByGroup[group].ForEach (p =>
@@ -175,7 +196,7 @@ namespace Epsitec.Aider.BusinessCases
 						AiderGroupParticipantEntity.StopParticipation (p, Date.Today);
 						businessContext.DeleteEntity (p);
 					});
-					
+
 					continue;
 				}
 
@@ -195,7 +216,9 @@ namespace Epsitec.Aider.BusinessCases
 
 					continue;
 				}
+				
 
+				// By default, clean Archives groups
 				var searchPath     = Enumerable.Repeat (group, 1).Union (group.Parents);
 				if (searchPath.Any (g => g.Name == "Archives"))
 				{
@@ -207,7 +230,7 @@ namespace Epsitec.Aider.BusinessCases
 					continue;
 				}
 
-
+				// In other case find office and create task
 				var matchingGroups = searchPath.Intersect (officesGroups);
 				if (matchingGroups.IsEmpty ())
 				{
