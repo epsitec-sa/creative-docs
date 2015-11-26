@@ -57,8 +57,9 @@ namespace Epsitec.Aider.BusinessCases
 			{
 				var dataContext   = businessContext.DataContext;
 				var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
-				AiderPersonsProcess.PersonExitProcess (businessContext, person);
+				AiderPersonsProcess.PersonExitProcess (businessContext, person, process);
 				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
+
 			}
 		}
 
@@ -120,7 +121,7 @@ namespace Epsitec.Aider.BusinessCases
 			AiderPersonsProcess.Next (businessContext, process);
 		}
 
-		private static void PersonExitProcess (BusinessContext businessContext, AiderPersonEntity person)
+		private static void PersonExitProcess (BusinessContext businessContext, AiderPersonEntity person, AiderOfficeProcessEntity process)
 		{
 			// check remaining participations
 			if (person.GetParticipations (reload: true).Count == 0)
@@ -136,8 +137,12 @@ namespace Epsitec.Aider.BusinessCases
 				}
 			}
 
-			// prevent bindind side-effects during save
-			businessContext.ClearRegisteredEntities ();
+			if (process.Type == OfficeProcessType.PersonsOutputProcess)
+			{
+				// prevent bindind side-effects during save
+				businessContext.ClearRegisteredEntities ();
+			}
+
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 		}
 
@@ -228,8 +233,12 @@ namespace Epsitec.Aider.BusinessCases
 				});
 			}
 
-			// prevent bindind side-effects during save
-			businessContext.ClearRegisteredEntities ();
+			if (process.Type == OfficeProcessType.PersonsOutputProcess)
+			{
+				// prevent bindind side-effects during save
+				businessContext.ClearRegisteredEntities ();
+			}
+
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 		}
 	}
