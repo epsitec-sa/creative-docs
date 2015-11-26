@@ -16,6 +16,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Aider.Override;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Aider.BusinessCases;
+using Epsitec.Aider.Enumerations;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
@@ -39,18 +40,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			
 			switch (task.Kind)
 			{
-				case Enumerations.OfficeTaskKind.EnterNewAddress:
-				// Redo all processed tasks in the same office
-				var toRedo = process.Tasks.Where (t => t.Kind == Enumerations.OfficeTaskKind.CheckParticipation && t.IsDone == true && t.Office == task.Office);
-				foreach (var pTask in toRedo)
+				case OfficeTaskKind.EnterNewAddress:
+				if (process.Type == OfficeProcessType.PersonsOutputProcess)
 				{
-					AiderPersonsProcess.DoRemoveParticipationTask (this.BusinessContext, pTask);
-				}
+					this.BusinessContext.DeleteEntity (task);
+					// Redo all processed tasks in the same office
+					var toRedo = process.Tasks.Where (t => t.Kind == OfficeTaskKind.CheckParticipation && t.IsDone == true && t.Office == task.Office);
+					foreach (var pTask in toRedo)
+					{
+						AiderPersonsProcess.DoRemoveParticipationTask (this.BusinessContext, pTask);
+					}
+				}			
 				break;
-			}
-			this.BusinessContext.DeleteEntity (task);
-			AiderPersonsProcess.Next (this.BusinessContext, process);
-			
+				default:
+				this.BusinessContext.DeleteEntity (task);
+				AiderPersonsProcess.Next (this.BusinessContext, process);
+				break;
+			}	
 		}
 	}
 }
