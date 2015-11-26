@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var canEditEmployee	   = user.CanEditEmployee () || user.CanEditReferee ();
 			var canRemoveEmployee  = showEmployeeTile && user.CanEditEmployee ();
 
-			var canRestoreContact  = this.Entity.MainContact.IsNull ();
+			var canReactivate      = this.Entity.MainContact.IsNull ();
 
 			wall.AddBrick ()
 				.EnableActionMenu<ActionAiderPersonViewController4AddAlternateAddress> ()
@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderPersonViewController15DeleteEmployee> ().IfTrue (canRemoveEmployee)
 				.EnableActionMenu<ActionAiderPersonViewController16RemoveJob> ().IfTrue (canRemoveEmployee)
 				.EnableActionMenu<ActionAiderPersonViewController17AddReferee> ().IfTrue (canEditEmployee)
-//				.EnableActionMenu<ActionAiderPersonViewController18RestoreContact> ().IfTrue (canRestoreContact)
+				.EnableActionMenu<ActionAiderPersonViewController18ReactivatePerson> ().IfTrue (canReactivate)
 				.EnableActionButton<ActionAiderPersonViewController14DefineEmployee> ().IfTrue (showEmployeeAction)
 				.EnableActionOnDrop<ActionAiderPersonViewController8FusionOnDrop> ()
 				.Icon (this.Entity.GetIconName ("Data"))
