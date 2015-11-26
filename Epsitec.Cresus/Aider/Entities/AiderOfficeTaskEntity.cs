@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Entities
 			switch (this.Kind)
 			{
 				case OfficeTaskKind.EnterNewAddress:
-					help = help.AppendLine ("Vous pouvez choisir d'annuler, si vous avez conserver par erreur cette");
+					help = help.AppendLine ("Vous pouvez choisir d'annuler, si vous avez conservé par erreur cette");
 					help = help.AppendLine ("participation.");
 					break;
 				case OfficeTaskKind.CheckParticipation:
