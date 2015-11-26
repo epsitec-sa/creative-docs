@@ -29,6 +29,19 @@ namespace Epsitec.Aider.BusinessCases
 			{
 				throw new BusinessRuleException ("Impossible de démarrer le processus pour " + person.GetFullName () + ", la personne est employée");
 			}
+
+			var notif = NotificationManager.GetCurrentNotificationManager ();
+			var user  = AiderUserManager.Current.AuthenticatedUser;
+			if (user.IsNotNull ())
+			{
+				notif.Notify (user.LoginName,
+				new NotificationMessage ()
+				{
+					Title = "Processus démarré",
+					Body = person.GetSummary ()
+				},
+				When.Now);
+			}
 			var process = AiderOfficeProcessEntity
 							.Create (businessContext, type, person);
 
