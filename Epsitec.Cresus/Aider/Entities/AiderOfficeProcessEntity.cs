@@ -24,6 +24,13 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
+			var finished   = this.Tasks.Count (t => t.IsDone);
+			var total      = this.Tasks.Count ();
+			return TextFormatter.FormatText (this.Type, "\n", this.GetSubject (), "\n", finished, "/", total);
+		}
+
+		public FormattedText GetSubject()
+		{
 			var subject = new FormattedText ();
 			switch (this.Type)
 			{
@@ -33,10 +40,7 @@ namespace Epsitec.Aider.Entities
 					break;
 
 			}
-
-			var finished   = this.Tasks.Count (t => t.IsDone);
-			var total      = this.Tasks.Count ();
-			return TextFormatter.FormatText (this.Type, "\n", subject, "\n", finished, "/", total);
+			return subject;
 		}
 
 		public AiderOfficeTaskEntity StartTaskInOffice(
@@ -81,12 +85,11 @@ namespace Epsitec.Aider.Entities
 			{
 				case OfficeProcessType.PersonsOutputProcess:
 				case OfficeProcessType.PersonsParishChangeProcess:
-					if (source.GetType () != typeof (AiderPersonEntity))
-					{
-						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
-					}
+				if (source.GetType () != typeof (AiderPersonEntity))
+				{
+					throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au processus métier");
+				}
 				break;
-
 			}
 
 			var process = businessContext.CreateAndRegisterEntity<AiderOfficeProcessEntity> ();

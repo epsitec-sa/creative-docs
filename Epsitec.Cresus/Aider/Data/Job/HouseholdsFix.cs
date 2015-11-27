@@ -19,6 +19,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Properties;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -27,6 +28,33 @@ namespace Epsitec.Aider.Data.Job
 	/// </summary>
 	internal static class HouseholdsFix
 	{
+		/// <summary>
+		///  Create exit process for each hidden persons with household
+		/// </summary>
+		/// <param name="coreData"></param>
+		public static void HiddenPersonWithHousehold(CoreData coreData)
+		{
+			var personExample = new AiderPersonEntity ()
+			{
+				Visibility = Enumerations.PersonVisibilityStatus.Hidden
+			};
+
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				businessContext.GetByExample<AiderPersonEntity> (personExample).ForEach (p =>
+				{
+					if (p.MainContact.IsNotNull ())
+					{
+						AiderPersonsProcess.StartExitProcess (businessContext, p, Enumerations.OfficeProcessType.PersonsOutputProcess);
+					}
+				});
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+
+
+		}
+
 		public static void EchHouseholdsQuality(CoreData coreData, string currentEchFile)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))

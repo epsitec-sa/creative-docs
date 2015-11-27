@@ -34,7 +34,7 @@ function() {
         title: options.items[0].title,
         iconCls: options.items[0].iconCls,
         items: [this.form],
-        buttons: this.getButtons()
+        buttons: this.getButtons(),
       }]);
       return this;
     },
@@ -130,20 +130,20 @@ function() {
 
       if (success) {
         this.close();
-        
+
         this.handleSave(json);
       }
       else {
         Epsitec.ErrorHandler.handleFormError(action);
-        
+
         if(json!==null)
         {
-          businessError = json.content.businesserror;     
+          businessError = json.content.businesserror;
           if (Ext.isDefined(businessError))
           {
             this.showError(businessError);
-          } 
-        }  
+          }
+        }
       }
     },
 
@@ -162,7 +162,7 @@ function() {
         else {
             Epsitec.ErrorHandler.showError(this.title, error);
         }
-      
+
     },
 
     hideError: function() {
@@ -194,7 +194,7 @@ function() {
           console.warn('ActionCall : json is empty');
           return;
         }
-        
+
         options = Epsitec.BrickWallParser.parseColumn(json.content);
         options.callback = callback;
         options.executeInQueue = inQueue;
@@ -204,7 +204,7 @@ function() {
         {
             dialog.show();
             dialog.isDisplayed = true;
-        }    
+        }
         else
         {
           dialog.onSaveClick();

@@ -36,7 +36,7 @@ function() {
 
       var newOptions = {
         tools: this.createEntityTileTools(options),
-        dockedItems: this.createEntityTileDockTools(options),   
+        dockedItems: this.createEntityTileDockTools(options),
       };
 
       if(Ext.isDefined(options.isRoot))
@@ -53,8 +53,8 @@ function() {
           newOptions.closable = true;
         }
       }
-      
-      
+
+
       Ext.applyIf(newOptions, options);
 
       this.callParent([newOptions]);
@@ -76,10 +76,10 @@ function() {
       actions = options.actions;
       toolbars = [];
       var tile = this;
-      Ext.Array.each(actions, function(a) {   
+      Ext.Array.each(actions, function(a) {
         if(a.displayMode == "Button")
         {
-          
+
           var button = {};
           button.xtype = 'button';
           button.text = a.title;
@@ -89,7 +89,7 @@ function() {
           button.textAlign = 'left';
           button.executeInQueue = a.executeInQueue;
           button.requiresAdditionalEntity = a.requiresAdditionalEntity; //needed?
-          button.handler = function() { 
+          button.handler = function() {
               this.handleDirectAction(a.viewId, a.executeInQueue);
           };
           button.scope = tile;
@@ -116,7 +116,7 @@ function() {
             Epsitec.Cresus.Core.app.entityBag.registerDropZone(dropZone);
             toolbars.unshift(dropZone);
           }
-        }        
+        }
       });
       return toolbars;
     },
@@ -179,6 +179,7 @@ function() {
 
     handleDirectAction: function(viewId, inQueue) {
       var callback = Epsitec.Callback.create(this.handleDirectActionCallback, this);
+      this.setLoading(true);
       this.showAction(viewId, inQueue, callback);
     },
 
@@ -204,6 +205,7 @@ function() {
     },
 
     handleDirectActionCallback: function() {
+      this.setLoading(false);
       this.column.refreshAll();
       Epsitec.Cresus.Core.app.reloadCurrentTile();
     },
@@ -260,7 +262,7 @@ function() {
           }
         }
       }
-      
+
     },
 
     // A tile might be selected by the user when he clicks on it. We keep track

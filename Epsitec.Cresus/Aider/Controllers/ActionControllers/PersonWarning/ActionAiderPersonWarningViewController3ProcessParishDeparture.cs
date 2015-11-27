@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			if (!person.HasDerogation)
 			{
-				AiderPersonsProcess.StartProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
+				AiderPersonsProcess.StartExitProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
 			}
 
 			this.ClearWarningAndRefreshCaches ();

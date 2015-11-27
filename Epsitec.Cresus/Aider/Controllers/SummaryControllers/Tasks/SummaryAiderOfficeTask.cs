@@ -19,8 +19,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			var task      = this.Entity;
 			var process   = task.Process;
 			var userCanDo = AiderUserManager.Current.AuthenticatedUser.CanDoTaskInOffice (this.Entity.Office);
-			wall.AddBrick (x => x.Process)
-						.Title ("Processus")
+			wall.AddBrick ()
+						.Title ("Tâche")
 						.Text (x => x.GetSummary ())
 						.Attribute (BrickMode.DefaultToNoSubView);
 
@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 		private void CreateBrickForPersonsExitProcess(BrickWall<AiderOfficeTaskEntity> wall)
 		{
-			var task    = this.Entity;
+			var task     = this.Entity;
 
 			switch (task.Kind)
 			{
@@ -54,12 +54,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					{
 						wall.AddBrick (x => x.GetSourceEntity<AiderGroupParticipantEntity> (this.DataContext))
 							.Title ("Participation à vérifier")
-							.Text (x => x.GetSummaryWithHierarchicalGroupName () + "</br>")
+							.Text (task.GetTaskInfo ())
 							.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 						wall.AddBrick ()
 							.Title ("Choisir une action:")
-							.Text ("")
+							.Text (task.GetTaskHelp ())
 							.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
 							.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
 					}
@@ -76,14 +76,15 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					else
 					{
 						wall.AddBrick (x => x.GetSourceEntity<AiderContactEntity> (this.DataContext))
-							.Title ("Nouvelle adresse")
-							.Text (x => "Actuelle: \n" + x.GetAddress ().GetSummary ())
+							.Title ("Saisir la nouvelle adresse")
+							.Text (task.GetTaskInfo ())
 							.WithSpecialController (typeof (EditionAiderContactViewController1Address));
 
 						wall.AddBrick ()
-							.Title ("Terminer la tâche")
-							.Text ("")
-							.EnableActionButton<ActionAiderOfficeTaskViewController12AddressChanged> ();
+							.Title ("Choisir une action:")
+							.Text (task.GetTaskHelp ())
+							.EnableActionButton<ActionAiderOfficeTaskViewController12AddressChanged> ()
+							.EnableActionButton<ActionAiderOfficeTaskViewController2Cancel> ();
 					}
 
 					break;

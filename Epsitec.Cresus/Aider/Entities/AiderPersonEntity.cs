@@ -327,7 +327,7 @@ namespace Epsitec.Aider.Entities
 
 		public void RemoveFromThisHousehold(BusinessContext context, AiderHouseholdEntity household)
 		{
-			if (household.IsNull ())
+			if (household.IsNull () | household.Members.Count <= 1)
 			{
 				return;
 			}
@@ -837,6 +837,11 @@ namespace Epsitec.Aider.Entities
 			return this.Contacts.Where (x => x.Household.IsNotNull ()).FirstOrDefault ();
 		}
 
+		public void ClearParticipationsCache ()
+		{
+			this.participations = null;
+		}
+
 		public IList<AiderGroupParticipantEntity> GetParticipations(bool reload = false)
 		{
 			if (this.participations == null || reload)
@@ -845,6 +850,15 @@ namespace Epsitec.Aider.Entities
 			}
 
 			return this.participations;
+		}
+
+		public void ClearCaches ()
+		{
+			this.households = null;
+			this.contacts = null;
+			this.employees = null;
+			this.participations = null;
+			this.warnings = null;
 		}
 
 

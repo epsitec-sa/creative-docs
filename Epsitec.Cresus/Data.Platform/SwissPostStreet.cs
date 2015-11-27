@@ -23,14 +23,20 @@ namespace Epsitec.Data.Platform
 		{
 			var matchClient        = SwissPost.MatchWebClient;
 			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
-			var file               = matchClient.GetMatchSortFile ();
-
-			if (matchClient.IsANewRelease || SwissPostStreet.MustGenerateMatchStreetCsv ())
-			{			
-				MatchSortExtractor.WriteRecordsToFile<SwissPostStreetInformation> (file, SwissPostStreetInformation.GetMatchRecordId (), swissPostStreetCsv);
-				return swissPostStreetCsv;
+			try
+			{
+				var file           = matchClient.GetMatchSortFile ();
+				if (matchClient.IsANewRelease || SwissPostStreet.MustGenerateMatchStreetCsv ())
+				{
+					MatchSortExtractor.WriteRecordsToFile<SwissPostStreetInformation> (file, SwissPostStreetInformation.GetMatchRecordId (), swissPostStreetCsv);
+					return swissPostStreetCsv;
+				}
+				else
+				{
+					return swissPostStreetCsv;
+				}
 			}
-			else
+			catch
 			{
 				return swissPostStreetCsv;
 			}

@@ -1,5 +1,5 @@
 //	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
@@ -25,36 +25,26 @@ using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (13)]
-	public sealed class ActionAiderPersonViewController13DeleteContact : ActionViewController<AiderPersonEntity>
+	[ControllerSubType (18)]
+	public sealed class ActionAiderPersonViewController18ReactivatePerson : ActionViewController<AiderPersonEntity>
 	{
 		public override FormattedText GetTitle()
 		{
-			return Resources.Text ("Supprimer le contact...");
+			return Resources.Text ("Réactiver la personne");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool> (this.Execute);
+			return ActionExecutor.Create (this.Execute);
 		}
 
-		protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
+		private void Execute()
 		{
-			form
-				.Title ("Supprimer le contact")
-				.Field<bool> ()
-					.Title ("Confirmer la suppresion ?")
-					.InitialValue (false)
-				.End ()
-			.End ();
-		}
+			var person = this.Entity;
 
-		private void Execute(bool confirmed)
-		{
-			if (confirmed)
-			{
-				AiderPersonsProcess.StartExitProcess (this.BusinessContext, this.Entity, OfficeProcessType.PersonsOutputProcess);				
-			}
+			person.Visibility = PersonVisibilityStatus.Default;
+			var household = AiderHouseholdEntity.Create (this.BusinessContext, person.Address);
+			AiderContactEntity.Create (this.BusinessContext, person, household, true);
 		}
 	}
 }

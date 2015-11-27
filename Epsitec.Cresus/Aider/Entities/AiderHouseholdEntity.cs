@@ -15,6 +15,10 @@ using Epsitec.Cresus.DataLayer.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.BusinessCases;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Aider.Override;
 
 
 namespace Epsitec.Aider.Entities
@@ -45,6 +49,12 @@ namespace Epsitec.Aider.Entities
 			this.ParishGroupPathCache = AiderGroupEntity.GetPath (this.GetParishGroup ());
 		}
 
+		public void RefreshMembers()
+		{
+			this.ClearContactsCache ();
+			this.ClearMemberCache ();
+		}
+
 
 		public bool IsHead(AiderPersonEntity person)
 		{
@@ -55,7 +65,15 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetAddressLabelText()
 		{
-			return TextFormatter.FormatText (this.GetAddressRecipientText (), "\n", this.Address.GetPostalAddress ());
+			if (this.Address.IsNotNull ())
+			{
+				return TextFormatter.FormatText (this.GetAddressRecipientText (), "\n", this.Address.GetPostalAddress ());
+			}
+			else
+			{
+				return TextFormatter.FormatText ("Adresse indisponible");
+			}
+			
 		}
 
 
@@ -63,7 +81,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.Contacts.Count == 0)
 			{
-				// This may happen for corrupted households.
+				// This may happen for corrupted/in deletion households.
 
 				return FormattedText.Empty;
 			}
@@ -333,31 +351,43 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
+		public static bool Delete(BusinessContext businessContext, AiderHouseholdEntity household)
 		{
-			if (household.Comment.IsNotNull ())
+			if (household.Members.Count == 0)
 			{
-				businessContext.DeleteEntity (household.Comment);
-			}
+				if (household.Comment.IsNotNull ())
+				{
+					businessContext.DeleteEntity (household.Comment);
+				}
 
-			if (household.Address.IsNotNull ())
+				if (household.Address.IsNotNull ())
+				{
+					businessContext.DeleteEntity (household.Address);
+				}
+
+				var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+				if (subscription.IsNotNull ())
+				{
+					businessContext.DeleteEntity (subscription);
+				}
+
+				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+				if (refusal.IsNotNull ())
+				{
+					businessContext.DeleteEntity (refusal);
+				}
+
+				businessContext.DeleteEntity (household);
+				return true;
+			}
+			else
 			{
-				businessContext.DeleteEntity (household.Address);
+				foreach(var person in household.Members)
+				{
+					AiderPersonsProcess.StartExitProcess (businessContext, person, OfficeProcessType.PersonsOutputProcess);
+				}
+				return false;
 			}
-
-			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
-			if (subscription.IsNotNull ())
-			{
-				businessContext.DeleteEntity (subscription);
-			}
-
-			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
-			if (refusal.IsNotNull ())
-			{
-				businessContext.DeleteEntity (refusal);
-			}
-
-			businessContext.DeleteEntity (household);
 		}
 
 		public static void DeleteEmptyHouseholds(BusinessContext businessContext, params AiderHouseholdEntity[] households)
@@ -369,35 +399,66 @@ namespace Epsitec.Aider.Entities
 		{
 			foreach (var household in households)
 			{
-				if (household.Members.Count == 0)
+				if (AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, household, keepChildrenOnly))
 				{
-					AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
-					AiderHouseholdEntity.Delete (businessContext, household);
-				}
-				else
-				{
-					var adults   = household.Members.Where (m => m.Age >= 18);
-					var children = household.Members.Where (m => m.Age < 18);
-
-					//	Check for children-only household case
-
-					if (!adults.Any () && children.Any ()) 
+					var notif = NotificationManager.GetCurrentNotificationManager ();
+					if (notif != null)
 					{
-						if (keepChildrenOnly)
+						var manager = AiderUserManager.Current;
+						if (manager != null)
 						{
-							continue;
-						}
-
-						//	Warn children
-						foreach (var child in children)
-						{
-							AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
-						}
-
-						AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
-						AiderHouseholdEntity.Delete (businessContext, household);
-					}
+							var user  = manager.AuthenticatedUser;
+							if (user.IsNotNull ())
+							{
+								notif.Notify (user.LoginName,
+								new NotificationMessage ()
+								{
+									Title = "Ménage supprimé",
+									Body = household.GetSummary ()
+								},
+								When.Now);
+							}
+						}						
+					}				
 				}
+			}
+		}
+
+		public static bool DeleteEmptyHousehold(BusinessContext businessContext, AiderHouseholdEntity household, bool keepChildrenOnly = false)
+		{
+			household.ClearContactsCache ();
+			household.ClearMemberCache ();
+			var members = household.GetMembers ();
+			if (members.Count == 0)
+			{
+				AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
+				return AiderHouseholdEntity.Delete (businessContext, household);
+			}
+			else
+			{
+				var adults   = household.Members.Where (m => m.Age >= 18);
+				var children = household.Members.Where (m => m.Age < 18);
+
+				//	Check for children-only household case
+
+				if (!adults.Any () && children.Any ())
+				{
+					if (keepChildrenOnly)
+					{
+						return false;
+					}
+
+					//	Warn children
+					foreach (var child in children)
+					{
+						AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
+					}
+
+					AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
+					return AiderHouseholdEntity.Delete (businessContext, household);
+				}
+
+				return false;
 			}
 		}
 
@@ -556,6 +617,11 @@ namespace Epsitec.Aider.Entities
 		private void ClearMemberCache()
 		{
 			this.membersCache = null;
+		}
+
+		private void ClearContactsCache()
+		{
+			this.contactsCache = null;
 		}
 
 
