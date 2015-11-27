@@ -65,7 +65,15 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetAddressLabelText()
 		{
-			return TextFormatter.FormatText (this.GetAddressRecipientText (), "\n", this.Address.GetPostalAddress ());
+			if (this.Address.IsNotNull ())
+			{
+				return TextFormatter.FormatText (this.GetAddressRecipientText (), "\n", this.Address.GetPostalAddress ());
+			}
+			else
+			{
+				return TextFormatter.FormatText ("Adresse indisponible");
+			}
+			
 		}
 
 
@@ -73,7 +81,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.Contacts.Count == 0)
 			{
-				// This may happen for corrupted households.
+				// This may happen for corrupted/in deletion households.
 
 				return FormattedText.Empty;
 			}
