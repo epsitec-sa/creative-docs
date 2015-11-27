@@ -179,6 +179,7 @@ function() {
 
     handleDirectAction: function(viewId, inQueue) {
       var callback = Epsitec.Callback.create(this.handleDirectActionCallback, this);
+      this.setLoading(true);
       this.showAction(viewId, inQueue, callback);
     },
 
@@ -204,6 +205,7 @@ function() {
     },
 
     handleDirectActionCallback: function() {
+      this.setLoading(false);
       this.column.refreshAll();
       Epsitec.Cresus.Core.app.reloadCurrentTile();
     },
