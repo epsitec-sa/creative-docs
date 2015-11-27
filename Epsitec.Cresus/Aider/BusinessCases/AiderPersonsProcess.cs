@@ -15,6 +15,7 @@ using Epsitec.Aider.Override;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
+using System.Threading;
 
 namespace Epsitec.Aider.BusinessCases
 {
@@ -30,18 +31,14 @@ namespace Epsitec.Aider.BusinessCases
 				throw new BusinessRuleException ("Impossible de démarrer le processus pour " + person.GetFullName () + ", la personne est employée");
 			}
 
-			var notif = NotificationManager.GetCurrentNotificationManager ();
-			var user  = AiderUserManager.Current.AuthenticatedUser;
-			if (user.IsNotNull ())
+			var message = new NotificationMessage ()
 			{
-				notif.Notify (user.LoginName,
-				new NotificationMessage ()
-				{
-					Title = "Processus démarré",
-					Body = person.GetSummary ()
-				},
-				When.Now);
-			}
+				Title = "Processus démarré",
+				Body = person.GetSummary ()
+			};
+
+			AiderPersonsProcess.NotifyUser (message);
+
 			var process = AiderOfficeProcessEntity
 							.Create (businessContext, type, person);
 
@@ -51,16 +48,30 @@ namespace Epsitec.Aider.BusinessCases
 			return process;
 		}
 
+		/// <summary>
+		/// Fin de processus
+		/// </summary>
+		/// <param name="businessContext"></param>
+		/// <param name="process"></param>
 		public static void EndProcess (BusinessContext businessContext, AiderOfficeProcessEntity process)
 		{
-			if (process.Type == OfficeProcessType.PersonsOutputProcess)
+			var dataContext   = businessContext.DataContext;
+			var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
+			switch(process.Type)
 			{
-				var dataContext   = businessContext.DataContext;
-				var person = process.GetSourceEntity<AiderPersonEntity> (dataContext);
+				case OfficeProcessType.PersonsOutputProcess:
 				AiderPersonsProcess.PersonExitProcess (businessContext, person, process);
 				AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, person.Households);
-
+				break;
 			}
+
+			var message = new NotificationMessage ()
+			{
+				Title = "Processus terminé",
+				Body = person.GetSummary ()
+			};
+
+			AiderPersonsProcess.NotifyUser (message);
 		}
 
 		public static void Next (BusinessContext businessContext, AiderOfficeProcessEntity process)
@@ -154,7 +165,7 @@ namespace Epsitec.Aider.BusinessCases
 			var groups         = participations.Select (p => p.Group).ToList ();
 
 			var participationsByGroup = participations.ToLookup (p => p.Group, p => p);
-
+			var createdTaskPerOffice  = new Dictionary<string, TaskCounter> ();
 			foreach (var group in groups)
 			{
 				AiderOfficeManagementEntity office = null;
@@ -250,11 +261,33 @@ namespace Epsitec.Aider.BusinessCases
 				{
 					if (!started)
 					{
+						var taskCounter = new TaskCounter ();
+						if (createdTaskPerOffice.TryGetValue (office.OfficeShortName,out taskCounter))
+						{
+							taskCounter.Increment ();
+						}
+						else
+						{
+							createdTaskPerOffice[office.OfficeShortName] = new TaskCounter ();
+							createdTaskPerOffice[office.OfficeShortName].Increment ();
+						}
 						process.StartTaskInOffice (businessContext, OfficeTaskKind.CheckParticipation, office, p);
 						started = true;
 					}
 				});
 			}
+
+			if (createdTaskPerOffice.Count > 0)
+			{
+				var message = new NotificationMessage ()
+				{
+					Title = "Nouvelle tâches:",
+					Body = createdTaskPerOffice.Select (kv => kv.Key + ": " + kv.Value.GetString).Join ("\n")
+				};
+				AiderPersonsProcess.NotifyUser (message);
+				
+			}
+			
 
 			if (process.Type == OfficeProcessType.PersonsOutputProcess)
 			{
@@ -263,6 +296,47 @@ namespace Epsitec.Aider.BusinessCases
 			}
 
 			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+		}
+
+		public static void NotifyUser (NotificationMessage message)
+		{
+			var notif = NotificationManager.GetCurrentNotificationManager ();
+			var user  = AiderUserManager.Current.AuthenticatedUser;
+			if (user.IsNotNull ())
+			{
+				notif.Notify (user.LoginName,
+				message,
+				When.Now);
+			}
+		}
+		
+		class TaskCounter
+		{
+			public string GetString
+			{
+				get
+				{
+					if (this.count <= 1)
+					{
+						return this.count.ToString () + " tâche";
+					}
+
+					return this.count.ToString () + " tâches";							
+				}
+			}
+			// Trick de Roger
+			// Permet de faire var x = 3 + taskCounter;
+			public static implicit operator int (TaskCounter self)
+			{
+				return self.count;
+			}
+
+			public int Increment ()
+			{
+				return Interlocked.Increment (ref this.count);
+			}
+
+			private int count;
 		}
 	}
 }
