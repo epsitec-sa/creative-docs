@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.HideRemoveButton)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.AutoGroup)
-				.EnableActionMenu<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ()
+				.EnableActionMenu<ActionAiderHouseholdViewController2RemoveMemberFromHousehold> ().IfTrue (household.Members.Count > 1)
 				.EnableActionMenu<ActionAiderHouseholdViewController3ChangeHeadOfHousehold> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController5CleanHousehold> ()
 				.EnableActionMenu<ActionAiderHouseholdViewController7AddHouseholdMembersToBag> ()
@@ -104,7 +104,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					foreach (var item in list)
 					{
 						wall.AddBrick ()
-							.Attribute (BrickMode.DefaultToSummarySubView)
+							.Attribute (BrickMode.DefaultToNoSubView)
 							.Icon ("Data.AiderPersons")
 							.Title ("Données ECh")
 							.Text (item.GetSummary ());

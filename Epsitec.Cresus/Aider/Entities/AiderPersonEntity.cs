@@ -327,7 +327,7 @@ namespace Epsitec.Aider.Entities
 
 		public void RemoveFromThisHousehold(BusinessContext context, AiderHouseholdEntity household)
 		{
-			if (household.IsNull ())
+			if (household.IsNull () | household.Members.Count <= 1)
 			{
 				return;
 			}
