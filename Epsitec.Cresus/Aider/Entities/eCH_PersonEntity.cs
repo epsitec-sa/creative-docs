@@ -59,7 +59,16 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText ("ID eCH:", this.PersonId, "\n", this.DeclarationStatus, "\n","Raison:",this.RemovalReason);
+			var person = this.GetDataContext ().GetByExample<AiderPersonEntity> (new AiderPersonEntity ()
+			{
+				eCH_Person = this
+			}).SingleOrDefault ();
+			var personInfo = "Donnée eCh de la personne manquante";
+			if (person.IsNotNull ())
+			{
+				personInfo = person.GetFullName ();
+			}
+			return TextFormatter.FormatText (personInfo, "\n", "ID eCH:", this.PersonId, "\n", this.DeclarationStatus, "\n","Raison:",this.RemovalReason);
 		}
 
 		public override EntityStatus GetEntityStatus()
