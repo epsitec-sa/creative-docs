@@ -66,10 +66,17 @@ namespace Epsitec.Data.Platform
 			
 			if (this.MustUpdateOrCreate ())
 			{
-				this.DownloadFile (this.ProductUri);
-				var release = this.GetMatchSortFileReleaseDate ();
-				MatchWebClient.WriteLocalMetaData (release);
-				this.IsANewRelease = true;
+				var fileName = this.DownloadFile (this.ProductUri);
+				if (fileName == null)
+				{
+					this.IsANewRelease = false;
+				}
+				else
+				{
+					var release = this.GetMatchSortFileReleaseDate ();
+					MatchWebClient.WriteLocalMetaData (release);
+					this.IsANewRelease = true;
+				}
 				this.aValidFileIsAvailable = true;
 				return MatchWebClient.GetLocalMatchSortDataPath ();
 			}
@@ -184,9 +191,10 @@ namespace Epsitec.Data.Platform
 					}
 					System.Diagnostics.Trace.WriteLine ("Done");
 				}
-				catch
+				catch (System.Exception ex)
 				{
-					throw new System.Exception ("Error during file download");
+					System.Diagnostics.Trace.WriteLine (ex.Message);
+					return null;
 				}
 			}
 			return filename;

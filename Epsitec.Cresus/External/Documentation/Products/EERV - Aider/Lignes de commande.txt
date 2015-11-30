@@ -807,3 +807,9 @@ Lancé le 17.11.2015
 
 -exportsubscriptions -output:export-2015-11-26.txt -error:error-2015-11-26.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-11-26.txt -publicationdate:2015-11-26 -response:tamedia-2015-11-26.log
+
+
+Lancé le 24.11.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-11-23.xml -oldechfile:S:\eerv\eerv-2015-11-16.xml -output:s:\eerv\ech-diff-2015-11-23.md
