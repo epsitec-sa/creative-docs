@@ -55,8 +55,8 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		private void Execute(string _1, AiderTownEntity _2, string _3, string _4)
 		{
 			var household = this.Entity;
-
-			AiderHouseholdEntity.Delete (this.BusinessContext, household);
+			household.StartExitProcessForEachMember (this.BusinessContext);
+			
 		}
 	}
 }
