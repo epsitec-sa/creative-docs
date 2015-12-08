@@ -1339,6 +1339,28 @@ namespace Epsitec.Aider.Entities
 				return this.GetFieldCollection<global::Epsitec.Aider.Entities.AiderEventEntity> ("[LVOG73]");
 			}
 		}
+		///	<summary>
+		///	Mis à jour une fois par an
+		///	designer:fld/LVAF/LVOC93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOC93]")]
+		public int? CalculatedAge
+		{
+			get
+			{
+				return this.GetField<int?> ("[LVOC93]");
+			}
+			set
+			{
+				int? oldValue = this.CalculatedAge;
+				if (oldValue != value || !this.IsFieldDefined("[LVOC93]"))
+				{
+					this.OnCalculatedAgeChanging (oldValue, value);
+					this.SetField<int?> ("[LVOC93]", oldValue, value);
+					this.OnCalculatedAgeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1394,6 +1416,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnMainPhoneChanged(string oldValue, string newValue);
 		partial void OnSecondaryPhoneChanging(string oldValue, string newValue);
 		partial void OnSecondaryPhoneChanged(string oldValue, string newValue);
+		partial void OnCalculatedAgeChanging(int? oldValue, int? newValue);
+		partial void OnCalculatedAgeChanged(int? oldValue, int? newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);

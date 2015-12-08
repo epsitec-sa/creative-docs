@@ -229,6 +229,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-calculateage"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.CalculateAge (args));
+					return;
+				}
+
 				if (args.Contains ("-fixpersonswithoutcontact"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPersonsWithoutContact (args));
@@ -747,6 +753,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => ContactNameFixer.FixContactNames (coreData)
+			);
+		}
+
+		private static void CalculateAge(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => AgeCalculator.Start (coreData)
 			);
 		}
 

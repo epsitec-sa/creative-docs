@@ -3860,6 +3860,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayMonth = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 472);
 				//	designer:cap/LVAPE
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayYear = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 473);
+				//	designer:cap/LVOC93
+				public static readonly global::Epsitec.Common.Support.Druid CalculatedAge = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 300);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 				//	designer:cap/LVGS32

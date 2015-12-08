@@ -41,10 +41,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var person = this.Entity;
-
 			person.Visibility = PersonVisibilityStatus.Default;
-			var household = AiderHouseholdEntity.Create (this.BusinessContext, person.Address);
-			AiderContactEntity.Create (this.BusinessContext, person, household, true);
+			
+			if (person.HouseholdContact.IsNull ())
+			{
+				var household = AiderHouseholdEntity.Create (this.BusinessContext, person.Address);
+				AiderContactEntity.Create (this.BusinessContext, person, household, true);
+			}
 		}
 	}
 }

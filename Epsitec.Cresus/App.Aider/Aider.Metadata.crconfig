@@ -112,6 +112,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOC93]" title="Age (calculé)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -801,6 +805,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOC93]" title="Age (calculé)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1105,6 +1113,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVALK].[LVA5E].[LVOC93]" title="Age (calculé)" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVALK].[LVA5E].[LVAU1].[LVA8B]" title="Date de naissance" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1349,6 +1361,10 @@ AiderOfficeTask = [LVOD83]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVALK].[LVA5E].[LVAL2]" title="Nom de naissance" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVALK].[LVA5E].[LVOC93]" title="Age (calculé)" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
