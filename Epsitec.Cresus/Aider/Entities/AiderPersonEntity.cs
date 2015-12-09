@@ -1115,16 +1115,25 @@ namespace Epsitec.Aider.Entities
 
 		private AiderAddressEntity GetAddress()
 		{
-			//	A person's address is the one which was explicitely defined to be the default
-			//	(AddressType = Default), or the first household address, or any fully defined
-			//	available address for the person if everything else failed:
-
-			var defaultAddress = 
+			if (this.UseProfessionalAdressAsDefault)
+			{
+				var defaultAddress = 
+					this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Professional).Select (x => x.Address).FirstOrDefault () ??
+					this.Households.Select (x => x.Address).FirstOrDefault () ??
+					this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
+				return defaultAddress;
+			}
+			else
+			{
+				//	A person's address is the one which was explicitely defined to be the default
+				//	(AddressType = Default), or the first household address, or any fully defined
+				//	available address for the person if everything else failed:
+				var defaultAddress = 
 				this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Default).Select (x => x.Address).FirstOrDefault () ??
 				this.Households.Select (x => x.Address).FirstOrDefault () ??
 				this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
-
-			return defaultAddress;
+				return defaultAddress;
+			}		
 		}
 
 		private ISet<AiderHouseholdEntity> GetHouseholds()

@@ -3912,6 +3912,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid SecondaryPhone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 110);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
+				//	designer:cap/LVOE93
+				public static readonly global::Epsitec.Common.Support.Druid UseProfessionalAdressAsDefault = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 302);
 				//	designer:cap/LVAVE
 				public static readonly global::Epsitec.Common.Support.Druid Visibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 479);
 				//	designer:cap/LVAOB

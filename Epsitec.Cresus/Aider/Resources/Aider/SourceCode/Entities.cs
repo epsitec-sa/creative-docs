@@ -1361,6 +1361,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>UseProfessionalAdressAsDefault</c> field.
+		///	designer:fld/LVAF/LVOE93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOE93]")]
+		public bool UseProfessionalAdressAsDefault
+		{
+			get
+			{
+				return this.GetField<bool> ("[LVOE93]");
+			}
+			set
+			{
+				bool oldValue = this.UseProfessionalAdressAsDefault;
+				if (oldValue != value || !this.IsFieldDefined("[LVOE93]"))
+				{
+					this.OnUseProfessionalAdressAsDefaultChanging (oldValue, value);
+					this.SetField<bool> ("[LVOE93]", oldValue, value);
+					this.OnUseProfessionalAdressAsDefaultChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1418,6 +1440,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSecondaryPhoneChanged(string oldValue, string newValue);
 		partial void OnCalculatedAgeChanging(int? oldValue, int? newValue);
 		partial void OnCalculatedAgeChanged(int? oldValue, int? newValue);
+		partial void OnUseProfessionalAdressAsDefaultChanging(bool oldValue, bool newValue);
+		partial void OnUseProfessionalAdressAsDefaultChanged(bool oldValue, bool newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);
