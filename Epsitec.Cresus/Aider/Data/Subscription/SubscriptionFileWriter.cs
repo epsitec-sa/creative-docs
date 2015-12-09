@@ -174,6 +174,12 @@ namespace Epsitec.Aider.Data.Subscription
 					(x.Street == y.Street) &&
 					(x.Lastname == y.Lastname))
 				{
+					//	Multiple subscriptions for different editions at same address is OK
+					if (x.EditionId != y.EditionId)
+					{
+						return false;
+					}
+
 					if ((x.HouseNumber == y.HouseNumber) ||
 						((x.HouseNumber.Length >= 1) && (y.HouseNumber.Length == 0)) ||
 						((x.HouseNumber.Length == 0) && (y.HouseNumber.Length >= 1)))
