@@ -26,7 +26,7 @@ namespace Epsitec.Aider.BusinessCases
 	{
 		public static AiderOfficeProcessEntity StartExitProcess(BusinessContext businessContext, AiderPersonEntity person, OfficeProcessType type)
 		{
-			if (person.Employee.IsNotNull ())
+			if (person.Employee.IsNotNull () && type == OfficeProcessType.PersonsOutputProcess)
 			{
 				throw new BusinessRuleException ("Impossible de démarrer le processus pour " + person.GetFullName () + ", la personne est employée");
 			}
@@ -181,8 +181,21 @@ namespace Epsitec.Aider.BusinessCases
 					// skip NOPA.
 					if (group.IsNoParish ())
 					{
-	
 						continue;
+					}
+					if (person.HasDerogation)
+					{
+						// Skip groups other than person geo. parish
+						if (!group.IsInTheSameParish (person.GeoParishGroupPathCache))
+						{
+							continue;
+						}
+
+						// skip Derogation Out group from original parish
+						if (group.IsInTheSameParish (person.GeoParishGroupPathCache) && group.Name == "Dérogations sortantes")
+						{
+							continue;
+						}
 					}
 					break;
 					case OfficeProcessType.PersonsOutputProcess:
@@ -199,7 +212,7 @@ namespace Epsitec.Aider.BusinessCases
 					break;
 				}
 
-				// Clean Parish
+				// Clean Parish if no derogation in place
 				if (group.IsParish ())
 				{
 					participationsByGroup[group].ForEach (p =>
