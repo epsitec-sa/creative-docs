@@ -391,6 +391,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-updateparishname")) //-updateparishname -current:"Morge" -new:"Morges – Echichens"
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.UpdateParish (args));
+					return;
+				}
+
 				if (args.Contains ("-hiddenpersonscheck")) //-admin2muni
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.HiddenPersonsCheck (args));
@@ -575,6 +581,18 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData =>
 			{
 				UpdateLegalPerson.AdminToMunicipality (coreData);
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+
+		private static void UpdateParish(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				var currentName = AiderProgram.GetString (args, "-current:", mandatory: true);
+				var newName     = AiderProgram.GetString (args, "-new:", mandatory: true);
+				UpdateParishName.Update (coreData, currentName, newName);
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
