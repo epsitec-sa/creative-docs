@@ -785,7 +785,12 @@ function() {
           );
         }
         else {
-          this.filters.getFilter(columnName).setValue(field.value + '*');
+          if (field.value.startsWith('"') && field.value.endsWith('"')) {
+            this.filters.getFilter(columnName).setValue(field.value);
+          } else {
+            this.filters.getFilter(columnName).setValue(field.value + '*');
+          }
+
           if (field.value !== '') {
             this.filters.getFilter(columnName).setActive(true);
           }
