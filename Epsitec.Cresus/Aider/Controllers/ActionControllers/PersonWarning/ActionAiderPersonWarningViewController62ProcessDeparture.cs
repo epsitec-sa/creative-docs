@@ -14,10 +14,11 @@ using Epsitec.Cresus.Core.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-	[ControllerSubType (6)]
+	[ControllerSubType (62)]
 	public sealed class ActionAiderPersonWarningViewController62ProcessDeparture : ActionAiderPersonWarningViewControllerInteractive
 	{
 		public override bool IsEnabled
@@ -30,55 +31,17 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override FormattedText GetTitle()
 		{
-			return Resources.FormattedText ("La personne a déménagé hors canton");
+			return Resources.FormattedText ("J'ai saisi la nouvelle adresse");
 		}
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<bool, bool> (this.Execute);
+			return ActionExecutor.Create (this.Execute);
 		}
 
-		private void Execute(bool confirmAddress, bool hidePerson)
+		private void Execute()
 		{
-			var warning = this.Entity;
-			var person  = warning.Person;
-
-			if (confirmAddress == hidePerson)
-			{
-				var message = "Il faut choisir l'une des deux options...";
-
-				throw new BusinessRuleException (message);
-			}
-
-			//TODO: participation removal
-			if (hidePerson)
-			{
-				person.HidePerson (this.BusinessContext);
-				person.DeleteNonParishGroupParticipations (this.BusinessContext);
-				person.DeleteParishGroupParticipation (this.BusinessContext);
-			}
-			else
-			{
-				person.eCH_Person.RemovalReason = RemovalReason.Departed;
-			}
-
 			this.ClearWarningAndRefreshCaches ();
-		}
-
-		protected override void GetForm(ActionBrick<AiderPersonWarningEntity, SimpleBrick<AiderPersonWarningEntity>> form)
-		{
-			form
-				.Title (this.GetTitle ())
-				.Text (this.Entity.Person.GetNonParishGroupParticipationsNumberedSummary (this.BusinessContext))
-				.Field<bool> ()
-					.Title ("J'ai traité manuellement le déménagement")
-					.InitialValue (false)
-				.End ()
-				.Field<bool> ()
-					.Title ("Cacher la personne")
-					.InitialValue (false)
-				.End ()
-			.End ();
 		}
 	}
 }

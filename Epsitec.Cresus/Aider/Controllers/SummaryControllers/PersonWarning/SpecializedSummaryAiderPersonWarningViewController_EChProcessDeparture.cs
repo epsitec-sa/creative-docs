@@ -21,6 +21,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Aider.Override;
+using Epsitec.Aider.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -34,12 +35,20 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			bool canProcess = currentUser.IsOfficeManager ();
 			bool alive      = person.IsAlive;
 
+			if (person.MainContact.IsNotNull () && alive)
+			{
+				wall.AddBrick (x => x.Person.MainContact)
+					.Title ("Dernière adresse connue:")
+					.Text (x => x.GetAddress ())
+					.WithSpecialController (typeof (EditionAiderContactViewController1Address));
+			}
+
 			wall.AddBrick ()
 				.Title (x => x.WarningType)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))
 				.EnableActionButton<ActionAiderPersonWarningViewController61ProcessDepartureDeceased> ()
-				.EnableActionButton<ActionAiderPersonWarningViewController63ProcessDeparture> ().IfTrue (alive)
+				.EnableActionButton<ActionAiderPersonWarningViewController62ProcessDeparture> ().IfTrue (alive)
 				.EnableActionButton<ActionAiderPersonWarningViewController64ProcessDeparture> ().IfTrue (alive);
 
 		}
