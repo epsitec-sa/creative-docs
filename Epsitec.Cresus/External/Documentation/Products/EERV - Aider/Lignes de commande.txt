@@ -813,3 +813,13 @@ Lancé le 24.11.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-11-23.xml -oldechfile:S:\eerv\eerv-2015-11-16.xml -output:s:\eerv\ech-diff-2015-11-23.md
+
+Lancé le 01.12.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-11-30.xml -oldechfile:S:\eerv\eerv-2015-11-23.xml -output:s:\eerv\ech-diff-2015-11-30.md
+
+Lancé le 08.12.2015
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2015-12-07.xml -oldechfile:S:\eerv\eerv-2015-11-30.xml -output:s:\eerv\ech-diff-2015-12-07.md
