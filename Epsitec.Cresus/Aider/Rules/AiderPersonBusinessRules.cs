@@ -238,8 +238,6 @@ namespace Epsitec.Aider.Rules
 			var oldParishGroup	        = person.ParishGroup;
 			var oldParishName           = person.ParishGroup.Name;
 			var oldParishGroupPath      = AiderGroupIds.DefaultToNoParish (person.ParishGroupPathCache);
-			var oldParishParticipations = person.GetOtherParishLevelParticipations ().ToList (); 
-			
 
 			AiderPersonBusinessRules.AssignParish (context, person);
 
@@ -254,15 +252,6 @@ namespace Epsitec.Aider.Rules
 
 			var notifyOldParish = true;
 
-			var removedParticipations = new List<string> ();
-			oldParishParticipations.ForEach (p =>
-			{
-				removedParticipations.Add (p.GetRolePathOrHierarchicalName ());
-				person.MainContact.RemoveParticipationInternal (p);
-				context.DeleteEntity (p);
-			});
-
-
 			if (person.HasDerogation)
 			{
 				AiderPersonBusinessRules.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
@@ -274,9 +263,7 @@ namespace Epsitec.Aider.Rules
 			var description = TextFormatter.FormatText ("La paroisse ne correspondait pas à l'adresse\n",
 														"principale du ménage. La correction suivante\n",
 														"a été appliquée:\n \n",
-														oldParishName, "\n->\n", newParishName,
-														"\nParticipations supprimée:\n \n",
-														removedParticipations.Join ("\n"));
+														oldParishName, "\n->\n", newParishName);
 
 			if (notifyOldParish)
 			{

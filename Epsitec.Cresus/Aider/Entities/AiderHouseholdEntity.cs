@@ -350,44 +350,39 @@ namespace Epsitec.Aider.Entities
 			return household;
 		}
 
-
-		public static bool Delete(BusinessContext businessContext, AiderHouseholdEntity household)
+		public void StartExitProcessForEachMember (BusinessContext businessContext)
 		{
-			if (household.Members.Count == 0)
+			foreach (var person in this.Members)
 			{
-				if (household.Comment.IsNotNull ())
-				{
-					businessContext.DeleteEntity (household.Comment);
-				}
-
-				if (household.Address.IsNotNull ())
-				{
-					businessContext.DeleteEntity (household.Address);
-				}
-
-				var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
-				if (subscription.IsNotNull ())
-				{
-					businessContext.DeleteEntity (subscription);
-				}
-
-				var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
-				if (refusal.IsNotNull ())
-				{
-					businessContext.DeleteEntity (refusal);
-				}
-
-				businessContext.DeleteEntity (household);
-				return true;
+				AiderPersonsProcess.StartExitProcess (businessContext, person, OfficeProcessType.PersonsOutputProcess);
 			}
-			else
+		}
+
+		public static void Delete(BusinessContext businessContext, AiderHouseholdEntity household)
+		{
+			if (household.Comment.IsNotNull ())
 			{
-				foreach(var person in household.Members)
-				{
-					AiderPersonsProcess.StartExitProcess (businessContext, person, OfficeProcessType.PersonsOutputProcess);
-				}
-				return false;
+				businessContext.DeleteEntity (household.Comment);
 			}
+
+			if (household.Address.IsNotNull ())
+			{
+				businessContext.DeleteEntity (household.Address);
+			}
+
+			var subscription = AiderSubscriptionEntity.FindSubscription (businessContext, household);
+			if (subscription.IsNotNull ())
+			{
+				businessContext.DeleteEntity (subscription);
+			}
+
+			var refusal = AiderSubscriptionRefusalEntity.FindRefusal (businessContext, household);
+			if (refusal.IsNotNull ())
+			{
+				businessContext.DeleteEntity (refusal);
+			}
+
+			businessContext.DeleteEntity (household);
 		}
 
 		public static void DeleteEmptyHouseholds(BusinessContext businessContext, params AiderHouseholdEntity[] households)
@@ -431,8 +426,8 @@ namespace Epsitec.Aider.Entities
 			var members = household.GetMembers ();
 			if (members.Count == 0)
 			{
-				AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
-				return AiderHouseholdEntity.Delete (businessContext, household);
+				AiderHouseholdEntity.Delete (businessContext, household);
+				return true;
 			}
 			else
 			{
@@ -454,8 +449,8 @@ namespace Epsitec.Aider.Entities
 						AiderPersonWarningEntity.Create (businessContext, child, child.ParishGroupPathCache, WarningType.EChHouseholdMissing, new FormattedText ("Cet enfant n'est plus assigné à un ménage"));
 					}
 
-					AiderSubscriptionEntity.DeleteSubscription (businessContext, household);
-					return AiderHouseholdEntity.Delete (businessContext, household);
+					AiderHouseholdEntity.Delete (businessContext, household);
+					return true;
 				}
 
 				return false;

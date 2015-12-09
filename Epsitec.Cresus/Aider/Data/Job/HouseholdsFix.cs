@@ -38,15 +38,45 @@ namespace Epsitec.Aider.Data.Job
 			{
 				Visibility = Enumerations.PersonVisibilityStatus.Hidden
 			};
-
+			Logger.LogToConsole ("//////////////////////////////////////");
+			Logger.LogToConsole ("////:::CHECK HIDDEN PERSON::://///");
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
+				var totalTask=0;
 				businessContext.GetByExample<AiderPersonEntity> (personExample).ForEach (p =>
 				{
-					if (p.MainContact.IsNotNull ())
+					Logger.LogToConsole ("//: " + p.DisplayName);
+					
+					if (p.IsDeceased)
 					{
-						AiderPersonsProcess.StartExitProcess (businessContext, p, Enumerations.OfficeProcessType.PersonsOutputProcess);
+						Logger.LogToConsole ("skip (dead person)");
+						return;
 					}
+					if (p.Employee.IsNotNull ())
+					{
+						Logger.LogToConsole ("skip (employee)");
+						return;
+					}
+					if (p.MainContact.IsNull ())
+					{
+						Logger.LogToConsole ("skip (no contact)");
+						return;
+					}
+
+					Logger.LogToConsole ("Start process...");
+					var process = AiderPersonsProcess.StartExitProcess (businessContext, p, Enumerations.OfficeProcessType.PersonsOutputProcess);
+					switch (process.Status)
+					{
+						case Enumerations.OfficeProcessStatus.Ended:
+							Logger.LogToConsole ("Process Ended!");
+							break;
+						default:
+							var tasks = process.Tasks.Count ();
+							totalTask += tasks;
+							Logger.LogToConsole (tasks + " task(s) created");
+							break;
+					}
+					Logger.LogToConsole ("//////////totalTask: " + totalTask + "/////////////////");
 				});
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);

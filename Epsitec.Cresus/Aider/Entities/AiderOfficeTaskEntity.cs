@@ -60,8 +60,17 @@ namespace Epsitec.Aider.Entities
 					help = help.AppendLine ("participation.");
 					break;
 				case OfficeTaskKind.CheckParticipation:
-					help = help.AppendLine ("Si vous conserver la participation,");
-					help = help.AppendLine ("il faudra renseigner une nouvelle adresse pour cette personne.");
+					if (this.Process.Type == OfficeProcessType.PersonsOutputProcess)
+					{
+						help = help.AppendLine ("Si vous conserver la participation,");
+						help = help.AppendLine ("il faudra renseigner une nouvelle adresse pour cette personne.");
+					}
+					else
+					{
+						help = help.AppendLine ("La personne à changé de paroisse");
+						help = help.AppendLine ("voulez-vous tout de même conserver cette participation ?");
+					}
+
 					break;
 			}
 			return help;

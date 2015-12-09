@@ -49,8 +49,11 @@ namespace Epsitec.Aider.BusinessCases
 				needDerogationLetter = true;
 			}
 
-			//Remove parish participations
-			AiderDerogations.RemoveParishGroupPartiticipations (businessContext, person, currentParishGroup);
+			// X Remove parish participations  
+			// this case is now handled by a ParishChangePersonProcess triggered by 
+			// parish departure warning
+			//AiderDerogations.RemoveParishGroupPartiticipations (businessContext, person, currentParishGroup);
+
 
 			//Add participation to the destination parish
 			AiderDerogations.AddParishGroupParticipations (businessContext, person, derogationParishGroup, date);
