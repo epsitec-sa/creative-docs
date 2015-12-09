@@ -218,7 +218,7 @@ namespace Epsitec.Aider.Entities
 				ParishGroup = group
 			};
 
-			return businessContext.DataContext.GetByExample (officeExample).First ();
+			return businessContext.DataContext.GetByExample (officeExample).SingleOrDefault ();
 		}
 
 		public static AiderOfficeManagementEntity Create(BusinessContext businessContext,string name,AiderGroupEntity managementGroup)
