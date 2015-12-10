@@ -774,7 +774,7 @@ namespace Epsitec.Aider.Data.Job
 				//Derogation exist?
 				if (aiderPersonEntity.HasDerogation)
 				{
-					AiderPersonBusinessRules.RemoveDerogation (businessContext, aiderPersonEntity, oldParishGroup, oldParishGroupPath);
+					AiderPersonBusinessRules.RemoveDerogation (businessContext, aiderPersonEntity, oldParishGroup);
 					notifyOldParish = false;
 				}
 

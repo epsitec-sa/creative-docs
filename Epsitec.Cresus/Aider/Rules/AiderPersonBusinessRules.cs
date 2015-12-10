@@ -254,7 +254,7 @@ namespace Epsitec.Aider.Rules
 
 			if (person.HasDerogation)
 			{
-				AiderPersonBusinessRules.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
+				AiderPersonBusinessRules.RemoveDerogation (context, person, oldParishGroup);
 				notifyOldParish = false;
 			}
 
@@ -275,9 +275,9 @@ namespace Epsitec.Aider.Rules
 			return true;
 		}
 
-		public static void RemoveDerogation(BusinessContext context, AiderPersonEntity person, AiderGroupEntity oldParishGroup, string oldParishGroupPath)
+		public static void RemoveDerogation(BusinessContext context, AiderPersonEntity person, AiderGroupEntity oldParishGroup)
 		{
-			AiderDerogations.RemoveDerogation (context, person, oldParishGroup, oldParishGroupPath);
+			AiderDerogations.RemoveDerogation (context, person, oldParishGroup);
 		}
 		
 		

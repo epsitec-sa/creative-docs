@@ -66,7 +66,7 @@ namespace Epsitec.Aider.BusinessCases
 			return needDerogationLetter;
 		}
 
-		public static void RemoveDerogation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity oldParishGroup, string oldParishGroupPath)
+		public static void RemoveDerogation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity oldParishGroup,bool enableWarning = true)
 		{
 			//Remove old derogation in
 			AiderDerogations.RemoveDerogationInParticipations (businessContext, oldParishGroup, person);
@@ -75,12 +75,15 @@ namespace Epsitec.Aider.BusinessCases
 			var geoParishGroup = person.GetDerogationGeoParishGroup (businessContext);
 			AiderDerogations.RemoveDerogationOutParticipations (businessContext, geoParishGroup, person);
 
-			//Warn old derogated parish
-			AiderDerogations.WarnEndOfDerogationForRelocation (businessContext, person, oldParishGroupPath);
+			if (enableWarning)
+			{
+				//Warn old derogated parish
+				AiderDerogations.WarnEndOfDerogationForRelocation (businessContext, person, oldParishGroup.Path);
 
-			//Warn GeoParish for derogation end
-			AiderDerogations.WarnEndOfDerogationForRelocationAsChange (businessContext, person, person.GeoParishGroupPathCache);
-
+				//Warn GeoParish for derogation end
+				AiderDerogations.WarnEndOfDerogationForRelocationAsChange (businessContext, person, person.GeoParishGroupPathCache);
+			}
+			
 			person.ClearDerogation ();
 		}
 
