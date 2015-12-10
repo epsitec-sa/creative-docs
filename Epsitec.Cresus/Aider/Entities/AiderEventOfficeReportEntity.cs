@@ -31,9 +31,14 @@ namespace Epsitec.Aider.Entities
 			report.Year         = targetEvent.Date.Value.Year;
 			report.IsValidated  = true;
 			report.EventNumberByYearAndRegistry  = AiderEventOfficeReportEntity.FindNextNumber (context, targetEvent);
-			report.Name			= targetEvent.GetRegitryActName () + " " + report.GetEventNumber ();
+			report.Name			= AiderEventOfficeReportEntity.GetReportName (targetEvent, report);
 			targetEvent.Office.AddDocumentInternal (report);
 			return report;
+		}
+
+		public static string GetReportName (AiderEventEntity targetEvent, AiderEventOfficeReportEntity report)
+		{
+			return targetEvent.GetRegitryActName () + " " + report.GetEventNumber ();
 		}
 
 		public static AiderEventOfficeReportEntity CreatePreview(BusinessContext context, AiderEventEntity targetEvent)
@@ -66,6 +71,23 @@ namespace Epsitec.Aider.Entities
 			};
 
 			return context.GetByExample<AiderEventOfficeReportEntity> (example).FirstOrDefault ();
+		}
+
+		public static IEnumerable<AiderEventOfficeReportEntity> GetNextOfficeActFromEvent(BusinessContext context, AiderEventEntity eventBase, int nextTo)
+		{
+			var eventStyle = new AiderEventEntity ()
+			{
+				Type = eventBase.Type,
+				Office = eventBase.Office,
+				State = Enumerations.EventState.Validated
+			};
+			var example   = new AiderEventOfficeReportEntity ()
+			{
+				Event = eventStyle
+			};
+
+			var reports        = context.GetByExample<AiderEventOfficeReportEntity> (example);
+			return reports.Where (r => r.Year == eventBase.Date.Value.Year && r.EventNumberByYearAndRegistry > nextTo);
 		}
 
 		private static int FindNextNumber(BusinessContext context, AiderEventEntity eventBase)

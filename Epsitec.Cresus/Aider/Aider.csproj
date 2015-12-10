@@ -97,6 +97,7 @@
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController03RemoveJob.cs" />
     <Compile Include="Controllers\ActionControllers\Employee\ActionAiderEmployeeViewController04RemoveReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController10AddMinister.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController11Delete.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController9PreviewReport.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController8AddParticipantExternal.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController7AddParticipant.cs" />
@@ -106,7 +107,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
-    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4Delete.cs" />
+    <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4DeleteDraft.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController3Validate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController2Rollback.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController0AddParticipantsFromBag.cs" />

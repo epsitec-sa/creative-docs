@@ -20,8 +20,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderEventEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
 			var currentEvent = this.Entity;
-			var userCanValidate = AiderUserManager.Current.AuthenticatedUser.CanValidateEvents () || AiderUserManager.Current.AuthenticatedUser.LoginName == "root";
+			var userCanValidate = user.CanValidateEvents () || AiderUserManager.Current.AuthenticatedUser.LoginName == "root";
 			if(currentEvent.State == Enumerations.EventState.InPreparation)
 			{
 				wall.AddBrick ()
@@ -29,7 +30,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Title ("Acte en préparation")
 					.Text (x => x.GetSummary ())
 					.EnableActionButton<ActionAiderEventViewController1SetToValidate> ()
-					.EnableActionButton<ActionAiderEventViewController4Delete> ()
+					.EnableActionButton<ActionAiderEventViewController4DeleteDraft> ()
 					.Attribute (BrickMode.DefaultToCreationOrEditionSubView);
 
 				wall.AddBrick (x => x.Participants)
@@ -82,7 +83,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Icon ("Data.AiderEvent")
 					.Title (x => "Acte N° " + x.Report.GetEventNumber ())
 					.Text (x => x.GetSummary ())
-					.Attribute (BrickMode.DefaultToNoSubView);
+					.Attribute (BrickMode.DefaultToNoSubView)
+					.EnableActionMenu<ActionAiderEventViewController11Delete> ().IfTrue (user.IsAdmin ());
 
 				if (this.Entity.Report.IsNotNull ())
 				{

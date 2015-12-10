@@ -21,7 +21,7 @@ using Epsitec.Cresus.Core.Library;
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
 	[ControllerSubType (4)]
-	public sealed class ActionAiderEventViewController4Delete : ActionViewController<AiderEventEntity>
+	public sealed class ActionAiderEventViewController4DeleteDraft : ActionViewController<AiderEventEntity>
 	{
 		public override bool IsEnabled
 		{
