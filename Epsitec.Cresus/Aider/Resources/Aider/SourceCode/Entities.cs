@@ -1362,24 +1362,72 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>UseProfessionalAdressAsDefault</c> field.
+		///	Utilisé pour determiné l'adresse secondaire
 		///	designer:fld/LVAF/LVOE93
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVOE93]")]
-		public bool UseProfessionalAdressAsDefault
+		public global::Epsitec.Aider.Enumerations.AddressType SecondaryAddressType
 		{
 			get
 			{
-				return this.GetField<bool> ("[LVOE93]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.AddressType> ("[LVOE93]");
 			}
 			set
 			{
-				bool oldValue = this.UseProfessionalAdressAsDefault;
+				global::Epsitec.Aider.Enumerations.AddressType oldValue = this.SecondaryAddressType;
 				if (oldValue != value || !this.IsFieldDefined("[LVOE93]"))
 				{
-					this.OnUseProfessionalAdressAsDefaultChanging (oldValue, value);
-					this.SetField<bool> ("[LVOE93]", oldValue, value);
-					this.OnUseProfessionalAdressAsDefaultChanged (oldValue, value);
+					this.OnSecondaryAddressTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.AddressType> ("[LVOE93]", oldValue, value);
+					this.OnSecondaryAddressTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SecondaryAddressTextSingleLine</c> field.
+		///	designer:fld/LVAF/LVOF93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOF93]", IsVirtual=true)]
+		public string SecondaryAddressTextSingleLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetSecondaryAddressTextSingleLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.SecondaryAddressTextSingleLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVOF93]"))
+				{
+					this.OnSecondaryAddressTextSingleLineChanging (oldValue, value);
+					this.SetSecondaryAddressTextSingleLine (value);
+					this.OnSecondaryAddressTextSingleLineChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>SecondaryAddressTextMultiLine</c> field.
+		///	designer:fld/LVAF/LVOG93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOG93]", IsVirtual=true)]
+		public string SecondaryAddressTextMultiLine
+		{
+			get
+			{
+				string value = default (string);
+				this.GetSecondaryAddressTextMultiLine (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.SecondaryAddressTextMultiLine;
+				if (oldValue != value || !this.IsFieldDefined("[LVOG93]"))
+				{
+					this.OnSecondaryAddressTextMultiLineChanging (oldValue, value);
+					this.SetSecondaryAddressTextMultiLine (value);
+					this.OnSecondaryAddressTextMultiLineChanged (oldValue, value);
 				}
 			}
 		}
@@ -1440,8 +1488,12 @@ namespace Epsitec.Aider.Entities
 		partial void OnSecondaryPhoneChanged(string oldValue, string newValue);
 		partial void OnCalculatedAgeChanging(int? oldValue, int? newValue);
 		partial void OnCalculatedAgeChanged(int? oldValue, int? newValue);
-		partial void OnUseProfessionalAdressAsDefaultChanging(bool oldValue, bool newValue);
-		partial void OnUseProfessionalAdressAsDefaultChanged(bool oldValue, bool newValue);
+		partial void OnSecondaryAddressTypeChanging(global::Epsitec.Aider.Enumerations.AddressType oldValue, global::Epsitec.Aider.Enumerations.AddressType newValue);
+		partial void OnSecondaryAddressTypeChanged(global::Epsitec.Aider.Enumerations.AddressType oldValue, global::Epsitec.Aider.Enumerations.AddressType newValue);
+		partial void OnSecondaryAddressTextSingleLineChanging(string oldValue, string newValue);
+		partial void OnSecondaryAddressTextSingleLineChanged(string oldValue, string newValue);
+		partial void OnSecondaryAddressTextMultiLineChanging(string oldValue, string newValue);
+		partial void OnSecondaryAddressTextMultiLineChanged(string oldValue, string newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);
@@ -1471,6 +1523,10 @@ namespace Epsitec.Aider.Entities
 		partial void SetMainPhone(string value);
 		partial void GetSecondaryPhone(ref string value);
 		partial void SetSecondaryPhone(string value);
+		partial void GetSecondaryAddressTextSingleLine(ref string value);
+		partial void SetSecondaryAddressTextSingleLine(string value);
+		partial void GetSecondaryAddressTextMultiLine(ref string value);
+		partial void SetSecondaryAddressTextMultiLine(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

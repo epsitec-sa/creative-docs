@@ -3906,14 +3906,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 534);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
+				//	designer:cap/LVOG93
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryAddressTextMultiLine = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 304);
+				//	designer:cap/LVOF93
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryAddressTextSingleLine = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 303);
+				//	designer:cap/LVOE93
+				public static readonly global::Epsitec.Common.Support.Druid SecondaryAddressType = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 302);
 				//	designer:cap/LVOC33
 				public static readonly global::Epsitec.Common.Support.Druid SecondaryEmail = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 108);
 				//	designer:cap/LVOE33
 				public static readonly global::Epsitec.Common.Support.Druid SecondaryPhone = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 110);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
-				//	designer:cap/LVOE93
-				public static readonly global::Epsitec.Common.Support.Druid UseProfessionalAdressAsDefault = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 302);
 				//	designer:cap/LVAVE
 				public static readonly global::Epsitec.Common.Support.Druid Visibility = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 479);
 				//	designer:cap/LVAOB
