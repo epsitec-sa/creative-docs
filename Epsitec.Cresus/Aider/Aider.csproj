@@ -141,6 +141,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController19CancelDerogation.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController18ReactivatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController16RemoveJob.cs" />

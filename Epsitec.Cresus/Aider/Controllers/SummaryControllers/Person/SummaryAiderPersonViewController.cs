@@ -181,6 +181,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.EnableActionMenu<ActionAiderPersonViewController19CancelDerogation> ()
 					.Icon ("Data.AiderGroup.Parish")
 					.Title ("Paroisse")
 					.Text (p => p.ParishGroup.Name);
@@ -205,6 +206,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				wall.AddBrick ()
 					.EnableActionMenu<ActionAiderPersonViewController11Derogate> ()
+					.EnableActionMenu<ActionAiderPersonViewController19CancelDerogation> ()
 					.Icon ("Data.AiderGroup.Parish")
 					.Title ("Paroisse")
 					.Text (TextFormatter.FormatText (buffer));
