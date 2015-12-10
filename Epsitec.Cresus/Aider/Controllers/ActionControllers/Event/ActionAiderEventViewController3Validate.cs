@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,23 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			if (user.CanValidateEvents () || user.IsAdmin ())
 			{
+				// check for existing act for main actors in the registry
+				if ((this.Entity.Type != Enumerations.EventType.Marriage) || 
+					(this.Entity.Type != Enumerations.EventType.CelebrationRegisteredPartners))
+				{
+					var echActors = this.Entity.GetMainActors ()
+									.Where (a => a.IsExternal == false)
+									.Select (a => a.Person)
+									.Where (p => p.IsGovernmentDefined);
+					echActors.ForEach (p =>
+					{
+						if (p.Events.Any (e => e.Type == this.Entity.Type))
+						{
+							throw new BusinessRuleException (string.Format ("Un acte existe dejà pour {0} dans le registre", p.GetFullName ()));
+						}
+					});
+				}
+
 				this.Entity.State     = Enumerations.EventState.Validated;
 				this.Entity.Validator = this.BusinessContext.DataContext.GetLocalEntity (user);
 				this.Entity.GetMainActors ().ForEach ((a) =>
