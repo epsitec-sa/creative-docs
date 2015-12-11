@@ -23,6 +23,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using Epsitec.Aider.BusinessCases;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -774,7 +775,7 @@ namespace Epsitec.Aider.Data.Job
 				//Derogation exist?
 				if (aiderPersonEntity.HasDerogation)
 				{
-					AiderPersonBusinessRules.RemoveDerogation (businessContext, aiderPersonEntity, oldParishGroup);
+					AiderDerogations.RemoveDerogation (businessContext, aiderPersonEntity, oldParishGroup);
 					notifyOldParish = false;
 				}
 

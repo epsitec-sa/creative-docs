@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 namespace Epsitec.Aider.BusinessCases
 {
@@ -68,12 +69,7 @@ namespace Epsitec.Aider.BusinessCases
 
 		public static void RemoveDerogation(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity oldParishGroup,bool enableWarning = true)
 		{
-			//Remove old derogation in
-			AiderDerogations.RemoveDerogationInParticipations (businessContext, oldParishGroup, person);
-
-			//Remove old derogation out
-			var geoParishGroup = person.GetDerogationGeoParishGroup (businessContext);
-			AiderDerogations.RemoveDerogationOutParticipations (businessContext, geoParishGroup, person);
+			AiderDerogations.RemoveAllDerogationsParticipations (businessContext, person);
 
 			if (enableWarning)
 			{
@@ -296,6 +292,13 @@ namespace Epsitec.Aider.BusinessCases
 				return null;
 		}
 
+		private static void RemoveAllDerogationsParticipations(BusinessContext businessContext, AiderPersonEntity person)
+		{
+			AiderGroupEntity.RemoveParticipations (businessContext, person.GetParticipations ().Where (p => 
+				p.Group.GroupDef.Classification == GroupClassification.DerogationIn
+				|| p.Group.GroupDef.Classification == GroupClassification.DerogationOut).ToList ()
+			);
+		}
 		private static void RemoveDerogationInParticipations(BusinessContext businessContext, AiderGroupEntity parishGroup, AiderPersonEntity person)
 		{
 			var oldDerogationInGroup = parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
