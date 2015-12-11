@@ -280,7 +280,7 @@ namespace Epsitec.Aider.BusinessCases
 		{
 			if (parishGroup.Subgroups.Any ())
 			{
-				return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
+				return parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
 			}
 			else
 				return null;
@@ -290,7 +290,7 @@ namespace Epsitec.Aider.BusinessCases
 		{
 			if (parishGroup.Subgroups.Any ())
 			{
-				return parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
+				return parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
 			}
 			else
 				return null;
@@ -298,7 +298,7 @@ namespace Epsitec.Aider.BusinessCases
 
 		private static void RemoveDerogationInParticipations(BusinessContext businessContext, AiderGroupEntity parishGroup, AiderPersonEntity person)
 		{
-			var oldDerogationInGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
+			var oldDerogationInGroup = parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationIn);
 			if (oldDerogationInGroup != null)
 			{
 				AiderGroupEntity.RemoveParticipations (businessContext, oldDerogationInGroup.FindParticipationsByGroup (businessContext, person, oldDerogationInGroup));
@@ -307,7 +307,7 @@ namespace Epsitec.Aider.BusinessCases
 
 		private static void RemoveDerogationOutParticipations(BusinessContext businessContext, AiderGroupEntity parishGroup, AiderPersonEntity person)
 		{
-			var oldDerogationOutGroup = parishGroup.Subgroups.Single (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
+			var oldDerogationOutGroup = parishGroup.Subgroups.SingleOrDefault (g => g.GroupDef.Classification == GroupClassification.DerogationOut);
 			if (oldDerogationOutGroup != null)
 			{
 				AiderGroupEntity.RemoveParticipations (businessContext, oldDerogationOutGroup.FindParticipationsByGroup (businessContext, person, oldDerogationOutGroup));
