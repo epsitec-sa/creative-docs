@@ -72,6 +72,14 @@ AiderOfficeTask = [LVOD83]
       <!--
         Person data
       -->
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVA5E].[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />
@@ -749,6 +757,14 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderMailingParticipant:[LVON03].[LVA5E].[LVAIH]" title="E-mails" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1073,6 +1089,14 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVALK].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVALK].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployeeJob:[LVA9J].[LVALK].[LVA5E].[LVAIH]" title="E-mails" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1324,6 +1348,14 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVALK].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVALK].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderReferee:[LVAEJ].[LVALK].[LVA5E].[LVAIH]" title="E-mails" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1547,6 +1579,14 @@ AiderOfficeTask = [LVOD83]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVALK].[LVG442]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVALK].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEmployee:[LVALK].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -1847,6 +1887,14 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAIH]" title="E-mails" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
@@ -1881,6 +1929,14 @@ AiderOfficeTask = [LVOD83]
       <!--
         Person data
       -->
+       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOF93]" title="Addresse secondaire (une ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVOG93]" title="Addresse secondaire (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderGroupParticipant:[LVAIG].[LVA5E].[LVAU1].[LVA2]" title="Nom de famille" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Hidden" />

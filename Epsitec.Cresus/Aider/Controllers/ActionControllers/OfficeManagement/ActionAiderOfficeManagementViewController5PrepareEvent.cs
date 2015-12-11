@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			AiderTownEntity town,
 			Date celebrationDate)
 		{
-			if (type == null)
+			if (type == EventType.None)
 			{
 				throw new BusinessRuleException ("Il faut choisir un registre");
 			}

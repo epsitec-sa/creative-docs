@@ -1087,6 +1087,34 @@ namespace Epsitec.Aider.Entities
 				.AsReadOnlyCollection ();
 		}
 
+		partial void GetSecondaryAddressTextSingleLine(ref string value)
+		{
+			this.GetSecondaryAddressTextMultiLine (ref value);
+
+			value = value.Replace ("\n", ", ");
+		}
+
+		partial void SetSecondaryAddressTextSingleLine(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
+		partial void GetSecondaryAddressTextMultiLine(ref string value)
+		{
+			var contact = this.GetSecondaryAddressContact ();
+			if (contact.IsNull ())
+			{
+				value = "";
+				return;
+			}
+			value = contact.GetAddressLabelText ().ToSimpleText ();
+		}
+
+		partial void SetSecondaryAddressTextMultiLine(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
 		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
 		{
 			value = this.GetWarnings ().AsReadOnlyCollection ();
@@ -1112,18 +1140,20 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotImplementedException ();
 		}
 
+		private AiderContactEntity GetSecondaryAddressContact()
+		{
+			return this.AdditionalAddresses.Where (x => x.AddressType == this.SecondaryAddressType && x.HasFullAddress ()).FirstOrDefault ();
+		}
 
 		private AiderAddressEntity GetAddress()
 		{
 			//	A person's address is the one which was explicitely defined to be the default
 			//	(AddressType = Default), or the first household address, or any fully defined
 			//	available address for the person if everything else failed:
-
 			var defaultAddress = 
 				this.AdditionalAddresses.Where (x => x.AddressType == AddressType.Default).Select (x => x.Address).FirstOrDefault () ??
 				this.Households.Select (x => x.Address).FirstOrDefault () ??
 				this.AdditionalAddresses.Where (x => x.HasFullAddress ()).Select (x => x.Address).FirstOrDefault ();
-
 			return defaultAddress;
 		}
 
