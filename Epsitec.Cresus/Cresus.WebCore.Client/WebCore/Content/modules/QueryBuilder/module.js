@@ -67,6 +67,12 @@ queryBuilder.directive('queryBuilder', ['$compile', 'webCoreServices',
           }, {
             name: 'plus grand que',
             value: 'gt'
+          }, {
+              name: 'pair',
+              value: 'even'
+          }, {
+              name: 'impair',
+              value: 'odd'
           }];
 
           // prefetch all enum values
