@@ -29,7 +29,13 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			if (backupGroup != null)
 			{
 				var participation =  new ParticipationData (this.Entity.Person);
-				AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, backupGroup, participation, Common.Types.Date.Today);
+
+				// create only if not already present
+				if (! (this.Entity.Person.GetParticipations ().Any (p => p.Group == backupGroup)))
+				{
+					AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, backupGroup, participation, Common.Types.Date.Today);
+				}
+				
 			}
 
 			var warning = this.Entity;
