@@ -30,8 +30,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				var participation =  new ParticipationData (this.Entity.Person);
 
-				// create only if not already present
-				if (! (this.Entity.Person.GetParticipations ().Any (p => p.Group == backupGroup)))
+				// create only if person is not already present in group and is alive
+				if (! (this.Entity.Person.GetParticipations ().Any (p => p.Group == backupGroup)) &&
+					(this.Entity.Person.IsAlive))
 				{
 					AiderGroupParticipantEntity.StartParticipation (this.BusinessContext, backupGroup, participation, Common.Types.Date.Today);
 				}
