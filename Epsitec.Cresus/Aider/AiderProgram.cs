@@ -391,7 +391,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-updateparishname")) //-updateparishname -current:"Morge" -new:"Morges – Echichens"
+				if (args.Contains ("-updateparishname")) //-updateparishname -current:"Morge" -new:"Morges – Echichens" -pla:false
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.UpdateParish (args));
 					return;
@@ -592,7 +592,8 @@ namespace Epsitec.Aider
 			{
 				var currentName = AiderProgram.GetString (args, "-current:", mandatory: true);
 				var newName     = AiderProgram.GetString (args, "-new:", mandatory: true);
-				UpdateParishName.Update (coreData, currentName, newName);
+				var isPLA       = AiderProgram.GetBool (args, "-pla:", mandatory: true) ?? false;
+				UpdateParishName.Update (coreData, currentName, newName, isPLA);
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});

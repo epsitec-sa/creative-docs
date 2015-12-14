@@ -21,23 +21,29 @@ namespace Epsitec.Aider.Data.Job
 {
 	internal static class UpdateParishName
 	{
-		public static void Update(CoreData coreData, string currentName, string newName)
+		public static void Update(CoreData coreData, string currentName, string newName, bool isPLA)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
 				Logger.LogToConsole ("Update Parish Name...");
-				var repo = ParishAddressRepository.Current;
-				if (ParishAssigner.GetParishGroupName (repo, newName) == "Paroisse inconnue (" + newName + ")")
-				{
-					throw new BusinessRuleException ("le nouveau nom n'a pas été changé dans le fichier de correspondance externe à AIDER");
-				}
-				if (ParishAssigner.GetParishGroupName (repo, currentName) != "Paroisse inconnue (" + currentName + ")")
-				{
-					throw new BusinessRuleException ("le nom actuel fournit est encore dans le fichier de correspondance !");
-				}
+				var currentParishGroupName = currentName;
+				var newParishGroupName     = newName;
 
-				var currentParishGroupName = "Paroisse de " + currentName;
-				var newParishGroupName     = ParishAssigner.GetParishGroupName (repo, newName);
+				if (!isPLA)
+				{
+					var repo = ParishAddressRepository.Current;
+					if (ParishAssigner.GetParishGroupName (repo, newName) == "Paroisse inconnue (" + newName + ")")
+					{
+						throw new BusinessRuleException ("le nouveau nom n'a pas été changé dans le fichier de correspondance externe à AIDER");
+					}
+					if (ParishAssigner.GetParishGroupName (repo, currentName) != "Paroisse inconnue (" + currentName + ")")
+					{
+						throw new BusinessRuleException ("le nom actuel fournit est encore dans le fichier de correspondance !");
+					}
+
+					currentParishGroupName = "Paroisse de " + currentName;
+					newParishGroupName     = ParishAssigner.GetParishGroupName (repo, newName);
+				}
 
 				var groupToRename = ParishAssigner.FindGroup (businessContext, currentParishGroupName, Enumerations.GroupClassification.Parish);
 				groupToRename.Name = newParishGroupName;
