@@ -51,9 +51,8 @@ namespace Epsitec.Aider.Rules
 			AiderPersonBusinessRules.UpdatePersonOfficialName (person);
 			AiderPersonBusinessRules.UpdatePersonSex (person);
 			AiderPersonBusinessRules.UpdateVisibility (person);
-
 			AiderPersonBusinessRules.VerifyParish (context, person);
-			
+		
 			person.RefreshCache ();
 		}
 
@@ -195,6 +194,13 @@ namespace Epsitec.Aider.Rules
 		{
 			if (person.IsDeceased)
 			{
+				return;
+			}
+
+			// reassign non-protestant -> will finally ends in NOPA. group
+			if (person.Confession != PersonConfession.Protestant)
+			{
+				AiderPersonBusinessRules.AssignParish (context, person);
 				return;
 			}
 

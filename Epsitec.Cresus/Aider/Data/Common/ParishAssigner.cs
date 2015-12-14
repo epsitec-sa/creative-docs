@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Data.Common
 		{
 			var parishGroup = this.FindParishGroup (person);
 
-			if (parishGroup.IsNull ())
+			if (parishGroup.IsNull () || person.Confession != PersonConfession.Protestant)
 			{
 				this.AssignToNoParishGroup (person);
 				this.UpdateSubscriptionAndRefreshCache (person);
