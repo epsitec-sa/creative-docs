@@ -30,9 +30,9 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			var categories = this.GetCategories ();
 
 			action
-				.Title ("Création d'un publipostage")
+				.Title ("Création d'un mailing")
 				.Field<string> ()
-					.Title ("Intitulé du publipostage")
+					.Title ("Intitulé du mailing")
 				.End ()
 				.Field<string> ()
 					.Title ("Description")

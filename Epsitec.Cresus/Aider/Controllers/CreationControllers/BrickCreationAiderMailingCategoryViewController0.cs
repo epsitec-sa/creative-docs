@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			AiderGroupEntity defaultGroup = null;
 
 			action
-				.Title ("Création d'une catégorie de publipostage")
+				.Title ("Création d'une catégorie de mailing")
 				.Field<string> ()
 					.Title ("Nom de la catégorie")
 				.End ()

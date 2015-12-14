@@ -43,7 +43,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick ()
 				.Icon ("Data.AiderMailing")
-				.Title ("Détails du publipostage")
+				.Title ("Détails du mailing")
 				.Text (x => "Modifier " + x.GetCompactSummary ())
 				.WithSpecialController (typeof (EditionAiderMailingViewController1Mailing));
 

@@ -164,7 +164,7 @@ function() {
       {
         var button = {};
           button.xtype = 'button';
-          button.text = 'Ajouter au publipostage';
+          button.text = 'Ajouter au mailing';
           button.width = 400;
           button.width = 200;
           button.cls = 'tile-button';

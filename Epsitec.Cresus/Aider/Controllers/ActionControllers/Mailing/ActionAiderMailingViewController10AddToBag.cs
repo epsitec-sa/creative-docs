@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute()
 		{
 			var mailing = this.Entity;
-			EntityBag.Add (mailing, "Publipostage");
+			EntityBag.Add (mailing, "Mailing");
 		}
 	}
 }

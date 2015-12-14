@@ -8763,7 +8763,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	Catégorie du publipostage
+		///	Catégorie du mailing
 		///	designer:fld/LVOA03/LVO313
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVO313]")]
@@ -9329,7 +9329,7 @@ namespace Epsitec.Aider.Entities
 	public partial class AiderMailingCategoryEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	Nom de la catégorie du publipostage
+		///	Nom de la catégorie du mailing
 		///	designer:fld/LVO013/LVO113
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVO113]")]

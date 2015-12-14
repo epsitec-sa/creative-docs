@@ -24,8 +24,8 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> action)
 		{
 			action
-				.Title ("Détruire le publipostage")
-				.Text ("Êtes vous sûr de vouloir détruire ce publipostage ?")
+				.Title ("Détruire le mailing")
+				.Text ("Êtes vous sûr de vouloir détruire ce mailing ?")
 				.Field<string> ()
 					.Title ("Intitulé")
 					.InitialValue (x => x.Name)
@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 			
 			if (this.Entity.CreatedBy != aiderUser.DisplayName && !aiderUser.CanRemoveMailing())
 			{
-				var message = "Vous ne pouvez pas détruire le publipostage d'un autre utilisateur";
+				var message = "Vous ne pouvez pas détruire le mailing d'un autre utilisateur";
 
 				throw new BusinessRuleException (this.Entity, message);
 			}
