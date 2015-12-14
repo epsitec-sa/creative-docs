@@ -66,7 +66,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		protected override void GetForm(ActionBrick<AiderGroupEntity, SimpleBrick<AiderGroupEntity>> form)
 		{
 			var currentUser = this.BusinessContext.GetLocalEntity(AiderUserManager.Current.AuthenticatedUser);
-
+			var favorites   = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
 			form
 				.Title ("Production d'un extrait officiel")
 				.Field<string> ()
@@ -80,6 +80,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				.Field<AiderTownEntity> ()
 					.Title ("Lieu de l'assemblée")
 					.InitialValue (currentUser.Office.OfficeMainContact.Address.Town)
+					.WithFavorites (favorites)
 				.End ()
 			.End ();
 		}
