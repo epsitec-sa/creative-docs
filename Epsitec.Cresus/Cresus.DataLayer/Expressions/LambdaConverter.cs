@@ -515,6 +515,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			{
 				expression = this.VisitMethodCallCompareTo (node);
 			}
+			else if (method == SqlMethods.IsEvenMethodInfo)
+			{
+				var entityField = (EntityField) this.VisitAndPop (node.Arguments[0]);
+				expression = this.GetEvenTest (entityField);
+			}
+			else if (method == SqlMethods.IsOddMethodInfo)
+			{
+				var entityField = (EntityField) this.VisitAndPop (node.Arguments[0]);
+				expression = this.GetOddTest (entityField);
+			}
 			else if (method == SqlMethods.IsInValueSetMethodInfo)
 			{
 				expression = this.VisitMethodCallIsInValueSet (node);
@@ -678,6 +688,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 				return new BinaryComparison (valueField, BinaryComparator.IsEqual, constant);
 			}
+		}
+
+		private DataExpression GetEvenTest(EntityField valueField)
+		{
+			return new UnaryComparison (valueField, UnaryComparator.IsEven);
+		}
+
+		private DataExpression GetOddTest(EntityField valueField)
+		{
+			return new UnaryComparison (valueField, UnaryComparator.IsOdd);
 		}
 
 

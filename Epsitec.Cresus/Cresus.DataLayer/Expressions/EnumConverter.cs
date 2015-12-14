@@ -27,6 +27,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 					return SqlFunctionCode.CompareIsNull;
 				case UnaryComparator.IsNotNull:
 					return SqlFunctionCode.CompareIsNotNull;
+				case UnaryComparator.IsEven:
+					return SqlFunctionCode.Even;
+				case UnaryComparator.IsOdd:
+					return SqlFunctionCode.Odd;
 				default:
 					throw new System.NotSupportedException ("Conversion of '" + unaryComparator + "' is not supported");
 			}
