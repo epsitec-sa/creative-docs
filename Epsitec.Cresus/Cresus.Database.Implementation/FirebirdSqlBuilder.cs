@@ -1297,6 +1297,18 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (")");
 					break;
 
+				case SqlFunctionCode.Even:
+					this.Append ("MOD(");
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (", 2) = 0");
+					break;
+
+				case SqlFunctionCode.Odd:
+					this.Append ("MOD(");
+					this.Append (sqlFunction.A, onlyAcceptQualifiedNames);
+					this.Append (", 2) = 1");
+					break;
+
 				default:
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} not supported", sqlFunction.Code));
 			}
