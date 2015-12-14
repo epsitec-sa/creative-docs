@@ -93,6 +93,8 @@ namespace Epsitec.Cresus.Database
 
 					case SqlFunctionCode.CompareIsNull:
 					case SqlFunctionCode.CompareIsNotNull:
+					case SqlFunctionCode.Even:
+					case SqlFunctionCode.Odd:
 						return 1;
 
 					case SqlFunctionCode.CompareLike:
