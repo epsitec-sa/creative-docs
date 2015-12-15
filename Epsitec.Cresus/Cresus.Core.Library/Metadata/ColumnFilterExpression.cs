@@ -78,6 +78,11 @@ namespace Epsitec.Cresus.Core.Metadata
 
 				case ColumnFilterComparisonCode.LessThanOrEqual:
 					return Expression.LessThanOrEqual (parameter, expression);
+
+				case ColumnFilterComparisonCode.Even:
+					return Expression.Call (SqlMethods.IsEvenMethodInfo, parameter);
+				case ColumnFilterComparisonCode.Odd:
+					return Expression.Call (SqlMethods.IsOddMethodInfo, parameter);
 				
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", code.GetQualifiedName ()));

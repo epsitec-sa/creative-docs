@@ -29,5 +29,8 @@ namespace Epsitec.Cresus.Core.Metadata
 		StartsWithEscaped,
 		NotStartsWith,
 		NotStartsWithEscaped,
+
+		Even,									// WHERE MOD (x, 2) = 0
+		Odd,									// WHERE MOD (x, 2) = 1
 	}
 }

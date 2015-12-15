@@ -21,6 +21,16 @@
 		/// </summary>
 		IsNotNull,
 
+		/// <summary>
+		///  The comparison that checks that the value is even
+		/// </summary>
+		IsEven,
+
+		/// <summary>
+		///  The comparison that checks that the value is odd.
+		/// </summary>
+		IsOdd,
+
 
 	}
 

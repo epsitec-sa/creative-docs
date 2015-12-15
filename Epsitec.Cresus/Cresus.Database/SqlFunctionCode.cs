@@ -45,6 +45,9 @@ namespace Epsitec.Cresus.Database
 		Upper,									//	UPPER(a)
 		Cast,									//	CAST(a AS b)
 
+		Even,									// MOD(a, 2) = 0
+		Odd,									// MOD(a, 2) = 1
+
 		//	Equivalents :
 
 		CompareNotLessThan = CompareGreaterThanOrEqual,

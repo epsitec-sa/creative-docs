@@ -21,7 +21,12 @@
                 <input parse-date="" style="margin-left: 5px" type="date" ng-model="rule.value" class="form-control input-xs" placeholder="Entrer une date..."/>
               </span>
               <span ng-switch-when="int">
-                <input style="margin-left: 5px" type="number" ng-model="rule.value" class="form-control input-xs" placeholder="Entrer un nombre..."/>
+                <span ng-if="(rule.comparison != 'even') && (rule.comparison != 'odd')">
+                  <input ng-show= style="margin-left: 5px" type="number" ng-model="rule.value" class="form-control input-xs" placeholder="Entrer un nombre..."/>
+                </span>
+                <span nf-if="(rule.comparison == 'even') || (rule.comparison == 'odd')">
+                  <input ng-init="rule.value=1" ng-model="rule.value" type="hidden"/>
+                </span>
               </span>
               <span ng-switch-when="list">
                 <select ng-options="t.id as t.text for t in enum[fieldEnumMap[rule.field]]" ng-model="rule.selectedValue" ng-change="pushSelectedValue(rule)"  class="form-control input-xs"></select>

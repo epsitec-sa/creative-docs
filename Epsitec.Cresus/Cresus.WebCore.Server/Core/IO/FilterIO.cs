@@ -270,6 +270,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					return ColumnFilterComparisonCode.GreaterThan;
 				case "lt":
 					return ColumnFilterComparisonCode.LessThan;
+				case "even":
+					return ColumnFilterComparisonCode.Even;
+				case "odd":
+					return ColumnFilterComparisonCode.Odd;
 				default:
 					throw new NotImplementedException ();
 			}

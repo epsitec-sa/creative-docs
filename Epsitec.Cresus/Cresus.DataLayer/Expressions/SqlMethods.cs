@@ -35,6 +35,21 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			}
 		}
 
+		public static MethodInfo IsEvenMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isEvenMethodInfo;
+			}
+		}
+
+		public static MethodInfo IsOddMethodInfo
+		{
+			get
+			{
+				return SqlMethods.isOddMethodInfo;
+			}
+		}
 
 		public static MethodInfo LikeMethodInfo
 		{
@@ -172,6 +187,17 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			throw new NotImplementedException ();
 		}
 
+		public static bool IsEven(int? value)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public static bool IsOdd(int? value)
+		{
+			throw new NotImplementedException ();
+		}
+
+
 
 		/// <summary>
 		/// This method is used to convert between values of two different type. SQL is not type
@@ -197,6 +223,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		static SqlMethods()
 		{
 			SqlMethods.compareToMethodInfo = typeof (SqlMethods).GetMethod ("CompareTo", new Type[] { typeof (string), typeof (string) });
+			SqlMethods.isEvenMethodInfo = typeof (SqlMethods).GetMethod ("IsEven", new Type[] { typeof (int?) });
+			SqlMethods.isOddMethodInfo = typeof (SqlMethods).GetMethod ("IsOdd", new Type[] { typeof (int?) });
 			SqlMethods.likeMethodInfo = typeof (SqlMethods).GetMethod ("Like", new Type[] { typeof (string), typeof (string) });
 			SqlMethods.escapedLikeMethodInfo = typeof (SqlMethods).GetMethod ("EscapedLike", new Type[] { typeof (string), typeof (string) });
 			SqlMethods.isInValueSetMethodInfo = typeof (SqlMethods).GetMethod ("IsInSet", new Type[] { typeof (object), typeof (IEnumerable<object>) });
@@ -208,6 +236,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		private static readonly MethodInfo compareToMethodInfo;
+		private static readonly MethodInfo isEvenMethodInfo;
+		private static readonly MethodInfo isOddMethodInfo;
 		private static readonly MethodInfo likeMethodInfo;
 		private static readonly MethodInfo escapedLikeMethodInfo;
 		private static readonly MethodInfo isInValueSetMethodInfo;
