@@ -81,7 +81,7 @@ namespace Epsitec.Aider.Data.Common
 
 		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
-			const int size = 1000;
+			const int size = 10000;
 
 			for (int i = 0; ; i += size)
 			{
