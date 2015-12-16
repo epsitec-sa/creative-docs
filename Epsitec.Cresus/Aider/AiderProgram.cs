@@ -229,7 +229,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-calculateage"))
+				if (args.Contains ("-calculateage")) // must be run 1 times/year
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.CalculateAge (args));
 					return;
@@ -373,7 +373,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-cleanhouseholds")) //-cleanhouseholds -echfile:s:\eerv\last.xml 
+				if (args.Contains ("-cleanhouseholds")) //-cleanhouseholds
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanHouseholds (args));
 					return;
