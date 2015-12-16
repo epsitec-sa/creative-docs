@@ -697,6 +697,7 @@ namespace Epsitec.Aider.Entities
 			return this.GetContacts ()
 				.Where (x => x.HouseholdRole == role)
 				.Select (x => x.Person)
+				.Where (x => x.Visibility == PersonVisibilityStatus.Default && x.IsAlive)
 				.ToList ();
 		}
 
