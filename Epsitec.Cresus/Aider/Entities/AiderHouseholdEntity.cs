@@ -387,7 +387,12 @@ namespace Epsitec.Aider.Entities
 
 		public static void DeleteEmptyHouseholds(BusinessContext businessContext, params AiderHouseholdEntity[] households)
 		{
-			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households, keepChildrenOnly: true);
+			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households, keepChildrenOnly: false);
+		}
+
+		public static void DeleteEmptyHouseholds(BusinessContext businessContext, IEnumerable<AiderHouseholdEntity> households)
+		{
+			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households, keepChildrenOnly: false);
 		}
 
 		public static void DeleteEmptyHouseholds(BusinessContext businessContext, IEnumerable<AiderHouseholdEntity> households, bool keepChildrenOnly = false)
