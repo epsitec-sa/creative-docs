@@ -20,6 +20,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Properties;
 using Epsitec.Aider.BusinessCases;
+using Epsitec.Aider.Data.Common;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -28,61 +29,50 @@ namespace Epsitec.Aider.Data.Job
 	/// </summary>
 	internal static class HouseholdsFix
 	{
-		/// <summary>
-		///  Create exit process for each hidden persons with household
-		/// </summary>
-		/// <param name="coreData"></param>
-		public static void HiddenPersonWithHousehold(CoreData coreData)
+		public static void PerformBatchFix(CoreData coreData)
 		{
-			var personExample = new AiderPersonEntity ()
+			Logger.LogToConsole ("//BATCH FIXES STARTED");
+			AiderEnumerator.Execute (coreData, HouseholdsFix.FixAiderHouseholds);
+		}
+
+		private static void FixAiderHouseholds
+		(
+			BusinessContext businessContext,
+			IEnumerable<AiderHouseholdEntity> households
+		)
+		{
+			Logger.LogToConsole ("//Household to delete");
+			var householdsToDelete = households.Where (h => h.Members.Count == 0);
+			Logger.LogToConsole ("//" + householdsToDelete.Count () + " Household(s) to delete");
+			householdsToDelete.ForEach (h => AiderHouseholdEntity.Delete (businessContext, h));
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+
+			Logger.LogToConsole ("//Adresses repair");
+			var householdToRepair = households.Except (householdsToDelete).Where (h => h.Address.Street.IsNullOrWhiteSpace ());
+			var fixedStreet=0;
+			Logger.LogToConsole ("//" + householdToRepair.Count () + " Adresse(s) to check");
+			householdToRepair.ForEach (h =>
 			{
-				Visibility = Enumerations.PersonVisibilityStatus.Hidden
-			};
-			Logger.LogToConsole ("//////////////////////////////////////");
-			Logger.LogToConsole ("////:::CHECK HIDDEN PERSON::://///");
-			using (var businessContext = new BusinessContext (coreData, false))
-			{
-				var totalTask=0;
-				businessContext.GetByExample<AiderPersonEntity> (personExample).ForEach (p =>
+				var echMember = h.Members.FirstOrDefault (m => m.IsGovernmentDefined);
+				if (echMember != null)
 				{
-					Logger.LogToConsole ("//: " + p.DisplayName);
-					
-					if (p.IsDeceased)
+					if (!echMember.eCH_Person.ReportedPerson1.Address.Street.IsNullOrWhiteSpace ())
 					{
-						Logger.LogToConsole ("skip (dead person)");
-						return;
+						EChDataHelpers.UpdateAiderHouseholdAddress (businessContext, h, echMember.eCH_Person.ReportedPerson1);
 					}
-					if (p.Employee.IsNotNull ())
+					else
 					{
-						Logger.LogToConsole ("skip (employee)");
-						return;
-					}
-					if (p.MainContact.IsNull ())
-					{
-						Logger.LogToConsole ("skip (no contact)");
-						return;
+						EChDataHelpers.UpdateAiderHouseholdAddress (businessContext, h, echMember.eCH_Person.ReportedPerson2);
 					}
 
-					Logger.LogToConsole ("Start process...");
-					var process = AiderPersonsProcess.StartExitProcess (businessContext, p, Enumerations.OfficeProcessType.PersonsOutputProcess);
-					switch (process.Status)
+					if (!h.Address.Street.IsNullOrWhiteSpace ())
 					{
-						case Enumerations.OfficeProcessStatus.Ended:
-							Logger.LogToConsole ("Process Ended!");
-							break;
-						default:
-							var tasks = process.Tasks.Count ();
-							totalTask += tasks;
-							Logger.LogToConsole (tasks + " task(s) created");
-							break;
+						fixedStreet++;
 					}
-					Logger.LogToConsole ("//////////totalTask: " + totalTask + "/////////////////");
-				});
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
-			}
-
-
+				}
+			});
+			Logger.LogToConsole ("// " + fixedStreet + " repaired");
+			businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 		}
 
 		public static void EchHouseholdsQuality(CoreData coreData, string currentEchFile)
