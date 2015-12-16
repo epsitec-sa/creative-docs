@@ -397,12 +397,6 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-hiddenpersonscheck")) //-admin2muni
-				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.HiddenPersonsCheck (args));
-					return;
-				}
-
 				
 			}
 
@@ -598,17 +592,6 @@ namespace Epsitec.Aider
 				System.Console.ReadLine ();
 			});
 		}
-
-		private static void HiddenPersonsCheck(string[] args)
-		{
-			AiderProgram.RunWithCoreData (coreData =>
-			{
-				HouseholdsFix.HiddenPersonWithHousehold (coreData);
-				System.Console.WriteLine ("Press RETURN to quit");
-				System.Console.ReadLine ();
-			});
-		}
-		
 
 		private static void RunEervMainImportation(string[] args)
 		{
