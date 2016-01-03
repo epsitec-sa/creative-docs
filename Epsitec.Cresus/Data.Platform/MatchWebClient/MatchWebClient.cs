@@ -93,23 +93,31 @@ namespace Epsitec.Data.Platform
 			var swissPostMeta = MatchWebClient.GetLocalMetaDataPath ();
 			if (System.IO.File.Exists (swissPostMeta))
 			{
-				var currentRelease = MatchWebClient.ReadLocalMetaData ();
-				var lastRelease     = this.GetMatchSortFileReleaseDate ();
-				int result = System.DateTime.Compare (currentRelease, lastRelease);
-				if (result < 0)
+				try
 				{
-					System.Diagnostics.Trace.WriteLine ("Outdated local Mat[CH] file detected");
-					return true;
+					var currentRelease = MatchWebClient.ReadLocalMetaData ();
+					var lastRelease    = this.GetMatchSortFileReleaseDate ();
+					int result = System.DateTime.Compare (currentRelease, lastRelease);
+					if (result < 0)
+					{
+						System.Diagnostics.Trace.WriteLine ("Outdated local MAT[CH] file detected");
+						return true;
+					}
+					else
+					{
+						System.Diagnostics.Trace.WriteLine ("No update required");
+						return false;
+					}
 				}
-				else
+				catch
 				{
-					System.Diagnostics.Trace.WriteLine ("No update required");
+					System.Diagnostics.Trace.WriteLine ("Cannot update - reverting back to local MAT[CH] file");
 					return false;
 				}
 			}
 			else
 			{
-				System.Diagnostics.Trace.WriteLine ("No local Mat[CH] file found, download required");
+				System.Diagnostics.Trace.WriteLine ("No local MAT[CH] file found, download required");
 				return true;
 			}
 		}
@@ -144,7 +152,7 @@ namespace Epsitec.Data.Platform
 
 		private string DoMatchLoginRequest()
 		{
-			System.Diagnostics.Trace.WriteLine ("Login to Mat[CH] Downloadcenter...");
+			System.Diagnostics.Trace.WriteLine ("Login to MAT[CH] Downloadcenter...");
 			var hiddenFieldValue = this.FindHiddenFormField ();
 			var values = this.BuildLoginFormPostData (hiddenFieldValue);
 			var response = this.UploadValues ("https://match.post.ch/downloadCenter?login=match", values);
@@ -175,7 +183,7 @@ namespace Epsitec.Data.Platform
 		private string DownloadFile(string uri)
 		{
 			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
-			System.Diagnostics.Trace.WriteLine ("Downloading Mat[CH]Sort file...");
+			System.Diagnostics.Trace.WriteLine ("Downloading MAT[CH]Sort file...");
 
 			using (var stream = this.OpenRead (uri))
 			{
