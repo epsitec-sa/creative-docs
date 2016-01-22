@@ -194,7 +194,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			using (ISetViewController controller = this.GetController (businessContext, parameters))
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, controller, parameters))
 			{
-				return DatabaseModule.Export (businessContext, caches, extractor, this.Request.Query);
+                var writer = this.GetEntityWriter (businessContext, caches, extractor, this.Request.Query);
+                return DatabaseModule.Export (businessContext, caches, extractor, writer, this.Request.Query);
 			}
 		}
 

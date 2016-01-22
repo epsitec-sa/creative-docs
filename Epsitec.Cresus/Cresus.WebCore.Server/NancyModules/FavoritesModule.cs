@@ -19,28 +19,38 @@ using System;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
-	using Database = Core.Databases.Database;
-
-	/// <summary>
-	/// This module is used to retrieve data from the favorites cache, in a similar way as it is
-	/// done in the DatabaseModule.
-	/// </summary>
-	public class FavoritesModule : AbstractAuthenticatedModule
+    using Database = Core.Databases.Database;
+    using Epsitec.Cresus.WebCore.Server.Processors;
+    using System.Collections.Concurrent;
+    using Cresus.Core.Resolvers;
+    using Core.IO;
+    using Common.Support;
+    using System.Linq;
+    using System.Collections.Generic;/// <summary>
+                                     /// This module is used to retrieve data from the favorites cache, in a similar way as it is
+                                     /// done in the DatabaseModule.
+                                     /// </summary>
+    public class FavoritesModule : AbstractAuthenticatedModule
 	{
 		public FavoritesModule(CoreServer coreServer)
 			: base (coreServer, "/favorites")
 		{
-			// Gets the data of the entities in a favorite cache entry.
-			// URL arguments:
-			// - name:    The id of the favorite entry, as used by the FavoritesCache class.
-			// GET arguments:
-			// - start:   The index of the first entity to return, as an integer.
-			// - limit:   The maximum number of entities to return, as an integer.
-			// - columns: The id of the columns whose data to return, in the format used by the
-			//            ColumnIO class.
-			// - sort:    The sort clauses, in the format used by SorterIO class.
-			// - filter:  The filters, in the format used by FilterIO class.
-			Get["/get/{name}"] = p =>
+
+            var instances = InterfaceImplementationResolver<IReportingProcessor>.CreateInstances(coreServer);
+            var processors = instances.Select(x => new KeyValuePair<string, IReportingProcessor>(x.Name, x));
+            this.processors = new System.Collections.Concurrent.ConcurrentDictionary<string, IReportingProcessor>(processors);
+
+            // Gets the data of the entities in a favorite cache entry.
+            // URL arguments:
+            // - name:    The id of the favorite entry, as used by the FavoritesCache class.
+            // GET arguments:
+            // - start:   The index of the first entity to return, as an integer.
+            // - limit:   The maximum number of entities to return, as an integer.
+            // - columns: The id of the columns whose data to return, in the format used by the
+            //            ColumnIO class.
+            // - sort:    The sort clauses, in the format used by SorterIO class.
+            // - filter:  The filters, in the format used by FilterIO class.
+            Get["/get/{name}"] = p =>
 				this.Execute (context => this.GetEntities (context, p));
 
 			// Exports the entities of a favorite cache entry to a file.
@@ -86,7 +96,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
-				return DatabaseModule.Export (businessContext, caches, extractor, this.Request.Query);
+                var writer = this.GetEntityWriter (businessContext, caches, extractor, this.Request.Query);
+                return DatabaseModule.Export (businessContext, caches, extractor, writer, this.Request.Query);
 			}
 		}
 
@@ -123,5 +134,77 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				databaseId, rawSorters, rawFilters, rawQuery, customizer
 			);
 		}
-	}
+
+        private EntityWriter GetEntityWriter(BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
+        {
+            string type = query.type;
+
+            switch (type)
+            {
+                case "array":
+                    return this.GetArrayWriter(caches, extractor, query);
+
+                case "label":
+                    return this.GetLabelWriter(extractor, query);
+
+                case "report":
+                    return this.GetReportWriter(context, extractor, query);
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private EntityWriter GetArrayWriter(Caches caches, EntityExtractor extractor, dynamic query)
+        {
+            string rawColumns = query.columns;
+
+            var metaData = extractor.Metadata;
+            var accessor = extractor.Accessor;
+
+            var properties = caches.PropertyAccessorCache;
+            var format = new CsvArrayFormat();
+            var columns = ColumnIO.ParseColumns(caches, extractor.Database, rawColumns);
+
+            return new ArrayWriter(properties, metaData, columns, accessor, format)
+            {
+                RemoveDuplicates = true
+            };
+        }
+
+        private EntityWriter GetLabelWriter(EntityExtractor extractor, dynamic query)
+        {
+            string rawLayout = query.layout;
+            int rawTextFactoryId = query.text;
+
+            var metaData = extractor.Metadata;
+            var accessor = extractor.Accessor;
+
+            var layout = (LabelLayout)Enum.Parse(typeof(LabelLayout), rawLayout);
+            var entitytype = metaData.EntityTableMetadata.EntityType;
+            var textFactory = LabelTextFactoryResolver.Resolve(entitytype, rawTextFactoryId);
+
+            return new LabelWriter(metaData, accessor, textFactory, layout)
+            {
+                RemoveDuplicates = true
+            };
+        }
+
+        private EntityWriter GetReportWriter(BusinessContext context, EntityExtractor extractor, dynamic query)
+        {
+            var metaData = extractor.Metadata;
+            var accessor = extractor.Accessor;
+            var processorName = (string)query.text;
+
+            IReportingProcessor processor;
+            if (this.processors.TryGetValue(processorName, out processor))
+            {
+                return new ReportWriter(metaData, accessor, context, query, processor);
+            }
+
+            return null;
+        }
+
+        private readonly ConcurrentDictionary<string, IReportingProcessor> processors;
+    }
 }

@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			return CoreResponse.Success (content);
 		}
 
-		internal static Response Export(BusinessContext context, Caches caches, EntityExtractor extractor, dynamic query)
+		internal static Response Export(BusinessContext context, Caches caches, EntityExtractor extractor, EntityWriter writer, dynamic query)
 		{
 			var itemCount = extractor.Accessor.GetItemCount ();
 
@@ -185,8 +185,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				throw new System.InvalidOperationException ("Too many items in extractor: " + itemCount.ToString ());
 			}
-
-			EntityWriter writer = DatabaseModule.GetEntityWriter (context, caches, extractor, query);
 
 			var filename = writer.GetFilename ();
 			var stream   = writer.GetStream ();
@@ -282,7 +280,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (EntityExtractor extractor = this.GetEntityExtractor (businessContext, parameters))
 			{
-				return DatabaseModule.Export (businessContext, caches, extractor, this.Request.Query);
+                var writer = this.GetEntityWriter(businessContext, caches, extractor, this.Request.Query);
+                return DatabaseModule.Export (businessContext, caches, extractor, writer, this.Request.Query);
 			}
 		}
 
