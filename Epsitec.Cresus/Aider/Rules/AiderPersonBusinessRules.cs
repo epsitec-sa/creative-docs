@@ -197,13 +197,6 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			// reassign non-protestant -> will finally ends in NOPA. group
-			if (person.Confession != PersonConfession.Protestant)
-			{
-				AiderPersonBusinessRules.AssignParish (context, person);
-				return;
-			}
-
 			if (person.ParishGroup.IsNull ())
 			{
 				AiderPersonBusinessRules.AssignParish (context, person);
