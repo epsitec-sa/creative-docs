@@ -344,6 +344,7 @@
     <Compile Include="Data\Job\EChDataUpdater.cs" />
     <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
     <Compile Include="Data\Job\HouseholdsFix.cs" />
+    <Compile Include="Data\Job\HouseholdCleaner.cs" />
     <Compile Include="Data\Job\SqlHelpers.cs" />
     <Compile Include="Data\Job\UpdateParishName.cs" />
     <Compile Include="Data\Job\UpdateLegalPerson.cs" />
