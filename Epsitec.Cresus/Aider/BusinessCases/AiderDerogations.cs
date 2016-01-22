@@ -129,8 +129,8 @@ namespace Epsitec.Aider.BusinessCases
 				foreach (var subscription in currentSubscriptions)
 				{
 					var currentEdition		= subscription.RegionalEdition;
-					var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
-					if (currentEdition != derogationEdition)
+                    var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
+					if ((currentEdition != derogationEdition) && derogationEdition.GetRegionId () != 12)
 					{
 						AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
 						break;
@@ -151,10 +151,8 @@ namespace Epsitec.Aider.BusinessCases
 			var regionGroup = parishGroup.Parent;
 			var regionCode	= regionGroup.GetRegionId ();
 
-			if(regionCode == 12)
-				return Epsitec.Aider.Data.Common.ParishAssigner.FindGroup (businessContext, "PLA", GroupClassification.Region);
-			else
-				return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup (businessContext, regionCode);
+            return Epsitec.Aider.Data.Common.ParishAssigner.FindRegionGroup(businessContext, regionCode);
+            
 		}
 
 		private static void CheckPrerequisiteBeforeDerogate(AiderPersonEntity person, AiderGroupEntity currentParishGroup, AiderGroupEntity derogationParishGroup)
