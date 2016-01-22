@@ -328,6 +328,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVOH93]" title="Code qualité" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderLegalPerson" n="default">

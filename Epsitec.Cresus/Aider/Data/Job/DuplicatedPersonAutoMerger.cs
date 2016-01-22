@@ -37,7 +37,6 @@ namespace Epsitec.Aider.Data.Job
 				var current = 1;
 				foreach (var key in addressesToCheckKeys)
 				{
-
 					DuplicatedPersonAutoMerger.LogToConsole ("{0}/{1}", true, current, total);
 					current++;
 					var address = (AiderAddressEntity) businessContext.DataContext.ResolveEntity (key);
@@ -68,23 +67,27 @@ namespace Epsitec.Aider.Data.Job
 						}
 						else
 						{					
-							//Try to merge
-							try
-							{
-								var duplicatedPerson = potentialDuplicateChecker[checkKey];
-								DuplicatedPersonAutoMerger.LogToConsole ("Found! {0}, try to merge with {1}", false, contact.GetDisplayName (), duplicatedPerson.GetDisplayName ());
-								AiderPersonEntity.MergePersons (businessContext, contact.Person, duplicatedPerson);
-								
-							}
-							catch
-							{
+							var duplicatedPerson = potentialDuplicateChecker[checkKey];
+                            var contactsToFlag = duplicatedPerson.Contacts.Union(contact.Person.Contacts);
+                            foreach (var c2f in contactsToFlag)
+                            {
+                                if (c2f.QualityCode.IsNullOrWhiteSpace ())
+                                {
+                                    c2f.QualityCode += "D";
+                                }
+                                else
+                                {
+                                    if (c2f.QualityCode.IndexOf('D') < 0)
+                                    {
+                                        c2f.QualityCode += "D";
+                                    }
+                                }
+                            }
 
-							}
+                            businessContext.SaveChanges(LockingPolicy.ReleaseLock, EntitySaveMode.None);
 						}
 					}
-				}
-
-				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);		
+				}	
 			}
 		}
 

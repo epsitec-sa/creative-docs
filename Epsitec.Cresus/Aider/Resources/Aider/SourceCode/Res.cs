@@ -3124,6 +3124,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ParishGroupPathCache = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 468);
 				//	designer:cap/LVA5E
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 453);
+				//	designer:cap/LVOH93
+				public static readonly global::Epsitec.Common.Support.Druid QualityCode = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 305);
 			}
 			
 			public static class AiderCountry

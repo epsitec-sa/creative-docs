@@ -7721,6 +7721,28 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	définit la qualité du contact
+		///	designer:fld/LVARD/LVOH93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOH93]")]
+		public string QualityCode
+		{
+			get
+			{
+				return this.GetField<string> ("[LVOH93]");
+			}
+			set
+			{
+				string oldValue = this.QualityCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVOH93]"))
+				{
+					this.OnQualityCodeChanging (oldValue, value);
+					this.SetField<string> ("[LVOH93]", oldValue, value);
+					this.OnQualityCodeChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
@@ -7762,6 +7784,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnFullAddressTextMultiLineChanged(string oldValue, string newValue);
 		partial void OnDebugIdsChanging(string oldValue, string newValue);
 		partial void OnDebugIdsChanged(string oldValue, string newValue);
+		partial void OnQualityCodeChanging(string oldValue, string newValue);
+		partial void OnQualityCodeChanged(string oldValue, string newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetFullAddressTextSingleLine(ref string value);
