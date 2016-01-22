@@ -523,6 +523,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+      <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOS73]" title="Confession" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOL73]" title="Domicile" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
