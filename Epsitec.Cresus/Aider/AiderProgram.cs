@@ -1005,12 +1005,13 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				//var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
-				//HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
+                //var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
+                //HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
 
-				HouseholdsFix.PerformBatchFix (coreData);
+                //HouseholdsFix.PerformBatchFix (coreData);
+                HouseholdCleaner.FixHouseholds(coreData);
 
-				System.Console.WriteLine ("Press RETURN to quit");
+                System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
 		}
