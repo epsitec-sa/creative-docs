@@ -36,7 +36,11 @@ namespace Epsitec.Aider.Entities
 			{
 				case OfficeProcessType.PersonsParishChangeProcess:
 				case OfficeProcessType.PersonsOutputProcess:
-					subject = this.GetSourceEntity<AiderPersonEntity> (this.GetDataContext ()).GetSummary ();
+                    var person = this.GetSourceEntity<AiderPersonEntity>(this.GetDataContext());
+                    if (person.IsNotNull ())
+                    {
+                        subject = person.GetSummary();
+                    }
 					break;
 
 			}
