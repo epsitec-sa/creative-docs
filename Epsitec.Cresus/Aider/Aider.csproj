@@ -239,6 +239,7 @@
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderMailingCategoryViewController0.cs" />
     <Compile Include="Controllers\CreationControllers\BrickCreationAiderOfficeManagementViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderHouseholdViewController0.cs" />
+    <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderEventPlaceViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderUserViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderLegalPersonViewController0.cs" />
     <Compile Include="Controllers\DeletionControllers\BrickDeletionAiderSubscriptionViewController0.cs" />
