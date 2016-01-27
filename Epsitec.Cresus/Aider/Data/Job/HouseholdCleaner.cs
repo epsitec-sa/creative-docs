@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Data.Job
                         if (household.Members.SelectMany(m => m.GetParticipations().Where(p => !p.Group.IsNoParish())).Any())
                         {
                             var participations = household.Members.SelectMany(m => m.GetParticipations().Where(p => !p.Group.IsNoParish()));
-                            var persons = participations.Select(p => p.Contact.Person).Distinct();
+                            var persons = participations.Select(p => p.Contact.Person).Distinct().ToList ();
                             foreach (var person in persons)
                             {
                                 AiderPersonsProcess.StartExitProcess(businessContext, person, Enumerations.OfficeProcessType.PersonsOutputProcess);
