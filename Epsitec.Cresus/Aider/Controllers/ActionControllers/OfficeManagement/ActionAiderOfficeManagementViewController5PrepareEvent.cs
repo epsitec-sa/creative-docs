@@ -36,13 +36,12 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<EventType, EventKind, AiderEventPlaceEntity, AiderTownEntity, Date> (this.Execute);
+			return ActionExecutor.Create<EventType, EventKind, AiderEventPlaceEntity, Date> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderOfficeManagementEntity, SimpleBrick<AiderOfficeManagementEntity>> form)
 		{
 			var currentUser     = UserManager.Current.AuthenticatedUser;
-			var favorites       = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
 			var favoritesPlaces = AiderOfficeManagementEntity.GetOfficeEventPlaces (this.BusinessContext, this.Entity);
 
 			form
@@ -58,10 +57,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 					.Title ("Lieu de la célébration")
 					.WithFavorites (favoritesPlaces)
 				.End ()
-				.Field<AiderTownEntity> ()
-					.Title ("Localité")
-					.WithFavorites (favorites)
-				.End ()
 				.Field<Date> ()
 					.Title ("Date de la célébration")
 					.InitialValue (Date.Today)
@@ -73,7 +68,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			EventType type,
 			EventKind kind,
 			AiderEventPlaceEntity place,
-			AiderTownEntity town,
 			Date celebrationDate)
 		{
 			if (type == EventType.None)
@@ -86,17 +80,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Il faut choisir un lieu de célébration");
 			}
 
-			if (town.IsNull ())
-			{
-				throw new BusinessRuleException ("Il faut choisir la localité");
-			}
-
 			AiderEventEntity.Create (
 				this.BusinessContext, 
 				type,
 				kind,
 				this.Entity,
-				town,
 				place,
 				celebrationDate);
 		}

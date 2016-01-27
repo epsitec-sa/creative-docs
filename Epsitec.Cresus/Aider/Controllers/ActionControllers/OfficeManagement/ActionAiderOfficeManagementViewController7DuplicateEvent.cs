@@ -50,12 +50,16 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(Date celebrationDate)
 		{
+            if (this.AdditionalEntity.Place.Town.IsNull ())
+            {
+                throw new BusinessRuleException ("Impossible de dupliquer l'acte, le lieu de célébration n'a pas de localité renseignée");
+            }
+
 			var duplicat = AiderEventEntity.Create (
 				this.BusinessContext, 
 				this.AdditionalEntity.Type, 
 				this.AdditionalEntity.Kind, 
-				this.AdditionalEntity.Office, 
-				this.AdditionalEntity.Town, 
+				this.AdditionalEntity.Office,
 				this.AdditionalEntity.Place, 
 				celebrationDate
 			);

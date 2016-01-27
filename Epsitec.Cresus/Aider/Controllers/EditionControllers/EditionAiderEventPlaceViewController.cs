@@ -19,6 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Name)
+                    .Field (x => x.Town)
 					.Field (x => x.OfficeOwner)
 					.Field (x => x.Shared)
 				.End ();

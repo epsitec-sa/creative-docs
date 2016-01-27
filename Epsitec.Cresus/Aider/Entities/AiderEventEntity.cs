@@ -63,16 +63,20 @@ namespace Epsitec.Aider.Entities
 			Enumerations.EventType type,
 			Enumerations.EventKind? kind,
 			AiderOfficeManagementEntity office,
-			AiderTownEntity town,
 			AiderEventPlaceEntity place,
 			Date celebrationDate)
 		{
-			var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
+            if (place.Town.IsNull ())
+            {
+                throw new BusinessRuleException ("Le lieu de célébration n'a pas de localité renseignée");
+            }
+
+            var newEvent = context.CreateAndRegisterEntity<AiderEventEntity> ();
 			newEvent.Type = type;
 			newEvent.State = Enumerations.EventState.InPreparation;
 					
 			newEvent.Office = office;
-			newEvent.Town = town;
+			newEvent.Town = place.Town;
 			newEvent.Place = place;
 			newEvent.Kind  = kind != null ? kind : Enumerations.EventKind.None;
 			newEvent.Date = celebrationDate;

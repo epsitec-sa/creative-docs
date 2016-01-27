@@ -3329,6 +3329,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OfficeOwner = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 216);
 				//	designer:cap/LVON63
 				public static readonly global::Epsitec.Common.Support.Druid Shared = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 215);
+				//	designer:cap/LVOI93
+				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 306);
 			}
 			
 			public static class AiderEventReport

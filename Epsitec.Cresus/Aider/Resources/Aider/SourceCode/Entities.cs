@@ -11629,6 +11629,28 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>Town</c> field.
+		///	designer:fld/LVOL63/LVOI93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOI93]")]
+		public global::Epsitec.Aider.Entities.AiderTownEntity Town
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderTownEntity> ("[LVOI93]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderTownEntity oldValue = this.Town;
+				if (oldValue != value || !this.IsFieldDefined("[LVOI93]"))
+				{
+					this.OnTownChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderTownEntity> ("[LVOI93]", oldValue, value);
+					this.OnTownChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
@@ -11636,6 +11658,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSharedChanged(bool oldValue, bool newValue);
 		partial void OnOfficeOwnerChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeOwnerChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
+		partial void OnTownChanging(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
+		partial void OnTownChanged(global::Epsitec.Aider.Entities.AiderTownEntity oldValue, global::Epsitec.Aider.Entities.AiderTownEntity newValue);
 		
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventEntity> value);
 		
