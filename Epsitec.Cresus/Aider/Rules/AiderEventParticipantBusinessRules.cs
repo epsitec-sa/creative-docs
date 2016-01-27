@@ -31,7 +31,9 @@ namespace Epsitec.Aider.Rules
 				case Enumerations.EventParticipantRole.Confirmant:
 				case Enumerations.EventParticipantRole.Catechumen:
 				case Enumerations.EventParticipantRole.Minister:
-					return true;
+                case Enumerations.EventParticipantRole.GodFather:
+                case Enumerations.EventParticipantRole.GodMother:
+                    return true;
 				default:
 					return !(entity.Event.CountRole (entity.Role) > 1);
 			}

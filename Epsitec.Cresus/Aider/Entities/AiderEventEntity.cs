@@ -222,12 +222,21 @@ namespace Epsitec.Aider.Entities
 			return actor;
 		}
 
-		public string GetActorFullName(Enumerations.EventParticipantRole role)
+		public string GetActorFullName(Enumerations.EventParticipantRole role, bool secondary = false)
 		{
-			var participant = this.Participants.Where (p => p.Role == role).FirstOrDefault ();
-			if (participant.IsNotNull ())
+            AiderEventParticipantEntity actor;
+            if (!secondary)
+            {
+                actor = this.Participants.Where (p => p.Role == role).FirstOrDefault ();            
+            }
+            else
+            {
+                actor = this.Participants.Where (p => p.Role == role).Skip (1).FirstOrDefault ();
+            }
+            
+			if (actor.IsNotNull ())
 			{
-				return participant.GetFullName ();
+				return actor.GetFullName ();
 			}
 			else
 			{

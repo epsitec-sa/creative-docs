@@ -314,12 +314,13 @@ namespace Epsitec.Aider.Processors.Pdf
 			lines.Add (this.GetMinisterLine (act));
 			switch (act.Type)
 			{
-				case Enumerations.EventType.Blessing:
-				case Enumerations.EventType.Baptism:
-					lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother));
-					break;
-				case Enumerations.EventType.CelebrationRegisteredPartners:
-				case Enumerations.EventType.Marriage:
+				case EventType.Blessing:
+				case EventType.Baptism:
+					lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather, primary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother, primary: true));
+                    lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather, secondary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother, secondary: true));
+                    break;
+				case EventType.CelebrationRegisteredPartners:
+				case EventType.Marriage:
 					lines.Add (this.GetParticipantLine (act, EventParticipantRole.FirstWitness) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.SecondWitness));
 					break;
 			}
@@ -332,19 +333,19 @@ namespace Epsitec.Aider.Processors.Pdf
 			lines.Add (this.GetParishLine (actor));
 			switch (act.Type)
 			{
-				case Enumerations.EventType.Blessing:
+				case EventType.Blessing:
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.BlessedChild));
 					break;
-				case Enumerations.EventType.Baptism:
+				case EventType.Baptism:
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.ChildBatise));
 					break;
-				case Enumerations.EventType.Confirmation:
+				case EventType.Confirmation:
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.Confirmant));
 					break;
-				case Enumerations.EventType.EndOfCatechism:
+				case EventType.EndOfCatechism:
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.Catechumen));
 					break;
-				case Enumerations.EventType.FuneralService:
+				case EventType.FuneralService:
 					lines.Add (this.GetConfessionLine (actor));
 					lines.Add (this.GetSonOfLine (act, EventParticipantRole.DeceasedPerson));
 					
@@ -419,17 +420,34 @@ namespace Epsitec.Aider.Processors.Pdf
 			}
 		}
 
-		private string GetParticipantLine(AiderEventEntity act, Enumerations.EventParticipantRole role)
+		private string GetParticipantLine(AiderEventEntity act, Enumerations.EventParticipantRole role ,bool primary = false, bool secondary = false)
 		{
-			var line = this.GetRoleLabel (role);
-			line += act.GetActorFullName (role);
+            string line = "<tab/>";
+            if (!secondary)
+            {
+                line = this.GetRoleLabel (act, role, primary);
+                line += act.GetActorFullName (role);
+            }
+            else
+            {
+                line += act.GetActorFullName (role, secondary);
+            }
+			
 			return line;
 		}
 
-		private string GetRoleLabel(Enumerations.EventParticipantRole role)
+		private string GetRoleLabel(AiderEventEntity act, EventParticipantRole role, bool handlePlurality = false)
 		{
-			return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (role).Caption.DefaultLabel + " :<tab/>";
-		}
+            if (handlePlurality)
+            {
+                if (act.CountRole (role) > 1)
+                {
+                    return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (role).Caption.DefaultLabel + "s :<tab/>";
+                }               
+            }
+
+            return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (role).Caption.DefaultLabel + " :<tab/>";
+        }
 
 		private string GetParishLine(AiderEventParticipantEntity person)
 		{
