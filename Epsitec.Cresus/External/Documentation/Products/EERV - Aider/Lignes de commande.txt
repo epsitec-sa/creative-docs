@@ -834,3 +834,21 @@ Lancé le 03.01.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-12-28.xml -oldechfile:S:\eerv\eerv-2015-12-21.xml -output:s:\eerv\ech-diff-2015-12-21.md
+
+Lancé le 06.01.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-01-04.xml -oldechfile:S:\eerv\eerv-2015-12-28.xml -output:s:\eerv\ech-diff-2016-01-04.md
+
+-exportsubscriptions -output:export-2016-01-14.txt -error:error-2016-01-14.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2016-01-14.txt -publicationdate:2016-01-14 -response:tamedia-2016-01-14.log
+
+Lancé le 18.01.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-01-18.xml -oldechfile:S:\eerv\eerv-2016-01-04.xml -output:s:\eerv\ech-diff-2016-01-18.md
+
+Lancé le 27.01.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-01-25.xml -oldechfile:S:\eerv\eerv-2016-01-18.xml -output:s:\eerv\ech-diff-2016-01-25.md

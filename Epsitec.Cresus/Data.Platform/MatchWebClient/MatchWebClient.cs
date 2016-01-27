@@ -145,6 +145,12 @@ namespace Epsitec.Data.Platform
 			var page = this.DownloadString ("https://match.post.ch/downloadCenter?product=4");
 			var endIndex = page.IndexOf (currentYear + "</b>");
 			var startIndex = endIndex - 6;
+
+			if ((endIndex < 0) || (startIndex < 0))
+			{	// #HACK MAT[CH]
+				return new DateTime (2016, 01, 18);
+			}
+
 			var length = endIndex - startIndex;
 			var date = page.Substring (startIndex, length) + currentYear;
 			return Convert.ToDateTime (date);
@@ -202,6 +208,12 @@ namespace Epsitec.Data.Platform
 				catch (System.Exception ex)
 				{
 					System.Diagnostics.Trace.WriteLine (ex.Message);
+					
+					if (System.IO.File.Exists (filename))
+					{
+						return filename;
+					}
+					
 					return null;
 				}
 			}
