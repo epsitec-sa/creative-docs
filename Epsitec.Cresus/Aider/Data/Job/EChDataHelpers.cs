@@ -464,7 +464,7 @@ namespace Epsitec.Aider.Data.Job
 			/**/						  eCH_ReportedPersonEntity eChReportedPerson, bool isHead1 = false, bool isHead2 = false, bool secondaryHousehold = false)
 		{
 			var isHead = isHead1 || isHead2;
-
+            aiderHousehold.RefreshMembers ();
 			//If we need to add AiderPerson in AiderHousehold
 			if (!aiderHousehold.Members.Contains (aiderPerson))
 			{
