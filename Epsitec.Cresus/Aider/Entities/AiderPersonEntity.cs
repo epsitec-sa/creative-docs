@@ -700,8 +700,13 @@ namespace Epsitec.Aider.Entities
 
 		private static void CopyAdditionalAddressInfos(AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
 		{
-			var baseInfos  = officialPerson.Address;
-			var infos  = otherPerson.Address;
+			var baseInfos = officialPerson.Address;
+			var infos     = otherPerson.Address;
+
+			if (baseInfos == null)
+			{
+				return;
+			}
 
 			if (baseInfos.Email.IsNullOrWhiteSpace () && !infos.Email.IsNullOrWhiteSpace ())
 			{
