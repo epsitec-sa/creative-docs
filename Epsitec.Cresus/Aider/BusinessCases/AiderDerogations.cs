@@ -130,7 +130,7 @@ namespace Epsitec.Aider.BusinessCases
 				{
 					var currentEdition		= subscription.RegionalEdition;
                     var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
-					if ((currentEdition != derogationEdition) && derogationEdition.GetRegionId () != 12)
+					if ((currentEdition != derogationEdition) && derogationEdition.IsNotNull ())
 					{
 						AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
 						break;
@@ -140,7 +140,10 @@ namespace Epsitec.Aider.BusinessCases
 			else
 			{
 				var derogationEdition	= AiderDerogations.GetSubscriptionEdition (businessContext, derogationParishGroup);
-				AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
+                if (derogationEdition.IsNotNull ())
+                {
+                    AiderSubscriptionEntity.Create (businessContext, person.HouseholdContact.Household, derogationEdition, 1);
+                }
 			}
 		}
 

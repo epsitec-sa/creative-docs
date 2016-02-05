@@ -447,7 +447,7 @@ namespace Epsitec.Aider.Data.Common
 				}
 			};
 
-			return dataContext.GetByExample (example).Single ();
+			return dataContext.GetByExample (example).SingleOrDefault ();
 		}
 
 		public static AiderGroupEntity FindNoParishGroup(BusinessContext businessContext)
