@@ -217,7 +217,7 @@ namespace Epsitec.Aider.Rules
 
 		private static bool IsReassignNeeded(BusinessContext context, AiderPersonEntity person)
 		{
-			if (ParishAssigner.IsInNoParishGroup (person))
+			if (ParishAssigner.IsInNoParishGroup (person) && !person.HasDerogation)
 			{
 				return true;
 			}
