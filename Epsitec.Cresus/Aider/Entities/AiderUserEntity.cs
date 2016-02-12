@@ -169,7 +169,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (this.Office.IsNotNull ())
 				{
-					if (derogationParishGroup == this.Office.ParishGroup)
+					if (derogationParishGroup.Name == this.Office.ParishGroup.Name)
 					{
 						return true;
 					}
