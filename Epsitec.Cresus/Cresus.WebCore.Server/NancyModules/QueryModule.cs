@@ -1,33 +1,25 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2016, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Data;
-using Epsitec.Cresus.Core.Resolvers;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.WebCore.Server.Core;
-using Epsitec.Cresus.WebCore.Server.Core.Databases;
-using Epsitec.Cresus.WebCore.Server.Core.Extraction;
 using Epsitec.Cresus.WebCore.Server.Core.IO;
-using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.Results;
 
 using Nancy;
-
-using System;
+using Nancy.Responses;
 
 using System.Collections.Generic;
-
 using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
 	using Database = Core.Databases.Database;
-	using Epsitec.Cresus.Core.Library;
-	using Epsitec.Cresus.Core.Entities;
-	using Nancy.Json;
-	using Nancy.Responses;
-	using Epsitec.Cresus.WebCore.Server.Results;
-
+	
 	/// <summary>
 	/// This module is used to create query filters for databases
 	/// </summary>
@@ -97,8 +89,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string rawColumns = Request.Query.columns;
 			
 			var query = FilterIO.ParseQuery (businessContext, caches, database, rawQuery);
-			query.Name = queryName;
-			query.Description = rawQuery;
+			query.Name = FormattedText.Escape (queryName);
+			query.Description = FormattedText.Escape (rawQuery);
 			queries.RemoveAll (q => q.Name.ToSimpleText () == queryName);
 			queries.Add (query);
 			userManager.ActiveSession.SetDataSetSettings (dataset, settings);
