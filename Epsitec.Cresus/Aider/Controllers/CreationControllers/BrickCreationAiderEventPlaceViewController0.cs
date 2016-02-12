@@ -35,10 +35,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 		public override FunctionExecutor GetExecutor()
 		{
-			return FunctionExecutor.Create<string, AiderOfficeManagementEntity, bool, AiderEventPlaceEntity> (this.Execute);
+			return FunctionExecutor.Create<string, AiderTownEntity, AiderOfficeManagementEntity, bool, AiderEventPlaceEntity> (this.Execute);
 		}
 
-		private AiderEventPlaceEntity Execute(string name, AiderOfficeManagementEntity office, bool shared)
+		private AiderEventPlaceEntity Execute(string name, AiderTownEntity town, AiderOfficeManagementEntity office, bool shared)
 		{
 			if (string.IsNullOrEmpty (name))
 			{
@@ -56,7 +56,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			var user = AiderUserManager.Current.AuthenticatedUser;
 			if (user.CanViewOfficeDetails ())
 			{
-				return AiderEventPlaceEntity.Create (this.BusinessContext, name, shared, office);
+				return AiderEventPlaceEntity.Create (this.BusinessContext, name, town, shared, office);
 			}
 			else
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					}
 					else
 					{
-						return AiderEventPlaceEntity.Create (this.BusinessContext, name, shared, office);
+						return AiderEventPlaceEntity.Create (this.BusinessContext, name, town, shared, office);
 					}
 				}
 			}

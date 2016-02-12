@@ -40,12 +40,13 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
-		public static AiderEventPlaceEntity Create(BusinessContext context, string placeName,  bool isSharedPlace, AiderOfficeManagementEntity office)
+		public static AiderEventPlaceEntity Create(BusinessContext context, string placeName, AiderTownEntity town, bool isSharedPlace, AiderOfficeManagementEntity office)
 		{
 			var place = context.CreateAndRegisterEntity<AiderEventPlaceEntity> ();
 			place.Name        = placeName;
 			place.OfficeOwner = office;
 			place.Shared      = isSharedPlace;
+            place.Town = town;
 			return place;
 		}
 	}

@@ -104,7 +104,6 @@
     <Compile Include="Controllers\ActionControllers\Mailing\ActionAiderMailingViewController26AddHouseholdExclusion.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController8DeleteEvent.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController7DuplicateEvent.cs" />
-    <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController6CreatePlace.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController5AddParticipantFromScratch.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController1SetToValidate.cs" />
     <Compile Include="Controllers\ActionControllers\Event\ActionAiderEventViewController4DeleteDraft.cs" />
