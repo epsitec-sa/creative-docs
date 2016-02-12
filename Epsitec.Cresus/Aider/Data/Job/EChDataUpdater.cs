@@ -160,20 +160,29 @@ namespace Epsitec.Aider.Data.Job
 
 			var isSameHead = potentialHousehold.IsHead (person);
 			var isSameEChMemberCount = potentialHousehold.Members.Count (x => x.IsGovernmentDefined).Equals (eChHousehold.MembersCount);
-			var isSameMemberCount	 = potentialHousehold.Members.Count ().Equals (eChHousehold.MembersCount);
-			
-			//	Ensure that potential family is like ECh ReportedPerson before we apply a full relocate
 
-			//Move all family in this case:
+            //	Ensure that potential family is like ECh ReportedPerson before we apply a full relocate
+
+            // Move all family in this case:
+            // more info: https://git.epsitec.ch/aider/rch/issues/1
+            var isSpecialCase = false;
 			if ((person.eCH_Person.AdultMaritalStatus == PersonMaritalStatus.Married) && 
 				(eChHousehold.Adult2.IsNull ()) && 
 				(!isSameEChMemberCount))
 			{
-				isSameEChMemberCount = true; //force update
+                var heads = potentialHousehold.Members.Where (m => potentialHousehold.IsHead (m));
+                // One head is non protestant
+                if (heads.Count (p => p.Confession != PersonConfession.Protestant) == 1)
+                {
+                    // and one head is RCH defined
+                    if (heads.Count (p => p.IsGovernmentDefined) == 1)
+                    {
+                        isSpecialCase = true; //force update
+                    }
+                }
 			}
 			
-			if ((isSameHead) &&
-				(isSameEChMemberCount))
+			if ((isSameHead && isSameEChMemberCount) || isSpecialCase)
 			{
 				this.LogToConsole ("Info: Same head and member count detected, processing full relocate");
 				var members = potentialHousehold.Members;
@@ -634,6 +643,8 @@ namespace Epsitec.Aider.Data.Job
 			{
 				this.LogToConsole ("Info: {0} is already assiged to an household", aiderPerson.GetFullName ());
 				var currentHousehold    = aiderPerson.HouseholdContact.Household;
+                currentHousehold.RefreshCache ();
+
 				var householdAddress	= currentHousehold.Address;
 
 				if (!EChDataHelpers.AddressComparator (householdAddress, rchAddress))
