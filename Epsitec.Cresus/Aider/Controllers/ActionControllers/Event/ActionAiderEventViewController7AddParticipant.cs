@@ -55,7 +55,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 				throw new BusinessRuleException ("Il faut choisir une personne");
 			}
 
-			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, person, role);
-		}
+            AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, person, role);
+        }
 	}
 }

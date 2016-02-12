@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			var currentUser = UserManager.Current.AuthenticatedUser;
 			var favorites = AiderTownEntity.GetTownFavoritesByUserScope (this.BusinessContext, currentUser as AiderUserEntity);
-			
+            this.Entity.UpdateActDataFromModel ();
 			if (this.Entity.IsExternal == false)
 			{
 				wall.AddBrick ()
@@ -30,8 +30,13 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Input ()
 						.Field (x => x.Person.MainContact.Address.Town)
 							.WithFavorites (favorites)
-					.End ();
-			}
+					.End ()
+                    .Input ()     
+                        .Field (x => x.FirstName)
+                        .Field (x => x.LastName)
+                        .Field (x => x.Confession)
+                    .End ();
+            }
 			else
 			{
 				wall.AddBrick ()

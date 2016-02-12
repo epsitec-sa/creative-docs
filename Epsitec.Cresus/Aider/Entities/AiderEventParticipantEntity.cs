@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Entities
 			newParticipant.Role = role;
 			newParticipant.Person = person;
 			newParticipant.ParishGroupPathCache = targetEvent.ParishGroupPathCache;
+            newParticipant.UpdateActDataFromModel ();
 			return newParticipant;
 		}
 
@@ -88,7 +89,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonOfficialName;
+                if (this.LastName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.eCH_Person.PersonOfficialName;
+                }
+                else
+                {
+                    return this.LastName;
+                }
 			}
 		}
 
@@ -100,7 +108,15 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonFirstNames;
+                if (this.FirstName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.eCH_Person.PersonFirstNames;
+                }
+                else
+                {
+                    return this.FirstName;
+                }
+				
 			}
 		}
 
@@ -112,7 +128,15 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.GetFullName ();
+                if (this.FirstName.IsNullOrWhiteSpace () || this.LastName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.GetFullName ();
+                }
+                else
+                {
+                    return StringUtils.Join (" ", this.FirstName, this.LastName);
+                }
+				
 			}
 		}
 
@@ -124,7 +148,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonDateOfBirth;
+                return this.Person.eCH_Person.PersonDateOfBirth;
 			}
 			
 		}
@@ -137,7 +161,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonSex;
+               return this.Person.eCH_Person.PersonSex;
 			}
 		}
 
@@ -149,30 +173,30 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				var person = this.Person;
-				if (person.IsGovernmentDefined && person.IsDeclared)
-				{
-					return person.eCH_Person.GetAddress ().Town;
-				}
-				else
-				{
-					if (person.MainContact.IsNotNull ())
-					{
-						if (person.MainContact.GetAddress ().Town.IsNotNull ())
-						{
-							return person.MainContact.GetAddress ().Town.Name;
-						}
-						else
-						{
-							return person.MainContact.Address.Town.Name;
-						}
-					}
-					else
-					{
-						return "";
-					}
-				}
-			}			
+                var person = this.Person;
+                if (person.IsGovernmentDefined && person.IsDeclared)
+                {
+                    return person.eCH_Person.GetAddress ().Town;
+                }
+                else
+                {
+                    if (person.MainContact.IsNotNull ())
+                    {
+                        if (person.MainContact.GetAddress ().Town.IsNotNull ())
+                        {
+                            return person.MainContact.GetAddress ().Town.Name;
+                        }
+                        else
+                        {
+                            return person.MainContact.Address.Town.Name;
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+            }			
 		}
 
 		public string GetParishName(bool fromModel = false)
@@ -183,7 +207,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.ParishGroup.Name;
+                if (this.ParishName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.ParishGroup.Name;
+                }
+                else
+                {
+                    return this.ParishName;
+                }
 			}
 		}
 
@@ -195,7 +226,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.Confession;
+                if (this.Confession == Enumerations.PersonConfession.Unknown)
+                {
+                    return this.Person.Confession;
+                }
+				else
+                {
+                    return this.Confession;
+                }
 			}
 		}
 
