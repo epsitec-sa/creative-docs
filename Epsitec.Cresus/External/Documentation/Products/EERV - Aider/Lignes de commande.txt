@@ -854,3 +854,9 @@ Lancé le 02.02.2016
 -echupdate -newechfile:S:\eerv\eerv-2016-01-25.xml -oldechfile:S:\eerv\eerv-2016-01-18.xml -output:s:\eerv\ech-diff-2016-01-25.md
 -echupdate -newechfile:S:\eerv\eerv-2016-02-01.xml -oldechfile:S:\eerv\eerv-2016-01-25.xml -output:s:\eerv\ech-diff-2016-02-01.md
 -cleanhouseholds 
+
+Lancé le 09.02.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-02-08.xml -oldechfile:S:\eerv\eerv-2016-02-01.xml -output:s:\eerv\ech-diff-2016-02-08.md
+
