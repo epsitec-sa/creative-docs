@@ -308,12 +308,12 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderContactEntity ChangeHousehold(BusinessContext businessContext, AiderContactEntity contact, AiderHouseholdEntity newHousehold, bool isHead)
 		{
+            var oldHousehold = contact.Household;
 			var role = isHead
 				? HouseholdRole.Head
 				: HouseholdRole.None;
 
 			contact.Household.RemoveContactInternal (contact);
-			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, contact.Household);
 			contact.Person.RemoveContactInternal (contact);
 
 			contact.Household     = newHousehold;
@@ -328,8 +328,10 @@ namespace Epsitec.Aider.Entities
 			{
 				newSubscription.RefreshCache ();
 			}
-
-			return contact;
+            
+            businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+            AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, oldHousehold, true);
+            return contact;
 		}
 
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)
