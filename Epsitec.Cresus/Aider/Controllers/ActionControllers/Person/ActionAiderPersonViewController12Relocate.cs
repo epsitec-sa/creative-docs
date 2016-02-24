@@ -55,9 +55,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		private void Execute(AiderHouseholdEntity newHousehold, bool isHead)
 		{
 			var mainContact = this.Entity.MainContact;
-			AiderContactEntity.ChangeHousehold (this.BusinessContext, mainContact, newHousehold, isHead);
-			
-			var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
+            AiderContactEntity.ChangeHousehold (this.BusinessContext, mainContact, newHousehold, isHead);
+
+            var subscription = AiderSubscriptionEntity.FindSubscription (this.BusinessContext, newHousehold);
 			
 			if (subscription.IsNotNull ())
 			{

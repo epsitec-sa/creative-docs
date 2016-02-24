@@ -214,8 +214,8 @@ namespace Epsitec.Aider.Data.Job
 				}
 				else // move person as household member
 				{
-					AiderContactEntity.ChangeHousehold (businessContext, person.MainContact, potentialHousehold, potentialHousehold.IsHead (person));
-					this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, person);
+                    AiderContactEntity.ChangeHousehold (businessContext, person.MainContact, potentialHousehold, potentialHousehold.IsHead (person));
+                    this.UpdateAiderHouseholdAndSubscription (businessContext, eChHousehold, person);
 					this.ReassignAndWarnParish (businessContext, person, changes);
 				}
 			}
