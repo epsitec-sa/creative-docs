@@ -19,6 +19,14 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 	[ControllerSubType (9)]
 	public sealed class ActionAiderPersonViewController9Deceased : ActionViewController<AiderPersonEntity>
 	{
+		public override bool IsEnabled
+		{
+			get
+			{
+				return this.Entity.IsAlive;
+			}
+		}
+
 		public override FormattedText GetTitle()
 		{
 			return Resources.Text ("La personne est décédée");
