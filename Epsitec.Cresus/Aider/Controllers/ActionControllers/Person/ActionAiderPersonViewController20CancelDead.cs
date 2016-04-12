@@ -50,7 +50,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{		
 			var person = this.Entity;
 			person.UndoKillPerson (this.BusinessContext);
-			person.MainContact.RefreshCache ();
 		}
 	}
 }

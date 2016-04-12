@@ -590,12 +590,15 @@ namespace Epsitec.Aider.Entities
 			}
 
 			// recreate an household
-			var household = AiderHouseholdEntity.Create (businessContext, this.MainContact.Address);
+			var household = AiderHouseholdEntity.Create (businessContext, this.GetAddress ());
 			household.AddContactInternal (this.MainContact);
 			this.MainContact.Household = household;
-
+			
 			// Add subscription
-			AiderSubscriptionEntity.Create (businessContext, household);
+			if (this.GetAddress ().IsNotNull ())
+			{
+				AiderSubscriptionEntity.Create (businessContext, household);
+			}
 		}
 
 		public static void MergeGroupParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
