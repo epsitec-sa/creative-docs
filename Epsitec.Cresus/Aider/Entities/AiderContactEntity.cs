@@ -329,7 +329,7 @@ namespace Epsitec.Aider.Entities
 				newSubscription.RefreshCache ();
 			}
             
-            businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+            businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
             AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, oldHousehold, true);
             return contact;
 		}
