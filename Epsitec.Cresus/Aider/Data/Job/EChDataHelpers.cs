@@ -480,17 +480,32 @@ namespace Epsitec.Aider.Data.Job
 						}
 						catch
 						{
-
+							
 						}
 					}
 					if (aiderPerson.MainContact.IsNull ())
 					{
-						var contact = AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
+						try
+						{
+							var contact = AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
+						}
+						catch
+						{
+
+						}
 					}
 				}
 				else
 				{
-					var contact = AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
+					try
+					{
+						var contact = AiderContactEntity.Create (businessContext, aiderPerson, aiderHousehold, isHead);
+					}
+					catch
+					{
+
+					}
+					
 				}				
 			}
 
