@@ -860,3 +860,49 @@ Lancé le 09.02.2016
 
 -echupdate -newechfile:S:\eerv\eerv-2016-02-08.xml -oldechfile:S:\eerv\eerv-2016-02-01.xml -output:s:\eerv\ech-diff-2016-02-08.md
 
+
+Lancé le 17.02.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-02-15.xml -oldechfile:S:\eerv\eerv-2016-02-08.xml -output:s:\eerv\ech-diff-2016-02-15.md
+
+-exportsubscriptions -output:export-2016-02-25.txt -error:error-2016-02-25.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2016-02-25.txt -publicationdate:2016-02-25 -response:tamedia-2016-02-25.log
+
+
+Lancé le 24.02.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-02-22.xml -oldechfile:S:\eerv\eerv-2016-02-15.xml -output:s:\eerv\ech-diff-2016-02-22.md
+
+
+Lancé le 01.03.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-02-29.xml -oldechfile:S:\eerv\eerv-2016-02-22.xml -output:s:\eerv\ech-diff-2016-02-29.md
+
+
+Lancé le 15.03.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-03-08.xml -oldechfile:S:\eerv\eerv-2016-02-29.xml -output:s:\eerv\ech-diff-2016-03-08.md
+-echupdate -newechfile:S:\eerv\eerv-2016-03-14.xml -oldechfile:S:\eerv\eerv-2016-03-08.xml -output:s:\eerv\ech-diff-2016-03-14.md
+
+
+Lancé le 17.03.2016
+-------------------
+
+-exportsubscriptions -output:export-2016-03-31.txt -error:error-2016-03-31.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2016-03-31.txt -publicationdate:2016-03-31 -response:tamedia-2016-03-31.log
+
+
+Lancé le 25.03.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-03-21.xml -oldechfile:S:\eerv\eerv-2016-03-14.xml -output:s:\eerv\ech-diff-2016-03-21.md
+
+
+Lancé le 12.04.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-04-11.xml -oldechfile:S:\eerv\eerv-2016-03-21.xml -output:s:\eerv\ech-diff-2016-04-11.md
