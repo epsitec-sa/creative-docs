@@ -169,7 +169,7 @@ namespace Epsitec.Aider.Rules
 						}
 						else
 						{
-							Logic.BusinessRuleException (person, Resources.Text ("Cette femme n'est pas célibataire. L'appellation 'Mademoiselle' n'est donc pas appropriée dans son cas."));
+							Logic.BusinessRuleException (person, Resources.Text ($"{person.GetFullName ()} n'est pas célibataire. L'appellation 'Mademoiselle' n'est donc pas appropriée dans son cas."));
 						}
 
 						return;
