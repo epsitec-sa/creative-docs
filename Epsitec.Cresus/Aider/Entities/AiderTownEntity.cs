@@ -196,14 +196,14 @@ namespace Epsitec.Aider.Entities
 					{
 						var zips = parishRepo.FindAllAddressInformations ()
 												.Where (p => p.RegionCode == parishInfo.RegionCode)
-												.Select (p => p.ZipCode.ToString ()).ToList ();
+												.Select (p => p.ZipCode.ToString ()).Distinct ().ToList ();
 
 						request.AddCondition (businessContext.DataContext, example, p => SqlMethods.IsInSet (p.ZipCode, zips));
 					}
 					if (scope.Name == "Canton")
 					{
 						var zips = parishRepo.FindAllAddressInformations ()
-												.Select (p => p.ZipCode.ToString ()).ToList ();
+												.Select (p => p.ZipCode.ToString ()).Distinct ().ToList ();
 
 						request.AddCondition (businessContext.DataContext, example, p => SqlMethods.IsInSet (p.ZipCode, zips));
 					}
