@@ -317,6 +317,11 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 					}
 					else
 					{
+						// Odd or Even comparison need a dummy constant value
+						if (comparison == ColumnFilterComparisonCode.Odd || comparison == ColumnFilterComparisonCode.Even)
+						{
+							return ColumnFilterConstant.From (1);
+						}
 						throw new NotImplementedException ();
 					}
 
