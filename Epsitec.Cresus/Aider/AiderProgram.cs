@@ -349,6 +349,15 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-flagmissinghousehold"))
+				{
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => PersonWithoutHousehold.FlagContacts (coreData)
+						)
+					);
+				}
+
 				if (args.Contains ("-fixrolecacheparticipations")) //-fixrolecacheparticipations
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixRoleCacheParticipations (args));
