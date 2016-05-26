@@ -252,11 +252,25 @@ namespace Epsitec.Cresus.WebCore.Server.Core.IO
 						return ColumnFilterComparisonCode.Equal;
 					}
 
-					return ColumnFilterComparisonCode.StartsWithEscaped;
+					switch ((string)comparator)
+					{
+						case "eq":
+							return ColumnFilterComparisonCode.StartsWithEscaped;
+						case "nq":
+							return ColumnFilterComparisonCode.NotStartsWithEscaped;
+						default:
+							throw new NotImplementedException ();
+					}
 				}
 				else // By default we are not srict
 				{
-					return ColumnFilterComparisonCode.StartsWithEscaped;
+					switch ((string)comparator)
+					{
+						case "eq":
+							return ColumnFilterComparisonCode.StartsWithEscaped;
+						default:
+							throw new NotImplementedException ();
+					}
 				}
 			}
 
