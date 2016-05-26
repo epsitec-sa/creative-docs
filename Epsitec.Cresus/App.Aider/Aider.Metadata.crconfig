@@ -535,6 +535,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVAR3]" title="Remarque" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
     </t>
 
     <t eid="@AiderHousehold" n="default">
