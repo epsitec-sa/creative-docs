@@ -340,9 +340,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					}
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				message = "Une erreur est survenue. Tâche annulée.";
+				message = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
 			}
 			finally
 			{
@@ -378,9 +378,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					DatabaseModule.ExportToDisk (fileName, extractor, writer);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				message = "Une erreur est survenue. Tâche annulée.";
+				message = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
 			}
 			finally
 			{

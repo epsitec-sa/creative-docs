@@ -217,9 +217,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					DatabaseModule.ExportToDisk (filename, extractor, writer);
 				}
 			}
-			catch
+			catch (Exception ex)
 			{
-				finishMetaData = "Une erreur est survenue. tâche annulée";
+				finishMetaData = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
 			}
 			finally
 			{
