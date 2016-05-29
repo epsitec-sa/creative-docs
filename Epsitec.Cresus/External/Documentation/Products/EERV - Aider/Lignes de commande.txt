@@ -902,7 +902,35 @@ Lancé le 25.03.2016
 -echupdate -newechfile:S:\eerv\eerv-2016-03-21.xml -oldechfile:S:\eerv\eerv-2016-03-14.xml -output:s:\eerv\ech-diff-2016-03-21.md
 
 
-Lancé le 12.04.2016
+Lancé le 18.04.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-04-11.xml -oldechfile:S:\eerv\eerv-2016-03-21.xml -output:s:\eerv\ech-diff-2016-04-11.md
+-echupdate -newechfile:S:\eerv\eerv-2016-04-20.xml -oldechfile:S:\eerv\eerv-2016-04-11.xml -output:s:\eerv\ech-diff-2016-04-20.md
+
+-exportsubscriptions -output:export-2016-04-28.txt -error:error-2016-04-28.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2016-04-28.txt -publicationdate:2016-04-28 -response:tamedia-2016-04-28.log
+
+Lancé le 09.05.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-05-02.xml -oldechfile:S:\eerv\eerv-2016-04-20.xml -output:s:\eerv\ech-diff-2016-05-02.md
+-echupdate -newechfile:S:\eerv\eerv-2016-05-09.xml -oldechfile:S:\eerv\eerv-2016-05-02.xml -output:s:\eerv\ech-diff-2016-05-09.md
+
+Lancé le 18.05.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-05-16.xml -oldechfile:S:\eerv\eerv-2016-05-09.xml -output:s:\eerv\ech-diff-2016-05-16.md
+
+-exportsubscriptions -output:export-2016-05-26.txt -error:error-2016-05-26.txt -exclude-district-error:false
+-uploadsubscriptions -input:export-2016-05-26.txt -publicationdate:2016-05-26 -response:tamedia-2016-05-26.log
+
+Lancé le 24.05.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-05-23.xml -oldechfile:S:\eerv\eerv-2016-05-16.xml -output:s:\eerv\ech-diff-2016-05-23.md
+
+Lancé le 29.05.2016
+-------------------
+
+-flagmissinghousehold
