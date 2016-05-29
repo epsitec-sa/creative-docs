@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 			catch (Exception ex)
 			{
-				finishMetaData = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
+				finishMetaData = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
 			}
 			finally
 			{
