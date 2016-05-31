@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 			catch (Exception ex)
 			{
-				message = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
+				message = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
 			}
 			finally
 			{
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 			catch (Exception ex)
 			{
-				message = $"Une erreur est survenue. Tâche annulée. ({ex.Message})";
+				message = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
 			}
 			finally
 			{
