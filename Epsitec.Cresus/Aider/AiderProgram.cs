@@ -343,19 +343,43 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-automergeduplicatedpersons")) //-automergeduplicatedpersons
+				if (args.Contains ("-flagduplicatedpersons")) //--flagduplicatedpersons
 				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
 					return;
 				}
 
-				if (args.Contains ("-flagmissinghousehold"))
+				if (args.Contains ("-flagmissinghousehold")) //-flagmissinghousehold
 				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (
 						() => AiderProgram.RunWithCoreData (
 							coreData => PersonWithoutHousehold.FlagContacts (coreData)
 						)
 					);
+					return;
+				}
+
+				if (args.Contains ("-cleardqflags")) //-cleardqflags
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => ClearDataQualityFlags.Run (coreData)
+						)
+					);
+					return;
+				}
+				if (args.Contains ("-fixdqflags")) //-cleardqflags
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => DataQualityFlagsFixer.Run (coreData)
+						)
+					);
+					return;
 				}
 
 				if (args.Contains ("-fixrolecacheparticipations")) //-fixrolecacheparticipations
@@ -959,7 +983,7 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				DuplicatedPersonAutoMerger.FindAndMerge (coreData);
+				FlagDuplicatedPersons.Run (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

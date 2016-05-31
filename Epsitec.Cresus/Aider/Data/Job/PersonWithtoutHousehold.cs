@@ -25,6 +25,42 @@ namespace Epsitec.Aider.Data.Job
 			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
+		public static string GetCode(AiderPersonEntity person)
+		{
+			//M1 si personne a été supprimée du RCH
+			//M2 si Source manuelle ET manque l'adresse
+			//M3 si Source manuelle mais on a une adresse
+			//M4 si adresse OK ET présent dans le RCH.
+			var isGov = person.IsGovernmentDefined;
+			var isRemoved = isGov && person.eCH_Person.DeclarationStatus == PersonDeclarationStatus.Removed;
+			var badAddress = string.IsNullOrWhiteSpace (person.MainContact.Address.StreetHouseNumberAndComplement);
+			if (isRemoved)
+			{
+				return "M1";
+			}
+
+			if (isGov)
+			{
+				if (!badAddress)
+				{
+					return "M4";
+				}
+			}
+			else
+			{
+				if (badAddress)
+				{
+					return "M2";
+				}
+				else
+				{
+					return "M3";
+				}
+			}
+
+			return "M";
+		}
+
 		private static void FlagContacts
 		(
 			BusinessContext businessContext,
@@ -53,7 +89,8 @@ namespace Epsitec.Aider.Data.Job
 			AiderPersonEntity person
 		)
 		{
-			person.MainContact.QualityCode += "M";
+			
+            person.MainContact.QualityCode += PersonWithoutHousehold.GetCode (person);
 		}
 
 
