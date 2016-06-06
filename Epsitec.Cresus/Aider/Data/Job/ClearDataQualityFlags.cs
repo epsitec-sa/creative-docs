@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Data.Job
 				var dbAbstraction = DbFactory.CreateDatabaseAbstraction (db.Access);
 				var sqlEngine = dbAbstraction.SqlEngine;
 
-				var sqlCommand = "SELECT mud_lvard SET mud_lvard.u_lvoh93 = ''";
+				var sqlCommand = "UPDATE mud_lvard SET mud_lvard.u_lvoh93 = ''";
 
 				var sqlBuilder = dbAbstraction.SqlBuilder;
 
