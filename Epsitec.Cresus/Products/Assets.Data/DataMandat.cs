@@ -254,6 +254,16 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
+		public void DeleteAccounts(DateRange dateRange)
+		{
+			//	Oublie un plan comptable d'une période donnée.
+			GuidDictionary<DataObject> accounts;
+			if (this.rangeAccounts.TryGetValue (dateRange, out accounts))
+			{
+				this.rangeAccounts.Remove (dateRange);
+			}
+		}
+
 		public DateRange GetBestAccountsDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
@@ -271,6 +281,16 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Prend connaissance du nom de fichier d'un plan comptable importé.
 			this.rangeAccountsFilenames[dateRange] = filename;
+		}
+
+		public void DeleteAccountsFilename(DateRange dateRange)
+		{
+			//	Oublie un nom de fichier d'un plan comptable importé.
+			string filename;
+			if (this.rangeAccountsFilenames.TryGetValue (dateRange, out filename))
+			{
+				this.rangeAccountsFilenames.Remove (dateRange);
+			}
 		}
 
 		public string GetAccountsFilename(DateRange dateRange)
@@ -328,6 +348,16 @@ namespace Epsitec.Cresus.Assets.Data
 			//	Prend connaissance d'un nouveau code TVA, qui est ajouté ou
 			//	qui remplace un existant, selon sa période.
 			this.rangeVatCodes[dateRange] = vatCodes;
+		}
+
+		public void DeleteVatCodes(DateRange dateRange)
+		{
+			//	Oublie un code TVA d'une période donnée.
+			GuidDictionary<DataObject> vatCodes;
+			if (this.rangeVatCodes.TryGetValue (dateRange, out vatCodes))
+			{
+				this.rangeVatCodes.Remove (dateRange);
+			}
 		}
 
 		private DateRange GetBestVatCodesDateRange(System.DateTime date)

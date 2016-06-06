@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected void OnDateRange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowDateRangePopup (target);
+			this.ChangeDateRange (target);
 		}
 
 		[Command (Res.CommandIds.Accounts.Graphic)]
@@ -197,6 +197,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.VisibleSelectedRow = -1;
 		}
 
+		[Command (Res.CommandIds.Accounts.Delete)]
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.DeleteDateRange (target);
+		}
+
 		[Command (Res.CommandIds.Accounts.Import)]
 		protected void OnImport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -221,16 +228,42 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private void ShowDateRangePopup(Widget target)
+		private void ChangeDateRange(Widget target)
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
-			//	choisir une.
-			var items = new List<string>();
+			//	choisir une qui sera montrée.
+			this.ShowDateRangePopup (target, "Montrer le plan comptable de la période", delegate (int rank)  //????
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
+			});
+		}
+
+		private void DeleteDateRange(Widget target)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une qui sera supprimée.
+			this.ShowDateRangePopup (target, "Supprimer le plan comptable de la période", delegate (int rank)  //????
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+
+				using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
+				{
+					h.Delete (range);  // choix du fichier puis importation
+				}
+			});
+		}
+
+		private void ShowDateRangePopup(Widget target, string prefix, System.Action<int> action)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une, sur laquelle on effectuera une action.
+			var items = new List<string> ();
 			int selectedItem = -1;
 			int i = 0;
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
 			{
-				items.Add ("Période " + range.ToNiceString ());
+				items.Add (prefix + " " + range.ToNiceString ());
 
 				if (range == this.baseType.AccountsDateRange)
 				{
@@ -240,11 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				i++;
 			}
 
-			SimplePopup.Show (target, items, selectedItem, delegate (int rank)
-			{
-				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
-				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
-			});
+			SimplePopup.Show (target, items, selectedItem, action);
 		}
 
 

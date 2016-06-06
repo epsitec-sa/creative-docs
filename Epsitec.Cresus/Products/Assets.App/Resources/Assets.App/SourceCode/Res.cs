@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Assets.App
 				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175));
 				//	designer:cap/JUKR301
 				public static readonly global::Epsitec.Common.Widgets.Command DateRange = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
+				//	designer:cap/JUKE701
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 238));
 				//	designer:cap/JUK3401
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 131));
 				//	designer:cap/JUKG501
@@ -708,6 +710,8 @@ namespace Epsitec.Cresus.Assets.App
 				public const long CompactOne = 0x7D3000140000AFL;
 				//	designer:cap/JUKR301
 				public const long DateRange = 0x7D30001400007BL;
+				//	designer:cap/JUKE701
+				public const long Delete = 0x7D3000140000EEL;
 				//	designer:cap/JUK3401
 				public const long Deselect = 0x7D300014000083L;
 				//	designer:cap/JUKG501

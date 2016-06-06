@@ -93,6 +93,24 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
+		public void Delete(DateRange dateRange)
+		{
+			//	Supprime un plan comptable de la liste des plans comptables dans le mandat.
+			this.accessor.UndoManager.Start ();
+
+			this.accessor.Mandat.DeleteAccounts         (dateRange);
+			this.accessor.Mandat.DeleteVatCodes         (dateRange);
+			this.accessor.Mandat.DeleteAccountsFilename (dateRange);
+
+			this.accessor.WarningsDirty = true;
+			this.updateAction ();
+
+			var desc = UndoManager.GetDescription (Res.Commands.Accounts.Delete.Description, null);
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
+		}
+
+
 		private void Import(string filename)
 		{
 			//	Lit le fichier .crp et ajoute-le à la liste des plans comptables dans le mandat.

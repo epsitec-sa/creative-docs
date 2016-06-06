@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class SimplePopup : AbstractPopup
 	{
-		public SimplePopup()
+		private SimplePopup()
 		{
 			this.items = new List<string> ();
 			this.SelectedItem = -1;
 		}
 
 
-		public List<string>						Items
+		private List<string>					Items
 		{
 			get
 			{
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int								SelectedItem;
+		private int								SelectedItem;
 
 
 		protected override Size					DialogSize
