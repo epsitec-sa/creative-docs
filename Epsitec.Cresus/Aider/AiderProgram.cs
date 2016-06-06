@@ -343,7 +343,18 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-flagduplicatedpersons")) //--flagduplicatedpersons
+				if (args.Contains ("-cleardqflags")) //-cleardqflags
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => ClearDataQualityFlags.Run (coreData)
+						)
+					);
+					return;
+				}
+				
+				if (args.Contains ("-flagduplicatedpersons")) //-flagduplicatedpersons
 				{
 					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
@@ -361,17 +372,7 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-cleardqflags")) //-cleardqflags
-				{
-					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
-					ConsoleCreator.RunWithConsole (
-						() => AiderProgram.RunWithCoreData (
-							coreData => ClearDataQualityFlags.Run (coreData)
-						)
-					);
-					return;
-				}
-				if (args.Contains ("-fixdqflags")) //-cleardqflags
+				if (args.Contains ("-fixdqflags")) //-fixdqflags
 				{
 					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (
@@ -1038,13 +1039,13 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-                //var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
-                //HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
+				//var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
+				//HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
 
-                //HouseholdsFix.PerformBatchFix (coreData);
-                HouseholdCleaner.FixHouseholds(coreData);
+				//HouseholdsFix.PerformBatchFix (coreData);
+				HouseholdCleaner.FixHouseholds(coreData);
 
-                System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
 		}
