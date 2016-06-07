@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera montrée.
-			this.ShowDateRangePopup (target, "Afficher un plan comptable", delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangeDateRange.ToString (), delegate (int rank)  //????
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera supprimée.
-			this.ShowDateRangePopup (target, "Supprimer un plan comptable", delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.DeleteDateRange.ToString (), delegate (int rank)  //????
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			int i = 0;
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
 			{
-				items.Add ("Période " + range.ToNiceString ());
+				items.Add (Res.Strings.AccountsSimplePopup.DateRange.ToString () + " " + range.ToNiceString ());
 
 				if (range == this.baseType.AccountsDateRange)
 				{

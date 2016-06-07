@@ -1333,6 +1333,34 @@ namespace Epsitec.Cresus.Assets.App
 				}
 			}
 			
+			public static class AccountsSimplePopup
+			{
+				//	designer:str/JUK1M01
+				public static global::Epsitec.Common.Types.FormattedText ChangeDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545025));
+					}
+				}
+				//	designer:str/JUK3M01
+				public static global::Epsitec.Common.Types.FormattedText DateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545027));
+					}
+				}
+				//	designer:str/JUK2M01
+				public static global::Epsitec.Common.Types.FormattedText DeleteDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545026));
+					}
+				}
+			}
+			
 			public static class AmortizedAmountController
 			{
 				//	designer:str/JUKSK01
@@ -6125,6 +6153,34 @@ namespace Epsitec.Cresus.Assets.App
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544518);
 						}
+					}
+				}
+			}
+			
+			public static class AccountsSimplePopup
+			{
+				//	designer:str/JUK1M01
+				public static global::Epsitec.Common.Support.Druid ChangeDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545025);
+					}
+				}
+				//	designer:str/JUK3M01
+				public static global::Epsitec.Common.Support.Druid DateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545027);
+					}
+				}
+				//	designer:str/JUK2M01
+				public static global::Epsitec.Common.Support.Druid DeleteDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545026);
 					}
 				}
 			}

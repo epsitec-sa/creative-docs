@@ -503,4 +503,7 @@
   <data name="AmortizedAmountController.Increase" id="KUL">Augmentation</data>
   <data name="Popup.CreateEvent.RemovePostOutput.Many" id="KVL">Voulez-vous supprimer les {0} événements postérieurs au {1} ?</data>
   <data name="Popup.CreateEvent.RemovePostOutput.One" id="K0M">Voulez-vous supprimer les l'événement postérieur au {0} ?</data>
+  <data name="AccountsSimplePopup.ChangeDateRange" id="K1M">Afficher un plan comptable</data>
+  <data name="AccountsSimplePopup.DeleteDateRange" id="K2M">Supprimer un plan comptable</data>
+  <data name="AccountsSimplePopup.DateRange" id="K3M">Période</data>
 </bundle>
