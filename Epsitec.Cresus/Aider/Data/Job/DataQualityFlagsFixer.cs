@@ -22,18 +22,22 @@ namespace Epsitec.Aider.Data.Job
 					foreach (var id in ids)
 					{
 						var entity = businessContext.DataContext.ResolveEntity<AiderContactEntity> (new DbKey (id));
-						if (entity.Household.IsNotNull ())
+						if (entity.IsNotNull ())
 						{
-							var household = entity.Household;
-							AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
-							household.RefreshCache ();
-							entity.QualityCode = "";
-							businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+							if (entity.Household.IsNotNull ())
+							{
+								var household = entity.Household;
+								AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
+								household.RefreshCache ();
+								entity.QualityCode = "";
+								businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+							}
+							else
+							{
+								entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
+							}
 						}
-						else
-						{
-							entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
-						}
+						
 					}
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 				});
@@ -43,17 +47,20 @@ namespace Epsitec.Aider.Data.Job
 					foreach (var id in ids)
 					{
 						var entity = businessContext.DataContext.ResolveEntity<AiderContactEntity> (new DbKey (id));
-						if (entity.Household.IsNotNull ())
+						if (entity.IsNotNull ())
 						{
-							var household = entity.Household;
-							AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
-							household.RefreshCache ();
-							entity.QualityCode = "";
-							
-						}
-						else
-						{
-							entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
+							if (entity.Household.IsNotNull ())
+							{
+								var household = entity.Household;
+								AiderContactEntity.DeleteDuplicateContacts (businessContext, household.Contacts);
+								household.RefreshCache ();
+								entity.QualityCode = "";
+
+							}
+							else
+							{
+								entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
+							}
 						}
 					}
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
