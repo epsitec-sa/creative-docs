@@ -934,3 +934,11 @@ Lancé le 29.05.2016
 -------------------
 
 -flagmissinghousehold
+
+-cleardqflags
+-flagduplicatedpersons
+-flagmissinghousehold
+
+-echupdate -newechfile:S:\eerv\eerv-2016-06-06.xml -oldechfile:S:\eerv\eerv-2016-05-23.xml -output:s:\eerv\ech-diff-2016-06-06.md
+
+-fixdqflags
