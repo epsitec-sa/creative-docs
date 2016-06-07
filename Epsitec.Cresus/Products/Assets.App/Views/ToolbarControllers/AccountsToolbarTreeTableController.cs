@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera montrée.
-			this.ShowDateRangePopup (target, "Montrer le plan comptable de la période", delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangeDateRange.ToString (), delegate (int rank)  //????
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera supprimée.
-			this.ShowDateRangePopup (target, "Supprimer le plan comptable de la période", delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.DeleteDateRange.ToString (), delegate (int rank)  //????
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			});
 		}
 
-		private void ShowDateRangePopup(Widget target, string prefix, System.Action<int> action)
+		private void ShowDateRangePopup(Widget target, string title, System.Action<int> action)
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une, sur laquelle on effectuera une action.
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			int i = 0;
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
 			{
-				items.Add (prefix + " " + range.ToNiceString ());
+				items.Add (Res.Strings.AccountsSimplePopup.DateRange.ToString () + " " + range.ToNiceString ());
 
 				if (range == this.baseType.AccountsDateRange)
 				{
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				i++;
 			}
 
-			SimplePopup.Show (target, items, selectedItem, action);
+			SimplePopup.Show (target, items, selectedItem, title, action);
 		}
 
 

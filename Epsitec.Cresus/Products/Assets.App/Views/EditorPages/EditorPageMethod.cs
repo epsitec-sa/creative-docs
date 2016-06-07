@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 		private void ShowLibraryPopup(Widget target)
 		{
 			//	Affiche le popup pour choisir une expression à "importer".
-			SimplePopup.Show (target, AmortizationExpressionCollection.Items.Select (x => x.Description), -1, delegate (int rank)
+			SimplePopup.Show (target, AmortizationExpressionCollection.Items.Select (x => x.Description), -1, null, delegate (int rank)
 			{
 				var expression = AmortizationExpressionCollection.Items
 					.Select (x => x.Expression)
