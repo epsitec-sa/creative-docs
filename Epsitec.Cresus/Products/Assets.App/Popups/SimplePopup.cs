@@ -57,8 +57,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				h -= SimplePopup.itemHeight;
 				this.CreateTitle (h, w);
 
-				h -= SimplePopup.sepHeight;
+				h -= SimplePopup.sepHeight - 2;
 				this.CreateSeparator (h, w);
+				h -= 2;
 			}
 
 			int i = 0;
