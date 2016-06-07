@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Assets.App.Views.FieldControllers
 				}
 			}
 
-			SimplePopup.Show (this.predefinedButton, items, this.GetSelectedDate (this.value), delegate (int rank)
+			SimplePopup.Show (this.predefinedButton, items, this.GetSelectedDate (this.value), null, delegate (int rank)
 			{
 				this.Value = this.GetPredefinedDate (rank);
 				this.UpdateButtons ();
