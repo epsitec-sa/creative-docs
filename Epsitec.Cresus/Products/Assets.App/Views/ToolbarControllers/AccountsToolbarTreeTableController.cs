@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				i++;
 			}
 
-			SimplePopup.Show (target, items, selectedItem, title, action);
+			SimplePopup.Show (target, items, selectedItem, title, action, leftOrRight: false);
 		}
 
 

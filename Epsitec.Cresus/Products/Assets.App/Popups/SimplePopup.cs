@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, IEnumerable<string> items, int selectedItem, string title, System.Action<int> action)
+		public static void Show(Widget target, IEnumerable<string> items, int selectedItem, string title, System.Action<int> action, bool leftOrRight = true)
 		{
 			//	Affiche le Popup.
 			var popup = new SimplePopup ()
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				popup.Items.Add (item);
 			}
 
-			popup.Create (target, leftOrRight: true);
+			popup.Create (target, leftOrRight);
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{
