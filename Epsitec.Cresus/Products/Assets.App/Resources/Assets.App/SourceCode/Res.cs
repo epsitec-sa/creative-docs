@@ -16,9 +16,11 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Accounts.CompactAll, null);
+					global::System.Object.Equals (Accounts.ChangePath, null);
 				}
 				
+				//	designer:cap/JUKF701
+				public static readonly global::Epsitec.Common.Widgets.Command ChangePath = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 239));
 				//	designer:cap/JUKE501
 				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174));
 				//	designer:cap/JUKF501
@@ -704,6 +706,8 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			public static class Accounts
 			{
+				//	designer:cap/JUKF701
+				public const long ChangePath = 0x7D3000140000EFL;
 				//	designer:cap/JUKE501
 				public const long CompactAll = 0x7D3000140000AEL;
 				//	designer:cap/JUKF501
@@ -1341,6 +1345,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545025));
+					}
+				}
+				//	designer:str/JUK4M01
+				public static global::Epsitec.Common.Types.FormattedText ChangePathDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545028));
 					}
 				}
 				//	designer:str/JUK3M01
@@ -6165,6 +6177,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335545025);
+					}
+				}
+				//	designer:str/JUK4M01
+				public static global::Epsitec.Common.Support.Druid ChangePathDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545028);
 					}
 				}
 				//	designer:str/JUK3M01

@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Assets.App.Views.CommandToolbars
 			
 			this.CreateSeparator (3);
 
+			this.CreateButton (Res.Commands.Accounts.ChangePath, 3);
 			this.CreateButton (Res.Commands.Accounts.Delete, 3);
 
 			this.CreateSeparator (1);

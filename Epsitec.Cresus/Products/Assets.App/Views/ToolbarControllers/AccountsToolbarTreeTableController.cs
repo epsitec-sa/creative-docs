@@ -197,6 +197,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.VisibleSelectedRow = -1;
 		}
 
+		[Command (Res.CommandIds.Accounts.ChangePath)]
+		protected void OnChangePath(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.ChangePathDateRange (target);
+		}
+
 		[Command (Res.CommandIds.Accounts.Delete)]
 		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -232,10 +239,25 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera montrée.
-			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangeDateRange.ToString (), delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangeDateRange.ToString (), delegate (int rank)
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
+			});
+		}
+
+		private void ChangePathDateRange(Widget target)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une dont on modifiera le chemin au plan comptable.
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangePathDateRange.ToString (), delegate (int rank)
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+
+				using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
+				{
+					h.ChangePath (range);
+				}
 			});
 		}
 
@@ -243,13 +265,13 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
 			//	choisir une qui sera supprimée.
-			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.DeleteDateRange.ToString (), delegate (int rank)  //????
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.DeleteDateRange.ToString (), delegate (int rank)
 			{
 				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
 
 				using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
 				{
-					h.Delete (range);  // choix du fichier puis importation
+					h.Delete (range);
 				}
 			});
 		}

@@ -93,6 +93,36 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
+		public void ChangePath(DateRange dateRange)
+		{
+			//	Affiche le dialogue standard de Windows pour choisir le plan comptable, puis modifie le
+			//	chemin d'accès.
+			var filename = this.accessor.Mandat.GetAccountsFilename (dateRange);
+
+			DialogsHelper.ShowImportAccounts (this.target, filename, delegate (string path)
+			{
+				LocalSettings.AccountsImportFilename = path;
+				this.ChangePath (dateRange, path);
+			});
+		}
+
+		private void ChangePath(DateRange dateRange, string filename)
+		{
+			//	Modifie le chemin d'accès à un plan comptable.
+			this.accessor.UndoManager.Start ();
+
+			this.accessor.Mandat.DeleteAccountsFilename (dateRange);
+			this.accessor.Mandat.AddAccountsFilename    (dateRange, filename);
+
+			this.accessor.WarningsDirty = true;
+			this.updateAction ();
+
+			var op = string.Concat (Res.Commands.Accounts.ChangePath.Description, " — ", dateRange.ToNiceString ());
+			var desc = UndoManager.GetDescription (op, null);
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
+		}
+
 		public void Delete(DateRange dateRange)
 		{
 			//	Supprime un plan comptable de la liste des plans comptables dans le mandat.
@@ -105,7 +135,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 			this.accessor.WarningsDirty = true;
 			this.updateAction ();
 
-			var desc = UndoManager.GetDescription (Res.Commands.Accounts.Delete.Description, null);
+			var op = string.Concat (Res.Commands.Accounts.Delete.Description, " — ", dateRange.ToNiceString ());
+			var desc = UndoManager.GetDescription (op, null);
 			this.accessor.UndoManager.SetDescription (desc);
 			this.accessor.UndoManager.SetAfterViewState ();
 		}
