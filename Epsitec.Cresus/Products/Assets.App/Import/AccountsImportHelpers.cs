@@ -102,25 +102,8 @@ namespace Epsitec.Cresus.Assets.App.Export
 			DialogsHelper.ShowImportAccounts (this.target, filename, delegate (string path)
 			{
 				LocalSettings.AccountsImportFilename = path;
-				this.ChangePath (dateRange, path);
+				this.Import (path);  // on refait l'importation
 			});
-		}
-
-		private void ChangePath(DateRange dateRange, string filename)
-		{
-			//	Modifie le chemin d'accès à un plan comptable.
-			this.accessor.UndoManager.Start ();
-
-			this.accessor.Mandat.DeleteAccountsFilename (dateRange);
-			this.accessor.Mandat.AddAccountsFilename    (dateRange, filename);
-
-			this.accessor.WarningsDirty = true;
-			this.updateAction ();
-
-			var op = string.Concat (Res.Commands.Accounts.ChangePath.Description, " — ", dateRange.ToNiceString ());
-			var desc = UndoManager.GetDescription (op, null);
-			this.accessor.UndoManager.SetDescription (desc);
-			this.accessor.UndoManager.SetAfterViewState ();
 		}
 
 		public void Delete(DateRange dateRange)
