@@ -8,7 +8,7 @@ using Epsitec.Cresus.Assets.Data.Helpers;
 namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
-	/// Cette classe est reflète le contenu d'une ligne quelconque d'un fichier .ecc.
+	/// Cette classe reflète le contenu d'une ligne quelconque d'un fichier .ecc.
 	/// Par exemple:
 	/// #FSC	9.3 	ECC
 	///	#ECF	1; 10/6/2010 11:06:53; "toto.ecf"; 123
