@@ -530,8 +530,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private const string					entriesHeader = "#FSC\t9.5.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
-		//?private const string					type = "ecassets";  // nouveau, à voir avec MW
-		private const string					type = "ecf";  // comme Crésus Facturation en attendant
+		private const string					type = "ecassets";  // nouveau, à voir avec MW et DD
+		//?private const string					type = "ecf";  // comme Crésus Facturation en attendant
 
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;
