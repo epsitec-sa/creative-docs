@@ -322,7 +322,18 @@ namespace Epsitec.Cresus.Assets.Data.Helpers
 
 		public static decimal ParseDecimal(this string s)
 		{
-			return decimal.Parse (s, System.Globalization.CultureInfo.InvariantCulture);
+			if (!string.IsNullOrEmpty (s))
+			{
+				s = s.Replace ("'", "");  // supprime les séparateurs des milliers
+
+				decimal result;
+				if (decimal.TryParse (s, out result))
+				{
+					return result;
+				}
+			}
+
+			return 0;
 		}
 		#endregion
 
