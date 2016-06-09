@@ -327,7 +327,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandOne,  expandEnable);
 			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandAll,  expandEnable);
 
-			this.toolbar.SetEnable (Res.Commands.Accounts.Export, !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.ChangePath, !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.Delete,     !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.Export,     !this.IsEmpty);
 		}
 
 
