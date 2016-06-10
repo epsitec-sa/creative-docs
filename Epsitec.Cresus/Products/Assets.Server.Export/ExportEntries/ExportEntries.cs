@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
 	/// Cette classe s'occupe d'exporter les écritures pour Crésus Comptabilité
-	/// dans les fichiers .ecc et .ecassets, sans utiliser la librairie FSC32.
+	/// dans les fichiers .ecc et .ecf, sans utiliser la librairie FSC32.
 	/// C'est un choix délibéré, car cette librairie est obsolète. Il faudra la
 	/// réécrire dans un futur indéterminé...
 	/// </summary>
@@ -141,8 +141,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 			}
 
-			int uid = this.GetEccUid ();
-
 			//	On lit le fichier .ecf, à la recherche du dernier idno utilisé.
 			int idno;
 			try
@@ -156,37 +154,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			const int nlot = 1;
 
+			int uid = this.CreateOrUpdateEccLine ();
 			var data = this.GenerateEntriesData (nlot, uid, idno);
 			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
-
-			this.CreateOrUpdateEccLine (uid);
 			this.WriteEcc ();
 
 			return this.entriesCount;
 		}
 
-
-		private int GetEccUid()
-		{
-			int uid = 1;
-
-			foreach (var eccLine in this.eccLines)
-			{
-				if (eccLine.IsBody)
-				{
-					if (eccLine.Tag == ExportEntries.EccTag)
-					{
-						return eccLine.Uid.GetValueOrDefault (1);
-					}
-					else
-					{
-						uid = System.Math.Max (uid, eccLine.Uid.GetValueOrDefault () + 1);
-					}
-				}
-			}
-
-			return uid;
-		}
 
 		private int GetLastIdno()
 		{
@@ -422,26 +397,54 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		}
 
 
-		private EccLine CreateOrUpdateEccLine(int uid)
+		private int CreateOrUpdateEccLine()
 		{
 			//	Crée ou met à jour la ligne concernée dans le fichier .ecc.
-			var eccLine = this.eccLines
-				.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename)
-				.FirstOrDefault ();
+			var eccLine = this.EccLine;
 
 			if (eccLine == null)  // ligne inexistante ?
 			{
 				//	On crée une nouvelle ligne.
-				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, uid);
+				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, this.NewEccUid);
 				this.AddEccLine (eccLine);
 			}
 			else  // ligne trouvée ?
 			{
 				eccLine.Date = System.DateTime.Now;  // on met simplement à jour la date
-				eccLine.Uid  = uid;
 			}
 
-			return eccLine;
+			return eccLine.Uid.GetValueOrDefault ();
+		}
+
+		private int NewEccUid
+		{
+			//	Retourne un nouvel Uid pas encore utilisé.
+			get
+			{
+				int uid = 1;
+				
+				foreach (var eccLine in this.eccLines)
+				{
+					if (eccLine.IsBody)
+					{
+						uid = System.Math.Max (uid, eccLine.Uid.GetValueOrDefault () + 1);
+					}
+				}
+				
+				return uid;
+			}
+		}
+
+		private EccLine EccLine
+		{
+			//	Retourne la ligne correspondant aux bonnes écritures de Assets,
+			//	ou null si elle n'existe pas.
+			get
+			{
+				return this.eccLines
+					.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename)
+					.FirstOrDefault ();
+			}
 		}
 
 		private void AddEccLine(EccLine eccLine)
@@ -477,13 +480,21 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private void WriteEcc()
 		{
 			//	Ecrit la totalité du fichier .ecc.
+			try
+			{
+				System.IO.File.Delete (this.EccPath);
+			}
+			catch (System.Exception ex)
+			{
+			}
+
 			System.IO.File.WriteAllLines (this.EccPath, this.eccLines.Select (x => x.Line), System.Text.Encoding.Default);
 		}
 
 
 		private string EccPath
 		{
-			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.ecassets,
+			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.ecf,
 			//	par exemple "C:\Documents Crésus\Exemples\Compta 2015.ecc".
 			get
 			{
@@ -496,7 +507,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesPath
 		{
 			//	Retourne le chemin du fichier contenant les écritures,
-			//	par exemple "C:\Documents Crésus\Exemples\Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
+			//	par exemple "C:\Documents Crésus\Exemples\Mon Village Assets (01-01-2015 ~ 31-12-2015).ecf".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -507,19 +518,21 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesFilename
 		{
 			//	Retourne le nom du fichier contenant les écritures,
-			//	par exemple "Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
+			//	par exemple "Mon Village Assets (01-01-2015 ~ 31-12-2015).ecf".
+			//	Ce nom contient la chaîne "Assets" pour qu'on ne puisse pas le confondre avec un
+			//	fichier généré par Crésus Facturation (aussi un .ecf) !
 			get
 			{
 				string from = this.accountsRange.IncludeFrom           .ToString ("dd-MM-yyyy");
 				string to   = this.accountsRange.ExcludeTo.AddDays (-1).ToString ("dd-MM-yyyy");
 
-				return string.Format ("{0} ({1} ~ {2}).{3}", this.accessor.Mandat.Name, from, to, ExportEntries.type);
+				return string.Format ("{0} ({1} ~ {2}) Assets.{3}", this.accessor.Mandat.Name, from, to, ExportEntries.type);
 			}
 		}
 
 		private static string EccTag
 		{
-			//	Retourne le tag pour le fichier .ecc, normalement "#ECASSETS".
+			//	Retourne le tag pour le fichier .ecc, normalement "#ECF".
 			get
 			{
 				return string.Concat ("#", ExportEntries.type.ToUpper ());
@@ -530,8 +543,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private const string					entriesHeader = "#FSC\t9.5.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
-		private const string					type = "ecassets";  // nouveau, à voir avec MW et DD
-		//?private const string					type = "ecf";  // comme Crésus Facturation en attendant
+		private const string					type = "ecf";  // comme Crésus Facturation
 
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;
