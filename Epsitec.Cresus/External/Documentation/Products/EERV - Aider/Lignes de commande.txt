@@ -942,3 +942,9 @@ Lancé le 29.05.2016
 -echupdate -newechfile:S:\eerv\eerv-2016-06-06.xml -oldechfile:S:\eerv\eerv-2016-05-23.xml -output:s:\eerv\ech-diff-2016-06-06.md
 
 -fixdqflags
+
+Lancé le 14.06.2016
+-------------------
+
+-updateparishname -current:"Villeneuve – Noville" -new:"Villeneuve – Haut-Lac" -pla:false
+-echupdate -newechfile:S:\eerv\eerv-2016-06-13.xml -oldechfile:S:\eerv\eerv-2016-06-06.xml -output:s:\eerv\ech-diff-2016-06-13.md
