@@ -958,6 +958,11 @@ Lancé le 21.06.2016
 -uploadsubscriptions -input:export-2016-06-30.txt -publicationdate:2016-06-30 -response:tamedia-2016-06-30.log
 
 
+Lancé le 28.06.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-06-27.xml -oldechfile:S:\eerv\eerv-2016-06-20.xml -output:s:\eerv\ech-diff-2016-06-27.md
+
 
 
 ___________________________________________________________________________________________________________________________________
