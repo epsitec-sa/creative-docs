@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
-				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
+				this.GetBestStreetName (), this.HouseNumberAndComplement, "\n",
 				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
@@ -85,10 +85,43 @@ namespace Epsitec.Aider.Entities
 		private FormattedText GetCompactPostalAddress()
 		{
 			return TextFormatter.FormatText (
-				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
+				this.GetBestStreetName (forceShortName: true), this.HouseNumberAndComplement, "\n",
 				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
+		}
+
+		private string GetBestStreetName (bool forceShortName = false)
+		{
+			var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
+			
+			var shortnames = new Dictionary<string, string> ()
+			{
+				{ "Chemin ", "Ch. " },
+				{ "Passage ", "Pass. " },
+				{ "Boulevard ",  "Bd " },
+				{ "Route ", "Rte " },
+				{ "Promenade ", "Prom. " },
+				{ "Terrasse ", "Terr. " },
+				{ "Avenue ", "Av. " },
+				{ "Escalier ", "Esc. " },
+				{ "Impasse ", "Imp. "},
+				{ "Strasse ", "Str. "},
+				{ "Esplanade ", "Espl. "}
+			};
+
+			var len = street.Length;
+			if (len > 24 || forceShortName)
+			{
+				var isInShortnames = shortnames.Any (s => street.StartsWith (s.Key));
+				if (isInShortnames)
+				{
+					var shortName = shortnames.Single (s => street.StartsWith (s.Key));
+					return street.Replace (shortName.Key, shortName.Value);
+				}
+				return street;
+			}
+			return street;
 		}
 
 		public FormattedText GetDisplayAddress()
