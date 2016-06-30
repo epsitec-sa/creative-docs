@@ -29,10 +29,11 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var context = this.BusinessContext;
 			var person  = this.Entity.Person;
 
-
-			AiderPersonsProcess.StartExitProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
+			if (person.IsNotNull ())
+			{
+				AiderPersonsProcess.StartExitProcess (context, person, OfficeProcessType.PersonsParishChangeProcess);
+			}
 			
-
 			this.ClearWarningAndRefreshCaches ();
 		}
 
