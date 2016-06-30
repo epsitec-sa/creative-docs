@@ -2385,6 +2385,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Visible" />
       </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOJ93]" title="Concerne" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOM83]" title="Terminée?" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />

@@ -11849,6 +11849,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Subject</c> field.
+		///	designer:fld/LVOD83/LVOJ93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOJ93]", IsVirtual=true)]
+		public string Subject
+		{
+			get
+			{
+				string value = default (string);
+				this.GetSubject (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Subject;
+				if (oldValue != value || !this.IsFieldDefined("[LVOJ93]"))
+				{
+					this.OnSubjectChanging (oldValue, value);
+					this.SetSubject (value);
+					this.OnSubjectChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnOfficeChanging(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
 		partial void OnOfficeChanged(global::Epsitec.Aider.Entities.AiderOfficeManagementEntity oldValue, global::Epsitec.Aider.Entities.AiderOfficeManagementEntity newValue);
@@ -11864,7 +11888,11 @@ namespace Epsitec.Aider.Entities
 		partial void OnGroupPathCacheChanged(string oldValue, string newValue);
 		partial void OnActorChanging(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
 		partial void OnActorChanged(global::Epsitec.Aider.Entities.AiderUserEntity oldValue, global::Epsitec.Aider.Entities.AiderUserEntity newValue);
+		partial void OnSubjectChanging(string oldValue, string newValue);
+		partial void OnSubjectChanged(string oldValue, string newValue);
 		
+		partial void GetSubject(ref string value);
+		partial void SetSubject(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

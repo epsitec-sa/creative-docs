@@ -3841,6 +3841,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Process = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 276);
 				//	designer:cap/LVO593
 				public static readonly global::Epsitec.Common.Support.Druid SourceId = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 293);
+				//	designer:cap/LVOJ93
+				public static readonly global::Epsitec.Common.Support.Druid Subject = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 307);
 			}
 			
 			public static class AiderPerson
