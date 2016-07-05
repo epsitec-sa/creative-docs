@@ -91,28 +91,19 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
 
-		private string GetBestStreetName (bool forceShortName = false)
+		private string GetBestStreetName(bool forceShortName = false)
 		{
 			var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
-			
-			var shortnames = new Dictionary<string, string> ()
+
+			if (street == null)
 			{
-				{ "Chemin ", "Ch. " },
-				{ "Passage ", "Pass. " },
-				{ "Boulevard ",  "Bd " },
-				{ "Route ", "Rte " },
-				{ "Promenade ", "Prom. " },
-				{ "Terrasse ", "Terr. " },
-				{ "Avenue ", "Av. " },
-				{ "Escalier ", "Esc. " },
-				{ "Impasse ", "Imp. "},
-				{ "Strasse ", "Str. "},
-				{ "Esplanade ", "Espl. "}
-			};
+				return street;
+			}
 
 			var len = street.Length;
 			if (len > 24 || forceShortName)
 			{
+				var shortnames = AiderAddressEntity.ShortStreetMap;
 				var isInShortnames = shortnames.Any (s => street.StartsWith (s.Key));
 				if (isInShortnames)
 				{
@@ -509,6 +500,21 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotImplementedException ("Do not use this method");
 		}
 
+
+		private static readonly Dictionary<string, string> ShortStreetMap = new Dictionary<string, string> ()
+			{
+				{ "Chemin ", "Ch. " },
+				{ "Passage ", "Pass. " },
+				{ "Boulevard ",  "Bd " },
+				{ "Route ", "Rte " },
+				{ "Promenade ", "Prom. " },
+				{ "Terrasse ", "Terr. " },
+				{ "Avenue ", "Av. " },
+				{ "Escalier ", "Esc. " },
+				{ "Impasse ", "Imp. "},
+				{ "Strasse ", "Str. "},
+				{ "Esplanade ", "Espl. "}
+			};
 
 		private static char[] digits = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}
