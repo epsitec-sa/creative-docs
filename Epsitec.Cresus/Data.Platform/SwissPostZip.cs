@@ -16,6 +16,10 @@ namespace Epsitec.Data.Platform
 	{
 		public static string GetSwissPostZipCsv()
 		{
+			return SwissPostZip.GetMatchZipCsvPath ();
+			/* TODO:
+			* MatchSort website (swisspost) has changed!
+			* We must migrate the match client
 			var matchClient     = SwissPost.MatchWebClient;
 			var swissPostZipCsv = SwissPostZip.GetMatchZipCsvPath ();
 			var file            = matchClient.GetMatchSortFile ();
@@ -29,6 +33,7 @@ namespace Epsitec.Data.Platform
 			{
 				return swissPostZipCsv;
 			}
+			*/
 		}
 
 		private static string GetMatchZipCsvPath()

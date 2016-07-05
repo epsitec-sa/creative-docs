@@ -21,6 +21,10 @@ namespace Epsitec.Data.Platform
 
 		public static string GetSwissPostStreetCsv()
 		{
+			return SwissPostStreet.GetMatchStreetCsvPath ();
+			/* TODO:
+			* MatchSort website (swisspost) has changed!
+			* We must migrate the match client
 			var matchClient        = SwissPost.MatchWebClient;
 			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
 			try
@@ -39,17 +43,17 @@ namespace Epsitec.Data.Platform
 			catch
 			{
 				return swissPostStreetCsv;
-			}
-		}
+			}*/
+        }
 
-		/// <summary>
-		/// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
-		/// that is "Neuchâtel, rue de") into a user friendly street name (such as
-		/// "rue de Neuchâtel 32").
-		/// </summary>
-		/// <param name="street">The Swiss Post street name.</param>
-		/// <returns>The user friendly street name.</returns>
-		public static string ConvertToUserFriendlyStreetName(string street)
+        /// <summary>
+        /// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
+        /// that is "Neuchâtel, rue de") into a user friendly street name (such as
+        /// "rue de Neuchâtel 32").
+        /// </summary>
+        /// <param name="street">The Swiss Post street name.</param>
+        /// <returns>The user friendly street name.</returns>
+        public static string ConvertToUserFriendlyStreetName(string street)
 		{
 			if (string.IsNullOrEmpty (street))
 			{
