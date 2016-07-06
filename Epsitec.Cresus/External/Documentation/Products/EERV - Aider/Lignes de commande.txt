@@ -964,6 +964,12 @@ Lancé le 28.06.2016
 -echupdate -newechfile:S:\eerv\eerv-2016-06-27.xml -oldechfile:S:\eerv\eerv-2016-06-20.xml -output:s:\eerv\ech-diff-2016-06-27.md
 
 
+Lancé le 04.07.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-07-04.xml -oldechfile:S:\eerv\eerv-2016-06-27.xml -output:s:\eerv\ech-diff-2016-07-04.md
+
+
 
 ___________________________________________________________________________________________________________________________________
 
