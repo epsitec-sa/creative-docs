@@ -93,7 +93,12 @@ namespace Epsitec.Aider.Entities
 
 		private string GetBestStreetName (bool forceShortName = false)
 		{
-			var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
+            if (this.StreetUserFriendly == null)
+            {
+                return null;
+            }
+
+            var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
 			
 			var shortnames = new Dictionary<string, string> ()
 			{
