@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				try
 				{
-					var range = importEngine.Import (importedAccounts, null, filename);
+					var range = importEngine.Import (importedAccounts, null, null, filename);
 
 					bool existing = this.accessor.Mandat.AccountsDateRanges.Contains (range);
 					if (existing)
@@ -133,12 +133,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 			using (var importEngine = new AccountsImport ())
 			{
 				DateRange range;
-				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
-				var importedVatCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedVatCodes    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
 				try
 				{
-					range = importEngine.Import (importedAccounts, importedVatCodes, filename);
+					range = importEngine.Import (importedAccounts, importedVatCodes, importedCenterCodes, filename);
 				}
 				catch (System.Exception ex)
 				{
