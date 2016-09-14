@@ -318,10 +318,11 @@ namespace Epsitec.Aider.Processors.Pdf
 				case EventType.Baptism:
 					lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather, primary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother, primary: true));
                     lines.Add (this.GetParticipantLine (act, EventParticipantRole.GodFather, secondary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.GodMother, secondary: true));
-                    break;
+					lines.Add (this.GetParticipantLine (act, EventParticipantRole.Witness, primary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.Witness, secondary: true));
+					break;
 				case EventType.CelebrationRegisteredPartners:
 				case EventType.Marriage:
-					lines.Add (this.GetParticipantLine (act, EventParticipantRole.FirstWitness) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.SecondWitness));
+					lines.Add (this.GetParticipantLine (act, EventParticipantRole.Witness, primary: true) + this.Tabs () + this.GetParticipantLine (act, EventParticipantRole.Witness, secondary: true));
 					break;
 			}
 		}
@@ -423,16 +424,19 @@ namespace Epsitec.Aider.Processors.Pdf
 		private string GetParticipantLine(AiderEventEntity act, Enumerations.EventParticipantRole role ,bool primary = false, bool secondary = false)
 		{
             string line = "<tab/>";
-            if (!secondary)
-            {
-                line = this.GetRoleLabel (act, role, primary);
-                line += act.GetActorFullName (role);
-            }
-            else
-            {
-                line += act.GetActorFullName (role, secondary);
-            }
-			
+			if (act.GetActorFullName (role, secondary) != null)
+			{
+				if (!secondary)
+				{
+
+					line = this.GetRoleLabel (act, role, primary);
+					line += act.GetActorFullName (role);
+				}
+				else
+				{
+					line += act.GetActorFullName (role, secondary);
+				}
+			}
 			return line;
 		}
 
