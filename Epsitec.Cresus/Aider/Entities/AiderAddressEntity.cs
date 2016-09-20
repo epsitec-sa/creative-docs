@@ -93,12 +93,12 @@ namespace Epsitec.Aider.Entities
 
 		private string GetBestStreetName(bool forceShortName = false)
 		{
-			var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
+            if (this.StreetUserFriendly == null)
+            {
+                return null;
+            }
 
-			if (street == null)
-			{
-				return street;
-			}
+            var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
 
 			var len = street.Length;
 			if (len > 24 || forceShortName)

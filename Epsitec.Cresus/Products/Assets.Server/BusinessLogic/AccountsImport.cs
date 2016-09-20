@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vatCodes, string filename)
+		public DateRange Import(GuidDictionary<DataObject> accounts, GuidDictionary<DataObject> vatCodes, GuidDictionary<DataObject> centerCodes, string filename)
 		{
 			//	Importe un plan comptable de Crésus Comptabilité (fichier .crp) et
 			//	peuple la liste des comptes sous forme d'objets avec des propriétés.
@@ -30,12 +30,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				this.vatCodes.Clear ();
 			}
 
+			this.centerCodes = centerCodes;
+			if (this.centerCodes != null)
+			{
+				this.centerCodes.Clear ();
+			}
+
 			this.ReadLines (filename);
 			this.InitDates ();
 
 			if (this.vatCodes != null)
 			{
 				this.AddVatCodes ();
+			}
+
+			if (this.centerCodes != null)
+			{
+				this.AddCenterCodes ();
 			}
 
 			this.AddAccounts ();
@@ -75,6 +86,40 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 					if (rate.HasValue && !AccountsImport.ObsoleteVatCodes.Contains(name))
 					{
 						this.AddVatCode (name, rate.Value/100.0m, desc);
+					}
+				}
+			}
+		}
+
+		private void AddCenterCodes()
+		{
+			//	Importe tous les codes analytiques.
+			int index = this.IndexOfLine ("BEGIN=CENTERS");
+
+			this.AddCenterCode (DataStringProperty.WithoutVat, null);
+
+			while (++index < this.lines.Length)
+			{
+				var line = this.lines[index];
+
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				if (line.StartsWith ("END=CENTERS"))
+				{
+					break;
+				}
+
+				if (line.StartsWith ("ENTRY"))
+				{
+					var name   = this.GetEntryContentText (index, "NAME");
+					var number = this.GetEntryContentText (index, "NUMBER");
+
+					if (!string.IsNullOrEmpty (name) && !string.IsNullOrEmpty (number))
+					{
+						this.AddCenterCode (name, number);
 					}
 				}
 			}
@@ -235,6 +280,23 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				{
 					e.AddProperty (new DataDecimalProperty (ObjectField.VatRate, rate.Value));
 				}
+			}
+
+			//?System.Console.WriteLine (number);
+			return o;
+		}
+
+		private DataObject AddCenterCode(string name, string number)
+		{
+			var o = new DataObject (null);
+			this.centerCodes.Add (o);
+			{
+				var start = new Timestamp (new System.DateTime (2000, 1, 1), 0);
+				var e = new DataEvent (null, start, EventType.Input);
+				o.AddEvent (e);
+
+				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Number, number));
 			}
 
 			//?System.Console.WriteLine (number);
@@ -460,7 +522,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private string[]						lines;
 		private GuidDictionary<DataObject>		accounts;
-		private GuidDictionary<DataObject>		vatCodes;
+		private GuidDictionary<DataObject>      vatCodes;
+		private GuidDictionary<DataObject>		centerCodes;
 		private System.DateTime					beginDate;
 		private System.DateTime					endDate;
 	}
