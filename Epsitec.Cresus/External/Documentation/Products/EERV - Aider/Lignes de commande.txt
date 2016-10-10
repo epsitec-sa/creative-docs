@@ -1003,6 +1003,12 @@ Lancé le 20.09.2016
 -uploadsubscriptions -input:export-2016-09-29.txt -publicationdate:2016-09-29 -response:tamedia-2016-09-29.log
 
 
+Lancé le 03.10.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-09-26.xml -oldechfile:S:\eerv\eerv-2016-09-19.xml -output:s:\eerv\ech-diff-2016-09-26.md
+-echupdate -newechfile:S:\eerv\eerv-2016-10-03.xml -oldechfile:S:\eerv\eerv-2016-09-26.xml -output:s:\eerv\ech-diff-2016-10-03.md
+
 
 ___________________________________________________________________________________________________________________________________
 
