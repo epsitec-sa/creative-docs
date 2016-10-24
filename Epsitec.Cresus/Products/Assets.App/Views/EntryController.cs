@@ -122,7 +122,8 @@ namespace Epsitec.Cresus.Assets.App.Views
 					|| this.stampController  .HasError
 					|| this.titleController  .HasError
 					|| this.amountController .HasError
-					|| this.vatCodeController.HasError;
+					|| this.vatCodeController.HasError
+					|| this.centerController .HasError;
 			}
 		}
 
@@ -152,6 +153,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.CreateTitleController   (parent);
 			this.CreateAmountController  (parent);
 			this.CreateVatCodeController (parent);
+			this.CreateCenterController  (parent);
 
 			this.UpdateUI ();
 		}
@@ -298,6 +300,26 @@ namespace Epsitec.Cresus.Assets.App.Views
 			};
 		}
 
+		private void CreateCenterController(Widget parent)
+		{
+			this.centerController = new CenterFieldController (this.accessor)
+			{
+				Field                 = ObjectField.Unknown,
+				Label                 = Res.Strings.EntryController.Center.ToString (),
+				EditWidth             = AbstractFieldController.maxWidth,
+				HideAdditionalButtons = false,
+				TabIndex              = this.tabIndex,
+			};
+
+			this.centerController.CreateUI (parent);
+			this.tabIndex = this.centerController.TabIndex;
+
+			this.centerController.ValueEdited += delegate (object sender, ObjectField of)
+			{
+				this.SetCenter (this.centerController.Value);
+			};
+		}
+
 
 		private void SetDate(System.DateTime? value)
 		{
@@ -341,6 +363,12 @@ namespace Epsitec.Cresus.Assets.App.Views
 			this.OnValueEdited ();
 		}
 
+		private void SetCenter(string value)
+		{
+			this.accessor.EditionAccessor.SetField (ObjectField.AssetEntryForcedCenter, value);
+			this.OnValueEdited ();
+		}
+
 
 
 		public void UpdateNoEditingUI()
@@ -357,6 +385,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.debitController  .Date = this.accessor.EditionAccessor.EventDate;
 				this.creditController .Date = this.accessor.EditionAccessor.EventDate;
 				this.vatCodeController.Date = this.accessor.EditionAccessor.EventDate;
+				this.centerController .Date = this.accessor.EditionAccessor.EventDate;
 
 				EntryProperties baseProperties = null;
 				EntryProperties editProperties = null;
@@ -374,6 +403,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.UpdatePropertyState (this.titleController,   baseProperties.Title   == editProperties.Title);
 				this.UpdatePropertyState (this.amountController,  baseProperties.Amount  == editProperties.Amount);
 				this.UpdatePropertyState (this.vatCodeController, baseProperties.VatCode == editProperties.VatCode);
+				this.UpdatePropertyState (this.centerController,  baseProperties.Center  == editProperties.Center);
 
 				this.dateController   .Value = editProperties.Date;
 				this.debitController  .Value = editProperties.Debit;
@@ -382,6 +412,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController  .Value = editProperties.Title;
 				this.amountController .Value = editProperties.Amount;
 				this.vatCodeController.Value = editProperties.VatCode;
+				this.centerController .Value = editProperties.Center;
 			}
 			else
 			{
@@ -392,6 +423,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController  .PropertyState = this.propertyState;
 				this.amountController .PropertyState = this.propertyState;
 				this.vatCodeController.PropertyState = this.propertyState;
+				this.centerController .PropertyState = this.propertyState;
 
 				this.dateController   .IsReadOnly = this.isReadOnly;
 				this.debitController  .IsReadOnly = this.isReadOnly;
@@ -400,6 +432,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController  .IsReadOnly = this.isReadOnly;
 				this.amountController .IsReadOnly = this.isReadOnly;
 				this.vatCodeController.IsReadOnly = this.isReadOnly;
+				this.centerController .IsReadOnly = this.isReadOnly;
 
 				this.dateController   .Value = null;
 				this.debitController  .Value = null;
@@ -408,6 +441,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 				this.titleController  .Value = null;
 				this.amountController .Value = null;
 				this.vatCodeController.Value = null;
+				this.centerController .Value = null;
 
 				var type = AbstractFieldController.GetFieldColorType (this.propertyState, isLocked: this.isReadOnly);
 				this.fieldColorTypes.Add (type);
@@ -492,6 +526,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private StringFieldController			stampController;
 		private StringFieldController			titleController;
 		private DecimalFieldController			amountController;
-		private VatCodeFieldController			vatCodeController;
+		private VatCodeFieldController          vatCodeController;
+		private CenterFieldController			centerController;
 	}
 }

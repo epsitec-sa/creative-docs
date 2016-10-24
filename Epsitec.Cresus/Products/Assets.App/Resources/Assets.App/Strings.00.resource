@@ -507,4 +507,5 @@
   <data name="AccountsSimplePopup.DeleteDateRange" id="K2M">Plan comptable à supprimer</data>
   <data name="AccountsSimplePopup.DateRange" id="K3M">Période</data>
   <data name="AccountsSimplePopup.ChangePathDateRange" id="K4M">Plan comptable à modifier</data>
+  <data name="EntryController.Center" id="K5M">Centre de charge</data>
 </bundle>

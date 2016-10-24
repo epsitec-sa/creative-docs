@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   350, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.VatCode.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCenter,        TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.Center.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryLocked,        TreeTableColumnType.Glyph ,  30, ""));
 

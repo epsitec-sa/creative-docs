@@ -66,14 +66,16 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 			int w12 = EntrySamples.accountWidth;
 			int w4  = EntrySamples.vatCodeWidth;
-			int w3  = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth - margins*2 - w12*2 - w4;
+			int w5  = EntrySamples.centerWidth;
+			int w3  = AbstractView.editionWidth - 20 - AbstractView.scrollerDefaultBreadth - margins*2 - w12*2 - w4 - w5;
 			
 			var c1 = new TreeTableColumnDescription (ObjectField.EntryDebitAccount,  TreeTableColumnType.String, w12, Res.Strings.EntryController.Debit.ToString ());
 			var c2 = new TreeTableColumnDescription (ObjectField.EntryCreditAccount, TreeTableColumnType.String, w12, Res.Strings.EntryController.Credit.ToString ());
 			var c3 = new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.String, w3,  Res.Strings.EntryController.Title.ToString ());
 			var c4 = new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String, w4,  Res.Strings.EntryController.VatCode.ToString ());
+			var c5 = new TreeTableColumnDescription (ObjectField.EntryCenter,        TreeTableColumnType.String, w5,  Res.Strings.EntryController.Center.ToString ());
 
-			var columns = new TreeTableColumnDescription[] { c1, c2, c3, c4 };
+			var columns = new TreeTableColumnDescription[] { c1, c2, c3, c4, c5 };
 			this.treeTable.SetColumns (columns, SortingInstructions.Default, 0, "EntrySamples");
 		}
 
@@ -167,6 +169,7 @@ namespace Epsitec.Cresus.Assets.App.Views
 		private const int rowHeight    =  18;
 		private const int accountWidth = 110;
 		private const int vatCodeWidth =  80;
+		private const int centerWidth  =  80;
 
 		private readonly DataAccessor			accessor;
 		private readonly System.DateTime?		forcedDate;

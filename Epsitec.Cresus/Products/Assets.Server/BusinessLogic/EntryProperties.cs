@@ -14,7 +14,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		public string							Stamp;
 		public string							Title;
 		public decimal							Amount;
-		public string							VatCode;
+		public string                           VatCode;
+		public string							Center;
 
 		public bool IsValid
 		{
@@ -37,6 +38,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			Title   = null,
 			Amount  = 0.0m,
 			VatCode = null,
+			Center  = null,
 		};
 	}
 }

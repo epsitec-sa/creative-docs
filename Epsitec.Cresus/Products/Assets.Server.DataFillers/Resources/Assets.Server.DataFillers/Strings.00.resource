@@ -110,4 +110,5 @@
   <data name="MCH2SummaryTreeTableFiller.FromTo" id="KT3">du {0} au {1}</data>
   <data name="Enum.MCH2Summary.Column.PostPreInputs.Text" id="KU3">Financ. ant.</data>
   <data name="Enum.MCH2Summary.Column.PostPreInputs.Tooltip" id="KV3">Entrées de financement préalable antérieures au &amp;lt;INITIAL&amp;gt;</data>
+  <data name="EntriesTreeTableFiller.Center" id="K04">Centre de charge</data>
 </bundle>

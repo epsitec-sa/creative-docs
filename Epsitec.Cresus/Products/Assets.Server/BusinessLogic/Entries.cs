@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			var aa = new AmortizedAmount (scenario);
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				ea[field] = this.accessor.EditionAccessor.GetFieldString (field);
 			}
@@ -106,6 +106,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				case 3:
 					text = this.GetVatCode (null, null, aa, ea, GetEntryPropertiesType.Sample);
+					break;
+
+				case 4:
+					text = this.GetCenter (null, null, aa, ea, GetEntryPropertiesType.Sample);
 					break;
 			}
 		}
@@ -134,6 +138,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				Title   = this.GetTitle   (asset, e, amount,                type),
 				Amount  = this.GetValue   (asset, e, amount,                type),
 				VatCode = this.GetVatCode (asset, e, amount, entryAccounts, type),
+				Center  = this.GetCenter  (asset, e, amount, entryAccounts, type),
 			};
 		}
 
@@ -144,7 +149,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	à l'événement contenant ce montant.
 			var ea = new EntryAccounts ();
 
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				ea[field] = ObjectProperties.GetObjectPropertyString (asset, e.Timestamp, field);
 			}
@@ -488,6 +493,58 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
+		private string GetCenter(DataObject asset, DataEvent e, AmortizedAmount amount, EntryAccounts entryAccouts, GetEntryPropertiesType type)
+		{
+			//	Retourne le centre de charge de l'écriture.
+			if (type == GetEntryPropertiesType.Current)
+			{
+				var p = e.GetProperty (ObjectField.AssetEntryForcedCenter) as DataStringProperty;
+				if (p != null)
+				{
+					return p.Value;
+				}
+			}
+
+			if (type == GetEntryPropertiesType.EditedOrBase)
+			{
+				var s = this.accessor.EditionAccessor.GetFieldString (ObjectField.AssetEntryForcedCenter, synthetic: false);
+				if (!string.IsNullOrEmpty (s))
+				{
+					return s;
+				}
+			}
+
+			switch (amount.EntryScenario)
+			{
+				case EntryScenario.PreInput:
+					return entryAccouts[ObjectField.AccountPreInputCenter];
+
+				case EntryScenario.Purchase:
+					return entryAccouts[ObjectField.AccountPurchaseCenter];
+
+				case EntryScenario.Sale:
+					return entryAccouts[ObjectField.AccountSaleCenter];
+
+				case EntryScenario.AmortizationAuto:
+					return entryAccouts[ObjectField.AccountAmortizationAutoCenter];
+
+				case EntryScenario.AmortizationExtra:
+					return entryAccouts[ObjectField.AccountAmortizationExtraCenter];
+
+				case EntryScenario.Increase:
+					return entryAccouts[ObjectField.AccountIncreaseCenter];
+
+				case EntryScenario.Decrease:
+					return entryAccouts[ObjectField.AccountDecreaseCenter];
+
+				case EntryScenario.Adjust:
+					return entryAccouts[ObjectField.AccountAdjustCenter];
+
+				default:
+					return null;
+			}
+		}
+
 
 		private DataObject CreateDataEntry(DataObject asset, DataEvent e, AmortizedAmount amount, ref Guid entryGuid, ref int entrySeed)
 		{
@@ -520,6 +577,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,         entryProperties.Title));
 			e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount,        entryProperties.Amount));
 			e.AddProperty (new DataStringProperty  (ObjectField.EntryVatCode,       entryProperties.VatCode));
+			e.AddProperty (new DataStringProperty  (ObjectField.EntryCenter,        entryProperties.Center));
 
 			return entry.Guid;
 		}

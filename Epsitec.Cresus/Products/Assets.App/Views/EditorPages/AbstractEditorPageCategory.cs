@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void CreateAccountsUI(Widget parent, System.DateTime? forcedDate)
 		{
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				var type = this.accessor.GetFieldType (field);
 
