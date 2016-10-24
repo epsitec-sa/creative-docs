@@ -37,13 +37,14 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Retourne le rapport sur la future importation d'un plan comptable.
 			using (var importEngine = new AccountsImport ())
 			{
-				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
 				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
 
 				try
 				{
-					var range = importEngine.Import (importedAccounts, null, null, filename);
+					var range = importEngine.Import (importedAccounts, null, importedCenterCodes, filename);
 
 					bool existing = this.accessor.Mandat.AccountsDateRanges.Contains (range);
 					if (existing)
@@ -56,13 +57,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						}
 						else
 						{
-							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count);
+							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count, importedCenterCodes.Count);
 							return new AccountsImportReport (AccountsImportMode.Update, report + message);
 						}
 					}
 					else
 					{
-						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count);
+						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count, importedCenterCodes.Count);
 						return new AccountsImportReport (AccountsImportMode.Add, report + message);
 					}
 				}
