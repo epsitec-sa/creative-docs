@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Assets.Data
 		#region Centers
 		public IEnumerable<DateRange> CentersDateRanges
 		{
-			//	Retourne la liste des périodes de tous les codes TVA connus.
+			//	Retourne la liste des périodes de tous les centres de charge connus.
 			get
 			{
 				return this.rangeCenters.Select (x => x.Key);
@@ -397,7 +397,7 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public GuidDictionary<DataObject> GetCenters(DateRange range)
 		{
-			//	Retourne le code TVA correspondant à une période.
+			//	Retourne le centre de charge correspondant à une période.
 			GuidDictionary<DataObject> centers;
 			if (!range.IsEmpty && this.rangeCenters.TryGetValue (range, out centers))
 			{
@@ -412,14 +412,14 @@ namespace Epsitec.Cresus.Assets.Data
 
 		public void AddCenters(DateRange dateRange, GuidDictionary<DataObject> centers)
 		{
-			//	Prend connaissance d'un nouveau code TVA, qui est ajouté ou
+			//	Prend connaissance d'un nouveau centres de charge, qui est ajouté ou
 			//	qui remplace un existant, selon sa période.
 			this.rangeCenters[dateRange] = centers;
 		}
 
 		public void DeleteCenters(DateRange dateRange)
 		{
-			//	Oublie un code TVA d'une période donnée.
+			//	Oublie un centres de charge d'une période donnée.
 			GuidDictionary<DataObject> centers;
 			if (this.rangeCenters.TryGetValue (dateRange, out centers))
 			{

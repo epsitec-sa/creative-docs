@@ -112,4 +112,5 @@
   <data name="Enum.EntryScenario.Title.PreInput" id="KM3">Financement préalable {0}</data>
   <data name="CentersLogic.CodeDoesNotExist" id="KN3">Ce centre de charge n'existe pas</data>
   <data name="CentersLogic.InvalidDate" id="KO3">Aucun plan comptable à cette date</data>
+  <data name="AccountsImport.WithoutCenter" id="KP3">Pas de centre de charge</data>
 </bundle>

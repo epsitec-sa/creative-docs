@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var title   = fields[4];
 					var value   = fields[5].ParseDecimal ();
 					var vatCode = fields[14];
-					var center  = fields[15];  //????
+					var center  = fields[15];
 
 					var entry = new DataObject (null);
 
@@ -377,9 +377,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append ("\t");
 					builder.Append ((idno++).ToStringIO ());  // idno
 					builder.Append ("\t");
-					builder.Append (vatCode);
+					builder.Append (vatCode);  // index 14
 					builder.Append ("\t");
-					builder.Append (center);  //???? -- 15 ?
+					builder.Append (center);  // index 15
 					builder.Append ("\t");
 					builder.Append ("\t");
 					builder.Append ("\t");

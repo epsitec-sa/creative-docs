@@ -39,13 +39,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
-				var centerCount = System.Math.Max (importedCenterCodes.Count-1, 0);
 
 				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
 
 				try
 				{
 					var range = importEngine.Import (importedAccounts, null, importedCenterCodes, filename);
+					var centerCount = System.Math.Max (importedCenterCodes.Count-1, 0);
 
 					bool existing = this.accessor.Mandat.AccountsDateRanges.Contains (range);
 					if (existing)

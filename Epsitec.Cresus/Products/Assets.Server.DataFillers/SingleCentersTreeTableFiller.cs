@@ -24,8 +24,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			get
 			{
-				// Tri primaire du plus grand taux au plus petit, et secondaire selon le code.
-				return new SortingInstructions (ObjectField.VatRate, SortedType.Descending, ObjectField.Name, SortedType.Ascending);
+				return new SortingInstructions (ObjectField.Number, SortedType.Ascending, ObjectField.Name, SortedType.Ascending);
 			}
 		}
 
@@ -43,9 +42,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,        TreeTableColumnType.String, SingleCentersTreeTableFiller.nameWidth));
-				columns.Add (new TreeTableColumnDescription (ObjectField.VatRate,     TreeTableColumnType.Rate,   SingleCentersTreeTableFiller.rateWidth));
-				columns.Add (new TreeTableColumnDescription (ObjectField.Description, TreeTableColumnType.String, SingleCentersTreeTableFiller.descWidth));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,   TreeTableColumnType.String, SingleCentersTreeTableFiller.nameWidth));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Number, TreeTableColumnType.String, SingleCentersTreeTableFiller.numberWidth));
 
 				return columns.ToArray ();
 			}
@@ -55,7 +53,6 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			content.Columns.Add (new TreeTableColumnItem ());
 			content.Columns.Add (new TreeTableColumnItem ());
 			content.Columns.Add (new TreeTableColumnItem ());
 
@@ -70,18 +67,15 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var center = this.accessor.GetObject (this.BaseType, node.Guid);
 
 				var name = ObjectProperties.GetObjectPropertyString  (center, this.Timestamp, ObjectField.Name, inputValue: true);
-				var rate = ObjectProperties.GetObjectPropertyDecimal (center, this.Timestamp, ObjectField.VatRate);
-				var desc = ObjectProperties.GetObjectPropertyString  (center, this.Timestamp, ObjectField.Description);
+				var desc = ObjectProperties.GetObjectPropertyString  (center, this.Timestamp, ObjectField.Number);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellString  (name, cellState);
-				var cell2 = new TreeTableCellDecimal (rate, cellState);
-				var cell3 = new TreeTableCellString  (desc, cellState);
+				var cell1 = new TreeTableCellString (name, cellState);
+				var cell2 = new TreeTableCellString (desc, cellState);
 
 				content.Columns[0].AddRow (cell1);
 				content.Columns[1].AddRow (cell2);
-				content.Columns[2].AddRow (cell3);
 			}
 
 			return content;
@@ -90,11 +84,9 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 		public const int TotalWidth =
 			SingleCentersTreeTableFiller.nameWidth +
-			SingleCentersTreeTableFiller.rateWidth +
-			SingleCentersTreeTableFiller.descWidth;
+			SingleCentersTreeTableFiller.numberWidth;
 
-		private const int nameWidth =  90;
-		private const int rateWidth =  50;
-		private const int descWidth = 400;
+		private const int nameWidth   = 200;
+		private const int numberWidth =  70;
 	}
 }
