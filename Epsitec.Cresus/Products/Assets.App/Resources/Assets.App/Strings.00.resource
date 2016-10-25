@@ -507,7 +507,7 @@
   <data name="AccountsSimplePopup.DeleteDateRange" id="K2M">Plan comptable à supprimer</data>
   <data name="AccountsSimplePopup.DateRange" id="K3M">Période</data>
   <data name="AccountsSimplePopup.ChangePathDateRange" id="K4M">Plan comptable à modifier</data>
-  <data name="EntryController.Center" id="K5M">Centre de charge</data>
+  <data name="EntryController.Center" id="K5M">Centre</data>
   <data name="Popup.Centers.Title" id="K6M">Choix d'un centre de charge — {0}</data>
   <data name="Popup.VatCode.Title" id="K7M">Choix d'un code TVA — {0}</data>
 </bundle>
