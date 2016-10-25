@@ -340,6 +340,14 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 					this.CreateAccountController (parent, userField.Field);
 					break;
 
+				case FieldType.VatCode:
+					this.CreateVatCodeController (parent, userField.Field);
+					break;
+
+				case FieldType.Center:
+					this.CreateCenterController (parent, userField.Field);
+					break;
+
 				default:
 					throw new System.InvalidOperationException (string.Format ("Unknown FieldType {0}", userField.Type.ToString ()));
 			}

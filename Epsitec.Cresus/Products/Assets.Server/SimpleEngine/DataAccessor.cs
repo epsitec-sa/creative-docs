@@ -522,7 +522,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				return DataAccessor.GetAccountAndVatCodeFields (false);
+				return DataAccessor.GetAccountAndVatCodeFields (account: true, vatCode: false, center: false);
 			}
 		}
 
@@ -530,73 +530,137 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 		{
 			get
 			{
-				return DataAccessor.GetAccountAndVatCodeFields (true);
+				return DataAccessor.GetAccountAndVatCodeFields (account: true, vatCode: true, center: true);
 			}
 		}
 
-		private static IEnumerable<ObjectField> GetAccountAndVatCodeFields(bool other)
+		private static IEnumerable<ObjectField> VatCodeFields
 		{
-			yield return ObjectField.AccountPreInputDebit;
-			yield return ObjectField.AccountPreInputCredit;
-			if (other)
+			get
+			{
+				return DataAccessor.GetAccountAndVatCodeFields (account: false, vatCode: true, center: false);
+			}
+		}
+
+		private static IEnumerable<ObjectField> CenterFields
+		{
+			get
+			{
+				return DataAccessor.GetAccountAndVatCodeFields (account: false, vatCode: false, center: true);
+			}
+		}
+
+		private static IEnumerable<ObjectField> GetAccountAndVatCodeFields(bool account, bool vatCode, bool center)
+		{
+			if (account)
+			{
+				yield return ObjectField.AccountPreInputDebit;
+				yield return ObjectField.AccountPreInputCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountPreInputVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountPreInputCenter;
 			}
 
-			yield return ObjectField.AccountPurchaseDebit;
-			yield return ObjectField.AccountPurchaseCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountPurchaseDebit;
+				yield return ObjectField.AccountPurchaseCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountPurchaseVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountPurchaseCenter;
 			}
 
-			yield return ObjectField.AccountSaleDebit;
-			yield return ObjectField.AccountSaleCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountSaleDebit;
+				yield return ObjectField.AccountSaleCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountSaleVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountSaleCenter;
 			}
 
-			yield return ObjectField.AccountAmortizationAutoDebit;
-			yield return ObjectField.AccountAmortizationAutoCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountAmortizationAutoDebit;
+				yield return ObjectField.AccountAmortizationAutoCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountAmortizationAutoVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountAmortizationAutoCenter;
 			}
 
-			yield return ObjectField.AccountAmortizationExtraDebit;
-			yield return ObjectField.AccountAmortizationExtraCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountAmortizationExtraDebit;
+				yield return ObjectField.AccountAmortizationExtraCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountAmortizationExtraVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountAmortizationExtraCenter;
 			}
 
-			yield return ObjectField.AccountIncreaseDebit;
-			yield return ObjectField.AccountIncreaseCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountIncreaseDebit;
+				yield return ObjectField.AccountIncreaseCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountIncreaseVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountIncreaseCenter;
 			}
 
-			yield return ObjectField.AccountDecreaseDebit;
-			yield return ObjectField.AccountDecreaseCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountDecreaseDebit;
+				yield return ObjectField.AccountDecreaseCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountDecreaseVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountDecreaseCenter;
 			}
 
-			yield return ObjectField.AccountAdjustDebit;
-			yield return ObjectField.AccountAdjustCredit;
-			if (other)
+			if (account)
+			{
+				yield return ObjectField.AccountAdjustDebit;
+				yield return ObjectField.AccountAdjustCredit;
+			}
+			if (vatCode)
 			{
 				yield return ObjectField.AccountAdjustVatCode;
+			}
+			if (center)
+			{
 				yield return ObjectField.AccountAdjustCenter;
 			}
 		}
@@ -674,6 +738,16 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				return FieldType.Account;
 			}
 
+			if (DataAccessor.VatCodeFields.Where (x => x == objectField).Any ())
+			{
+				return FieldType.VatCode;
+			}
+
+			if (DataAccessor.CenterFields.Where (x => x == objectField).Any ())
+			{
+				return FieldType.Center;
+			}
+
 			switch (objectField)
 			{
 				case ObjectField.MainValue:
@@ -699,6 +773,12 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 				case ObjectField.EntryDebitAccount:
 				case ObjectField.EntryCreditAccount:
 					return FieldType.Account;
+
+				case ObjectField.EntryVatCode:
+					return FieldType.VatCode;
+
+				case ObjectField.EntryCenter:
+					return FieldType.Center;
 
 				case ObjectField.MethodGuid:
 					return FieldType.GuidMethod;

@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				case FieldType.String:
 				case FieldType.Account:
+				case FieldType.VatCode:
+				case FieldType.Center:
 					CategoriesLogic.ImportFieldString (accessor, asset, e, catObj, fieldSrc, fieldDst);
 					break;
 
