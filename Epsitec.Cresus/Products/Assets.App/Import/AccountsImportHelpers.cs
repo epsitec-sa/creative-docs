@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 			{
 				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var centerCount = System.Math.Max (importedCenterCodes.Count-1, 0);
 
 				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
 
@@ -57,13 +58,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						}
 						else
 						{
-							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count, importedCenterCodes.Count);
+							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count, centerCount);
 							return new AccountsImportReport (AccountsImportMode.Update, report + message);
 						}
 					}
 					else
 					{
-						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count, importedCenterCodes.Count);
+						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count, centerCount);
 						return new AccountsImportReport (AccountsImportMode.Add, report + message);
 					}
 				}
