@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 
 					mandat.AddAccounts         (range, accounts);
 					mandat.AddVatCodes         (range, vatCodes);
+					mandat.AddCenters          (range, centerCodes);
 					mandat.AddAccountsFilename (range, filename);
 					//?mandat.CurrentAccountsDateRange = range;
 				}

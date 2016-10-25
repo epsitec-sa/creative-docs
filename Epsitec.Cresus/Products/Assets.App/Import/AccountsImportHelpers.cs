@@ -152,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				this.accessor.Mandat.AddAccounts         (range, importedAccounts);
 				this.accessor.Mandat.AddVatCodes         (range, importedVatCodes);
+				this.accessor.Mandat.AddCenters          (range, importedCenterCodes);
 				this.accessor.Mandat.AddAccountsFilename (range, filename);
 				//?this.accessor.Mandat.CurrentAccountsDateRange = range;
 				this.accessor.WarningsDirty = true;
