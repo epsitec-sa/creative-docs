@@ -11,41 +11,41 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 {
 	public static class CentersLogic
 	{
-		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string code, out bool hasError)
+		public static string GetExplanation(DataAccessor accessor, System.DateTime date, string number, out bool hasError)
 		{
 			//	Retourne le texte explicatif d'un centre de charge. Exemples:
-			//	"TVARED 3.6%"
+			//	"P1000 — Projet 1000"
 			//	"XX — Inconnu dans le plan comptable"
 			string explanationsValue;
 
-			if (string.IsNullOrEmpty (code))  // aucun code ?
+			if (string.IsNullOrEmpty (number))  // aucun number ?
 			{
 				explanationsValue = null;
 				hasError = false;
 			}
-			else  // code présent ?
+			else  // number présent ?
 			{
 				//	Cherche le plan comptable correspondant à la date.
 				var baseType = accessor.Mandat.GetCentersBase (date);
 
 				if (baseType.AccountsDateRange.IsEmpty)  // pas de plan comptable ?
 				{
-					explanationsValue = CentersLogic.AddError (code, Res.Strings.CentersLogic.InvalidDate.ToString ());
+					explanationsValue = CentersLogic.AddError (number, Res.Strings.CentersLogic.InvalidDate.ToString ());
 					hasError = true;
 				}
 				else  // plan comptable trouvé ?
 				{
-					//	Cherche le résumé du code.
-					var summary = CentersLogic.GetSummary (accessor, baseType, code);
+					//	Cherche le résumé du centre de charge.
+					var summary = CentersLogic.GetSummary (accessor, baseType, number);
 
-					if (string.IsNullOrEmpty (summary))  // code inexistant ?
+					if (string.IsNullOrEmpty (summary))  // number inexistant ?
 					{
-						explanationsValue = CentersLogic.AddError (code, Res.Strings.CentersLogic.CodeDoesNotExist.ToString ());
+						explanationsValue = CentersLogic.AddError (number, Res.Strings.CentersLogic.CodeDoesNotExist.ToString ());
 						hasError = true;
 					}
 					else
 					{
-						explanationsValue = summary;  // par exemple "1000 Caisse"
+						explanationsValue = summary;  // par exemple "P1000 — Projet 1000"
 						hasError = false;
 					}
 				}
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		private static string AddError(string text, string error)
 		{
-			//	Retourne un texte explicatif composé du numéro du code et de l'erreur.
+			//	Retourne un texte explicatif composé du numéro du number et de l'erreur.
 			if (string.IsNullOrEmpty (text))
 			{
 				return null;
@@ -75,29 +75,28 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetSummary(DataAccessor accessor, BaseType baseType, string code)
+		private static string GetSummary(DataAccessor accessor, BaseType baseType, string number)
 		{
-			//	Retourne le résumé (par exemple "TVARED 3.6%") d'après le seul code.
-			if (!string.IsNullOrEmpty (code))
+			//	Retourne le résumé (par exemple "P1000 — Projet 1000") d'après le seul number.
+			if (!string.IsNullOrEmpty (number))
 			{
-				var obj = CentersLogic.GetCenter (accessor, baseType, code);
+				var obj = CentersLogic.GetCenter (accessor, baseType, number);
 
 				if (obj != null)
 				{
-					var rate = ObjectProperties.GetObjectPropertyDecimal (obj, null, ObjectField.VatRate);
+					var name = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
 
-					if (rate.HasValue)
+					if (!string.IsNullOrEmpty (name))
 					{
-						var r = TypeConverters.RateToString (rate);
-						return string.Join (" ", code, r);
+						return string.Join (number, " — ", name);
 					}
 				}
 			}
 
-			return code;
+			return number;
 		}
 
-		public static DataObject GetCenter(DataAccessor accessor, BaseType baseType, string code)
+		private static DataObject GetCenter(DataAccessor accessor, BaseType baseType, string number)
 		{
 			if (baseType != BaseType.Unknown)
 			{
@@ -105,8 +104,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 				foreach (var obj in data)
 				{
-					var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
-					if (n == code)
+					var n = ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
+					if (n == number)
 					{
 						return obj;
 					}
@@ -118,7 +117,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 
 		public static string GetCenter(DataAccessor accessor, BaseType baseType, Guid guid)
 		{
-			//	Retourne le nom d'un centre de charge.
+			//	Retourne le number d'un centre de charge.
 			var obj = accessor.GetObject (baseType, guid);
 			if (obj == null)
 			{
@@ -126,7 +125,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 			else
 			{
-				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Name);
+				return ObjectProperties.GetObjectPropertyString (obj, null, ObjectField.Number);
 			}
 		}
 	}

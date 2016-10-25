@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				var columns = new List<TreeTableColumnDescription> ();
 
-				columns.Add (new TreeTableColumnDescription (ObjectField.Name,   TreeTableColumnType.String, SingleCentersTreeTableFiller.nameWidth));
 				columns.Add (new TreeTableColumnDescription (ObjectField.Number, TreeTableColumnType.String, SingleCentersTreeTableFiller.numberWidth));
+				columns.Add (new TreeTableColumnDescription (ObjectField.Name,   TreeTableColumnType.String, SingleCentersTreeTableFiller.nameWidth));
 
 				return columns.ToArray ();
 			}
@@ -66,13 +66,13 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				var node   = this.nodeGetter[firstRow+i];
 				var center = this.accessor.GetObject (this.BaseType, node.Guid);
 
-				var name = ObjectProperties.GetObjectPropertyString  (center, this.Timestamp, ObjectField.Name, inputValue: true);
-				var desc = ObjectProperties.GetObjectPropertyString  (center, this.Timestamp, ObjectField.Number);
+				var number = ObjectProperties.GetObjectPropertyString (center, this.Timestamp, ObjectField.Number);
+				var name   = ObjectProperties.GetObjectPropertyString (center, this.Timestamp, ObjectField.Name, inputValue: true);
 
 				var cellState = (i == selection) ? CellState.Selected : CellState.None;
 
-				var cell1 = new TreeTableCellString (name, cellState);
-				var cell2 = new TreeTableCellString (desc, cellState);
+				var cell1 = new TreeTableCellString (number, cellState);
+				var cell2 = new TreeTableCellString (name,   cellState);
 
 				content.Columns[0].AddRow (cell1);
 				content.Columns[1].AddRow (cell2);
@@ -83,10 +83,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 
 
 		public const int TotalWidth =
-			SingleCentersTreeTableFiller.nameWidth +
-			SingleCentersTreeTableFiller.numberWidth;
+			SingleCentersTreeTableFiller.numberWidth +
+			SingleCentersTreeTableFiller.nameWidth;
 
-		private const int nameWidth   = 200;
 		private const int numberWidth =  70;
+		private const int nameWidth   = 200;
 	}
 }
