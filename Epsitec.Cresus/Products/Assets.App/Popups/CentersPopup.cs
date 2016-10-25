@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-			this.title    = title;
+			this.title    = string.Format (Res.Strings.Popup.Centers.Title.ToString (), title);
 
 			this.controller = new NavigationTreeTableController(this.accessor);
 
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		#region Helpers
 		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string title, string selectedCenter, System.Action<string> action)
 		{
-			//	Affiche le popup pour choisir un code TVA.
+			//	Affiche le popup pour choisir un centre de charge.
 			var popup = new CentersPopup (accessor, baseType, title, selectedCenter);
 			
 			popup.Create (target, leftOrRight: true);
