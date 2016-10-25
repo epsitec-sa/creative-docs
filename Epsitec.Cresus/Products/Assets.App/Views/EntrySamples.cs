@@ -167,9 +167,9 @@ namespace Epsitec.Cresus.Assets.App.Views
 
 
 		private const int rowHeight    =  18;
-		private const int accountWidth =  90;
+		private const int accountWidth = 100;
 		private const int vatCodeWidth =  70;
-		private const int centerWidth  =  80;
+		private const int centerWidth  =  60;
 
 		private readonly DataAccessor			accessor;
 		private readonly System.DateTime?		forcedDate;
