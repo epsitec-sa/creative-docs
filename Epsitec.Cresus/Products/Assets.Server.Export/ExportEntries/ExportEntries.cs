@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Lit la totalité du fichier .ecc.
 			this.eccLines.Clear ();
 
-			var lines = System.IO.File.ReadAllLines (this.EccPath);
+			var lines = System.IO.File.ReadAllLines (this.EccPath, System.Text.Encoding.Default);
 			foreach (var line in lines)
 			{
 				if (!string.IsNullOrEmpty (line))
