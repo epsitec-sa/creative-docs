@@ -127,14 +127,15 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var entryAccounts = this.GetEntryAccounts (asset, e, amount);
 
+			var date = this.GetDate (asset, e, amount, type);
 			string tooltip;
 
 			return new EntryProperties
 			{
-				Date    = this.GetDate    (asset, e, amount,                type),
+				Date    = date,
 				Debit   = this.GetDebit   (asset, e, amount, entryAccounts, type, out tooltip),
 				Credit  = this.GetCredit  (asset, e, amount, entryAccounts, type, out tooltip),
-				Stamp   = this.GetStamp   (asset, e, amount,                type),
+				Stamp   = this.GetStamp   (asset, e, amount,                type, date),
 				Title   = this.GetTitle   (asset, e, amount,                type),
 				Amount  = this.GetValue   (asset, e, amount,                type),
 				VatCode = this.GetVatCode (asset, e, amount, entryAccounts, type),
@@ -323,7 +324,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			}
 		}
 
-		private string GetStamp(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
+		private string GetStamp(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type, System.DateTime date)
 		{
 			//	Retourne la pièce de l'écriture.
 			if (type == GetEntryPropertiesType.Current)
@@ -344,7 +345,9 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				}
 			}
 
-			return null;
+			//	Retourne un numéro de pièce du style "A-03", où 03 est le mois de l'écriture.
+			var month = date.Month.ToString ("D2");
+			return string.Format ("A-{0}", month);
 		}
 
 		private string GetTitle(DataObject asset, DataEvent e, AmortizedAmount amount, GetEntryPropertiesType type)
