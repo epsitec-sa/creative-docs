@@ -47,7 +47,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		public static CsvConfiguration ConfigureBaseReader()
 		{
 			var config = new CsvConfiguration ();
-			config.Encoding = System.Text.Encoding.GetEncoding ("Windows-1252");
+			config.Encoding = System.Text.Encoding.UTF8;
 			config.Delimiter = ";";
 			config.HasHeaderRecord = false;
 			config.IgnoreQuotes = true;
@@ -62,6 +62,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		{
 			var config = new CsvConfiguration ();
 			config.Delimiter = ";";
+			config.Encoding = System.Text.Encoding.UTF8;
 			config.HasHeaderRecord = false;
 			config.IgnoreQuotes = true;
 			config.AutoMap<T> ();

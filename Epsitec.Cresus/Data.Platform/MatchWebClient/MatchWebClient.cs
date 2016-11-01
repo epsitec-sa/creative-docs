@@ -17,7 +17,7 @@ namespace Epsitec.Data.Platform
 		public MatchWebClient()
 		{
 			this.container = new CookieContainer ();
-			var credentials = Convert.ToBase64String (Encoding.ASCII.GetBytes ("TU_26036_001:L8qUmdpU"));
+			var credentials = Convert.ToBase64String (Encoding.ASCII.GetBytes ("TU_26036_0001:L8qUmdpU"));
 			this.Headers.Add (HttpRequestHeader.Authorization, $"Basic {credentials}");
 		}
 
@@ -53,68 +53,10 @@ namespace Epsitec.Data.Platform
 			}
 
 			this.ProductUri = this.ServiceUri ();
-			
-			if (this.MustUpdateOrCreate ())
-			{
-				var fileName = this.DownloadFile (this.ProductUri);
-				/*
-				if (fileName == null)
-				{
-					this.IsANewRelease = false;
-				}
-				else
-				{
-					var release = this.GetMatchSortFileReleaseDate ();
-					MatchWebClient.WriteLocalMetaData (release);
-					this.IsANewRelease = true;
-				}
-				*/
-				this.IsANewRelease = true;
-				this.aValidFileIsAvailable = true;
-				return MatchWebClient.GetLocalMatchSortDataPath ();
-			}
-			else
-			{
-				this.IsANewRelease = false;
-				this.aValidFileIsAvailable = true;
-				return MatchWebClient.GetLocalMatchSortDataPath ();
-			}
-		}
-
-		public bool MustUpdateOrCreate()
-		{
-			return true;
-			/*
-			var swissPostMeta = MatchWebClient.GetLocalMetaDataPath ();
-			if (System.IO.File.Exists (swissPostMeta))
-			{
-				try
-				{
-					var currentRelease = MatchWebClient.ReadLocalMetaData ();
-					var lastRelease    = this.GetMatchSortFileReleaseDate ();
-					int result = System.DateTime.Compare (currentRelease, lastRelease);
-					if (result < 0)
-					{
-						System.Diagnostics.Trace.WriteLine ("Outdated local MAT[CH] file detected");
-						return true;
-					}
-					else
-					{
-						System.Diagnostics.Trace.WriteLine ("No update required");
-						return false;
-					}
-				}
-				catch
-				{
-					System.Diagnostics.Trace.WriteLine ("Cannot update - reverting back to local MAT[CH] file");
-					return false;
-				}
-			}
-			else
-			{
-				System.Diagnostics.Trace.WriteLine ("No local MAT[CH] file found, download required");
-				return true;
-			}*/
+			var fileName = this.DownloadFile (this.ProductUri);
+			this.IsANewRelease = true;
+			this.aValidFileIsAvailable = true;
+			return MatchWebClient.GetLocalMatchSortDataPath ();
 		}
 
 		private string ServiceUri()

@@ -21,10 +21,6 @@ namespace Epsitec.Data.Platform
 
 		public static string GetSwissPostStreetCsv()
 		{
-			return SwissPostStreet.GetMatchStreetCsvPath ();
-			/* TODO:
-			* MatchSort website (swisspost) has changed!
-			* We must migrate the match client
 			var matchClient        = SwissPost.MatchWebClient;
 			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
 			try
@@ -43,7 +39,7 @@ namespace Epsitec.Data.Platform
 			catch
 			{
 				return swissPostStreetCsv;
-			}*/
+			}
         }
 
         /// <summary>
