@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				CategoriesLogic.ImportArgument (accessor, asset, e, catObj, field);
 			}
 
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				CategoriesLogic.ImportField (accessor, asset, e, catObj, field, field);
 			}
@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			{
 				case FieldType.String:
 				case FieldType.Account:
+				case FieldType.VatCode:
+				case FieldType.Center:
 					CategoriesLogic.ImportFieldString (accessor, asset, e, catObj, fieldSrc, fieldDst);
 					break;
 
@@ -230,7 +232,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		{
 			var e = cat.GetInputEvent ();
 
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				e.RemoveProperty (field);
 			}

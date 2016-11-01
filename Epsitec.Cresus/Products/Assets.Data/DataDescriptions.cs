@@ -27,6 +27,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountPreInputVatCode:
 					return Res.Strings.Enum.ObjectField.AccountPreInputVatCode.ToString ();
 
+				case ObjectField.AccountPreInputCenter:
+					return Res.Strings.Enum.ObjectField.AccountPreInputCenter.ToString ();
+
 				case ObjectField.AccountPurchaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountPurchaseDebit.ToString ();
 
@@ -35,6 +38,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.AccountPurchaseVatCode:
 					return Res.Strings.Enum.ObjectField.AccountPurchaseVatCode.ToString ();
+
+				case ObjectField.AccountPurchaseCenter:
+					return Res.Strings.Enum.ObjectField.AccountPurchaseCenter.ToString ();
 
 				case ObjectField.AccountSaleDebit:
 					return Res.Strings.Enum.ObjectField.AccountSaleDebit.ToString ();
@@ -45,6 +51,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountSaleVatCode:
 					return Res.Strings.Enum.ObjectField.AccountSaleVatCode.ToString ();
 
+				case ObjectField.AccountSaleCenter:
+					return Res.Strings.Enum.ObjectField.AccountSaleCenter.ToString ();
+
 				case ObjectField.AccountAmortizationAutoDebit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoDebit.ToString ();
 
@@ -53,6 +62,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.AccountAmortizationAutoVatCode:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoVatCode.ToString ();
+
+				case ObjectField.AccountAmortizationAutoCenter:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationAutoCenter.ToString ();
 
 				case ObjectField.AccountAmortizationExtraDebit:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraDebit.ToString ();
@@ -63,6 +75,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountAmortizationExtraVatCode:
 					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraVatCode.ToString ();
 
+				case ObjectField.AccountAmortizationExtraCenter:
+					return Res.Strings.Enum.ObjectField.AccountAmortizationExtraCenter.ToString ();
+
 				case ObjectField.AccountIncreaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountIncreaseDebit.ToString ();
 
@@ -71,6 +86,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.AccountIncreaseVatCode:
 					return Res.Strings.Enum.ObjectField.AccountIncreaseVatCode.ToString ();
+
+				case ObjectField.AccountIncreaseCenter:
+					return Res.Strings.Enum.ObjectField.AccountIncreaseCenter.ToString ();
 
 				case ObjectField.AccountDecreaseDebit:
 					return Res.Strings.Enum.ObjectField.AccountDecreaseDebit.ToString ();
@@ -81,6 +99,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case ObjectField.AccountDecreaseVatCode:
 					return Res.Strings.Enum.ObjectField.AccountDecreaseVatCode.ToString ();
 
+				case ObjectField.AccountDecreaseCenter:
+					return Res.Strings.Enum.ObjectField.AccountDecreaseCenter.ToString ();
+
 				case ObjectField.AccountAdjustDebit:
 					return Res.Strings.Enum.ObjectField.AccountAdjustDebit.ToString ();
 
@@ -89,6 +110,9 @@ namespace Epsitec.Cresus.Assets.Data
 
 				case ObjectField.AccountAdjustVatCode:
 					return Res.Strings.Enum.ObjectField.AccountAdjustVatCode.ToString ();
+
+				case ObjectField.AccountAdjustCenter:
+					return Res.Strings.Enum.ObjectField.AccountAdjustCenter.ToString ();
 
 				case ObjectField.AccountCategory:
 					return Res.Strings.Enum.ObjectField.AccountCategory.ToString ();

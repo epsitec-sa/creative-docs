@@ -183,8 +183,8 @@
   <data name="DateRange.FromTo" id="K36">du {0} au {1}</data>
   <data name="DateTime.WeekOfYear" id="K46"> (sem. {0})</data>
   <data name="AccountsImport.Message.Equal" id="K56">L'importation est inutile.&lt;br/&gt;Ce plan comptable a déjà été importé.</data>
-  <data name="AccountsImport.Message.Update" id="K66">Mise à jour de la période {0}.&lt;br/&gt;{1} comptes à importer.</data>
-  <data name="AccountsImport.Message.New" id="K76">Nouvelle période {0}.&lt;br/&gt;{1} comptes à importer.</data>
+  <data name="AccountsImport.Message.Update" id="K66">Mise à jour de la période {0}.&lt;br/&gt;{1} comptes à importer.&lt;br/&gt;{2} centres de charge.</data>
+  <data name="AccountsImport.Message.New" id="K76">Nouvelle période {0}.&lt;br/&gt;{1} comptes à importer.&lt;br/&gt;{2} centres de charge.</data>
   <data name="Popup.Message.AccountsImport.Title" id="K86">Importation</data>
   <data name="Popup.Amortizations.ToExtra.Title" id="KE7">Transformer en amortissement extraordinaire</data>
   <data name="EditorPages.ColorsExplanation.Editable.Description" id="KN8">Peut être défini</data>
@@ -507,4 +507,7 @@
   <data name="AccountsSimplePopup.DeleteDateRange" id="K2M">Plan comptable à supprimer</data>
   <data name="AccountsSimplePopup.DateRange" id="K3M">Période</data>
   <data name="AccountsSimplePopup.ChangePathDateRange" id="K4M">Plan comptable à modifier</data>
+  <data name="EntryController.Center" id="K5M">Centre</data>
+  <data name="Popup.Centers.Title" id="K6M">Choix d'un centre de charge — {0}</data>
+  <data name="Popup.VatCode.Title" id="K7M">Choix d'un code TVA — {0}</data>
 </bundle>

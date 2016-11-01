@@ -104,6 +104,7 @@
     <Compile Include="NodeGetters\LastViewNode.cs" />
     <Compile Include="NodeGetters\LastViewsNodeGetter.cs" />
     <Compile Include="Popups\MCH2SummaryTypeHelpers.cs" />
+    <Compile Include="Popups\CentersPopup.cs" />
     <Compile Include="Popups\VatCodesPopup.cs" />
     <Compile Include="Popups\AccountsPopup.cs" />
     <Compile Include="Popups\AddFavoritePopup.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Views\EditorPages\EditorPageArgument.cs" />
     <Compile Include="Views\EditorPages\EditorPageMethod.cs" />
     <Compile Include="Views\ArgumentsView.cs" />
+    <Compile Include="Views\FieldControllers\CenterFieldController.cs" />
     <Compile Include="Views\FieldControllers\VatCodeFieldController.cs" />
     <Compile Include="Views\FieldControllers\ArgumentToUseFieldController.cs" />
     <Compile Include="Views\FieldControllers\ArgumentToUseFieldsController.cs" />

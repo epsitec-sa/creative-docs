@@ -48,6 +48,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryTitle,         TreeTableColumnType.Tree,   350, Res.Strings.EntriesTreeTableFiller.Title.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryAmount,        TreeTableColumnType.Amount, 100, Res.Strings.EntriesTreeTableFiller.Amount.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryVatCode,       TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.VatCode.ToString ()));
+				columns.Add (new TreeTableColumnDescription (ObjectField.EntryCenter,        TreeTableColumnType.String,  80, Res.Strings.EntriesTreeTableFiller.Center.ToString ()));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EventType,          TreeTableColumnType.Glyph ,  30, ""));
 				columns.Add (new TreeTableColumnDescription (ObjectField.EntryLocked,        TreeTableColumnType.Glyph ,  30, ""));
 
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 		{
 			var content = new TreeTableContentItem ();
 
-			for (int i=0; i<9; i++)
+			for (int i=0; i<10; i++)
 			{
 				content.Columns.Add (new TreeTableColumnItem ());
 			}
@@ -107,10 +108,11 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 					cell5 = new TreeTableCellTree (level, type, node.Title, cellState);
 				}
 
-				var cell6 = new TreeTableCellDecimal (node.Value,   cellState);
-				var cell7 = new TreeTableCellString  (node.VatCode, cellState);
-				var cell8 = new TreeTableCellGlyph   (glyph,        cellState);
-				var cell9 = new TreeTableCellGlyph   (locked,       cellState);
+				var cell6  = new TreeTableCellDecimal (node.Value,   cellState);
+				var cell7  = new TreeTableCellString  (node.VatCode, cellState);
+				var cell8  = new TreeTableCellString  (node.Center,  cellState);
+				var cell9  = new TreeTableCellGlyph   (glyph,        cellState);
+				var cell10 = new TreeTableCellGlyph   (locked,       cellState);
 
 				int columnRank = 0;
 				content.Columns[columnRank++].AddRow (cell1);
@@ -122,6 +124,7 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				content.Columns[columnRank++].AddRow (cell7);
 				content.Columns[columnRank++].AddRow (cell8);
 				content.Columns[columnRank++].AddRow (cell9);
+				content.Columns[columnRank++].AddRow (cell10);
 			}
 
 			return content;

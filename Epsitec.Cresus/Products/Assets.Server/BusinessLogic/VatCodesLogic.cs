@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 		}
 
 
-		public static string GetSummary(DataAccessor accessor, BaseType baseType, string code)
+		private static string GetSummary(DataAccessor accessor, BaseType baseType, string code)
 		{
 			//	Retourne le résumé (par exemple "TVARED 3.6%") d'après le seul code.
 			if (!string.IsNullOrEmpty (code))
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			return code;
 		}
 
-		public static DataObject GetVatCode(DataAccessor accessor, BaseType baseType, string code)
+		private static DataObject GetVatCode(DataAccessor accessor, BaseType baseType, string code)
 		{
 			if (baseType != BaseType.Unknown)
 			{

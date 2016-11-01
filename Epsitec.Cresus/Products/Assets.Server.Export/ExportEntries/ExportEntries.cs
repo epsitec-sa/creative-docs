@@ -243,6 +243,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var title1   = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryTitle)         ?? "";
 			var value1   = ObjectProperties.GetObjectPropertyDecimal (e1, null, ObjectField.EntryAmount);
 			var vatCode1 = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryVatCode)       ?? "";
+			var center1  = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryCenter)        ?? "";
 
 			var date2    = ObjectProperties.GetObjectPropertyDate    (e2, null, ObjectField.EntryDate);
 			var debit2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryDebitAccount)  ?? "";
@@ -251,9 +252,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var title2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryTitle)         ?? "";
 			var value2   = ObjectProperties.GetObjectPropertyDecimal (e2, null, ObjectField.EntryAmount);
 			var vatCode2 = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryVatCode)       ?? "";
+			var center2  = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryCenter)        ?? "";
 
 			vatCode1 = ExportEntries.FormatVatCode (vatCode1) ?? "";
 			vatCode2 = ExportEntries.FormatVatCode (vatCode2) ?? "";
+
+			center1 = ExportEntries.FormatCenter (center1) ?? "";
+			center2 = ExportEntries.FormatCenter (center2) ?? "";
 
 			return date1    == date2
 				&& debit1   == debit2
@@ -261,7 +266,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				&& stamp1   == stamp2
 				&& title1   == title2
 				&& value1   == value2
-				&& vatCode1 == vatCode2;
+				&& vatCode1 == vatCode2
+				&& center1  == center2;
 		}
 
 		private List<DataObject> ReloadEntries(string[] lines)
@@ -282,6 +288,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var title   = fields[4];
 					var value   = fields[5].ParseDecimal ();
 					var vatCode = fields[14];
+					var center  = fields[15];
 
 					var entry = new DataObject (null);
 
@@ -296,6 +303,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,         title));
 					e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount,        value));
 					e.AddProperty (new DataStringProperty  (ObjectField.EntryVatCode,       vatCode));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryCenter,        center));
 
 					entries.Add (entry);
 				}
@@ -336,8 +344,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var title   = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
 				var value   = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 				var vatCode = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryVatCode);
+				var center  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryCenter);
 
 				vatCode = ExportEntries.FormatVatCode (vatCode);
+				center  = ExportEntries.FormatCenter  (center);
 
 				if (date.HasValue && this.accountsRange.IsInside (date.Value) &&
 					value.HasValue && value.Value != 0.0m)
@@ -367,8 +377,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append ("\t");
 					builder.Append ((idno++).ToStringIO ());  // idno
 					builder.Append ("\t");
-					builder.Append (vatCode);
+					builder.Append (vatCode);  // index 14
 					builder.Append ("\t");
+					builder.Append (center);  // index 15
 					builder.Append ("\t");
 					builder.Append ("\t");
 					builder.Append ("\t");
@@ -394,6 +405,18 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			}
 
 			return vatCode;
+		}
+
+		private static string FormatCenter(string center)
+		{
+			//	Retourne le centre de charge formaté.
+			//	Lorsqu'il n'y a pas de centre de charge, le champ contient un tiret qu'il s'agit d'éliminer.
+			if (center != null && center.Length == 1)  // pas de code TVA (par exemple "-") ?
+			{
+				center = null;
+			}
+
+			return center;
 		}
 
 
@@ -466,7 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Lit la totalité du fichier .ecc.
 			this.eccLines.Clear ();
 
-			var lines = System.IO.File.ReadAllLines (this.EccPath);
+			var lines = System.IO.File.ReadAllLines (this.EccPath, System.Text.Encoding.Default);
 			foreach (var line in lines)
 			{
 				if (!string.IsNullOrEmpty (line))
