@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			{
 				StackedControllerType = StackedControllerType.Label,
 				Width                 = 400,
-				Height                = 15*5,  // place pour 5 lignes du rapport
+				Height                = 15*6,  // place pour 6 lignes du rapport
 			});
 
 			this.SetDescriptions (list);

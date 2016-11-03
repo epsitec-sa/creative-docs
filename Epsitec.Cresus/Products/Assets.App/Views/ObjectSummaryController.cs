@@ -352,6 +352,24 @@ namespace Epsitec.Cresus.Assets.App.Views
 					alignment = ContentAlignment.MiddleLeft;
 					break;
 
+				case FieldType.VatCode:
+					text = ObjectProperties.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
+					if (!string.IsNullOrEmpty (text) && this.timestamp.HasValue)
+					{
+						text = VatCodesLogic.GetExplanation (this.accessor, this.timestamp.Value.Date, text, out hasError);
+					}
+					alignment = ContentAlignment.MiddleLeft;
+					break;
+
+				case FieldType.Center:
+					text = ObjectProperties.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
+					if (!string.IsNullOrEmpty (text) && this.timestamp.HasValue)
+					{
+						text = CentersLogic.GetExplanation (this.accessor, this.timestamp.Value.Date, text, out hasError);
+					}
+					alignment = ContentAlignment.MiddleLeft;
+					break;
+
 				default:
 					string s = ObjectProperties.GetObjectPropertyString (this.obj, this.timestamp, tile.Field);
 					if (!string.IsNullOrEmpty (s))

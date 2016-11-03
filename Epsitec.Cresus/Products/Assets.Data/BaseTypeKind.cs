@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Assets.Data
 		Entries,
 		Accounts,
 		VatCodes,
+		Centers,
 		Methods,
 		Arguments,
 	}

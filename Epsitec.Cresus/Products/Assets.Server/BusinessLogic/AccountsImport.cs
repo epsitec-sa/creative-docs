@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 			//	Importe tous les codes analytiques.
 			int index = this.IndexOfLine ("BEGIN=CENTERS");
 
-			this.AddCenterCode (DataStringProperty.WithoutVat, null);
+			this.AddCenterCode (Res.Strings.AccountsImport.WithoutCenter.ToString (), DataStringProperty.WithoutCenter);
 
 			while (++index < this.lines.Length)
 			{
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,        name));
 				e.AddProperty (new DataStringProperty (ObjectField.Description, desc));
 
 				if (rate.HasValue)
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,   name));
 				e.AddProperty (new DataStringProperty (ObjectField.Number, number));
 			}
 
@@ -312,10 +312,10 @@ namespace Epsitec.Cresus.Assets.Server.BusinessLogic
 				var e = new DataEvent (null, start, EventType.Input);
 				o.AddEvent (e);
 
-				e.AddProperty (new DataStringProperty (ObjectField.Number, number));
-				e.AddProperty (new DataStringProperty (ObjectField.Name, name));
+				e.AddProperty (new DataStringProperty (ObjectField.Number,          number));
+				e.AddProperty (new DataStringProperty (ObjectField.Name,            name));
 				e.AddProperty (new DataIntProperty    (ObjectField.AccountCategory, (int) category));
-				e.AddProperty (new DataIntProperty    (ObjectField.AccountType, (int) type));
+				e.AddProperty (new DataIntProperty    (ObjectField.AccountType,     (int) type));
 			}
 
 			//?System.Console.WriteLine (number);

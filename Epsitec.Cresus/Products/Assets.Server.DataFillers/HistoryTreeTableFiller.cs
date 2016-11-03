@@ -98,6 +98,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 						break;
 
 					case FieldType.Account:
+					case FieldType.VatCode:
+					case FieldType.Center:
 					default:
 						columns.Add (new TreeTableColumnDescription (ObjectField.HistoryValue, TreeTableColumnType.String, this.ValueColumnWidth, Res.Strings.HistoryTreeTableFiller.Value.ToString ()));
 						break;
@@ -146,6 +148,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				case FieldType.String:
 				case FieldType.Account:
+				case FieldType.VatCode:
+				case FieldType.Center:
 					this.PutString (content, firstRow, count, selection);
 					break;
 
@@ -436,6 +440,10 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 				case FieldType.GuidPerson:
 				case FieldType.Account:
 					return 300;
+
+				case FieldType.VatCode:
+				case FieldType.Center:
+					return 100;
 
 				case FieldType.GuidRatio:
 					return 350;

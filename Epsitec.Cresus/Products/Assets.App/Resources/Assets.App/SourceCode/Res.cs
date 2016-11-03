@@ -2198,6 +2198,14 @@ namespace Epsitec.Cresus.Assets.App
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544754));
 					}
 				}
+				//	designer:str/JUK5M01
+				public static global::Epsitec.Common.Types.FormattedText Center
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545029));
+					}
+				}
 				//	designer:str/JUKFD01
 				public static global::Epsitec.Common.Types.FormattedText Credit
 				{
@@ -3967,6 +3975,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Centers
+				{
+					//	designer:str/JUK6M01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545030));
+						}
+					}
+				}
+				
 				public static class CreateArgument
 				{
 					//	designer:str/JUK3K01
@@ -5413,6 +5433,18 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544889));
 							}
+						}
+					}
+				}
+				
+				public static class VatCode
+				{
+					//	designer:str/JUK7M01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545031));
 						}
 					}
 				}
@@ -7028,6 +7060,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544754);
+					}
+				}
+				//	designer:str/JUK5M01
+				public static global::Epsitec.Common.Support.Druid Center
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545029);
 					}
 				}
 				//	designer:str/JUKFD01
@@ -8799,6 +8839,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Centers
+				{
+					//	designer:str/JUK6M01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545030);
+						}
+					}
+				}
+				
 				public static class CreateArgument
 				{
 					//	designer:str/JUK3K01
@@ -10245,6 +10297,18 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544889);
 							}
+						}
+					}
+				}
+				
+				public static class VatCode
+				{
+					//	designer:str/JUK7M01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545031);
 						}
 					}
 				}

@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Assets.Data.Serialization
 		public const string Type = "Type";
 
 		public const string VatCodes = "VatCodes";
+		public const string Centers = "Centers";
 		public const string Value = "Value";
 
 		public const string WindowPlacement = "WindowPlacement";

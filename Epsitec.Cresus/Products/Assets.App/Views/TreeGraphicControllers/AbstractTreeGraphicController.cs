@@ -174,6 +174,8 @@ namespace Epsitec.Cresus.Assets.App.Views.TreeGraphicControllers
 						break;
 
 					case FieldType.Account:
+					case FieldType.VatCode:
+					case FieldType.Center:
 						var ac = ObjectProperties.GetObjectPropertyString (obj, null, field);
 						value = TreeGraphicValue.CreateText (ac);
 						break;

@@ -50,7 +50,8 @@ namespace Epsitec.Cresus.Assets.Data.DataProperties
 		}
 
 
-		public static string WithoutVat = "-";
+		public static string WithoutVat    = "-";
+		public static string WithoutCenter = "-";
 
 
 		public readonly string Value;

@@ -4,5 +4,9 @@ External/Clipboard.Win32.dll
 PrecompiledWeb/
 node_modules/
 Setup.CreativeDocs/SignedDlls/
+.vs/
+
+*.db
+*.opendb
 
 Epsitec.Cresus.sln.GhostDoc.xml

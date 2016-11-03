@@ -17,15 +17,15 @@ using Epsitec.Cresus.Assets.Server.SimpleEngine;
 namespace Epsitec.Cresus.Assets.App.Popups
 {
 	/// <summary>
-	/// Choix d'un code TVA.
+	/// Choix d'un centre de charge.
 	/// </summary>
-	public class VatCodesPopup : AbstractPopup
+	public class CentersPopup : AbstractPopup
 	{
-		private VatCodesPopup(DataAccessor accessor, BaseType baseType, string title, string selectedVatCode)
+		private CentersPopup(DataAccessor accessor, BaseType baseType, string title, string selectedCenter)
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-			this.title    = string.Format (Res.Strings.Popup.VatCode.Title.ToString (), title);
+			this.title    = string.Format (Res.Strings.Popup.Centers.Title.ToString (), title);
 
 			this.controller = new NavigationTreeTableController(this.accessor);
 
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			var secondary   = new SortableNodeGetter (primary, this.accessor, baseType);
 			this.nodeGetter = new SorterNodeGetter (secondary);
 
-			this.dataFiller = new SingleVatCodesTreeTableFiller (this.accessor, this.nodeGetter)
+			this.dataFiller = new SingleCentersTreeTableFiller (this.accessor, this.nodeGetter)
 			{
 				BaseType = this.baseType,
 			};
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			secondary.SetParams (null, this.dataFiller.DefaultSorting);
 			this.nodeGetter.SetParams (this.dataFiller.DefaultSorting);
 
-			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetVatCode (x.Guid) == selectedVatCode);
+			this.visibleSelectedRow = this.nodeGetter.GetNodes ().ToList ().FindIndex (x => this.GetCenter (x.Guid) == selectedCenter);
 			this.UpdateSelectedGuid ();
 
 			//	Connexion des événements.
@@ -55,18 +55,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				this.visibleSelectedRow = this.controller.TopVisibleRow + row;
 				this.UpdateController ();
 
-				this.OnNavigate (this.SelectedVatCode);
+				this.OnNavigate (this.SelectedCenter);
 				this.ClosePopup ();
 			};
 		}
 
 
-		private string							SelectedVatCode
+		private string							SelectedCenter
 		{
 			get
 			{
 				var node = this.nodeGetter[this.visibleSelectedRow];
-				return this.GetVatCode (node.Guid);
+				return this.GetCenter (node.Guid);
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			this.controller.AllowsMovement = false;
 			this.controller.AllowsSorting  = false;
 
-			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.VatCodes");
+			TreeTableFiller<SortableNode>.FillColumns (this.controller, this.dataFiller, "Popup.Centers");
 
 			this.UpdateController ();
 		}
@@ -125,9 +125,9 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		}
 
 
-		private string GetVatCode(Guid guid)
+		private string GetCenter(Guid guid)
 		{
-			return VatCodesLogic.GetVatCode (this.accessor, this.baseType, guid);
+			return CentersLogic.GetCenter (this.accessor, this.baseType, guid);
 		}
 
 
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 					 - AbstractScroller.DefaultBreadth;
 
 			//	Utilise au maximum les 1/2 de la hauteur.
-			int max = (int) (h*0.5) / VatCodesPopup.rowHeight;
+			int max = (int) (h*0.5) / CentersPopup.rowHeight;
 
 			int rows = System.Math.Min (this.nodeGetter.Count, max);
 			rows = System.Math.Max (rows, 3);
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				   + (int) AbstractScroller.DefaultBreadth;
 
 			int dy = AbstractPopup.titleHeight
-				   + rows * VatCodesPopup.rowHeight
+				   + rows * CentersPopup.rowHeight
 				   + (int) AbstractScroller.DefaultBreadth
 				   + AbstractFilterController.height;
 
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return SingleVatCodesTreeTableFiller.TotalWidth;
+				return SingleCentersTreeTableFiller.TotalWidth;
 			}
 		}
 
@@ -195,23 +195,23 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string title, string selectedVatCode, System.Action<string> action)
+		public static void Show(Widget target, DataAccessor accessor, BaseType baseType, string title, string selectedCenter, System.Action<string> action)
 		{
-			//	Affiche le popup pour choisir un code TVA.
-			var popup = new VatCodesPopup (accessor, baseType, title, selectedVatCode);
+			//	Affiche le popup pour choisir un centre de charge.
+			var popup = new CentersPopup (accessor, baseType, title, selectedCenter);
 			
 			popup.Create (target, leftOrRight: true);
 			
-			popup.Navigate += delegate (object sender, string vatCode)
+			popup.Navigate += delegate (object sender, string center)
 			{
-				action (vatCode);
+				action (center);
 			};
 
 			popup.Closed += delegate (object sender, ReasonClosure raison)
 			{
 				if (raison == ReasonClosure.AcceptKey)
 				{
-					action (popup.SelectedVatCode);
+					action (popup.SelectedCenter);
 				}
 			};
 		}
@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		private readonly string							title;
 		private readonly NavigationTreeTableController	controller;
 		private readonly SorterNodeGetter				nodeGetter;
-		private readonly SingleVatCodesTreeTableFiller	dataFiller;
+		private readonly SingleCentersTreeTableFiller   dataFiller;
 
 		private int										visibleSelectedRow;
 		private Guid									selectedGuid;
