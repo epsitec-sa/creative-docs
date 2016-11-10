@@ -26,6 +26,10 @@ namespace Epsitec.Data.Platform
 
 				foreach (var street in streets)
 				{
+					try
+					{
+
+					
 					List<SwissPostStreetInformation> list;
 					street.SetSwissPostZipInformations ();
 					street.SetSwissPostHouseInformations ();
@@ -61,6 +65,11 @@ namespace Epsitec.Data.Platform
 					}
 
 					this.streetByUserFriendlyStreetName[zipStreetKey] = street;
+					}
+					catch (System.Exception ex)
+					{
+
+					}
 				}
 			}
 		}

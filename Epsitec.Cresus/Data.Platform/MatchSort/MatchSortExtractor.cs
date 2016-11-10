@@ -36,6 +36,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		private static CsvConfiguration ConfigureWriter<T>()
 		{
 			var config = new CsvConfiguration ();
+			config.Encoding = System.Text.Encoding.UTF8;
 			config.Delimiter = ";";
 			config.HasHeaderRecord = false;
 			config.IgnoreQuotes = true;

@@ -1026,6 +1026,13 @@ Lancé le 01.11.2016
 -buildrolecache
 -clearwarnings -beforedate:2015-01-01 -killpersons:true -createsubscriptions:true
 
+Lancé le 09.11.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-11-07.xml -oldechfile:S:\eerv\eerv-2016-11-01.xml -output:s:\eerv\ech-diff-2016-11-07.md
+-clearwarnings -beforedate:2016-01-01 -killpersons:true -createsubscriptions:true
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

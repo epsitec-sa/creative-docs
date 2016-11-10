@@ -17,6 +17,8 @@ namespace Epsitec.Data.Platform
 		public MatchWebClient()
 		{
 			this.container = new CookieContainer ();
+			var credentials = Convert.ToBase64String (Encoding.ASCII.GetBytes ("TU_26036_0001:L8qUmdpU"));
+			this.Headers.Add (HttpRequestHeader.Authorization, "Basic " + credentials);
 		}
 
 		public CookieContainer CookieContainer
@@ -37,13 +39,6 @@ namespace Epsitec.Data.Platform
 			internal set;
 		}
 
-
-		public bool IsLogged
-		{
-			get;
-			internal set;
-		}
-
 		public string ProductUri
 		{
 			get;
@@ -57,133 +52,16 @@ namespace Epsitec.Data.Platform
 				return MatchWebClient.GetLocalMatchSortDataPath ();
 			}
 
-			if (!this.IsLogged)
-			{
-				this.DoMatchLoginRequest ();
-			}
-
-			this.ProductUri = this.FindProductUri ();
-			
-			if (this.MustUpdateOrCreate ())
-			{
-				var fileName = this.DownloadFile (this.ProductUri);
-				if (fileName == null)
-				{
-					this.IsANewRelease = false;
-				}
-				else
-				{
-					var release = this.GetMatchSortFileReleaseDate ();
-					MatchWebClient.WriteLocalMetaData (release);
-					this.IsANewRelease = true;
-				}
-				this.aValidFileIsAvailable = true;
-				return MatchWebClient.GetLocalMatchSortDataPath ();
-			}
-			else
-			{
-				this.IsANewRelease = false;
-				this.aValidFileIsAvailable = true;
-				return MatchWebClient.GetLocalMatchSortDataPath ();
-			}
+			this.ProductUri = this.ServiceUri ();
+			var fileName = this.DownloadFile (this.ProductUri);
+			this.IsANewRelease = true;
+			this.aValidFileIsAvailable = true;
+			return MatchWebClient.GetLocalMatchSortDataPath ();
 		}
 
-		public bool MustUpdateOrCreate()
+		private string ServiceUri()
 		{
-			var swissPostMeta = MatchWebClient.GetLocalMetaDataPath ();
-			if (System.IO.File.Exists (swissPostMeta))
-			{
-				try
-				{
-					var currentRelease = MatchWebClient.ReadLocalMetaData ();
-					var lastRelease    = this.GetMatchSortFileReleaseDate ();
-					int result = System.DateTime.Compare (currentRelease, lastRelease);
-					if (result < 0)
-					{
-						System.Diagnostics.Trace.WriteLine ("Outdated local MAT[CH] file detected");
-						return true;
-					}
-					else
-					{
-						System.Diagnostics.Trace.WriteLine ("No update required");
-						return false;
-					}
-				}
-				catch
-				{
-					System.Diagnostics.Trace.WriteLine ("Cannot update - reverting back to local MAT[CH] file");
-					return false;
-				}
-			}
-			else
-			{
-				System.Diagnostics.Trace.WriteLine ("No local MAT[CH] file found, download required");
-				return true;
-			}
-		}
-
-		private DateTime GetMatchSortFileReleaseDate()
-		{
-			if (!this.IsLogged)
-			{
-				this.DoMatchLoginRequest ();
-			}
-			return FindProductReleaseDate ();
-		}
-
-		private string FindProductUri()
-		{
-			var page = this.DownloadString ("https://match.post.ch/downloadCenter?product=4");
-			var startIndex = page.IndexOf ("/download");
-			var length = page.IndexOf ("Bestand") - 2 - startIndex;
-			return "https://match.post.ch" + page.Substring (startIndex, length);
-		}
-
-		private DateTime FindProductReleaseDate()
-		{
-			var currentYear = DateTime.UtcNow.Year.ToString ();
-			var page = this.DownloadString ("https://match.post.ch/downloadCenter?product=4");
-			var endIndex = page.IndexOf (currentYear + "</b>");
-			var startIndex = endIndex - 6;
-
-			if ((endIndex < 0) || (startIndex < 0))
-			{	// #HACK MAT[CH]
-				return new DateTime (2016, 01, 18);
-			}
-
-			var length = endIndex - startIndex;
-			var date = page.Substring (startIndex, length) + currentYear;
-			return Convert.ToDateTime (date);
-		}
-
-		private string DoMatchLoginRequest()
-		{
-			System.Diagnostics.Trace.WriteLine ("Login to MAT[CH] Downloadcenter...");
-			var hiddenFieldValue = this.FindHiddenFormField ();
-			var values = this.BuildLoginFormPostData (hiddenFieldValue);
-			var response = this.UploadValues ("https://match.post.ch/downloadCenter?login=match", values);
-			System.Diagnostics.Trace.WriteLine ("Done");
-			this.IsLogged = true;
-			return Encoding.Default.GetString (response);
-		}
-
-		private string FindHiddenFormField()
-		{
-			var page = this.DownloadString ("https://match.post.ch/downloadCenter?login=match");
-			var startIndex = page.LastIndexOf ("type=\"hidden\" value=\"") + 21;
-			var length = page.LastIndexOf ("\" name=\"fp_match\"") - startIndex;
-			return page.Substring (startIndex, length);
-		}
-
-		private NameValueCollection BuildLoginFormPostData(string hiddenFieldName)
-		{
-			var userName = "arnaud@epsitec.ch";
-			var password = "TADF8%PYC";
-			var  loginFormData = new NameValueCollection ();
-			loginFormData["benutzer"] = userName;
-			loginFormData["passwort"] = password;
-			loginFormData["fp_match"] = hiddenFieldName;
-			return loginFormData;
+			return "https://webservices.post.ch:17017/IN_ZOPAxFILES/v1/groups/1062/versions/latest/file/gateway";
 		}
 
 		private string DownloadFile(string uri)
