@@ -18,7 +18,7 @@ namespace Epsitec.Data.Platform
 		{
 			this.container = new CookieContainer ();
 			var credentials = Convert.ToBase64String (Encoding.ASCII.GetBytes ("TU_26036_0001:L8qUmdpU"));
-			this.Headers.Add (HttpRequestHeader.Authorization, $"Basic {credentials}");
+			this.Headers.Add (HttpRequestHeader.Authorization, "Basic " + credentials);
 		}
 
 		public CookieContainer CookieContainer
