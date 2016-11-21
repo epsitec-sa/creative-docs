@@ -259,6 +259,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixduplicatesubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixDuplicateSubscriptions (args));
+					return;
+				}
+
 				if (args.Contains("-fixwarningparishgroup"))
 				{
 					ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
@@ -813,6 +819,14 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData
 			(
 				coreData => PrillySubscriptionFixer.FixPrillySubscriptions (coreData)
+			);
+		}
+
+		private static void FixDuplicateSubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => SubscriptionAndRefusalFixer.FixDuplicateSubscriptions (coreData)
 			);
 		}
 

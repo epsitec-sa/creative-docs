@@ -52,9 +52,20 @@ namespace Epsitec.Data.Platform
 				return MatchWebClient.GetLocalMatchSortDataPath ();
 			}
 
-			this.ProductUri = this.ServiceUri ();
-			var fileName = this.DownloadFile (this.ProductUri);
-			this.IsANewRelease = true;
+			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
+			System.Diagnostics.Trace.WriteLine ("Downloading MAT[CH]Sort file...");
+			var lastWrite = File.GetLastWriteTime (filename).Date;
+			var now = System.DateTime.Now.Date;
+			if (lastWrite.Date == now)
+			{
+				this.IsANewRelease = false;
+			}
+			else
+			{
+				this.IsANewRelease = true;
+				this.ProductUri = this.ServiceUri ();
+				var fileName = this.DownloadFile (this.ProductUri);
+			}
 			this.aValidFileIsAvailable = true;
 			return MatchWebClient.GetLocalMatchSortDataPath ();
 		}
@@ -68,7 +79,6 @@ namespace Epsitec.Data.Platform
 		{
 			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
 			System.Diagnostics.Trace.WriteLine ("Downloading MAT[CH]Sort file...");
-
 			using (var stream = this.OpenRead (uri))
 			{
 				try

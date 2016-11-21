@@ -66,6 +66,23 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
+		public static void FixDuplicateSubscriptions(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+
+				var duplicates = businessContext
+					.GetAllEntities<AiderSubscriptionEntity> ()
+					.GroupBy (s => s.LegalPersonContact)
+					.Where (g => g.Count () > 1)
+					.Select (g => new { key = g.Key, nb = g.Count () })
+					.ToList ();
+
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+
+		}
+
 		public static void FixEmptySubscriptions(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
