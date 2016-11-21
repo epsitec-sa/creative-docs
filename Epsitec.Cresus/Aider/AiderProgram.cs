@@ -538,6 +538,9 @@ namespace Epsitec.Aider
 				//HouseholdsFix.EchHouseholdsQuality (coreData, newEChDataFile.FullName);
 				//EChPersonFixer.TryFixAll (coreData);
 
+				System.Console.WriteLine ("Fixing subscriptions after updating...");
+				AiderProgram.FixDuplicateSubscriptions (args);
+
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
