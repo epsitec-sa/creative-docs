@@ -71,13 +71,30 @@ namespace Epsitec.Aider.Data.Job
 			using (var businessContext = new BusinessContext (coreData, false))
 			{
 
-				var duplicates = businessContext
-					.GetAllEntities<AiderSubscriptionEntity> ()
-					.GroupBy (s => s.LegalPersonContact)
+				var subs = businessContext
+					.GetAllEntities<AiderSubscriptionEntity> ();
+
+				var potentialDup = subs
+					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress })
 					.Where (g => g.Count () > 1)
-					.Select (g => new { key = g.Key, nb = g.Count () })
+					.Select (g => new { key = g.Key, nb = g.Count (), values = g.ToList () })
 					.ToList ();
 
+				Console.WriteLine ($"Find {potentialDup.Count} duplicates");
+				var deleted = 0;
+				foreach (var duplicate in potentialDup)
+				{
+					var keep = duplicate.values.First ();
+					var toDelete = duplicate.values.Skip (1);
+					Console.WriteLine ($"Keeping {keep.Id}, deleting {string.Join (" / ", toDelete.Select (s => s.Id))}");
+					deleted += toDelete.Count ();
+					foreach (var sub in toDelete)
+					{
+						AiderSubscriptionEntity.Delete (businessContext, sub);
+					}
+				}
+
+				Console.WriteLine ($"Done {deleted} duplicates removed");
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 
