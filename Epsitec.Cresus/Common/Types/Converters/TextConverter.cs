@@ -191,6 +191,11 @@ namespace Epsitec.Common.Types.Converters
 			{
 				int length = text.IndexOf (";", offset)-offset+1;
 
+				if (length == -1)
+				{
+					return text[offset++];
+				}
+
 				if (length < 3)
 				{
 					throw new System.FormatException (string.Format ("Invalid entity found (too short)."));
