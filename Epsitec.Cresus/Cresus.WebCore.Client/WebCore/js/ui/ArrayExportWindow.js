@@ -141,6 +141,20 @@ function() {
       if(this.currentConfig.useFilters) {
         this.exportUrl = config.url;
       }
+      var colDefs = this.columnDefinitions;
+      // ensure data columns id map with current cache
+      for (var col in config.data) {
+        var toCheck = config.data[col];
+        var column = colDefs.find(function (c) {
+          return c.title == toCheck.title;
+        });
+        if (column) {
+          if (toCheck.name !== column.name) {
+              toCheck.name = column.name;
+              console.log('fixed column' + toCheck.title);
+          }
+        }
+      }
       this.leftGrid.store.loadData (config.data);
     },
 

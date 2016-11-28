@@ -1032,6 +1032,19 @@ Lancé le 09.11.2016
 -echupdate -newechfile:S:\eerv\eerv-2016-11-07.xml -oldechfile:S:\eerv\eerv-2016-11-01.xml -output:s:\eerv\ech-diff-2016-11-07.md
 -clearwarnings -beforedate:2016-01-01 -killpersons:true -createsubscriptions:true
 
+Lancé le 15.11.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-11-14.xml -oldechfile:S:\eerv\eerv-2016-11-07.xml -output:s:\eerv\ech-diff-2016-11-14.md
+-exportsubscriptions -output:export-2016-11-15.txt -error:error-2016-11-15.txt -exclude-district-error:false
+
+
+Lancé le 24.11.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-11-22.xml -oldechfile:S:\eerv\eerv-2016-11-14.xml -output:s:\eerv\ech-diff-2016-11-22.md
+
+Testé -fixduplicatesubscriptions (mais pas produit de version modifiée de la base)
 
 ___________________________________________________________________________________________________________________________________
 

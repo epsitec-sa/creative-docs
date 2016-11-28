@@ -2189,6 +2189,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 727));
 						}
 					}
+					//	designer:cap/LVOK93
+					public static global::Epsitec.Common.Types.Caption Cdt_Monsieur
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 308));
+						}
+					}
 					//	designer:cap/LVAPM
 					public static global::Epsitec.Common.Types.Caption CdtCorps_Monsieur
 					{

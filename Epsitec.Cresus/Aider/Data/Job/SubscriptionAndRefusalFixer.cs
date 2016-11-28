@@ -80,13 +80,13 @@ namespace Epsitec.Aider.Data.Job
 					.Select (g => new { key = g.Key, nb = g.Count (), values = g.ToList () })
 					.ToList ();
 
-				Console.WriteLine ($"Find {potentialDup.Count} duplicates");
+				Console.WriteLine ("Find {0} duplicates", potentialDup.Count);
 				var deleted = 0;
 				foreach (var duplicate in potentialDup)
 				{
 					var keep = duplicate.values.First ();
 					var toDelete = duplicate.values.Skip (1);
-					Console.WriteLine ($"Keeping {keep.Id}, deleting {string.Join (" / ", toDelete.Select (s => s.Id))}");
+					Console.WriteLine ("Keeping {0}, deleting {1}", keep.Id, string.Join (" / ", toDelete.Select (s => s.Id)));
 					deleted += toDelete.Count ();
 					foreach (var sub in toDelete)
 					{
@@ -94,7 +94,7 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				Console.WriteLine ($"Done {deleted} duplicates removed");
+				Console.WriteLine ("Done {0} duplicates removed", deleted);
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
 			}
 

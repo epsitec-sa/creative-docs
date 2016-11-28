@@ -47,27 +47,43 @@ namespace Epsitec.Data.Platform
 
 		public string GetMatchSortFile()
 		{
+			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
+			
 			if (this.aValidFileIsAvailable)
 			{
-				return MatchWebClient.GetLocalMatchSortDataPath ();
+				return filename;
 			}
 
-			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
-			System.Diagnostics.Trace.WriteLine ("Downloading MAT[CH]Sort file...");
-			var lastWrite = File.GetLastWriteTime (filename).Date;
-			var now = System.DateTime.Now.Date;
-			if (lastWrite.Date == now)
+			if ((System.IO.File.Exists (filename) == false) ||
+				(System.IO.File.GetLastWriteTime (filename).Date.Date != System.DateTime.Now.Date))
 			{
-				this.IsANewRelease = false;
-			}
-			else
-			{
-				this.IsANewRelease = true;
 				this.ProductUri = this.ServiceUri ();
-				var fileName = this.DownloadFile (this.ProductUri);
+				this.DownloadFile (this.ProductUri, filename);
+				this.IsANewRelease = this.VerifyNewRelease (filename);
 			}
 			this.aValidFileIsAvailable = true;
-			return MatchWebClient.GetLocalMatchSortDataPath ();
+			
+			return filename;
+		}
+
+		private bool VerifyNewRelease(string filename)
+		{
+			//	First line contains something like "00;20161205;34148"
+			//	The 2nd argument encodes the date of the file...
+
+			var firstLine = System.IO.File.ReadLines (filename).First ();
+			var dateArg = firstLine.Split (';')[1];
+			
+			var dateYear  = int.Parse (dateArg.Substring (0, 4));
+			var dateMonth = int.Parse (dateArg.Substring (4, 2));
+			var dateDay   = int.Parse (dateArg.Substring (6, 2));
+
+			var releaseDate = new System.DateTime (dateYear, dateMonth, dateDay);
+			var currentDate = MatchWebClient.ReadLocalMetaData ();
+
+			MatchWebClient.WriteLocalMetaData (releaseDate);
+
+			return currentDate != releaseDate;
 		}
 
 		private string ServiceUri()
@@ -75,10 +91,10 @@ namespace Epsitec.Data.Platform
 			return "https://webservices.post.ch:17017/IN_ZOPAxFILES/v1/groups/1062/versions/latest/file/gateway";
 		}
 
-		private string DownloadFile(string uri)
+		private void DownloadFile(string uri, string filename)
 		{
-			var filename = MatchWebClient.GetLocalMatchSortDataPath ();
-			System.Diagnostics.Trace.WriteLine ("Downloading MAT[CH]Sort file...");
+			System.Diagnostics.Trace.WriteLine (string.Format ("Downloading MAT[CH]sort file from {0}", uri));
+			
 			using (var stream = this.OpenRead (uri))
 			{
 				try
@@ -86,7 +102,7 @@ namespace Epsitec.Data.Platform
 					var zipFile = new Epsitec.Common.IO.ZipFile ();
 					zipFile.LoadFile (stream);
 					var zipEntry = zipFile.Entries.First ();
-					System.Diagnostics.Trace.WriteLine ("Writing file on {0}...", filename);
+					System.Diagnostics.Trace.WriteLine (string.Format ("Writing file {0}", filename));
 					using (StreamWriter sw = new StreamWriter (filename))
 					{
 						sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
@@ -96,16 +112,8 @@ namespace Epsitec.Data.Platform
 				catch (System.Exception ex)
 				{
 					System.Diagnostics.Trace.WriteLine (ex.Message);
-					
-					if (System.IO.File.Exists (filename))
-					{
-						return filename;
-					}
-					
-					return null;
 				}
 			}
-			return filename;
 		}
 
 		private static string GetLocalMetaDataPath()
@@ -120,11 +128,17 @@ namespace Epsitec.Data.Platform
 			return System.IO.Path.Combine (path1, "Epsitec", "swisspost.csv");
 		}
 
-		private static System.DateTime ReadLocalMetaData()
+		private static System.DateTime? ReadLocalMetaData()
 		{
 			var swissPostStreetMeta = MatchWebClient.GetLocalMetaDataPath ();
-			string date = System.IO.File.ReadAllText (swissPostStreetMeta);
-			return System.Convert.ToDateTime (date);
+
+			if (System.IO.File.Exists (swissPostStreetMeta))
+			{
+				string date = System.IO.File.ReadAllText (swissPostStreetMeta);
+				return System.Convert.ToDateTime (date);
+			}
+
+			return null;
 		}
 
 		private static void WriteLocalMetaData(System.DateTime releaseDate)
