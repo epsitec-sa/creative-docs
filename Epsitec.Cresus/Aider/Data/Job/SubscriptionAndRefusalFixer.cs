@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Data.Job
 					.GetAllEntities<AiderSubscriptionEntity> ();
 
 				var potentialDup = subs
-					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress })
+					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress, z = s.RegionalEdition })
 					.Where (g => g.Count () > 1)
 					.Select (g => new { key = g.Key, nb = g.Count (), values = g.ToList () })
 					.ToList ();
