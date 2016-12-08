@@ -67,28 +67,25 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			return AiderMailingEntity.Create (this.BusinessContext, aiderUser, name, desc, cat, isReady: false);
 		}
 		
-		private List<AiderMailingCategoryEntity> GetCategories()
+		private IEnumerable<AiderMailingCategoryEntity> GetCategories()
 		{
-			List<AiderMailingCategoryEntity> categories = new List<AiderMailingCategoryEntity> ();
-
 			var aiderUser = this.BusinessContext.GetLocalEntity (AiderUserManager.Current.AuthenticatedUser);
-
+			var cats = Enumerable.Empty<AiderMailingCategoryEntity> ();
 			if (aiderUser.EnableGroupEditionCanton)
 			{
-				categories.AddRange (AiderMailingCategoryEntity.GetCantonCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+				cats.Concat (AiderMailingCategoryEntity.GetCantonCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 			}
 
 			if (aiderUser.EnableGroupEditionRegion)
 			{
-				categories.AddRange (AiderMailingCategoryEntity.GetRegionCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+				cats.Concat (AiderMailingCategoryEntity.GetRegionCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 			}
 
-			if (aiderUser.EnableGroupEditionParish)
-			{
-				categories.AddRange (AiderMailingCategoryEntity.GetParishCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
-			}
+
+			cats.Concat (AiderMailingCategoryEntity.GetParishCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+
 			
-			return categories;
+			return cats;
 		}
 	}
 }

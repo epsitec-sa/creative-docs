@@ -1200,6 +1200,7 @@ namespace Epsitec.Aider.Entities
 
 		private AiderContactEntity GetSecondaryAddressContact()
 		{
+
 			return this.AdditionalAddresses.Where (x => x.AddressType == this.SecondaryAddressType && x.HasFullAddress ()).FirstOrDefault ();
 		}
 
