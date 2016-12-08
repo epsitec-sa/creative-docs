@@ -91,8 +91,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			{
 				wall.AddBrick ()
 					.Icon ("Base.AiderGoup.Parish")
-					.Title ("Membres et dérogations")
-					.Text ( x => x.ParishGroup.FindParticipantCount (this.DataContext) + " membres")
+					.Title ("Dérogations")
+					.Text ("...")
 					.Attribute (BrickMode.DefaultToSummarySubView)
 					.WithSpecialController (typeof (SummaryAiderOfficeManagementViewController5Members));
 			}

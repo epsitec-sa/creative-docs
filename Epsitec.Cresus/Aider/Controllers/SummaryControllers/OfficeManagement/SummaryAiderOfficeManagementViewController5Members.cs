@@ -27,7 +27,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderOfficeManagementEntity> wall)
 		{
-			SummaryAiderOfficeManagementViewController5Members.CreateBricksParishMembers (wall);
+			//SummaryAiderOfficeManagementViewController5Members.CreateBricksParishMembers (wall);
 			SummaryAiderOfficeManagementViewController5Members.CreateBricksDerogations (wall);	
 		}
 
