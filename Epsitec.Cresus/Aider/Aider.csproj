@@ -213,6 +213,8 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController20RemoveAllParticipations.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController21KeepAllParticipations.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController2Cancel.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController0Done.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController12AddressChanged.cs" />
