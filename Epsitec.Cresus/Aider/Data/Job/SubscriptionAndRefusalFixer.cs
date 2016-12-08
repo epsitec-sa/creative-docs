@@ -151,7 +151,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
-				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
+				var jobDescription = string.Format ("Ménages sans abonnement au journal");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
@@ -224,7 +224,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
-				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
+				var jobDescription = string.Format ("Ménages sans abonnement au journal");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
