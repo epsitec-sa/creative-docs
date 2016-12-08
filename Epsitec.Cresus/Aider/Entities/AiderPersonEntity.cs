@@ -160,6 +160,16 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		partial void GetBirthdate(ref string value)
+		{
+			value = this.GetFormattedBirthdayDate ();
+		}
+
+		partial void SetBirthdate(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
 		public string GetFormattedBirthdayDate()
 		{
 			if (this.BirthdayYear == 0)

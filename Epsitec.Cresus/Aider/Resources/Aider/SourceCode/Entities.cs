@@ -1431,6 +1431,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Birthdate</c> field.
+		///	designer:fld/LVAF/LVON93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVON93]", IsVirtual=true)]
+		public string Birthdate
+		{
+			get
+			{
+				string value = default (string);
+				this.GetBirthdate (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.Birthdate;
+				if (oldValue != value || !this.IsFieldDefined("[LVON93]"))
+				{
+					this.OnBirthdateChanging (oldValue, value);
+					this.SetBirthdate (value);
+					this.OnBirthdateChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1494,6 +1518,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnSecondaryAddressTextSingleLineChanged(string oldValue, string newValue);
 		partial void OnSecondaryAddressTextMultiLineChanging(string oldValue, string newValue);
 		partial void OnSecondaryAddressTextMultiLineChanged(string oldValue, string newValue);
+		partial void OnBirthdateChanging(string oldValue, string newValue);
+		partial void OnBirthdateChanged(string oldValue, string newValue);
 		
 		partial void GetCallNameDisplay(ref string value);
 		partial void SetCallNameDisplay(string value);
@@ -1527,6 +1553,8 @@ namespace Epsitec.Aider.Entities
 		partial void SetSecondaryAddressTextSingleLine(string value);
 		partial void GetSecondaryAddressTextMultiLine(ref string value);
 		partial void SetSecondaryAddressTextMultiLine(string value);
+		partial void GetBirthdate(ref string value);
+		partial void SetBirthdate(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -7743,6 +7771,30 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>IsHouseholdHead</c> field.
+		///	designer:fld/LVARD/LVOL93
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVOL93]", IsVirtual=true)]
+		public bool IsHouseholdHead
+		{
+			get
+			{
+				bool value = default (bool);
+				this.GetIsHouseholdHead (ref value);
+				return value;
+			}
+			set
+			{
+				bool oldValue = this.IsHouseholdHead;
+				if (oldValue != value || !this.IsFieldDefined("[LVOL93]"))
+				{
+					this.OnIsHouseholdHeadChanging (oldValue, value);
+					this.SetIsHouseholdHead (value);
+					this.OnIsHouseholdHeadChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnContactTypeChanging(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
 		partial void OnContactTypeChanged(global::Epsitec.Aider.Enumerations.ContactType oldValue, global::Epsitec.Aider.Enumerations.ContactType newValue);
@@ -7786,6 +7838,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnDebugIdsChanged(string oldValue, string newValue);
 		partial void OnQualityCodeChanging(string oldValue, string newValue);
 		partial void OnQualityCodeChanged(string oldValue, string newValue);
+		partial void OnIsHouseholdHeadChanging(bool oldValue, bool newValue);
+		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue);
 		
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
 		partial void GetFullAddressTextSingleLine(ref string value);
@@ -7794,6 +7848,8 @@ namespace Epsitec.Aider.Entities
 		partial void SetFullAddressTextMultiLine(string value);
 		partial void GetDebugIds(ref string value);
 		partial void SetDebugIds(string value);
+		partial void GetIsHouseholdHead(ref bool value);
+		partial void SetIsHouseholdHead(bool value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -3118,6 +3118,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 454);
 				//	designer:cap/LVA9E
 				public static readonly global::Epsitec.Common.Support.Druid HouseholdRole = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 457);
+				//	designer:cap/LVOL93
+				public static readonly global::Epsitec.Common.Support.Druid IsHouseholdHead = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 309);
 				//	designer:cap/LVA7E
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 455);
 				//	designer:cap/LVAFG
@@ -3868,6 +3870,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AllEmails = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 562);
 				//	designer:cap/LVAHH
 				public static readonly global::Epsitec.Common.Support.Druid AllPhoneNumbers = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 561);
+				//	designer:cap/LVON93
+				public static readonly global::Epsitec.Common.Support.Druid Birthdate = new global::Epsitec.Common.Support.Druid (_moduleId, 120, 311);
 				//	designer:cap/LVANE
 				public static readonly global::Epsitec.Common.Support.Druid BirthdayDay = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 471);
 				//	designer:cap/LVAOE

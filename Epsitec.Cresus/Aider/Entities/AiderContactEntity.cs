@@ -202,7 +202,15 @@ namespace Epsitec.Aider.Entities
 			this.GetParticipations ().Remove (participation);
 		}
 
+		partial void GetIsHouseholdHead(ref bool value)
+		{
+			value = this.Household.IsHead (this.Person);
+		}
 
+		partial void SetIsHouseholdHead(bool value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
 
 		partial void GetFullAddressTextSingleLine(ref string value)
 		{
