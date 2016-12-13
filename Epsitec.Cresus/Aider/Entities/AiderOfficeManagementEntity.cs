@@ -367,9 +367,9 @@ namespace Epsitec.Aider.Entities
 			return businessContext.GetByRequest<AiderEventPlaceEntity> (request).ToList ();
 		}
 
-		public static List<AiderPersonEntity> GetOfficeMinisters(BusinessContext businessContext, AiderOfficeManagementEntity office)
+		public static List<AiderEmployeeEntity> GetOfficeMinisters(BusinessContext businessContext, AiderOfficeManagementEntity office)
 		{
-			var employees     = office.Employees.Where (e => e.IsMinister () == true).Select (e => e.Person);
+			var employees     = office.Employees.Where (e => e.IsMinister () == true);
 			var officeEvent = new AiderEventEntity ()
 			{
 				Office = office
@@ -379,7 +379,7 @@ namespace Epsitec.Aider.Entities
 				Event = officeEvent,
 				Role = EventParticipantRole.Minister
 			};
-			var lastMinisters = businessContext.GetByExample<AiderEventParticipantEntity> (example).Select (p => p.Person).Distinct ();
+			var lastMinisters = businessContext.GetByExample<AiderEventParticipantEntity> (example).Select (p => p.Person.Employee).Distinct ();
 
 			return lastMinisters.Union (employees).Where (m => m.IsNotNull ()).ToList ();
 		}

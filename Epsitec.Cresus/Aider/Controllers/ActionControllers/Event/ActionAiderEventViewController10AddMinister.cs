@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		public override ActionExecutor GetExecutor()
 		{
-			return ActionExecutor.Create<AiderPersonEntity> (this.Execute);
+			return ActionExecutor.Create<AiderEmployeeEntity> (this.Execute);
 		}
 
 		protected override void GetForm(ActionBrick<AiderEventEntity, SimpleBrick<AiderEventEntity>> form)
@@ -40,21 +40,21 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			var favoriteMinisters = AiderOfficeManagementEntity.GetOfficeMinisters (this.BusinessContext, this.Entity.Office);
 			form
 				.Title ("Choisir le ministre")
-				.Field<AiderPersonEntity> ()
+				.Field<AiderEmployeeEntity> ()
 					.Title ("Ministre")
 					.WithFavorites (favoriteMinisters)
 				.End ()
 			.End ();
 		}
 
-		private void Execute(AiderPersonEntity minister)
+		private void Execute(AiderEmployeeEntity minister)
 		{
 			if (minister.IsNull ())
 			{
 				throw new BusinessRuleException ("Il faut choisir un ministre");
 			}
 
-			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, minister, Enumerations.EventParticipantRole.Minister);
+			AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, minister.Person, Enumerations.EventParticipantRole.Minister);
 		}
 	}
 }
