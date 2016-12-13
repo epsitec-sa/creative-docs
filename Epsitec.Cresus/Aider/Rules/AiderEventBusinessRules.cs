@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Rules
 					case Enumerations.EventType.FuneralService:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.IsExternal == false)
+							if (actor.Person.IsNotNull ())
 							{
 								var person = actor.Person;
 								if (person.IsAlive)
@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Rules
 					case Enumerations.EventType.CelebrationRegisteredPartners:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.IsExternal == false)
+							if (actor.Person.IsNotNull ())
 							{
 								var person = actor.Person.eCH_Person;
 								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Pacs)
@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Rules
 					case Enumerations.EventType.Marriage:
 						entity.GetMainActors ().ForEach ((actor) =>
 						{
-							if (actor.IsExternal == false)
+							if (actor.Person.IsNotNull ())
 							{
 								var person = actor.Person.eCH_Person;
 								if (person.AdultMaritalStatus != Enumerations.PersonMaritalStatus.Married)

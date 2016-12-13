@@ -47,6 +47,7 @@ namespace Epsitec.Aider.Entities
 			newParticipant.Role = role;
 			newParticipant.Person = person;
 			newParticipant.ParishGroupPathCache = targetEvent.ParishGroupPathCache;
+            newParticipant.UpdateActDataFromModel ();
 			return newParticipant;
 		}
 
@@ -88,7 +89,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonOfficialName;
+                if (this.LastName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.eCH_Person.PersonOfficialName;
+                }
+                else
+                {
+                    return this.LastName;
+                }
 			}
 		}
 
@@ -100,7 +108,15 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonFirstNames;
+                if (this.FirstName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.eCH_Person.PersonFirstNames;
+                }
+                else
+                {
+                    return this.FirstName;
+                }
+				
 			}
 		}
 
@@ -112,7 +128,15 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.GetFullName ();
+                if (this.FirstName.IsNullOrWhiteSpace () || this.LastName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.GetFullName ();
+                }
+                else
+                {
+                    return StringUtils.Join (" ", this.FirstName, this.LastName);
+                }
+				
 			}
 		}
 
@@ -124,7 +148,7 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonDateOfBirth;
+                return this.Person.eCH_Person.PersonDateOfBirth;
 			}
 			
 		}
@@ -133,11 +157,51 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.Sex;
+				if (this.Sex == Enumerations.PersonSex.Unknown)
+				{
+					return this.DetermineSexFromRole (this.Sex);
+				}
+				else
+				{
+					return this.Sex;
+				}
 			}
 			else
 			{
-				return this.Person.eCH_Person.PersonSex;
+				if (this.Person.eCH_Person.PersonSex == Enumerations.PersonSex.Unknown)
+				{
+					return this.DetermineSexFromRole (this.Sex);
+				}
+				else
+				{
+					return this.Person.eCH_Person.PersonSex;
+				}
+				
+			}
+		}
+
+		public Enumerations.PersonSex DetermineSexFromRole (Enumerations.PersonSex defaultValue)
+		{
+			switch (this.Role)
+			{
+				case Enumerations.EventParticipantRole.Spouse:
+				case Enumerations.EventParticipantRole.SpouseMother:
+				case Enumerations.EventParticipantRole.PartnerBMother:
+				case Enumerations.EventParticipantRole.PartnerAMother:
+				case Enumerations.EventParticipantRole.Mother:
+				case Enumerations.EventParticipantRole.HusbandMother:
+				case Enumerations.EventParticipantRole.GodMother:
+					return Enumerations.PersonSex.Female;
+				case Enumerations.EventParticipantRole.SpouseFather:
+				case Enumerations.EventParticipantRole.PartnerBFather:
+				case Enumerations.EventParticipantRole.PartnerAFather:
+				case Enumerations.EventParticipantRole.HusbandFather:
+				case Enumerations.EventParticipantRole.GodFather:
+				case Enumerations.EventParticipantRole.Father:
+				case Enumerations.EventParticipantRole.Husband:
+					return Enumerations.PersonSex.Male;
+				default:
+					return defaultValue;
 			}
 		}
 
@@ -149,30 +213,30 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				var person = this.Person;
-				if (person.IsGovernmentDefined && person.IsDeclared)
-				{
-					return person.eCH_Person.GetAddress ().Town;
-				}
-				else
-				{
-					if (person.MainContact.IsNotNull ())
-					{
-						if (person.MainContact.GetAddress ().Town.IsNotNull ())
-						{
-							return person.MainContact.GetAddress ().Town.Name;
-						}
-						else
-						{
-							return person.MainContact.Address.Town.Name;
-						}
-					}
-					else
-					{
-						return "";
-					}
-				}
-			}			
+                var person = this.Person;
+                if (person.IsGovernmentDefined && person.IsDeclared)
+                {
+                    return person.eCH_Person.GetAddress ().Town;
+                }
+                else
+                {
+                    if (person.MainContact.IsNotNull ())
+                    {
+                        if (person.MainContact.GetAddress ().Town.IsNotNull ())
+                        {
+                            return person.MainContact.GetAddress ().Town.Name;
+                        }
+                        else
+                        {
+                            return person.MainContact.Address.Town.Name;
+                        }
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }
+            }			
 		}
 
 		public string GetParishName(bool fromModel = false)
@@ -183,7 +247,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.ParishGroup.Name;
+                if (this.ParishName.IsNullOrWhiteSpace ())
+                {
+                    return this.Person.ParishGroup.Name;
+                }
+                else
+                {
+                    return this.ParishName;
+                }
 			}
 		}
 
@@ -195,7 +266,14 @@ namespace Epsitec.Aider.Entities
 			}
 			else
 			{
-				return this.Person.Confession;
+                if (this.Confession == Enumerations.PersonConfession.Unknown)
+                {
+                    return this.Person.Confession;
+                }
+				else
+                {
+                    return this.Confession;
+                }
 			}
 		}
 
