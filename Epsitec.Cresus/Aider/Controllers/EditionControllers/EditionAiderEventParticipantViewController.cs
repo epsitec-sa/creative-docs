@@ -31,10 +31,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.Person.MainContact.Address.Town)
 							.WithFavorites (favorites)
 					.End ()
-                    .Input ()     
+                    .Input ()
                         .Field (x => x.FirstName)
                         .Field (x => x.LastName)
                         .Field (x => x.Confession)
+						.Field (x => x.Sex)
                     .End ();
             }
 			else

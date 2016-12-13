@@ -157,11 +157,51 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.Sex;
+				if (this.Sex == Enumerations.PersonSex.Unknown)
+				{
+					return this.DetermineSexFromRole (this.Sex);
+				}
+				else
+				{
+					return this.Sex;
+				}
 			}
 			else
 			{
-               return this.Person.eCH_Person.PersonSex;
+				if (this.Person.eCH_Person.PersonSex == Enumerations.PersonSex.Unknown)
+				{
+					return this.DetermineSexFromRole (this.Sex);
+				}
+				else
+				{
+					return this.Person.eCH_Person.PersonSex;
+				}
+				
+			}
+		}
+
+		public Enumerations.PersonSex DetermineSexFromRole (Enumerations.PersonSex defaultValue)
+		{
+			switch (this.Role)
+			{
+				case Enumerations.EventParticipantRole.Spouse:
+				case Enumerations.EventParticipantRole.SpouseMother:
+				case Enumerations.EventParticipantRole.PartnerBMother:
+				case Enumerations.EventParticipantRole.PartnerAMother:
+				case Enumerations.EventParticipantRole.Mother:
+				case Enumerations.EventParticipantRole.HusbandMother:
+				case Enumerations.EventParticipantRole.GodMother:
+					return Enumerations.PersonSex.Female;
+				case Enumerations.EventParticipantRole.SpouseFather:
+				case Enumerations.EventParticipantRole.PartnerBFather:
+				case Enumerations.EventParticipantRole.PartnerAFather:
+				case Enumerations.EventParticipantRole.HusbandFather:
+				case Enumerations.EventParticipantRole.GodFather:
+				case Enumerations.EventParticipantRole.Father:
+				case Enumerations.EventParticipantRole.Husband:
+					return Enumerations.PersonSex.Male;
+				default:
+					return defaultValue;
 			}
 		}
 
