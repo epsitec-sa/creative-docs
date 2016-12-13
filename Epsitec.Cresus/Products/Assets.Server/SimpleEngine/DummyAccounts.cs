@@ -24,13 +24,15 @@ namespace Epsitec.Cresus.Assets.Server.SimpleEngine
 			{
 				try
 				{
-					var accounts = new GuidDictionary<DataObject> (mandat.UndoManager);
-					var vatCodes = new GuidDictionary<DataObject> (mandat.UndoManager);
+					var accounts    = new GuidDictionary<DataObject> (mandat.UndoManager);
+					var vatCodes    = new GuidDictionary<DataObject> (mandat.UndoManager);
+					var centerCodes = new GuidDictionary<DataObject> (mandat.UndoManager);
 
-					var range = importEngine.Import (accounts, vatCodes, filename);
+					var range = importEngine.Import (accounts, vatCodes, centerCodes, filename);
 
 					mandat.AddAccounts         (range, accounts);
 					mandat.AddVatCodes         (range, vatCodes);
+					mandat.AddCenters          (range, centerCodes);
 					mandat.AddAccountsFilename (range, filename);
 					//?mandat.CurrentAccountsDateRange = range;
 				}

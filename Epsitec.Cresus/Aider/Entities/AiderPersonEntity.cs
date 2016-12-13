@@ -160,6 +160,16 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
+		partial void GetBirthdate(ref string value)
+		{
+			value = this.GetFormattedBirthdayDate ();
+		}
+
+		partial void SetBirthdate(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
 		public string GetFormattedBirthdayDate()
 		{
 			if (this.BirthdayYear == 0)
@@ -556,6 +566,49 @@ namespace Epsitec.Aider.Entities
 			}
 
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
+		}
+
+		public void UndoKillPerson(BusinessContext businessContext)
+		{
+			var contacts = this.Contacts.ToList ();
+			var participations = this.Groups.ToList ();
+
+			this.Visibility = PersonVisibilityStatus.Default;
+			this.eCH_Person.PersonDateOfDeath = null;
+			this.eCH_Person.PersonDateOfDeathIsUncertain = false;
+			this.eCH_Person.RemovalReason = RemovalReason.None;
+
+
+			// undo deceased contact
+			foreach (var contact in contacts)
+			{
+				if (contact.ContactType == ContactType.Deceased)
+				{
+					contact.ContactType = ContactType.PersonHousehold;
+				}
+
+				if (contact.AddressType == AddressType.LastKnow)
+				{
+					contact.AddressType = AddressType.Default;
+				}
+			}
+
+			//	undo ended participation
+			foreach (var participation in participations)
+			{
+				participation.EndDate = null;
+			}
+
+			// recreate an household
+			var household = AiderHouseholdEntity.Create (businessContext, this.GetAddress ());
+			household.AddContactInternal (this.MainContact);
+			this.MainContact.Household = household;
+			
+			// Add subscription
+			if (this.GetAddress ().IsNotNull ())
+			{
+				AiderSubscriptionEntity.Create (businessContext, household);
+			}
 		}
 
 		public static void MergeGroupParticipations(BusinessContext businessContext, AiderPersonEntity officialPerson, AiderPersonEntity otherPerson)
@@ -1147,6 +1200,7 @@ namespace Epsitec.Aider.Entities
 
 		private AiderContactEntity GetSecondaryAddressContact()
 		{
+
 			return this.AdditionalAddresses.Where (x => x.AddressType == this.SecondaryAddressType && x.HasFullAddress ()).FirstOrDefault ();
 		}
 

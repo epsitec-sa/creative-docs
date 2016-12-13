@@ -53,6 +53,7 @@ namespace Epsitec.Aider.Enumerations
 		Divisionnaire_Monsieur	= 0x521,
 		CdtCorps_Monsieur		= 0x531,
 		ChefArmee_Monsieur		= 0x541,
+		Cdt_Monsieur			= 0x551
 	}
 }
 

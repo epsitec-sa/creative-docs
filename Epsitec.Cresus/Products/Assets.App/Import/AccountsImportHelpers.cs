@@ -37,13 +37,15 @@ namespace Epsitec.Cresus.Assets.App.Export
 			//	Retourne le rapport sur la future importation d'un plan comptable.
 			using (var importEngine = new AccountsImport ())
 			{
-				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
 				var report = string.Format (Res.Strings.Popup.AccountsImport.Report.ToString (), filename);
 
 				try
 				{
-					var range = importEngine.Import (importedAccounts, null, filename);
+					var range = importEngine.Import (importedAccounts, null, importedCenterCodes, filename);
+					var centerCount = System.Math.Max (importedCenterCodes.Count-1, 0);
 
 					bool existing = this.accessor.Mandat.AccountsDateRanges.Contains (range);
 					if (existing)
@@ -56,13 +58,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 						}
 						else
 						{
-							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count);
+							string message = string.Format (Res.Strings.AccountsImport.Message.Update.ToString (), range.ToNiceString (), importedAccounts.Count, centerCount);
 							return new AccountsImportReport (AccountsImportMode.Update, report + message);
 						}
 					}
 					else
 					{
-						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count);
+						string message = string.Format (Res.Strings.AccountsImport.Message.New.ToString (), range.ToNiceString (), importedAccounts.Count, centerCount);
 						return new AccountsImportReport (AccountsImportMode.Add, report + message);
 					}
 				}
@@ -93,6 +95,38 @@ namespace Epsitec.Cresus.Assets.App.Export
 		}
 
 
+		public void ChangePath(DateRange dateRange)
+		{
+			//	Affiche le dialogue standard de Windows pour choisir le plan comptable, puis modifie le
+			//	chemin d'accès.
+			var filename = this.accessor.Mandat.GetAccountsFilename (dateRange);
+
+			DialogsHelper.ShowImportAccounts (this.target, filename, delegate (string path)
+			{
+				LocalSettings.AccountsImportFilename = path;
+				this.Import (path);  // on refait l'importation
+			});
+		}
+
+		public void Delete(DateRange dateRange)
+		{
+			//	Supprime un plan comptable de la liste des plans comptables dans le mandat.
+			this.accessor.UndoManager.Start ();
+
+			this.accessor.Mandat.DeleteAccounts         (dateRange);
+			this.accessor.Mandat.DeleteVatCodes         (dateRange);
+			this.accessor.Mandat.DeleteAccountsFilename (dateRange);
+
+			this.accessor.WarningsDirty = true;
+			this.updateAction ();
+
+			var op = string.Concat (Res.Commands.Accounts.Delete.Description, " — ", dateRange.ToNiceString ());
+			var desc = UndoManager.GetDescription (op, null);
+			this.accessor.UndoManager.SetDescription (desc);
+			this.accessor.UndoManager.SetAfterViewState ();
+		}
+
+
 		private void Import(string filename)
 		{
 			//	Lit le fichier .crp et ajoute-le à la liste des plans comptables dans le mandat.
@@ -101,12 +135,13 @@ namespace Epsitec.Cresus.Assets.App.Export
 			using (var importEngine = new AccountsImport ())
 			{
 				DateRange range;
-				var importedAccounts = new GuidDictionary<DataObject> (this.accessor.UndoManager);
-				var importedVatCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedAccounts    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedVatCodes    = new GuidDictionary<DataObject> (this.accessor.UndoManager);
+				var importedCenterCodes = new GuidDictionary<DataObject> (this.accessor.UndoManager);
 
 				try
 				{
-					range = importEngine.Import (importedAccounts, importedVatCodes, filename);
+					range = importEngine.Import (importedAccounts, importedVatCodes, importedCenterCodes, filename);
 				}
 				catch (System.Exception ex)
 				{
@@ -117,6 +152,7 @@ namespace Epsitec.Cresus.Assets.App.Export
 
 				this.accessor.Mandat.AddAccounts         (range, importedAccounts);
 				this.accessor.Mandat.AddVatCodes         (range, importedVatCodes);
+				this.accessor.Mandat.AddCenters          (range, importedCenterCodes);
 				this.accessor.Mandat.AddAccountsFilename (range, filename);
 				//?this.accessor.Mandat.CurrentAccountsDateRange = range;
 				this.accessor.WarningsDirty = true;

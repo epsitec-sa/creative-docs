@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				//	S'il y a déjà un item correspondant à la clé, l'opération d'annulation
 				//	devra remettre l'item intitial.
-				this.dict.Add (key, item);
+				this.dict[key] = item;
 
 				var undoData = new UndoData
 				{
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Assets.Data
 			{
 				//	Si l'item correspondant à la clé n'est pas déjà dans le dictionnaire,
 				//	l'opération d'annulation devra simplement supprimer la clé.
-				this.dict.Add (key, item);
+				this.dict[key] = item;
 
 				var undoData = new UndoData
 				{

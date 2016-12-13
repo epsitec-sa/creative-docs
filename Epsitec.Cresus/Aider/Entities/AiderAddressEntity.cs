@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (
 				this.AddressLine1, "\n",
-				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
+				this.GetBestStreetName (), this.HouseNumberAndComplement, "\n",
 				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
@@ -85,10 +85,34 @@ namespace Epsitec.Aider.Entities
 		private FormattedText GetCompactPostalAddress()
 		{
 			return TextFormatter.FormatText (
-				this.StreetUserFriendly.CapitalizeFirstLetter (), this.HouseNumberAndComplement, "\n",
+				this.GetBestStreetName (forceShortName: true), this.HouseNumberAndComplement, "\n",
 				this.PostBox, "\n",
 				this.Town.ZipCode, this.Town.Name, "\n",
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
+		}
+
+		private string GetBestStreetName(bool forceShortName = false)
+		{
+            if (this.StreetUserFriendly == null)
+            {
+                return null;
+            }
+
+            var street = this.StreetUserFriendly.CapitalizeFirstLetter ();
+
+			var len = street.Length;
+			if (len > 24 || forceShortName)
+			{
+				var shortnames = AiderAddressEntity.ShortStreetMap;
+				var isInShortnames = shortnames.Any (s => street.StartsWith (s.Key));
+				if (isInShortnames)
+				{
+					var shortName = shortnames.Single (s => street.StartsWith (s.Key));
+					return street.Replace (shortName.Key, shortName.Value);
+				}
+				return street;
+			}
+			return street;
 		}
 
 		public FormattedText GetDisplayAddress()
@@ -476,6 +500,21 @@ namespace Epsitec.Aider.Entities
 			throw new System.NotImplementedException ("Do not use this method");
 		}
 
+
+		private static readonly Dictionary<string, string> ShortStreetMap = new Dictionary<string, string> ()
+			{
+				{ "Chemin ", "Ch. " },
+				{ "Passage ", "Pass. " },
+				{ "Boulevard ",  "Bd " },
+				{ "Route ", "Rte " },
+				{ "Promenade ", "Prom. " },
+				{ "Terrasse ", "Terr. " },
+				{ "Avenue ", "Av. " },
+				{ "Escalier ", "Esc. " },
+				{ "Impasse ", "Imp. "},
+				{ "Strasse ", "Str. "},
+				{ "Esplanade ", "Espl. "}
+			};
 
 		private static char[] digits = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
 	}

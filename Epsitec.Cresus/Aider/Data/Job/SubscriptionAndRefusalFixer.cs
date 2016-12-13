@@ -66,6 +66,40 @@ namespace Epsitec.Aider.Data.Job
 
 		}
 
+		public static void FixDuplicateSubscriptions(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+
+				var subs = businessContext
+					.GetAllEntities<AiderSubscriptionEntity> ();
+
+				var potentialDup = subs
+					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress, z = s.RegionalEdition })
+					.Where (g => g.Count () > 1)
+					.Select (g => new { key = g.Key, nb = g.Count (), values = g.ToList () })
+					.ToList ();
+
+				Console.WriteLine ("Find {0} duplicates", potentialDup.Count);
+				var deleted = 0;
+				foreach (var duplicate in potentialDup)
+				{
+					var keep = duplicate.values.First ();
+					var toDelete = duplicate.values.Skip (1);
+					Console.WriteLine ("Keeping {0}, deleting {1}", keep.Id, string.Join (" / ", toDelete.Select (s => s.Id)));
+					deleted += toDelete.Count ();
+					foreach (var sub in toDelete)
+					{
+						AiderSubscriptionEntity.Delete (businessContext, sub);
+					}
+				}
+
+				Console.WriteLine ("Done {0} duplicates removed", deleted);
+				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+
+		}
+
 		public static void FixEmptySubscriptions(CoreData coreData)
 		{
 			using (var businessContext = new BusinessContext (coreData, false))
@@ -117,7 +151,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
-				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
+				var jobDescription = string.Format ("Ménages sans abonnement au journal");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 
@@ -190,7 +224,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				var jobDateTime    = System.DateTime.Now;
 				var jobName        = "SubscriptionAndRefusalFixer.WarnHouseholdWithNoSubscription()";
-				var jobDescription = string.Format ("Ménages sans abonnement à Bonne Nouvelle");
+				var jobDescription = string.Format ("Ménages sans abonnement au journal");
 
 				var warningSource = AiderPersonWarningSourceEntity.Create (businessContext, jobDateTime, jobName, TextFormatter.FormatText (jobDescription));
 

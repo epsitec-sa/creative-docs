@@ -50,6 +50,16 @@ namespace Epsitec.Aider.Entities
 			return info;
 		}
 
+		partial void SetSubject(string value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
+
+		partial void GetSubject(ref string value)
+		{
+			value = this.Process.GetSubject ().ToSimpleText ();
+		}
+
 		public FormattedText GetTaskHelp()
 		{
 			var help = new FormattedText ("Aide:\n");

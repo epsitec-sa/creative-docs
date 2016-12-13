@@ -67,6 +67,6 @@ namespace Epsitec.Tool.Data.Platform
 			zip.SaveFile (System.IO.Path.Combine (Program.rootPath, "Data.Platform", "DataFiles", "ZipCodeFolding.zip"));
 		}
 		
-		private static string rootPath = @"S:\git\core\cresus\Epsitec.Cresus";
+		private static string rootPath = @"S:\core\Epsitec.Cresus";
 	}
 }

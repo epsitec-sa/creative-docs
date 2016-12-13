@@ -16,14 +16,16 @@ namespace Epsitec.Cresus.Assets.App.Popups
 	/// </summary>
 	public class SimplePopup : AbstractPopup
 	{
-		public SimplePopup()
+		private SimplePopup()
 		{
 			this.items = new List<string> ();
 			this.SelectedItem = -1;
 		}
 
 
-		public List<string>						Items
+		private string                          Title;
+
+		private List<string>					Items
 		{
 			get
 			{
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			}
 		}
 
-		public int								SelectedItem;
+		private int								SelectedItem;
 
 
 		protected override Size					DialogSize
@@ -49,8 +51,18 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			int h = SimplePopup.margins + this.RequiredHeight;
 			int w = this.RequiredWidth;
-			int i = 0;
 
+			if (!string.IsNullOrEmpty (this.Title))  // y a-t-il un titre ?
+			{
+				h -= SimplePopup.itemHeight;
+				this.CreateTitle (h, w);
+
+				h -= SimplePopup.sepHeight - 2;
+				this.CreateSeparator (h, w);
+				h -= 2;
+			}
+
+			int i = 0;
 			foreach (int y in this.PosY)
 			{
 				var item = this.items[i];
@@ -66,6 +78,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 				i++;
 			}
+		}
+
+		private void CreateTitle(int y, int width)
+		{
+			int x = ColoredButton.horizontalMargins + SimplePopup.margins;
+			int dx = width;
+			int dy = SimplePopup.itemHeight;
+
+			new StaticText
+			{
+				Parent        = this.mainFrameBox,
+				Anchor        = AnchorStyles.BottomLeft,
+				PreferredSize = new Size (dx, dy),
+				Margins       = new Margins (x, 0, 0, y),
+				Text          = this.GetTextWithGaps (-1),
+			};
 		}
 
 		private void CreateSeparator(int y, int width)
@@ -107,18 +135,30 @@ namespace Epsitec.Cresus.Assets.App.Popups
 			//	Calcule la largeur nécessaire en fonction de l'ensemble des textes.
 			get
 			{
-				return this.items.Max
-				(
-					item => SimplePopup.GetTextWithGaps (item).GetTextWidth ()
-				)
-				+ ColoredButton.horizontalMargins * 2
-				+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
+				return System.Math.Max (this.GetTextWithGaps (-1).GetTextWidth (), this.TextsWidth)
+					+ ColoredButton.horizontalMargins * 2
+					+ 3;  // visuellement, il est bon d'avoir un chouia d'espace en plus à droite
+			}
+		}
+
+		private int TextsWidth
+		{
+			get
+			{
+				return this.items.Max (item => SimplePopup.GetTextWithGaps (item).GetTextWidth ());
 			}
 		}
 
 		private string GetTextWithGaps(int rank)
 		{
-			return SimplePopup.GetTextWithGaps (this.items[rank]);
+			if (rank == -1)
+			{
+				return SimplePopup.GetTextWithGaps (this.Title);
+			}
+			else
+			{
+				return SimplePopup.GetTextWithGaps (this.items[rank]);
+			}
 		}
 
 		private static string GetTextWithGaps(string text)
@@ -131,7 +171,22 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			get
 			{
-				return -this.PosY.Last ();
+				return this.TitleHeight - this.PosY.Last ();
+			}
+		}
+
+		private int TitleHeight
+		{
+		get
+			{
+				if (string.IsNullOrEmpty (this.Title))
+				{
+					return 0;
+				}
+				else
+				{
+					return SimplePopup.itemHeight + SimplePopup.sepHeight;
+				}
 			}
 		}
 
@@ -185,12 +240,13 @@ namespace Epsitec.Cresus.Assets.App.Popups
 
 
 		#region Helpers
-		public static void Show(Widget target, IEnumerable<string> items, int selectedItem, System.Action<int> action)
+		public static void Show(Widget target, IEnumerable<string> items, int selectedItem, string title, System.Action<int> action, bool leftOrRight = true)
 		{
 			//	Affiche le Popup.
 			var popup = new SimplePopup ()
 			{
 				SelectedItem = selectedItem,
+				Title        = title,
 			};
 
 			foreach (var item in items)
@@ -198,7 +254,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 				popup.Items.Add (item);
 			}
 
-			popup.Create (target, leftOrRight: true);
+			popup.Create (target, leftOrRight);
 
 			popup.ItemClicked += delegate (object sender, int rank)
 			{

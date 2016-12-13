@@ -91,17 +91,22 @@ namespace Epsitec.Common.Types.Converters
 						{
 							buffer.Append ("\t");
 						}
+
+						continue;
+					}
+					else
+					{
+						//	Broken <...> element, without closing >
 					}
 				}
 				else if (c == '&')
 				{
 					buffer.Append (TextConverter.AnalyzeEntityChar (text, ref offset));
+					continue;
 				}
-				else
-				{
-					buffer.Append (c);
-					offset++;
-				}
+				
+				buffer.Append (c);
+				offset++;
 			}
 
 			return buffer.ToString ();
@@ -185,6 +190,11 @@ namespace Epsitec.Common.Types.Converters
 			if (text[offset] == '&')
 			{
 				int length = text.IndexOf (";", offset)-offset+1;
+
+				if (length == -1)
+				{
+					return text[offset++];
+				}
 
 				if (length < 3)
 				{

@@ -83,4 +83,12 @@
   <data name="Enum.ObjectField.AccountPreInputDebit" id="KN2">Débit finan. préa.</data>
   <data name="Enum.ObjectField.AccountPreInputVatCode" id="KO2">TVA finan. préa.</data>
   <data name="Enum.ObjectField.MainValueDelta" id="KP2">Différence</data>
+  <data name="Enum.ObjectField.AccountAmortizationAutoCenter" id="KQ2">Centre amort. ord.</data>
+  <data name="Enum.ObjectField.AccountAdjustCenter" id="KR2">Centre correction</data>
+  <data name="Enum.ObjectField.AccountAmortizationExtraCenter" id="KS2">Centre amort. extra.</data>
+  <data name="Enum.ObjectField.AccountDecreaseCenter" id="KT2">Centre rééval.</data>
+  <data name="Enum.ObjectField.AccountIncreaseCenter" id="KU2">Centre reval.</data>
+  <data name="Enum.ObjectField.AccountPreInputCenter" id="KV2">Centre finan. préa.</data>
+  <data name="Enum.ObjectField.AccountPurchaseCenter" id="K03">Centre achat</data>
+  <data name="Enum.ObjectField.AccountSaleCenter" id="K13">Centre vente</data>
 </bundle>

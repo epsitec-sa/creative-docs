@@ -16,15 +16,19 @@ namespace Epsitec.Cresus.Assets.App
 			{
 				internal static void _Initialize()
 				{
-					global::System.Object.Equals (Accounts.CompactAll, null);
+					global::System.Object.Equals (Accounts.ChangePath, null);
 				}
 				
+				//	designer:cap/JUKF701
+				public static readonly global::Epsitec.Common.Widgets.Command ChangePath = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 239));
 				//	designer:cap/JUKE501
 				public static readonly global::Epsitec.Common.Widgets.Command CompactAll = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174));
 				//	designer:cap/JUKF501
 				public static readonly global::Epsitec.Common.Widgets.Command CompactOne = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175));
 				//	designer:cap/JUKR301
 				public static readonly global::Epsitec.Common.Widgets.Command DateRange = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
+				//	designer:cap/JUKE701
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 238));
 				//	designer:cap/JUK3401
 				public static readonly global::Epsitec.Common.Widgets.Command Deselect = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 131));
 				//	designer:cap/JUKG501
@@ -702,12 +706,16 @@ namespace Epsitec.Cresus.Assets.App
 		{
 			public static class Accounts
 			{
+				//	designer:cap/JUKF701
+				public const long ChangePath = 0x7D3000140000EFL;
 				//	designer:cap/JUKE501
 				public const long CompactAll = 0x7D3000140000AEL;
 				//	designer:cap/JUKF501
 				public const long CompactOne = 0x7D3000140000AFL;
 				//	designer:cap/JUKR301
 				public const long DateRange = 0x7D30001400007BL;
+				//	designer:cap/JUKE701
+				public const long Delete = 0x7D3000140000EEL;
 				//	designer:cap/JUK3401
 				public const long Deselect = 0x7D300014000083L;
 				//	designer:cap/JUKG501
@@ -1325,6 +1333,42 @@ namespace Epsitec.Cresus.Assets.App
 						{
 							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544518));
 						}
+					}
+				}
+			}
+			
+			public static class AccountsSimplePopup
+			{
+				//	designer:str/JUK1M01
+				public static global::Epsitec.Common.Types.FormattedText ChangeDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545025));
+					}
+				}
+				//	designer:str/JUK4M01
+				public static global::Epsitec.Common.Types.FormattedText ChangePathDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545028));
+					}
+				}
+				//	designer:str/JUK3M01
+				public static global::Epsitec.Common.Types.FormattedText DateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545027));
+					}
+				}
+				//	designer:str/JUK2M01
+				public static global::Epsitec.Common.Types.FormattedText DeleteDateRange
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545026));
 					}
 				}
 			}
@@ -2152,6 +2196,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544754));
+					}
+				}
+				//	designer:str/JUK5M01
+				public static global::Epsitec.Common.Types.FormattedText Center
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545029));
 					}
 				}
 				//	designer:str/JUKFD01
@@ -3923,6 +3975,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Centers
+				{
+					//	designer:str/JUK6M01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545030));
+						}
+					}
+				}
+				
 				public static class CreateArgument
 				{
 					//	designer:str/JUK3K01
@@ -5373,6 +5437,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class VatCode
+				{
+					//	designer:str/JUK7M01
+					public static global::Epsitec.Common.Types.FormattedText Title
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.App.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335545031));
+						}
+					}
+				}
+				
 				public static class YearsCalculator
 				{
 					//	designer:str/JUK5J01
@@ -6121,6 +6197,42 @@ namespace Epsitec.Cresus.Assets.App
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544518);
 						}
+					}
+				}
+			}
+			
+			public static class AccountsSimplePopup
+			{
+				//	designer:str/JUK1M01
+				public static global::Epsitec.Common.Support.Druid ChangeDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545025);
+					}
+				}
+				//	designer:str/JUK4M01
+				public static global::Epsitec.Common.Support.Druid ChangePathDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545028);
+					}
+				}
+				//	designer:str/JUK3M01
+				public static global::Epsitec.Common.Support.Druid DateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545027);
+					}
+				}
+				//	designer:str/JUK2M01
+				public static global::Epsitec.Common.Support.Druid DeleteDateRange
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545026);
 					}
 				}
 			}
@@ -6948,6 +7060,14 @@ namespace Epsitec.Cresus.Assets.App
 					get
 					{
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544754);
+					}
+				}
+				//	designer:str/JUK5M01
+				public static global::Epsitec.Common.Support.Druid Center
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335545029);
 					}
 				}
 				//	designer:str/JUKFD01
@@ -8719,6 +8839,18 @@ namespace Epsitec.Cresus.Assets.App
 					}
 				}
 				
+				public static class Centers
+				{
+					//	designer:str/JUK6M01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545030);
+						}
+					}
+				}
+				
 				public static class CreateArgument
 				{
 					//	designer:str/JUK3K01
@@ -10165,6 +10297,18 @@ namespace Epsitec.Cresus.Assets.App
 							{
 								return global::Epsitec.Common.Support.Druid.FromFieldId (335544889);
 							}
+						}
+					}
+				}
+				
+				public static class VatCode
+				{
+					//	designer:str/JUK7M01
+					public static global::Epsitec.Common.Support.Druid Title
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335545031);
 						}
 					}
 				}

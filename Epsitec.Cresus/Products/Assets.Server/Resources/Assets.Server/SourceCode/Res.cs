@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544321));
 					}
 				}
+				//	designer:str/IUKP301
+				public static global::Epsitec.Common.Types.FormattedText WithoutCenter
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544441));
+					}
+				}
 				//	designer:str/IUKJ301
 				public static global::Epsitec.Common.Types.FormattedText WithoutVat
 				{
@@ -90,6 +98,26 @@ namespace Epsitec.Cresus.Assets.Server
 						{
 							return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544399));
 						}
+					}
+				}
+			}
+			
+			public static class CentersLogic
+			{
+				//	designer:str/IUKN301
+				public static global::Epsitec.Common.Types.FormattedText CodeDoesNotExist
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544439));
+					}
+				}
+				//	designer:str/IUKO301
+				public static global::Epsitec.Common.Types.FormattedText InvalidDate
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Assets.Server.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544440));
 					}
 				}
 			}
@@ -1110,6 +1138,14 @@ namespace Epsitec.Cresus.Assets.Server
 						return global::Epsitec.Common.Support.Druid.FromFieldId (335544321);
 					}
 				}
+				//	designer:str/IUKP301
+				public static global::Epsitec.Common.Support.Druid WithoutCenter
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544441);
+					}
+				}
 				//	designer:str/IUKJ301
 				public static global::Epsitec.Common.Support.Druid WithoutVat
 				{
@@ -1163,6 +1199,26 @@ namespace Epsitec.Cresus.Assets.Server
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544399);
 						}
+					}
+				}
+			}
+			
+			public static class CentersLogic
+			{
+				//	designer:str/IUKN301
+				public static global::Epsitec.Common.Support.Druid CodeDoesNotExist
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544439);
+					}
+				}
+				//	designer:str/IUKO301
+				public static global::Epsitec.Common.Support.Druid InvalidDate
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (335544440);
 					}
 				}
 			}

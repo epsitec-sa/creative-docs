@@ -352,6 +352,10 @@ namespace Epsitec.Aider.Entities
 
 		public void StartExitProcessForEachMember (BusinessContext businessContext)
 		{
+			if (this.Members.Count == 0)
+			{
+				AiderHouseholdEntity.Delete (businessContext, this);
+			}
 			foreach (var person in this.Members)
 			{
 				AiderPersonsProcess.StartExitProcess (businessContext, person, OfficeProcessType.PersonsOutputProcess);

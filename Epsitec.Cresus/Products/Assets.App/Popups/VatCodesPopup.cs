@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Assets.App.Popups
 		{
 			this.accessor = accessor;
 			this.baseType = baseType;
-			this.title    = title;
+			this.title    = string.Format (Res.Strings.Popup.VatCode.Title.ToString (), title);
 
 			this.controller = new NavigationTreeTableController(this.accessor);
 

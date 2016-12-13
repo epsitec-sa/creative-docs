@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					.WithFavorites (countries)
 				.End ()
 				.Field<bool> ()
-					.Title ("Créer un abonnement Bonne Nouvelle")
+					.Title ("Créer un abonnement au journal")
 					.InitialValue (true)
 				.End ();
 		}

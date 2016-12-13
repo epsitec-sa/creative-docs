@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		protected void OnDateRange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var target = this.toolbar.GetTarget (e);
-			this.ShowDateRangePopup (target);
+			this.ChangeDateRange (target);
 		}
 
 		[Command (Res.CommandIds.Accounts.Graphic)]
@@ -197,6 +197,20 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.VisibleSelectedRow = -1;
 		}
 
+		[Command (Res.CommandIds.Accounts.ChangePath)]
+		protected void OnChangePath(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.ChangePathDateRange (target);
+		}
+
+		[Command (Res.CommandIds.Accounts.Delete)]
+		protected void OnDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var target = this.toolbar.GetTarget (e);
+			this.DeleteDateRange (target);
+		}
+
 		[Command (Res.CommandIds.Accounts.Import)]
 		protected void OnImport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -221,16 +235,57 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 		}
 
 
-		private void ShowDateRangePopup(Widget target)
+		private void ChangeDateRange(Widget target)
 		{
 			//	Affiche la liste des périodes des plans comptables connus, afin d'en
-			//	choisir une.
-			var items = new List<string>();
+			//	choisir une qui sera montrée.
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangeDateRange.ToString (), delegate (int rank)
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
+			});
+		}
+
+		private void ChangePathDateRange(Widget target)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une dont on modifiera le chemin au plan comptable.
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.ChangePathDateRange.ToString (), delegate (int rank)
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+
+				using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
+				{
+					h.ChangePath (range);
+				}
+			});
+		}
+
+		private void DeleteDateRange(Widget target)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une qui sera supprimée.
+			this.ShowDateRangePopup (target, Res.Strings.AccountsSimplePopup.DeleteDateRange.ToString (), delegate (int rank)
+			{
+				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
+
+				using (var h = new AccountsImportHelpers (this.accessor, target, this.UpdateAfterImport))
+				{
+					h.Delete (range);
+				}
+			});
+		}
+
+		private void ShowDateRangePopup(Widget target, string title, System.Action<int> action)
+		{
+			//	Affiche la liste des périodes des plans comptables connus, afin d'en
+			//	choisir une, sur laquelle on effectuera une action.
+			var items = new List<string> ();
 			int selectedItem = -1;
 			int i = 0;
 			foreach (var range in this.accessor.Mandat.AccountsDateRanges)
 			{
-				items.Add ("Période " + range.ToNiceString ());
+				items.Add (Res.Strings.AccountsSimplePopup.DateRange.ToString () + " " + range.ToNiceString ());
 
 				if (range == this.baseType.AccountsDateRange)
 				{
@@ -240,11 +295,7 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 				i++;
 			}
 
-			SimplePopup.Show (target, items, selectedItem, delegate (int rank)
-			{
-				var range = this.accessor.Mandat.AccountsDateRanges.ToArray ()[rank];
-				this.OnChangeView (new ViewType (ViewTypeKind.Accounts, range));
-			});
+			SimplePopup.Show (target, items, selectedItem, title, action, leftOrRight: false);
 		}
 
 
@@ -276,7 +327,9 @@ namespace Epsitec.Cresus.Assets.App.Views.ToolbarControllers
 			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandOne,  expandEnable);
 			this.toolbar.SetEnable (Res.Commands.Accounts.ExpandAll,  expandEnable);
 
-			this.toolbar.SetEnable (Res.Commands.Accounts.Export, !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.ChangePath, !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.Delete,     !this.IsEmpty);
+			this.toolbar.SetEnable (Res.Commands.Accounts.Export,     !this.IsEmpty);
 		}
 
 

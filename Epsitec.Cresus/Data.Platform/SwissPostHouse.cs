@@ -24,7 +24,7 @@ namespace Epsitec.Data.Platform
 			else
 			{
 				return swissPostHouseCsv;
-			}		
+			}
 		}
 
 		private static string GetMatchHouseCsvPath()

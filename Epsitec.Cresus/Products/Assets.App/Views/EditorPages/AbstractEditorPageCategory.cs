@@ -85,18 +85,26 @@ namespace Epsitec.Cresus.Assets.App.Views.EditorPages
 
 		protected void CreateAccountsUI(Widget parent, System.DateTime? forcedDate)
 		{
-			foreach (var field in DataAccessor.AccountAndVatCodeFields)
+			foreach (var field in DataAccessor.AccountAndOtherFields)
 			{
 				var type = this.accessor.GetFieldType (field);
+				switch (type)
+				{
+					case FieldType.Account:
+						this.CreateAccountController (parent, field, forcedDate);
+						break;
 
-				if (type == FieldType.Account)
-				{
-					this.CreateAccountController (parent, field, forcedDate);
-				}
-				else
-				{
-					this.CreateVatCodeController (parent, field, forcedDate);
-					this.CreateSepartor (parent);
+					case FieldType.VatCode:
+						this.CreateVatCodeController (parent, field, forcedDate);
+						break;
+
+					case FieldType.Center:
+						this.CreateCenterController (parent, field, forcedDate);
+						this.CreateSepartor (parent);
+						break;
+
+					default:
+						throw new System.InvalidOperationException (string.Format ("CreateAccountsUI: Unknown FieldType {0}", type.ToString ()));
 				}
 			}
 

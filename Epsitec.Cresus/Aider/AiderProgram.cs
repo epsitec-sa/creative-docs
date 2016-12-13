@@ -259,6 +259,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixduplicatesubscriptions"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixDuplicateSubscriptions (args));
+					return;
+				}
+
 				if (args.Contains("-fixwarningparishgroup"))
 				{
 					ConsoleCreator.RunWithConsole(() => AiderProgram.FixWarningParishGroup(args));
@@ -343,9 +349,43 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-automergeduplicatedpersons")) //-automergeduplicatedpersons
+				if (args.Contains ("-cleardqflags")) //-cleardqflags
 				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => ClearDataQualityFlags.Run (coreData)
+						)
+					);
+					return;
+				}
+				
+				if (args.Contains ("-flagduplicatedpersons")) //-flagduplicatedpersons
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (() => AiderProgram.AutoMergeDuplicatedPersons (args));
+					return;
+				}
+
+				if (args.Contains ("-flagmissinghousehold")) //-flagmissinghousehold
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => PersonWithoutHousehold.FlagContacts (coreData)
+						)
+					);
+					return;
+				}
+
+				if (args.Contains ("-fixdqflags")) //-fixdqflags
+				{
+					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
+					ConsoleCreator.RunWithConsole (
+						() => AiderProgram.RunWithCoreData (
+							coreData => DataQualityFlagsFixer.Run (coreData)
+						)
+					);
 					return;
 				}
 
@@ -497,6 +537,9 @@ namespace Epsitec.Aider
 				//System.Console.WriteLine ("Running DataQualityJobs after updating...");
 				//HouseholdsFix.EchHouseholdsQuality (coreData, newEChDataFile.FullName);
 				//EChPersonFixer.TryFixAll (coreData);
+
+				System.Console.WriteLine ("Fixing subscriptions after updating...");
+				AiderProgram.FixDuplicateSubscriptions (args);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
@@ -782,6 +825,14 @@ namespace Epsitec.Aider
 			);
 		}
 
+		private static void FixDuplicateSubscriptions(string[] args)
+		{
+			AiderProgram.RunWithCoreData
+			(
+				coreData => SubscriptionAndRefusalFixer.FixDuplicateSubscriptions (coreData)
+			);
+		}
+
 		private static void FixSubscriptionsParishGroup(string[] args)
 		{
 			AiderProgram.RunWithCoreData
@@ -950,7 +1001,7 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-				DuplicatedPersonAutoMerger.FindAndMerge (coreData);
+				FlagDuplicatedPersons.Run (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
@@ -1005,13 +1056,13 @@ namespace Epsitec.Aider
 		{
 			AiderProgram.RunWithCoreData (coreData =>
 			{
-                //var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
-                //HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
+				//var echFilePath = AiderProgram.GetString (args, "-echfile:", true);
+				//HouseholdsFix.EchHouseholdsQuality (coreData, echFilePath);
 
-                //HouseholdsFix.PerformBatchFix (coreData);
-                HouseholdCleaner.FixHouseholds(coreData);
+				//HouseholdsFix.PerformBatchFix (coreData);
+				HouseholdCleaner.FixHouseholds(coreData);
 
-                System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();
 			});
 		}

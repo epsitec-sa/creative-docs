@@ -140,6 +140,7 @@
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController4DeleteEmployee.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController100AddToBag.cs" />
     <Compile Include="Controllers\ActionControllers\PersonWarning\ActionAiderPersonWarningViewController64ProcessDeparture.cs" />
+    <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController20CancelDead.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController19CancelDerogation.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController18ReactivatePerson.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController17AddReferee.cs" />
@@ -212,6 +213,8 @@
     <Compile Include="Controllers\ActionControllers\GroupDef\ActionAiderGroupDefViewController0CreateSubGroupDef.cs" />
     <Compile Include="Controllers\ActionControllers\OfficeManagement\ActionAiderOfficeManagementViewController0CreateSettings.cs" />
     <Compile Include="Controllers\ActionControllers\Person\ActionAiderPersonViewController11Derogate.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController20RemoveAllParticipations.cs" />
+    <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController21KeepAllParticipations.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController2Cancel.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController0Done.cs" />
     <Compile Include="Controllers\ActionControllers\Tasks\ActionAiderOfficeTaskViewController12AddressChanged.cs" />
@@ -339,10 +342,13 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\AgeCalculator.cs" />
+    <Compile Include="Data\Job\DataQualityFlagsFixer.cs" />
+    <Compile Include="Data\Job\ClearDataQualityFlags.cs" />
+    <Compile Include="Data\Job\PersonWithtoutHousehold.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\DerogationHotfix.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
-    <Compile Include="Data\Job\DuplicatedPersonAutoMerger.cs" />
+    <Compile Include="Data\Job\FlagDuplicatedPersons.cs" />
     <Compile Include="Data\Job\HouseholdsFix.cs" />
     <Compile Include="Data\Job\HouseholdCleaner.cs" />
     <Compile Include="Data\Job\SqlHelpers.cs" />
@@ -449,6 +455,7 @@
     <Compile Include="Helpers\FrenchLanguage.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory1.cs" />
+    <Compile Include="Labels\AiderEmployeeLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderLegalPersonTextFactory0.cs" />

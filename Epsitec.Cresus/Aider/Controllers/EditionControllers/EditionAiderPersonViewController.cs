@@ -3,7 +3,7 @@
 
 using Epsitec.Aider.Controllers.ActionControllers;
 using Epsitec.Aider.Entities;
-
+using Epsitec.Aider.Override;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
@@ -27,10 +27,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private void CreateBricksForUserAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
 			var favorites = AiderCountryEntity.GetCountryFavorites (this.BusinessContext);
-
+			var user = AiderUserManager.Current.AuthenticatedUser;
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.EnableActionMenu<ActionAiderPersonViewController9Deceased> ()
+				.EnableActionMenu<ActionAiderPersonViewController20CancelDead> ().IfTrue (user.IsAdmin ())
 				.Input ()
 					.HorizontalGroup ()
 						.Title ("Prénoms et nom")
@@ -61,9 +62,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 
 		private void CreateBricksForGovernmentAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
+			var user = AiderUserManager.Current.AuthenticatedUser;
+
 			wall.AddBrick ()
 				.Icon (this.Entity.GetIconName ("Data"))
 				.EnableActionMenu<ActionAiderPersonViewController9Deceased> ()
+				.EnableActionMenu<ActionAiderPersonViewController20CancelDead> ().IfTrue (user.IsAdmin ())
 				.Input ()				
 					.HorizontalGroup ()
 						.Title ("Prénoms et nom selon le contrôle des habitants")

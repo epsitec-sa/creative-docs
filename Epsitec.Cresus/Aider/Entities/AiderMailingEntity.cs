@@ -664,7 +664,30 @@ namespace Epsitec.Aider.Entities
 					}
 				}
 			}
-			
+			else
+			{
+				var households = this.GetParticipantsByHousehold (businessContext.DataContext);
+				foreach (var household in households)
+				{
+					var excludeHousehold = false;
+					foreach (var contact in household.Contacts)
+					{
+						if (excludedContacts.Contains (contact))
+						{
+							excludeHousehold = true;
+						}
+					}
+
+					if (excludeHousehold)
+					{
+						foreach (var contact in household.Contacts)
+						{
+							AiderMailingParticipantEntity.ExcludeContact (businessContext, this, contact);
+						}
+					}
+				}
+			}
+
 			this.UpdateLastUpdateDate ();
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}

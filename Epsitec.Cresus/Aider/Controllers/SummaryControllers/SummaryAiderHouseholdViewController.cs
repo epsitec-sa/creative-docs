@@ -35,15 +35,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 				if (string.IsNullOrEmpty (household.DisplayName))
 				{
-					var example1 = new AiderHouseholdEntity
-					{
-						DisplayName = ""
-					};
-
-					var example2 = new AiderHouseholdEntity
-					{
-						DisplayName = ","
-					};
+					var example1 = new AiderHouseholdEntity { DisplayName = "" };
+					var example2 = new AiderHouseholdEntity	{ DisplayName = "," };
 
 					var emptyItems1 = this.BusinessContext.GetByExample (example1);
 					var emptyItems2 = this.BusinessContext.GetByExample (example2);
@@ -52,8 +45,13 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 					foreach (var item in emptyItems)
 					{
-						AiderHouseholdEntity.Delete (this.BusinessContext, item);
+						if (item != household)
+						{
+							AiderHouseholdEntity.Delete (this.BusinessContext, item);
+						}
 					}
+
+					AiderHouseholdEntity.Delete (this.BusinessContext, household);
 
 					this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.KeepLock);
 

@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Assets.Data
 		Int,
 		Date,
 		Account,		// compte
+		VatCode,		// code TVA
+		Center,			// centre de charge
 		GuidGroup,		// Guid d'un groupe
 		GuidPerson,		// Guid d'une personne
 		GuidMethod,		// Guid d'une méthode d'amortissement

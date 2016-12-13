@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.arguments              = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeVatCodes          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeCenters           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
 			this.reports                = new GuidDictionary<AbstractReportParams> (this.undoManager);
 		}
@@ -53,6 +54,7 @@ namespace Epsitec.Cresus.Assets.Data
 			this.arguments              = new GuidDictionary<DataObject> (this.undoManager);
 			this.rangeAccounts          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeVatCodes          = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
+			this.rangeCenters           = new UndoableDictionary<DateRange, GuidDictionary<DataObject>> (this.undoManager);
 			this.rangeAccountsFilenames = new UndoableDictionary<DateRange, string> (this.undoManager);
 			this.reports                = new GuidDictionary<AbstractReportParams> (this.undoManager);
 
@@ -201,6 +203,9 @@ namespace Epsitec.Cresus.Assets.Data
 				case BaseTypeKind.VatCodes:
 					return this.GetVatCodes (type.AccountsDateRange);
 
+				case BaseTypeKind.Centers:
+					return this.GetCenters (type.AccountsDateRange);
+
 				case BaseTypeKind.Methods:
 					return this.methods;
 
@@ -254,6 +259,16 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeAccounts[dateRange] = accounts;
 		}
 
+		public void DeleteAccounts(DateRange dateRange)
+		{
+			//	Oublie un plan comptable d'une période donnée.
+			GuidDictionary<DataObject> accounts;
+			if (this.rangeAccounts.TryGetValue (dateRange, out accounts))
+			{
+				this.rangeAccounts.Remove (dateRange);
+			}
+		}
+
 		public DateRange GetBestAccountsDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
@@ -271,6 +286,16 @@ namespace Epsitec.Cresus.Assets.Data
 		{
 			//	Prend connaissance du nom de fichier d'un plan comptable importé.
 			this.rangeAccountsFilenames[dateRange] = filename;
+		}
+
+		public void DeleteAccountsFilename(DateRange dateRange)
+		{
+			//	Oublie un nom de fichier d'un plan comptable importé.
+			string filename;
+			if (this.rangeAccountsFilenames.TryGetValue (dateRange, out filename))
+			{
+				this.rangeAccountsFilenames.Remove (dateRange);
+			}
 		}
 
 		public string GetAccountsFilename(DateRange dateRange)
@@ -330,11 +355,83 @@ namespace Epsitec.Cresus.Assets.Data
 			this.rangeVatCodes[dateRange] = vatCodes;
 		}
 
+		public void DeleteVatCodes(DateRange dateRange)
+		{
+			//	Oublie un code TVA d'une période donnée.
+			GuidDictionary<DataObject> vatCodes;
+			if (this.rangeVatCodes.TryGetValue (dateRange, out vatCodes))
+			{
+				this.rangeVatCodes.Remove (dateRange);
+			}
+		}
+
 		private DateRange GetBestVatCodesDateRange(System.DateTime date)
 		{
 			//	Retourne la période comptable correspondant à une date donnée.
 			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
 			return this.VatCodesDateRanges
+				.Reverse ()
+				.Where (x => x.IsInside (date))
+				.FirstOrDefault ();
+		}
+		#endregion
+
+
+		#region Centers
+		public IEnumerable<DateRange> CentersDateRanges
+		{
+			//	Retourne la liste des périodes de tous les centres de charge connus.
+			get
+			{
+				return this.rangeCenters.Select (x => x.Key);
+			}
+		}
+
+		public BaseType GetCentersBase(System.DateTime date)
+		{
+			//	Retourne la base correspondant à une date.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			var range = this.GetBestCentersDateRange (date);
+			return new BaseType (BaseTypeKind.Centers, range);
+		}
+
+		public GuidDictionary<DataObject> GetCenters(DateRange range)
+		{
+			//	Retourne le centre de charge correspondant à une période.
+			GuidDictionary<DataObject> centers;
+			if (!range.IsEmpty && this.rangeCenters.TryGetValue (range, out centers))
+			{
+				return centers;
+			}
+			else
+			{
+				// Il vaut mieux retourner un dictionnaire vide, plutôt que null.
+				return new GuidDictionary<DataObject> (this.undoManager);
+			}
+		}
+
+		public void AddCenters(DateRange dateRange, GuidDictionary<DataObject> centers)
+		{
+			//	Prend connaissance d'un nouveau centres de charge, qui est ajouté ou
+			//	qui remplace un existant, selon sa période.
+			this.rangeCenters[dateRange] = centers;
+		}
+
+		public void DeleteCenters(DateRange dateRange)
+		{
+			//	Oublie un centres de charge d'une période donnée.
+			GuidDictionary<DataObject> centers;
+			if (this.rangeCenters.TryGetValue (dateRange, out centers))
+			{
+				this.rangeCenters.Remove (dateRange);
+			}
+		}
+
+		private DateRange GetBestCentersDateRange(System.DateTime date)
+		{
+			//	Retourne la période comptable correspondant à une date donnée.
+			//	Si plusieurs périodes se recouvrent, on prend la dernière définie.
+			return this.CentersDateRanges
 				.Reverse ()
 				.Where (x => x.IsInside (date))
 				.FirstOrDefault ();
@@ -364,6 +461,7 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteElementString (X.DocumentVersion, DataMandat.SerializationVersion);
 			this.SerializeAccounts          (writer);
 			this.SerializeVatCodes          (writer);
+			this.SerializeCenters           (writer);
 			this.SerializeAccountsFilenames (writer);
 
 			writer.WriteEndDocument ();
@@ -391,6 +489,23 @@ namespace Epsitec.Cresus.Assets.Data
 			writer.WriteStartElement (X.VatCodes);
 
 			foreach (var pair in this.rangeVatCodes)
+			{
+				writer.WriteStartElement (X.Period);
+
+				pair.Key.Serialize (writer, X.DateRange);
+				this.SerializeObjects (writer, X.List, pair.Value);
+
+				writer.WriteEndElement ();
+			}
+
+			writer.WriteEndElement ();
+		}
+
+		private void SerializeCenters(System.Xml.XmlWriter writer)
+		{
+			writer.WriteStartElement (X.Centers);
+
+			foreach (var pair in this.rangeCenters)
 			{
 				writer.WriteStartElement (X.Period);
 
@@ -573,6 +688,10 @@ namespace Epsitec.Cresus.Assets.Data
 							this.DeserializeVatCodes (reader);
 							break;
 
+						case X.Centers:
+							this.DeserializeCenters (reader);
+							break;
+
 						case X.AccountsFilenames:
 							this.DeserializeAccountsFilenames (reader);
 							break;
@@ -682,6 +801,58 @@ namespace Epsitec.Cresus.Assets.Data
 					if (!dateRange.IsEmpty && objects.Any ())
 					{
 						this.rangeVatCodes.Add (dateRange, objects);
+					}
+
+					break;
+				}
+			}
+		}
+
+		private void DeserializeCenters(System.Xml.XmlReader reader)
+		{
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case X.Period:
+							this.DeserializeCentersPeriod (reader);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					break;
+				}
+			}
+		}
+
+		private void DeserializeCentersPeriod(System.Xml.XmlReader reader)
+		{
+			var dateRange = DateRange.Empty;
+			var objects = new GuidDictionary<DataObject> (null);
+
+			while (reader.Read ())
+			{
+				if (reader.NodeType == System.Xml.XmlNodeType.Element)
+				{
+					switch (reader.Name)
+					{
+						case X.DateRange:
+							dateRange = new DateRange (reader);
+							break;
+
+						case X.List:
+							this.DeserializeObjects (reader, objects);
+							break;
+					}
+				}
+				else if (reader.NodeType == System.Xml.XmlNodeType.EndElement)
+				{
+					if (!dateRange.IsEmpty && objects.Any ())
+					{
+						this.rangeCenters.Add (dateRange, objects);
 					}
 
 					break;
@@ -863,6 +1034,7 @@ namespace Epsitec.Cresus.Assets.Data
 		private readonly GuidDictionary<DataObject>						arguments;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeAccounts;
 		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeVatCodes;
+		private readonly UndoableDictionary<DateRange, GuidDictionary<DataObject>> rangeCenters;
 		private readonly UndoableDictionary<DateRange, string>			rangeAccountsFilenames;
 		private readonly GuidDictionary<AbstractReportParams>			reports;
 

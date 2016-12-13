@@ -53,7 +53,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					.Title ("Case postale")
 				.End ()
 				.Field<bool> ()
-					.Title ("Inscription au Bonne Nouvelle")
+					.Title ("Inscription au journal")
 					.InitialValue (false)
 				.End ();
 		}

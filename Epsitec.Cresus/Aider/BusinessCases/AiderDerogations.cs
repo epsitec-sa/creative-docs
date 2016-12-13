@@ -59,8 +59,12 @@ namespace Epsitec.Aider.BusinessCases
 			//Add participation to the destination parish
 			AiderDerogations.AddParishGroupParticipations (businessContext, person, derogationParishGroup, date);
 
-			//Check for new subscription
-			AiderDerogations.CheckForNewSubscription (businessContext, person, derogationParishGroup);
+			//Check for new subscription (except in case of PLA)
+			if (derogationParishGroup.IsParishOfGermanLanguage == false)
+			{
+				AiderDerogations.CheckForNewSubscription (businessContext, person, derogationParishGroup);
+			}
+			
 			//!Trigg business rules!
 			person.ParishGroup = derogationParishGroup;
 

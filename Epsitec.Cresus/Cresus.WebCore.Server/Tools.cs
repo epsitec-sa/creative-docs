@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		[Conditional ("DEBUG")]
+//		[Conditional ("DEBUG")]
 		public static void LogMessage(string message)
 		{
 			Logger.LogToConsole (message);

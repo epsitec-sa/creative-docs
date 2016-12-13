@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 {
 	/// <summary>
 	/// Cette classe s'occupe d'exporter les écritures pour Crésus Comptabilité
-	/// dans les fichiers .ecc et .ecassets, sans utiliser la librairie FSC32.
+	/// dans les fichiers .ecc et .ecf, sans utiliser la librairie FSC32.
 	/// C'est un choix délibéré, car cette librairie est obsolète. Il faudra la
 	/// réécrire dans un futur indéterminé...
 	/// </summary>
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				//	On retourne juste le rapport sur les écritures générées.
 				return this.ReportsDescription;
 			}
-			else  // il y a une ou plusieurs des années manquantes ?
+			else  // il y a une ou plusieurs années manquantes ?
 			{
 				//	Le rapport sur les écritures générées est complété par celui sur les années manquantes.
 				return string.Concat (this.ReportsDescription, Res.Strings.ExportEntries.MissingYears.Title, missingYearsReport);
@@ -141,8 +141,6 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			{
 			}
 
-			int uid = this.GetEccUid ();
-
 			//	On lit le fichier .ecf, à la recherche du dernier idno utilisé.
 			int idno;
 			try
@@ -156,37 +154,14 @@ namespace Epsitec.Cresus.Assets.Server.Export
 
 			const int nlot = 1;
 
+			int uid = this.CreateOrUpdateEccLine ();
 			var data = this.GenerateEntriesData (nlot, uid, idno);
 			System.IO.File.WriteAllText (this.EntriesPath, data, System.Text.Encoding.Default);
-
-			this.CreateOrUpdateEccLine (uid);
 			this.WriteEcc ();
 
 			return this.entriesCount;
 		}
 
-
-		private int GetEccUid()
-		{
-			int uid = 1;
-
-			foreach (var eccLine in this.eccLines)
-			{
-				if (eccLine.IsBody)
-				{
-					if (eccLine.Tag == ExportEntries.EccTag)
-					{
-						return eccLine.Uid.GetValueOrDefault (1);
-					}
-					else
-					{
-						uid = System.Math.Max (uid, eccLine.Uid.GetValueOrDefault () + 1);
-					}
-				}
-			}
-
-			return uid;
-		}
 
 		private int GetLastIdno()
 		{
@@ -268,6 +243,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var title1   = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryTitle)         ?? "";
 			var value1   = ObjectProperties.GetObjectPropertyDecimal (e1, null, ObjectField.EntryAmount);
 			var vatCode1 = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryVatCode)       ?? "";
+			var center1  = ObjectProperties.GetObjectPropertyString  (e1, null, ObjectField.EntryCenter)        ?? "";
 
 			var date2    = ObjectProperties.GetObjectPropertyDate    (e2, null, ObjectField.EntryDate);
 			var debit2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryDebitAccount)  ?? "";
@@ -276,9 +252,13 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			var title2   = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryTitle)         ?? "";
 			var value2   = ObjectProperties.GetObjectPropertyDecimal (e2, null, ObjectField.EntryAmount);
 			var vatCode2 = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryVatCode)       ?? "";
+			var center2  = ObjectProperties.GetObjectPropertyString  (e2, null, ObjectField.EntryCenter)        ?? "";
 
 			vatCode1 = ExportEntries.FormatVatCode (vatCode1) ?? "";
 			vatCode2 = ExportEntries.FormatVatCode (vatCode2) ?? "";
+
+			center1 = ExportEntries.FormatCenter (center1) ?? "";
+			center2 = ExportEntries.FormatCenter (center2) ?? "";
 
 			return date1    == date2
 				&& debit1   == debit2
@@ -286,7 +266,8 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				&& stamp1   == stamp2
 				&& title1   == title2
 				&& value1   == value2
-				&& vatCode1 == vatCode2;
+				&& vatCode1 == vatCode2
+				&& center1  == center2;
 		}
 
 		private List<DataObject> ReloadEntries(string[] lines)
@@ -307,6 +288,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					var title   = fields[4];
 					var value   = fields[5].ParseDecimal ();
 					var vatCode = fields[14];
+					var center  = fields[15];
 
 					var entry = new DataObject (null);
 
@@ -321,6 +303,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					e.AddProperty (new DataStringProperty  (ObjectField.EntryTitle,         title));
 					e.AddProperty (new DataDecimalProperty (ObjectField.EntryAmount,        value));
 					e.AddProperty (new DataStringProperty  (ObjectField.EntryVatCode,       vatCode));
+					e.AddProperty (new DataStringProperty  (ObjectField.EntryCenter,        center));
 
 					entries.Add (entry);
 				}
@@ -361,8 +344,10 @@ namespace Epsitec.Cresus.Assets.Server.Export
 				var title   = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryTitle);
 				var value   = ObjectProperties.GetObjectPropertyDecimal (entry, null, ObjectField.EntryAmount);
 				var vatCode = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryVatCode);
+				var center  = ObjectProperties.GetObjectPropertyString  (entry, null, ObjectField.EntryCenter);
 
 				vatCode = ExportEntries.FormatVatCode (vatCode);
+				center  = ExportEntries.FormatCenter  (center);
 
 				if (date.HasValue && this.accountsRange.IsInside (date.Value) &&
 					value.HasValue && value.Value != 0.0m)
@@ -392,8 +377,9 @@ namespace Epsitec.Cresus.Assets.Server.Export
 					builder.Append ("\t");
 					builder.Append ((idno++).ToStringIO ());  // idno
 					builder.Append ("\t");
-					builder.Append (vatCode);
+					builder.Append (vatCode);  // index 14
 					builder.Append ("\t");
+					builder.Append (center);  // index 15
 					builder.Append ("\t");
 					builder.Append ("\t");
 					builder.Append ("\t");
@@ -421,27 +407,67 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			return vatCode;
 		}
 
+		private static string FormatCenter(string center)
+		{
+			//	Retourne le centre de charge formaté.
+			//	Lorsqu'il n'y a pas de centre de charge, le champ contient un tiret qu'il s'agit d'éliminer.
+			if (center != null && center.Length == 1)  // pas de code TVA (par exemple "-") ?
+			{
+				center = null;
+			}
 
-		private EccLine CreateOrUpdateEccLine(int uid)
+			return center;
+		}
+
+
+		private int CreateOrUpdateEccLine()
 		{
 			//	Crée ou met à jour la ligne concernée dans le fichier .ecc.
-			var eccLine = this.eccLines
-				.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename)
-				.FirstOrDefault ();
+			var eccLine = this.EccLine;
 
 			if (eccLine == null)  // ligne inexistante ?
 			{
 				//	On crée une nouvelle ligne.
-				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, uid);
+				eccLine = new EccLine (ExportEntries.EccTag, 1, System.DateTime.Now, this.EntriesFilename, this.NewEccUid);
 				this.AddEccLine (eccLine);
 			}
 			else  // ligne trouvée ?
 			{
 				eccLine.Date = System.DateTime.Now;  // on met simplement à jour la date
-				eccLine.Uid  = uid;
 			}
 
-			return eccLine;
+			return eccLine.Uid.GetValueOrDefault ();
+		}
+
+		private int NewEccUid
+		{
+			//	Retourne un nouvel Uid pas encore utilisé.
+			get
+			{
+				int uid = 1;
+				
+				foreach (var eccLine in this.eccLines)
+				{
+					if (eccLine.IsBody)
+					{
+						uid = System.Math.Max (uid, eccLine.Uid.GetValueOrDefault () + 1);
+					}
+				}
+				
+				return uid;
+			}
+		}
+
+		private EccLine EccLine
+		{
+			//	Retourne la ligne correspondant aux bonnes écritures de Assets,
+			//	ou null si elle n'existe pas.
+			get
+			{
+				return this.eccLines
+					.Where (x => x.Tag == ExportEntries.EccTag && x.Filename == this.EntriesFilename)
+					.FirstOrDefault ();
+			}
 		}
 
 		private void AddEccLine(EccLine eccLine)
@@ -463,7 +489,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 			//	Lit la totalité du fichier .ecc.
 			this.eccLines.Clear ();
 
-			var lines = System.IO.File.ReadAllLines (this.EccPath);
+			var lines = System.IO.File.ReadAllLines (this.EccPath, System.Text.Encoding.Default);
 			foreach (var line in lines)
 			{
 				if (!string.IsNullOrEmpty (line))
@@ -477,13 +503,21 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private void WriteEcc()
 		{
 			//	Ecrit la totalité du fichier .ecc.
+			try
+			{
+				System.IO.File.Delete (this.EccPath);
+			}
+			catch (System.Exception ex)
+			{
+			}
+
 			System.IO.File.WriteAllLines (this.EccPath, this.eccLines.Select (x => x.Line), System.Text.Encoding.Default);
 		}
 
 
 		private string EccPath
 		{
-			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.ecassets,
+			//	Retourne le chemin du fichier de "pointeurs" vers les fichiers .ecf/.ecs/.ecf,
 			//	par exemple "C:\Documents Crésus\Exemples\Compta 2015.ecc".
 			get
 			{
@@ -496,7 +530,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesPath
 		{
 			//	Retourne le chemin du fichier contenant les écritures,
-			//	par exemple "C:\Documents Crésus\Exemples\Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
+			//	par exemple "C:\Documents Crésus\Exemples\Mon Village Assets (01-01-2015 ~ 31-12-2015).ecf".
 			get
 			{
 				var dir = System.IO.Path.GetDirectoryName (this.accountsPath);
@@ -507,19 +541,21 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private string EntriesFilename
 		{
 			//	Retourne le nom du fichier contenant les écritures,
-			//	par exemple "Mon Village (01-01-2015 ~ 31-12-2015).ecassets".
+			//	par exemple "Mon Village Assets (01-01-2015 ~ 31-12-2015).ecf".
+			//	Ce nom contient la chaîne "Assets" pour qu'on ne puisse pas le confondre avec un
+			//	fichier généré par Crésus Facturation (aussi un .ecf) !
 			get
 			{
 				string from = this.accountsRange.IncludeFrom           .ToString ("dd-MM-yyyy");
 				string to   = this.accountsRange.ExcludeTo.AddDays (-1).ToString ("dd-MM-yyyy");
 
-				return string.Format ("{0} ({1} ~ {2}).{3}", this.accessor.Mandat.Name, from, to, ExportEntries.type);
+				return string.Format ("{0} ({1} ~ {2}) Assets.{3}", this.accessor.Mandat.Name, from, to, ExportEntries.type);
 			}
 		}
 
 		private static string EccTag
 		{
-			//	Retourne le tag pour le fichier .ecc, normalement "#ECASSETS".
+			//	Retourne le tag pour le fichier .ecc, normalement "#ECF".
 			get
 			{
 				return string.Concat ("#", ExportEntries.type.ToUpper ());
@@ -530,8 +566,7 @@ namespace Epsitec.Cresus.Assets.Server.Export
 		private const string					entriesHeader = "#FSC\t9.5.0";
 		private const string					eccHeader = "#FSC\t9.3\tECC";
 		private const string					eccFooter = "#END";
-		//?private const string					type = "ecassets";  // nouveau, à voir avec MW
-		private const string					type = "ecf";  // comme Crésus Facturation en attendant
+		private const string					type = "ecf";  // comme Crésus Facturation
 
 		private readonly DataAccessor			accessor;
 		private readonly List<EccLine>			eccLines;

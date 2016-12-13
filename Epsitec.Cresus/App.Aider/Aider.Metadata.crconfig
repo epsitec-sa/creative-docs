@@ -2,7 +2,7 @@
 # Aider.Metadata
 #
 # This file defines the various data sets and their settings for the AIDER project.
-#
+# 
 
 user = [AVAK]
 submenuBonneNouvelle = [LVG732]
@@ -66,6 +66,10 @@ AiderOfficeTask = [LVOD83]
         <disp m="Hidden" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVG442]" title="Addresse complète (multi ligne)" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderContact:[LVOL93]" title="Chef de ménage ?" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Hidden" />
       </col>
@@ -532,6 +536,10 @@ AiderOfficeTask = [LVOD83]
         <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVOL73]" title="Domicile" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderEventParticipant:[LVAB3].[LVAR3]" title="Remarque" canSort="True" canFilter="True">
         <sort o="None" />
         <disp m="Visible" />
       </col>
@@ -2285,6 +2293,10 @@ AiderOfficeTask = [LVOD83]
         <sort o="None" />
         <disp m="Hidden" />
       </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderPersonWarning:[LVAMB].[LVON93]" title="Date de naissance" canSort="False" canFilter="False">
+        <sort o="None" />
+        <disp m="Hidden" />
+      </col>
     </t>
 
     <t eid="@AiderPerson" n="default">
@@ -2378,6 +2390,10 @@ AiderOfficeTask = [LVOD83]
         <disp m="Visible" />
       </col>
       <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVO493]" title="Tâche" canSort="True" canFilter="True">
+        <sort o="None" />
+        <disp m="Visible" />
+      </col>
+	  <col t="$CoreMeta.EntityColumnMetadata" si="0" p="@AiderOfficeTask:[LVOJ93]" title="Concerne" canSort="False" canFilter="False">
         <sort o="None" />
         <disp m="Visible" />
       </col>

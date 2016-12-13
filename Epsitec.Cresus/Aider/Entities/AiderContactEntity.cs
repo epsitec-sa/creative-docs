@@ -202,7 +202,15 @@ namespace Epsitec.Aider.Entities
 			this.GetParticipations ().Remove (participation);
 		}
 
+		partial void GetIsHouseholdHead(ref bool value)
+		{
+			value = this.Household.IsHead (this.Person);
+		}
 
+		partial void SetIsHouseholdHead(bool value)
+		{
+			throw new System.NotImplementedException ("Do not use this method");
+		}
 
 		partial void GetFullAddressTextSingleLine(ref string value)
 		{
@@ -308,12 +316,12 @@ namespace Epsitec.Aider.Entities
 
 		public static AiderContactEntity ChangeHousehold(BusinessContext businessContext, AiderContactEntity contact, AiderHouseholdEntity newHousehold, bool isHead)
 		{
+            var oldHousehold = contact.Household;
 			var role = isHead
 				? HouseholdRole.Head
 				: HouseholdRole.None;
 
 			contact.Household.RemoveContactInternal (contact);
-			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, contact.Household);
 			contact.Person.RemoveContactInternal (contact);
 
 			contact.Household     = newHousehold;
@@ -328,8 +336,10 @@ namespace Epsitec.Aider.Entities
 			{
 				newSubscription.RefreshCache ();
 			}
-
-			return contact;
+            
+            businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+            AiderHouseholdEntity.DeleteEmptyHousehold (businessContext, oldHousehold, true);
+            return contact;
 		}
 
 		public static AiderContactEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderHouseholdEntity household, HouseholdRole role)

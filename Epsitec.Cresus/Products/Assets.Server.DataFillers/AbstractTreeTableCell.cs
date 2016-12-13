@@ -62,6 +62,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				case FieldType.String:
 				case FieldType.Account:
+				case FieldType.VatCode:
+				case FieldType.Center:
 					var text = ObjectProperties.GetObjectPropertyString (obj, timestamp, userField.Field, synthetic: synthetic, inputValue: inputValue);
 					return new TreeTableCellString (text, cellState);
 
@@ -106,6 +108,8 @@ namespace Epsitec.Cresus.Assets.Server.DataFillers
 			{
 				case FieldType.String:
 				case FieldType.Account:
+				case FieldType.VatCode:
+				case FieldType.Center:
 				case FieldType.GuidPerson:
 				case FieldType.GuidMethod:
 					return TreeTableColumnType.String;

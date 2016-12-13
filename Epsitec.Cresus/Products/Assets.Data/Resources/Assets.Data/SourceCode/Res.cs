@@ -157,6 +157,14 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
+					//	designer:str/HUKR201
+					public static global::Epsitec.Common.Types.FormattedText AccountAdjustCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544411));
+						}
+					}
 					//	designer:str/HUKV101
 					public static global::Epsitec.Common.Types.FormattedText AccountAdjustCredit
 					{
@@ -181,6 +189,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544397));
 						}
 					}
+					//	designer:str/HUKQ201
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationAutoCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544410));
+						}
+					}
 					//	designer:str/HUKN001
 					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationAutoCredit
 					{
@@ -203,6 +219,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398));
+						}
+					}
+					//	designer:str/HUKS201
+					public static global::Epsitec.Common.Types.FormattedText AccountAmortizationExtraCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544412));
 						}
 					}
 					//	designer:str/HUKP001
@@ -237,6 +261,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346));
 						}
 					}
+					//	designer:str/HUKT201
+					public static global::Epsitec.Common.Types.FormattedText AccountDecreaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544413));
+						}
+					}
 					//	designer:str/HUKU101
 					public static global::Epsitec.Common.Types.FormattedText AccountDecreaseCredit
 					{
@@ -259,6 +291,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544400));
+						}
+					}
+					//	designer:str/HUKU201
+					public static global::Epsitec.Common.Types.FormattedText AccountIncreaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544414));
 						}
 					}
 					//	designer:str/HUKS101
@@ -285,6 +325,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544401));
 						}
 					}
+					//	designer:str/HUKV201
+					public static global::Epsitec.Common.Types.FormattedText AccountPreInputCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544415));
+						}
+					}
 					//	designer:str/HUKM201
 					public static global::Epsitec.Common.Types.FormattedText AccountPreInputCredit
 					{
@@ -309,6 +357,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544408));
 						}
 					}
+					//	designer:str/HUK0301
+					public static global::Epsitec.Common.Types.FormattedText AccountPurchaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544416));
+						}
+					}
 					//	designer:str/HUKI001
 					public static global::Epsitec.Common.Types.FormattedText AccountPurchaseCredit
 					{
@@ -331,6 +387,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544402));
+						}
+					}
+					//	designer:str/HUK1301
+					public static global::Epsitec.Common.Types.FormattedText AccountSaleCenter
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Assets.Data.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544417));
 						}
 					}
 					//	designer:str/HUKL001
@@ -921,6 +985,14 @@ namespace Epsitec.Cresus.Assets.Data
 				
 				public static class ObjectField
 				{
+					//	designer:str/HUKR201
+					public static global::Epsitec.Common.Support.Druid AccountAdjustCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544411);
+						}
+					}
 					//	designer:str/HUKV101
 					public static global::Epsitec.Common.Support.Druid AccountAdjustCredit
 					{
@@ -945,6 +1017,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544397);
 						}
 					}
+					//	designer:str/HUKQ201
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationAutoCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544410);
+						}
+					}
 					//	designer:str/HUKN001
 					public static global::Epsitec.Common.Support.Druid AccountAmortizationAutoCredit
 					{
@@ -967,6 +1047,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544398);
+						}
+					}
+					//	designer:str/HUKS201
+					public static global::Epsitec.Common.Support.Druid AccountAmortizationExtraCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544412);
 						}
 					}
 					//	designer:str/HUKP001
@@ -1001,6 +1089,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544346);
 						}
 					}
+					//	designer:str/HUKT201
+					public static global::Epsitec.Common.Support.Druid AccountDecreaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544413);
+						}
+					}
 					//	designer:str/HUKU101
 					public static global::Epsitec.Common.Support.Druid AccountDecreaseCredit
 					{
@@ -1023,6 +1119,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544400);
+						}
+					}
+					//	designer:str/HUKU201
+					public static global::Epsitec.Common.Support.Druid AccountIncreaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544414);
 						}
 					}
 					//	designer:str/HUKS101
@@ -1049,6 +1153,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544401);
 						}
 					}
+					//	designer:str/HUKV201
+					public static global::Epsitec.Common.Support.Druid AccountPreInputCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544415);
+						}
+					}
 					//	designer:str/HUKM201
 					public static global::Epsitec.Common.Support.Druid AccountPreInputCredit
 					{
@@ -1073,6 +1185,14 @@ namespace Epsitec.Cresus.Assets.Data
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544408);
 						}
 					}
+					//	designer:str/HUK0301
+					public static global::Epsitec.Common.Support.Druid AccountPurchaseCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544416);
+						}
+					}
 					//	designer:str/HUKI001
 					public static global::Epsitec.Common.Support.Druid AccountPurchaseCredit
 					{
@@ -1095,6 +1215,14 @@ namespace Epsitec.Cresus.Assets.Data
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (335544402);
+						}
+					}
+					//	designer:str/HUK1301
+					public static global::Epsitec.Common.Support.Druid AccountSaleCenter
+					{
+						get
+						{
+							return global::Epsitec.Common.Support.Druid.FromFieldId (335544417);
 						}
 					}
 					//	designer:str/HUKL001
