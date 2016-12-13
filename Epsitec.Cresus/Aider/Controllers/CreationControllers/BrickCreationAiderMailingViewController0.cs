@@ -73,16 +73,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 			var cats = Enumerable.Empty<AiderMailingCategoryEntity> ();
 			if (aiderUser.EnableGroupEditionCanton)
 			{
-				cats.Concat (AiderMailingCategoryEntity.GetCantonCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+				cats = cats.Concat (AiderMailingCategoryEntity.GetCantonCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 			}
 
 			if (aiderUser.EnableGroupEditionRegion)
 			{
-				cats.Concat (AiderMailingCategoryEntity.GetRegionCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+				cats = cats.Concat (AiderMailingCategoryEntity.GetRegionCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 			}
 
 
-			cats.Concat (AiderMailingCategoryEntity.GetParishCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
+			cats = cats.Concat (AiderMailingCategoryEntity.GetParishCategories (this.BusinessContext, aiderUser.ParishGroupPathCache));
 
 			
 			return cats;

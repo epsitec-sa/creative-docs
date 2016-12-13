@@ -111,17 +111,25 @@ namespace Epsitec.Aider.Entities
 			var example = new AiderMailingCategoryEntity ();
 			var request = Request.Create (example);
 
-			request.AddCondition (dataContext, example, x => SqlMethods.Like (x.GroupPathCache, groupPath + "%"));
+			if (!string.IsNullOrEmpty (groupPath))
+			{
+				request.AddCondition (dataContext, example, x => SqlMethods.Like (x.GroupPathCache, groupPath + "%"));
+			}
 
 			var categories = dataContext.GetByRequest (request).ToList ();
 
-			if ((groupPath.Length > 1) &&
-				(categories.Any (x => x.HasNakedName) == false))
+			// This impl. is not stable and potentialy create duplicate
+			// the user can create a category manually if needed
+			/*if (!string.IsNullOrEmpty (groupPath))
 			{
-				AiderMailingCategoryEntity.CreateDefaultNamedCategory (context, groupPath);
-				categories = dataContext.GetByRequest (request).ToList ();
-			}
-
+				if ((groupPath.Length > 1) &&
+				(categories.Any (x => x.HasNakedName) == false))
+				{
+					AiderMailingCategoryEntity.CreateDefaultNamedCategory (context, groupPath);
+					categories = dataContext.GetByRequest (request).ToList ();
+				}
+			}*/
+			
 			return categories;
 		}
 

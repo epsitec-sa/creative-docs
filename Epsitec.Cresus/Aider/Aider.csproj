@@ -351,6 +351,7 @@
     <Compile Include="Data\Job\FlagDuplicatedPersons.cs" />
     <Compile Include="Data\Job\HouseholdsFix.cs" />
     <Compile Include="Data\Job\HouseholdCleaner.cs" />
+    <Compile Include="Data\Job\MailingCategoriesCleaner.cs" />
     <Compile Include="Data\Job\SqlHelpers.cs" />
     <Compile Include="Data\Job\UpdateParishName.cs" />
     <Compile Include="Data\Job\UpdateLegalPerson.cs" />

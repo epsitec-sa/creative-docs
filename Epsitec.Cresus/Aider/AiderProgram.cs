@@ -419,6 +419,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-cleanmailingcategories")) //-cleanmailingcategories
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.CleanMailingCategories (args));
+					return;
+				}
+
 				if (args.Contains ("-townfusionhack")) //-townfusionhack
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FusionArzier (args));
@@ -1066,6 +1072,18 @@ namespace Epsitec.Aider
 				System.Console.ReadLine ();
 			});
 		}
+
+		private static void CleanMailingCategories(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				MailingCategoriesCleaner.Clean (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
+		
 
 		private static void RunWithCoreData(Action<CoreData> action)
 		{
