@@ -428,12 +428,6 @@ namespace Epsitec.Aider.Entities
 				return false;
 			}
 
-			if (participant.GetSex () == Enumerations.PersonSex.Unknown)
-			{
-				error = main.GetFullName () + ": sexe non renseigné";
-				return false;
-			}
-
 			if (participant.GetParishName ().IsNullOrWhiteSpace ())
 			{
 				error = main.GetFullName () + ": paroisse non renseignée";
