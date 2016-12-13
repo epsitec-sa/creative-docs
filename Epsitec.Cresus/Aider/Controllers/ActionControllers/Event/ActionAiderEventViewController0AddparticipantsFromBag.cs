@@ -46,19 +46,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 			foreach (var contact in contacts)
 			{
-				if (contact.Person.MrMrs == Enumerations.PersonMrMrs.None)
-				{
-					var message = new NotificationMessage () {
-						Title = "Impossible de determiner le sexe de ce contact",
-						Body = "Veuillez contrôler " + contact.GetSummary ()
-					};
-					NotificationManager.GetCurrentNotificationManager ()
-									   .WarnUser (AiderUserManager.Current.AuthenticatedUser.LoginName, message, When.Now);
-				}
-				else
-				{
-					AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, contact.Person, Enumerations.EventParticipantRole.None);
-				}		
+				AiderEventParticipantEntity.Create (this.BusinessContext, this.Entity, contact.Person, Enumerations.EventParticipantRole.None);
 			}
 		}
 	}

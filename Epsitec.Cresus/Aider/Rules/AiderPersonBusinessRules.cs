@@ -105,23 +105,35 @@ namespace Epsitec.Aider.Rules
 
 		public static void FixMrMrsBasedOnSex(AiderPersonEntity person, eCH_PersonEntity eCH)
 		{
-			if (eCH.PersonSex == PersonSex.Male)
-			{
-				person.MrMrs = PersonMrMrs.Monsieur;
-			}
-			else
-			{
-				if (person.MrMrs == PersonMrMrs.Mademoiselle)
-				{
-					if ((eCH.AdultMaritalStatus == PersonMaritalStatus.Single) ||
-						(eCH.AdultMaritalStatus == PersonMaritalStatus.Unmarried) ||
-						(eCH.AdultMaritalStatus == PersonMaritalStatus.None))
-					{
-						return;
-					}
-				}
+			var sex = eCH.PersonSex;
 
-				person.MrMrs = PersonMrMrs.Madame;
+			if (eCH.PersonDateOfBirth.HasValue)
+			{
+				var age = eCH.PersonDateOfBirth.Value.ComputeAge ();
+				if ((age.HasValue) &&
+					(age.Value < 20))
+				{
+					person.MrMrs = Enumerations.PersonMrMrs.None;
+					return;
+				}
+			}
+
+			if (sex == Enumerations.PersonSex.Male)
+			{
+				person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
+				return;
+			}
+
+			if (sex == Enumerations.PersonSex.Female)
+			{
+				person.MrMrs = Enumerations.PersonMrMrs.Madame;
+				return;
+			}
+
+			if (sex == Enumerations.PersonSex.Unknown)
+			{
+				person.MrMrs = Enumerations.PersonMrMrs.None;
+				return;
 			}
 		}
 
@@ -139,14 +151,14 @@ namespace Epsitec.Aider.Rules
 				return;
 			}
 
-			if (eCH.PersonSex == PersonSex.Unknown)
-			{
-				return;
-			}
-			
 			if (eCH.DataSource == Enumerations.DataSource.Government)
 			{
 				AiderPersonBusinessRules.FixMrMrsBasedOnSex (person, eCH);
+			}
+
+			if (eCH.PersonSex == PersonSex.Unknown)
+			{
+				return;
 			}
 
 			switch (person.MrMrs)
@@ -161,18 +173,6 @@ namespace Epsitec.Aider.Rules
 				case PersonMrMrs.Mademoiselle:
 					if (eCH.PersonSex == PersonSex.Female)
 					{
-						if ((eCH.AdultMaritalStatus == PersonMaritalStatus.Single) ||
-							(eCH.AdultMaritalStatus == PersonMaritalStatus.Unmarried) ||
-							(eCH.AdultMaritalStatus == PersonMaritalStatus.None))
-						{
-							//	OK
-						}
-						else
-						{
-							Logic.BusinessRuleException (person, Resources.Text (
-								string.Format ("{0} n'est pas célibataire. L'appellation 'Mademoiselle' n'est donc pas appropriée dans son cas.", person.GetFullName ())));
-						}
-
 						return;
 					}
 					break;

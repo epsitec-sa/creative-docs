@@ -80,27 +80,29 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private static void AssignPersonMrMrs(AiderPersonEntity person, Enumerations.PersonSex sex, Date? birthdate)
 		{
-			if (sex == Enumerations.PersonSex.Male)
-			{
-				person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
-			}
-			else if (birthdate.HasValue)
-			{
-				var age = birthdate.Value.ComputeAge ();
+			var age = birthdate.Value.ComputeAge ();
 
-				if ((age.HasValue) &&
-						(age.Value < 20))
-				{
-					person.MrMrs = Enumerations.PersonMrMrs.Mademoiselle;
-				}
-				else
-				{
-					person.MrMrs = Enumerations.PersonMrMrs.Madame;
-				}
+			if ((age.HasValue) &&
+				(age.Value < 20))
+			{
+				person.MrMrs = Enumerations.PersonMrMrs.None;
 			}
 			else
 			{
-				person.MrMrs = Enumerations.PersonMrMrs.Madame;
+				if (sex == Enumerations.PersonSex.Male)
+				{
+					person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
+				}
+
+				if (sex == Enumerations.PersonSex.Female)
+				{
+					person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
+				}
+
+				if (sex == Enumerations.PersonSex.Unknown)
+				{
+					person.MrMrs = Enumerations.PersonMrMrs.None;
+				}
 			}
 		}
 

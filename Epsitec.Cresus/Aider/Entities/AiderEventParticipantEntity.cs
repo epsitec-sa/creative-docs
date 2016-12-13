@@ -159,7 +159,7 @@ namespace Epsitec.Aider.Entities
 			{
 				if (this.Sex == Enumerations.PersonSex.Unknown)
 				{
-					return this.DetermineSexFromRole (this.Sex);
+					return AiderEventParticipantEntity.DetermineSexFromRole (this.Role, this.Sex);
 				}
 				else
 				{
@@ -170,38 +170,13 @@ namespace Epsitec.Aider.Entities
 			{
 				if (this.Person.eCH_Person.PersonSex == Enumerations.PersonSex.Unknown)
 				{
-					return this.DetermineSexFromRole (this.Sex);
+					return AiderEventParticipantEntity.DetermineSexFromRole (this.Role, this.Sex);
 				}
 				else
 				{
 					return this.Person.eCH_Person.PersonSex;
 				}
 				
-			}
-		}
-
-		public Enumerations.PersonSex DetermineSexFromRole (Enumerations.PersonSex defaultValue)
-		{
-			switch (this.Role)
-			{
-				case Enumerations.EventParticipantRole.Spouse:
-				case Enumerations.EventParticipantRole.SpouseMother:
-				case Enumerations.EventParticipantRole.PartnerBMother:
-				case Enumerations.EventParticipantRole.PartnerAMother:
-				case Enumerations.EventParticipantRole.Mother:
-				case Enumerations.EventParticipantRole.HusbandMother:
-				case Enumerations.EventParticipantRole.GodMother:
-					return Enumerations.PersonSex.Female;
-				case Enumerations.EventParticipantRole.SpouseFather:
-				case Enumerations.EventParticipantRole.PartnerBFather:
-				case Enumerations.EventParticipantRole.PartnerAFather:
-				case Enumerations.EventParticipantRole.HusbandFather:
-				case Enumerations.EventParticipantRole.GodFather:
-				case Enumerations.EventParticipantRole.Father:
-				case Enumerations.EventParticipantRole.Husband:
-					return Enumerations.PersonSex.Male;
-				default:
-					return defaultValue;
 			}
 		}
 
@@ -291,6 +266,31 @@ namespace Epsitec.Aider.Entities
 		public string GetRoleCaption()
 		{
 			return Res.Types.Enum.EventParticipantRole.FindValueFromEnumValue (this.Role).Caption.DefaultLabel;
+		}
+
+		public static Enumerations.PersonSex DetermineSexFromRole(Enumerations.EventParticipantRole role, Enumerations.PersonSex defaultValue)
+		{
+			switch (role)
+			{
+				case Enumerations.EventParticipantRole.Spouse:
+				case Enumerations.EventParticipantRole.SpouseMother:
+				case Enumerations.EventParticipantRole.PartnerBMother:
+				case Enumerations.EventParticipantRole.PartnerAMother:
+				case Enumerations.EventParticipantRole.Mother:
+				case Enumerations.EventParticipantRole.HusbandMother:
+				case Enumerations.EventParticipantRole.GodMother:
+					return Enumerations.PersonSex.Female;
+				case Enumerations.EventParticipantRole.SpouseFather:
+				case Enumerations.EventParticipantRole.PartnerBFather:
+				case Enumerations.EventParticipantRole.PartnerAFather:
+				case Enumerations.EventParticipantRole.HusbandFather:
+				case Enumerations.EventParticipantRole.GodFather:
+				case Enumerations.EventParticipantRole.Father:
+				case Enumerations.EventParticipantRole.Husband:
+					return Enumerations.PersonSex.Male;
+				default:
+					return defaultValue;
+			}
 		}
 	}
 }

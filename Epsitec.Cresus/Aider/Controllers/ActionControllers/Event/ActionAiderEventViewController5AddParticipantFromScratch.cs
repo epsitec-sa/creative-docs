@@ -81,11 +81,6 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			Enumerations.EventParticipantRole role
 		)
 		{
-			if (mrMrs == Enumerations.PersonMrMrs.None)
-			{
-				throw new BusinessRuleException ("impossible de determiner le sexe de la personne avec ce titre");
-			}
-
 			if(string.IsNullOrEmpty (name) || string.IsNullOrEmpty (firstName))
 			{
 				throw new BusinessRuleException ("un nom et un prénom et obligatoire");
@@ -102,6 +97,9 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 			{
 				sex = Enumerations.PersonSex.Male;
 			}
+
+			// Try to guess from role:
+			sex = AiderEventParticipantEntity.DetermineSexFromRole (role, sex);
 
 			var eChPerson = new EChPerson (	"",
 											name, 

@@ -425,6 +425,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-setpersonmrmrs")) //-setpersonmrmrs
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.SetPersonMrMrs (args));
+					return;
+				}
+
 				if (args.Contains ("-townfusionhack")) //-townfusionhack
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FusionArzier (args));
@@ -1083,8 +1089,17 @@ namespace Epsitec.Aider
 				System.Console.ReadLine ();
 			});
 		}
-		
 
+		private static void SetPersonMrMrs(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData =>
+			{
+				PersonMrMrsSetter.Set (coreData);
+
+				System.Console.WriteLine ("Press RETURN to quit");
+				System.Console.ReadLine ();
+			});
+		}
 		private static void RunWithCoreData(Action<CoreData> action)
 		{
 			SwissPost.Initialize ();

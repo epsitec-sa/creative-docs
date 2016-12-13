@@ -371,21 +371,14 @@ namespace Epsitec.Aider.Data.ECh
 		public static PersonMrMrs GuessMrMrs(PersonSex personSex, Date dateOfBirth, PersonMaritalStatus maritalStatus)
 		{
 			int? age = dateOfBirth.ComputeAge ();
-
+			if ((age.HasValue) && (age.Value < 18))
+			{
+				return PersonMrMrs.None;
+			}
 			switch (personSex)
 			{
 				case PersonSex.Female:
-					if ((age.HasValue) &&
-						(age.Value < 20) &&
-						(maritalStatus == PersonMaritalStatus.None || maritalStatus == PersonMaritalStatus.Unmarried || maritalStatus == PersonMaritalStatus.Single))
-					{
-						return PersonMrMrs.Mademoiselle;
-					}
-					else
-					{
-						return PersonMrMrs.Madame;
-					}
-
+					return PersonMrMrs.Madame;
 				case PersonSex.Male:
 					return PersonMrMrs.Monsieur;
 				
