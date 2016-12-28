@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.Text (new FormattedText ("Êtes-vous sûr de vouloir supprimer ce refus ?<br/>Ceci créera un nouvel abonnement."))
 				.Field<bool> ()
 					.Title ("Je confirme l'opération")
-					.InitialValue (true)
+					.InitialValue (false)
 				.End ()
 			.End ();
 		}
