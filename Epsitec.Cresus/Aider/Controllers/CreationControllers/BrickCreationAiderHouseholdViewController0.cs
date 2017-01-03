@@ -125,7 +125,10 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 					? person.ParishGroup.Parent
 					: ParishAssigner.FindRegionGroup (this.BusinessContext, 4);
 
-				AiderSubscriptionEntity.Create (this.BusinessContext, household, region, 1);
+				if (region != null) // don't create if FindRegionGroup fail to retreive something
+				{
+					AiderSubscriptionEntity.Create (this.BusinessContext, household, region, 1);
+				}
 			}
 
 			return household;
