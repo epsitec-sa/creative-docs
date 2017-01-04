@@ -551,7 +551,7 @@ namespace Epsitec.Aider
 				//EChPersonFixer.TryFixAll (coreData);
 
 				System.Console.WriteLine ("Fixing subscriptions after updating...");
-				AiderProgram.FixDuplicateSubscriptions (args);
+				SubscriptionAndRefusalFixer.FixDuplicateSubscriptions (coreData);
 
 				System.Console.WriteLine ("Press RETURN to quit");
 				System.Console.ReadLine ();

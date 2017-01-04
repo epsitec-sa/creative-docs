@@ -1046,6 +1046,33 @@ Lancé le 24.11.2016
 
 Testé -fixduplicatesubscriptions (mais pas produit de version modifiée de la base)
 
+
+Lancé le 30.11.2016
+-------------------
+
+-buildrolecache
+-echupdate -newechfile:S:\eerv\eerv-2016-11-29.xml -oldechfile:S:\eerv\eerv-2016-11-22.xml -output:s:\eerv\ech-diff-2016-11-29.md
+-fixduplicatesubscriptions
+
+Lancé le 27.12.2016
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2016-12-05.xml -oldechfile:S:\eerv\eerv-2016-11-29.xml -output:s:\eerv\ech-diff-2016-12-05.md
+-echupdate -newechfile:S:\eerv\eerv-2016-12-13.xml -oldechfile:S:\eerv\eerv-2016-12-05.xml -output:s:\eerv\ech-diff-2016-12-13.md
+-echupdate -newechfile:S:\eerv\eerv-2016-12-19.xml -oldechfile:S:\eerv\eerv-2016-12-13.xml -output:s:\eerv\ech-diff-2016-12-19.md
+-echupdate -newechfile:S:\eerv\eerv-2016-12-26.xml -oldechfile:S:\eerv\eerv-2016-12-19.xml -output:s:\eerv\ech-diff-2016-12-26.md
+
+-fixduplicatesubscriptions
+-buildrolecache
+-cleanmailingcategories
+-setpersonmrmrs
+
+Lancé le 03.01.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-01-02.xml -oldechfile:S:\eerv\eerv-2016-12-26.xml -output:s:\eerv\ech-diff-2017-01-02.md
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
