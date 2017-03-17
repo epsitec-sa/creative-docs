@@ -17,7 +17,7 @@ namespace Epsitec.Aider.Data.Job
 			{
 				Logger.LogToConsole ("Fixing flags...");
 
-				SqlHelpers.SelectDbIds (businessContext, "mud_lvard", "mud_lvard.u_lvoh93 = 'D'", (ids) =>
+				SqlHelpers.SelectDbIds (businessContext, "mud_lvard", "mud_lvard.u_lvoh93 = 'D;'", (ids) =>
 				{
 					foreach (var id in ids)
 					{
@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
+								entity.QualityCode = MXFlagger.GetCode (entity.Person);
 							}
 						}
 						
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Data.Job
 					businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
 				});
 
-				SqlHelpers.SelectDbIds (businessContext, "mud_lvard", "mud_lvard.u_lvoh93 = 'D3'", (ids) =>
+				SqlHelpers.SelectDbIds (businessContext, "mud_lvard", "mud_lvard.u_lvoh93 = 'D3;'", (ids) =>
 				{
 					foreach (var id in ids)
 					{
@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Data.Job
 							}
 							else
 							{
-								entity.QualityCode = PersonWithoutHousehold.GetCode (entity.Person);
+								entity.QualityCode = MXFlagger.GetCode (entity.Person);
 							}
 						}
 					}

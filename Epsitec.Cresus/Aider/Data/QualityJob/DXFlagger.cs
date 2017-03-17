@@ -112,20 +112,20 @@ namespace Epsitec.Aider.Data.Job
 				{
 					if (c1IsHidden || c2IsHidden)
 					{
-						return "D2";
+						return "D2;";
 					}
-					return "D1";
+					return "D1;";
 				}
 				else
 				{
 					if (c1IsGov && c2IsGov)
 					{
-						return "D3";
+						return "D3;";
 					}
-					return "D";
+					return "D;";
 				}
 			}
-			return "D";
+			return "D;";
 		}
 
 		private static List<EntityKey> GetAddressesToFix
