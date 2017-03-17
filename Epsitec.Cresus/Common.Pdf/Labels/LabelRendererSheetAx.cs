@@ -22,6 +22,11 @@ namespace Epsitec.Common.Pdf.Labels
 			this.pageOffset = pageOffset;
 		}
 
+		public bool								PrintSender
+		{
+			get;
+			set;
+		}
 
 		public bool								UsesPP
 		{
@@ -61,7 +66,7 @@ namespace Epsitec.Common.Pdf.Labels
 		}
 
 
-		protected override void RenderLabel(Port port, FormattedText text, Rectangle bounds, LabelPageLayout layout)
+		protected override void RenderLabel(Port port, FormattedText text, FormattedText senderText, Rectangle bounds, LabelPageLayout layout)
 		{
 			bounds = Rectangle.Offset (bounds, this.pageOffset);
 
@@ -70,13 +75,19 @@ namespace Epsitec.Common.Pdf.Labels
 				port.PaintImage (this.logoImage, bounds);
 			}
 
-			var textRect = new Rectangle (bounds.X + 1200, bounds.Y + 700, 800, 300);
 
+			var textRect = new Rectangle (bounds.X + 1200, bounds.Y + 700, 800, 300);
 			port.PaintText (textRect, text, layout.TextStyle);
 
 			if (this.UsesPP)
 			{
 				this.RenderPP (port, bounds, layout, textRect);
+			}
+
+			if (this.PrintSender)
+			{
+				var senderTextRect = new Rectangle (bounds.X + 200, bounds.Y + 940, 750, 300);
+				port.PaintText (senderTextRect, senderText, layout.TextStyle);
 			}
 		}
 

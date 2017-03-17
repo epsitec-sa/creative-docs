@@ -38,6 +38,37 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName);
 		}
 
+		public FormattedText GetSenderAddressLabelText ()
+		{
+			var sender = this.OfficeSender;
+			if (sender.IsNull ())
+			{
+				var office = this.Office;
+				if (office.IsNull ())
+				{
+					throw new BusinessRuleException ("Votre utilisateur n'est pas associé à une gestion, impossible d'utiliser un expéditeur");
+				}
+				else
+				{
+					var mainContactText = office.OfficeMainContact.GetAddressLabelText ();
+					if (mainContactText.IsNullOrEmpty ())
+					{
+						throw new BusinessRuleException (
+							string.Format ("Le contact principal de votre gestion ({0}) est mal configuré, impossible d'utiliser cet expéditeur", office.OfficeName)
+						);
+					}
+					return mainContactText;
+				}
+
+			}
+			var senderText = sender.OfficialContact.GetAddressLabelText ();
+			if (senderText.IsNullOrEmpty ())
+			{
+				throw new BusinessRuleException ("Le contact pour votre expéditeur est mal configuré, impossible d'utiliser cet expéditeur");
+			}
+			return senderText;
+		}
+
 
 		public void AssignGroup(BusinessContext businessContext, UserPowerLevel powerLevel)
 		{

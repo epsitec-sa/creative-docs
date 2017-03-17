@@ -22,7 +22,10 @@ namespace Epsitec.Aider.Labels
 			return entity.GetAddressLabelText ();
 		}
 
-
+		public override FormattedText GetSenderText()
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 

@@ -529,6 +529,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			string rawLayout        = query.layout;
 			int    rawTextFactoryId = query.text;
+			bool   rawPrintSender   = query.sender;
 
 			var metaData = extractor.Metadata;
 			var accessor = extractor.Accessor;
@@ -537,7 +538,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entitytype  = metaData.EntityTableMetadata.EntityType;
 			var textFactory = LabelTextFactoryResolver.Resolve (entitytype, rawTextFactoryId);
 
-			return new LabelWriter (metaData, accessor, textFactory, layout)
+			return new LabelWriter (metaData, accessor, textFactory, layout, rawPrintSender)
 			{
 				RemoveDuplicates = true
 			};

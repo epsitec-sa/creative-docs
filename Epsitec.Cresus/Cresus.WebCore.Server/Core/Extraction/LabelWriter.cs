@@ -22,11 +22,12 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 	/// </summary>
 	internal sealed class LabelWriter : EntityWriter
 	{
-		public LabelWriter(DataSetMetadata metadata, DataSetAccessor accessor, LabelTextFactory textFactory, LabelLayout layout)
+		public LabelWriter(DataSetMetadata metadata, DataSetAccessor accessor, LabelTextFactory textFactory, LabelLayout layout, bool printSender)
 			: base (metadata, accessor)
 		{
 			this.textFactory = textFactory;
 			this.layout      = layout;
+			this.printSender = printSender;
 		}
 
 
@@ -39,13 +40,14 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		{
 			var labelTexts = this.GetLabelTexts ().ToList ();
 			var labels     = this.GetLabels ();
+			var sender     = this.GetSenderText ();
 
 			if (this.RemoveDuplicates)
 			{
 				labelTexts = labelTexts.Distinct ().ToList ();
 			}
 
-			labels.GeneratePdf (stream, labelTexts.Count, i => labelTexts[i]);
+			labels.GeneratePdf (stream, labelTexts.Count, i => labelTexts[i], () => sender);
 		}
 
 
@@ -55,11 +57,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 				.Select (e => this.textFactory.GetLabelText (e));
 		}
 
+		private FormattedText GetSenderText()
+		{
+			return this.textFactory.GetSenderText ();
+		}
+
 		private LabelGenerator GetLabels()
 		{
 			var exportPdfInfo   = this.layout.GetExportPdfInfo ();
 			var labelPageLayout = this.layout.GetLabelPageLayout ();
-			var labelRenderer   = this.layout.GetLabelRenderer ();
+			var labelRenderer   = this.layout.GetLabelRenderer (this.printSender);
 
 			return new LabelGenerator (exportPdfInfo, labelPageLayout, labelRenderer);
 		}
@@ -67,5 +74,6 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 
 		private readonly LabelTextFactory		textFactory;
 		private readonly LabelLayout			layout;
+		private readonly bool					printSender;
 	}
 }

@@ -1,4 +1,5 @@
-﻿using Epsitec.Aider.Entities;
+﻿using System;
+using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Types;
 
@@ -19,7 +20,10 @@ namespace Epsitec.Aider.Labels
 			return entity.Contact.GetAddressLabelText ();
 		}
 
-
+		public override FormattedText GetSenderText()
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 
