@@ -22,7 +22,10 @@ namespace Epsitec.Aider.Labels
 			return entity.PersonContact.GetAddressLabelText (PostalAddressType.Default);
 		}
 
-
+		public override FormattedText GetSenderText()
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 

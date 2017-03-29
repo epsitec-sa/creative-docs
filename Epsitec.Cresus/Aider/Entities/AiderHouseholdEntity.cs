@@ -86,12 +86,30 @@ namespace Epsitec.Aider.Entities
 				return FormattedText.Empty;
 			}
 
-			return TextFormatter.FormatText
-			(
-				this.GetHonorific (false),
-				"\n",
-				this.GetAddressName ()
-			);
+			var names = this.GetAddressName ();
+			if (names.Length > 30)
+			{
+				return TextFormatter.FormatText
+				(
+					names
+				);
+			}
+			else if (names.Length > 20 && names.Length <= 30)
+			{
+				return TextFormatter.FormatText
+				(
+					this.GetHonorific (true),
+					names
+				);
+			}
+			else
+			{
+				return TextFormatter.FormatText
+				(
+					this.GetHonorific (false),
+					names
+				);
+			}
 		}
 
 

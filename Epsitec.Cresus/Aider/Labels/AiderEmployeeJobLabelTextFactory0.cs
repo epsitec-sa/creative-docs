@@ -15,14 +15,15 @@ namespace Epsitec.Aider.Labels
 	[LabelTextFactoryId (0)]
 	public sealed class AiderEmployeeJobLabelTextFactory0 : LabelTextFactory<AiderEmployeeJobEntity>
 	{
-
-
 		public override FormattedText GetLabelText(AiderEmployeeJobEntity entity)
 		{
 			return entity.GetAddressLabelText ();
 		}
 
-
+		public override FormattedText GetSenderText()
+		{
+			throw new NotImplementedException ();
+		}
 	}
 
 

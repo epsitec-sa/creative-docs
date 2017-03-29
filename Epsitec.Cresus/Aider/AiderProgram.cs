@@ -372,7 +372,7 @@ namespace Epsitec.Aider
 					//More info about this command: https://git.epsitec.ch/aider/dataquality/issues/3
 					ConsoleCreator.RunWithConsole (
 						() => AiderProgram.RunWithCoreData (
-							coreData => PersonWithoutHousehold.FlagContacts (coreData)
+							coreData => MXFlagger.FlagContacts (coreData)
 						)
 					);
 					return;

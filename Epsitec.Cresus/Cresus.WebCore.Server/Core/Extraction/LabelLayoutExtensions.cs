@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 			}
 		}
 
-		public static LabelRenderer GetLabelRenderer(this LabelLayout layout)
+		public static LabelRenderer GetLabelRenderer(this LabelLayout layout, bool printSender = false)
 		{
 			switch (layout)
 			{
@@ -114,7 +114,10 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					return new LabelRenderer ();
 
 				case LabelLayout.Sheet_A5_Simple:
-					return new LabelRendererSheetA5 (); //.DefineLogo (@"S:\eerv.png", new Size (2100, 1480));
+					return new LabelRendererSheetA5
+					{
+						PrintSender = printSender
+					}; //.DefineLogo (@"S:\eerv.png", new Size (2100, 1480));
 
 				case LabelLayout.Sheet_A5_SimplePP:
 				case LabelLayout.Sheet_A5_SimplePPPriority:
@@ -122,11 +125,15 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					{
 						EmitterZipCode = 1002,
 						EmitterPostOffice = "Lausanne",
-						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A5_SimplePPPriority
+						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A5_SimplePPPriority,
+						PrintSender = printSender
 					};
 
 				case LabelLayout.Sheet_A4_Simple:
-					return new LabelRendererSheetA4 ();
+					return new LabelRendererSheetA4
+					{
+						PrintSender = printSender
+					};
 
 				case LabelLayout.Sheet_A4_SimplePP:
 				case LabelLayout.Sheet_A4_SimplePPPriority:
@@ -134,7 +141,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 					{
 						EmitterZipCode = 1002,
 						EmitterPostOffice = "Lausanne",
-						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A4_SimplePPPriority
+						IncludesPrioritySymbol = layout == LabelLayout.Sheet_A4_SimplePPPriority,
+						PrintSender = printSender
 					};
 				
 				default:

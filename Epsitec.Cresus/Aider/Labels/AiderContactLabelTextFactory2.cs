@@ -1,5 +1,4 @@
 ﻿using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
@@ -7,21 +6,19 @@ using Epsitec.Cresus.Core.Business.UserManagement;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Labels;
 
-using System;
-
 
 namespace Epsitec.Aider.Labels
 {
 
 
-	[LabelTextFactoryId (0)]
-	public sealed class AiderLegalPersonTextFactory0 : LabelTextFactory<AiderLegalPersonEntity>
+	[LabelTextFactoryId (2)]
+	public sealed class AiderContactLabelTextFactory2 : LabelTextFactory<AiderContactEntity>
 	{
 
 
-		public override FormattedText GetLabelText(AiderLegalPersonEntity entity)
+		public override FormattedText GetLabelText(AiderContactEntity entity)
 		{
-			return entity.GetAddressLabelText ();
+			return entity.Household.GetAddressLabelText ();
 		}
 
 		public override FormattedText GetSenderText()

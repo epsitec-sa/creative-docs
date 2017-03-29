@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Core.Labels
 	public abstract class LabelTextFactory
 	{
 		public abstract FormattedText GetLabelText(AbstractEntity entity);
+		public abstract FormattedText GetSenderText();
 	}
 }

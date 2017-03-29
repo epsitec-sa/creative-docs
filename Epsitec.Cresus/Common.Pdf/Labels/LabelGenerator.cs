@@ -54,18 +54,19 @@ namespace Epsitec.Common.Pdf.Labels
 		}
 		
 		
-		public void GeneratePdf(string path, int count, System.Func<int, FormattedText> dataAccessor)
+		public void GeneratePdf(string path, int count, System.Func<int, FormattedText> dataAccessor, System.Func<FormattedText> senderGetter)
 		{
 			using (var stream = File.Open (path, FileMode.Create))
 			{
-				this.GeneratePdf (stream, count, dataAccessor);
+				this.GeneratePdf (stream, count, dataAccessor, senderGetter);
 			}
 		}
 
-		public void GeneratePdf(Stream stream, int count, System.Func<int, FormattedText> dataAccessor)
+		public void GeneratePdf(Stream stream, int count, System.Func<int, FormattedText> dataAccessor, System.Func<FormattedText> senderGetter)
 		{
 			this.totalLabelCount = count;
 			this.textGetter    = dataAccessor;
+			this.senderGetter  = senderGetter;
 
 			this.labelsPerPage = this.LabelsPerPage;
 
@@ -84,7 +85,7 @@ namespace Epsitec.Common.Pdf.Labels
 		private void RenderPage(Port port, int page)
 		{
 			this.RenderLayers (port, page);
-
+			var senderText = this.senderGetter ();
 			for (int y = 0; y < this.VerticalLabelsCount; y++)
 			{
 				for (int x = 0; x < this.HorizontalLabelsCount; x++)
@@ -97,7 +98,7 @@ namespace Epsitec.Common.Pdf.Labels
 						var text   = this.textGetter (rank);
 						var bounds = this.GetLabelBounds (rankIntoPage);
 
-						this.renderer.Render (port, text, bounds, this.Setup);
+						this.renderer.Render (port, text, senderText, bounds, this.Setup);
 					}
 				}
 			}
@@ -118,6 +119,7 @@ namespace Epsitec.Common.Pdf.Labels
 		private readonly LabelRenderer			renderer;
 		
 		private System.Func<int, FormattedText>	textGetter;
+		private System.Func<FormattedText>      senderGetter;
 		private int								labelsPerPage;
 		private int								totalLabelCount;
 	}

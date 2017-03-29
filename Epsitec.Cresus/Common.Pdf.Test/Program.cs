@@ -218,7 +218,7 @@ namespace Common.Pdf.Test
 			Program.AddFixElements (labels, setup);
 
 			var path = "test2.pdf";
-			labels.GeneratePdf (path, 100, Program.Test2DataAccessor);
+			labels.GeneratePdf (path, 100, Program.Test2DataAccessor, () => FormattedText.FromSimpleText ("test"));
 			return path;
 		}
 

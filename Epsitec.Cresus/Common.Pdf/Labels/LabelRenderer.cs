@@ -10,7 +10,7 @@ namespace Epsitec.Common.Pdf.Labels
 {
 	public class LabelRenderer
 	{
-		public void Render(Port port, FormattedText text, Rectangle bounds, LabelPageLayout layout)
+		public void Render(Port port, FormattedText text, FormattedText senderText, Rectangle bounds, LabelPageLayout layout)
 		{
 			if (layout.ShouldPaintFrame)
 			{
@@ -26,10 +26,10 @@ namespace Epsitec.Common.Pdf.Labels
 
 			bounds.Deflate (layout.LabelMargins);
 			
-			this.RenderLabel (port, text, bounds, layout);
+			this.RenderLabel (port, text, senderText, bounds, layout);
 		}
 		
-		protected virtual void RenderLabel(Port port, FormattedText text, Rectangle bounds, LabelPageLayout layout)
+		protected virtual void RenderLabel(Port port, FormattedText text, FormattedText senderText, Rectangle bounds, LabelPageLayout layout)
 		{
 			port.PaintText (bounds, text, layout.TextStyle);
 		}

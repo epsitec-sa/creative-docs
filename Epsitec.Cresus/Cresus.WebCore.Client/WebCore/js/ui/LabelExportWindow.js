@@ -28,6 +28,8 @@ function() {
     exportUrl: null,
     textFactoryCombo: null,
     layoutCombo: null,
+    useSender: false,
+    useSenderCheckbox: null,
 
     /* Constructor */
 
@@ -36,9 +38,13 @@ function() {
 
       this.textFactoryCombo = this.createTextFactoryCombo(options);
       this.layoutCombo = this.createLayoutCombo();
-
+      this.useSenderButton = this.createUseSenderField();
+      this.useSenderButton.on('change', function () {
+          this.useSender = !this.useSender;
+          console.log('Use sender: ', this.useSender);
+      }, this);
       newOptions = {
-        items: [this.textFactoryCombo, this.layoutCombo],
+        items: [this.textFactoryCombo, this.layoutCombo, this.useSenderButton],
         buttons: [
           this.createOkButton(),
           this.createCancelButton()
@@ -51,6 +57,13 @@ function() {
     },
 
     /* Methods */
+    createUseSenderField: function () {
+      return Ext.create('Ext.form.field.Checkbox', {
+          labelWidth: 150,
+          boxLabel: 'Avec exp\u00E9diteur',
+          checked: this.onUseSender
+      });
+    },
 
     createTextFactoryCombo: function(options) {
       return Ext.create('Ext.form.ComboBox', {
@@ -129,6 +142,7 @@ function() {
       url = Epsitec.Tools.addParameterToUrl(url, 'type', 'label');
       url = Epsitec.Tools.addParameterToUrl(url, 'layout', layoutId);
       url = Epsitec.Tools.addParameterToUrl(url, 'text', textId);
+      url = Epsitec.Tools.addParameterToUrl(url, 'sender', this.useSender);
 
       //window.open(url);
       Ext.Ajax.request({

@@ -2428,6 +2428,7 @@ AiderOfficeTask = [LVOD83]
       <L>
         <l t="Adresse normale" f="0"/>
         <l t="Adresse aux parents de..." f="1"/>
+		<l t="Intitulé du ménage" f="2"/>
       </L>
        <!-- Filter -->
        <f id="@AiderContact">     

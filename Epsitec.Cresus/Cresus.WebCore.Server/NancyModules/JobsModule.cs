@@ -3,6 +3,7 @@
 
 using Epsitec.Cresus.WebCore.Server.Core;
 using Nancy;
+using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -11,7 +12,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public JobsModule(CoreServer coreServer)
 			: base (coreServer, "/jobs")
 		{
-			Get["/list"] = p => Response.AsJson (this.GetJobs ());
+			Get["/list"] = p => Response.AsJson (this.GetJobs ().Select (j => new { Id = j.Id, Title = j.Title, Username = j.Username}));
 
 			Get["/cancel/{job}"] = p =>
 			{

@@ -566,6 +566,16 @@ namespace Epsitec.Aider.Entities
 			}
 
 			AiderHouseholdEntity.DeleteEmptyHouseholds (businessContext, households);
+
+			var employees = businessContext.GetByExample (new AiderEmployeeEntity ()
+			{
+				Person = this
+			});
+
+			employees.ForEach (e =>
+			{
+				AiderEmployeeEntity.Delete (businessContext, e);
+			});
 		}
 
 		public void UndoKillPerson(BusinessContext businessContext)

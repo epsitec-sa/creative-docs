@@ -342,14 +342,14 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\AgeCalculator.cs" />
-    <Compile Include="Data\Job\DataQualityFlagsFixer.cs" />
-    <Compile Include="Data\Job\ClearDataQualityFlags.cs" />
+    <Compile Include="Data\QualityJob\DataQualityFlagsFixer.cs" />
+    <Compile Include="Data\QualityJob\ClearDataQualityFlags.cs" />
     <Compile Include="Data\Job\PersonMrMrsSetter.cs" />
-    <Compile Include="Data\Job\PersonWithtoutHousehold.cs" />
+    <Compile Include="Data\QualityJob\MXFlagger.cs" />
     <Compile Include="Data\Job\ContactNameFixer.cs" />
     <Compile Include="Data\Job\DerogationHotfix.cs" />
     <Compile Include="Data\Job\EChDataUpdater.cs" />
-    <Compile Include="Data\Job\FlagDuplicatedPersons.cs" />
+    <Compile Include="Data\QualityJob\DXFlagger.cs" />
     <Compile Include="Data\Job\HouseholdsFix.cs" />
     <Compile Include="Data\Job\HouseholdCleaner.cs" />
     <Compile Include="Data\Job\MailingCategoriesCleaner.cs" />
@@ -456,6 +456,7 @@
     <Compile Include="Helpers\AiderParticipationsHelpers.cs" />
     <Compile Include="Helpers\FrenchLanguage.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory0.cs" />
+    <Compile Include="Labels\AiderContactLabelTextFactory2.cs" />
     <Compile Include="Labels\AiderContactLabelTextFactory1.cs" />
     <Compile Include="Labels\AiderEmployeeLabelTextFactory0.cs" />
     <Compile Include="Labels\AiderGroupParticipantLabelTextFactory0.cs" />
