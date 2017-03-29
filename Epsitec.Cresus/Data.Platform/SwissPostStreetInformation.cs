@@ -58,6 +58,19 @@ namespace Epsitec.Data.Platform
 				}
 			}
 
+			if (this.StreetName.Contains (',') == false)
+			{
+				var suspect = SwissPostStreet.SuspectRootPrefixes.FirstOrDefault (x => this.StreetNameRoot.StartsWith (x));
+
+				if (suspect != null)
+				{
+					var len = suspect.Length;
+					this.StreetName = this.StreetName.Substring (len) + ", " + this.StreetNameShort.Substring (0, len-1).ToLower ();
+					this.StreetNameRoot = this.StreetNameRoot.Substring (len);
+					System.Console.WriteLine ("Invalid root: {0}", this.ToString ());
+				}
+			}
+
 			if (SwissPostStreet.HeuristicTokens.Contains (this.StreetNameRoot))
 			{
 				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();

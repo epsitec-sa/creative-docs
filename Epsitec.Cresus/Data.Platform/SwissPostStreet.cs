@@ -1,4 +1,4 @@
-//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -40,16 +40,16 @@ namespace Epsitec.Data.Platform
 			{
 				return swissPostStreetCsv;
 			}
-        }
+		}
 
-        /// <summary>
-        /// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
-        /// that is "Neuchâtel, rue de") into a user friendly street name (such as
-        /// "rue de Neuchâtel 32").
-        /// </summary>
-        /// <param name="street">The Swiss Post street name.</param>
-        /// <returns>The user friendly street name.</returns>
-        public static string ConvertToUserFriendlyStreetName(string street)
+		/// <summary>
+		/// Converts the Swiss Post street name (as represent in the MAT[CH]street database,
+		/// that is "Neuchâtel, rue de") into a user friendly street name (such as
+		/// "rue de Neuchâtel 32").
+		/// </summary>
+		/// <param name="street">The Swiss Post street name.</param>
+		/// <returns>The user friendly street name.</returns>
+		public static string ConvertToUserFriendlyStreetName(string street)
 		{
 			if (string.IsNullOrEmpty (street))
 			{
@@ -307,9 +307,25 @@ namespace Epsitec.Data.Platform
 			"QUARTIER",
 			"ROUTE",
 			"RUE",
+			"RUE DU",
 			"RUELLE",
+			"RUELLE DU",
 			"SQUARE",
 			"ZONE",
+		};
+
+		internal static readonly List<string> SuspectRootPrefixes = new List<string> ()
+		{
+			"AVENUE ",
+			"CHEMIN DES ",
+			"CHEMIN DE ",
+			"CHEMIN ",
+			"PASSAGE ",
+			"QUAI DE LA ",
+			"RUE DU ",
+			"RUELLE A ",
+			"RUELLE DU ",
+			"VOIE DU ",
 		};
 
 		internal static readonly HashSet<string> NormalizationNoise = new HashSet<string> ()
