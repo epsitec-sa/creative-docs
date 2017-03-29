@@ -1071,6 +1071,76 @@ Lancé le 03.01.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-01-02.xml -oldechfile:S:\eerv\eerv-2016-12-26.xml -output:s:\eerv\ech-diff-2017-01-02.md
+-exportsubscriptions -output:export-2017-01-12.txt -error:error-2017-01-12.txt -exclude-district-error:false
+
+Lancé le 15.01.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-01-10.xml -oldechfile:S:\eerv\eerv-2017-01-02.xml -output:s:\eerv\ech-diff-2017-01-10.md
+-exportsubscriptions -output:export-2017-01.txt -error:error-2017-01.txt -exclude-district-error:false
+
+Lancé le 29.01.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-01-17.xml -oldechfile:S:\eerv\eerv-2017-01-10.xml -output:s:\eerv\ech-diff-2017-01-17.md
+-echupdate -newechfile:S:\eerv\eerv-2017-01-24.xml -oldechfile:S:\eerv\eerv-2017-01-17.xml -output:s:\eerv\ech-diff-2017-01-24.md
+
+
+Lancé le 13.02.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-01-30.xml -oldechfile:S:\eerv\eerv-2017-01-24.xml -output:s:\eerv\ech-diff-2017-01-31.md
+-echupdate -newechfile:S:\eerv\eerv-2017-02-06.xml -oldechfile:S:\eerv\eerv-2017-01-30.xml -output:s:\eerv\ech-diff-2017-02-06.md
+
+-exportsubscriptions -output:export-2017-02-xx.txt -error:error-2017-02-xx.txt -exclude-district-error:false
+
+
+Lancé le 07.03.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-03-06.xml -oldechfile:S:\eerv\eerv-2017-02-06.xml -output:s:\eerv\ech-diff-2017-03-06.md
+
+
+Lancé le 13.03.2017
+-------------------
+
+-exportsubscriptions -output:export-2017-03-xx.txt -error:error-2017-03-xx.txt -exclude-district-error:false
+
+
+Lancé le 19.03.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-03-13.xml -oldechfile:S:\eerv\eerv-2017-03-06.xml -output:s:\eerv\ech-diff-2017-03-13.md
+
+Doc:
+
+cf. https://firebirdsql.org/manual/gbak-recipies.html
+
+Depuis IB Expert:
+
+DELETE FROM CR_ED_LOG WHERE CR_ID > 0;
+DELETE FROM CR_EM_LOG WHERE CR_ID > 0;
+
+
+Depuis la console:
+
+CD /D C:\Program Files\Firebird\Firebird_2_5\bin
+gbak.exe -B -G "C:\ProgramData\Epsitec\Firebird Databases\AIDER.FIREBIRD" S:\aider.fbk -USER SYSDBA -PAS masterkey
+gbak.exe -REP S:\aider.fbk "C:\ProgramData\Epsitec\Firebird Databases\AIDER.FIREBIRD" -USER SYSDBA -PAS masterkey
+
+
+
+Lancé le 21.03.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-03-20.xml -oldechfile:S:\eerv\eerv-2017-03-13.xml -output:s:\eerv\ech-diff-2017-03-20.md
+
+
+Lancé le 28.03.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-03-28.xml -oldechfile:S:\eerv\eerv-2017-03-20.xml -output:s:\eerv\ech-diff-2017-03-28.md
+
 
 
 ___________________________________________________________________________________________________________________________________
@@ -1081,3 +1151,6 @@ converti avec EditPad Pro le CSV en UTF-8.
 
 Supprimer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.meta
 ___________________________________________________________________________________________________________________________________
+
+
+
