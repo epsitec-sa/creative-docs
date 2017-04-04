@@ -122,7 +122,7 @@ namespace Epsitec.Aider.Entities
 
 		private string GetPersonRecipientText(string title)
 		{
-			return StringUtils.Join ("\n", title, this.Person.GetFullName ());
+			return string.Join (" ",title, this.Person.GetFullName ());
 		}
 
 		private FormattedText GetAddressLabelText(string recipient, PostalAddressType type)
