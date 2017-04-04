@@ -54,8 +54,9 @@ namespace Epsitec.Data.Platform
 					var fix = names[0];
 
 					this.StreetNameRoot = fix;
-					System.Console.WriteLine ("Very short root name detected, fix applied", this.ToString ());
-				}
+                    System.Diagnostics.Trace.WriteLine ($"Very short root name detected, fix applied {this.ToString()}");
+
+                }
 			}
 
 			if (this.StreetName.Contains (',') == false)
@@ -67,8 +68,8 @@ namespace Epsitec.Data.Platform
 					var len = suspect.Length;
 					this.StreetName = this.StreetName.Substring (len) + ", " + this.StreetNameShort.Substring (0, len-1).ToLower ();
 					this.StreetNameRoot = this.StreetNameRoot.Substring (len);
-					System.Console.WriteLine ("Invalid root: {0}", this.ToString ());
-				}
+                    System.Diagnostics.Trace.WriteLine ($"Invalid root: {this.ToString()}");
+                }
 			}
 
 			if (SwissPostStreet.HeuristicTokens.Contains (this.StreetNameRoot))
@@ -78,7 +79,7 @@ namespace Epsitec.Data.Platform
 				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
 				{
 					this.StreetNameRoot = names.Last ();
-					System.Console.WriteLine ("Fix applied for {0}", this.ToString ());
+                    System.Diagnostics.Trace.WriteLine ($"Fix applied for {this.ToString ()}");
 				}
 			}
 		}
