@@ -40,15 +40,16 @@ namespace Epsitec.Cresus.WebCore.Server.Core.Extraction
 		{
 			var labelTexts = this.GetLabelTexts ().ToList ();
 			var labels     = this.GetLabels ();
-			var sender     = this.GetSenderText ();
+            var sender     = this.printSender ? this.GetSenderText() : FormattedText.Empty;
 
-			if (this.RemoveDuplicates)
-			{
-				labelTexts = labelTexts.Distinct ().ToList ();
-			}
 
-			labels.GeneratePdf (stream, labelTexts.Count, i => labelTexts[i], () => sender);
-		}
+            if (this.RemoveDuplicates)
+            {
+                labelTexts = labelTexts.Distinct().ToList();
+            }
+
+            labels.GeneratePdf(stream, labelTexts.Count, i => labelTexts[i], () => sender);
+        }
 
 
 		private IEnumerable<FormattedText> GetLabelTexts()
