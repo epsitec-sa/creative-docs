@@ -180,9 +180,23 @@ namespace Epsitec.Data.Platform
 			}
 
 			var tokens  = SwissPostStreet.TokenizeStreetName (street).ToArray ();
-			matchingInfos = this.FindStreets (zipCode, zipAddOn).Where (x => x.MatchNameWithHeuristics (tokens));
+			matchingInfos = this
+				.FindStreets (zipCode, zipAddOn)
+				.Where (x => x.MatchNameWithHeuristics (tokens))
+				.OrderByDescending (x => x.StreetNameRoot.Length);
 
 			found = matchingInfos.FirstOrDefault ();
+
+			if (found == null)
+			{
+				matchingInfos = this
+					.FindStreets (zipCode, zipAddOn)
+					.Where (x => x.MatchNameWithHeuristics (tokens, Heuristics.AcceptPartialRoot))
+					.OrderByDescending (x => x.StreetNameRoot.Length)
+					.ToList ();
+
+				found = matchingInfos.FirstOrDefault ();
+			}
 
 			return found;
 		}

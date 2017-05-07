@@ -164,9 +164,29 @@ namespace Epsitec.Data.Platform
 		}
 		public string					StreetNameRoot
 		{
+			get
+			{
+				return this.root;
+			}
+			set
+			{
+				this.root = value;
+				if (string.IsNullOrEmpty (value))
+				{
+					this.StreetNameRootHash = SwissPostStreetInformation.EmptyHashSet;
+				}
+				else
+				{
+					this.StreetNameRootHash = new HashSet<string> (value.Split (SwissPostStreet.NameSeparators));
+				}
+			}
+		}
+		public HashSet<string>			StreetNameRootHash
+		{
 			get;
 			set;
 		}
+
 		public int						StreetNameType
 		{
 			get;
@@ -200,13 +220,14 @@ namespace Epsitec.Data.Platform
 		/// etc.
 		/// </summary>
 		/// <param name="tokens">The array of street name tokens.</param>
+		/// <param name="mode">The heuristics to use match names.</param>
 		/// <returns><c>true</c> if the name could be matched; otherwise, <c>false</c>.</returns>
-		public bool MatchNameWithHeuristics(string[] tokens)
+		public bool MatchNameWithHeuristics(string[] tokens, Heuristics mode = Heuristics.Default)
 		{
 			var name1 = string.Join (" ", tokens);
 
 			if ((this.NormalizedStreetName == name1) ||
-				(this.MatchRootName (name1)))
+				(this.MatchRootName (name1, mode)))
 			{
 				return true;
 			}
@@ -216,7 +237,7 @@ namespace Epsitec.Data.Platform
 			if (name1 != name2)
 			{
 				if ((this.NormalizedStreetName == name2) ||
-					(this.MatchRootName (name2)))
+					(this.MatchRootName (name2, mode)))
 				{
 					return true;
 				}
@@ -356,7 +377,11 @@ namespace Epsitec.Data.Platform
 				return true;
 			}
 
-			return this.MatchRootName (TextConverter.ConvertToUpperAndStripAccents (name));
+			var root = SwissPostStreetInformation.CreateRootName (name);
+
+			return
+				this.MatchRootName (root) ||
+				this.MatchRootName (root, Heuristics.AcceptPartialRoot);
 		}
 
 		/// <summary>
@@ -375,9 +400,35 @@ namespace Epsitec.Data.Platform
 		/// Check if the root name matches this instance.
 		/// </summary>
 		/// <param name="name">The root name (uppercase and without accents).</param>
+		/// <param name="mode">The heuristics to use match names.</param>
 		/// <returns><c>true</c> if the root name matches this instance; otherwise, <c>false</c>.</returns>
-		private bool MatchRootName(string rootName)
+		private bool MatchRootName(string rootName, Heuristics mode = Heuristics.Default)
 		{
+			if (mode == Heuristics.Default)
+			{
+				return this.StreetNameRoot == rootName;
+			}
+			
+			if (mode == Heuristics.AcceptPartialRoot)
+			{
+				var srcTokens = rootName.Split (SwissPostStreet.NameSeparators);
+				var srcLength = srcTokens.Length;
+
+				for (int skip = 0; skip < srcLength; skip++)
+				{
+					var refTokens = this.StreetNameRootHash;
+
+					if (srcTokens.Skip (skip).All (x => refTokens.Contains (x)))
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+
+			throw new System.ArgumentException ("Invalid Heuristics mode provided");
+
 			int len = rootName.Length;
 			int pos = 0;
 
@@ -426,5 +477,9 @@ namespace Epsitec.Data.Platform
 		{
 			return string.Concat (this.Zip.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
 		}
+		
+		
+		private static readonly HashSet<string>	EmptyHashSet = new HashSet<string> ();
+		private string							root;
 	}
 }
