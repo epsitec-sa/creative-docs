@@ -35,13 +35,14 @@ namespace Epsitec.Data.Platform
 		/// </summary>
 		public void BuildAndCheckRootName()
 		{
-			this.StreetNameRoot = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort.Split (',')[0]);
+			this.StreetNameRoot = SwissPostStreetInformation.CreateRootName (this.StreetNameShort.Split (',')[0]);
+
 			if (this.StreetNameRoot.Length < 2)
 			{
 				//	Very short root names are often an indication that something is incorrect in the source data
 				//	file. "Marjovet B" has a root name "B" whereas it should be "MARJOVET", for instance...
 
-				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
+				var names = SwissPostStreetInformation.CreateRootName (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
 
 				if (names.Length > 0)
 				{
@@ -54,9 +55,9 @@ namespace Epsitec.Data.Platform
 					var fix = names[0];
 
 					this.StreetNameRoot = fix;
-                    System.Diagnostics.Trace.WriteLine (string.Format ("Very short root name detected, fix applied {0}", this));
+					System.Diagnostics.Trace.WriteLine (string.Format ("Very short root name detected, fix applied {0}", this));
 
-                }
+				}
 			}
 
 			if (this.StreetName.Contains (',') == false)
@@ -68,18 +69,18 @@ namespace Epsitec.Data.Platform
 					var len = suspect.Length;
 					this.StreetName = this.StreetName.Substring (len) + ", " + this.StreetNameShort.Substring (0, len-1).ToLower ();
 					this.StreetNameRoot = this.StreetNameRoot.Substring (len);
-                    System.Diagnostics.Trace.WriteLine (string.Format("Invalid root: {0}", this));
-                }
+					System.Diagnostics.Trace.WriteLine (string.Format("Invalid root: {0}", this));
+				}
 			}
 
 			if (SwissPostStreet.HeuristicTokens.Contains (this.StreetNameRoot))
 			{
-				var names = TextConverter.ConvertToUpperAndStripAccents (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
+				var names = SwissPostStreetInformation.CreateRootName (this.StreetNameShort).Split (' ', '-', '\'').Where (x => x.Length > 1).ToArray ();
 
 				if (!names.Any (x => x.StartsWith (this.StreetNameRoot) || x.EndsWith (this.StreetNameRoot)))
 				{
 					this.StreetNameRoot = names.Last ();
-                    System.Diagnostics.Trace.WriteLine (string.Format ("Fix applied for {0}", this));
+					System.Diagnostics.Trace.WriteLine (string.Format ("Fix applied for {0}", this));
 				}
 			}
 		}
@@ -356,6 +357,18 @@ namespace Epsitec.Data.Platform
 			}
 
 			return this.MatchRootName (TextConverter.ConvertToUpperAndStripAccents (name));
+		}
+
+		/// <summary>
+		/// Creates a root name based on a short name; this strips any accents and changes
+		/// all characters to upper case. Moreover, it replaces any "Y" with "I" to avoid
+		/// mismatches based on erros found in MAT[CH] files (Pré Fleury == Pré Fleuri).
+		/// </summary>
+		/// <param name="name">The short name.</param>
+		/// <returns>The root name of the street.</returns>
+		public static string CreateRootName(string name)
+		{
+			return TextConverter.ConvertToUpperAndStripAccents (name).Replace ("Y", "I");
 		}
 		
 		/// <summary>

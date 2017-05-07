@@ -130,7 +130,7 @@ namespace Epsitec.Data.Platform
 				return Enumerable.Empty<string> ();
 			}
 
-			name = TextConverter.ConvertToUpperAndStripAccents (name);
+			name = SwissPostStreetInformation.CreateRootName (name);
 
 			int pos = name.IndexOf (',');
 
