@@ -98,6 +98,7 @@
     <Compile Include="Directories\DirectoriesSearchAddressQuery.cs" />
     <Compile Include="Directories\DirectoriesSearchAddressResult.cs" />
     <Compile Include="Directories\DirectoriesWebService.cs" />
+    <Compile Include="Heuristics.cs" />
     <Compile Include="MatchSort\Mapping\MatchSortMetaDataMap.cs" />
     <Compile Include="MatchSort\Mapping\SwissPostHouseInformationMap.cs" />
     <Compile Include="MatchSort\Mapping\SwissPostStreetInformationMap.cs" />
