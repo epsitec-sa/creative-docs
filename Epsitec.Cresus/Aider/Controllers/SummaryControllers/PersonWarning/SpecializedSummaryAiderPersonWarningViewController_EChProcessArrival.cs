@@ -20,6 +20,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Aider.Rules;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -27,7 +28,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonWarningEntity> wall)
 		{
-			wall.AddBrick ()
+            AiderPersonBusinessRules.VerifyParish (this.BusinessContext, this.Entity.Person);
+            this.BusinessContext.SaveChanges (Cresus.Core.Business.LockingPolicy.ReleaseLock, Cresus.Core.Business.EntitySaveMode.None);
+
+            wall.AddBrick ()
 				.Title (x => x.WarningType)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.WithSpecialController (typeof (SummaryAiderPersonWarningViewController1Details))

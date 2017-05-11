@@ -191,7 +191,7 @@ namespace Epsitec.Aider.Rules
 			Logic.BusinessRuleException (person, Resources.Text ("Vérifiez l'appellation: elle ne correspond pas au sexe de la personne."));
 		}
 		
-		private static void VerifyParish(BusinessContext context, AiderPersonEntity person)
+		public static void VerifyParish(BusinessContext context, AiderPersonEntity person)
 		{
 			if (person.IsDeceased)
 			{
