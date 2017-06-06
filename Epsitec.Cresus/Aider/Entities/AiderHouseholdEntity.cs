@@ -87,14 +87,7 @@ namespace Epsitec.Aider.Entities
 			}
 
 			var names = this.GetAddressName ();
-			if (names.Length > 30)
-			{
-				return TextFormatter.FormatText
-				(
-					names
-				);
-			}
-			else if (names.Length > 20 && names.Length <= 30)
+			if (names.Length > 20)
 			{
 				return TextFormatter.FormatText
 				(
