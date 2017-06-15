@@ -98,7 +98,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 					if (sex == Enumerations.PersonSex.Female)
 					{
-						person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
+						person.MrMrs = Enumerations.PersonMrMrs.Madame;
 					}
 
 					if (sex == Enumerations.PersonSex.Unknown)
