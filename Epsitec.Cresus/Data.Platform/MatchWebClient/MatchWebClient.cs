@@ -103,7 +103,7 @@ namespace Epsitec.Data.Platform
 					zipFile.LoadFile (stream);
 					var zipEntry = zipFile.Entries.First ();
 					System.Diagnostics.Trace.WriteLine (string.Format ("Writing file {0}", filename));
-					using (StreamWriter sw = new StreamWriter (filename))
+					using (var sw = new StreamWriter (filename)) // output as UTF-8
 					{
 						sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
 					}

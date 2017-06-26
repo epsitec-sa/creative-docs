@@ -74,19 +74,30 @@ namespace Epsitec.Aider.Data.Job
 				var subs = businessContext
 					.GetAllEntities<AiderSubscriptionEntity> ();
 
+				//	If you do not want to keep subscriptions in multiple states, comment
+				//	out /* w = s.SubscriptionFlag */ in the GroupBy clause below:
+
 				var potentialDup = subs
-					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress, z = s.RegionalEdition })
+					.GroupBy (s => new { x = s.DisplayName, y = s.DisplayAddress, z = s.RegionalEdition, w = s.SubscriptionFlag })
 					.Where (g => g.Count () > 1)
-					.Select (g => new { key = g.Key, nb = g.Count (), values = g.ToList () })
+					.Select (g => new { key = g.Key, nb = g.Count (), values = g.OrderBy (x => x.SubscriptionFlag).ToList () })
 					.ToList ();
 
-				Console.WriteLine ("Find {0} duplicates", potentialDup.Count);
+				Console.WriteLine ("Found {0} duplicates", potentialDup.Count);
+				
+				System.IO.File.WriteAllLines ("duplicates.log", 
+					potentialDup
+						.SelectMany (x => x.values)
+						.Select (x => x.DisplayName + ", " + x.DisplayAddress + ", " + x.RegionalEdition.Name + ", " + x.SubscriptionFlag + ", " + x.Id)
+						.OrderBy (x => x));
+
 				var deleted = 0;
+				
 				foreach (var duplicate in potentialDup)
 				{
 					var keep = duplicate.values.First ();
 					var toDelete = duplicate.values.Skip (1);
-					Console.WriteLine ("Keeping {0}, deleting {1}", keep.Id, string.Join (" / ", toDelete.Select (s => s.Id)));
+					Console.WriteLine ("Keeping {0} ({2}), deleting {1}", keep.Id, string.Join (" / ", toDelete.Select (s => s.Id)), keep.SubscriptionFlag);
 					deleted += toDelete.Count ();
 					foreach (var sub in toDelete)
 					{
@@ -94,8 +105,19 @@ namespace Epsitec.Aider.Data.Job
 					}
 				}
 
-				Console.WriteLine ("Done {0} duplicates removed", deleted);
+				var damaged = subs.Where (x => string.IsNullOrEmpty (x.DisplayName));
+
+				foreach (var item in damaged)
+				{
+					Console.WriteLine ("Remove damaged {0}", item.Id);
+					AiderSubscriptionEntity.Delete (businessContext, item);
+					deleted += 1;
+				}
+
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+
+				Console.WriteLine ("Done. Removed {0} subscriptions", deleted);
+				Console.ReadLine ();
 			}
 
 		}
