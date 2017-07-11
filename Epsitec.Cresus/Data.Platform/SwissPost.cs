@@ -35,7 +35,7 @@ namespace Epsitec.Data.Platform
 			using (var outputStream = new System.IO.StreamWriter (System.IO.File.CreateText (outputFile).BaseStream, encoding))
 			{
 				var csv   = new CsvReader (stream, MatchSortLoader.ConfigureSwissPostReader<SwissPostZipInformation> ());
-				var zips  = csv.GetRecords<SwissPostZipInformation> ().ToList ();
+				var zips  = csv.GetRecords<SwissPostZipInformation> ().OrderBy (z => z.ZipCode).ToList ();
 				var csvWriter  = new CsvWriter (outputStream, cresusConfig);
 				foreach (var zip in zips)
 				{
