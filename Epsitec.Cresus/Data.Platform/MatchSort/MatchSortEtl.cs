@@ -95,7 +95,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		/// <returns></returns>
 		public int? GetDistrictNumber(string zip, string zipAddon, string street, string house, string houseAlpha)
 		{
-			if (houseAlpha == null)
+			if (string.IsNullOrEmpty (houseAlpha))
 			{
 				return this.GetDistrictNumberRelaxed (zip, zipAddon, street, house);
 			}
@@ -376,13 +376,16 @@ namespace Epsitec.Data.Platform.MatchSort
 			return command;
 		}
 
-		private void LoadFromDatabaseCsv(string CsvFilePath)
+		private void LoadFromDatabaseCsv(string csvFilePath)
 		{
 			this.transaction = this.connection.BeginTransaction ();
-			var CommitIndex = 0;
+			var commitIndex = 0;
+			var fields = System.IO.File
+				.ReadLines (csvFilePath, System.Text.Encoding.UTF8)
+				.Select (l => l.Replace ("' ", "'").Split (';'));
 
 			//Parse CSV and extract line fields -> INSERT
-			foreach (var lineFields in System.IO.File.ReadLines (CsvFilePath, System.Text.Encoding.GetEncoding ("Windows-1252")).Select (l => l.Replace ("' ", "'").Split (';')))
+			foreach (var lineFields in fields)
 			{
 				switch (lineFields[0])
 				{
@@ -476,8 +479,8 @@ namespace Epsitec.Data.Platform.MatchSort
 						this.InsertMessengerCommand.ExecuteNonQuery ();
 						break;
 				}
-				CommitIndex++;
-				if (CommitIndex % 200000 == 0)
+				commitIndex++;
+				if (commitIndex % 200000 == 0)
 				{
 					this.transaction.Commit ();
 					this.transaction = this.connection.BeginTransaction ();

@@ -1141,6 +1141,74 @@ Lancé le 28.03.2017
 
 -echupdate -newechfile:S:\eerv\eerv-2017-03-28.xml -oldechfile:S:\eerv\eerv-2017-03-20.xml -output:s:\eerv\ech-diff-2017-03-28.md
 
+Lancé le 06.04.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-04-04.xml -oldechfile:S:\eerv\eerv-2017-03-28.xml -output:s:\eerv\ech-diff-2017-04-04.md
+
+Lancé le 16.04.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-04-15.xml -oldechfile:S:\eerv\eerv-2017-04-04.xml -output:s:\eerv\ech-diff-2017-04-15.md
+
+-exportsubscriptions -output:export-2017-04-xx.txt -error:error-2017-04-xx.txt -exclude-district-error:false
+
+
+Lancé le 25.04.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-04-22.xml -oldechfile:S:\eerv\eerv-2017-04-15.xml -output:s:\eerv\ech-diff-2017-04-22.md
+
+Lancé le 07.05.2017
+-------------------
+
+Mise à jour du code selon issue dataquality/23 (erreurs de noms de rues à la suite
+de la mise à jour de MAT[CH]).
+
+-echupdate -newechfile:S:\eerv\eerv-2017-05-06.xml -oldechfile:S:\eerv\eerv-2017-04-22.xml -output:s:\eerv\ech-diff-2017-05-07.md
+
+
+Lancé le 14.05.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-05-13.xml -oldechfile:S:\eerv\eerv-2017-05-06.xml -output:s:\eerv\ech-diff-2017-05-13.md
+-exportsubscriptions -output:export-2017-05-xx.txt -error:error-2017-05-xx.txt -exclude-district-error:false
+
+
+Lancé le 04.06.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-06-03.xml -oldechfile:S:\eerv\eerv-2017-05-13.xml -output:s:\eerv\ech-diff-2017-06-03.md
+
+RUN:
+-calculateage
+
+TO RUN:
+-fixparishassignations
+-fixnoparish
+
+NOT RUN:
+-setpersonmrmrs
+-flagmissinghousehold
+-cleardqflags
+-flagduplicatedpersons
+-flagmissinghousehold
+-fixdqflags
+-fixduplicatesubscriptions
+-buildrolecache
+-cleanmailingcategories
+
+Lancé le 11.06.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-06-10.xml -oldechfile:S:\eerv\eerv-2017-06-03.xml -output:s:\eerv\ech-diff-2017-06-10.md
+
+
+Lancé le 18.06.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-06-17.xml -oldechfile:S:\eerv\eerv-2017-06-10.xml -output:s:\eerv\ech-diff-2017-06-17.md
+-exportsubscriptions -output:export-2017-06-xx.txt -error:error-2017-06-xx.txt -exclude-district-error:false
 
 
 ___________________________________________________________________________________________________________________________________
