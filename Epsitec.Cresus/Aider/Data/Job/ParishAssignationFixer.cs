@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Aider.Data.Job
 {
@@ -43,6 +44,50 @@ namespace Epsitec.Aider.Data.Job
 				}
 
 				businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.None);
+			}
+		}
+
+		public static void FixNullParish(CoreData coreData)
+		{
+			using (var businessContext = new BusinessContext (coreData, false))
+			{
+				var personExample = new AiderPersonEntity ()
+				{
+				};
+
+				var request = new Request ()
+				{
+					RootEntity = personExample
+				};
+
+				request.AddCondition
+				(
+					businessContext.DataContext, personExample, x => x.ParishGroup == null
+				);
+
+				var personsToFix = businessContext.DataContext.GetByRequest<AiderPersonEntity> (request);
+				int count = 0;
+
+				foreach (var person in personsToFix)
+				{
+					Rules.AiderPersonBusinessRules.ReassignParish (businessContext, person);
+					if (person.ParishGroup.IsNull ())
+					{
+						System.Diagnostics.Debug.WriteLine ("Could not find parish for " + person.DisplayName);
+					}
+					else
+					{
+						Logger.LogToConsole ("Parish for " + person.DisplayName + " set to " + person.ParishGroup.Name);
+						count++;
+					}
+				}
+
+				Logger.LogToConsole ("FOUND " + count + " PERSONS WITH NULL PARISH, FIXES APPLIED");
+
+				businessContext.SaveChanges
+				(
+					LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors
+				);
 			}
 		}
 

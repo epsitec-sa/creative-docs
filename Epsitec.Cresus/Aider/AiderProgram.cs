@@ -223,6 +223,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+				if (args.Contains ("-fixnullparish"))
+				{
+					ConsoleCreator.RunWithConsole (() => AiderProgram.FixNullParish (args));
+					return;
+				}
+
 				if (args.Contains ("-fixcontactnames"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixContactNames (args));
@@ -803,6 +809,11 @@ namespace Epsitec.Aider
 		private static void FixNoParish(string[] args)
 		{
 			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixNoParish (coreData));
+		}
+
+		private static void FixNullParish(string[] args)
+		{
+			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixNullParish (coreData));
 		}
 
 		private static void FixContactNames(string[] args)

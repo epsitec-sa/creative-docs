@@ -1211,6 +1211,57 @@ Lancé le 18.06.2017
 -exportsubscriptions -output:export-2017-06-xx.txt -error:error-2017-06-xx.txt -exclude-district-error:false
 
 
+Lancé le 25.06.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-06-24.xml -oldechfile:S:\eerv\eerv-2017-06-17.xml -output:s:\eerv\ech-diff-2017-06-24.md
+
+
+Lancé le 02.07.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-07-01.xml -oldechfile:S:\eerv\eerv-2017-06-24.xml -output:s:\eerv\ech-diff-2017-07-01.md
+
+
+Lancé le 11.07.2017
+-------------------
+
+-clearwarnings -beforedate:2017-01-01 -killpersons:true -createsubscriptions:true
+-echupdate -newechfile:S:\eerv\eerv-2017-07-08.xml -oldechfile:S:\eerv\eerv-2017-07-01.xml -output:s:\eerv\ech-diff-2017-07-08.md
+
+Lancé le 11.08.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-07-15.xml -oldechfile:S:\eerv\eerv-2017-07-08.xml -output:s:\eerv\ech-diff-2017-07-15.md
+-echupdate -newechfile:S:\eerv\eerv-2017-07-22.xml -oldechfile:S:\eerv\eerv-2017-07-15.xml -output:s:\eerv\ech-diff-2017-07-22.md
+-echupdate -newechfile:S:\eerv\eerv-2017-07-29.xml -oldechfile:S:\eerv\eerv-2017-07-22.xml -output:s:\eerv\ech-diff-2017-07-29.md
+-echupdate -newechfile:S:\eerv\eerv-2017-08-05.xml -oldechfile:S:\eerv\eerv-2017-07-29.xml -output:s:\eerv\ech-diff-2017-08-05.md
+
+-exportsubscriptions -output:export-2017-08-xx.txt -error:error-2017-08-xx.txt -exclude-district-error:false
+
+
+Lancé le 29.08.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-08-26.xml -oldechfile:S:\eerv\eerv-2017-08-05.xml -output:s:\eerv\ech-diff-2017-08-26.md
+
+Lancé le 03.09.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-09-02.xml -oldechfile:S:\eerv\eerv-2017-08-26.xml -output:s:\eerv\ech-diff-2017-09-02.md
+
+
+Lancé le 19.09.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-09-16.xml -oldechfile:S:\eerv\eerv-2017-09-02.xml -output:s:\eerv\ech-diff-2017-09-16.md
+-exportsubscriptions -output:export-2017-10-xx.txt -error:error-2017-10-xx.txt -exclude-district-error:false
+
+Lancé le 24.09.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-09-23.xml -oldechfile:S:\eerv\eerv-2017-09-16.xml -output:s:\eerv\ech-diff-2017-09-23.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
