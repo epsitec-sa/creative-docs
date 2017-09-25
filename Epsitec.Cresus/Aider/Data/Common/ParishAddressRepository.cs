@@ -177,7 +177,8 @@ namespace Epsitec.Aider.Data.Common
 			}
 
 			var parish = addresses.FindSpecific (normalizedStreetName, houseNumber)
-					  ?? addresses.FindDefault (normalizedStreetName);
+					  ?? addresses.FindDefault (normalizedStreetName)
+					  ?? addresses.FindDefault ();
 
 			return parish;
 		}

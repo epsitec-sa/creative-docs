@@ -415,7 +415,14 @@ namespace Epsitec.Aider.Data.Common
 
 			var parishGroupName = ParishAssigner.GetParishGroupName (parishRepository, parishName);
 
-			return parishGroupName == parishGroup.Name;
+			if (parishGroupName == parishGroup.Name)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 
