@@ -66,19 +66,19 @@ namespace Epsitec.Aider.Entities
 			switch (this.Kind)
 			{
 				case OfficeTaskKind.EnterNewAddress:
-					help = help.AppendLine ("Vous pouvez choisir d'annuler, si vous avez conservé par erreur cette");
-					help = help.AppendLine ("participation.");
+					help = help.AppendLine ("Vous pouvez choisir d'annuler, si vous avez conservé cette");
+					help = help.AppendLine ("participation par erreur.");
 					break;
 				case OfficeTaskKind.CheckParticipation:
 					if (this.Process.Type == OfficeProcessType.PersonsOutputProcess)
 					{
-						help = help.AppendLine ("Si vous conserver la participation,");
-						help = help.AppendLine ("il faudra renseigner une nouvelle adresse pour cette personne.");
+						help = help.AppendLine ("Si vous conservez cette participation, vous devrez");
+						help = help.AppendLine ("renseigner une nouvelle adresse pour cette personne.");
 					}
 					else
 					{
-						help = help.AppendLine ("La personne à changé de paroisse");
-						help = help.AppendLine ("voulez-vous tout de même conserver cette participation ?");
+						help = help.AppendLine ("La personne à changé de paroisse. Souhaitez-vous");
+						help = help.AppendLine ("tout de même conserver cette participation ?");
 					}
 
 					break;
@@ -106,13 +106,13 @@ namespace Epsitec.Aider.Entities
 				case OfficeTaskKind.EnterNewAddress:
 					if (source.GetType () != typeof (AiderContactEntity))
 					{
-						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au genre de tâche");
+						throw new BusinessRuleException ("Le type d'entité fourni ne correspond pas au genre de tâche");
 					}
 					break;
 				case OfficeTaskKind.CheckParticipation:
 					if (source.GetType () != typeof (AiderGroupParticipantEntity))
 					{
-						throw new BusinessRuleException ("Le type d'entité fournit ne correspond pas au genre de tâche");
+						throw new BusinessRuleException ("Le type d'entité fourni ne correspond pas au genre de tâche");
 					}
 					break;
 			}
