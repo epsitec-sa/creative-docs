@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Text;
+﻿//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -9,20 +12,26 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Tests.Vs.Text
 {
-
-
 	[TestClass]
 	public class UnitTestNameProcessor
 	{
-
-
 		[TestMethod]
-		public void GetAbbreviatedFirstnameTest()
+		public void GetAbbreviatedFirstNameTest()
 		{
 			var samples = new List<Tuple<string, string>>
 			{
 				Tuple.Create ((string) null, (string) null),
 				Tuple.Create ("", ""),
+				Tuple.Create ("Charles", "Ch."),
+				Tuple.Create ("Theodor", "Th."),
+				Tuple.Create ("Philippe", "Ph."),
+				Tuple.Create ("Claire-Lise", "Cl.-L."),
+				Tuple.Create ("Christian", "Chr."),
+				Tuple.Create ("Ghislaine", "Gh."),
+				Tuple.Create ("Françoise", "Fr."),
+				Tuple.Create ("Brandon", "Br."),
+				Tuple.Create ("Sharon", "Sh."),
+				Tuple.Create ("Schorsch", "Sch."),
 				Tuple.Create ("Marc", "M."),
 				Tuple.Create ("Marc andré", "M."),
 				Tuple.Create ("Marc-André", "M.-A."),
@@ -40,16 +49,15 @@ namespace Epsitec.Common.Tests.Vs.Text
 
 			foreach (var sample in samples)
 			{
-				var actual = NameProcessor.GetAbbreviatedFirstname(sample.Item1);
+				var actual = NameProcessor.GetAbbreviatedFirstName(sample.Item1);
 				var expected = sample.Item2;
 
 				Assert.AreEqual (expected, actual);
 			}
 		}
 
-
 		[TestMethod]
-		public void GetShortenedLastnameTest()
+		public void GetShortenedLastNameTest()
 		{
 			var samples = new List<Tuple<string, string>>
 			{
@@ -73,15 +81,11 @@ namespace Epsitec.Common.Tests.Vs.Text
 
 			foreach (var sample in samples)
 			{
-				var actual = NameProcessor.GetShortenedLastname (sample.Item1);
+				var actual = NameProcessor.GetShortenedLastName (sample.Item1);
 				var expected = sample.Item2;
 
 				Assert.AreEqual (expected, actual);
 			}
 		}
-
-
 	}
-
-
 }

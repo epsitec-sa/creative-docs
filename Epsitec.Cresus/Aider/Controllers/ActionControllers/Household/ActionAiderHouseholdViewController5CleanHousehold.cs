@@ -35,6 +35,8 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 		{
 			AiderContactEntity.DeleteDuplicateContacts (this.BusinessContext, this.Entity.Contacts);
 			this.Entity.RefreshCache ();
+			AiderContactEntity.DeleteDuplicateContacts (this.BusinessContext, this.Entity, this.Entity.Contacts);
+			this.Entity.RefreshCache ();
 		}
 	}
 }

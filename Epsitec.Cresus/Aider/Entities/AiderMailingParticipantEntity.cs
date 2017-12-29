@@ -1,7 +1,8 @@
-﻿//	Copyright © 2012-2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP
 
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Entities;
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Text;
@@ -22,7 +23,6 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderMailingParticipantEntity
 	{
-
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText
@@ -37,6 +37,27 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Contact.DisplayName, "\n", this.Contact.DisplayZipCode, this.Contact.DisplayAddress);
 		}
 
+		public void UpdateRecipientByContact()
+		{
+			this.CustomRecipient = this.Contact.GetAddressRecipientText ();
+		}
+
+		public void UpdateRecipientByHouseholdUsingDesc()
+		{
+			this.CustomRecipient = this.Contact.Household.GetAddressRecipientText ();
+		}
+
+		public void UpdateRecipientByHouseholdUsingParticipants(HashSet<AiderContactEntity> excludedContacts, ILookup<AiderHouseholdEntity, AiderContactEntity> contactsByHousehold)
+		{
+			var persons = contactsByHousehold[this.Contact.Household]
+				.Where (c => !excludedContacts.Contains (c))
+				.Select (c => c.Person)
+				.ToList ();
+
+			this.CustomRecipient = this.Contact.Household.GetAddressRecipientText (persons);
+		}
+
+		
 		public static IEnumerable<AiderMailingParticipantEntity> GetAllParticipants(DataContext context, AiderMailingEntity mailing)
 		{
 			var participantExample = new AiderMailingParticipantEntity ()

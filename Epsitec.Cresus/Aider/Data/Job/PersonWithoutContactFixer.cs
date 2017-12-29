@@ -111,7 +111,7 @@ namespace Epsitec.Aider.Data.Job
 							var isHead					= isHead1 || isHead2;
 
 							AiderContactEntity.Create (businessContext, person, existingHousehold1, isHead);
-							PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°1(Head:{1})", person.GetDisplayName (), existingHousehold1.GetHeadNames ().Item2.First ());
+							PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°1(Head:{1})", person.GetDisplayName (), existingHousehold1.GetHeadNames (compact: false).Item2.First ());
 
 							if(isSameReportedPerson || !hasMultiReportedPerson)
 							{
@@ -125,7 +125,7 @@ namespace Epsitec.Aider.Data.Job
 							var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, person.eCH_Person.ReportedPerson1);
 							if (addressTemplate.StreetHouseNumberAndComplement.IsNullOrWhiteSpace ())
 							{
-								PersonsWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
+								PersonsWithoutContactFixer.LogToConsole ("Warning address incomplete for: {0}", person.GetDisplayName ());
 							}
 
 							var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);
@@ -149,7 +149,7 @@ namespace Epsitec.Aider.Data.Job
 							if (existingHousehold2.IsNotNull ())
 							{
 								AiderContactEntity.Create (businessContext, person, existingHousehold2, isHead);
-								PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°2(Head:{1})", person.GetDisplayName (), existingHousehold2.GetHeadNames ().Item1);
+								PersonsWithoutContactFixer.LogToConsole ("Corrected: {0} added to household n°2(Head:{1})", person.GetDisplayName (), existingHousehold2.GetHeadNames (compact: false).Item1);
 							}
 							else
 							{
@@ -158,7 +158,7 @@ namespace Epsitec.Aider.Data.Job
 								var addressTemplate = EChDataHelpers.CreateAiderAddressEntityTemplate (businessContext, person.eCH_Person.ReportedPerson2);
 								if (addressTemplate.StreetHouseNumberAndComplement.IsNullOrWhiteSpace ())
 								{
-									PersonsWithoutContactFixer.LogToConsole ("Warning address imcomplete for: {0}", person.GetDisplayName ());
+									PersonsWithoutContactFixer.LogToConsole ("Warning address incomplete for: {0}", person.GetDisplayName ());
 								}
 
 								var newHousehold	= AiderHouseholdEntity.Create (businessContext, addressTemplate);

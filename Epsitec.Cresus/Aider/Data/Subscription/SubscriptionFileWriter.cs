@@ -386,12 +386,12 @@ namespace Epsitec.Aider.Data.Subscription
 		{
 			var household = subscription.Household;
 
-			var names = household.GetHeadNames ();
+			var names = household.GetHeadNames (compact: false);
 			
 			var firstnames = names.Item1;
 			var lastnames  = names.Item2;
 
-			title = SubscriptionFileWriter.Format (household.GetHonorific (false), SubscriptionFileLine.TitleLength, encodingHelper);
+			title = SubscriptionFileWriter.Format (household.GetHonorificTitles (), SubscriptionFileLine.TitleLength, encodingHelper);
 
 			if (firstnames.Count == 1)
 			{
@@ -425,9 +425,9 @@ namespace Epsitec.Aider.Data.Subscription
 
 			SubscriptionFileWriter.GetFirstAndLastname (
 				() => rawFirstname,
-				() => NameProcessor.GetAbbreviatedFirstname (rawFirstname),
+				() => NameProcessor.GetAbbreviatedFirstName (rawFirstname),
 				() => rawLastname,
-				() => NameProcessor.GetShortenedLastname (rawLastname),
+				() => NameProcessor.GetShortenedLastName (rawLastname),
 				encodingHelper,
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.LastnameLength,
@@ -450,10 +450,10 @@ namespace Epsitec.Aider.Data.Subscription
 				() => string.Join
 					(
 						" et ",
-						rawFirstnames.Select (n => NameProcessor.GetAbbreviatedFirstname (n))
+						rawFirstnames.Select (n => NameProcessor.GetAbbreviatedFirstName (n))
 					),
 				() => rawLastname,
-				() => NameProcessor.GetShortenedLastname (rawLastname),
+				() => NameProcessor.GetShortenedLastName (rawLastname),
 				encodingHelper,
 				SubscriptionFileLine.FirstnameLength,
 				SubscriptionFileLine.LastnameLength,
@@ -498,9 +498,9 @@ namespace Epsitec.Aider.Data.Subscription
 					SubscriptionFileWriter.GetFirstAndLastname
 					(
 						() => rawFirstnames[i],
-						() => NameProcessor.GetAbbreviatedFirstname (rawFirstnames[i]),
+						() => NameProcessor.GetAbbreviatedFirstName (rawFirstnames[i]),
 						() => rawLastnames[i],
-						() => NameProcessor.GetShortenedLastname (rawLastnames[i]),
+						() => NameProcessor.GetShortenedLastName (rawLastnames[i]),
 						encodingHelper,
 						maxNamePartLength,
 						maxNamePartLength,

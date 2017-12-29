@@ -571,6 +571,50 @@ namespace Epsitec.Aider.Entities
 			
 		}
 
+		public static void DeleteDuplicateContacts(BusinessContext businessContext, AiderHouseholdEntity household, IEnumerable<AiderContactEntity> contactsEnum)
+		{
+			var contacts = contactsEnum.ToList ();
+			var persons  = contacts.Select (x => x.Person).Distinct ().ToList ();
+
+			foreach (var person in persons)
+			{
+				if (contacts.Count (x => x.Person == person) > 1)
+				{
+					AiderContactEntity.DeleteSamePersonDuplicateContacts (businessContext, household, person, contacts);
+				}
+			}
+		}
+
+		private static void DeleteSamePersonDuplicateContacts(BusinessContext businessContext, AiderHouseholdEntity household, AiderPersonEntity person, List<AiderContactEntity> contacts)
+		{
+			var keep   = default (AiderContactEntity);
+			var remove = new List<AiderContactEntity> ();
+			
+			foreach (var contact in contacts)
+			{
+				if (contact.Person == person)
+				{
+					if ((contact.ContactType == ContactType.PersonHousehold) &&
+						(keep.IsNull ()))
+					{
+						keep = contact;
+					}
+					else
+					{
+						remove.Add (contact);
+					}
+				}
+			}
+
+			if (keep.IsNotNull ())
+			{
+				foreach (var contact in remove)
+				{
+					AiderContactEntity.Delete (businessContext, contact, deleteParticipations: false);
+				}
+			}
+		}
+
 		public static void DeleteBadContact(BusinessContext businessContext, AiderContactEntity goodContact, AiderContactEntity badContact)
 		{
 			var participationsBackup = new List<AiderGroupParticipantEntity> ();

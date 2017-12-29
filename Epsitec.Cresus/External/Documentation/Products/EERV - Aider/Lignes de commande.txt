@@ -1269,6 +1269,51 @@ Lancé le 15.10.2017
 -echupdate -newechfile:S:\eerv\eerv-2017-10-07.xml -oldechfile:S:\eerv\eerv-2017-09-30.xml -output:s:\eerv\ech-diff-2017-10-07.md
 -echupdate -newechfile:S:\eerv\eerv-2017-10-14.xml -oldechfile:S:\eerv\eerv-2017-10-07.xml -output:s:\eerv\ech-diff-2017-10-14.md
 
+-exportsubscriptions -output:export-2017-11-xx.txt -error:error-2017-11-xx.txt -exclude-district-error:false
+
+Lancé le 05.11.2017
+-------------------
+
+-clearwarnings -beforedate:2017-08-01 -killpersons:true -createsubscriptions:true
+-echupdate -newechfile:S:\eerv\eerv-2017-10-21.xml -oldechfile:S:\eerv\eerv-2017-10-14.xml -output:s:\eerv\ech-diff-2017-10-21.md
+-echupdate -newechfile:S:\eerv\eerv-2017-10-28.xml -oldechfile:S:\eerv\eerv-2017-10-21.xml -output:s:\eerv\ech-diff-2017-10-28.md
+-echupdate -newechfile:S:\eerv\eerv-2017-11-04.xml -oldechfile:S:\eerv\eerv-2017-10-28.xml -output:s:\eerv\ech-diff-2017-11-04.md
+
+Lancé le 12.11.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-11-11.xml -oldechfile:S:\eerv\eerv-2017-11-04.xml -output:s:\eerv\ech-diff-2017-11-11.md
+-exportsubscriptions -output:export-2017-12-xx.txt -error:error-2017-12-xx.txt -exclude-district-error:false
+
+Lancé le 21.11.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-11-18.xml -oldechfile:S:\eerv\eerv-2017-11-11.xml -output:s:\eerv\ech-diff-2017-11-18.md
+
+
+Lancé le 03.12.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-11-25.xml -oldechfile:S:\eerv\eerv-2017-11-18.xml -output:s:\eerv\ech-diff-2017-11-25.md
+-echupdate -newechfile:S:\eerv\eerv-2017-12-02.xml -oldechfile:S:\eerv\eerv-2017-11-25.xml -output:s:\eerv\ech-diff-2017-12-02.md
+
+Lancé le 10.12.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-12-09.xml -oldechfile:S:\eerv\eerv-2017-12-02.xml -output:s:\eerv\ech-diff-2017-12-09.md
+
+Lancé le 16.12.2017
+-------------------
+
+-clearwarnings -beforedate:2017-09-16 -killpersons:true -createsubscriptions:true
+-echupdate -newechfile:S:\eerv\eerv-2017-12-16.xml -oldechfile:S:\eerv\eerv-2017-12-09.xml -output:s:\eerv\ech-diff-2017-12-16.md
+
+
+Lancé le 28.12.2017
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2017-12-23.xml -oldechfile:S:\eerv\eerv-2017-12-16.xml -output:s:\eerv\ech-diff-2017-12-23.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
@@ -1277,6 +1322,5 @@ converti avec EditPad Pro le CSV en UTF-8.
 
 Supprimer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.meta
 ___________________________________________________________________________________________________________________________________
-
 
 

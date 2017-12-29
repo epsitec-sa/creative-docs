@@ -324,7 +324,7 @@ namespace Epsitec.Common.Types.Converters
 			}
 		}
 		
-		private static char StripAccent(char c)
+		public static char StripAccent(char c)
 		{
 			//	TODO: compléter la liste pour qu'elle soit complète
 

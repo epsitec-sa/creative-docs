@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Aider.Enumerations;
@@ -77,32 +77,19 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public FormattedText GetAddressRecipientText()
+		public string GetAddressRecipientText(IList<AiderPersonEntity> members = null)
 		{
 			if (this.Contacts.Count == 0)
 			{
 				// This may happen for corrupted/in deletion households.
 
-				return FormattedText.Empty;
+				return "";
 			}
 
-			var names = this.GetAddressName ();
-			if (names.Length > 20)
-			{
-				return TextFormatter.FormatText
-				(
-					this.GetHonorific (true),
-					names
-				);
-			}
-			else
-			{
-				return TextFormatter.FormatText
-				(
-					this.GetHonorific (false),
-					names
-				);
-			}
+			var titles = this.GetHonorificTitles (members, autoFamily: members == null);
+			var names  = this.GetAddressNames (members);
+
+			return titles + "\n" + names;
 		}
 
 
@@ -124,15 +111,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public string GetHonorific(bool abbreviated)
+		public string GetHonorificTitles(IList<AiderPersonEntity> members = null, bool autoFamily = true)
 		{
-			var members = this.GetMembers ();
+			if (members == null)
+			{
+				members = this.GetMembers ();
+			}
 
 			// If we have a single member, we return its title instead of the title of the
 			// household.
 			if (members.Count == 1)
 			{
-				return members[0].MrMrs.GetText (abbreviated);
+				return members[0].MrMrs.GetText ();
 			}
 
 			var honorific = this.HouseholdMrMrs;
@@ -146,7 +136,8 @@ namespace Epsitec.Aider.Entities
 				case HouseholdMrMrs.Messieurs:
 				case HouseholdMrMrs.Mesdames:
 					// If we have a single head and some children, we use the "Family" title.
-					if (this.GetHeads ().Count == 1)
+					if ((this.GetHeads ().Count == 1) &&
+						(autoFamily == true))
 					{
 						if (string.IsNullOrWhiteSpace (this.HouseholdName))
 						{
@@ -155,15 +146,15 @@ namespace Epsitec.Aider.Entities
 					}
 
 					// Only if we have 2 heads, do we use the real title.
-					return honorific.GetText (abbreviated);
+					return honorific.GetText ();
 
 				case HouseholdMrMrs.Auto:
-					honorific = this.ResolveAuto ();
+					honorific = autoFamily ? this.ResolveAuto () : this.ResolveAuto (members);
 					goto again;
 
 				case HouseholdMrMrs.Famille:
 				case HouseholdMrMrs.None:
-					return HouseholdMrMrs.Famille.GetText (abbreviated);
+					return HouseholdMrMrs.Famille.GetText ();
 
 				default:
 					throw new NotImplementedException ();
@@ -171,29 +162,49 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public string GetAddressName()
+		public string GetAddressNames(IList<AiderPersonEntity> members = null, int maxLength = 30)
 		{
-			if (this.GetMembers ().Count == 0)
+			var heads = members ?? this.GetHeadForNames ();
+			var names = this.GetAddressNames (heads, compact: false);
+			
+			if (names.Length > maxLength)
+			{
+				names = this.GetAddressNames (heads, compact: true);
+
+				if (names.Length > maxLength)
+				{
+
+					names = names.Substring (0, maxLength);
+				}
+			}
+
+			return names;
+		}
+		
+		private string GetAddressNames(IList<AiderPersonEntity> members, bool compact)
+		{
+			if (members.Count == 0)
 			{
 				return "";
 			}
 
-			var names = this.GetHeadNames ();
-			var firstnames = names.Item1;
-			var lastnames = names.Item2;
+			var names = this.GetHeadNames (members, compact);
 
-			if (firstnames.Count == 1)
+			var firstNames = names.Item1;
+			var lastNames  = names.Item2;
+
+			if (firstNames.Count == 1)
 			{
-				return firstnames[0] + " " + lastnames[0];
+				return firstNames[0] + " " + lastNames[0];
 			}
-			else if (firstnames.Count == 2 && lastnames.Count == 1)
+			else if (firstNames.Count == 2 && lastNames.Count == 1)
 			{
-				return firstnames[0] + " et " + firstnames[1] + " " + lastnames[0];
+				return firstNames[0] + " et " + firstNames[1] + " " + lastNames[0];
 			}
-			else if (firstnames.Count == 2 && lastnames.Count == 2)
+			else if (firstNames.Count == 2 && lastNames.Count == 2)
 			{
-				return firstnames[0] + " " + lastnames[0] + " et "
-					+ firstnames[1] + " " + lastnames[1];
+				return firstNames[0] + " " + lastNames[0] + " et "
+					+ firstNames[1] + " " + lastNames[1];
 			}
 			else
 			{
@@ -201,22 +212,24 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 
-
-		public Tuple<List<string>, List<string>> GetHeadNames()
+		public Tuple<List<string>, List<string>> GetHeadNames(bool compact)
 		{
-			var heads = this.GetHeadForNames ();
+			return this.GetHeadNames (this.GetHeadForNames (), compact);
+		}
 
-			var firstnames = heads
-				.Select (p => p.GetCallName ())
-				.ToList ();
+		public Tuple<List<string>, List<string>> GetHeadNames(IList<AiderPersonEntity> heads, bool compact)
+		{
+			var firstNames = compact
+				? heads.Select (p => NameProcessor.GetAbbreviatedFirstName (p.GetCallName ())).ToList ()
+				: heads.Select (p => p.GetCallName ()).ToList ();
 
-			var lastnames = !string.IsNullOrEmpty (this.HouseholdName)
+			var lastNames = !string.IsNullOrEmpty (this.HouseholdName)
 				? new List<string> () { this.HouseholdName }
 				: heads.Select (p => p.eCH_Person.PersonOfficialName).ToList ();
 
-			lastnames = NameProcessor.FilterLastnamePseudoDuplicates (lastnames);
+			lastNames = NameProcessor.FilterLastNamePseudoDuplicates (lastNames);
 
-			return Tuple.Create (firstnames, lastnames);
+			return Tuple.Create (firstNames, lastNames);
 		}
 
 
@@ -229,7 +242,14 @@ namespace Epsitec.Aider.Entities
 			{
 				return HouseholdMrMrs.Famille;
 			}
+			else
+			{
+				return this.ResolveAuto (heads);
+			}
+		}
 
+		private HouseholdMrMrs ResolveAuto(IList<AiderPersonEntity> heads)
+		{
 			var manCount   = heads.Count (x => x.eCH_Person.PersonSex == PersonSex.Male);
 			var womanCount = heads.Count (x => x.eCH_Person.PersonSex == PersonSex.Female);
 
@@ -547,7 +567,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetHonorificDisplay(ref string value)
 		{
-			value = this.GetHonorific (false);
+			value = this.GetHonorificTitles ();
 		}
 
 
@@ -563,11 +583,12 @@ namespace Epsitec.Aider.Entities
 
 			if (this.GetMembers ().Count >= 1)
 			{
-				var names = this.GetHeadNames ();
-				var firstnames = names.Item1;
-				var lastnames = names.Item2;
+				var names = this.GetHeadNames (compact: false);
+				
+				var firstNames = names.Item1;
+				var lastNames  = names.Item2;
 
-				value = firstnames[0] + " " + lastnames[0];
+				value = firstNames[0] + " " + lastNames[0];
 			}
 		}
 
@@ -584,14 +605,15 @@ namespace Epsitec.Aider.Entities
 
 			if (this.GetMembers ().Count >= 1)
 			{
-				var names = this.GetHeadNames ();
-				var firstnames = names.Item1;
-				var lastnames = names.Item2;
+				var names = this.GetHeadNames (compact: false);
 
-				if (firstnames.Count > 1)
+				var firstNames = names.Item1;
+				var lastNames  = names.Item2;
+
+				if (firstNames.Count > 1)
 				{
-					var index = lastnames.Count > 1 ? 1 : 0;
-					value = firstnames[1] + " " + lastnames[index];
+					var index = lastNames.Count > 1 ? 1 : 0;
+					value = firstNames[1] + " " + lastNames[index];
 				}
 			}
 		}
@@ -659,7 +681,7 @@ namespace Epsitec.Aider.Entities
 				return "";
 			}
 
-			var names = this.GetHeadNames ();
+			var names = this.GetHeadNames (compact: false);
 			var firstnames = names.Item1;
 			var lastnames = names.Item2;
 

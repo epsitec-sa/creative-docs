@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2012-2017, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 
@@ -10,11 +13,47 @@ namespace Epsitec.Common.Text
 {
 	public static class NameProcessor
 	{
-		public static string GetAbbreviatedFirstname(string firstname)
+		public static bool IsConsonant(char c)
 		{
-			if (string.IsNullOrEmpty (firstname))
+			c = char.ToUpperInvariant (Epsitec.Common.Types.Converters.TextConverter.StripAccent (c));
+
+			switch (c)
 			{
-				return firstname;
+				case 'A':
+				case 'E':
+				case 'I':
+				case 'O':
+				case 'U':
+				case 'Y':
+					return false;
+				default:
+					return c >= 'A' && c <= 'Z';
+			}
+		}
+		
+		public static bool IsVowel(char c)
+		{
+			c = char.ToUpperInvariant (Epsitec.Common.Types.Converters.TextConverter.StripAccent (c));
+
+			switch (c)
+			{
+				case 'A':
+				case 'E':
+				case 'I':
+				case 'O':
+				case 'U':
+				case 'Y':
+					return true;
+				default:
+					return false;
+			}
+		}
+		
+		public static string GetAbbreviatedFirstName(string name)
+		{
+			if (string.IsNullOrEmpty (name))
+			{
+				return name;
 			}
 
 			// For the abbreviation, we will keep only the first part of the name, i.e. everything
@@ -22,9 +61,9 @@ namespace Epsitec.Common.Text
 
 			int? whitespaceIndex = null;
 
-			for (int i = 0; i < firstname.Length; i++)
+			for (int i = 0; i < name.Length; i++)
 			{
-				if (char.IsWhiteSpace (firstname[i]))
+				if (char.IsWhiteSpace (name[i]))
 				{
 					whitespaceIndex = i;
 					break;
@@ -33,31 +72,32 @@ namespace Epsitec.Common.Text
 
 			if (whitespaceIndex.HasValue)
 			{
-				firstname = firstname.Substring (0, whitespaceIndex.Value);
+				name = name.Substring (0, whitespaceIndex.Value);
 			}
 
 			// Now we want to abbreviate each token and keep the token separators. A token is
-			// defineed as a sequence of letters (with accents). They are separated by separators,
+			// defined as a sequence of letters (with accents). They are separated by separators,
 			// which are everything else (usually '-').
 
 			var result = new StringBuilder ();
+			var token = new StringBuilder ();
 
-			// Here we store the first symbol of the curren token, so that when we reach its end, we
+			// Here we store the first symbol of the current token, so that when we reach its end, we
 			// can make the abbreviation.
 			char? firstTokenSymbol = null;
 
-			// Here we store the fact whether the token has one or more sympbols, so that we know
+			// Here we store the fact whether the token has one or more symbols, so that we know
 			// whether or not we must put a dot in the abbreviation.
 			bool singleLetterToken = true;
 
-			for (int i = 0; i < firstname.Length; i++)
+			for (int i = 0; i < name.Length; i++)
 			{
-				var c = firstname[i];
+				var c = name[i];
 
 				bool isPartOfToken = NameProcessor.IsPartOfToken (c);
-				bool isLastSymbol = (i == firstname.Length - 1);
+				bool isLastSymbol = (i == name.Length - 1);
 
-				// Process the current sympbol as part of the token if it is.
+				// Process the current symbol as part of the token if it is.
 				if (isPartOfToken)
 				{
 					if (firstTokenSymbol.HasValue)
@@ -69,6 +109,7 @@ namespace Epsitec.Common.Text
 						firstTokenSymbol = c;
 						singleLetterToken = true;
 					}
+					token.Append (c);
 				}
 
 				// Finish the token if the current symbol is not part of a token or if it is the
@@ -77,14 +118,19 @@ namespace Epsitec.Common.Text
 				{
 					if (firstTokenSymbol.HasValue)
 					{
-						result.Append (firstTokenSymbol.Value);
 
-						if (!singleLetterToken)
+						if (singleLetterToken)
 						{
+							result.Append (firstTokenSymbol.Value);
+						}
+						else
+						{
+							result.Append (NameProcessor.ShortenFirstName (token.ToString ()));
 							result.Append ('.');
 						}
 
 						firstTokenSymbol = null;
+						token.Length = 0;
 					}
 				}
 
@@ -96,6 +142,43 @@ namespace Epsitec.Common.Text
 			}
 
 			return result.ToString ();
+		}
+
+		private static string ShortenFirstName(string name)
+		{
+			if (name.Length > 2)
+			{
+				var prefix = name.Substring (0, 3);
+				switch (prefix.ToUpperInvariant ())
+				{
+					case "SCH":
+					case "CHR":
+					case "SHR":
+					case "SHL":
+						return prefix;
+				}
+			}
+			if (name.Length > 1)
+			{
+				var letter1 = name[0];
+				var letter2 = char.ToUpperInvariant (name[1]);
+				
+				if (letter2 == 'H')
+				{
+					return name.Substring (0, 2);
+				}
+
+				if (NameProcessor.IsConsonant (letter1))
+				{
+					switch (letter2)
+					{
+						case 'R':
+						case 'L':
+							return name.Substring (0, 2);
+					}
+				}
+			}
+			return name.Substring (0, 1);
 		}
 
 		private static bool IsPartOfToken(char c)
@@ -113,11 +196,11 @@ namespace Epsitec.Common.Text
 			return true;
 		}
 
-		public static string GetShortenedLastname(string lastname)
+		public static string GetShortenedLastName(string name)
 		{
-			if (string.IsNullOrEmpty (lastname))
+			if (string.IsNullOrEmpty (name))
 			{
-				return lastname;
+				return name;
 			}
 
 			// We keep only the part of the name before the first space. The only exception is that
@@ -138,9 +221,9 @@ namespace Epsitec.Common.Text
 			// or not.
 			var tokenSize = 0;
 
-			for (int i = 0; i < lastname.Length; i++)
+			for (int i = 0; i < name.Length; i++)
 			{
-				if (lastname[i] == ' ')
+				if (name[i] == ' ')
 				{
 					// This is a separator, so we must terminate the token.
 
@@ -164,17 +247,17 @@ namespace Epsitec.Common.Text
 				}
 			}
 
-			return lastname.Substring (0, shortSize);
+			return name.Substring (0, shortSize);
 		}
 
-		public static List<string> FilterLastnamePseudoDuplicates(IEnumerable<string> lastnames)
+		public static List<string> FilterLastNamePseudoDuplicates(IEnumerable<string> lastNames)
 		{
 			// Pseudo duplicates are names that contains another name. Like when we have a family
 			// where the wife has kept its maiden name and appended the name of her husband to it.
 			// For instance the husband is called "Albert Dupond" and the wife is called "Ginette
 			// Dupond-Dupuis" or "Ginette Dupuis-Dupond".
 
-			var originalNames = lastnames
+			var originalNames = lastNames
 				.Distinct ()
 				.ToList ();
 

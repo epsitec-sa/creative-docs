@@ -594,7 +594,7 @@ namespace Epsitec.Aider.Entities
 			businessContext.SaveChanges (LockingPolicy.KeepLock);
 		}
 
-		private void UpdateRecipientLabel(BusinessContext businessContext, List<AiderMailingParticipantEntity> created)
+		private void UpdateRecipientLabel(BusinessContext businessContext, IEnumerable<AiderMailingParticipantEntity> participants)
 		{
 			var dataContext      = businessContext.DataContext;
 			var excludedContacts = new HashSet<AiderContactEntity> (this.GetExcludedRecipients (dataContext));
@@ -602,45 +602,16 @@ namespace Epsitec.Aider.Entities
 			switch (this.GroupMode)
 			{
 				case MailingGroupMode.ByContact:
-					created.ForEach (p =>
-					{
-						p.CustomRecipient = p.Contact.GetAddressRecipientText ();
-					});
+					participants.ForEach (p => p.UpdateRecipientByContact ());
 					break;
 
 				case MailingGroupMode.ByHouseholdUsingDesc:
-					created.ForEach (p =>
-					{
-						p.CustomRecipient = p.Contact.Household.GetAddressLabelText ().ToSimpleText ();
-					});
+					participants.ForEach (p => p.UpdateRecipientByHouseholdUsingDesc ());
 					break;
 
 				case MailingGroupMode.ByHouseholdUsingParticipants:
 					var contactsByHousehold = this.GetParticipantsByContact (businessContext.DataContext).ToLookup (c => c.Household);
-					created.ForEach (p =>
-					{
-						var contacts   = contactsByHousehold[p.Contact.Household];
-						var contactsByName     = contacts.Where (c => !excludedContacts.Contains (c)).ToLookup (c => c.Person.eCH_Person.PersonOfficialName, c => c);
-						var recipients = new List<string> ();
-						contactsByName.ForEach (n =>
-						{
-							if (n.Count () == 1)
-							{
-								recipients.Add (n.First ().GetAddressRecipientText ());
-							}
-							else if (n.Count () == 2)
-							{
-								recipients.Add (string.Join (" et ", n.Select (c => c.Person.CallNameDisplay)) + " " + n.Key);
-							}
-							else
-							{
-								var last = n.Last ().Person.CallNameDisplay;
-								var firsts = n.Take (n.Count () - 1).Select (c => c.Person.CallNameDisplay);
-								recipients.Add (string.Join (", ", firsts) + " et " + last + " " + n.Key);
-							}
-						});
-						p.CustomRecipient = string.Join (" et ", recipients);
-					});
+					participants.ForEach (p => p.UpdateRecipientByHouseholdUsingParticipants (excludedContacts, contactsByHousehold));
 					break;
 			}
 		}

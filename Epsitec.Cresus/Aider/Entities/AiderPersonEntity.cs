@@ -229,7 +229,7 @@ namespace Epsitec.Aider.Entities
 
 		public string GetShortCallName()
 		{
-			return NameProcessor.GetAbbreviatedFirstname (this.GetCallName ());
+			return NameProcessor.GetAbbreviatedFirstName (this.GetCallName ());
 		}
 
 
@@ -316,12 +316,13 @@ namespace Epsitec.Aider.Entities
 
 		public void AssignNewHousehold(BusinessContext context, bool move)
 		{
-			var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
-			var mainContact  = this.MainContact;
+			var mainContact = this.MainContact;
 
 			if ((mainContact.IsNotNull ()) &&
 				(mainContact.Address.IsNotNull ()))
 			{
+				var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+				
 				var oldAddress = mainContact.Address;
 				var newAddress = newHousehold.Address;
 
@@ -331,7 +332,24 @@ namespace Epsitec.Aider.Entities
 
 			if (move)
 			{
-				AiderContactEntity.ChangeHousehold (context, this.MainContact, newHousehold, isHead: true);
+				if (mainContact.IsNull ())
+				{
+					//	This happens if the main contact was deleted; if a household is still
+					//	present for this person, recreate the main contact for the person:
+
+					var currentHousehold = this.Households.FirstOrDefault ();
+
+					if (currentHousehold.IsNotNull ())
+					{
+						AiderContactEntity.Create (context, this, currentHousehold, false);
+					}
+				}
+				else
+				{
+					var newHousehold = context.CreateAndRegisterEntity<AiderHouseholdEntity> ();
+
+					AiderContactEntity.ChangeHousehold (context, this.MainContact, newHousehold, isHead: true);
+				}
 			}
 		}
 

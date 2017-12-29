@@ -13,7 +13,7 @@ namespace Epsitec.Aider.Enumerations
 			return TextGenerator.GetText (value ?? PersonMrMrs.None, abbreviated);
 		}
 
-		public static string GetText(this PersonMrMrs value, bool abbreviated)
+		public static string GetText(this PersonMrMrs value, bool abbreviated = false)
 		{
 			return abbreviated
 				? TextGenerator.GetShortText (value)
@@ -98,7 +98,7 @@ namespace Epsitec.Aider.Enumerations
 			}
 		}
 
-		public static string GetText(this HouseholdMrMrs value, bool abbreviated)
+		public static string GetText(this HouseholdMrMrs value, bool abbreviated = false)
 		{
 			return abbreviated
 				? value.GetShortText ()
