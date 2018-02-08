@@ -165,33 +165,49 @@ namespace Epsitec.Aider.Entities
 		public string GetAddressNames(IList<AiderPersonEntity> members = null, int maxLength = 30)
 		{
 			var heads = members ?? this.GetHeadForNames ();
-			var names = this.GetAddressNames (heads, compact: false);
+			var names = this.GetAddressNames (heads, Compactness.Default);
 			
 			if (names.Length > maxLength)
 			{
-				names = this.GetAddressNames (heads, compact: true);
+				names = this.GetAddressNames (heads, Compactness.ShortenFirstNames);
 
 				if (names.Length > maxLength)
 				{
+					names = this.GetAddressNames (heads, Compactness.OmitFirstNames);
 
-					names = names.Substring (0, maxLength);
+					if (names.Length > maxLength)
+					{
+						names = names.Substring (0, maxLength);
+					}
 				}
 			}
 
 			return names;
 		}
+
+		enum Compactness
+		{
+			Default,
+			ShortenFirstNames,
+			OmitFirstNames,
+		}
 		
-		private string GetAddressNames(IList<AiderPersonEntity> members, bool compact)
+		private string GetAddressNames(IList<AiderPersonEntity> members, Compactness compactness)
 		{
 			if (members.Count == 0)
 			{
 				return "";
 			}
 
-			var names = this.GetHeadNames (members, compact);
+			var names = this.GetHeadNames (members, compactness == Compactness.Default ? false : true);
 
 			var firstNames = names.Item1;
 			var lastNames  = names.Item2;
+
+			if (compactness == Compactness.OmitFirstNames)
+			{
+				return firstNames[0] + " " + string.Join ("-", lastNames);
+			}
 
 			if (firstNames.Count == 1)
 			{
@@ -201,14 +217,25 @@ namespace Epsitec.Aider.Entities
 			{
 				return firstNames[0] + " et " + firstNames[1] + " " + lastNames[0];
 			}
+			else if (lastNames.Count == 1)
+			{
+				var firstFirstnames = string.Join (", ", firstNames.Take (firstNames.Count-1));
+				var lastFirstname   = firstNames.Skip (firstNames.Count-1).Single ();
+				
+				return firstFirstnames + " et " + lastFirstname + " " + lastNames[0];
+			}
 			else if (firstNames.Count == 2 && lastNames.Count == 2)
 			{
 				return firstNames[0] + " " + lastNames[0] + " et "
-					+ firstNames[1] + " " + lastNames[1];
+					 + firstNames[1] + " " + lastNames[1];
 			}
 			else
 			{
-				throw new NotImplementedException ();
+				var firstFirstnames = string.Join (", ", firstNames.Take (firstNames.Count-1));
+				var lastFirstname   = firstNames.Skip (firstNames.Count-1).Single ();
+				var allLastNames    = string.Join ("-", lastNames);
+				
+				return firstFirstnames + " et " + lastFirstname + " " + allLastNames;
 			}
 		}
 

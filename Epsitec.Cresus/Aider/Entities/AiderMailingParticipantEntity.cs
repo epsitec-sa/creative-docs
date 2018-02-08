@@ -47,11 +47,78 @@ namespace Epsitec.Aider.Entities
 			this.CustomRecipient = this.Contact.Household.GetAddressRecipientText ();
 		}
 
+		class HouseholdPersonComparer : IComparer<AiderPersonEntity>
+		{
+			public HouseholdPersonComparer(AiderHouseholdEntity household)
+			{
+				this.household = household;
+			}
+
+			#region IComparer<AiderPersonEntity> Members
+
+			public int Compare(AiderPersonEntity x, AiderPersonEntity y)
+			{
+				if (x == y)
+				{
+					return 0;
+				}
+				//	First head of household (males first), then by decreasing age.
+
+				var headX = this.household.IsHead (x);
+				var headY = this.household.IsHead (y);
+				
+				if (headX != headY)
+				{
+					return headX ? -1 : 1;
+				}
+
+				if (y.eCH_Person.IsNull ())
+				{
+					return -1;
+				}
+				if (x.eCH_Person.IsNull ())
+				{
+					return 1;
+				}
+
+				if (headX)
+				{
+					var maleX = x.eCH_Person.PersonSex == PersonSex.Male;
+					var maleY = y.eCH_Person.PersonSex == PersonSex.Male;
+
+					if (maleX != maleY)
+					{
+						return maleX ? -1 : 1;
+					}
+				}
+
+				var birthdateX = x.eCH_Person.PersonDateOfBirth;
+				var birthdateY = y.eCH_Person.PersonDateOfBirth;
+
+				if (birthdateY == null)
+				{
+					return -1;
+				}
+				if (birthdateX == null)
+				{
+					return 1;
+				}
+
+				return birthdateY.Value - birthdateX.Value;
+			}
+
+			#endregion
+
+			private readonly AiderHouseholdEntity household;
+		}
+
 		public void UpdateRecipientByHouseholdUsingParticipants(HashSet<AiderContactEntity> excludedContacts, ILookup<AiderHouseholdEntity, AiderContactEntity> contactsByHousehold)
 		{
+			var comparer = new HouseholdPersonComparer (this.Contact.Household);
 			var persons = contactsByHousehold[this.Contact.Household]
 				.Where (c => !excludedContacts.Contains (c))
 				.Select (c => c.Person)
+				.OrderBy (p => p, comparer)
 				.ToList ();
 
 			this.CustomRecipient = this.Contact.Household.GetAddressRecipientText (persons);
