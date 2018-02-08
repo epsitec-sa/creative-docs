@@ -24,7 +24,14 @@ namespace Epsitec.Common.Pdf.Labels
 				}
 			}
 
-			bounds.Deflate (layout.LabelMargins);
+			var margins = layout.LabelMargins;
+
+			if (margins.Right > 10)
+			{
+				margins.Right = 10;  // limite la marge de droite à 1mm pour éviter de tronquer
+			}
+
+			bounds.Deflate (margins);
 			
 			this.RenderLabel (port, text, senderText, bounds, layout);
 		}
