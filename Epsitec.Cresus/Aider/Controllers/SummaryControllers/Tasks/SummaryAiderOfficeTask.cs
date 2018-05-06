@@ -61,9 +61,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 							.Title ("Choisir une action:")
 							.Text (task.GetTaskHelp ())
 							.EnableActionButton<ActionAiderOfficeTaskViewController11KeepParticipation> ()
-							.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ()
-							.EnableActionButton<ActionAiderOfficeTaskViewController21KeepAllParticipations> ()
-							.EnableActionButton<ActionAiderOfficeTaskViewController20RemoveAllParticipations> ();
+							.EnableActionButton<ActionAiderOfficeTaskViewController10RemoveParticipation> ();
+//							.EnableActionButton<ActionAiderOfficeTaskViewController21KeepAllParticipations> ()
+//							.EnableActionButton<ActionAiderOfficeTaskViewController20RemoveAllParticipations> ()
 					}
 
 					break;

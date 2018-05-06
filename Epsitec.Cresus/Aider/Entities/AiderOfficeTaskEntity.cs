@@ -77,7 +77,7 @@ namespace Epsitec.Aider.Entities
 					}
 					else
 					{
-						help = help.AppendLine ("La personne à changé de paroisse. Souhaitez-vous");
+						help = help.AppendLine ("La personne a changé de paroisse. Souhaitez-vous");
 						help = help.AppendLine ("tout de même conserver cette participation ?");
 					}
 
