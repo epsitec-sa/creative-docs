@@ -1337,11 +1337,62 @@ Lancé le 21.01.2018
 -echupdate -newechfile:S:\eerv\eerv-2018-01-20.xml -oldechfile:S:\eerv\eerv-2018-01-13.xml -output:s:\eerv\ech-diff-2018-01-20.md
 
 
-Lancé le 04.02.2018
+Lancé le 11.02.2018
 -------------------
 
--echupdate -newechfile:S:\eerv\eerv-2018-02-03.xml -oldechfile:S:\eerv\eerv-2018-01-20.xml -output:s:\eerv\ech-diff-2018-02-03.md
+-echupdate -newechfile:S:\eerv\eerv-2018-02-10.xml -oldechfile:S:\eerv\eerv-2018-02-03.xml -output:s:\eerv\ech-diff-2018-02-10.md
+-exportsubscriptions -output:export-2018-02-xx.txt -error:error-2018-02-xx.txt -exclude-district-error:false
 
+
+Lancé le 11.03.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-03-10.xml -oldechfile:S:\eerv\eerv-2018-02-10.xml -output:s:\eerv\ech-diff-2018-03-10.md
+
+
+Lancé le 18.03.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-03-17.xml -oldechfile:S:\eerv\eerv-2018-03-10.xml -output:s:\eerv\ech-diff-2018-03-17.md
+-exportsubscriptions -output:export-2018-03-xx.txt -error:error-2018-03-xx.txt -exclude-district-error:false
+
+
+Lancé le 25.03.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-03-24.xml -oldechfile:S:\eerv\eerv-2018-03-17.xml -output:s:\eerv\ech-diff-2018-03-24.md
+
+
+Lancé le 01.04.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-03-31.xml -oldechfile:S:\eerv\eerv-2018-03-24.xml -output:s:\eerv\ech-diff-2018-03-31.md
+
+
+Lancé le 15.04.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-04-07.xml -oldechfile:S:\eerv\eerv-2018-03-31.xml -output:s:\eerv\ech-diff-2018-04-07.md
+-echupdate -newechfile:S:\eerv\eerv-2018-04-14.xml -oldechfile:S:\eerv\eerv-2018-04-07.xml -output:s:\eerv\ech-diff-2018-04-14.md
+-exportsubscriptions -output:export-2018-04-xx.txt -error:error-2018-04-xx.txt -exclude-district-error:false
+
+Lancé le 21.04.2018
+-------------------
+
+-clearwarnings -beforedate:2018-01-01 -killpersons:true -createsubscriptions:true
+-echupdate -newechfile:S:\eerv\eerv-2018-04-21.xml -oldechfile:S:\eerv\eerv-2018-04-14.xml -output:s:\eerv\ech-diff-2018-04-21.md
+
+
+Lancé le 29.04.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-04-28.xml -oldechfile:S:\eerv\eerv-2018-04-21.xml -output:s:\eerv\ech-diff-2018-04-28.md
+
+
+Lancé le 06.05.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-05-05.xml -oldechfile:S:\eerv\eerv-2018-04-28.xml -output:s:\eerv\ech-diff-2018-05-05.md
 
 ___________________________________________________________________________________________________________________________________
 
