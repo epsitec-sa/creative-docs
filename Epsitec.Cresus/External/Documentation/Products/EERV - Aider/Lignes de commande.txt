@@ -1394,6 +1394,31 @@ Lancé le 06.05.2018
 
 -echupdate -newechfile:S:\eerv\eerv-2018-05-05.xml -oldechfile:S:\eerv\eerv-2018-04-28.xml -output:s:\eerv\ech-diff-2018-05-05.md
 
+
+Lancé le 13.05.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-05-12.xml -oldechfile:S:\eerv\eerv-2018-05-05.xml -output:s:\eerv\ech-diff-2018-05-12.md
+
+
+Lancé le 20.05.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-05-19.xml -oldechfile:S:\eerv\eerv-2018-05-12.xml -output:s:\eerv\ech-diff-2018-05-19.md
+-exportsubscriptions -output:export-2018-05-xx.txt -error:error-2018-05-xx.txt -exclude-district-error:false
+
+
+Lancé le 27.05.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-05-26.xml -oldechfile:S:\eerv\eerv-2018-05-19.xml -output:s:\eerv\ech-diff-2018-05-26.md
+
+
+Lancé le 27.05.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-06-02.xml -oldechfile:S:\eerv\eerv-2018-05-26.xml -output:s:\eerv\ech-diff-2018-06-02.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

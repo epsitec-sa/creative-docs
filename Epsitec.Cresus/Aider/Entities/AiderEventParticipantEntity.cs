@@ -116,7 +116,6 @@ namespace Epsitec.Aider.Entities
                 {
                     return this.FirstName;
                 }
-				
 			}
 		}
 
@@ -184,32 +183,34 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.Town;
+				return this.Town ?? "";
 			}
 			else
 			{
                 var person = this.Person;
                 if (person.IsGovernmentDefined && person.IsDeclared)
                 {
-                    return person.eCH_Person.GetAddress ().Town;
+                    var address = person.eCH_Person.GetAddress ();
+					
+					if (address != null)
+					{
+						return address.Town ?? "";
+					}
                 }
-                else
+                if (person.MainContact.IsNotNull ())
                 {
-                    if (person.MainContact.IsNotNull ())
+                    if (person.MainContact.GetAddress ().Town.IsNotNull ())
                     {
-                        if (person.MainContact.GetAddress ().Town.IsNotNull ())
-                        {
-                            return person.MainContact.GetAddress ().Town.Name;
-                        }
-                        else
-                        {
-                            return person.MainContact.Address.Town.Name;
-                        }
+                        return person.MainContact.GetAddress ().Town.Name;
                     }
                     else
                     {
-                        return "";
+                        return person.MainContact.Address.Town.Name;
                     }
+                }
+                else
+                {
+                    return "";
                 }
             }			
 		}

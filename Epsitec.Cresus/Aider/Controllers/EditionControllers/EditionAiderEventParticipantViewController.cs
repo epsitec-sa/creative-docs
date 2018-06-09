@@ -30,12 +30,12 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Input ()
 						.Field (x => x.Person.MainContact.Address.Town)
 							.WithFavorites (favorites)
-					.End ()
+  					.End ()
                     .Input ()
                         .Field (x => x.FirstName)
                         .Field (x => x.LastName)
                         .Field (x => x.Confession)
-						.Field (x => x.Sex)
+  					    .Field (x => x.Sex)
                     .End ();
             }
 			else
