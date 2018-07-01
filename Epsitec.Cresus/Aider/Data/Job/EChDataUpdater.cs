@@ -122,7 +122,10 @@ namespace Epsitec.Aider.Data.Job
 							var eChPerson    = EChDataHelpers.GetEchPersonEntity (businessContext, item.NewValue);
 							var aiderPerson  = EChDataHelpers.GetAiderPersonEntity (businessContext, eChPerson);
 
-							System.Diagnostics.Debug.Assert (aiderPerson.IsNotNull ());
+							if (aiderPerson.IsNull ())
+							{
+								System.Diagnostics.Debug.Assert (aiderPerson.IsNotNull ());
+							}
 
 							var changes = new List<FormattedText> ();
 							changes.Add (aiderPerson.GetFullName ());

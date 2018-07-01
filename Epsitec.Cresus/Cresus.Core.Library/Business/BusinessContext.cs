@@ -715,7 +715,9 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			bool ignore = entitySaveMode.HasFlag (EntitySaveMode.IgnoreValidationErrors);
 
-			this.entityRecords.ForEach (record => record.Logic.ApplyRule (ruleType, record.Entity, disableBusinessRuleExceptions: ignore));
+			this.entityRecords
+				.ToList ()
+				.ForEach (record => record.Logic.ApplyRule (ruleType, record.Entity, disableBusinessRuleExceptions: ignore));
 		}
 
 		public T ApplyRules<T>(RuleType ruleType, T entity, EntitySaveMode entitySaveMode = EntitySaveMode.None)
