@@ -1,5 +1,5 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+﻿//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 
@@ -20,27 +20,25 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (CoreContext.HasExperimentalFeature ("Notifications"))
 			{
-				Epsitec.Cresus.Core.Library.NotificationManager.RegisterHub (this);
+				NotificationManager.RegisterHub (this);
 
 				this.server = server;
 
-				this.hubClients = new List<HubClient> ();
-				this.notificationQueue = new List<Notification> ();
+				this.hubClientsLock = new ReaderWriterLockWrapper ();
+				this.hubClients     = new List<HubClient> ();
+				
+				this.notificationQueueLock = new ReaderWriterLockWrapper ();
+				this.notificationQueue     = new List<Notification> ();
 
 				this.hubConnection = new HubConnection ("http://localhost:9002/");
 				this.hub = hubConnection.CreateHubProxy ("NotificationHub");
 
-
-				//Register Hub Listener
+				//	Register Hub Listener
 				this.hub.On ("SetUserConnectionId", (string u, string c) => this.SetUserConnectionId (u, c));
-				this.hub.On ("FlushConnectionId", c => RemoveUserConnectionIdWithLock (c));
+				this.hub.On ("FlushConnectionId", (string c) => this.FlushConnectionId (c));
 
 				this.hubConnection.Start ().Wait ();
-
-				this.setupLock = new ReaderWriterLockWrapper ();
-				this.queueLock = new ReaderWriterLockWrapper ();
 			}
-
 		}
 
 		public static NotificationClient Instance
@@ -57,8 +55,16 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			{
 				instance = new NotificationClient (server);
 			}
+
 			return instance;
 		}
+
+		
+		public string GetClientId()
+		{
+			return this.hubConnection.ConnectionId;
+		}
+
 
 		#region INotificationHub Members
 
@@ -66,7 +72,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (when == When.OnConnect)
 			{
-				using (this.queueLock.LockWrite ())
+				using (this.notificationQueueLock.LockWrite ())
 				{
 					this.notificationQueue.Add (new Notification ("notifyall", "*", message));
 				}
@@ -84,7 +90,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (when == When.OnConnect)
 			{
-				using (this.queueLock.LockWrite ())
+				using (this.notificationQueueLock.LockWrite ())
 				{
 					this.notificationQueue.Add (new Notification ("notify", userName, message));
 				}
@@ -101,7 +107,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			if (when == When.OnConnect)
 			{
-				using (this.queueLock.LockWrite ())
+				using (this.notificationQueueLock.LockWrite ())
 				{
 					this.notificationQueue.Add (new Notification ("warning", userName, message));
 				}
@@ -116,35 +122,33 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 		#endregion
 
-		public string GetConnectionId()
-		{
-			return this.hubConnection.ConnectionId;
-		}
-
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			this.queueLock.Dispose ();
-			this.setupLock.Dispose ();
+			this.notificationQueueLock.Dispose ();
+			this.hubClientsLock.Dispose ();
 		}
 
 		#endregion
 
 		private void SetUserConnectionId(string userName, string connectionId)
 		{
-			if (!(string.IsNullOrEmpty (userName) || string.IsNullOrEmpty (connectionId)))
+			if ((string.IsNullOrEmpty (userName) == false) &&
+				(string.IsNullOrEmpty (connectionId) == false))
 			{
 				var context = GlobalHost.ConnectionManager.GetHubContext<NotificationHub> ();
-				using (this.setupLock.LockWrite ())
-				{
 
+				//	TODO: update logic like in EntityBagClient
+				
+				using (this.hubClientsLock.LockWrite ())
+				{
 					if (!this.hubClients.Exists (c => c.Id == connectionId))
 					{
 						this.hubClients.Add (new HubClient (connectionId, userName));
 						context.Groups.Add (connectionId, userName);
 						//send and flush pending user notification from queue
-						using (this.queueLock.LockRead ())
+						using (this.notificationQueueLock.LockRead ())
 						{
 							foreach (var notif in this.notificationQueue)
 							{
@@ -165,7 +169,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 								}
 							}
 						}
-						using (this.queueLock.LockWrite ())
+						using (this.notificationQueueLock.LockWrite ())
 						{
 							this.notificationQueue.RemoveAll (m => m.DestinationUserName == userName);
 						}
@@ -185,9 +189,9 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		private void RemoveUserConnectionIdWithLock(string connectionId)
+		private void FlushConnectionId(string connectionId)
 		{
-			using (this.setupLock.LockWrite ())
+			using (this.hubClientsLock.LockWrite ())
 			{
 				this.RemoveUserConnectionId (connectionId);
 			}
@@ -211,7 +215,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		
+		#region Notification Class
+
 		private sealed class Notification
 		{
 			public Notification(string type, string userName, NotificationMessage payload)
@@ -226,7 +231,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			public NotificationMessage			Message;
 		}
 
-		
+		#endregion
+
+		#region HubClient Class
+
 		private sealed class HubClient
 		{
 			public HubClient(string connectionId, string userName)
@@ -239,16 +247,18 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			public string						UserName;
 		}
 
-		
+		#endregion
+
 		private static NotificationClient		instance;
 
-		private readonly ReaderWriterLockWrapper setupLock;
-		private readonly ReaderWriterLockWrapper queueLock;
+		private readonly ReaderWriterLockWrapper hubClientsLock;
+		private readonly List<HubClient>		 hubClients;
+		
+		private readonly ReaderWriterLockWrapper notificationQueueLock;
+		private readonly List<Notification>		 notificationQueue;
 
 		private readonly CoreServer				server;
 		private readonly HubConnection			hubConnection;
 		private readonly IHubProxy				hub;
-		private readonly List<HubClient>		hubClients;
-		private readonly List<Notification>		notificationQueue;
 	}
 }

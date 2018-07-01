@@ -1,5 +1,5 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+﻿//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.WebCore.Server.Chat;
 using Epsitec.Cresus.WebCore.Server.Gravatar;
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 {
 	public class ChatHub : Hub
 	{
-		public static List<ChatUser>			Users
+		private static List<ChatUser>			Users
 		{
 			get
 			{
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			}
 		}
 
-		public static List<ChatMessage>			Messages
+		private static List<ChatMessage>		Messages
 		{
 			get
 			{
@@ -42,7 +42,8 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 		{
 			lock (ChatHub.Users)
 			{
-				return ChatHub.Users.FirstOrDefault (u => u.Id == connectionId);
+				return ChatHub.Users
+					.FirstOrDefault (u => u.Id == connectionId);
 			}
 		}
 
@@ -62,7 +63,10 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 			userInfo.ProfilePictureUrl = picture;
 
 			this.BroadcastUsersList ();
-			this.Clients.Caller.setMyUserInfo (userInfo);
+			
+			this.Clients
+				.Caller
+				.setMyUserInfo (userInfo);
 		}
 
 		public List<ChatMessage> GetMessageHistory(string otherConnectionId)
@@ -70,14 +74,18 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 
 			var callerUserInfo = this.FindUserInfo ();
 			var otherUserInfo = this.FindUserInfo (otherConnectionId);
+			
 			lock (ChatHub.Messages)
 			{
-				var messages = ChatHub.Messages
-								   .Where (
-									   m =>
-									   (m.UserTo == callerUserInfo && m.UserFrom == otherUserInfo) ||
-									   (m.UserTo == otherUserInfo && m.UserFrom == callerUserInfo))
-								   .OrderByDescending (m => m.Timestamp).Take (30).ToList ();
+				var messages = ChatHub
+					.Messages
+					.Where (
+						m =>
+						(m.UserTo == callerUserInfo && m.UserFrom == otherUserInfo) ||
+						(m.UserTo == otherUserInfo && m.UserFrom == callerUserInfo))
+					.OrderByDescending (m => m.Timestamp)
+					.Take (30)
+					.ToList ();
 
 				return messages;
 			}
@@ -99,64 +107,82 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 				ChatHub.Messages.Add (chatMessage);
 			}
 
-			this.Clients.Client (otherConnectionId).sendMessage (chatMessage);
+			this.Clients
+				.Client (otherConnectionId)
+				.sendMessage (chatMessage);
 		}
 
 		public void SendTypingSignal(string otherConnectionId)
 		{
-			this.Clients.Client (otherConnectionId).sendTypingSignal (this.FindUserInfo ());
+			this.Clients
+				.Client (otherConnectionId)
+				.sendTypingSignal (this.FindUserInfo ());
 		}
 
 		
 		public override Task OnConnected()
 		{
-			var chatUser = new ChatUser ()
+			try
 			{
-				Id     = this.Context.ConnectionId,
-				Name   = this.Context.ConnectionId,
-				Status = ChatUserStatusType.Online,
-				
-				ProfilePictureUrl = GravatarHelper.GetGravatarUrl (null, GravatarImageSize.Size32)
-			};
+				var chatUser = new ChatUser ()
+				{
+					Id     = this.Context.ConnectionId,
+					Name   = this.Context.ConnectionId,
+					Status = ChatUserStatusType.Online,
 
-			lock (ChatHub.Users)
-			{
-				ChatHub.Users.Add (chatUser);
+					ProfilePictureUrl = GravatarHelper.GetGravatarUrl (null, GravatarImageSize.Size32)
+				};
+
+				lock (ChatHub.Users)
+				{
+					ChatHub.Users.Add (chatUser);
+				}
+
+				this.BroadcastUsersList ();
 			}
-
-			this.BroadcastUsersList ();
+			catch
+			{
+			}
 
 			return base.OnConnected ();
 		}
 
 		public override Task OnDisconnected()
 		{
-			lock (ChatHub.Users)
+			try
 			{
-				ChatHub.Users.RemoveAll (u => u.Id == this.Context.ConnectionId);
-			}
+				lock (ChatHub.Users)
+				{
+					ChatHub.Users.RemoveAll (u => u.Id == this.Context.ConnectionId);
+				}
 
-			this.BroadcastUsersList ();
+				this.BroadcastUsersList ();
+			}
+			catch
+			{
+			}
 			
 			return base.OnDisconnected ();
 		}
 
 		public override Task OnReconnected()
 		{
-			lock (ChatHub.Users)
-			{
-				ChatHub.Users.RemoveAll (u => u.Id == this.Context.ConnectionId);
-			}
-			
-			this.BroadcastUsersList ();
-			
 			return base.OnReconnected ();
 		}
 
 
 		private void BroadcastUsersList()
 		{
-			this.Clients.All.usersListChanged (ChatHub.Users);
+			List<ChatUser> copy;
+
+			lock (ChatHub.Users)
+			{
+				copy = ChatHub.Users.ToList ();
+			}
+
+			this.Clients
+				.All
+				.usersListChanged (copy);
 		}
 
 		

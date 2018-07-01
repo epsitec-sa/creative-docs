@@ -1,5 +1,5 @@
-﻿//	Copyright © 2013, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Samuel LOUP, Maintainer: Samuel LOUP
+﻿//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
 
 using Microsoft.AspNet.SignalR;
 
@@ -11,26 +11,40 @@ namespace Epsitec.Cresus.WebCore.Server.Owin.Hubs
 	{
 		public override Task OnDisconnected()
 		{
-			var backendClient = StatusBarClient.Instance;
+			try
+			{
+				var connectionId = this.Context.ConnectionId;
 
-
-			Clients.Client (backendClient.GetConnectionId ()).FlushConnectionId (Context.ConnectionId);
-
+				this.Clients
+					.Client (StatusBarClient.Instance.GetConnectionId ())
+					.FlushConnectionId (connectionId);
+			}
+			catch
+			{
+			}
+			
 			return base.OnDisconnected ();
 		}
 
 		public override Task OnReconnected()
 		{
-			var backendClient = StatusBarClient.Instance;
-
-			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Context.ConnectionId);
 			return base.OnReconnected ();
 		}
 
 		public void SetupUserConnection()
 		{
-			var backendClient = StatusBarClient.Instance;
-			Clients.Client (backendClient.GetConnectionId ()).SetUserConnectionId (Clients.Caller.userName, Clients.Caller.connectionId);
+			try
+			{
+				var userName     = this.Clients.Caller.userName;
+				var connectionId = this.Clients.Caller.connectionId;
+
+				this.Clients
+					.Client (StatusBarClient.Instance.GetConnectionId ())
+					.SetUserConnectionId (userName, connectionId);
+			}
+			catch
+			{
+			}
 		}
 	}
 }
