@@ -80,6 +80,7 @@ namespace Epsitec.Data.Platform
 		{
 			//	No longer freely available -- see http://www.iso.org/iso/home/standards/country_codes.htm
 //-			return Iso3166.DownloadLines ("http://www.iso.org/iso/list-en1-semic-3.txt").ToArray ();
+			//	see also https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes
 			return null;
 		}
 

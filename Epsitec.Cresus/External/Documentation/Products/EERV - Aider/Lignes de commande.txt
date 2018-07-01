@@ -1414,10 +1414,24 @@ Lancé le 27.05.2018
 -echupdate -newechfile:S:\eerv\eerv-2018-05-26.xml -oldechfile:S:\eerv\eerv-2018-05-19.xml -output:s:\eerv\ech-diff-2018-05-26.md
 
 
-Lancé le 27.05.2018
+Lancé le 03.06.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-06-02.xml -oldechfile:S:\eerv\eerv-2018-05-26.xml -output:s:\eerv\ech-diff-2018-06-02.md
+
+
+Lancé le 09.06.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-06-09.xml -oldechfile:S:\eerv\eerv-2018-06-02.xml -output:s:\eerv\ech-diff-2018-06-09.md
+
+
+Lancé le 16.06.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-06-17.xml -oldechfile:S:\eerv\eerv-2018-06-09.xml -output:s:\eerv\ech-diff-2018-06-17.md
+-clearwarnings -beforedate:2018-03-01 -killpersons:true -createsubscriptions:true
+-exportsubscriptions -output:export-2018-06-xx.txt -error:error-2018-06-xx.txt -exclude-district-error:false
 
 ___________________________________________________________________________________________________________________________________
 
