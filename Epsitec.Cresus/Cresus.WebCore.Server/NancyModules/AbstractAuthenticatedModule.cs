@@ -71,6 +71,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private bool RemoveJob(string jobId)
 		{
+			System.Diagnostics.Trace.WriteLine ("RemoveJob: " + jobId);
+
 			var job = this.FindJob (jobId);
 
 			if (job == null)
@@ -178,7 +180,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var userName   = LoginModule.GetUserName (this);
 			var sessionId  = LoginModule.GetSessionId (this);
 			job = new CoreJob (userName, sessionId, this.CreateJobId (), title, entityBag, statusBar, enableCancelation);
-			this.CoreServer.Jobs.TryAdd (job.Id, job);
+			var jobId = job.Id;
+			
+			this.CoreServer.Jobs.TryAdd (jobId, job);
+
+			System.Diagnostics.Trace.WriteLine ("CreateJob: " + jobId);
+			
 			return new Response ()
 			{
 				StatusCode = HttpStatusCode.Accepted

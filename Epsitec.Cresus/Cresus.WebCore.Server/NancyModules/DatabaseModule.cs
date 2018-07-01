@@ -343,6 +343,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			catch (Exception ex)
 			{
 				message = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
+				System.Diagnostics.Trace.WriteLine ("LongRunningExportToBag: " + message);
 			}
 			finally
 			{
@@ -381,6 +382,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			catch (Exception ex)
 			{
 				message = string.Format ("Une erreur est survenue. Tâche annulée. ({0})", ex.Message);
+				System.Diagnostics.Trace.WriteLine ("LongRunningExportToFile: " + message);
 			}
 			finally
 			{

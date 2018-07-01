@@ -1,4 +1,4 @@
-﻿//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2014-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.IO;
@@ -104,8 +104,8 @@ namespace Epsitec.Cresus.WebCore.Server.Core
 					catch (System.Exception ex)
 					{
 						System.Diagnostics.Trace.WriteLine ("CoreWorkerQueue: execution of work item crashed.");
-						System.Diagnostics.Trace.WriteLine (ex.Message);
-						System.Diagnostics.Trace.WriteLine (ex.StackTrace);
+						System.Diagnostics.Trace.WriteLine (item.ToString ());
+						System.Diagnostics.Trace.WriteLine (ex.GetFullText ());
 					}
 				}
 
