@@ -38,7 +38,7 @@ namespace Epsitec.Aider
 		private static void SetupExceptionCatcher()
 		{
 			GeneralExceptionCatcher.Setup ();
-			GeneralExceptionCatcher.AbortOnException = true;
+			GeneralExceptionCatcher.AbortOnException = false; // true;
 			GeneralExceptionCatcher.AddExceptionHandler (e => ErrorLogger.LogException (e));
 		}
 
