@@ -1,0 +1,1351 @@
+1	1000	Lausanne 26			La Sallaz - Les Croisettes
+2	1000	Lausanne 27			La Sallaz - Les Croisettes
+3	1010	Abeilles	ch. des		La Sallaz - Les Croisettes
+4	1006	Acacias	av. des		Saint-Jean
+5	1005	Académie	rue de l'		Chailly - La Cathédrale
+6	1003	Agassiz	av.		Saint-François - Saint-Jacques
+7	1003	Ale	rue de l'		Saint-Laurent - Les Bergières
+8	1012	Allières	ch. des		Chailly - La Cathédrale
+9	1006	Allinges	ch. des		Saint-Jean
+10	1006	Alpes	av. des	2-18/1-9	Saint-François - Saint-Jacques
+11	1006	Alpes	av. des	20-	Saint-François - Saint-Jacques
+12	1018	Amis	rue des		Bellevaux - Saint-Luc
+13	1003	Ancienne-Douane	rue de l'		Chailly - La Cathédrale
+14	1018	Ancien-Stand	ch. de l'		Bellevaux - Saint-Luc
+15	1003	Ansermet	allée Ernest-		Saint-François - Saint-Jacques
+16	1018	Aoste	av. d'		Bellevaux - Saint-Luc
+17	1003	Arlaud	place Marc-Louis-		Chailly - La Cathédrale
+18	1066	Arzillier	ch. de l'		La Sallaz - Les Croisettes
+19	1004	Aubépines	ch. des	14-16/43-45	Saint-Laurent - Les Bergières
+20	1004	Aubépines	ch. des	2-12/1-41	Saint-Laurent - Les Bergières
+21	1005	Aurore	rue de l'		Saint-François - Saint-Jacques
+22	1005	Avant-Poste	av. de l'		Saint-François - Saint-Jacques
+23	1004	Avelines	ch. des		Saint-Laurent - Les Bergières
+24	1007	Bains	av. des		Saint-Jean
+25	1066	Ballègue	ch. de		La Sallaz - Les Croisettes
+26	1004	Bancels	ch. des		Saint-Laurent - Les Bergières
+27	1004	Barberine	ch. de		Saint-Laurent - Les Bergières
+28	1005	Barre	rue de la		Chailly - La Cathédrale
+29	1007	Batelière	ch. de la		Saint-Jean
+30	1004	Beaulieu	av. de		Saint-Laurent - Les Bergières
+31	1012	Beaumont	av. de	1-29	Chailly - La Cathédrale
+32	1012	Beaumont	av. de	2-42	Chailly - La Cathédrale
+33	1012	Beaumont	av. de	44-54	La Sallaz - Les Croisettes
+34	1010	Beaumont	av. de	56-82	La Sallaz - Les Croisettes
+35	1007	Beauregard	av. de		Saint-Jean
+36	1006	Beau-Rivage	ch. de		Saint-Jean
+37	1003	Beau-Séjour	rue		Saint-François - Saint-Jacques
+38	1004	Beau-Site	ch. de		Saint-Laurent - Les Bergières
+39	1012	Beau-Val	ch. de		Chailly - La Cathédrale
+40	1018	Bégonias	ch. des		Bellevaux - Saint-Luc
+41	1003	Bel-Air	escaliers de		Saint-Laurent - Les Bergières
+42	1003	Bel-Air	place		Saint-Laurent - Les Bergières
+43	1003	Bel-Air	rte de		Saint-Laurent - Les Bergières
+44	1003	Bellefontaine	rue		Saint-François - Saint-Jacques
+45	1007	Bellerive	ch. de		Saint-Jean
+46	1007	Bellerive	place de		Saint-Jean
+47	1005	Belle-Rose	passage de		Saint-François - Saint-Jacques
+48	1007	Belle-Source	ch. de		Saint-Jean
+49	1004	Belles-Roches	av. des		Bellevaux - Saint-Luc
+50	1005	Bellevue	ch. de	2-18	Saint-François - Saint-Jacques
+51	1005	Bellevue	ch. de	23-29/26-36	Chailly - La Cathédrale
+52	1003	Constant	av. Benjamin-		Saint-François - Saint-Jacques
+53	1003	Constant	place Benjamin-		Saint-François - Saint-Jacques
+54	1003	Constant	galeries Benjamin-		Saint-François - Saint-Jacques
+55	1010	Bérée	ch. de		La Sallaz - Les Croisettes
+56	1004	Bergières	av. des		Saint-Laurent - Les Bergières
+57	1010	Berne	rte de		La Sallaz - Les Croisettes
+58	1005	Bessières	pont		Chailly - La Cathédrale
+59	1005	Béthusy	av. de		Chailly - La Cathédrale
+60	1012	Béthusy	av. de	29-99/40-88	Chailly - La Cathédrale
+61	1003	Billens	escaliers de		Saint-François - Saint-Jacques
+62	1066	Biolleyre	ch. de		La Sallaz - Les Croisettes
+63	1012	Bochardon	ch. de		Chailly - La Cathédrale
+64	1066	Bodérons	ch. des		La Sallaz - Les Croisettes
+65	1066	Bois-de-Ban	ch. du		La Sallaz - Les Croisettes
+66	1066	Bois-de-la-Chapelle	ch. du		La Sallaz - Les Croisettes
+67	1007	Bois-de-la-Fontaine	ch. du		Sud-Ouest lausannois
+68	1066	Bois-de-Menton	ch. du		La Sallaz - Les Croisettes
+69	1007	Bois-de-Vaux	ch. du	1-19/2-18	Sud-Ouest lausannois
+70	1007	Bois-de-Vaux	ch. du	20-/21-	Saint-Jean
+71	1018	Bois-Gentil	ch. du		Bellevaux - Saint-Luc
+72	1066	Bois-Murat	ch. du		La Sallaz - Les Croisettes
+73	1010	Boissonnet	ch. de		La Sallaz - Les Croisettes
+74	1004	Boisy	ch. du		Saint-Laurent - Les Bergières
+75	1007	Bon-Abri	ch. de		Saint-Jean
+76	1006	Bonne-Espérance	ch. de		Saint-François - Saint-Jacques
+77	1006	Bons	rue Jean-Louis-de-		Saint-Jean
+78	1018	Borde	rue de la		Bellevaux - Saint-Luc
+79	1066	Bornalet	ch. du		La Sallaz - Les Croisettes
+80	1018	Bossons	ch. des		Bellevaux - Saint-Luc
+81	1004	Boston	ch. des		Sud-Ouest lausannois
+82	1012	Bouleaux	ch. des		Chailly - La Cathédrale
+83	1003	Bourg	rue		Saint-François - Saint-Jacques
+84	1003	Bourg	ruelle de		Saint-François - Saint-Jacques
+85	1010	Boveresses	av. des		La Sallaz - Les Croisettes
+86	1066	Boveresses	ch. des		La Sallaz - Les Croisettes
+87	1006	Brillancourt	ch. de		Saint-Jean
+88	1007	Bruyères	ch. des		Saint-Jean
+89	1005	Bugnon	rue	1-27/2-42	Chailly - La Cathédrale
+90	1011	Bugnon	rue	44-46	Chailly - La Cathédrale
+91	1066	Butte	ch. de la		La Sallaz - Les Croisettes
+92	1005	Calvaire	ch. du		Chailly - La Cathédrale
+93	1007	Camping	ch. du		Saint-Jean
+94	1006	Cap	ch. du		Saint-François - Saint-Jacques
+95	1007	Capelard	ch. du		Saint-Jean
+96	1003	Caroline	rue	1-7/2	Saint-François - Saint-Jacques
+97	1003	Caroline	rue	4-/9-	Chailly - La Cathédrale
+98	1006	Cart	rue Jean-Jacques-		Saint-Jean
+99	1018	Casernes	av. des		Bellevaux - Saint-Luc
+100	1018	Cassinette	ch. de la		Bellevaux - Saint-Luc
+101	1005	Cathédrale	pl. de la		Chailly - La Cathédrale
+102	1007	Cécil	av.		Sud-Ouest lausannois
+103	1004	Cèdres	ch. des		Saint-Laurent - Les Bergières
+104	1018	Celtes	ch. des		Bellevaux - Saint-Luc
+105	1003	Centrale	rue	1-11	Saint-Laurent - Les Bergières
+106	1003	Centrale	rue	13-	Chailly - La Cathédrale
+107	1003	Centrale	rue	2-	Saint-François - Saint-Jacques
+108	1004	Cerisier	ch. du		Saint-Laurent - Les Bergières
+109	1008	Chablais	av. du		Sud-Ouest lausannois
+110	1008	Viaduc	ch. du		Sud-Ouest lausannois
+111	1007	Chablais	av. du		Sud-Ouest lausannois
+112	1004	Chablière	av. de la		Saint-Laurent - Les Bergières
+113	1012	Chailly	av. de		Chailly - La Cathédrale
+114	1004	Champrilly	ch. de		Sud-Ouest lausannois
+115	1010	Champ-Rond	ch. de		La Sallaz - Les Croisettes
+116	1012	Champ-Soleil	ch. de		Chailly - La Cathédrale
+117	1006	Chandieu	ch. de		Saint-Jean
+118	1005	Chandolin	ch. de		Saint-François - Saint-Jacques
+119	1004	Chantegrive	av. de	6/8	Saint-Laurent - Les Bergières
+120	1004	Chantegrive	av. de		Sud-Ouest lausannois
+121	1008	Chantegrive	av. de		Prilly - Jouxtens
+122	1010	Chantemerle	ch. de		La Sallaz - Les Croisettes
+123	1003	Charmettes	ch. des		Saint-François - Saint-Jacques
+124	1004	Charmilles	ch. des		Saint-Laurent - Les Bergières
+125	1004	Chasseron	ch. du		Saint-Laurent - Les Bergières
+126	1005	Château	place du		Chailly - La Cathédrale
+127	1018	Châtelard	rte du		Bellevaux - Saint-Luc
+128	1003	Chaucrau	rue		Saint-Laurent - Les Bergières
+129	1003	Chauderon	place		Saint-Laurent - Les Bergières
+130	1066	Chaugand	ch. du		La Sallaz - Les Croisettes
+131	1010	Chaumière	ch. de la		La Sallaz - Les Croisettes
+132	1007	Chavannes	rte de	101-213/2-6	Sud-Ouest lausannois
+133	1007	Chavannes	rte de	1-99/8-	Saint-Jean
+134	1020	Chêne	ch. du	13-23/8-20	Sud-Ouest lausannois
+135	1020	Usine à gaz	ch. de l'		Sud-Ouest lausannois
+136	1020	Epenex	av. d'	1-9/2-4	Chavannes - Epenex
+137	1006	Chissiez	ch. de		Saint-François - Saint-Jacques
+138	1010	Cigale	ch. de la		La Sallaz - Les Croisettes
+139	1005	Cité-Derrière	rue		Chailly - La Cathédrale
+140	1005	Cité-Devant	rue		Chailly - La Cathédrale
+141	1066	Clair-Matin	ch. du		La Sallaz - Les Croisettes
+142	1012	Clamadour	ch. de		Chailly - La Cathédrale
+143	1018	Clochatte	rte de la		Bellevaux - Saint-Luc
+144	1004	Clochetons	ch. des		Sud-Ouest lausannois
+145	1004	Clos-de-Bulle	rue du		Saint-Laurent - Les Bergières
+146	1006	Closelet	ch. du		Saint-Jean
+147	1007	Colline	ch. de la		Sud-Ouest lausannois
+148	1004	Collonges	av. de		Saint-Laurent - Les Bergières
+149	1004	Confrérie	av. de	1-7/2-16	Sud-Ouest lausannois
+150	1008	Confrérie	av. de	3-25/36-42	Prilly - Jouxtens
+151	1007	Contigny	ch. de		Saint-Jean
+152	1066	Côte	ch. de la		La Sallaz - Les Croisettes
+153	1020	Côtes	ch. des		Sud-Ouest lausannois
+154	1007	Côtes-de-la-Bourdonnette	-		Sud-Ouest lausannois
+155	1003	Côtes-de-Montbenon	rue des		Saint-François - Saint-Jacques
+156	1012	Côtes-de-Montmoiret	ch. des		Chailly - La Cathédrale
+157	1007	Cottages	ch. des		Sud-Ouest lausannois
+158	1007	Coubertin	av. Pierre		Saint-Jean
+159	1007	Couchant	ch. du		Saint-Jean
+160	1004	Couchirard	rue		Sud-Ouest lausannois
+161	1012	Coudrette	ch. de la		Chailly - La Cathédrale
+162	1000	Coumenets	ch. des		La Sallaz - Les Croisettes
+163	1007	Cour	av. de		Saint-Jean
+164	1005	Couvaloup	ch. de		Chailly - La Cathédrale
+165	1012	Craivavers	ch. de		Chailly - La Cathédrale
+166	1066	Crausaz	ch. de la		La Sallaz - Les Croisettes
+167	1006	Crêt	rue du		Saint-Jean
+168	1018	Crêtes	rue des		Bellevaux - Saint-Luc
+169	1066	Croisettes	ch. des		La Sallaz - Les Croisettes
+170	1066	Croix-Blanche	rte de la		La Sallaz - Les Croisettes
+171	1007	Croix-Rouges	ch. des		Sud-Ouest lausannois
+172	1010	Crousaz	av. de		La Sallaz - Les Croisettes
+173	1012	Cure	ch. de la		Chailly - La Cathédrale
+174	1066	Cure	ch. de la		La Sallaz - Les Croisettes
+175	1005	Curtat	rue Louis-		Chailly - La Cathédrale
+176	1007	Cygnes	ch. des		Saint-Jean
+177	1066	Dailles	ch. des		La Sallaz - Les Croisettes
+178	1066	Daillettes	ch. des		La Sallaz - Les Croisettes
+179	1006	Dapples	av.		Saint-Jean
+180	1004	Davel	av.	1-9/2-8	Saint-Laurent - Les Bergières
+181	1004	Davel	av.	10-/11-	Bellevaux - Saint-Luc
+182	1006	Délices	ch. des		Saint-Jean
+183	1006	Denantou	av. du		Saint-Jean
+184	1007	Dent d'Oche	av. de la		Saint-Jean
+185	1005	Deux-Marchés	rue des		Saint-Laurent - Les Bergières
+186	1007	Deux-Ponts	ch. des		Sud-Ouest lausannois
+187	1012	Devin	ch. du	1-57/2-76	Chailly - La Cathédrale
+188	1012	Devin	ch. du	59-/78-	La Sallaz - Les Croisettes
+189	1012	Diablerets	ch. des		Chailly - La Cathédrale
+190	1006	Dickens	av.		Saint-François - Saint-Jacques
+191	1005	Dôle	av. de la		Chailly - La Cathédrale
+192	1004	Dranse	ch. de la		Saint-Laurent - Les Bergières
+193	1018	Druey	av.		Bellevaux - Saint-Luc
+194	1007	Dufour	av. Marc-	1-15/2-6	Sud-Ouest lausannois
+195	1007	Dufour	av. Marc-	19-/38-	Saint-Jean
+196	1004	Dumur	ch. Benjamin-		Prilly - Jouxtens
+197	1004	Echallens	av. d'		Saint-Laurent - Les Bergières
+198	1004	Echelettes	rue des		Saint-Laurent - Les Bergières
+199	1005	Ecole-Supérieure	rue		Saint-François - Saint-Jacques
+200	1004	Ecole-de-Commerce	rue de l'		Saint-Laurent - Les Bergières
+201	1005	Edouard-Payot	rue		Chailly - La Cathédrale
+202	1007	Edouard-Rod	av.		Saint-Jean
+203	1006	Eglantine	av. de l'		Saint-François - Saint-Jacques
+204	1066	Eglise	ch. de l'		La Sallaz - Les Croisettes
+205	1006	Eglise-Anglaise	av. de l'		Saint-Jean
+206	1004	Egralets	ch. des		Bellevaux - Saint-Luc
+207	1006	Elysée	av. de l'		Saint-Jean
+208	1003	Enning	rue		Saint-François - Saint-Jacques
+209	1018	Entre-Bois	ch. d'		Bellevaux - Saint-Luc
+210	1007	Epinettes	ch. des		Saint-Jean
+211	1003	Marché	escaliers du 		Chailly - La Cathédrale
+212	1012	Esplanade	av. de l'		Chailly - La Cathédrale
+213	1010	Eterpeys	ch. des		La Sallaz - Les Croisettes
+214	1003	Etraz	rue		Saint-François - Saint-Jacques
+215	1005	Eugène-Rambert	av.		Saint-François - Saint-Jacques
+216	1006	Evian	av. d'		Saint-François - Saint-Jacques
+217	1005	Falaises	ch. des		La Sallaz - Les Croisettes
+218	1006	Fantaisie	av.		Saint-Jean
+219	1012	Fauconnières	ch. des		Chailly - La Cathédrale
+220	1018	Fauquez	rte Aloys-		Bellevaux - Saint-Luc
+221	1012	Fauvette	ch. de la		Chailly - La Cathédrale
+222	1006	Faverges	ch. des		Saint-François - Saint-Jacques
+223	1010	Feuillère	rte de la		La Sallaz - Les Croisettes
+224	1007	Figuiers	av. des		Saint-Jean
+225	1007	Fleurettes	ch. des		Saint-Jean
+226	1007	Fleurs	ch. des		Sud-Ouest lausannois
+227	1006	Floréal	av.		Saint-Jean
+228	1007	Florency	ch. de		Saint-Jean
+229	1006	Florimont	av. de		Saint-François - Saint-Jacques
+230	1066	Florimont	ch. de		La Sallaz - Les Croisettes
+231	1004	Fontannaz	ch. de		Saint-Laurent - Les Bergières
+232	1066	Fontannins	ch. des		La Sallaz - Les Croisettes
+233	1007	Fontenailles	rue des		Saint-Jean
+234	1007	Fontenay	ch. de		Saint-Jean
+235	1018	Forêt	ch. de la		Bellevaux - Saint-Luc
+236	1007	Fougères	ch. des		Saint-Jean
+237	1010	Fourmi	ch. de la		La Sallaz - Les Croisettes
+238	1004	France	av. de		Saint-Laurent - Les Bergières
+239	1007	François-Bocion	passage		Saint-Jean
+240	1004	Frêne	ch. du		Saint-Laurent - Les Bergières
+241	1006	Funiculaire	ch. du		Saint-Jean
+242	1018	Furet	ch. du		Bellevaux - Saint-Luc
+243	1003	Saint-François	galerie		Saint-François - Saint-Jacques
+244	1008	Galicien	av. du		Prilly - Jouxtens
+245	1004	Galliard	rue Jean-Louis		Saint-Laurent - Les Bergières
+246	1003	Gare	av. de la		Saint-François - Saint-Jacques
+247	1003	Gare	place de la		Saint-François - Saint-Jacques
+248	1066	Geais	ch. des		La Sallaz - Les Croisettes
+249	1003	Genève	rue de		Saint-Laurent - Les Bergières
+250	1004	Genève	rue de		Sud-Ouest lausannois
+251	1003	Georgette	av.		Sud-Ouest lausannois
+252	1006	Gide	ch. Charles		Saint-Jean
+253	1004	Gindroz	av.		Saint-Laurent - Les Bergières
+254	1066	Girarde	ch. de la		La Sallaz - Les Croisettes
+255	1004	Glaciers	rue des		Bellevaux - Saint-Luc
+256	1004	Glayre	av.		Saint-Laurent - Les Bergières
+257	1004	Glycines	ch. des		Sud-Ouest lausannois
+258	1012	Gottettaz	ch. de la		Chailly - La Cathédrale
+259	1007	Grammont	av. du		Saint-Jean
+260	1006	Grancy	boulevard de		Saint-Jean
+261	1018	Grandchamp	ch. de		Bellevaux - Saint-Luc
+262	1066	Grand-Chemin	le		La Sallaz - Les Croisettes
+263	1003	Grand-Chêne	escaliers du		Saint-François - Saint-Jacques
+264	1003	Grand-Chêne	rue du		Saint-François - Saint-Jacques
+265	1007	Grande-Rive	ch. de		Saint-Jean
+266	1018	Grandes-Roches	ch. des		Bellevaux - Saint-Luc
+267	1003	Grand-Pont	rue du	3-19/4-20	Saint-Laurent - Les Bergières
+268	1003	Grand-Pont	rue du	1/2	Saint-François - Saint-Jacques
+269	1003	Grand-Pont	escaliers du		Saint-François - Saint-Jacques
+270	1003	Grand-Pont	ruelle du		Saint-Laurent - Les Bergières
+271	1012	Grand-Praz	ch. du		Chailly - La Cathédrale
+272	1066	Grand-Pré	ch. du		La Sallaz - Les Croisettes
+273	1007	Grand-Pré	rue du		Sud-Ouest lausannois
+274	1003	Grand-St-Jean	place		Saint-Laurent - Les Bergières
+275	1003	Grand-St-Jean	rue		Saint-Laurent - Les Bergières
+276	1003	Grand-St-Jean	ruelle du		Saint-Laurent - Les Bergières
+277	1010	Grand-Vennes	ch. de		La Sallaz - Les Croisettes
+278	1066	Grand-Vennes	ch. du		La Sallaz - Les Croisettes
+279	1010	Grangette	ch. de la		La Sallaz - Les Croisettes
+280	1006	Grasset	ch. Eugène-		Saint-Jean
+281	1018	Gratta-Paille	av. de		Bellevaux - Saint-Luc
+282	1008	Gravière	ch. de la	2-4	Sud-Ouest lausannois
+283	1007	Gravière	ch. de la	6-8/9-13	Prilly - Jouxtens
+284	1012	Grésy	ch. de		Chailly - La Cathédrale
+285	1004	Grey	av. du	1-53/2-48	Saint-Laurent - Les Bergières
+286	1018	Grey	av. du	55-/50	Bellevaux - Saint-Luc
+287	1007	Grillon	ch. du		Saint-Jean
+288	1003	Grotte	rue de la		Saint-François - Saint-Jacques
+289	1004	Guiguer-de-Prangins	ch.		Saint-Laurent - Les Bergières
+290	1006	Guisan	place Général		Saint-Jean
+291	1003	Haldimand	rue		Saint-Laurent - Les Bergières
+292	1007	Harpe	av. de la		Saint-Jean
+293	1012	Haute-Brise	ch. de		Chailly - La Cathédrale
+294	1012	Haute-Vue	ch. de		Chailly - La Cathédrale
+295	1005	Industrie	rue de l'		Chailly - La Cathédrale
+296	1007	Jaques-Dalcroze	av. Emile Henri		Saint-Jean
+297	1005	Jaman	av. de		Chailly - La Cathédrale
+298	1018	Jardins	rue des		Bellevaux - Saint-Luc
+299	1006	Joliette	ch. de la		Saint-Jean
+300	1005	Jolimont	av.		Chailly - La Cathédrale
+301	1018	Jomini	av.		Bellevaux - Saint-Luc
+302	1004	Jomini	av.	2-8	Saint-Laurent - Les Bergières
+303	1004	Jomini	av.	10-22/1-5	Bellevaux - Saint-Luc
+304	1000	Jorat	rte du		La Sallaz - Les Croisettes
+305	1006	Jordils	av. des		Saint-Jean
+306	1004	Jura	rue du		Saint-Laurent - Les Bergières
+307	1006	Jurigoz	av. de		Saint-Jean
+308	1006	Olivier	av. Juste-		Saint-François - Saint-Jacques
+309	1007	Lac	rue du		Saint-Jean
+310	1066	Laiterie	ch. de la		La Sallaz - Les Croisettes
+311	1003	Langallerie	rue de	1-5	Chailly - La Cathédrale
+312	1003	Langallerie	rue de	2-/7-	Saint-François - Saint-Jacques
+313	1007	Languedoc	ch. du		Sud-Ouest lausannois
+314	1005	Lapin-Vert	ruelle du		Chailly - La Cathédrale
+315	1005	Léman	av. du		Saint-François - Saint-Jacques
+316	1005	Levant	ch. du	1-29/2-28	Chailly - La Cathédrale
+317	1005	Levant	ch. du	33-/44-	Saint-François - Saint-Jacques
+318	1010	Libellules	ch. des		La Sallaz - Les Croisettes
+319	1018	Lilas	ch. des		Bellevaux - Saint-Luc
+320	1003	Lion d'Or	rue		Saint-François - Saint-Jacques
+321	1006	Liseron	rue du		Saint-Jean
+322	1018	Lisière	ch. de la		Bellevaux - Saint-Luc
+323	1020	Longemalle	av. de		Sud-Ouest lausannois
+324	1006	Longeraie	ch. de		Saint-François - Saint-Jacques
+325	1000	Losiardes	ch. des		La Sallaz - Les Croisettes
+326	1003	Ruchonnet	av. Louis-		Saint-François - Saint-Jacques
+327	1003	Louve	place de la		Saint-Laurent - Les Bergières
+328	1003	Louve	rue de la		Saint-Laurent - Les Bergières
+329	1006	Lucinge	ch. de		Saint-François - Saint-Jacques
+330	1010	Lys	ch. des		La Sallaz - Les Croisettes
+331	1003	Madeleine	rue de la		Chailly - La Cathédrale
+332	1005	Magnolias	ch. des		Saint-François - Saint-Jacques
+333	1018	Maillefer	ch. de		Bellevaux - Saint-Luc
+334	1018	Maisons Familiales	-		Bellevaux - Saint-Luc
+335	1007	Malley	ch. de		Sud-Ouest lausannois
+336	1006	Maria Belgia	av.		Saint-Jean
+337	1018	Marronnier	ch. du		Bellevaux - Saint-Luc
+338	1005	Marterey	rue	5-	Chailly - La Cathédrale
+339	1005	Marterey	rue	2-/1-3	Saint-François - Saint-Jacques
+340	1007	Martinet	ch. du		Sud-Ouest lausannois
+341	1005	Mathurin-Cordier	rue		Chailly - La Cathédrale
+342	1007	Matines	ch. des		Saint-Jean
+343	1003	Mauborget	rue		Saint-Laurent - Les Bergières
+344	1004	Maupas	rue du	1-19/2-20	Saint-Laurent - Les Bergières
+345	1004	Maupas	rue du	21-/22-	Saint-Laurent - Les Bergières
+346	1012	Mayoresses	ch. des	3	La Sallaz - Les Croisettes
+347	1012	Mayoresses	ch. des	1/2-/5-	Chailly - La Cathédrale
+348	1004	Mayor	passage Mathias-		Sud-Ouest lausannois
+349	1006	Meillerie	ch. de		Saint-François - Saint-Jacques
+350	1018	Mémise	ch. de		Bellevaux - Saint-Luc
+351	1005	Menthon	av.		Chailly - La Cathédrale
+352	1003	Mercerie	rue de la		Chailly - La Cathédrale
+353	1003	Mercier	av. Jean-Jaques		Saint-François - Saint-Jacques
+354	1012	Mésanges	ch. des		Chailly - La Cathédrale
+355	1006	Messidor	ch. de		Saint-François - Saint-Jacques
+356	1003	Midi	rue du		Saint-François - Saint-Jacques
+357	1007	Milan	av. de		Saint-Jean
+358	1007	Milan	place de		Saint-Jean
+359	1007	*Molendruz	ch. du		Saint-Jean
+360	1012	Moléson	ch. du		Chailly - La Cathédrale
+361	1006	Mon-Loisir	av.		Saint-Jean
+362	1003	Monnard	rue Charles-		Saint-François - Saint-Jacques
+363	1005	Mon-Repos	av.		Saint-François - Saint-Jacques
+364	1005	Mon-Repos	parc de		Saint-François - Saint-Jacques
+365	1066	Mon-Repos	ch. de		La Sallaz - Les Croisettes
+366	1005	Monribeau	ch. de		Saint-François - Saint-Jacques
+367	1005	Montagibert	av.		Chailly - La Cathédrale
+368	1003	Montbenon	av.		Saint-François - Saint-Jacques
+369	1018	Mont-Blanc	av. du		Bellevaux - Saint-Luc
+370	1066	Montblesson	rte de		La Sallaz - Les Croisettes
+371	1006	Montchoisi	av. de		Saint-Jean
+372	1007	Mont-d'Or	av. du		Saint-Jean
+373	1066	Montéclard	ch. de		La Sallaz - Les Croisettes
+374	1007	Montelly	ch. de		Sud-Ouest lausannois
+375	1004	Montétan	ch. de		Saint-Laurent - Les Bergières
+376	1005	Montmeillan	ch. de		Chailly - La Cathédrale
+377	1007	Montoie	av. de	1-11/2-20	Sud-Ouest lausannois
+378	1007	Montoie	av. de	13-/22-	Saint-Jean
+379	1010	Montolieu	ch. Isabelle		La Sallaz - Les Croisettes
+380	1006	Montolivet	ch. de	1-3	Saint-François - Saint-Jacques
+381	1006	Montolivet	ch. de	2-/5-	Saint-Jean
+382	1012	Mont-Paisible	ch. de		Chailly - La Cathédrale
+383	1006	Montriond	passage de		Saint-Jean
+384	1007	Mont-Tendre	ch. du		Saint-Jean
+385	1004	Morges	av. de		Sud-Ouest lausannois
+386	1003	Mornex	ch. de		Saint-François - Saint-Jacques
+387	1018	Motte	ch. de la		Bellevaux - Saint-Luc
+388	1020	Mottey	ch. du		Sud-Ouest lausannois
+389	1007	Mouettes	ch. des		Saint-Jean
+390	1066	Moulins	ch. des		La Sallaz - Les Croisettes
+391	1005	Mousquines	av. des		Saint-François - Saint-Jacques
+392	1007	Muguet	ch. du		Saint-Jean
+393	1003	Muret	passage Jean-		Saint-Laurent - Les Bergières
+394	1012	Mûrier	ch. du		Chailly - La Cathédrale
+395	1012	Muveran	ch. du		Chailly - La Cathédrale
+396	1006	Navigation	place de la		Saint-Jean
+397	1003	Neuve	rue		Saint-Laurent - Les Bergières
+398	1004	Noirmont	ch. du		Sud-Ouest lausannois
+399	1004	Noisetiers	ch. des		Saint-Laurent - Les Bergières
+400	1005	Nord	rue du		Chailly - La Cathédrale
+401	1005	Nord	place du		Chailly - La Cathédrale
+402	1066	Ofréquaz	ch. d'		La Sallaz - Les Croisettes
+403	1018	Oiseaux	av. des		Bellevaux - Saint-Luc
+404	1018	Oliviers	rue des		Bellevaux - Saint-Luc
+405	1066	Orchez	ch. des		La Sallaz - Les Croisettes
+406	1005	Orient-Ville	rue		Saint-François - Saint-Jacques
+407	1066	Ormeaux	ch. des		La Sallaz - Les Croisettes
+408	1010	Oron	rte d'	1-29/2-	La Sallaz - Les Croisettes
+409	1010	Oron	rte d'	31-	La Sallaz - Les Croisettes
+410	1000	Oron	rte d'	100-104	La Sallaz - Les Croisettes
+411	1006	Ouchy	av. d'	1-9/2-6	Saint-François - Saint-Jacques
+412	1006	Ouchy	av. d'	11-/8-	Saint-Jean
+413	1006	Ouchy	quai d'		Saint-Jean
+414	1005	Ours	place de l'		Chailly - La Cathédrale
+415	1003	Paix	rue de la		Saint-François - Saint-Jacques
+416	1006	Paleyres	ch. des		Saint-Jean
+417	1003	Palud	place de la		Chailly - La Cathédrale
+418	1004	Pâquerettes	ch. des		Saint-Laurent - Les Bergières
+419	1004	Parc de Valency	ch. du		Sud-Ouest lausannois
+420	1018	Parc-de-la-Rouvraie	av.		Bellevaux - Saint-Luc
+421	1006	Passerose	ch. de		Saint-Jean
+422	1018	Pavement	rte du		Bellevaux - Saint-Luc
+423	1007	Pêcheurs	ch. des		Saint-Jean
+424	1066	Pécholettaz	ch. de la		La Sallaz - Les Croisettes
+425	1005	Pécos	passage du		Chailly - La Cathédrale
+426	1003	Pépinet	place		Saint-Laurent - Les Bergières
+427	1003	Pépinet	rue		Saint-François - Saint-Jacques
+428	1005	Perdonnet	passage	1-3	Saint-François - Saint-Jacques
+429	1005	Perdonnet	passage	2-/5-	Chailly - La Cathédrale
+430	1007	Pervenches	ch. des		Saint-Jean
+431	1003	Petit-Saint-Jean	rue du		Saint-Laurent - Les Bergières
+432	1004	Petit-Valentin	rue du		Saint-Laurent - Les Bergières
+433	1004	Petit-Beaulieu	rue du		Saint-Laurent - Les Bergières
+434	1066	Petit-Cerisier	ch. du		La Sallaz - Les Croisettes
+435	1005	Petit-Château	ch. du		Chailly - La Cathédrale
+436	1003	Petit-Chêne	rue du		Saint-François - Saint-Jacques
+437	1010	Petite-Source	ch. de la		La Sallaz - Les Croisettes
+438	1018	Petit-Flon	ch. du		Bellevaux - Saint-Luc
+439	1003	Petit-Rocher	rue du		Saint-Laurent - Les Bergières
+440	1066	Petit-Vennes	ch. du		La Sallaz - Les Croisettes
+441	1003	Pichard	rue		Saint-Laurent - Les Bergières
+442	1007	Pidou	ch. Auguste-		Saint-Jean
+443	1066	Pierraz	ch. de la		La Sallaz - Les Croisettes
+444	1005	Pierre-de-Plan	ch. de		La Sallaz - Les Croisettes
+445	1004	Pierrefleur	ch. de		Saint-Laurent - Les Bergières
+446	1007	Pierreval	ch. de		Saint-Jean
+447	1012	Pinsons	ch. des		Chailly - La Cathédrale
+448	1007	Plaines	ch. des		Saint-Jean
+449	1018	Plaines-du-Loup	route des		Bellevaux - Saint-Luc
+450	1012	Plaisante	ch. de la		Chailly - La Cathédrale
+451	1066	Planchamps	ch. des		La Sallaz - Les Croisettes
+452	1000	Planche aux Oies	ch. de		La Sallaz - Les Croisettes
+453	1066	Planches	ch. des		La Sallaz - Les Croisettes
+454	1005	Platanes	ch. des		Saint-François - Saint-Jacques
+455	1012	Point-du-Jour	ch. du	6-8	La Sallaz - Les Croisettes
+456	1012	Point-du-Jour	ch. du	10-	Chailly - La Cathédrale
+457	1066	Polny	ch. du		La Sallaz - Les Croisettes
+458	1003	Pont	rue du		Chailly - La Cathédrale
+459	1018	Pontaise	rue de la		Bellevaux - Saint-Luc
+460	1004	Porchat	ch.	18-32	Bellevaux - Saint-Luc
+461	1004	Porchat	ch.	1-/2-16/34-	Saint-Laurent - Les Bergières
+462	1006	Port	place du		Saint-Jean
+463	1066	Possession	ch. de la		La Sallaz - Les Croisettes
+464	1007	Prairie	ch. de la		Sud-Ouest lausannois
+465	1066	Prairie	ch. de la		La Sallaz - Les Croisettes
+466	1010	Praz-Berthoud	ch. de		La Sallaz - Les Croisettes
+467	1066	Praz-Buchilly	ch. du		La Sallaz - Les Croisettes
+468	1010	Praz-Séchaud	ch. de		La Sallaz - Les Croisettes
+469	1000	Praz-Simon	ch. de		La Sallaz - Les Croisettes
+470	1066	Pré-au-Seigneur	ch. du		La Sallaz - Les Croisettes
+471	1004	Pré-du-Marché	rue du		Saint-Laurent - Les Bergières
+472	1066	Pré-d'Yverdon	ch. du		La Sallaz - Les Croisettes
+473	1006	Pré-Fleuri	ch. de		Saint-Jean
+474	1004	Presbytère	ch. du		Saint-Laurent - Les Bergières
+475	1066	Près-les-Bois	ch. de		La Sallaz - Les Croisettes
+476	1003	Préville	ch. de		Saint-François - Saint-Jacques
+477	1004	Prilly	rte de	11-17/12-18	Prilly - Jouxtens
+478	1004	Prilly	rte de		Saint-Laurent - Les Bergières
+479	1007	Primerose	ch. de		Saint-Jean
+480	1007	Provence	av. de		Sud-Ouest lausannois
+481	1007	Pyramides	ch. des		Sud-Ouest lausannois
+482	1066	Raidillon	ch. du		La Sallaz - Les Croisettes
+483	1006	Rasude	av. de la		Saint-François - Saint-Jacques
+484	1012	Ravin	ch. du		Chailly - La Cathédrale
+485	1007	Réchoz	ch. de		Saint-Jean
+486	1004	Recordon	av.		Sud-Ouest lausannois
+487	1066	Marcel-Regamey	ch.		La Sallaz - Les Croisettes
+488	1004	Renens	ch. de		Sud-Ouest lausannois
+489	1005	Renou	ch.		Chailly - La Cathédrale
+490	1007	Reposoir	ch. du		Saint-Jean
+491	1012	Réservoir	ch. du		Chailly - La Cathédrale
+492	1004	Retraites	ch. des		Sud-Ouest lausannois
+493	1007	Rhodanie	av. de		Saint-Jean
+494	1004	Riant-Mont	av.		Saint-Laurent - Les Bergières
+495	1010	Riant-Pré	ch. de		La Sallaz - Les Croisettes
+496	1012	Riant-Val	ch. de		Chailly - La Cathédrale
+497	1012	Riolet	ch. du		Chailly - La Cathédrale
+498	1009	Riolet	ch. du		Pully - Paudex
+499	1020	Rionza	ch. de		Sud-Ouest lausannois
+500	1005	Riponne	place de la		Saint-Laurent - Les Bergières
+501	1004	Risoux	ch. du		Sud-Ouest lausannois
+502	1066	Roches	ch. des		La Sallaz - Les Croisettes
+503	1018	Romanel	rte de		Bellevaux - Saint-Luc
+504	1006	Rond-Point	av. du		Saint-Jean
+505	1006	Rosemont	av. de		Saint-François - Saint-Jacques
+506	1006	Roseneck	ch. de		Saint-Jean
+507	1012	Rosière	ch. de la		Chailly - La Cathédrale
+508	1004	Rosiers	ch. des		Saint-Laurent - Les Bergières
+509	1012	Rossel	av. Virgile-		Chailly - La Cathédrale
+510	1003	Rôtillon	rue du		Saint-François - Saint-Jacques
+511	1005	Roux	rue Dr César-		Chailly - La Cathédrale
+512	1012	Rovéréaz	ch. de		Chailly - La Cathédrale
+513	1007	Ruines-Romaines	ch. des		Saint-Jean
+514	1066	Ruisseau-Martin	ch. du		La Sallaz - Les Croisettes
+515	1005	Rumine	av. de		Saint-François - Saint-Jacques
+516	1007	Sablons	ch. des		Saint-Jean
+517	1004	Salève	ch. du		Bellevaux - Saint-Luc
+518	1005	Sallaz	av. de la		La Sallaz - Les Croisettes
+519	1010	Sallaz	av. de la	29-85/30-86	La Sallaz - Les Croisettes
+520	1010	Sallaz	place de la		La Sallaz - Les Croisettes
+521	1006	Sandoz	ch. Edouard-		Saint-Jean
+522	1018	Sauges	ch. des		Bellevaux - Saint-Luc
+523	1006	Saugettes	passage des		Saint-Jean
+524	1018	Sauvabelin>Lausanne			Bellevaux - Saint-Luc
+525	1003	Savoie	av. de		Saint-François - Saint-Jacques
+526	1003	Schnetzler	av. André-		Saint-François - Saint-Jacques
+527	1004	Sébeillon	rue		Sud-Ouest lausannois
+528	1005	Secrétan	av. Charles-		Chailly - La Cathédrale
+529	1006	Servan	av. du		Saint-Jean
+530	1004	Sévelin	av. de	10-58	Sud-Ouest lausannois
+531	1004	Sévelin	av. de	13-15	Sud-Ouest lausannois
+532	1007	Sévelin	av. de	2-6	Sud-Ouest lausannois
+533	1004	Sévery	av. de		Sud-Ouest lausannois
+534	1018	Signal	rte du		Bellevaux - Saint-Luc
+535	1005	Simplemont	ch. de		Chailly - La Cathédrale
+536	1006	Simplon	rue du		Saint-Jean
+537	1006	Solange	av.		Saint-François - Saint-Jacques
+538	1012	Sorbiers	ch. des		Chailly - La Cathédrale
+539	1007	Stade	ch. du		Saint-Jean
+540	1005	Sainte-Beuve	rue		Saint-François - Saint-Jacques
+541	1004	Steinlen	ch. Aimé-		Saint-Laurent - Les Bergières
+542	1003	Sainte-Luce	av.		Saint-François - Saint-Jacques
+543	1005	Saint-Etienne	rue		Chailly - La Cathédrale
+544	1003	Saint-François	place		Saint-François - Saint-Jacques
+545	1003	Saint-François	rue		Saint-François - Saint-Jacques
+546	1003	Saint-François	passage		Saint-François - Saint-Jacques
+547	1003	Saint-Laurent	rue		Saint-Laurent - Les Bergières
+548	1003	Saint-Martin	rue	2-22/3-27	Chailly - La Cathédrale
+549	1005	Saint-Martin	rue	24-38/29-33	Chailly - La Cathédrale
+550	1004	Saint-Paul	av.		Saint-Laurent - Les Bergières
+551	1003	Saint-Pierre	rue		Saint-François - Saint-Jacques
+552	1004	Strasbourg	rue de		Saint-Laurent - Les Bergières
+553	1004	Saint-Roch	rue		Saint-Laurent - Les Bergières
+554	1007	Suchet	ch. du		Saint-Jean
+555	1066	Sylvana	ch. de		La Sallaz - Les Croisettes
+556	1010	Temple	av. du	40	La Sallaz - Les Croisettes
+557	1012	Temple	av. du	43-	La Sallaz - Les Croisettes
+558	1012	Temple	av. du	2-34/1-41	Chailly - La Cathédrale
+559	1003	Terreaux	rue des		Saint-Laurent - Les Bergières
+560	1005	Théâtre	av. du		Saint-François - Saint-Jacques
+561	1006	Tilleuls	av. des		Saint-Jean
+562	1006	Tissot	av.		Saint-François - Saint-Jacques
+563	1007	Tivoli	av. de		Sud-Ouest lausannois
+564	1005	Toises	av. des		Saint-François - Saint-Jacques
+565	1004	Tonnelles	ch. des		Saint-Laurent - Les Bergières
+566	1004	Tour	rue de la		Saint-Laurent - Les Bergières
+567	1007	Tour-Grise	ch. de la		Sud-Ouest lausannois
+568	1006	Trabandan	ch. du		Saint-François - Saint-Jacques
+569	1018	Traversière	rue		Bellevaux - Saint-Luc
+570	1006	Treyblanc	ch. du		Saint-François - Saint-Jacques
+571	1005	Tribunal-Fédéral	av. du		Saint-François - Saint-Jacques
+572	1005	Trois Rois	ch. des		Saint-François - Saint-Jacques
+573	1066	Tuileries	ch. des		La Sallaz - Les Croisettes
+574	1005	Tunnel	place du		Chailly - La Cathédrale
+575	1005	Tunnel	rue du		Saint-Laurent - Les Bergières
+576	1005	Université	av. de l'		Chailly - La Cathédrale
+577	1012	Val d'Angrogne	ch. du		Chailly - La Cathédrale
+578	1012	Valdézia	ch. de		Chailly - La Cathédrale
+579	1004	Valentin	rue du	1-45/2-48	Saint-Laurent - Les Bergières
+580	1004	Valentin	rue du	47-/50-	Bellevaux - Saint-Luc
+581	1010	Valfaye	ch. de		La Sallaz - Les Croisettes
+582	1007	Jeunesse	vallée de la		Sud-Ouest lausannois
+583	1004	Vallombreuse	av. de la		Saint-Laurent - Les Bergières
+584	1004	Vallombreuse	ch. de la		Saint-Laurent - Les Bergières
+585	1008	Vallombreuse	av. de la		Prilly - Jouxtens
+586	1005	Vallon	rue		Chailly - La Cathédrale
+587	1005	Vallon	place		Chailly - La Cathédrale
+588	1012	Vallonnette	av. de la		Chailly - La Cathédrale
+589	1010	Valmont	av. de		La Sallaz - Les Croisettes
+590	1006	Vanil	ch. du		Saint-François - Saint-Jacques
+591	1066	Vaugueny	ch. du		La Sallaz - Les Croisettes
+592	1005	Verdeil	av.		Saint-François - Saint-Jacques
+593	1010	Verdonnet	ch. de	17	La Sallaz - Les Croisettes
+594	1010	Verdonnet	ch. de	1-15/19-/2-	Chailly - La Cathédrale
+595	1006	Vermont	ch.		Saint-Jean
+596	1012	Ruffy	av. Victor-	41-/54-	La Sallaz - Les Croisettes
+597	1012	Ruffy	av. Victor-	1-39/2-52	Chailly - La Cathédrale
+598	1007	Vidy	rte de		Saint-Jean
+599	1018	Vieux-Moulin	av. du		Bellevaux - Saint-Luc
+600	1006	Vieux-Port	place du		Saint-Jean
+601	1003	Vigie	rue de la		Sud-Ouest lausannois
+602	1004	Vigie	rue de la	12	Sud-Ouest lausannois
+603	1004	Vignes d'Argent	ch. des		Sud-Ouest lausannois
+604	1012	Village	ch. du		Chailly - La Cathédrale
+605	1066	Village	rte du		La Sallaz - Les Croisettes
+606	1005	Villamont	av. de		Saint-François - Saint-Jacques
+607	1007	Villard	ch. de		Saint-François - Saint-Jacques
+608	1004	Villardin	ch. de		Saint-Laurent - Les Bergières
+609	1004	Vinet	av. Alexandre-		Saint-Laurent - Les Bergières
+610	1004	Vingt-Quatre Janvier	av. du		Saint-Laurent - Les Bergières
+611	1018	Violette	quartier de la		Bellevaux - Saint-Luc
+612	1003	Viret	rue Pierre-		Chailly - La Cathédrale
+613	1006	Voltaire	rue		Saint-Jean
+614	1005	Vuachère	ch. de la	1-15/2-18	Saint-François - Saint-Jacques
+615	1012	Vuachère	ch. de la	17-/20	Chailly - La Cathédrale
+616	1005	Vuillermet	rue Charles		Chailly - La Cathédrale
+617	1005	Vulliemin	av. Louis-		Chailly - La Cathédrale
+618	1007	Warnery	av.		Saint-Jean
+619	1006	William-Fraisse	av.		Saint-Jean
+620	1004	Yverdon	av. d'		Saint-Laurent - Les Bergières
+621	1123	Aclens			Lonay - Préverenges - Vullierens
+622	1352	Agiez			Orbe - Agiez
+623	1860	Aigle			Aigle
+624	1165	Allaman			L'Aubonne
+625	1143	Apples			Pied du Jura
+626	1277	Arnex-sur-Nyon			La Dôle
+627	1321	Arnex-sur-Orbe			Orbe - Agiez
+628	1463	Arrissoules>Rovray			Yvonand
+629	1273	Arzier>Arzier-Le Muids			Saint-Cergue
+630	1042	Assens			Talent
+631	1170	Aubonne			L'Aubonne
+632	1580	Avenches			Vully - Avenches
+633	1338	Ballaigues			Ballaigues - Lignerolle
+634	1144	Ballens			Pied du Jura
+635	1269	Bassins			Begnins - Burtigny
+636	1446	Baulmes			Baulmes - Rances
+637	1372	Bavois			Chavornay
+638	1268	Begnins			Begnins - Burtigny
+639	1585	Bellerive>Bellerive VD			Vully - Avenches
+640	1092	Belmont-sur-Lausanne			Belmont - Lutry
+641	1432	Belmont-sur-Yverdon			Pomy - Gressy - Suchy
+642	1038	Bercher			Sauteruz
+643	1149	Berolle			Pied du Jura
+644	1042	Bettens			Talent
+645	1880	Bex			Les Avançons
+646	1145	Bière			Pied du Jura
+647	1407	Bioley-Magnoux			Pâquier - Donneloye
+648	1042	Bioley-Orjulaz			Talent
+649	1807	Blonay			Blonay - Saint-Légier
+650	1353	Bofflens			Orbe - Agiez
+651	1279	Bogis-Bossey			Terre Sainte
+652	1098	Mont-Chervet	ch. du		Saint-Saphorin
+653	1427	Bonvillars			L'Arnon
+654	1277	Borex			La Dôle
+655	1041	Bottens			Haute-Menthue
+656	1172	Bougy-Villars			L'Aubonne
+657	1063	Boulens			Plateau du Jorat
+658	1035	Bournens			Vufflens-la-Ville
+659	1034	Boussens			Vufflens-la-Ville
+660	1121	Bremblens			Lonay - Préverenges - Vullierens
+661	1683	Brenles			Curtilles - Lucens
+662	1510	Bressonnaz>Moudon			Moudon - Syens
+663	1053	Bretigny-sur-Morrens			Le Haut-Talent
+664	1329	Bretonnières			Vaulion - Romainmôtier
+665	1164	Buchillon			L'Aubonne
+666	1180	Bugnaux>Rolle			Coeur de la Côte
+667	1453	Bullet			Balcon du Jura
+668	1195	Bursinel			Coeur de la Côte
+669	1183	Bursins			Coeur de la Côte
+670	1268	Burtigny			Begnins - Burtigny
+671	1030	Bussigny-près-Lausanne>Bussigny			Bussigny - Villars-Sainte-Croix
+672	1608	Bussigny-sur-Oron			Oron - Palézieux
+673	1136	Bussy-Chardonney			Pied du Jura
+674	1514	Bussy-sur-Moudon			Moudon - Syens
+675	1084	Carrouge>Carrouge VD			Jorat
+676	1298	Céligny			Terre Sainte
+677	1682	Cerniaz>Cerniaz VD			Granges et environs
+678	1589	Chabrey			Vully - Avenches
+679	1436	Chamblon			Montagny - Champvent
+680	1424	Champagne			L'Arnon
+681	1588	Champmartin>Cudrefin			Vully - Avenches
+682	1537	Champtauroz			Granges et environs
+683	1443	Champvent			Montagny - Champvent
+684	1409	Chanéaz			Pâquier - Donneloye
+685	1063	Chapelle-sur-Moudon			Plateau du Jorat
+686	1803	Chardonne			Chardonne - Jongny
+687	1660	Château-d'Oex			Pays-d'Enhaut
+688	1610	Châtillens			Oron - Palézieux
+689	1279	Chavannes-de-Bogis			Terre Sainte
+690	1290	Chavannes-des-Bois			Terre Sainte
+691	1464	Chavannes-le-Chêne			Pâquier - Donneloye
+692	1148	Chavannes-le-Veyron			Veyron - Venoge
+693	1022	Chavannes-près-Renens			Chavannes - Epenex
+694	1512	Chavannes-sur-Moudon			Moudon - Syens
+695	1373	Chavornay			Chavornay
+696	1464	Chêne-Pâquier			Pâquier - Donneloye
+697	1683	Chesalles-sur-Moudon			Curtilles - Lucens
+698	1608	Chesalles-sur-Oron			Oron - Palézieux
+699	1400	Cheseaux-Noréaz			Yverdon-Temple
+700	1033	Cheseaux-sur-Lausanne			Cheseaux - Romanel
+701	1275	Chéserex			La Dôle
+702	1846	Chessel			Villeneuve – Haut-Lac
+703	1316	Chevilly			La Sarraz
+704	1545	Chevroux			Payerne - Corcelles - Ressudens
+705	1071	Chexbres			Saint-Saphorin
+706	1134	Chigny			Saint-Prex - Lussy - Vufflens
+707	1127	Clarmont			Pied du Jura
+708	1267	Coinsins			Gland
+709	1114	Colombier>Colombier VD			Morges - Échichens
+710	1535	Combremont-le-Grand			Granges et environs
+711	1536	Combremont-le-Petit			Granges et environs
+712	1291	Commugny			Terre Sainte
+713	1426	Concise			Mont-Aubert
+714	1587	Constantine			Vully - Avenches
+715	1296	Coppet			Terre Sainte
+716	1856	Corbeyrier			Aigle
+717	1082	Corcelles-le-Jorat			Jorat
+718	1426	Corcelles-près-Concise			Mont-Aubert
+719	1562	Corcelles-près-Payerne			Payerne - Corcelles - Ressudens
+720	1374	Corcelles-sur-Chavornay			Chavornay
+721	1410	Correvon			Plateau du Jorat
+722	1410	Prévondavaux			Plateau du Jorat
+723	1802	Corseaux			Corsier - Corseaux
+724	1804	Corsier-sur-Vevey			Corsier - Corseaux
+725	1304	Cossonay-Ville			Cossonay - Grancy
+726	1116	Cottens>Cottens VD			Pied du Jura
+727	1299	Crans-près-Céligny			Nyon
+728	1263	Crassier			La Dôle
+729	1526	Cremin			Curtilles - Lucens
+730	1023	Crissier			Crissier
+731	1406	Cronay			Pomy - Gressy - Suchy
+732	1322	Croy			Vaulion - Romainmôtier
+733	1148	Cuarnens			Veyron - Venoge
+734	1404	Cuarny			Pomy - Gressy - Suchy
+735	1588	Cudrefin			Vully - Avenches
+736	1053	Cugy>Cugy VD			Le Haut-Talent
+737	1096	Cully			Villette
+738	1521	Curtilles			Curtilles - Lucens
+739	1306	Daillens			Penthalaz
+740	1415	Démoret			Pâquier - Donneloye
+741	1135	Denens			Saint-Prex - Lussy - Vufflens
+742	1410	Denezy			Plateau du Jorat
+743	1026	Denges			Lonay - Préverenges - Vullierens
+744	1304	Dizy			Cossonay - Grancy
+745	1041	Dommartin			Haute-Menthue
+746	1682	Dompierre>Dompierre VD			Granges et environs
+747	1580	Donatyre			Vully - Avenches
+748	1407	Donneloye			Pâquier - Donneloye
+749	1266	Duillier			Genolier
+750	1195	Dully			Coeur de la Côte
+751	1040	Echallens			Echallens
+752	1026	Echandens			Lonay - Préverenges - Vullierens
+753	1112	Echichens>Échichens			Morges - Échichens
+754	1376	Eclagnens			Talent
+755	1312	Eclépens			La Sarraz
+756	1612	Ecoteaux			Oron - Palézieux
+757	1024	Forêt	ch. de la		Chavannes - Epenex
+758	1024	Suchet	ch. du		Chavannes - Epenex
+759	1024	Bochet	ch. du		Chavannes - Epenex
+760	1024	Champ-Colomb	ch. de		Chavannes - Epenex
+761	1024	Glycines	ch. des		Chavannes - Epenex
+762	1024	Tir-Fédéral	av. du	1-/2-44	Chavannes - Epenex
+763	1024	Tir-Fédéral	av. du	46-	Ecublens - Saint-Sulpice
+764	1024	Pont-Bleu	rte du		Chavannes - Epenex
+765	1024	Ecublens>Ecublens VD			Ecublens - Saint-Sulpice
+766	1066	Epalinges			La Sallaz - Les Croisettes
+767	1434	Ependes>Ependes VD			Pomy - Gressy - Suchy
+768	1098	Epesses			Villette
+769	1078	Essertes			Oron - Palézieux
+770	1186	Essertines-sur-Rolle			Gimel - Longirod
+771	1417	Essertines-sur-Yverdon			Sauteruz
+772	1435	Essert-Pittet			Chavornay
+773	1443	Essert-sous-Champvent			Montagny - Champvent
+774	1037	Etagnières			Talent
+775	1163	Etoy			L'Aubonne
+776	1262	Eysins			La Dôle
+777	1595	Faoug			Vully - Avenches
+778	1173	Féchy			L'Aubonne
+779	1076	Ferlens>Ferlens VD			Jorat
+780	1313	Ferreyres			La Sarraz
+781	1044	Fey			Sauteruz
+782	1420	Fiez			L'Arnon
+783	1421	Fontaines-sur-Grandson			L'Arnon
+784	1423	Fontanezier			L'Arnon
+785	1072	Forel (Lavaux)			Savigny - Forel
+786	1526	Forel-sur-Lucens			Curtilles - Lucens
+787	1297	Founex			Terre Sainte
+788	1055	Froideville			Le Haut-Talent
+789	1272	Genolier			Genolier
+790	1429	Giez			Grandson
+791	1182	Gilly			Coeur de la Côte
+792	1188	Gimel			Gimel - Longirod
+793	1276	Gingins			La Dôle
+794	1271	Givrins			Genolier
+795	1196	Gland			Gland
+796	1124	Gollion			Cossonay - Grancy
+797	1822	Chernex			Montreux - Veytaux
+798	1376	Goumoëns-la-Ville>Goumoens-la-Ville			Talent
+799	1376	Goumoëns-le-Jux>Goumoens-le-Jux			Talent
+800	1117	Grancy			Cossonay - Grancy
+801	1543	Grandcour			Payerne - Corcelles - Ressudens
+802	1421	Grandevent			L'Arnon
+803	1422	Grandson			Grandson
+804	1091	Grandvaux			Villette
+805	1523	Granges-près-Marnand			Granges et environs
+806	1274	Grens			La Dôle
+807	1432	Gressy			Pomy - Gressy - Suchy
+808	1882	Gryon			Les Avançons
+809	1525	Henniez			Granges et environs
+810	1513	Hermenches			Moudon - Syens
+811	1805	Jongny			Chardonne - Jongny
+812	1008	Jouxtens-Mézery			Prilly - Jouxtens
+813	1326	Juriens			Vaulion - Romainmôtier
+814	1308	La Chaux (Cossonay)			Cossonay - Grancy
+815	1148	La Praz			Vaulion - Romainmôtier
+816	1278	La Rippe			La Dôle
+817	1613	La Rogivue>Maracon			Oron - Palézieux
+818	1315	La Sarraz			La Sarraz
+819	1814	La Tour-de-Peilz			La Tour-de-Peilz
+820	1344	L'Abbaye			La Vallée
+821	1355	L'Abergement			Ballaigues - Lignerolle
+822	1892	Lavey-Village			Les Avançons
+823	1892	Lavey-les-Bains			Les Avançons
+824	1175	Lavigny			L'Aubonne
+825	1345	Le Lieu			La Vallée
+826	1345	Le Séchey			La Vallée
+827	1052	Le Mont-sur-Lausanne			Le Mont-sur-Lausanne
+828	1261	Le Vaud			Begnins - Burtigny
+829	1356	Les Clées			Ballaigues - Lignerolle
+830	1080	Les Cullayes			Jorat
+831	1607	Les Tavernes			Oron - Palézieux
+832	1607	Les Thioleyres			Oron - Palézieux
+833	1854	Leysin			Ormonts - Leysin
+834	1357	Lignerolle			Ballaigues - Lignerolle
+835	1148	L'Isle			Veyron - Venoge
+836	1027	Lonay			Lonay - Préverenges - Vullierens
+837	1261	Longirod			Gimel - Longirod
+838	1682	Lovatens			Curtilles - Lucens
+839	1522	Lucens			Curtilles - Lucens
+840	1184	Luins			Coeur de la Côte
+841	1132	Lully>Lully VD			Saint-Prex - Lussy - Vufflens
+842	1307	Lussery-Villars			Cossonay - Grancy
+843	1167	Lussy-sur-Morges			Saint-Prex - Lussy - Vufflens
+844	1095	Lutry			Belmont - Lutry
+845	1042	Malapalud>Assens			Talent
+846	1613	Maracon			Oron - Palézieux
+847	1261	Marchissy			Gimel - Longirod
+848	1524	Marnand			Granges et environs
+849	1063	Martherenges			Plateau du Jorat
+850	1438	Mathod			Montagny - Champvent
+851	1453	Mauborget			Balcon du Jura
+852	1148	Mauraz			Veyron - Venoge
+853	1031	Mex>Mex VD			Vufflens-la-Ville
+854	1407	Mézery-près-Donneloye			Pâquier - Donneloye
+855	1083	Mézières>Mézières VD			Jorat
+856	1295	Mies			Terre Sainte
+857	1565	Missy			Payerne - Corcelles - Ressudens
+858	1148	Moiry>Moiry VD			Veyron - Venoge
+859	1146	Mollens>Mollens VD			Pied du Jura
+860	1415	Molondin			Pâquier - Donneloye
+861	1125	Monnaz			Morges - Échichens
+862	1442	Montagny-près-Yverdon			Montagny - Champvent
+863	1041	Montaubion-Chardonney			Haute-Menthue
+864	1354	Montcherand			Ballaigues - Lignerolle
+865	1174	Montherod			L'Aubonne
+866	1148	Mont-la-Ville			Veyron - Venoge
+867	1587	Montmagny			Vully - Avenches
+868	1081	Montpreveyres			Jorat
+869	1820	Montreux			Montreux - Veytaux
+870	1147	Montricher			Veyron - Venoge
+871	1185	Mont-sur-Rolle			Coeur de la Côte
+872	1110	Morges			Morges - Échichens
+873	1054	Morrens>Morrens VD			Le Haut-Talent
+874	1510	Moudon			Moudon - Syens
+875	1787	Mur>Mur (Vully) VD			Vully - Avenches
+876	1787	Mur (Vully) FR			Vully - Avenches
+877	1787	Môtier (Vully)			Vully - Avenches
+878	1428	Mutrux			Mont-Aubert
+879	1041	Naz			Haute-Menthue
+880	1515	Neyruz-sur-Moudon			Plateau du Jorat
+881	1431	Novalles			L'Arnon
+882	1845	Noville			Villeneuve – Haut-Lac
+883	1260	Nyon			Nyon
+884	1045	Ogens			Plateau du Jorat
+885	1580	Oleyres			Vully - Avenches
+886	1867	Ollon>Ollon VD			Ollon - Villars
+887	1425	Onnens>Onnens VD			Mont-Aubert
+888	1047	Oppens			Sauteruz
+889	1350	Orbe			Orbe - Agiez
+890	1430	Orges			Grandson
+891	1863	Le Sépey			Ormonts - Leysin
+892	1865	Les Diablerets			Ormonts - Leysin
+893	1317	Orny			La Sarraz
+894	1610	Oron-la-Ville			Oron - Palézieux
+895	1608	Oron-le-Châtel			Oron - Palézieux
+896	1413	Orzens			Sauteruz
+897	1377	Oulens-sous-Echallens			Talent
+898	1522	Oulens-sur-Lucens			Curtilles - Lucens
+899	1416	Pailly			Sauteruz
+900	1607	Palézieux			Oron - Palézieux
+901	1142	Pampigny			Pied du Jura
+902	1094	Paudex			Pully - Paudex
+903	1530	Payerne			Payerne - Corcelles - Ressudens
+904	1059	Peney-le-Jorat			Plateau du Jorat
+905	1305	Penthalaz			Penthalaz
+906	1303	Penthaz			Penthalaz
+907	1375	Penthéréaz			Talent
+908	1166	Perroy			Coeur de la Côte
+909	1063	Peyres-Possens			Plateau du Jorat
+910	1174	Pizy			L'Aubonne
+911	1041	Poliez-le-Grand			Haute-Menthue
+912	1041	Poliez-Pittet			Haute-Menthue
+913	1318	Pompaples			La Sarraz
+914	1405	Pomy			Pomy - Gressy - Suchy
+915	1408	Prahins			Pâquier - Donneloye
+916	1197	Prangins			Nyon
+917	1324	Premier			Vaulion - Romainmôtier
+918	1028	Préverenges			Lonay - Préverenges - Vullierens
+919	1682	Prévonloup			Granges et environs
+920	1008	Prilly			Prilly - Jouxtens
+921	1428	Provence			Mont-Aubert
+922	1070	Puidoux			Saint-Saphorin
+923	1009	Pully			Pully - Paudex
+924	1439	Rances			Baulmes - Rances
+925	1020	Caudray	rue du	2-	Chavannes - Epenex
+926	1020	Censuy	av. du	1-9/2-	Chavannes - Epenex
+927	1020	Gare	av. de la		Chavannes - Epenex
+928	1020	Gare	place de la		Chavannes - Epenex
+929	1020	Piscine	av. de la		Chavannes - Epenex
+930	1020	Préfaully	av. de		Chavannes - Epenex
+931	1020	Silo	av. du		Chavannes - Epenex
+932	1020	Simplon	rue du		Chavannes - Epenex
+933	1020	Chêne	ch. du	1-11/2-10	Chavannes - Epenex
+934	1020	Chêne	ch. du	12-/13-	Sud-Ouest lausannois
+935	1020	Lac	rue du	1-29/2-22	Renens
+936	1020	Lac	rue du	31-/24-	Sud-Ouest lausannois
+937	1020	Rionza	ch. du		Sud-Ouest lausannois
+938	1020	Renens>Renens VD			Renens
+939	1847	Rennaz			Villeneuve – Haut-Lac
+940	1128	Reverolle			Pied du Jura
+941	1097	Riex			Villette
+942	1071	Rivaz			Saint-Saphorin
+943	1852	Roche>Roche VD			Villeneuve – Haut-Lac
+944	1180	Rolle			Coeur de la Côte
+945	1323	Romainmôtier			Vaulion - Romainmôtier
+946	1423	Romairon			L'Arnon
+947	1032	Romanel-sur-Lausanne			Cheseaux - Romanel
+948	1122	Romanel-sur-Morges			Lonay - Préverenges - Vullierens
+949	1088	Ropraz			Jorat
+950	1513	Rossenges			Moudon - Syens
+951	1554	Rossens>Rossens VD			Granges et environs
+952	1658	Rossinière			Pays-d'Enhaut
+953	1659	Rougemont			Pays-d'Enhaut
+954	1463	Rovray			Yvonand
+955	1046	Rueyres			Sauteruz
+956	1264	St-Cergue			Saint-Cergue
+957	1410	St-Cierges			Plateau du Jorat
+958	1188	St-George			Gimel - Longirod
+959	1806	St-Légier-La Chiésaz			Blonay - Saint-Légier
+960	1176	St-Livres			L'Aubonne
+961	1187	St-Oyens			Gimel - Longirod
+962	1162	St-Prex			Saint-Prex - Lussy - Vufflens
+963	1071	St-Saphorin (Lavaux)			Saint-Saphorin
+964	1113	St-Saphorin-sur-Morges			Morges - Échichens
+965	1025	St-Sulpice>St-Sulpice VD			Ecublens - Saint-Sulpice
+966	1683	Sarzens			Curtilles - Lucens
+967	1534	Sassel			Granges et environs
+968	1189	Saubraz			Gimel - Longirod
+969	1073	Savigny			Savigny - Forel
+970	1554	Sédeilles			Granges et environs
+971	1525	Seigneux			Granges et environs
+972	1304	Senarclens			Cossonay - Grancy
+973	1355	Sergey			Ballaigues - Lignerolle
+974	1077	Servion			Jorat
+975	1141	Sévery			Pied du Jura
+976	1274	Signy			La Dôle
+977	1062	Sottens			Plateau du Jorat
+978	1450	Ste-Croix			Balcon du Jura
+979	1890	St-Maurice			Les Avançons
+980	1433	Suchy			Pomy - Gressy - Suchy
+981	1043	Sugnens			Haute-Menthue
+982	1036	Sullens			Vufflens-la-Ville
+983	1437	Suscévaz			Montagny - Champvent
+984	1510	Syens			Moudon - Syens
+985	1295	Tannay			Terre Sainte
+986	1180	Tartegnin			Coeur de la Côte
+987	1410	Thierrens			Plateau du Jorat
+988	1131	Tolochenaz			Saint-Prex - Lussy - Vufflens
+989	1270	Trélex			Genolier
+990	1552	Trey			Granges et environs
+991	1436	Treycovagnes			Montagny - Champvent
+992	1538	Treytorrens (Payerne)			Granges et environs
+993	1412	Ursins			Pomy - Gressy - Suchy
+994	1441	Valeyres-sous-Montagny			Montagny - Champvent
+995	1358	Valeyres-sous-Rances			Baulmes - Rances
+996	1412	Valeyres-sous-Ursins			Pomy - Gressy - Suchy
+997	1586	Vallamand			Vully - Avenches
+998	1337	Vallorbe			Vallorbe
+999	1423	Vaugondry			L'Arnon
+1000	1325	Vaulion			Vaulion - Romainmôtier
+1001	1126	Vaux-sur-Morges			Saint-Prex - Lussy - Vufflens
+1002	1800	Vevey			Vevey
+1003	1820	Veytaux			Montreux - Veytaux
+1004	1267	Vich			Gland
+1005	1682	Villars-Bramard			Granges et environs
+1006	1423	Villars-Burquin			L'Arnon
+1007	1404	Villars-Epeney			Yvonand
+1008	1515	Villars-le-Comte			Curtilles - Lucens
+1009	1584	Villars-le-Grand			Vully - Avenches
+1010	1040	Villars-le-Terroir			Talent
+1011	1061	Villars-Mendraz			Plateau du Jorat
+1012	1029	Villars-Ste-Croix			Bussigny - Villars-Sainte-Croix
+1013	1443	Villars-sous-Champvent			Montagny - Champvent
+1014	1168	Villars-sous-Yens			Saint-Prex - Lussy - Vufflens
+1015	1058	Villars-Tiercelin			Haute-Menthue
+1016	1555	Villarzel			Granges et environs
+1017	1844	Villeneuve>Villeneuve VD			Villeneuve – Haut-Lac
+1018	1096	Villette (Lavaux)			Villette
+1019	1184	Vinzel			Coeur de la Côte
+1020	1418	Vuarrens			Sauteruz
+1021	1509	Vucherens			Jorat
+1022	1302	Vufflens-la-Ville			Vufflens-la-Ville
+1023	1134	Vufflens-le-Château			Saint-Prex - Lussy - Vufflens
+1024	1431	Vugelles-La Mothe			L'Arnon
+1025	1610	Vuibroye			Oron - Palézieux
+1026	1445	Vuiteboeuf			Baulmes - Rances
+1027	1085	Vulliens			Jorat
+1028	1115	Vullierens			Lonay - Préverenges - Vullierens
+1029	1169	Yens			Saint-Prex - Lussy - Vufflens
+1030	1462	Yvonand			Yvonand
+1031	1853	Yvorne			Aigle
+1032	1452	Les Rasses			Balcon du Jura
+1033	1454	L'Auberson			Balcon du Jura
+1034	1454	La Chaux>L'Auberson			Balcon du Jura
+1035	1454	La Vraconnaz			Balcon du Jura
+1036	1040	St-Barthélemy>St-Barthélemy VD			Talent
+1037	1816	Chailly-Montreux			Clarens
+1038	1817	Brent			Clarens
+1039	1815	Clarens			Clarens
+1040	1346	Les Bioux			La Vallée
+1041	1341	Orient			La Vallée
+1042	1348	Le Brassus			La Vallée
+1043	1343	Les Charbonnières			La Vallée
+1044	1864	Vers-L'Eglise			Ormonts - Leysin
+1045	1866	La Forclaz>La Forclaz VD			Ormonts - Leysin
+1046	1862	les Mosses			Ormonts - Leysin
+1047	1551	Vers-chez-Perrin			Payerne - Corcelles - Ressudens
+1048	1823	Glion			Montreux - Veytaux
+1049	1090	La Croix (Lutry)			Belmont - Lutry
+1050	1400	Acacias	rue des		Yverdon-Temple
+1051	1400	Aérodrome	ch. de l'		Yverdon-Temple
+1052	1400	Alpes	rue des		Yverdon-Temple
+1053	1400	Ancienne-Douane	quai de l'		Yverdon-Temple
+1054	1400	Ancien-Stand	rue de l'		Yverdon-Temple
+1055	1400	Ancienne-Poste	rue		Yverdon-Temple
+1056	1400	Arsenal	rue de		Yverdon-Temple
+1057	1400	Mermod	rue Arthur		Yverdon-Temple
+1058	1400	Auguste-Fallet	prom.		Yverdon-Temple
+1059	1400	Avenir	rue de l'		Yverdon-Fontenay - Les Cygnes
+1060	1400	Bains	av. des		Yverdon-Temple
+1061	1400	Beaumont	ch. de		Yverdon-Temple
+1062	1400	Beauregard	ch. de		Yverdon-Temple
+1063	1400	Bel-Air	place		Yverdon-Fontenay - Les Cygnes
+1064	1400	Bellevue	rte de		Yverdon-Temple
+1065	1400	Belvédère	ch. du		Yverdon-Temple
+1066	1400	Blancherie	rue de la		Yverdon-Fontenay - Les Cygnes
+1067	1400	Bosquets	ch. des		Yverdon-Temple
+1068	1400	Bouleaux	rue des		Yverdon-Fontenay - Les Cygnes
+1069	1400	Bullet	rue de		Yverdon-Fontenay - Les Cygnes
+1070	1400	Buron	rue du		Yverdon-Temple
+1071	1400	Calamin	ch. de		Yverdon-Temple
+1072	1400	Canal	rue du		Yverdon-Fontenay - Les Cygnes
+1073	1400	Candolle	rue de		Yverdon-Temple
+1074	1400	Casernes	rue des		Yverdon-Temple
+1075	1400	Casino	rue du		Yverdon-Temple
+1076	1400	Cerisiers	rue des		Yverdon-Temple
+1077	1400	Chaînettes	rue des		Yverdon-Temple
+1078	1400	Chalamont	ch. de		Yverdon-Temple
+1079	1400	Chamblon	rue de		Yverdon-Fontenay - Les Cygnes
+1080	1400	Champ-Pittet	château de		Yverdon-Temple
+1081	1400	Champs-Lovats	rue des		Yverdon-Temple
+1082	1400	Charmilles	rue des		Yverdon-Fontenay - Les Cygnes
+1083	1400	Chasseron	rue du		Yverdon-Fontenay - Les Cygnes
+1084	1400	Châtelard	rue du		Yverdon-Fontenay - Les Cygnes
+1085	1400	Cheminet	rue de		Yverdon-Fontenay - Les Cygnes
+1086	1400	Cheseaux	rte de		Yverdon-Temple
+1087	1400	Chèvre	ch. de la		Yverdon-Temple
+1088	1400	Clairs-Logis	rue des		Yverdon-Fontenay - Les Cygnes
+1089	1400	Clairmont	ch. de		Yverdon-Temple
+1090	1400	Clendy	rue de		Yverdon-Temple
+1091	1400	Coin-de-Terre	rue du		Yverdon-Fontenay - Les Cygnes
+1092	1400	Collège	rue du		Yverdon-Temple
+1093	1400	Colline	ch. de la		Yverdon-Temple
+1094	1400	Condémines	rue des		Yverdon-Temple
+1095	1400	Cordey	rue		Yverdon-Temple
+1096	1400	Coteau	ch. du		Yverdon-Temple
+1097	1400	Cottages	ch. des		Yverdon-Temple
+1098	1400	Couchant	rue de		Yverdon-Fontenay - Les Cygnes
+1099	1400	Curtil-Maillet	rue du		Yverdon-Fontenay - Les Cygnes
+1100	1400	Cygnes	rue des		Yverdon-Fontenay - Les Cygnes
+1101	1400	Dosson	ruelle		Yverdon-Temple
+1102	1400	Edouard-Verdan	rue		Yverdon-Fontenay - Les Cygnes
+1103	1400	Elie-Bertrand	rue		Yverdon-Temple
+1104	1400	Entremonts	rue d'		Yverdon-Temple
+1105	1400	Faïencerie	rue de la		Yverdon-Temple
+1106	1400	Félice	rue de		Yverdon-Temple
+1107	1400	Fleurettes	rue des		Yverdon-Fontenay - Les Cygnes
+1108	1400	Florimont	ch. de		Yverdon-Temple
+1109	1400	Fontenay	ch. du		Yverdon-Fontenay - Les Cygnes
+1110	1400	Foulques	rue des		Yverdon-Fontenay - Les Cygnes
+1111	1400	Four	rue du		Yverdon-Temple
+1112	1400	Frêne	ch. du		Yverdon-Temple
+1113	1400	Galilée	rue		Yverdon-Temple
+1114	1400	Gare	av. de la		Yverdon-Temple
+1115	1400	Gasparin	rue de		Yverdon-Temple
+1116	1400	Général Guisan	av.		Yverdon-Fontenay - Les Cygnes
+1117	1400	Grands-Champs	aux		Yverdon-Temple
+1118	1400	Grandson	av. de		Yverdon-Fontenay - Les Cygnes
+1119	1400	Graveline	rue de		Yverdon-Temple
+1120	1400	Grèbes	rue des		Yverdon-Fontenay - Les Cygnes
+1121	1400	Clendy	grèves de		Yverdon-Temple
+1122	1400	Haldimand	av.		Yverdon-Temple
+1123	1400	Henry-Correvon	rue		Yverdon-Temple
+1124	1400	Hippodrome	av. de l'		Yverdon-Temple
+1125	1400	Hôpital	rue de l'		Yverdon-Temple
+1126	1400	Indépendance	rue de l'		Yverdon-Temple
+1127	1400	Industrie	rue de l'		Yverdon-Temple
+1128	1400	Iris	avenue des		Yverdon-Temple
+1129	1400	Isles	rue des		Yverdon-Temple
+1130	1400	Rousseau	promenade J.J.		Yverdon-Temple
+1131	1400	Jardins	rue des		Yverdon-Temple
+1132	1400	Jean-André-Venel	rue		Yverdon-Temple
+1133	1400	Jonction	rue de la		Yverdon-Fontenay - Les Cygnes
+1134	1400	Jordils	rue des		Yverdon-Temple
+1135	1400	Kiener	av.		Yverdon-Fontenay - Les Cygnes
+1136	1400	Lac	rue du		Yverdon-Temple
+1137	1400	Lausanne	rte de		Yverdon-Temple
+1138	1400	Léon-Jaquier	rue		Yverdon-Fontenay - Les Cygnes
+1139	1400	Léon-Michaud	rue		Yverdon-Temple
+1140	1400	Levant	rue du		Yverdon-Temple
+1141	1400	Lilas	rue des		Yverdon-Temple
+1142	1400	Liserons	rue des		Yverdon-Temple
+1143	1400	Maison-rouge	rue de la		Yverdon-Temple
+1144	1400	Maladaire	rue de la		Yverdon-Temple
+1145	1400	Mauborget	rue de		Yverdon-Fontenay - Les Cygnes
+1146	1400	Midi	rue du		Yverdon-Temple
+1147	1400	Milieu	rue du		Yverdon-Temple
+1148	1400	Mont-d'Or	rue du		Yverdon-Fontenay - Les Cygnes
+1149	1400	Mont-Tendre	rue du		Yverdon-Fontenay - Les Cygnes
+1150	1400	Montagny	rue de		Yverdon-Fontenay - Les Cygnes
+1151	1400	Montchoisi	rue de		Yverdon-Temple
+1152	1400	Montélaz	rue du		Yverdon-Temple
+1153	1400	Mouettes	rue des		Yverdon-Fontenay - Les Cygnes
+1154	1400	Moulins	rue des		Yverdon-Temple
+1155	1400	Muguets	ch. des		Yverdon-Temple
+1156	1400	Mujon	rue du		Yverdon-Fontenay - Les Cygnes
+1157	1400	Neuchâtel	rue de		Yverdon-Fontenay - Les Cygnes
+1158	1400	Neuve	rue		Yverdon-Temple
+1159	1400	Nogent	quai de		Yverdon-Temple
+1160	1400	Nord	rue du		Yverdon-Temple
+1161	1400	Oiseaux	rue des		Yverdon-Temple
+1162	1400	Orbe	rue d'		Yverdon-Fontenay - Les Cygnes
+1163	1400	Orient	rue de l'		Yverdon-Temple
+1164	1400	Paix	rue de la		Yverdon-Fontenay - Les Cygnes
+1165	1400	Parc	rue du		Yverdon-Fontenay - Les Cygnes
+1166	1400	Payerne	rue de		Yverdon-Temple
+1167	1400	Pêcheurs	rue des		Yverdon-Temple
+1168	1400	Pestalozzi	rue		Yverdon-Temple
+1169	1400	Petits-Champs	rue des		Yverdon-Temple
+1170	1400	Petites Roches	rue des		Yverdon-Temple
+1171	1400	Peupliers	rue des		Yverdon-Fontenay - Les Cygnes
+1172	1400	Philosophes	rue des		Yverdon-Temple
+1173	1400	Pierre-de-Savoie	av.		Yverdon-Temple
+1174	1400	Pins	prom. des		Yverdon-Temple
+1175	1400	Plage	av. de la		Yverdon-Temple
+1176	1400	Plaine	rue de la		Yverdon-Temple
+1177	1400	Plaisance	rue de		Yverdon-Temple
+1178	1400	Pomy	rte de		Yverdon-Temple
+1179	1400	Prairie	quart. de la		Yverdon-Temple
+1180	1400	Pré	rue du		Yverdon-Temple
+1181	1400	Pré-du-Canal	ch. de		Yverdon-Temple
+1182	1400	Pré-Fleuri	ch. du		Yverdon-Temple
+1183	1400	Pré-Français	ch. du		Yverdon-Fontenay - Les Cygnes
+1184	1400	Pré-Neuf	ch. du		Yverdon-Fontenay - Les Cygnes
+1185	1400	Prés-du-Lac	rue des		Yverdon-Fontenay - Les Cygnes
+1186	1400	Préville	cité		Yverdon-Fontenay - Les Cygnes
+1187	1400	Quatorze-Avril	rue du		Yverdon-Temple
+1188	1400	Quatre Marronniers	av. des		Yverdon-Temple
+1189	1400	Remparts	rue des		Yverdon-Temple
+1190	1400	Riant-Fleurs	ch. de		Yverdon-Temple
+1191	1400	Rivage	rue du		Yverdon-Fontenay - Les Cygnes
+1192	1400	Guimps	rue Roger de		Yverdon-Temple
+1193	1400	Roselière	rue de la		Yverdon-Fontenay - Les Cygnes
+1194	1400	Roses	ch. des		Yverdon-Temple
+1195	1400	Roseyres	ch. des		Yverdon-Temple
+1196	1400	Sablonnaire	rue de la		Yverdon-Temple
+1197	1400	Saint-Georges	rue		Yverdon-Fontenay - Les Cygnes
+1198	1400	Saint-Roch	rue		Yverdon-Temple
+1199	1400	Sainte-Croix	rue de		Yverdon-Fontenay - Les Cygnes
+1200	1400	Sources	ch. des		Yverdon-Temple
+1201	1400	Sous-Bois	ch. de		Yverdon-Temple
+1202	1400	Sports	av. de		Yverdon-Temple
+1203	1400	Suchet	rue du		Yverdon-Fontenay - Les Cygnes
+1204	1400	Thermes	rue des		Yverdon-Temple
+1205	1400	Thièle	quai de la		Yverdon-Fontenay - Les Cygnes
+1206	1400	Tilleuls	rue des		Yverdon-Temple
+1207	1400	Treycovagnes	chaussée de		Yverdon-Fontenay - Les Cygnes
+1208	1400	Tuileries	rue des		Yverdon-Fontenay - Les Cygnes
+1209	1400	Uttins	rue des		Yverdon-Fontenay - Les Cygnes
+1210	1400	Valentin	rue du		Yverdon-Temple
+1211	1400	Vallon	ch. du		Yverdon-Temple
+1212	1400	Vautier	ruelle		Yverdon-Fontenay - Les Cygnes
+1213	1400	Vergers	rue des		Yverdon-Temple
+1214	1400	Vermont	ch. de		Yverdon-Temple
+1215	1400	Vernes	rue des		Yverdon-Fontenay - Les Cygnes
+1216	1400	Vignes	ch. des		Yverdon-Temple
+1217	1400	Villette	rue de la		Yverdon-Temple
+1218	1400	Vingt-Quatre-Janvier	rue du		Yverdon-Fontenay - Les Cygnes
+1219	1400	Vounoz	ch. du		Yverdon-Temple
+1220	1400	Barbey	rue William		Yverdon-Fontenay - Les Cygnes
+1221	1417	Epautheyres			Sauteruz
+1222	1407	Gossens			Pâquier - Donneloye
+1223	1073	Mollie-Margot			Savigny - Forel
+1224	1093	La Conversion			Belmont - Lutry
+1225	1304	Allens			Cossonay - Grancy
+1226	1148	Villars-Bozon			Veyron - Venoge
+1227	1148	La Coudre			Veyron - Venoge
+1228	1195	Dully-Bursinel			Coeur de la Côte
+1229	1274	Signy-Centre			La Dôle
+1230	1265	La Cure			Saint-Cergue
+1231	1267	Vich-Coinsins			Gland
+1232	1295	Mies-Tannay			Terre Sainte
+1233	1342	Le Pont			La Vallée
+1234	1347	Le Sentier			La Vallée
+1235	1347	Le Solliat			La Vallée
+1236	1356	La Russille			Ballaigues - Lignerolle
+1237	1450	La Sagne (Ste-Croix)			Balcon du Jura
+1238	1450	Le Château-de-Ste-Croix			Balcon du Jura
+1239	1585	Salavaux			Vully - Avenches
+1240	1585	Cotterd			Vully - Avenches
+1241	1607	Palézieux-Village			Oron - Palézieux
+1242	1091	Aran			Villette
+1243	1091	Chenaux			Villette
+1244	1801	Le Mont-Pèlerin			Chardonne - Jongny
+1245	1808	Les Monts-de-Corsier			Corsier - Corseaux
+1246	1809	Fenil-sur-Corsier			Corsier - Corseaux
+1247	1820	Territet-Veytaux			Montreux - Veytaux
+1248	1820	Territet			Montreux - Veytaux
+1249	1824	Caux			Montreux - Veytaux
+1250	1832	Villard-sur-Chamby			Montreux - Veytaux
+1251	1832	Chamby			Montreux - Veytaux
+1252	1832	Chaulin	rte de	115-/114-	Montreux - Veytaux
+1253	1832	Chaulin	rte de	1-113/2-112	Clarens
+1254	1832	Brison	ch. de		Clarens
+1255	1832	Cour de Chaulin	sentier		Clarens
+1256	1832	Cornaux	rte de		Clarens
+1257	1832	Joli-Bois	rte de		Clarens
+1258	1832	Scex que Pliau	ch. du		Clarens
+1259	1807	Vignerons	ch. des		Clarens
+1260	1807	Foge	ch. de la		Clarens
+1261	1807	Lurier	ch. de		Clarens
+1262	1658	La Tine			Pays-d'Enhaut
+1263	1660	Les Moulins			Pays-d'Enhaut
+1264	1660	L'Etivaz			Pays-d'Enhaut
+1265	1660	La Lécherette			Pays-d'Enhaut
+1266	1659	Flendruz			Pays-d'Enhaut
+1267	1833	Les Avants			Montreux - Veytaux
+1268	1867	St-Triphon			Ollon - Villars
+1269	1867	Panex			Ollon - Villars
+1270	1862	La Comballaz			Ormonts - Leysin
+1271	1862	Les Mosses			Ormonts - Leysin
+1272	1884	Huémoz			Ollon - Villars
+1273	1884	Villars-sur-Ollon			Ollon - Villars
+1274	1884	Arveyes			Ollon - Villars
+1275	1864	Vers-l'Eglise			Ormonts - Leysin
+1276	1880	Fenalet-sur-Bex			Les Avançons
+1277	1880	Frenières-sur-Bex			Les Avançons
+1278	1880	Les Posses-sur-Bex			Les Avançons
+1279	1885	Chesières			Ollon - Villars
+1280	1892	Morcles			Les Avançons
+1281	1068	Les Monts-de-Pully			Pully - Paudex
+1282	1440	Montagny-Chamard			Montagny - Champvent
+1283	1026	Echandens-Denges			Lonay - Préverenges - Vullierens
+1284	1880	Les Plans-sur-Bex			Les Avançons
+1285	1815	#Baugy			Montreux - Veytaux
+1286	1832	#Chaulin			Montreux - Veytaux
+1287	1820	#Collonge			Montreux - Veytaux
+1288	1832	#Cornaux			Montreux - Veytaux
+1289	1817	#Fontanivent			Montreux - Veytaux
+1290	1820	#Les Planches			Montreux - Veytaux
+1291	1820	#Mont-Fleuri			Montreux - Veytaux
+1292	1820	#Pallens			Montreux - Veytaux
+1293	1820	#Pertit			Montreux - Veytaux
+1294	1815	#Planchamp			Montreux - Veytaux
+1295	1822	#Sonzier			Montreux - Veytaux
+1296	1815	#Tavel			Montreux - Veytaux
+1297	1820	#Vernex			Montreux - Veytaux
+1298	1820	#Les Vuarennes			Montreux - Veytaux
+1299	1820	#Sâles			Montreux - Veytaux
+1300	1820	#Chêne			Montreux - Veytaux
+1301	1820	#Crin			Montreux - Veytaux
+1302	1820	Alpes	av. des	1-61/2-140	Montreux - Veytaux
+1303	1820	Alpes	av. des	63-/142-	Clarens
+1304	1820	Belmont	av. de	1-37/2-52	Montreux - Veytaux
+1305	1820	Belmont	av. de	39-/54-	Clarens
+1306	1820	Chaumény	ch. de la		Clarens
+1307	1820	Colondalles	route des	1-49/2-46	Montreux - Veytaux
+1308	1820	Colondalles	route des	51-/48-	Clarens
+1309	1000	Lausanne 25			La Sallaz - Les Croisettes
+1310	1003	Port-Franc	rue du		Saint-Laurent - Les Bergières
+1311	1000	Cojonnex	route de		La Sallaz - Les Croisettes
+1312	1018	Pavement	route du		Bellevaux - Saint-Luc
+1313	1003	Voie du Chariot	-		Saint-Laurent - Les Bergières
+1314	1007	Mollendruz	ch. du		Saint-Jean
+1315	1010	Roches	ch. des		La Sallaz - Les Croisettes
+1316	1400	Le Bey	-		Montagny - Champvent
+1317	1400	Chamblon	caserne		Montagny - Champvent
+1318	1400	Chamblon	Kaserne		Montagny - Champvent
+1319	1400	Chypre	rue de		Yverdon-Temple
+1320	1400	Clendy	Guérite CFF de		Yverdon-Temple
+1321	1400	Corfou	rue de		Yverdon-Temple
+1322	1400	Floreyres	ferme de		Yverdon-Temple
+1323	1400	Forge	ruelle de la		Yverdon-Temple
+1324	1400	Grande Prairie	-		Yverdon-Temple
+1325	1400	Madagascar	rue de		Yverdon-Temple
+1326	1400	Perret	rue Françoise		Yverdon-Temple
+1327	1400	Pestalozzi	place		Yverdon-Temple
+1328	1400	Pugessies	quartier des		Yverdon-Temple
+1329	1400	Rhodes	rue de		Yverdon-Temple
+1330	1400	Saint-Georges	Campagne		Yverdon-Fontenay - Les Cygnes
+1331	1400	Tannerie	place de la		Yverdon-Temple
+1332	1400	Yverdon	château d'		Yverdon-Temple
+1333	1400	Floreyres	chemin de		Yverdon-Temple
+1334	1400	Jolimont	chemin de		Yverdon-Temple
+1335	1400	Petitmaître	rue F.F.		Yverdon-Temple
+1336	1400	Terminus	chemin du		Yverdon-Temple
+1337	1400	Terrasses	chemin des		Yverdon-Temple
+1338	1485	Aclex	-		Granges et environs
+1339	1608	Château	route du		Oron - Palézieux
+1340	1787	Sauge	route de la		Vully - Avenches
+1341	2108	Petit-Pré-Baillod	-		Mont-Aubert
+1342	2108	Vers-chez-Pillot	-		Mont-Aubert
+1343	2108	Vers-chez-Sulpy	-		Mont-Aubert
+1344	1290	Versoix			Terre Sainte
+1345	1485	Nuvilly			Granges et environs
+1346	1608	Chapelle (Glâne)			Oron - Palézieux
+1347	2108	Couvet			Mont-Aubert
+1348	1003	Cheneau-de-Bourg	rue		Saint-François - Saint-Jacques
+1349	1004	Jardins-de-Prélaz	-		Sud-Ouest lausannois
+1350	1372	Entreroches	route d'		La Sarraz
+1351	1024	Epenex	av. d'	11-/6	Chavannes - Epenex

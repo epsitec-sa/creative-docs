@@ -1,0 +1,1334 @@
+0001	1000	Lausanne 26	Lausanne 26				La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0002	1000	Lausanne 27	Lausanne 27				La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0003	1010	Lausanne	Lausanne	Abeilles	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0004	1006	Lausanne	Lausanne	Acacias	avenue des		Saint-Jean	R4	de	Saint-Jean
+0005	1005	Lausanne	Lausanne	Académie	rue de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0006	1003	Lausanne	Lausanne	Agassiz	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0007	1003	Lausanne	Lausanne	Ale	rue de l'		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0008	1012	Lausanne	Lausanne	Allières	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0009	1006	Lausanne	Lausanne	Allinges	chemin des		Saint-Jean	R4	de	Saint-Jean
+0010	1006	Lausanne	Lausanne	Alpes	avenue des	2-18/1-9	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0011	1006	Lausanne	Lausanne	Alpes	avenue des	20-	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0012	1018	Lausanne	Lausanne	Amis	rue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0013	1003	Lausanne	Lausanne	Ancienne-Douane	rue de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0014	1018	Lausanne	Lausanne	Ancien-Stand	chemin de l'		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0015	1003	Lausanne	Lausanne	Ansermet	allée Ernest-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0016	1018	Lausanne	Lausanne	Aoste	avenue d'		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0017	1003	Lausanne	Lausanne	Arlaud	place Marc-Louis-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0018	1066	Epalinges	Epalinges	Arzillier	chemin de l'		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0019	1004	Lausanne	Lausanne	Aubépines	chemin des	14-16/43-45	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0020	1004	Lausanne	Lausanne	Aubépines	chemin des	2-12/1-41	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0021	1005	Lausanne	Lausanne	Aurore	rue de l'		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0022	1005	Lausanne	Lausanne	Avant-Poste	avenue de l'		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0023	1004	Lausanne	Lausanne	Avelines	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0024	1007	Lausanne	Lausanne	Bains	avenue des		Saint-Jean	R4	de	Saint-Jean
+0025	1066	Epalinges	Epalinges	Ballègue	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0026	1004	Lausanne	Lausanne	Bancels	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0027	1004	Lausanne	Lausanne	Barberine	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0028	1005	Lausanne	Lausanne	Barre	rue de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0029	1007	Lausanne	Lausanne	Batelière	chemin de la		Saint-Jean	R4	de	Saint-Jean
+0030	1004	Lausanne	Lausanne	Beaulieu	avenue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0031	1012	Lausanne	Lausanne	Beaumont	avenue de	1-29	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0032	1012	Lausanne	Lausanne	Beaumont	avenue de	2-42	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0033	1012	Lausanne	Lausanne	Beaumont	avenue de	44-54	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0034	1010	Lausanne	Lausanne	Beaumont	avenue de	56-82	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0035	1007	Lausanne	Lausanne	Beauregard	avenue de		Saint-Jean	R4	de	Saint-Jean
+0036	1006	Lausanne	Lausanne	Beau-Rivage	chemin de		Saint-Jean	R4	de	Saint-Jean
+0037	1003	Lausanne	Lausanne	Beau-Séjour	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0038	1004	Lausanne	Lausanne	Beau-Site	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0039	1012	Lausanne	Lausanne	Beau-Val	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0040	1018	Lausanne	Lausanne	Bégonias	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0041	1003	Lausanne	Lausanne	Bel-Air	escaliers de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0042	1003	Lausanne	Lausanne	Bel-Air	place		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0043	1003	Lausanne	Lausanne	Bel-Air	route de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0044	1003	Lausanne	Lausanne	Bellefontaine	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0045	1007	Lausanne	Lausanne	Bellerive	chemin de		Saint-Jean	R4	de	Saint-Jean
+0046	1007	Lausanne	Lausanne	Bellerive	place de		Saint-Jean	R4	de	Saint-Jean
+0047	1005	Lausanne	Lausanne	Belle-Rose	passage de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0048	1007	Lausanne	Lausanne	Belle-Source	chemin de		Saint-Jean	R4	de	Saint-Jean
+0049	1004	Lausanne	Lausanne	Belles-Roches	avenue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0050	1005	Lausanne	Lausanne	Bellevue	chemin de	2-18	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0051	1005	Lausanne	Lausanne	Bellevue	chemin de	23-29/26-36	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0052	1003	Lausanne	Lausanne	Constant	avenue Benjamin-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0053	1003	Lausanne	Lausanne	Constant	place Benjamin-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0054	1003	Lausanne	Lausanne	Constant	galeries Benjamin-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0055	1010	Lausanne	Lausanne	Bérée	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0056	1004	Lausanne	Lausanne	Bergières	avenue des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0057	1010	Lausanne	Lausanne	Berne	route de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0058	1005	Lausanne	Lausanne	Bessières	pont		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0059	1005	Lausanne	Lausanne	Béthusy	avenue de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0060	1012	Lausanne	Lausanne	Béthusy	avenue de	29-99/40-88	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0061	1003	Lausanne	Lausanne	Billens	escaliers de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0062	1066	Epalinges	Epalinges	Biolleyre	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0063	1012	Lausanne	Lausanne	Bochardon	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0064	1066	Epalinges	Epalinges	Bodérons	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0065	1066	Epalinges	Epalinges	Bois-de-Ban	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0066	1066	Epalinges	Epalinges	Bois-de-la-Chapelle	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0067	1007	Lausanne	Lausanne	Bois-de-la-Fontaine	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0068	1066	Epalinges	Epalinges	Bois-de-Menton	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0069	1007	Lausanne	Lausanne	Bois-de-Vaux	chemin du	1-19/2-18	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0070	1007	Lausanne	Lausanne	Bois-de-Vaux	chemin du	20-/21-	Saint-Jean	R4	de	Saint-Jean
+0071	1018	Lausanne	Lausanne	Bois-Gentil	chemin du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0072	1066	Epalinges	Epalinges	Bois-Murat	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0073	1010	Lausanne	Lausanne	Boissonnet	chemin Louis-		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0074	1004	Lausanne	Lausanne	Boisy	chemin du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0075	1007	Lausanne	Lausanne	Bon-Abri	chemin de		Saint-Jean	R4	de	Saint-Jean
+0076	1006	Lausanne	Lausanne	Bonne-Espérance	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0077	1006	Lausanne	Lausanne	Bons	rue Jean-Louis-de-		Saint-Jean	R4	de	Saint-Jean
+0078	1018	Lausanne	Lausanne	Borde	rue de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0079	1066	Epalinges	Epalinges	Bornalet	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0080	1018	Lausanne	Lausanne	Bossons	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0081	1004	Lausanne	Lausanne	Boston	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0082	1012	Lausanne	Lausanne	Bouleaux	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0083	1003	Lausanne	Lausanne	Bourg	rue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0084	1003	Lausanne	Lausanne	Bourg	ruelle de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0085	1010	Lausanne	Lausanne	Boveresses	avenue des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0086	1066	Epalinges	Epalinges	Boveresses	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0087	1006	Lausanne	Lausanne	Brillancourt	chemin de		Saint-Jean	R4	de	Saint-Jean
+0088	1007	Lausanne	Lausanne	Bruyères	chemin des		Saint-Jean	R4	de	Saint-Jean
+0089	1005	Lausanne	Lausanne	Bugnon	rue	1-27/2-42	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0090	1011	Lausanne	Lausanne	Bugnon	rue	44-46	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0091	1066	Epalinges	Epalinges	Butte	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0092	1005	Lausanne	Lausanne	Calvaire	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0093	1007	Lausanne	Lausanne	Camping	chemin du		Saint-Jean	R4	de	Saint-Jean
+0094	1006	Lausanne	Lausanne	Cap	chemin du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0095	1007	Lausanne	Lausanne	Capelard	chemin du		Saint-Jean	R4	de	Saint-Jean
+0096	1003	Lausanne	Lausanne	Caroline	rue	1-7/2	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0097	1003	Lausanne	Lausanne	Caroline	rue	4-/9-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0098	1006	Lausanne	Lausanne	Cart	rue Jean-Jacques-		Saint-Jean	R4	de	Saint-Jean
+0099	1018	Lausanne	Lausanne	Casernes	avenue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0100	1018	Lausanne	Lausanne	Cassinette	chemin de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0101	1005	Lausanne	Lausanne	Cathédrale	place de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0102	1007	Lausanne	Lausanne	Cécil	avenue		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0103	1004	Lausanne	Lausanne	Cèdres	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0104	1018	Lausanne	Lausanne	Celtes	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0105	1003	Lausanne	Lausanne	Centrale	rue	1-11	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0106	1003	Lausanne	Lausanne	Centrale	rue	13-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0107	1003	Lausanne	Lausanne	Centrale	rue	2-	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0108	1004	Lausanne	Lausanne	Cerisier	chemin du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0109	1008	Prilly	Prilly	Chablais	avenue du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0110	1008	Prilly	Prilly	Viaduc	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0111	1007	Lausanne	Lausanne	Chablais	avenue du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0112	1004	Lausanne	Lausanne	Chablière	avenue de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0113	1012	Lausanne	Lausanne	Chailly	avenue de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0114	1004	Lausanne	Lausanne	Champrilly	chemin de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0115	1010	Lausanne	Lausanne	Champ-Rond	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0116	1012	Lausanne	Lausanne	Champ-Soleil	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0117	1006	Lausanne	Lausanne	Antoine-de-Chandieu	chemin		Saint-Jean	R4	de	Saint-Jean
+0118	1005	Lausanne	Lausanne	Chandolin	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0119	1004	Lausanne	Lausanne	Chantegrive	avenue de	6/8	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0120	1004	Lausanne	Lausanne	Chantegrive	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0121	1008	Prilly	Prilly	Chantegrive	avenue de		Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0122	1010	Lausanne	Lausanne	Chantemerle	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0123	1003	Lausanne	Lausanne	Charmettes	chemin des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0124	1004	Lausanne	Lausanne	Charmilles	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0125	1004	Lausanne	Lausanne	Chasseron	chemin du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0126	1005	Lausanne	Lausanne	Château	place du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0127	1018	Lausanne	Lausanne	Châtelard	route du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0128	1003	Lausanne	Lausanne	Chaucrau	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0129	1003	Lausanne	Lausanne	Chauderon	place		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0130	1066	Epalinges	Epalinges	Chaugand	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0131	1010	Lausanne	Lausanne	Chaumière	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0132	1007	Lausanne	Lausanne	Chavannes	route de	101-213/2-6	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0133	1007	Lausanne	Lausanne	Chavannes	route de	1-99/8-	Saint-Jean	R4	de	Saint-Jean
+0134	1020	Renens VD	Renens VD	Chêne	chemin du	13-23/8-20	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0135	1020	Renens VD	Renens VD	Usine à gaz	chemin de l'		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0136	1020	Renens VD	Renens VD	Epenex	avenue d'	1-9/2-4	Chavannes – Epenex	R3	de	Chavannes – Epenex
+0137	1006	Lausanne	Lausanne	Chissiez	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0138	1010	Lausanne	Lausanne	Cigale	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0139	1005	Lausanne	Lausanne	Cité-Derrière	rue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0140	1005	Lausanne	Lausanne	Cité-Devant	rue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0141	1066	Epalinges	Epalinges	Clair-Matin	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0142	1012	Lausanne	Lausanne	Clamadour	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0143	1018	Lausanne	Lausanne	Clochatte	route de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0144	1004	Lausanne	Lausanne	Clochetons	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0145	1004	Lausanne	Lausanne	Clos-de-Bulle	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0146	1006	Lausanne	Lausanne	Closelet	chemin du		Saint-Jean	R4	de	Saint-Jean
+0147	1007	Lausanne	Lausanne	Colline	chemin de la		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0148	1004	Lausanne	Lausanne	Collonges	avenue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0149	1004	Lausanne	Lausanne	Confrérie	avenue de	1-7/2-16	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0150	1008	Prilly	Prilly	Confrérie	avenue de	3-25/36-42	Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0151	1007	Lausanne	Lausanne	Contigny	chemin de		Saint-Jean	R4	de	Saint-Jean
+0152	1066	Epalinges	Epalinges	Côte	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0153	1020	Renens VD	Renens VD	Côtes	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0154	1007	Lausanne	Lausanne	Côtes-de-la-Bourdonnette	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0155	1003	Lausanne	Lausanne	Côtes-de-Montbenon	rue des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0156	1012	Lausanne	Lausanne	Côtes-de-Montmoiret	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0157	1007	Lausanne	Lausanne	Cottages	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0158	1007	Lausanne	Lausanne	Coubertin	avenue Pierre-de-		Saint-Jean	R4	de	Saint-Jean
+0159	1007	Lausanne	Lausanne	Couchant	chemin du		Saint-Jean	R4	de	Saint-Jean
+0160	1004	Lausanne	Lausanne	Couchirard	rue		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0161	1012	Lausanne	Lausanne	Coudrette	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0162	1000	Lausanne	Lausanne	Coumenets	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0163	1007	Lausanne	Lausanne	Cour	avenue de		Saint-Jean	R4	de	Saint-Jean
+0164	1005	Lausanne	Lausanne	Couvaloup	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0165	1012	Lausanne	Lausanne	Craivavers	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0166	1066	Epalinges	Epalinges	Crausaz	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0167	1006	Lausanne	Lausanne	Crêt	rue du		Saint-Jean	R4	de	Saint-Jean
+0168	1018	Lausanne	Lausanne	Crêtes	rue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0169	1066	Epalinges	Epalinges	Croisettes	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0170	1066	Epalinges	Epalinges	Croix-Blanche	route de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0171	1007	Lausanne	Lausanne	Croix-Rouges	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0172	1010	Lausanne	Lausanne	Crousaz	avenue de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0173	1012	Lausanne	Lausanne	Cure	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0174	1066	Epalinges	Epalinges	Cure	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0175	1005	Lausanne	Lausanne	Curtat	rue Louis-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0176	1007	Lausanne	Lausanne	Cygnes	chemin des		Saint-Jean	R4	de	Saint-Jean
+0177	1066	Epalinges	Epalinges	Dailles	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0178	1066	Epalinges	Epalinges	Daillettes	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0179	1006	Lausanne	Lausanne	Dapples	avenue		Saint-Jean	R4	de	Saint-Jean
+0180	1004	Lausanne	Lausanne	Davel	avenue	1-9/2-8	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0181	1004	Lausanne	Lausanne	Davel	avenue	10-/11-	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0182	1006	Lausanne	Lausanne	Délices	chemin des		Saint-Jean	R4	de	Saint-Jean
+0183	1006	Lausanne	Lausanne	Denantou	avenue du		Saint-Jean	R4	de	Saint-Jean
+0184	1007	Lausanne	Lausanne	Dent-d'Oche	avenue de la		Saint-Jean	R4	de	Saint-Jean
+0185	1005	Lausanne	Lausanne	Deux-Marchés	rue des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0186	1007	Lausanne	Lausanne	Deux-Ponts	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0187	1012	Lausanne	Lausanne	Devin	chemin du	1-57/2-76	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0188	1012	Lausanne	Lausanne	Devin	chemin du	59-/78-	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0189	1012	Lausanne	Lausanne	Diablerets	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0190	1006	Lausanne	Lausanne	Dickens	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0191	1005	Lausanne	Lausanne	Dôle	avenue de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0192	1004	Lausanne	Lausanne	Dranse	chemin de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0193	1018	Lausanne	Lausanne	Druey	avenue		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0194	1007	Lausanne	Lausanne	Dufour	avenue Marc-	1-15/2-6	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0195	1007	Lausanne	Lausanne	Dufour	avenue Marc-	19-/38-	Saint-Jean	R4	de	Saint-Jean
+0196	1004	Lausanne	Lausanne	Dumur	chemin Benjamin-		Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0197	1004	Lausanne	Lausanne	Echallens	avenue d'		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0198	1004	Lausanne	Lausanne	Echelettes	rue des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0199	1005	Lausanne	Lausanne	Ecole-Supérieure	rue de l'		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0200	1004	Lausanne	Lausanne	Ecole-de-Commerce	rue de l'		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0201	1005	Lausanne	Lausanne	Payot	rue Edouard-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0202	1007	Lausanne	Lausanne	Rod	avenue Edouard-		Saint-Jean	R4	de	Saint-Jean
+0203	1006	Lausanne	Lausanne	Eglantine	avenue de l'		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0204	1066	Epalinges	Epalinges	Eglise	chemin de l'		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0205	1006	Lausanne	Lausanne	Eglise-Anglaise	avenue de l'		Saint-Jean	R4	de	Saint-Jean
+0206	1004	Lausanne	Lausanne	Egralets	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0207	1006	Lausanne	Lausanne	Elysée	avenue de l'		Saint-Jean	R4	de	Saint-Jean
+0208	1003	Lausanne	Lausanne	Enning	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0209	1018	Lausanne	Lausanne	Entre-Bois	chemin d'		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0210	1007	Lausanne	Lausanne	Epinettes	chemin des		Saint-Jean	R4	de	Saint-Jean
+0211	1003	Lausanne	Lausanne	Marché	escaliers du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0212	1012	Lausanne	Lausanne	Esplanade	avenue de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0213	1010	Lausanne	Lausanne	Eterpeys	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0214	1003	Lausanne	Lausanne	Etraz	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0215	1005	Lausanne	Lausanne	Rambert	avenue Eugène-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0216	1006	Lausanne	Lausanne	Evian	avenue d'		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0217	1005	Lausanne	Lausanne	Falaises	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0218	1006	Lausanne	Lausanne	Fantaisie	avenue		Saint-Jean	R4	de	Saint-Jean
+0219	1012	Lausanne	Lausanne	Fauconnières	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0220	1018	Lausanne	Lausanne	Fauquez	route Aloys-		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0221	1012	Lausanne	Lausanne	Fauvette	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0222	1006	Lausanne	Lausanne	Faverges	chemin des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0223	1010	Lausanne	Lausanne	Feuillère	route de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0224	1007	Lausanne	Lausanne	Figuiers	avenue des		Saint-Jean	R4	de	Saint-Jean
+0225	1007	Lausanne	Lausanne	Fleurettes	chemin des		Saint-Jean	R4	de	Saint-Jean
+0226	1007	Lausanne	Lausanne	Fleurs	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0227	1003	Lausanne	Lausanne	Flon	rue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0228	1003	Lausanne	Lausanne	Flon	ruelle du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0229	1006	Lausanne	Lausanne	Floréal	avenue		Saint-Jean	R4	de	Saint-Jean
+0230	1007	Lausanne	Lausanne	Florency	chemin de		Saint-Jean	R4	de	Saint-Jean
+0231	1006	Lausanne	Lausanne	Florimont	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0232	1066	Epalinges	Epalinges	Florimont	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0233	1004	Lausanne	Lausanne	Fontannaz	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0234	1066	Epalinges	Epalinges	Fontannins	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0235	1007	Lausanne	Lausanne	Fontenailles	rue des		Saint-Jean	R4	de	Saint-Jean
+0236	1007	Lausanne	Lausanne	Fontenay	chemin de		Saint-Jean	R4	de	Saint-Jean
+0237	1018	Lausanne	Lausanne	Forêt	chemin de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0238	1007	Lausanne	Lausanne	Fougères	chemin des		Saint-Jean	R4	de	Saint-Jean
+0239	1010	Lausanne	Lausanne	Fourmi	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0240	1004	Lausanne	Lausanne	France	avenue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0241	1007	Lausanne	Lausanne	Bocion	passage François-		Saint-Jean	R4	de	Saint-Jean
+0242	1004	Lausanne	Lausanne	Frêne	chemin du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0243	1006	Lausanne	Lausanne	Funiculaire	chemin du		Saint-Jean	R4	de	Saint-Jean
+0244	1018	Lausanne	Lausanne	Furet	chemin du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0245	1003	Lausanne	Lausanne	Saint-François	galerie		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0246	1008	Prilly	Prilly	Galicien	avenue du		Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0247	1004	Lausanne	Lausanne	Galliard	rue Jean-Louis		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0248	1003	Lausanne	Lausanne	Gare	avenue de la		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0249	1003	Lausanne	Lausanne	Gare	place de la		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0250	1066	Epalinges	Epalinges	Geais	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0251	1003	Lausanne	Lausanne	Genève	rue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0252	1004	Lausanne	Lausanne	Genève	rue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0253	1003	Lausanne	Lausanne	Georgette	avenue		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0254	1006	Lausanne	Lausanne	Gide	chemin Charles-		Saint-Jean	R4	de	Saint-Jean
+0255	1004	Lausanne	Lausanne	Gindroz	avenue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0256	1066	Epalinges	Epalinges	Girarde	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0257	1004	Lausanne	Lausanne	Glaciers	rue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0258	1004	Lausanne	Lausanne	Glayre	avenue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0259	1004	Lausanne	Lausanne	Glycines	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0260	1012	Lausanne	Lausanne	Gottettaz	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0261	1007	Lausanne	Lausanne	Grammont	avenue du		Saint-Jean	R4	de	Saint-Jean
+0262	1006	Lausanne	Lausanne	Grancy	boulevard de		Saint-Jean	R4	de	Saint-Jean
+0263	1018	Lausanne	Lausanne	Grandchamp	chemin de		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0264	1066	Epalinges	Epalinges	Grand-Chemin	le		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0265	1003	Lausanne	Lausanne	Grand-Chêne	escaliers du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0266	1003	Lausanne	Lausanne	Grand-Chêne	rue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0267	1007	Lausanne	Lausanne	Grande-Rive	chemin de		Saint-Jean	R4	de	Saint-Jean
+0268	1018	Lausanne	Lausanne	Grandes-Roches	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0269	1003	Lausanne	Lausanne	Grand-Pont	rue du	3-19/4-20	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0270	1003	Lausanne	Lausanne	Grand-Pont	rue du	1/2	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0271	1003	Lausanne	Lausanne	Grand-Pont	escaliers du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0272	1003	Lausanne	Lausanne	Grand-Pont	ruelle du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0273	1012	Lausanne	Lausanne	Grand-Praz	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0274	1066	Epalinges	Epalinges	Grand-Pré	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0275	1007	Lausanne	Lausanne	Grand-Pré	rue du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0276	1003	Lausanne	Lausanne	Grand-St-Jean	place		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0277	1003	Lausanne	Lausanne	Grand-St-Jean	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0278	1003	Lausanne	Lausanne	Grand-St-Jean	ruelle du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0279	1010	Lausanne	Lausanne	Grand-Vennes	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0280	1066	Epalinges	Epalinges	Grand-Vennes	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0281	1010	Lausanne	Lausanne	Grangette	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0282	1006	Lausanne	Lausanne	Grasset	chemin Eugène-		Saint-Jean	R4	de	Saint-Jean
+0283	1018	Lausanne	Lausanne	Gratta-Paille	avenue de		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0284	1008	Prilly	Prilly	Gravière	chemin de la	2-4	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0285	1007	Lausanne	Lausanne	Gravière	chemin de la	6-8/9-13	Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0286	1012	Lausanne	Lausanne	Grésy	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0287	1004	Lausanne	Lausanne	Grey	avenue du	1-53/2-48	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0288	1018	Lausanne	Lausanne	Grey	avenue du	55-/50	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0289	1007	Lausanne	Lausanne	Grillon	chemin du		Saint-Jean	R4	de	Saint-Jean
+0290	1003	Lausanne	Lausanne	Grotte	rue de la		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0291	1004	Lausanne	Lausanne	Guiguer-de-Prangins	chemin		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0292	1006	Lausanne	Lausanne	Guisan	place Général-		Saint-Jean	R4	de	Saint-Jean
+0293	1003	Lausanne	Lausanne	Haldimand	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0294	1007	Lausanne	Lausanne	Frédéric-César-de-la-Harpe	avenue		Saint-Jean	R4	de	Saint-Jean
+0295	1012	Lausanne	Lausanne	Haute-Brise	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0296	1012	Lausanne	Lausanne	Haute-Vue	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0297	1005	Lausanne	Lausanne	Industrie	rue de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0298	1007	Lausanne	Lausanne	Emile-Henri-Jaques-Dalcroze	avenue		Saint-Jean	R4	de	Saint-Jean
+0299	1005	Lausanne	Lausanne	Jaman	avenue de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0300	1018	Lausanne	Lausanne	Jardins	rue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0301	1006	Lausanne	Lausanne	Joliette	chemin de la		Saint-Jean	R4	de	Saint-Jean
+0302	1005	Lausanne	Lausanne	Jolimont	avenue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0303	1018	Lausanne	Lausanne	Jomini	avenue		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0304	1004	Lausanne	Lausanne	Jomini	avenue	2-8	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0305	1004	Lausanne	Lausanne	Jomini	avenue	10-22/1-5	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0306	1000	Lausanne	Lausanne	Jorat	route du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0307	1006	Lausanne	Lausanne	Jordils	avenue des		Saint-Jean	R4	de	Saint-Jean
+0308	1004	Lausanne	Lausanne	Jura	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0309	1006	Lausanne	Lausanne	Jurigoz	avenue de		Saint-Jean	R4	de	Saint-Jean
+0310	1006	Lausanne	Lausanne	Olivier	avenue Juste-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0311	1007	Lausanne	Lausanne	Lac	rue du		Saint-Jean	R4	de	Saint-Jean
+0312	1066	Epalinges	Epalinges	Laiterie	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0313	1003	Lausanne	Lausanne	Langallerie	rue de	1-5	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0314	1003	Lausanne	Lausanne	Langallerie	rue de	2-/7-	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0315	1007	Lausanne	Lausanne	Languedoc	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0316	1005	Lausanne	Lausanne	Lapin-Vert	ruelle du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0317	1005	Lausanne	Lausanne	Léman	avenue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0318	1005	Lausanne	Lausanne	Levant	chemin du	1-29/2-28	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0319	1005	Lausanne	Lausanne	Levant	chemin du	33-/44-	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0320	1010	Lausanne	Lausanne	Libellules	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0321	1018	Lausanne	Lausanne	Lilas	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0322	1003	Lausanne	Lausanne	Lion-d'Or	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0323	1006	Lausanne	Lausanne	Liseron	rue du		Saint-Jean	R4	de	Saint-Jean
+0324	1018	Lausanne	Lausanne	Lisière	chemin de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0325	1020	Renens VD	Renens VD	Longemalle	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0326	1006	Lausanne	Lausanne	Longeraie	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0327	1000	Lausanne	Lausanne	Losiardes	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0328	1003	Lausanne	Lausanne	Ruchonnet	avenue Louis-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0329	1003	Lausanne	Lausanne	Louve	place de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0330	1003	Lausanne	Lausanne	Louve	rue de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0331	1006	Lausanne	Lausanne	Lucinge	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0332	1010	Lausanne	Lausanne	Lys	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0333	1003	Lausanne	Lausanne	Madeleine	rue de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0334	1005	Lausanne	Lausanne	Magnolias	chemin des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0335	1018	Lausanne	Lausanne	Maillefer	chemin de		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0336	1018	Lausanne	Lausanne	Maisons Familiales	-		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0337	1007	Lausanne	Lausanne	Malley	chemin de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0338	1006	Lausanne	Lausanne	Maria-Belgia	avenue		Saint-Jean	R4	de	Saint-Jean
+0339	1018	Lausanne	Lausanne	Marronnier	chemin du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0340	1005	Lausanne	Lausanne	Marterey	rue	5-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0341	1005	Lausanne	Lausanne	Marterey	rue	2-/1-3	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0342	1007	Lausanne	Lausanne	Martinet	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0343	1005	Lausanne	Lausanne	Cordier	rue Mathurin-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0344	1007	Lausanne	Lausanne	Matines	chemin des		Saint-Jean	R4	de	Saint-Jean
+0345	1003	Lausanne	Lausanne	Mauborget	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0346	1004	Lausanne	Lausanne	Maupas	rue du	1-19/2-20	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0347	1004	Lausanne	Lausanne	Maupas	rue du	21-/22-	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0348	1012	Lausanne	Lausanne	Mayoresses	chemin des	3	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0349	1012	Lausanne	Lausanne	Mayoresses	chemin des	1/2-/5-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0350	1004	Lausanne	Lausanne	Mayor	passage Mathias-		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0351	1006	Lausanne	Lausanne	Meillerie	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0352	1018	Lausanne	Lausanne	Mémise	chemin de		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0353	1005	Lausanne	Lausanne	Robert-de-Menthon	avenue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0354	1003	Lausanne	Lausanne	Mercerie	rue de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0355	1003	Lausanne	Lausanne	Mercier	avenue Jean-Jaques		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0356	1012	Lausanne	Lausanne	Mésanges	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0357	1006	Lausanne	Lausanne	Messidor	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0358	1003	Lausanne	Lausanne	Midi	rue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0359	1007	Lausanne	Lausanne	Milan	avenue de		Saint-Jean	R4	de	Saint-Jean
+0360	1007	Lausanne	Lausanne	Milan	place de		Saint-Jean	R4	de	Saint-Jean
+0361	1007	Lausanne	Lausanne	*Molendruz	chemin du		Saint-Jean	R4	de	Saint-Jean
+0362	1012	Lausanne	Lausanne	Moléson	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0363	1006	Lausanne	Lausanne	Mon-Loisir	avenue		Saint-Jean	R4	de	Saint-Jean
+0364	1003	Lausanne	Lausanne	Monnard	rue Charles-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0365	1005	Lausanne	Lausanne	Mon-Repos	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0366	1005	Lausanne	Lausanne	Mon-Repos	parc de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0367	1066	Epalinges	Epalinges	Mon-Repos	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0368	1005	Lausanne	Lausanne	Monribeau	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0369	1005	Lausanne	Lausanne	Montagibert	avenue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0370	1003	Lausanne	Lausanne	Montbenon	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0371	1018	Lausanne	Lausanne	Mont-Blanc	avenue du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0372	1066	Epalinges	Epalinges	Montblesson	route de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0373	1006	Lausanne	Lausanne	Montchoisi	avenue de		Saint-Jean	R4	de	Saint-Jean
+0374	1007	Lausanne	Lausanne	Mont-d'Or	avenue du		Saint-Jean	R4	de	Saint-Jean
+0375	1066	Epalinges	Epalinges	Montéclard	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0376	1007	Lausanne	Lausanne	Montelly	chemin de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0377	1004	Lausanne	Lausanne	Montétan	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0378	1005	Lausanne	Lausanne	Montmeillan	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0379	1007	Lausanne	Lausanne	Montoie	avenue de	1-11/2-20	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0380	1007	Lausanne	Lausanne	Montoie	avenue de	13-/22-	Saint-Jean	R4	de	Saint-Jean
+0381	1010	Lausanne	Lausanne	Montolieu	chemin Isabelle-de-		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0382	1006	Lausanne	Lausanne	Montolivet	chemin de	1-3	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0383	1006	Lausanne	Lausanne	Montolivet	chemin de	2-/5-	Saint-Jean	R4	de	Saint-Jean
+0384	1012	Lausanne	Lausanne	Mont-Paisible	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0385	1006	Lausanne	Lausanne	Montriond	passage de		Saint-Jean	R4	de	Saint-Jean
+0386	1007	Lausanne	Lausanne	Mont-Tendre	chemin du		Saint-Jean	R4	de	Saint-Jean
+0387	1004	Lausanne	Lausanne	Morges	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0388	1003	Lausanne	Lausanne	Mornex	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0389	1018	Lausanne	Lausanne	Motte	chemin de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0390	1020	Renens VD	Renens VD	Mottey	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0391	1007	Lausanne	Lausanne	Mouettes	chemin des		Saint-Jean	R4	de	Saint-Jean
+0392	1066	Epalinges	Epalinges	Moulins	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0393	1005	Lausanne	Lausanne	Mousquines	avenue des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0394	1007	Lausanne	Lausanne	Muguet	chemin du		Saint-Jean	R4	de	Saint-Jean
+0395	1003	Lausanne	Lausanne	Muret	passage Jean-		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0396	1012	Lausanne	Lausanne	Mûrier	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0397	1012	Lausanne	Lausanne	Muveran	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0398	1006	Lausanne	Lausanne	Navigation	place de la		Saint-Jean	R4	de	Saint-Jean
+0399	1003	Lausanne	Lausanne	Neuve	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0400	1004	Lausanne	Lausanne	Noirmont	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0401	1004	Lausanne	Lausanne	Noisetiers	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0402	1005	Lausanne	Lausanne	Nord	rue du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0403	1005	Lausanne	Lausanne	Nord	place du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0404	1066	Epalinges	Epalinges	Ofréquaz	chemin d'		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0405	1018	Lausanne	Lausanne	Oiseaux	avenue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0406	1018	Lausanne	Lausanne	Oliviers	rue des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0407	1066	Epalinges	Epalinges	Orchez	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0408	1005	Lausanne	Lausanne	Orient-Ville	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0409	1066	Epalinges	Epalinges	Ormeaux	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0410	1010	Lausanne	Lausanne	Oron	route d'	1-29/2-	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0411	1010	Lausanne	Lausanne	Oron	route d'	31-	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0412	1000	Lausanne	Lausanne	Oron	route d'	100-104	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0413	1006	Lausanne	Lausanne	Ouchy	avenue d'	1-9/2-6	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0414	1006	Lausanne	Lausanne	Ouchy	avenue d'	11-/8-	Saint-Jean	R4	de	Saint-Jean
+0415	1006	Lausanne	Lausanne	Ouchy	quai d'		Saint-Jean	R4	de	Saint-Jean
+0416	1005	Lausanne	Lausanne	Ours	place de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0417	1003	Lausanne	Lausanne	Paix	rue de la		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0418	1006	Lausanne	Lausanne	Paleyres	chemin des		Saint-Jean	R4	de	Saint-Jean
+0419	1003	Lausanne	Lausanne	Palud	place de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0420	1004	Lausanne	Lausanne	Pâquerettes	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0421	1004	Lausanne	Lausanne	Parc-de-Valency	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0422	1018	Lausanne	Lausanne	Parc-de-la-Rouvraie	avenue		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0423	1006	Lausanne	Lausanne	Passerose	chemin de		Saint-Jean	R4	de	Saint-Jean
+0424	1018	Lausanne	Lausanne	Pavement	route du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0425	1007	Lausanne	Lausanne	Pêcheurs	chemin des		Saint-Jean	R4	de	Saint-Jean
+0426	1066	Epalinges	Epalinges	Pécholettaz	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0427	1005	Lausanne	Lausanne	Pécos	passage du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0428	1003	Lausanne	Lausanne	Pépinet	place		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0429	1003	Lausanne	Lausanne	Pépinet	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0430	1005	Lausanne	Lausanne	Perdonnet	passage	1-3	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0431	1005	Lausanne	Lausanne	Perdonnet	passage	2-/5-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0432	1007	Lausanne	Lausanne	Pervenches	chemin des		Saint-Jean	R4	de	Saint-Jean
+0433	1003	Lausanne	Lausanne	Petit-Saint-Jean	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0434	1004	Lausanne	Lausanne	Petit-Valentin	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0435	1004	Lausanne	Lausanne	Petit-Beaulieu	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0436	1066	Epalinges	Epalinges	Petit-Cerisier	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0437	1005	Lausanne	Lausanne	Petit-Château	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0438	1003	Lausanne	Lausanne	Petit-Chêne	rue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0439	1010	Lausanne	Lausanne	Petite-Source	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0440	1018	Lausanne	Lausanne	Petit-Flon	chemin du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0441	1003	Lausanne	Lausanne	Petit-Rocher	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0442	1066	Epalinges	Epalinges	Petit-Vennes	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0443	1003	Lausanne	Lausanne	Pichard	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0444	1007	Lausanne	Lausanne	Pidou	chemin Auguste-		Saint-Jean	R4	de	Saint-Jean
+0445	1066	Epalinges	Epalinges	Pierraz	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0446	1005	Lausanne	Lausanne	Pierre-de-Plan	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0447	1004	Lausanne	Lausanne	Pierrefleur	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0448	1007	Lausanne	Lausanne	Pierreval	chemin de		Saint-Jean	R4	de	Saint-Jean
+0449	1012	Lausanne	Lausanne	Pinsons	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0450	1007	Lausanne	Lausanne	Plaines	chemin des		Saint-Jean	R4	de	Saint-Jean
+0451	1018	Lausanne	Lausanne	Plaines-du-Loup	route des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0452	1012	Lausanne	Lausanne	Plaisante	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0453	1066	Epalinges	Epalinges	Planchamps	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0454	1000	Lausanne	Lausanne	Planche aux Oies	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0455	1066	Epalinges	Epalinges	Planches	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0456	1005	Lausanne	Lausanne	Platanes	chemin des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0457	1012	Lausanne	Lausanne	Point-du-Jour	chemin du	6-8	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0458	1012	Lausanne	Lausanne	Point-du-Jour	chemin du	10-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0459	1066	Epalinges	Epalinges	Polny	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0460	1003	Lausanne	Lausanne	Pont	rue du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0461	1018	Lausanne	Lausanne	Pontaise	rue de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0462	1004	Lausanne	Lausanne	Porchat	chemin	18-32	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0463	1004	Lausanne	Lausanne	Porchat	chemin	1-/2-16/34-	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0464	1006	Lausanne	Lausanne	Port	place du		Saint-Jean	R4	de	Saint-Jean
+0465	1066	Epalinges	Epalinges	Possession	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0466	1007	Lausanne	Lausanne	Prairie	chemin de la		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0467	1066	Epalinges	Epalinges	Prairie	chemin de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0468	1010	Lausanne	Lausanne	Praz-Berthoud	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0469	1066	Epalinges	Epalinges	Praz-Buchilly	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0470	1010	Lausanne	Lausanne	Praz-Séchaud	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0471	1000	Lausanne	Lausanne	Praz-Simon	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0472	1066	Epalinges	Epalinges	Pré-au-Seigneur	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0473	1004	Lausanne	Lausanne	Pré-du-Marché	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0474	1066	Epalinges	Epalinges	Pré-d'Yverdon	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0475	1006	Lausanne	Lausanne	Pré-Fleuri	chemin de		Saint-Jean	R4	de	Saint-Jean
+0476	1004	Lausanne	Lausanne	Presbytère	chemin du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0477	1066	Epalinges	Epalinges	Près-les-Bois	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0478	1003	Lausanne	Lausanne	Préville	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0479	1004	Lausanne	Lausanne	Prilly	route de	11-17/12-18	Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0480	1004	Lausanne	Lausanne	Prilly	route de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0481	1007	Lausanne	Lausanne	Primerose	chemin de		Saint-Jean	R4	de	Saint-Jean
+0482	1007	Lausanne	Lausanne	Provence	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0483	1007	Lausanne	Lausanne	Pyramides	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0484	1066	Epalinges	Epalinges	Raidillon	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0485	1006	Lausanne	Lausanne	Rasude	avenue de la		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0486	1012	Lausanne	Lausanne	Ravin	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0487	1007	Lausanne	Lausanne	Réchoz	chemin de		Saint-Jean	R4	de	Saint-Jean
+0488	1004	Lausanne	Lausanne	Recordon	avenue		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0489	1066	Epalinges	Epalinges	Marcel-Regamey	chemin		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0490	1004	Lausanne	Lausanne	Renens	chemin de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0491	1005	Lausanne	Lausanne	Renou	chemin		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0492	1007	Lausanne	Lausanne	Reposoir	chemin du		Saint-Jean	R4	de	Saint-Jean
+0493	1012	Lausanne	Lausanne	Réservoir	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0494	1004	Lausanne	Lausanne	Retraites	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0495	1007	Lausanne	Lausanne	Rhodanie	avenue de		Saint-Jean	R4	de	Saint-Jean
+0496	1004	Lausanne	Lausanne	Riant-Mont	avenue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0497	1010	Lausanne	Lausanne	Riant-Pré	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0498	1012	Lausanne	Lausanne	Riant-Val	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0499	1012	Lausanne	Lausanne	Riolet	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0500	1020	Renens VD	Renens VD	Rionza	chemin de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0501	1005	Lausanne	Lausanne	Riponne	place de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0502	1004	Lausanne	Lausanne	Risoux	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0503	1066	Epalinges	Epalinges	Roches	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0504	1018	Lausanne	Lausanne	Romanel	route de		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0505	1006	Lausanne	Lausanne	Rond-Point	avenue du		Saint-Jean	R4	de	Saint-Jean
+0506	1006	Lausanne	Lausanne	Rosemont	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0507	1006	Lausanne	Lausanne	Roseneck	chemin de		Saint-Jean	R4	de	Saint-Jean
+0508	1012	Lausanne	Lausanne	Rosière	chemin de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0509	1004	Lausanne	Lausanne	Rosiers	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0510	1012	Lausanne	Lausanne	Rossel	avenue Virgile-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0511	1003	Lausanne	Lausanne	Rôtillon	rue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0512	1005	Lausanne	Lausanne	Roux	rue Dr César-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0513	1012	Lausanne	Lausanne	Rovéréaz	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0514	1007	Lausanne	Lausanne	Ruines-Romaines	chemin des		Saint-Jean	R4	de	Saint-Jean
+0515	1066	Epalinges	Epalinges	Ruisseau-Martin	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0516	1005	Lausanne	Lausanne	Rumine	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0517	1007	Lausanne	Lausanne	Sablons	chemin des		Saint-Jean	R4	de	Saint-Jean
+0518	1004	Lausanne	Lausanne	Salève	chemin du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0519	1005	Lausanne	Lausanne	Sallaz	avenue de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0520	1010	Lausanne	Lausanne	Sallaz	avenue de la	29-85/30-86	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0521	1010	Lausanne	Lausanne	Sallaz	place de la		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0522	1006	Lausanne	Lausanne	Sandoz	chemin Edouard-		Saint-Jean	R4	de	Saint-Jean
+0523	1018	Lausanne	Lausanne	Sauges	chemin des		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0524	1006	Lausanne	Lausanne	Saugettes	passage des		Saint-Jean	R4	de	Saint-Jean
+0525	1018	Sauvabelin	Lausanne				Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0526	1003	Lausanne	Lausanne	Savoie	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0527	1003	Lausanne	Lausanne	Schnetzler	avenue André-		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0528	1004	Lausanne	Lausanne	Sébeillon	rue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0529	1005	Lausanne	Lausanne	Secrétan	avenue Charles-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0530	1006	Lausanne	Lausanne	Antoine-Michel-Servan	avenue		Saint-Jean	R4	de	Saint-Jean
+0531	1004	Lausanne	Lausanne	Sévelin	avenue de	10-58	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0532	1004	Lausanne	Lausanne	Sévelin	avenue de	13-15	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0533	1007	Lausanne	Lausanne	Sévelin	avenue de	2-6	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0534	1004	Lausanne	Lausanne	Sévery	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0535	1018	Lausanne	Lausanne	Signal	route du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0536	1005	Lausanne	Lausanne	Simplemont	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0537	1006	Lausanne	Lausanne	Simplon	rue du		Saint-Jean	R4	de	Saint-Jean
+0538	1006	Lausanne	Lausanne	Solange	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0539	1012	Lausanne	Lausanne	Sorbiers	chemin des		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0540	1007	Lausanne	Lausanne	Stade	chemin du		Saint-Jean	R4	de	Saint-Jean
+0541	1005	Lausanne	Lausanne	Sainte-Beuve	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0542	1004	Lausanne	Lausanne	Steinlen	chemin Aimé-		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0543	1003	Lausanne	Lausanne	Sainte-Luce	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0544	1005	Lausanne	Lausanne	Saint-Etienne	rue		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0545	1003	Lausanne	Lausanne	Saint-François	place		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0546	1003	Lausanne	Lausanne	Saint-François	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0547	1003	Lausanne	Lausanne	Saint-François	passage		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0548	1003	Lausanne	Lausanne	Saint-Laurent	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0549	1003	Lausanne	Lausanne	Saint-Martin	rue	2-22/3-27	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0550	1005	Lausanne	Lausanne	Saint-Martin	rue	24-38/29-33	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0551	1004	Lausanne	Lausanne	Saint-Paul	avenue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0552	1003	Lausanne	Lausanne	Saint-Pierre	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0553	1004	Lausanne	Lausanne	Strasbourg	rue de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0554	1004	Lausanne	Lausanne	Saint-Roch	rue		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0555	1007	Lausanne	Lausanne	Suchet	chemin du		Saint-Jean	R4	de	Saint-Jean
+0556	1066	Epalinges	Epalinges	Sylvana	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0557	1010	Lausanne	Lausanne	Temple	avenue du	40	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0558	1012	Lausanne	Lausanne	Temple	avenue du	43-	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0559	1012	Lausanne	Lausanne	Temple	avenue du	2-34/1-41	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0560	1003	Lausanne	Lausanne	Terreaux	rue des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0561	1005	Lausanne	Lausanne	Théâtre	avenue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0562	1006	Lausanne	Lausanne	Tilleuls	avenue des		Saint-Jean	R4	de	Saint-Jean
+0563	1006	Lausanne	Lausanne	Tissot	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0564	1007	Lausanne	Lausanne	Tivoli	avenue de		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0565	1005	Lausanne	Lausanne	Toises	avenue des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0566	1004	Lausanne	Lausanne	Tonnelles	chemin des		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0567	1004	Lausanne	Lausanne	Tour	rue de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0568	1007	Lausanne	Lausanne	Tour-Grise	chemin de la		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0569	1006	Lausanne	Lausanne	Trabandan	chemin du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0570	1018	Lausanne	Lausanne	Traversière	rue		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0571	1006	Lausanne	Lausanne	Treyblanc	chemin du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0572	1005	Lausanne	Lausanne	Tribunal-Fédéral	avenue du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0573	1005	Lausanne	Lausanne	Trois-Rois	chemin des		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0574	1066	Epalinges	Epalinges	Tuileries	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0575	1005	Lausanne	Lausanne	Tunnel	place du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0576	1005	Lausanne	Lausanne	Tunnel	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0577	1005	Lausanne	Lausanne	Université	avenue de l'		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0578	1012	Lausanne	Lausanne	Val-d'Angrogne	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0579	1012	Lausanne	Lausanne	Valdézia	chemin de		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0580	1004	Lausanne	Lausanne	Valentin	rue du	1-45/2-48	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0581	1004	Lausanne	Lausanne	Valentin	rue du	47-/50-	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0582	1010	Lausanne	Lausanne	Valfaye	chemin de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0583	1007	Lausanne	Lausanne	Jeunesse	vallée de la		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0584	1004	Lausanne	Lausanne	Vallombreuse	avenue de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0585	1004	Lausanne	Lausanne	Vallombreuse	chemin de la		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0586	1008	Prilly	Prilly	Vallombreuse	avenue de la		Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0587	1005	Lausanne	Lausanne	Vallon	rue du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0588	1005	Lausanne	Lausanne	Vallon	place du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0589	1012	Lausanne	Lausanne	Vallonnette	avenue de la		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0590	1010	Lausanne	Lausanne	Valmont	avenue de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0591	1006	Lausanne	Lausanne	Vanil	chemin du		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0592	1066	Epalinges	Epalinges	Vaugueny	chemin du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0593	1005	Lausanne	Lausanne	Auguste-Verdeil	avenue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0594	1010	Lausanne	Lausanne	Verdonnet	chemin de	17	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0595	1010	Lausanne	Lausanne	Verdonnet	chemin de	1-15/19-/2-	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0596	1006	Lausanne	Lausanne	Vermont	chemin		Saint-Jean	R4	de	Saint-Jean
+0597	1012	Lausanne	Lausanne	Ruffy	avenue Victor-	41-/54-	La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0598	1012	Lausanne	Lausanne	Ruffy	avenue Victor-	1-39/2-52	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0599	1007	Lausanne	Lausanne	Vidy	route de		Saint-Jean	R4	de	Saint-Jean
+0600	1018	Lausanne	Lausanne	Vieux-Moulin	avenue du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0601	1006	Lausanne	Lausanne	Vieux-Port	place du		Saint-Jean	R4	de	Saint-Jean
+0602	1003	Lausanne	Lausanne	Vigie	rue de la		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0603	1004	Lausanne	Lausanne	Vigie	rue de la	12	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0604	1004	Lausanne	Lausanne	Vignes-d'Argent	chemin des		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0605	1012	Lausanne	Lausanne	Village	chemin du		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0606	1066	Epalinges	Epalinges	Village	route du		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0607	1005	Lausanne	Lausanne	Villamont	avenue de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0608	1007	Lausanne	Lausanne	Villard	chemin de		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0609	1004	Lausanne	Lausanne	Villardin	chemin de		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0610	1004	Lausanne	Lausanne	Vinet	avenue Alexandre-		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0611	1004	Lausanne	Lausanne	Vingt-Quatre-Janvier	avenue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0612	1018	Lausanne	Lausanne	Violette	quartier de la		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+0613	1003	Lausanne	Lausanne	Viret	rue Pierre-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0614	1006	Lausanne	Lausanne	Voltaire	rue		Saint-Jean	R4	de	Saint-Jean
+0615	1005	Lausanne	Lausanne	Vuachère	chemin de la	1-15/2-18	Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+0616	1012	Lausanne	Lausanne	Vuachère	chemin de la	17-/20	Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0617	1005	Lausanne	Lausanne	Vuillermet	rue Charles-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0618	1005	Lausanne	Lausanne	Vulliemin	avenue Louis-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
+0619	1007	Lausanne	Lausanne	Warnery	avenue		Saint-Jean	R4	de	Saint-Jean
+0620	1006	Lausanne	Lausanne	Fraisse	avenue William-		Saint-Jean	R4	de	Saint-Jean
+0621	1004	Lausanne	Lausanne	Yverdon	avenue d'		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+0622	1123	Aclens	Aclens				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0623	1352	Agiez	Agiez				Orbe – Agiez	R6	d'	Orbe – Agiez
+0624	1860	Aigle	Aigle				Aigle	R11	d'	Aigle
+0625	1165	Allaman	Allaman				L'Aubonne	R2	de l'	Aubonne
+0626	1143	Apples	Apples				Pied du Jura	R2	du	Pied du Jura
+0627	1277	Arnex-sur-Nyon	Arnex-sur-Nyon				La Dôle	R1	de La	Dôle
+0628	1321	Arnex-sur-Orbe	Arnex-sur-Orbe				Orbe – Agiez	R6	d'	Orbe – Agiez
+0629	1463	Arrissoules	Rovray				Yvonand	R7	d'	Yvonand
+0630	1273	Arzier	Arzier-Le Muids				Saint-Cergue	R1	de	Saint-Cergue
+0631	1042	Assens	Assens				Talent	R5	du	Talent
+0632	1170	Aubonne	Aubonne				L'Aubonne	R2	de l'	Aubonne
+0633	1580	Avenches	Avenches				Vully – Avenches	R8	de	Vully – Avenches
+0634	1338	Ballaigues	Ballaigues				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0635	1144	Ballens	Ballens				Pied du Jura	R2	du	Pied du Jura
+0636	1269	Bassins	Bassins				Begnins – Burtigny	R1	de	Begnins – Burtigny
+0637	1446	Baulmes	Baulmes				Baulmes – Rances	R6	de	Baulmes – Rances
+0638	1372	Bavois	Bavois				Chavornay	R6	de	Chavornay
+0639	1268	Begnins	Begnins				Begnins – Burtigny	R1	de	Begnins – Burtigny
+0640	1585	Bellerive	Bellerive VD				Vully – Avenches	R8	de	Vully – Avenches
+0641	1092	Belmont-sur-Lausanne	Belmont-sur-Lausanne				Belmont – Lutry	R9	de	Belmont – Lutry
+0642	1432	Belmont-sur-Yverdon	Belmont-sur-Yverdon				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0643	1038	Bercher	Bercher				Sauteruz	R5	du	Sauteruz
+0644	1149	Berolle	Berolle				Pied du Jura	R2	du	Pied du Jura
+0645	1042	Bettens	Bettens				Talent	R5	du	Talent
+0646	1880	Bex	Bex				Les Avançons	R11	des	Avançons
+0647	1145	Bière	Bière				Pied du Jura	R2	du	Pied du Jura
+0648	1407	Bioley-Magnoux	Bioley-Magnoux				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0649	1042	Bioley-Orjulaz	Bioley-Orjulaz				Talent	R5	du	Talent
+0650	1807	Blonay	Blonay				Blonay – Saint-Légier	R10	de	Blonay – Saint-Légier
+0651	1353	Bofflens	Bofflens				Orbe – Agiez	R6	d'	Orbe – Agiez
+0652	1279	Bogis-Bossey	Bogis-Bossey				Terre Sainte	R1	de	Terre Sainte
+0653	1098	Epesses	Epesses	Mont-Chervet	chemin du		Saint-Saphorin	R9	de	Saint-Saphorin
+0654	1427	Bonvillars	Bonvillars				L'Arnon	R7	de l'	Arnon
+0655	1277	Borex	Borex				La Dôle	R1	de La	Dôle
+0656	1041	Bottens	Bottens				Haute-Menthue	R5	de la	Haute-Menthue
+0657	1172	Bougy-Villars	Bougy-Villars				L'Aubonne	R2	de l'	Aubonne
+0658	1063	Boulens	Boulens				Plateau du Jorat	R5	du	Plateau du Jorat
+0659	1035	Bournens	Bournens				Vufflens-la-Ville	R5	de	Vufflens-la-Ville
+0660	1034	Boussens	Boussens				Vufflens-la-Ville	R5	de	Vufflens-la-Ville
+0661	1121	Bremblens	Bremblens				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0662	1683	Brenles	Brenles				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0663	1510	Bressonnaz	Moudon				Moudon – Syens	R8	de	Moudon – Syens
+0664	1053	Bretigny-sur-Morrens	Bretigny-sur-Morrens				Le Haut-Talent	R3	du	Haut-Talent
+0665	1329	Bretonnières	Bretonnières				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0666	1164	Buchillon	Buchillon				L'Aubonne	R2	de l'	Aubonne
+0667	1180	Bugnaux	Rolle				Coeur de la Côte	R1	du	Coeur de la Côte
+0668	1453	Bullet	Bullet				Balcon du Jura	R7	du	Balcon du Jura
+0669	1195	Bursinel	Bursinel				Coeur de la Côte	R1	du	Coeur de la Côte
+0670	1183	Bursins	Bursins				Coeur de la Côte	R1	du	Coeur de la Côte
+0671	1268	Burtigny	Burtigny				Begnins – Burtigny	R1	de	Begnins – Burtigny
+0672	1030	Bussigny-près-Lausanne	Bussigny				Bussigny – Villars-Sainte-Croix	R3	de	Bussigny – Villars-Sainte-Croix
+0673	1608	Bussigny-sur-Oron	Bussigny-sur-Oron				Oron – Palézieux	R8	d'	Oron – Palézieux
+0674	1136	Bussy-Chardonney	Bussy-Chardonney				Pied du Jura	R2	du	Pied du Jura
+0675	1514	Bussy-sur-Moudon	Bussy-sur-Moudon				Moudon – Syens	R8	de	Moudon – Syens
+0676	1084	Carrouge	Carrouge VD				Jorat	R8	du	Jorat
+0677	1298	Céligny	Céligny				Terre Sainte	R1	de	Terre Sainte
+0678	1682	Cerniaz	Cerniaz VD				Granges et environs	R8	de	Granges et environs
+0679	1589	Chabrey	Chabrey				Vully – Avenches	R8	de	Vully – Avenches
+0680	1436	Chamblon	Chamblon				Montagny – Champvent	R7	de	Montagny – Champvent
+0681	1424	Champagne	Champagne				L'Arnon	R7	de l'	Arnon
+0682	1588	Champmartin	Cudrefin				Vully – Avenches	R8	de	Vully – Avenches
+0683	1537	Champtauroz	Champtauroz				Granges et environs	R8	de	Granges et environs
+0684	1443	Champvent	Champvent				Montagny – Champvent	R7	de	Montagny – Champvent
+0685	1409	Chanéaz	Chanéaz				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0686	1063	Chapelle-sur-Moudon	Chapelle-sur-Moudon				Plateau du Jorat	R5	du	Plateau du Jorat
+0687	1803	Chardonne	Chardonne				Chardonne – Jongny	R10	de	Chardonne – Jongny
+0688	1660	Château-d'Oex	Château-d'Oex				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+0689	1610	Châtillens	Châtillens				Oron – Palézieux	R8	d'	Oron – Palézieux
+0690	1279	Chavannes-de-Bogis	Chavannes-de-Bogis				Terre Sainte	R1	de	Terre Sainte
+0691	1290	Chavannes-des-Bois	Chavannes-des-Bois				Terre Sainte	R1	de	Terre Sainte
+0692	1464	Chavannes-le-Chêne	Chavannes-le-Chêne				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0693	1148	Chavannes-le-Veyron	Chavannes-le-Veyron				Veyron – Venoge	R5	de	Veyron – Venoge
+0694	1022	Chavannes-près-Renens	Chavannes-près-Renens				Chavannes – Epenex	R3	de	Chavannes – Epenex
+0695	1512	Chavannes-sur-Moudon	Chavannes-sur-Moudon				Moudon – Syens	R8	de	Moudon – Syens
+0696	1373	Chavornay	Chavornay				Chavornay	R6	de	Chavornay
+0697	1464	Chêne-Pâquier	Chêne-Pâquier				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0698	1683	Chesalles-sur-Moudon	Chesalles-sur-Moudon				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0699	1608	Chesalles-sur-Oron	Chesalles-sur-Oron				Oron – Palézieux	R8	d'	Oron – Palézieux
+0700	1400	Cheseaux-Noréaz	Cheseaux-Noréaz				Yverdon-Temple	R7	d'	Yverdon-Temple
+0701	1033	Cheseaux-sur-Lausanne	Cheseaux-sur-Lausanne				Cheseaux – Romanel	R3	de	Cheseaux – Romanel
+0702	1275	Chéserex	Chéserex				La Dôle	R1	de La	Dôle
+0703	1846	Chessel	Chessel				Villeneuve – Haut-Lac	R11	de	Villeneuve – Haut-Lac
+0704	1316	Chevilly	Chevilly				La Sarraz	R5	de La	Sarraz
+0705	1545	Chevroux	Chevroux				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+0706	1071	Chexbres	Chexbres				Saint-Saphorin	R9	de	Saint-Saphorin
+0707	1134	Chigny	Chigny				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0708	1127	Clarmont	Clarmont				Pied du Jura	R2	du	Pied du Jura
+0709	1267	Coinsins	Coinsins				Gland	R1	de	Gland
+0710	1114	Colombier	Colombier VD				Morges – Échichens	R2	de	Morges – Échichens
+0711	1535	Combremont-le-Grand	Combremont-le-Grand				Granges et environs	R8	de	Granges et environs
+0712	1536	Combremont-le-Petit	Combremont-le-Petit				Granges et environs	R8	de	Granges et environs
+0713	1291	Commugny	Commugny				Terre Sainte	R1	de	Terre Sainte
+0714	1426	Concise	Concise				Mont-Aubert	R7	du	Mont-Aubert
+0715	1587	Constantine	Constantine				Vully – Avenches	R8	de	Vully – Avenches
+0716	1296	Coppet	Coppet				Terre Sainte	R1	de	Terre Sainte
+0717	1856	Corbeyrier	Corbeyrier				Aigle	R11	d'	Aigle
+0718	1082	Corcelles-le-Jorat	Corcelles-le-Jorat				Jorat	R8	du	Jorat
+0719	1426	Corcelles-près-Concise	Corcelles-près-Concise				Mont-Aubert	R7	du	Mont-Aubert
+0720	1562	Corcelles-près-Payerne	Corcelles-près-Payerne				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+0721	1374	Corcelles-sur-Chavornay	Corcelles-sur-Chavornay				Chavornay	R6	de	Chavornay
+0722	1410	Correvon	Correvon				Plateau du Jorat	R5	du	Plateau du Jorat
+0723	1410	Prévondavaux	Prévondavaux				Plateau du Jorat	R5	du	Plateau du Jorat
+0724	1802	Corseaux	Corseaux				Corsier – Corseaux	R10	de	Corsier – Corseaux
+0725	1804	Corsier-sur-Vevey	Corsier-sur-Vevey				Corsier – Corseaux	R10	de	Corsier – Corseaux
+0726	1304	Cossonay-Ville	Cossonay-Ville				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0727	1116	Cottens	Cottens VD				Pied du Jura	R2	du	Pied du Jura
+0728	1299	Crans-près-Céligny	Crans-près-Céligny				Nyon	R1	de	Nyon
+0729	1263	Crassier	Crassier				La Dôle	R1	de La	Dôle
+0730	1526	Cremin	Cremin				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0731	1023	Crissier	Crissier				Crissier	R3	de	Crissier
+0732	1406	Cronay	Cronay				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0733	1322	Croy	Croy				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0734	1148	Cuarnens	Cuarnens				Veyron – Venoge	R5	de	Veyron – Venoge
+0735	1404	Cuarny	Cuarny				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0736	1588	Cudrefin	Cudrefin				Vully – Avenches	R8	de	Vully – Avenches
+0737	1053	Cugy	Cugy VD				Le Haut-Talent	R3	du	Haut-Talent
+0738	1096	Cully	Cully				Villette	R9	de	Villette
+0739	1521	Curtilles	Curtilles				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0740	1306	Daillens	Daillens				Penthalaz	R5	de	Penthalaz
+0741	1415	Démoret	Démoret				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0742	1135	Denens	Denens				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0743	1410	Denezy	Denezy				Plateau du Jorat	R5	du	Plateau du Jorat
+0744	1026	Denges	Denges				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0745	1304	Dizy	Dizy				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0746	1041	Dommartin	Dommartin				Haute-Menthue	R5	de la	Haute-Menthue
+0747	1682	Dompierre	Dompierre VD				Granges et environs	R8	de	Granges et environs
+0748	1580	Donatyre	Donatyre				Vully – Avenches	R8	de	Vully – Avenches
+0749	1407	Donneloye	Donneloye				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0750	1266	Duillier	Duillier				Genolier	R1	de	Genolier
+0751	1195	Dully	Dully				Coeur de la Côte	R1	du	Coeur de la Côte
+0752	1040	Echallens	Echallens				Echallens	R5	d'	Echallens
+0753	1026	Echandens	Echandens				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0754	1112	Echichens	Échichens				Morges – Échichens	R2	de	Morges – Échichens
+0755	1376	Eclagnens	Eclagnens				Talent	R5	du	Talent
+0756	1312	Eclépens	Eclépens				La Sarraz	R5	de La	Sarraz
+0757	1612	Ecoteaux	Ecoteaux				Oron – Palézieux	R8	d'	Oron – Palézieux
+0758	1024	Ecublens VD	Ecublens VD	Forêt	chemin de la		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0759	1024	Ecublens VD	Ecublens VD	Suchet	chemin du		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0760	1024	Ecublens VD	Ecublens VD	Bochet	chemin du		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0761	1024	Ecublens VD	Ecublens VD	Champ-Colomb	chemin de		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0762	1024	Ecublens VD	Ecublens VD	Glycines	chemin des		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0763	1024	Ecublens VD	Ecublens VD	Tir-Fédéral	avenue du	1-/2-44	Chavannes – Epenex	R3	de	Chavannes – Epenex
+0764	1024	Ecublens VD	Ecublens VD	Tir-Fédéral	avenue du	46-	Ecublens – Saint-Sulpice	R3	d'	Ecublens – Saint-Sulpice
+0765	1024	Ecublens VD	Ecublens VD	Pont-Bleu	route du		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0766	1024	Ecublens	Ecublens VD				Ecublens – Saint-Sulpice	R3	d'	Ecublens – Saint-Sulpice
+0767	1066	Epalinges	Epalinges				La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+0768	1434	Ependes	Ependes VD				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0769	1098	Epesses	Epesses				Villette	R9	de	Villette
+0770	1078	Essertes	Essertes				Oron – Palézieux	R8	d'	Oron – Palézieux
+0771	1186	Essertines-sur-Rolle	Essertines-sur-Rolle				Gimel – Longirod	R2	de	Gimel – Longirod
+0772	1417	Essertines-sur-Yverdon	Essertines-sur-Yverdon				Sauteruz	R5	du	Sauteruz
+0773	1435	Essert-Pittet	Essert-Pittet				Chavornay	R6	de	Chavornay
+0774	1443	Essert-sous-Champvent	Essert-sous-Champvent				Montagny – Champvent	R7	de	Montagny – Champvent
+0775	1037	Etagnières	Etagnières				Talent	R5	du	Talent
+0776	1163	Etoy	Etoy				L'Aubonne	R2	de l'	Aubonne
+0777	1262	Eysins	Eysins				La Dôle	R1	de La	Dôle
+0778	1595	Faoug	Faoug				Vully – Avenches	R8	de	Vully – Avenches
+0779	1173	Féchy	Féchy				L'Aubonne	R2	de l'	Aubonne
+0780	1076	Ferlens	Ferlens VD				Jorat	R8	du	Jorat
+0781	1313	Ferreyres	Ferreyres				La Sarraz	R5	de La	Sarraz
+0782	1044	Fey	Fey				Sauteruz	R5	du	Sauteruz
+0783	1420	Fiez	Fiez				L'Arnon	R7	de l'	Arnon
+0784	1421	Fontaines-sur-Grandson	Fontaines-sur-Grandson				L'Arnon	R7	de l'	Arnon
+0785	1423	Fontanezier	Fontanezier				L'Arnon	R7	de l'	Arnon
+0786	1072	Forel (Lavaux)	Forel (Lavaux)				Savigny – Forel	R9	de	Savigny – Forel
+0787	1526	Forel-sur-Lucens	Forel-sur-Lucens				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0788	1297	Founex	Founex				Terre Sainte	R1	de	Terre Sainte
+0789	1055	Froideville	Froideville				Le Haut-Talent	R3	du	Haut-Talent
+0790	1272	Genolier	Genolier				Genolier	R1	de	Genolier
+0791	1429	Giez	Giez				Grandson	R7	de	Grandson
+0792	1182	Gilly	Gilly				Coeur de la Côte	R1	du	Coeur de la Côte
+0793	1188	Gimel	Gimel				Gimel – Longirod	R2	de	Gimel – Longirod
+0794	1276	Gingins	Gingins				La Dôle	R1	de La	Dôle
+0795	1271	Givrins	Givrins				Genolier	R1	de	Genolier
+0796	1196	Gland	Gland				Gland	R1	de	Gland
+0797	1124	Gollion	Gollion				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0798	1822	Chernex	Chernex				Montreux – Veytaux	R10	de	Montreux – Veytaux
+0799	1376	Goumoëns-la-Ville	Goumoens-la-Ville				Talent	R5	du	Talent
+0800	1376	Goumoëns-le-Jux	Goumoens-le-Jux				Talent	R5	du	Talent
+0801	1117	Grancy	Grancy				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0802	1543	Grandcour	Grandcour				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+0803	1421	Grandevent	Grandevent				L'Arnon	R7	de l'	Arnon
+0804	1422	Grandson	Grandson				Grandson	R7	de	Grandson
+0805	1091	Grandvaux	Grandvaux				Villette	R9	de	Villette
+0806	1523	Granges-près-Marnand	Granges-près-Marnand				Granges et environs	R8	de	Granges et environs
+0807	1274	Grens	Grens				La Dôle	R1	de La	Dôle
+0808	1432	Gressy	Gressy				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0809	1882	Gryon	Gryon				Les Avançons	R11	des	Avançons
+0810	1525	Henniez	Henniez				Granges et environs	R8	de	Granges et environs
+0811	1513	Hermenches	Hermenches				Moudon – Syens	R8	de	Moudon – Syens
+0812	1805	Jongny	Jongny				Chardonne – Jongny	R10	de	Chardonne – Jongny
+0813	1008	Jouxtens-Mézery	Jouxtens-Mézery				Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0814	1326	Juriens	Juriens				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0815	1308	La Chaux (Cossonay)	La Chaux (Cossonay)				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0816	1148	La Praz	La Praz				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0817	1278	La Rippe	La Rippe				La Dôle	R1	de La	Dôle
+0818	1613	La Rogivue	Maracon				Oron – Palézieux	R8	d'	Oron – Palézieux
+0819	1315	La Sarraz	La Sarraz				La Sarraz	R5	de La	Sarraz
+0820	1814	La Tour-de-Peilz	La Tour-de-Peilz				La Tour-de-Peilz	R10	de La	Tour-de-Peilz
+0821	1344	L'Abbaye	L'Abbaye				La Vallée	R6	de La	Vallée
+0822	1355	L'Abergement	L'Abergement				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0823	1892	Lavey-Village	Lavey-Village				Les Avançons	R11	des	Avançons
+0824	1892	Lavey-les-Bains	Lavey-les-Bains				Les Avançons	R11	des	Avançons
+0825	1175	Lavigny	Lavigny				L'Aubonne	R2	de l'	Aubonne
+0826	1345	Le Lieu	Le Lieu				La Vallée	R6	de La	Vallée
+0827	1345	Le Séchey	Le Séchey				La Vallée	R6	de La	Vallée
+0828	1052	Le Mont-sur-Lausanne	Le Mont-sur-Lausanne				Le Mont-sur-Lausanne	R3	du	Mont-sur-Lausanne
+0829	1261	Le Vaud	Le Vaud				Begnins – Burtigny	R1	de	Begnins – Burtigny
+0830	1356	Les Clées	Les Clées				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0831	1080	Les Cullayes	Les Cullayes				Jorat	R8	du	Jorat
+0832	1607	Les Tavernes	Les Tavernes				Oron – Palézieux	R8	d'	Oron – Palézieux
+0833	1607	Les Thioleyres	Les Thioleyres				Oron – Palézieux	R8	d'	Oron – Palézieux
+0834	1854	Leysin	Leysin				Ormonts – Leysin	R11	des	Ormonts – Leysin
+0835	1357	Lignerolle	Lignerolle				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0836	1148	L'Isle	L'Isle				Veyron – Venoge	R5	de	Veyron – Venoge
+0837	1027	Lonay	Lonay				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0838	1261	Longirod	Longirod				Gimel – Longirod	R2	de	Gimel – Longirod
+0839	1682	Lovatens	Lovatens				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0840	1522	Lucens	Lucens				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0841	1184	Luins	Luins				Coeur de la Côte	R1	du	Coeur de la Côte
+0842	1132	Lully	Lully VD				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0843	1307	Lussery-Villars	Lussery-Villars				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0844	1167	Lussy-sur-Morges	Lussy-sur-Morges				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0845	1095	Lutry	Lutry				Belmont – Lutry	R9	de	Belmont – Lutry
+0846	1042	Malapalud	Assens				Talent	R5	du	Talent
+0847	1613	Maracon	Maracon				Oron – Palézieux	R8	d'	Oron – Palézieux
+0848	1261	Marchissy	Marchissy				Gimel – Longirod	R2	de	Gimel – Longirod
+0849	1524	Marnand	Marnand				Granges et environs	R8	de	Granges et environs
+0850	1063	Martherenges	Martherenges				Plateau du Jorat	R5	du	Plateau du Jorat
+0851	1438	Mathod	Mathod				Montagny – Champvent	R7	de	Montagny – Champvent
+0852	1453	Mauborget	Mauborget				Balcon du Jura	R7	du	Balcon du Jura
+0853	1148	Mauraz	Mauraz				Veyron – Venoge	R5	de	Veyron – Venoge
+0854	1031	Mex	Mex VD				Vufflens-la-Ville	R5	de	Vufflens-la-Ville
+0855	1407	Mézery-près-Donneloye	Mézery-près-Donneloye				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0856	1083	Mézières	Mézières VD				Jorat	R8	du	Jorat
+0857	1295	Mies	Mies				Terre Sainte	R1	de	Terre Sainte
+0858	1565	Missy	Missy				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+0859	1148	Moiry	Moiry VD				Veyron – Venoge	R5	de	Veyron – Venoge
+0860	1146	Mollens	Mollens VD				Pied du Jura	R2	du	Pied du Jura
+0861	1415	Molondin	Molondin				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0862	1125	Monnaz	Monnaz				Morges – Échichens	R2	de	Morges – Échichens
+0863	1442	Montagny-près-Yverdon	Montagny-près-Yverdon				Montagny – Champvent	R7	de	Montagny – Champvent
+0864	1041	Montaubion-Chardonney	Montaubion-Chardonney				Haute-Menthue	R5	de la	Haute-Menthue
+0865	1354	Montcherand	Montcherand				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0866	1174	Montherod	Montherod				L'Aubonne	R2	de l'	Aubonne
+0867	1148	Mont-la-Ville	Mont-la-Ville				Veyron – Venoge	R5	de	Veyron – Venoge
+0868	1587	Montmagny	Montmagny				Vully – Avenches	R8	de	Vully – Avenches
+0869	1081	Montpreveyres	Montpreveyres				Jorat	R8	du	Jorat
+0870	1820	Montreux	Montreux				Montreux – Veytaux	R10	de	Montreux – Veytaux
+0871	1147	Montricher	Montricher				Veyron – Venoge	R5	de	Veyron – Venoge
+0872	1185	Mont-sur-Rolle	Mont-sur-Rolle				Coeur de la Côte	R1	du	Coeur de la Côte
+0873	1110	Morges	Morges				Morges – Échichens	R2	de	Morges – Échichens
+0874	1054	Morrens	Morrens VD				Le Haut-Talent	R3	du	Haut-Talent
+0875	1510	Moudon	Moudon				Moudon – Syens	R8	de	Moudon – Syens
+0876	1787	Mur	Mur (Vully) VD				Vully – Avenches	R8	de	Vully – Avenches
+0877	1787	Mur (Vully) FR	Mur (Vully) FR				Vully – Avenches	R8	de	Vully – Avenches
+0878	1787	Môtier (Vully)	Môtier (Vully)				Vully – Avenches	R8	de	Vully – Avenches
+0879	1428	Mutrux	Mutrux				Mont-Aubert	R7	du	Mont-Aubert
+0880	1041	Naz	Naz				Haute-Menthue	R5	de la	Haute-Menthue
+0881	1515	Neyruz-sur-Moudon	Neyruz-sur-Moudon				Plateau du Jorat	R5	du	Plateau du Jorat
+0882	1431	Novalles	Novalles				L'Arnon	R7	de l'	Arnon
+0883	1845	Noville	Noville				Villeneuve – Haut-Lac	R11	de	Villeneuve – Haut-Lac
+0884	1260	Nyon	Nyon				Nyon	R1	de	Nyon
+0885	1045	Ogens	Ogens				Plateau du Jorat	R5	du	Plateau du Jorat
+0886	1580	Oleyres	Oleyres				Vully – Avenches	R8	de	Vully – Avenches
+0887	1867	Ollon	Ollon VD				Ollon – Villars	R11	d'	Ollon – Villars
+0888	1425	Onnens	Onnens VD				Mont-Aubert	R7	du	Mont-Aubert
+0889	1047	Oppens	Oppens				Sauteruz	R5	du	Sauteruz
+0890	1350	Orbe	Orbe				Orbe – Agiez	R6	d'	Orbe – Agiez
+0891	1430	Orges	Orges				Grandson	R7	de	Grandson
+0892	1863	Le Sépey	Le Sépey				Ormonts – Leysin	R11	des	Ormonts – Leysin
+0893	1865	Les Diablerets	Les Diablerets				Ormonts – Leysin	R11	des	Ormonts – Leysin
+0894	1317	Orny	Orny				La Sarraz	R5	de La	Sarraz
+0895	1610	Oron-la-Ville	Oron-la-Ville				Oron – Palézieux	R8	d'	Oron – Palézieux
+0896	1608	Oron-le-Châtel	Oron-le-Châtel				Oron – Palézieux	R8	d'	Oron – Palézieux
+0897	1413	Orzens	Orzens				Sauteruz	R5	du	Sauteruz
+0898	1377	Oulens-sous-Echallens	Oulens-sous-Echallens				Talent	R5	du	Talent
+0899	1522	Oulens-sur-Lucens	Oulens-sur-Lucens				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0900	1416	Pailly	Pailly				Sauteruz	R5	du	Sauteruz
+0901	1607	Palézieux	Palézieux				Oron – Palézieux	R8	d'	Oron – Palézieux
+0902	1142	Pampigny	Pampigny				Pied du Jura	R2	du	Pied du Jura
+0903	1094	Paudex	Paudex				Pully – Paudex	R9	de	Pully – Paudex
+0904	1530	Payerne	Payerne				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+0905	1059	Peney-le-Jorat	Peney-le-Jorat				Plateau du Jorat	R5	du	Plateau du Jorat
+0906	1305	Penthalaz	Penthalaz				Penthalaz	R5	de	Penthalaz
+0907	1303	Penthaz	Penthaz				Penthalaz	R5	de	Penthalaz
+0908	1375	Penthéréaz	Penthéréaz				Talent	R5	du	Talent
+0909	1166	Perroy	Perroy				Coeur de la Côte	R1	du	Coeur de la Côte
+0910	1063	Peyres-Possens	Peyres-Possens				Plateau du Jorat	R5	du	Plateau du Jorat
+0911	1174	Pizy	Pizy				L'Aubonne	R2	de l'	Aubonne
+0912	1041	Poliez-le-Grand	Poliez-le-Grand				Haute-Menthue	R5	de la	Haute-Menthue
+0913	1041	Poliez-Pittet	Poliez-Pittet				Haute-Menthue	R5	de la	Haute-Menthue
+0914	1318	Pompaples	Pompaples				La Sarraz	R5	de La	Sarraz
+0915	1405	Pomy	Pomy				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0916	1408	Prahins	Prahins				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+0917	1197	Prangins	Prangins				Nyon	R1	de	Nyon
+0918	1324	Premier	Premier				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0919	1028	Préverenges	Préverenges				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0920	1682	Prévonloup	Prévonloup				Granges et environs	R8	de	Granges et environs
+0921	1008	Prilly	Prilly				Prilly – Jouxtens	R3	de	Prilly – Jouxtens
+0922	1428	Provence	Provence				Mont-Aubert	R7	du	Mont-Aubert
+0923	1070	Puidoux	Puidoux				Saint-Saphorin	R9	de	Saint-Saphorin
+0924	1009	Pully	Pully				Pully – Paudex	R9	de	Pully – Paudex
+0925	1439	Rances	Rances				Baulmes – Rances	R6	de	Baulmes – Rances
+0926	1020	Renens VD	Renens VD	Caudray	rue du	2-	Chavannes – Epenex	R3	de	Chavannes – Epenex
+0927	1020	Renens VD	Renens VD	Censuy	avenue du	1-9/2-	Chavannes – Epenex	R3	de	Chavannes – Epenex
+0928	1020	Renens VD	Renens VD	Gare	avenue de la		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0929	1020	Renens VD	Renens VD	Gare	place de la		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0930	1020	Renens VD	Renens VD	Piscine	avenue de la		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0931	1020	Renens VD	Renens VD	Préfaully	avenue de		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0932	1020	Renens VD	Renens VD	Silo	avenue du		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0933	1020	Renens VD	Renens VD	Simplon	rue du		Chavannes – Epenex	R3	de	Chavannes – Epenex
+0934	1020	Renens VD	Renens VD	Chêne	chemin du	1-11/2-10	Chavannes – Epenex	R3	de	Chavannes – Epenex
+0935	1020	Renens VD	Renens VD	Chêne	chemin du	12-/13-	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0936	1020	Renens VD	Renens VD	Lac	rue du	1-29/2-22	Renens	R3	de	Renens
+0937	1020	Renens VD	Renens VD	Lac	rue du	31-/24-	Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0938	1020	Renens VD	Renens VD	Rionza	chemin du		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+0939	1020	Renens	Renens VD				Renens	R3	de	Renens
+0940	1847	Rennaz	Rennaz				Villeneuve – Haut-Lac	R11	de	Villeneuve – Haut-Lac
+0941	1128	Reverolle	Reverolle				Pied du Jura	R2	du	Pied du Jura
+0942	1097	Riex	Riex				Villette	R9	de	Villette
+0943	1071	Rivaz	Rivaz				Saint-Saphorin	R9	de	Saint-Saphorin
+0944	1852	Roche	Roche VD				Villeneuve – Haut-Lac	R11	de	Villeneuve – Haut-Lac
+0945	1180	Rolle	Rolle				Coeur de la Côte	R1	du	Coeur de la Côte
+0946	1323	Romainmôtier	Romainmôtier				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+0947	1423	Romairon	Romairon				L'Arnon	R7	de l'	Arnon
+0948	1032	Romanel-sur-Lausanne	Romanel-sur-Lausanne				Cheseaux – Romanel	R3	de	Cheseaux – Romanel
+0949	1122	Romanel-sur-Morges	Romanel-sur-Morges				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+0950	1088	Ropraz	Ropraz				Jorat	R8	du	Jorat
+0951	1513	Rossenges	Rossenges				Moudon – Syens	R8	de	Moudon – Syens
+0952	1554	Rossens	Rossens VD				Granges et environs	R8	de	Granges et environs
+0953	1658	Rossinière	Rossinière				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+0954	1659	Rougemont	Rougemont				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+0955	1463	Rovray	Rovray				Yvonand	R7	d'	Yvonand
+0956	1046	Rueyres	Rueyres				Sauteruz	R5	du	Sauteruz
+0957	1264	St-Cergue	St-Cergue				Saint-Cergue	R1	de	Saint-Cergue
+0958	1410	St-Cierges	St-Cierges				Plateau du Jorat	R5	du	Plateau du Jorat
+0959	1188	St-George	St-George				Gimel – Longirod	R2	de	Gimel – Longirod
+0960	1806	St-Légier-La Chiésaz	St-Légier-La Chiésaz				Blonay – Saint-Légier	R10	de	Blonay – Saint-Légier
+0961	1176	St-Livres	St-Livres				L'Aubonne	R2	de l'	Aubonne
+0962	1187	St-Oyens	St-Oyens				Gimel – Longirod	R2	de	Gimel – Longirod
+0963	1162	St-Prex	St-Prex				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0964	1071	St-Saphorin (Lavaux)	St-Saphorin (Lavaux)				Saint-Saphorin	R9	de	Saint-Saphorin
+0965	1113	St-Saphorin-sur-Morges	St-Saphorin-sur-Morges				Morges – Échichens	R2	de	Morges – Échichens
+0966	1025	St-Sulpice	St-Sulpice VD				Ecublens – Saint-Sulpice	R3	d'	Ecublens – Saint-Sulpice
+0967	1683	Sarzens	Sarzens				Curtilles – Lucens	R8	de	Curtilles – Lucens
+0968	1534	Sassel	Sassel				Granges et environs	R8	de	Granges et environs
+0969	1189	Saubraz	Saubraz				Gimel – Longirod	R2	de	Gimel – Longirod
+0970	1073	Savigny	Savigny				Savigny – Forel	R9	de	Savigny – Forel
+0971	1554	Sédeilles	Sédeilles				Granges et environs	R8	de	Granges et environs
+0972	1525	Seigneux	Seigneux				Granges et environs	R8	de	Granges et environs
+0973	1304	Senarclens	Senarclens				Cossonay – Grancy	R5	de	Cossonay – Grancy
+0974	1355	Sergey	Sergey				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+0975	1077	Servion	Servion				Jorat	R8	du	Jorat
+0976	1141	Sévery	Sévery				Pied du Jura	R2	du	Pied du Jura
+0977	1274	Signy	Signy				La Dôle	R1	de La	Dôle
+0978	1062	Sottens	Sottens				Plateau du Jorat	R5	du	Plateau du Jorat
+0979	1450	Ste-Croix	Ste-Croix				Balcon du Jura	R7	du	Balcon du Jura
+0980	1890	St-Maurice	St-Maurice				Les Avançons	R11	des	Avançons
+0981	1433	Suchy	Suchy				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0982	1043	Sugnens	Sugnens				Haute-Menthue	R5	de la	Haute-Menthue
+0983	1036	Sullens	Sullens				Vufflens-la-Ville	R5	de	Vufflens-la-Ville
+0984	1437	Suscévaz	Suscévaz				Montagny – Champvent	R7	de	Montagny – Champvent
+0985	1510	Syens	Syens				Moudon – Syens	R8	de	Moudon – Syens
+0986	1295	Tannay	Tannay				Terre Sainte	R1	de	Terre Sainte
+0987	1180	Tartegnin	Tartegnin				Coeur de la Côte	R1	du	Coeur de la Côte
+0988	1410	Thierrens	Thierrens				Plateau du Jorat	R5	du	Plateau du Jorat
+0989	1131	Tolochenaz	Tolochenaz				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+0990	1270	Trélex	Trélex				Genolier	R1	de	Genolier
+0991	1552	Trey	Trey				Granges et environs	R8	de	Granges et environs
+0992	1436	Treycovagnes	Treycovagnes				Montagny – Champvent	R7	de	Montagny – Champvent
+0993	1538	Treytorrens (Payerne)	Treytorrens (Payerne)				Granges et environs	R8	de	Granges et environs
+0994	1412	Ursins	Ursins				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0995	1441	Valeyres-sous-Montagny	Valeyres-sous-Montagny				Montagny – Champvent	R7	de	Montagny – Champvent
+0996	1358	Valeyres-sous-Rances	Valeyres-sous-Rances				Baulmes – Rances	R6	de	Baulmes – Rances
+0997	1412	Valeyres-sous-Ursins	Valeyres-sous-Ursins				Pomy – Gressy – Suchy	R7	de	Pomy – Gressy – Suchy
+0998	1586	Vallamand	Vallamand				Vully – Avenches	R8	de	Vully – Avenches
+0999	1337	Vallorbe	Vallorbe				Vallorbe	R6	de	Vallorbe
+1000	1423	Vaugondry	Vaugondry				L'Arnon	R7	de l'	Arnon
+1001	1325	Vaulion	Vaulion				Vaulion – Romainmôtier	R6	de	Vaulion – Romainmôtier
+1002	1126	Vaux-sur-Morges	Vaux-sur-Morges				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+1003	1800	Vevey	Vevey				Vevey	R10	de	Vevey
+1004	1820	Veytaux	Veytaux				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1005	1267	Vich	Vich				Gland	R1	de	Gland
+1006	1682	Villars-Bramard	Villars-Bramard				Granges et environs	R8	de	Granges et environs
+1007	1423	Villars-Burquin	Villars-Burquin				L'Arnon	R7	de l'	Arnon
+1008	1404	Villars-Epeney	Villars-Epeney				Yvonand	R7	d'	Yvonand
+1009	1515	Villars-le-Comte	Villars-le-Comte				Curtilles – Lucens	R8	de	Curtilles – Lucens
+1010	1584	Villars-le-Grand	Villars-le-Grand				Vully – Avenches	R8	de	Vully – Avenches
+1011	1040	Villars-le-Terroir	Villars-le-Terroir				Talent	R5	du	Talent
+1012	1061	Villars-Mendraz	Villars-Mendraz				Plateau du Jorat	R5	du	Plateau du Jorat
+1013	1029	Villars-Ste-Croix	Villars-Ste-Croix				Bussigny – Villars-Sainte-Croix	R3	de	Bussigny – Villars-Sainte-Croix
+1014	1443	Villars-sous-Champvent	Villars-sous-Champvent				Montagny – Champvent	R7	de	Montagny – Champvent
+1015	1168	Villars-sous-Yens	Villars-sous-Yens				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+1016	1058	Villars-Tiercelin	Villars-Tiercelin				Haute-Menthue	R5	de la	Haute-Menthue
+1017	1555	Villarzel	Villarzel				Granges et environs	R8	de	Granges et environs
+1018	1844	Villeneuve	Villeneuve VD				Villeneuve – Haut-Lac	R11	de	Villeneuve – Haut-Lac
+1019	1096	Villette (Lavaux)	Villette (Lavaux)				Villette	R9	de	Villette
+1020	1184	Vinzel	Vinzel				Coeur de la Côte	R1	du	Coeur de la Côte
+1021	1418	Vuarrens	Vuarrens				Sauteruz	R5	du	Sauteruz
+1022	1509	Vucherens	Vucherens				Jorat	R8	du	Jorat
+1023	1302	Vufflens-la-Ville	Vufflens-la-Ville				Vufflens-la-Ville	R5	de	Vufflens-la-Ville
+1024	1134	Vufflens-le-Château	Vufflens-le-Château				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+1025	1431	Vugelles-La Mothe	Vugelles-La Mothe				L'Arnon	R7	de l'	Arnon
+1026	1610	Vuibroye	Vuibroye				Oron – Palézieux	R8	d'	Oron – Palézieux
+1027	1445	Vuiteboeuf	Vuiteboeuf				Baulmes – Rances	R6	de	Baulmes – Rances
+1028	1085	Vulliens	Vulliens				Jorat	R8	du	Jorat
+1029	1115	Vullierens	Vullierens				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+1030	1169	Yens	Yens				Saint-Prex – Lussy – Vufflens	R2	de	Saint-Prex – Lussy – Vufflens
+1031	1462	Yvonand	Yvonand				Yvonand	R7	d'	Yvonand
+1032	1853	Yvorne	Yvorne				Aigle	R11	d'	Aigle
+1033	1452	Les Rasses	Les Rasses				Balcon du Jura	R7	du	Balcon du Jura
+1034	1454	L'Auberson	L'Auberson				Balcon du Jura	R7	du	Balcon du Jura
+1035	1454	La Chaux	L'Auberson				Balcon du Jura	R7	du	Balcon du Jura
+1036	1454	La Vraconnaz	La Vraconnaz				Balcon du Jura	R7	du	Balcon du Jura
+1037	1040	St-Barthélemy	St-Barthélemy VD				Talent	R5	du	Talent
+1038	1816	Chailly-Montreux	Chailly-Montreux				Clarens	R10	de	Clarens
+1039	1817	Brent	Brent				Clarens	R10	de	Clarens
+1040	1815	Clarens	Clarens				Clarens	R10	de	Clarens
+1041	1346	Les Bioux	Les Bioux				La Vallée	R6	de La	Vallée
+1042	1341	Orient	Orient				La Vallée	R6	de La	Vallée
+1043	1348	Le Brassus	Le Brassus				La Vallée	R6	de La	Vallée
+1044	1343	Les Charbonnières	Les Charbonnières				La Vallée	R6	de La	Vallée
+1045	1864	Vers-L'Eglise	Vers-L'Eglise				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1046	1866	La Forclaz	La Forclaz VD				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1047	1862	les Mosses	les Mosses				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1048	1551	Vers-chez-Perrin	Vers-chez-Perrin				Payerne – Corcelles – Ressudens	R8	de	Payerne – Corcelles – Ressudens
+1049	1823	Glion	Glion				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1050	1090	La Croix (Lutry)	La Croix (Lutry)				Belmont – Lutry	R9	de	Belmont – Lutry
+1051	1400	Yverdon	Yverdon-les-Bains	Acacias	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1052	1400	Yverdon	Yverdon-les-Bains	Aérodrome	chemin de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1053	1400	Yverdon	Yverdon-les-Bains	Alpes	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1054	1400	Yverdon	Yverdon-les-Bains	Ancienne-Douane	quai de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1055	1400	Yverdon	Yverdon-les-Bains	Ancien Stand	rue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1056	1400	Yverdon	Yverdon-les-Bains	Ancienne Poste	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1057	1400	Yverdon	Yverdon-les-Bains	Arsenal	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1058	1400	Yverdon	Yverdon-les-Bains	Mermod	rue Arthur		Yverdon-Temple	R7	d'	Yverdon-Temple
+1059	1400	Yverdon	Yverdon-les-Bains	Fallet	promenade Auguste		Yverdon-Temple	R7	d'	Yverdon-Temple
+1060	1400	Yverdon	Yverdon-les-Bains	Avenir	rue de l'		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1061	1400	Yverdon	Yverdon-les-Bains	Bains	avenue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1062	1400	Yverdon	Yverdon-les-Bains	Beaumont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1063	1400	Yverdon	Yverdon-les-Bains	Beauregard	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1064	1400	Yverdon	Yverdon-les-Bains	Bel-Air	place		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1065	1400	Yverdon	Yverdon-les-Bains	Bellevue	route de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1066	1400	Yverdon	Yverdon-les-Bains	Belvédère	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1067	1400	Yverdon	Yverdon-les-Bains	Blancherie	rue de la		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1068	1400	Yverdon	Yverdon-les-Bains	Bosquets	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1069	1400	Yverdon	Yverdon-les-Bains	Bouleaux	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1070	1400	Yverdon	Yverdon-les-Bains	Bullet	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1071	1400	Yverdon	Yverdon-les-Bains	Buron	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1072	1400	Yverdon	Yverdon-les-Bains	Calamin	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1073	1400	Yverdon	Yverdon-les-Bains	Canal	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1074	1400	Yverdon	Yverdon-les-Bains	Pyrame-de-Candolle	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1075	1400	Yverdon	Yverdon-les-Bains	Casernes	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1076	1400	Yverdon	Yverdon-les-Bains	Casino	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1077	1400	Yverdon	Yverdon-les-Bains	Cerisiers	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1078	1400	Yverdon	Yverdon-les-Bains	Chaînettes	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1079	1400	Yverdon	Yverdon-les-Bains	Chalamont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1080	1400	Yverdon	Yverdon-les-Bains	Chamblon	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1081	1400	Yverdon	Yverdon-les-Bains	Champ-Pittet	château de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1082	1400	Yverdon	Yverdon-les-Bains	Champs-Lovats	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1083	1400	Yverdon	Yverdon-les-Bains	Charmilles	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1084	1400	Yverdon	Yverdon-les-Bains	Chasseron	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1085	1400	Yverdon	Yverdon-les-Bains	Châtelard	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1086	1400	Yverdon	Yverdon-les-Bains	Cheminet	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1087	1400	Yverdon	Yverdon-les-Bains	Cheseaux	route de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1088	1400	Yverdon	Yverdon-les-Bains	Chèvre	chemin de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1089	1400	Yverdon	Yverdon-les-Bains	Clairs Logis	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1090	1400	Yverdon	Yverdon-les-Bains	Clairmont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1091	1400	Yverdon	Yverdon-les-Bains	Clendy	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1092	1400	Yverdon	Yverdon-les-Bains	Coin de Terre	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1093	1400	Yverdon	Yverdon-les-Bains	Collège	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1094	1400	Yverdon	Yverdon-les-Bains	Colline	chemin de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1095	1400	Yverdon	Yverdon-les-Bains	Condémines	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1096	1400	Yverdon	Yverdon-les-Bains	Cordey	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1097	1400	Yverdon	Yverdon-les-Bains	Coteau	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1098	1400	Yverdon	Yverdon-les-Bains	Cottages	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1099	1400	Yverdon	Yverdon-les-Bains	Couchant	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1100	1400	Yverdon	Yverdon-les-Bains	Curtil-Maillet	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1101	1400	Yverdon	Yverdon-les-Bains	Cygnes	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1102	1400	Yverdon	Yverdon-les-Bains	Dosson	ruelle		Yverdon-Temple	R7	d'	Yverdon-Temple
+1103	1400	Yverdon	Yverdon-les-Bains	Verdan	rue Edouard-		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1104	1400	Yverdon	Yverdon-les-Bains	Bertrand	rue Elie-		Yverdon-Temple	R7	d'	Yverdon-Temple
+1105	1400	Yverdon	Yverdon-les-Bains	Entremonts	rue d'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1106	1400	Yverdon	Yverdon-les-Bains	Faïencerie	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1107	1400	Yverdon	Yverdon-les-Bains	Félice	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1108	1400	Yverdon	Yverdon-les-Bains	Fleurettes	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1109	1400	Yverdon	Yverdon-les-Bains	Florimont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1110	1400	Yverdon	Yverdon-les-Bains	Fontenay	chemin du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1111	1400	Yverdon	Yverdon-les-Bains	Foulques	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1112	1400	Yverdon	Yverdon-les-Bains	Four	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1113	1400	Yverdon	Yverdon-les-Bains	Frêne	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1114	1400	Yverdon	Yverdon-les-Bains	Galilée	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1115	1400	Yverdon	Yverdon-les-Bains	Gare	avenue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1116	1400	Yverdon	Yverdon-les-Bains	Gasparin	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1117	1400	Yverdon	Yverdon-les-Bains	Général Guisan	avenue		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1118	1400	Yverdon	Yverdon-les-Bains	Grands-Champs	aux		Yverdon-Temple	R7	d'	Yverdon-Temple
+1119	1400	Yverdon	Yverdon-les-Bains	Grandson	avenue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1120	1400	Yverdon	Yverdon-les-Bains	Graveline	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1121	1400	Yverdon	Yverdon-les-Bains	Grèbes	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1122	1400	Yverdon	Yverdon-les-Bains	Clendy	grèves de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1123	1400	Yverdon	Yverdon-les-Bains	Haldimand	avenue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1124	1400	Yverdon	Yverdon-les-Bains	Correvon	rue Henry		Yverdon-Temple	R7	d'	Yverdon-Temple
+1125	1400	Yverdon	Yverdon-les-Bains	Hippodrome	avenue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1126	1400	Yverdon	Yverdon-les-Bains	Hôpital	rue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1127	1400	Yverdon	Yverdon-les-Bains	Indépendance	rue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1128	1400	Yverdon	Yverdon-les-Bains	Industrie	rue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1129	1400	Yverdon	Yverdon-les-Bains	Iris	avenue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1130	1400	Yverdon	Yverdon-les-Bains	Isles	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1131	1400	Yverdon	Yverdon-les-Bains	Rousseau	promenade J.J.		Yverdon-Temple	R7	d'	Yverdon-Temple
+1132	1400	Yverdon	Yverdon-les-Bains	Jardins	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1133	1400	Yverdon	Yverdon-les-Bains	Venel	rue Jean-André-		Yverdon-Temple	R7	d'	Yverdon-Temple
+1134	1400	Yverdon	Yverdon-les-Bains	Jonction	rue de la		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1135	1400	Yverdon	Yverdon-les-Bains	Jordils	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1136	1400	Yverdon	Yverdon-les-Bains	Kiener	avenue		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1137	1400	Yverdon	Yverdon-les-Bains	Lac	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1138	1400	Yverdon	Yverdon-les-Bains	Lausanne	route de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1139	1400	Yverdon	Yverdon-les-Bains	Jaquier	rue Léon		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1140	1400	Yverdon	Yverdon-les-Bains	Michaud	rue Léon		Yverdon-Temple	R7	d'	Yverdon-Temple
+1141	1400	Yverdon	Yverdon-les-Bains	Levant	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1142	1400	Yverdon	Yverdon-les-Bains	Lilas	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1143	1400	Yverdon	Yverdon-les-Bains	Liserons	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1144	1400	Yverdon	Yverdon-les-Bains	Maison-Rouge	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1145	1400	Yverdon	Yverdon-les-Bains	Maladaire	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1146	1400	Yverdon	Yverdon-les-Bains	Mauborget	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1147	1400	Yverdon	Yverdon-les-Bains	Midi	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1148	1400	Yverdon	Yverdon-les-Bains	Milieu	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1149	1400	Yverdon	Yverdon-les-Bains	Mont-d'Or	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1150	1400	Yverdon	Yverdon-les-Bains	Mont-Tendre	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1151	1400	Yverdon	Yverdon-les-Bains	Montagny	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1152	1400	Yverdon	Yverdon-les-Bains	Montchoisi	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1153	1400	Yverdon	Yverdon-les-Bains	Montélaz	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1154	1400	Yverdon	Yverdon-les-Bains	Mouettes	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1155	1400	Yverdon	Yverdon-les-Bains	Moulins	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1156	1400	Yverdon	Yverdon-les-Bains	Muguets	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1157	1400	Yverdon	Yverdon-les-Bains	Mujon	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1158	1400	Yverdon	Yverdon-les-Bains	Neuchâtel	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1159	1400	Yverdon	Yverdon-les-Bains	Neuve	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1160	1400	Yverdon	Yverdon-les-Bains	Nogent	quai de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1161	1400	Yverdon	Yverdon-les-Bains	Nord	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1162	1400	Yverdon	Yverdon-les-Bains	Oiseaux	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1163	1400	Yverdon	Yverdon-les-Bains	Orbe	rue d'		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1164	1400	Yverdon	Yverdon-les-Bains	Orient	rue de l'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1165	1400	Yverdon	Yverdon-les-Bains	Paix	rue de la		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1166	1400	Yverdon	Yverdon-les-Bains	Parc	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1167	1400	Yverdon	Yverdon-les-Bains	Payerne	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1168	1400	Yverdon	Yverdon-les-Bains	Pêcheurs	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1169	1400	Yverdon	Yverdon-les-Bains	Pestalozzi	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1170	1400	Yverdon	Yverdon-les-Bains	Petits-Champs	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1171	1400	Yverdon	Yverdon-les-Bains	Petites Roches	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1172	1400	Yverdon	Yverdon-les-Bains	Peupliers	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1173	1400	Yverdon	Yverdon-les-Bains	Philosophes	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1174	1400	Yverdon	Yverdon-les-Bains	Pierre-de-Savoie	avenue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1175	1400	Yverdon	Yverdon-les-Bains	Pins	promenade des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1176	1400	Yverdon	Yverdon-les-Bains	Plage	avenue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1177	1400	Yverdon	Yverdon-les-Bains	Plaine	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1178	1400	Yverdon	Yverdon-les-Bains	Plaisance	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1179	1400	Yverdon	Yverdon-les-Bains	Pomy	route de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1180	1400	Yverdon	Yverdon-les-Bains	Prairie	quartier de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1181	1400	Yverdon	Yverdon-les-Bains	Pré	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1182	1400	Yverdon	Yverdon-les-Bains	Pré-du-Canal	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1183	1400	Yverdon	Yverdon-les-Bains	Pré-Fleuri	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1184	1400	Yverdon	Yverdon-les-Bains	Pré-Français	chemin du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1185	1400	Yverdon	Yverdon-les-Bains	Pré-Neuf	chemin du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1186	1400	Yverdon	Yverdon-les-Bains	Prés-du-Lac	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1187	1400	Yverdon	Yverdon-les-Bains	Préville	cité		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1188	1400	Yverdon	Yverdon-les-Bains	Quatorze-Avril	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1189	1400	Yverdon	Yverdon-les-Bains	Quatre Marronniers	avenue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1190	1400	Yverdon	Yverdon-les-Bains	Remparts	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1191	1400	Yverdon	Yverdon-les-Bains	Riant-Fleurs	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1192	1400	Yverdon	Yverdon-les-Bains	Rivage	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1193	1400	Yverdon	Yverdon-les-Bains	Guimps	rue Roger de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1194	1400	Yverdon	Yverdon-les-Bains	Roselière	rue de la		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1195	1400	Yverdon	Yverdon-les-Bains	Roses	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1196	1400	Yverdon	Yverdon-les-Bains	Roseyres	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1197	1400	Yverdon	Yverdon-les-Bains	Sablonnaire	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1198	1400	Yverdon	Yverdon-les-Bains	Saint-Georges	rue		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1199	1400	Yverdon	Yverdon-les-Bains	Saint-Roch	rue		Yverdon-Temple	R7	d'	Yverdon-Temple
+1200	1400	Yverdon	Yverdon-les-Bains	Sainte-Croix	rue de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1201	1400	Yverdon	Yverdon-les-Bains	Sources	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1202	1400	Yverdon	Yverdon-les-Bains	Sous-Bois	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1203	1400	Yverdon	Yverdon-les-Bains	Sports	avenue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1204	1400	Yverdon	Yverdon-les-Bains	Suchet	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1205	1400	Yverdon	Yverdon-les-Bains	Thermes	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1206	1400	Yverdon	Yverdon-les-Bains	Thièle	quai de la		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1207	1400	Yverdon	Yverdon-les-Bains	Tilleuls	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1208	1400	Yverdon	Yverdon-les-Bains	Treycovagnes	chaussée de		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1209	1400	Yverdon	Yverdon-les-Bains	Tuileries	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1210	1400	Yverdon	Yverdon-les-Bains	Uttins	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1211	1400	Yverdon	Yverdon-les-Bains	Valentin	rue du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1212	1400	Yverdon	Yverdon-les-Bains	Vallon	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1213	1400	Yverdon	Yverdon-les-Bains	Vautier	ruelle		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1214	1400	Yverdon	Yverdon-les-Bains	Vergers	rue des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1215	1400	Yverdon	Yverdon-les-Bains	Vermont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1216	1400	Yverdon	Yverdon-les-Bains	Vernes	rue des		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1217	1400	Yverdon	Yverdon-les-Bains	Vignes	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1218	1400	Yverdon	Yverdon-les-Bains	Villette	rue de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1219	1400	Yverdon	Yverdon-les-Bains	Vingt-Quatre-Janvier	rue du		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1220	1400	Yverdon	Yverdon-les-Bains	Vounoz	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1221	1400	Yverdon	Yverdon-les-Bains	Barbey	rue William		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1222	1417	Epautheyres	Epautheyres				Sauteruz	R5	du	Sauteruz
+1223	1407	Gossens	Gossens				Pâquier – Donneloye	R7	de	Pâquier – Donneloye
+1224	1073	Mollie-Margot	Mollie-Margot				Savigny – Forel	R9	de	Savigny – Forel
+1225	1093	La Conversion	La Conversion				Belmont – Lutry	R9	de	Belmont – Lutry
+1226	1304	Allens	Allens				Cossonay – Grancy	R5	de	Cossonay – Grancy
+1227	1148	Villars-Bozon	Villars-Bozon				Veyron – Venoge	R5	de	Veyron – Venoge
+1228	1148	La Coudre	La Coudre				Veyron – Venoge	R5	de	Veyron – Venoge
+1229	1195	Dully-Bursinel	Dully-Bursinel				Coeur de la Côte	R1	du	Coeur de la Côte
+1230	1274	Signy-Centre	Signy-Centre				La Dôle	R1	de La	Dôle
+1231	1265	La Cure	La Cure				Saint-Cergue	R1	de	Saint-Cergue
+1232	1267	Vich-Coinsins	Vich-Coinsins				Gland	R1	de	Gland
+1233	1295	Mies	Mies				Terre Sainte	R1	de	Terre Sainte
+1234	1295	Tannay	Tannay				Terre Sainte	R1	de	Terre Sainte
+1235	1342	Le Pont	Le Pont				La Vallée	R6	de La	Vallée
+1236	1347	Le Sentier	Le Sentier				La Vallée	R6	de La	Vallée
+1237	1347	Le Solliat	Le Solliat				La Vallée	R6	de La	Vallée
+1238	1356	La Russille	La Russille				Ballaigues – Lignerolle	R6	de	Ballaigues – Lignerolle
+1239	1450	La Sagne (Ste-Croix)	La Sagne (Ste-Croix)				Balcon du Jura	R7	du	Balcon du Jura
+1240	1450	Le Château-de-Ste-Croix	Le Château-de-Ste-Croix				Balcon du Jura	R7	du	Balcon du Jura
+1241	1585	Salavaux	Salavaux				Vully – Avenches	R8	de	Vully – Avenches
+1242	1585	Cotterd	Cotterd				Vully – Avenches	R8	de	Vully – Avenches
+1243	1607	Palézieux-Village	Palézieux-Village				Oron – Palézieux	R8	d'	Oron – Palézieux
+1244	1091	Aran	Aran				Villette	R9	de	Villette
+1245	1091	Chenaux	Chenaux				Villette	R9	de	Villette
+1246	1801	Le Mont-Pèlerin	Le Mont-Pèlerin				Chardonne – Jongny	R10	de	Chardonne – Jongny
+1247	1808	Les Monts-de-Corsier	Les Monts-de-Corsier				Corsier – Corseaux	R10	de	Corsier – Corseaux
+1248	1809	Fenil-sur-Corsier	Fenil-sur-Corsier				Corsier – Corseaux	R10	de	Corsier – Corseaux
+1249	1820	Territet	Territet				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1250	1824	Caux	Caux				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1251	1832	Villard-sur-Chamby	Villard-sur-Chamby				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1252	1832	Chamby	Chamby				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1253	1832	Chamby	Chamby	Chaulin	route de	115-/114-	Montreux – Veytaux	R10	de	Montreux – Veytaux
+1254	1832	Chamby	Chamby	Chaulin	route de	1-113/2-112	Clarens	R10	de	Clarens
+1255	1832	Chamby	Chamby	Brison	chemin de		Clarens	R10	de	Clarens
+1256	1832	Chamby	Chamby	Cour de Chaulin	sentier		Clarens	R10	de	Clarens
+1257	1832	Chamby	Chamby	Cornaux	route de		Clarens	R10	de	Clarens
+1258	1832	Chamby	Chamby	Joli-Bois	route de		Clarens	R10	de	Clarens
+1259	1832	Chamby	Chamby	Scex que Pliau	chemin du		Clarens	R10	de	Clarens
+1260	1807	Blonay	Blonay	Vignerons	chemin des		Clarens	R10	de	Clarens
+1261	1807	Blonay	Blonay	Foge	chemin de la		Clarens	R10	de	Clarens
+1262	1807	Blonay	Blonay	Lurier	chemin de		Clarens	R10	de	Clarens
+1263	1658	La Tine	La Tine				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+1264	1660	Les Moulins	Les Moulins				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+1265	1660	L'Etivaz	L'Etivaz				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+1266	1660	La Lécherette	La Lécherette				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+1267	1659	Flendruz	Flendruz				Pays-d'Enhaut	R10	du	Pays-d'Enhaut
+1268	1833	Les Avants	Les Avants				Montreux – Veytaux	R10	de	Montreux – Veytaux
+1269	1867	St-Triphon	St-Triphon				Ollon – Villars	R11	d'	Ollon – Villars
+1270	1867	Panex	Panex				Ollon – Villars	R11	d'	Ollon – Villars
+1271	1862	La Comballaz	La Comballaz				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1272	1862	Les Mosses	Les Mosses				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1273	1884	Huémoz	Huémoz				Ollon – Villars	R11	d'	Ollon – Villars
+1274	1884	Villars-sur-Ollon	Villars-sur-Ollon				Ollon – Villars	R11	d'	Ollon – Villars
+1275	1884	Arveyes	Arveyes				Ollon – Villars	R11	d'	Ollon – Villars
+1276	1864	Vers-l'Eglise	Vers-l'Eglise				Ormonts – Leysin	R11	des	Ormonts – Leysin
+1277	1880	Fenalet-sur-Bex	Fenalet-sur-Bex				Les Avançons	R11	des	Avançons
+1278	1880	Frenières-sur-Bex	Frenières-sur-Bex				Les Avançons	R11	des	Avançons
+1279	1880	Les Posses-sur-Bex	Les Posses-sur-Bex				Les Avançons	R11	des	Avançons
+1280	1885	Chesières	Chesières				Ollon – Villars	R11	d'	Ollon – Villars
+1281	1892	Morcles	Morcles				Les Avançons	R11	des	Avançons
+1282	1068	Les Monts-de-Pully	Les Monts-de-Pully				Pully – Paudex	R9	de	Pully – Paudex
+1283	1440	Montagny-Chamard	Montagny-Chamard				Montagny – Champvent	R7	de	Montagny – Champvent
+1284	1026	Echandens-Denges	Echandens-Denges				Lonay – Préverenges – Vullierens	R2	de	Lonay – Préverenges – Vullierens
+1285	1880	Les Plans-sur-Bex	Les Plans-sur-Bex				Les Avançons	R11	des	Avançons
+1286	1820	Montreux	Montreux	Alpes	avenue des	1-61/2-140	Montreux – Veytaux	R10	de	Montreux – Veytaux
+1287	1820	Montreux	Montreux	Alpes	avenue des	63-/142-	Clarens	R10	de	Clarens
+1288	1820	Montreux	Montreux	Belmont	avenue de	1-37/2-52	Montreux – Veytaux	R10	de	Montreux – Veytaux
+1289	1820	Montreux	Montreux	Belmont	avenue de	39-/54-	Clarens	R10	de	Clarens
+1290	1820	Montreux	Montreux	Chaumény	chemin de la		Clarens	R10	de	Clarens
+1291	1820	Montreux	Montreux	Colondalles	route des	1-49/2-46	Montreux – Veytaux	R10	de	Montreux – Veytaux
+1292	1820	Montreux	Montreux	Colondalles	route des	51-/48-	Clarens	R10	de	Clarens
+1293	1000	Lausanne 25	Lausanne 25				La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+1294	1003	Lausanne	Lausanne	Port-Franc	rue du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+1295	1000	Lausanne	Lausanne	Cojonnex	route de		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+1296	1018	Lausanne	Lausanne	Pavement	route du		Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
+1297	1003	Lausanne	Lausanne	Chariot	voie du		Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
+1298	1007	Lausanne	Lausanne	Mollendruz	chemin du		Saint-Jean	R4	de	Saint-Jean
+1299	1010	Lausanne	Lausanne	Roches	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
+1300	1400	Yverdon	Yverdon-les-Bains	Bey	le		Montagny – Champvent	R7	de	Montagny – Champvent
+1301	1400	Yverdon	Yverdon-les-Bains	Chamblon	caserne		Montagny – Champvent	R7	de	Montagny – Champvent
+1302	1400	Yverdon	Yverdon-les-Bains	Chypre	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1303	1400	Yverdon	Yverdon-les-Bains	Clendy	Guérite CFF de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1304	1400	Yverdon	Yverdon-les-Bains	Corfou	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1305	1400	Yverdon	Yverdon-les-Bains	Floreyres	ferme de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1306	1400	Yverdon	Yverdon-les-Bains	Forge	ruelle de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1307	1400	Yverdon	Yverdon-les-Bains	Grande Prairie	-		Yverdon-Temple	R7	d'	Yverdon-Temple
+1308	1400	Yverdon	Yverdon-les-Bains	Madagascar	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1309	1400	Yverdon	Yverdon-les-Bains	Perret	rue Françoise		Yverdon-Temple	R7	d'	Yverdon-Temple
+1310	1400	Yverdon	Yverdon-les-Bains	Pestalozzi	place		Yverdon-Temple	R7	d'	Yverdon-Temple
+1311	1400	Yverdon	Yverdon-les-Bains	Pugessies	quartier des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1312	1400	Yverdon	Yverdon-les-Bains	Rhodes	rue de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1313	1400	Yverdon	Yverdon-les-Bains	Saint-Georges	Campagne		Yverdon-Fontenay – Les Cygnes	R7	d'	Yverdon-Fontenay – Les Cygnes
+1314	1400	Yverdon	Yverdon-les-Bains	Tannerie	place de la		Yverdon-Temple	R7	d'	Yverdon-Temple
+1315	1400	Yverdon	Yverdon-les-Bains	Yverdon	château d'		Yverdon-Temple	R7	d'	Yverdon-Temple
+1316	1400	Yverdon	Yverdon-les-Bains	Floreyres	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1317	1400	Yverdon	Yverdon-les-Bains	Jolimont	chemin de		Yverdon-Temple	R7	d'	Yverdon-Temple
+1318	1400	Yverdon	Yverdon-les-Bains	Petitmaître	rue F.F.		Yverdon-Temple	R7	d'	Yverdon-Temple
+1319	1400	Yverdon	Yverdon-les-Bains	Terminus	chemin du		Yverdon-Temple	R7	d'	Yverdon-Temple
+1320	1400	Yverdon	Yverdon-les-Bains	Terrasses	chemin des		Yverdon-Temple	R7	d'	Yverdon-Temple
+1321	1485	Nuvilly	Nuvilly	Aclex	-		Granges et environs	R8	de	Granges et environs
+1322	1608	Oron-le-Châtel	Oron-le-Châtel	Château	route du		Oron – Palézieux	R8	d'	Oron – Palézieux
+1323	1787	Môtier (Vully)	Môtier (Vully)	Sauge	route de la		Vully – Avenches	R8	de	Vully – Avenches
+1324	2108	Couvet	Couvet	Petit-Pré-Baillod	-		Mont-Aubert	R7	du	Mont-Aubert
+1325	2108	Couvet	Couvet	Vers-chez-Pillot	-		Mont-Aubert	R7	du	Mont-Aubert
+1326	2108	Couvet	Couvet	Vers-chez-Sulpy	-		Mont-Aubert	R7	du	Mont-Aubert
+1327	1290	Versoix	Versoix				Terre Sainte	R1	de	Terre Sainte
+1328	1485	Nuvilly	Nuvilly				Granges et environs	R8	de	Granges et environs
+1329	1608	Chapelle (Glâne)	Chapelle (Glâne)				Oron – Palézieux	R8	d'	Oron – Palézieux
+1330	2108	Couvet	Couvet				Mont-Aubert	R7	du	Mont-Aubert
+1331	1003	Lausanne	Lausanne	Cheneau-de-Bourg	rue		Saint-François – Saint-Jacques	R4	de	Saint-François – Saint-Jacques
+1332	1004	Lausanne	Lausanne	Jardins-de-Prélaz	-		Sud-Ouest lausannois	R4	du	Sud-Ouest lausannois
+1333	1372	Bavois	Bavois	Entreroches	route d'		La Sarraz	R5	de La	Sarraz
+1334	1024	Ecublens VD	Ecublens VD	Epenex	avenue d'	11-/6	Chavannes – Epenex	R3	de	Chavannes – Epenex
