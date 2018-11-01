@@ -19,10 +19,10 @@ namespace AIDER.ParishPreprocessor
 			var exeDir = System.IO.Path.GetDirectoryName (exePath);
 			var dataDir = System.IO.Path.GetFullPath (System.IO.Path.Combine (exeDir, "..", "..", "Data"));
 
-			string inputPath = System.IO.Path.Combine (dataDir, "2018-01-xx Clean Parish Info.txt");
-			string input2Path = System.IO.Path.Combine (dataDir, "2018-01-xx parish names.txt");
-			string outputPath = System.IO.Path.Combine (dataDir, "2018-01-xx parishes.txt");
-			string missingPath = System.IO.Path.Combine (dataDir, "2018-01-xx missing.txt");
+			string inputPath = System.IO.Path.Combine (dataDir, "2018-11-xx Clean Parish Info.txt");
+			string input2Path = System.IO.Path.Combine (dataDir, "2018-11-xx parish names.txt");
+			string outputPath = System.IO.Path.Combine (dataDir, "2018-11-xx parishes.txt");
+			string missingPath = System.IO.Path.Combine (dataDir, "2018-11-xx missing.txt");
 
 			Program.ReadParishNames (input2Path);
 
@@ -45,6 +45,8 @@ namespace AIDER.ParishPreprocessor
 				.Where (x => !string.IsNullOrWhiteSpace (x))
 				.Select (x => Program.Transform2CleanLine (zips, x))
 				.ToList ();
+
+			Program.AvoidDuplicates (parishAddresses);
 
 			System.IO.File.WriteAllLines (outputPath, parishAddresses.Select (x => x.ToString ()), System.Text.Encoding.Default);
 
@@ -83,6 +85,30 @@ namespace AIDER.ParishPreprocessor
 			System.Diagnostics.Process.Start (@"S:\git\core\cresus\Epsitec.Cresus\Aider\DataFiles");
 			System.Diagnostics.Process.Start (dataDir);
 		}
+
+		private static void AvoidDuplicates(IEnumerable<ParishAddress> addresses)
+		{
+			var lines = addresses
+				.Select (x => new { Address = $"{x.Zip} {x.Town} {x.StreetFullName} {x.Range}", Parish = x.Parish })
+				.ToList ();
+			var dupes = lines
+				.GroupBy (x => x.Address)
+				.Where (g => g.Distinct ().Count () > 1)
+				.Select (y => $"{y.Key}\r\nConflicting: {string.Join ("/", y.Select (z => z.Parish))}")
+				.ToList ();
+
+			foreach (var dupe in dupes)
+			{
+				System.Console.ForegroundColor = System.ConsoleColor.Red;
+				System.Console.WriteLine (dupe);
+			}
+
+			if (dupes.Count > 0)
+			{
+				System.Console.ReadLine ();
+			}
+		}
+
 
 		private static IEnumerable<SwissPostStreetInformation> VerifyStreets(SwissPostStreetRepository streetRepository, List<ParishAddress> parishAddresses)
 		{

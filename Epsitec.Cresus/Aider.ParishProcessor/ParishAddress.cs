@@ -40,9 +40,12 @@ namespace AIDER.ParishPreprocessor
 
 
 		public int Zip => this.zip;
+		public string Town => this.town;
 		public string StreetName => this.streetName;
 		public string StreetPrefix => this.streetPrefix;
 		public string StreetFullName => this.streetFullName;
+		public string Range => this.range;
+		public string Parish => this.parishName;
 
 
 		public override string ToString()
