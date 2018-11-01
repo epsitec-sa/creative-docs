@@ -1,0 +1,384 @@
+1008	Acacias	avenue des
+1008	Alpes	promenade des
+1008	Baumettes	chemin des
+1008	Bel-Orne	chemin de
+1008	Bellevue	chemin de
+1008	Belmont	chemin de
+1008	Belmonthoux	chemin de
+1008	Broye	route de
+1008	Buissonnière	chemin de la
+1008	Centenaire	chemin du
+1008	Cerisiers	avenue des
+1008	Cery	hôpital de
+1008	Cery	route de
+1008	Chalet-Mignon	chemin du
+1008	Chalets	chemin des
+1008	Chardonnerets	chemin des
+1008	Charmilles	chemin des
+1008	Charmontel	chemin de
+1008	Chasseur	route du
+1008	Château	avenue du
+1008	Collège	place du
+1008	Combette	rue de la
+1008	Corminjoz	chemin de
+1008	Cossonay	route de
+1008	Cottages	chemin des
+1008	Coudraie	chemin de la
+1008	Courtil	chemin du
+1008	Creuses	chemin des
+1008	Cure	chemin de la
+1008	Fleur-de-Lys	route de la
+1008	Fleur-de-Lys	sentier de
+1008	Fleurs	chemin des
+1008	Florissant	avenue de
+1008	Floréal	avenue de
+1008	Flumeaux	route des
+1008	Fontadel	chemin de
+1008	Grand-Champ	chemin du
+1008	Grand-Vigne	chemin de la
+1008	Huttins	avenue des
+1008	Jolimont	avenue de
+1008	Lande	chemin de la
+1008	Léman	avenue du
+1008	Maison des Scouts	
+1008	Meunière	chemin de la
+1008	Mont	route du
+1008	Mont-Goulin	avenue de
+1008	Moraine	chemin de la
+1008	Métiers	rue des
+1008	Neuchâtel	route de
+1008	Ochette	chemin de l'
+1008	Ombreval	chemin d'
+1008	Ondine	chemin de l'
+1008	Passiaux	chemin des
+1008	Pernette	chemin de la
+1008	Perréaz	chemin de
+1008	Peupliers	chemin des
+1008	PkP 5àsec	
+1008	Planches	chemin des
+1008	Platane	chemin du
+1008	Pommeraie	chemin de la
+1008	Possession	chemin de la
+1008	Pâquis	chemin des
+1008	Rapille	avenue de la
+1008	Renens	route de
+1008	Rochelle	avenue de la
+1008	Sous-Mont	chemin de
+1008	Suettaz	chemin de la
+1008	Union	chemin de l'
+1008	Verger	chemin du
+1008	Vieux-Collège	chemin du
+1008	Vieux-Tilleul	chemin du
+1008	Beau-Cèdre	chemin de
+1008	Boracles	chemin des
+1008	Bâtiaz	chemin de la
+1008	Chalet-Vert	chemin du
+1008	Champvent	chemin de
+1008	Crissier	chemin de
+1008	Cure	chemin de la
+1008	Dérochet	chemin du
+1008	Fleur-de-Lys	chemin de la
+1008	Flusel	promenade de
+1008	Jardins	chemin des
+1008	Lussex	chemin du
+1008	Mémises	chemin des
+1008	Mézery	chemin de
+1008	Neuchâtel	route de
+1008	Oche	chemin de l'
+1008	Pierregrosse	chemin de
+1008	Praz-Forney	chemin de
+1008	Pépinière	chemin de la
+1008	Rueyre	chemin de la
+1008	Sous-Bois	chemin de
+1008	Taulard	chemin du
+1008	Venoge	chemin de la
+1008	Vignettes	chemin des
+1010	MP La Sallaz	
+1011	Beaumont	avenue de
+1020	24-Janvier	avenue du
+1020	Airelles	chemin des
+1020	Alpes	rue des
+1020	Arzillier	chemin d'
+1020	Avenir	rue de l'
+1020	Avril	avenue 14-
+1020	Baumettes	avenue des
+1020	Belle Vue	chemin de
+1020	Biondes	chemin de
+1020	Bois	chemin du
+1020	Borjod	chemin de
+1020	Bourg-Dessus	chemin de
+1020	Broye	chemin de
+1020	Bruyère	chemin de la
+1020	Bugnon	rue du
+1020	Carroz	chemin du
+1020	Cerisiers	chemin des
+1020	Chablais	avenue du
+1020	Chenalette	rue de la
+1020	Château	avenue du
+1020	Clos	chemin des
+1020	Closel	chemin du
+1020	Corbettes	chemin de
+1020	Corjon	chemin de
+1020	Cossonay	rue de
+1020	Creuse	chemin de la
+1020	Crissier	rue de
+1020	Côtes-de-la-Bourdonnette	
+1020	Eglise Catholique	avenue
+1020	Eterpy	chemin d'
+1020	Florissant	avenue de
+1020	Follieu	chemin de
+1020	Gare	sentier de la
+1020	Industrie	rue de l'
+1020	Jonquilles	chemin des
+1020	Jouxtens	chemin de
+1020	Lausanne	rue de
+1020	Levant	chemin du
+1020	Lilas	chemin des
+1020	Léman	rue du
+1020	Mai	avenue du 1er-
+1020	Marché	place du
+1020	Martinet	chemin du
+1020	Midi	rue du
+1020	Mont Robert	chemin de
+1020	Mont	rue du
+1020	Mont	villas du
+1020	Mèbre	rue de la
+1020	Neuve	rue
+1020	Novalles	chemin des
+1020	Noyerettes	chemin des
+1020	Paix	rue de la
+1020	Pallettes	chemin de
+1020	Paudex	avenue des
+1020	Perrelet	chemin de
+1020	Pierregrosse	chemin de
+1020	Pins	Sentier des
+1020	Poste	avenue de la
+1020	Pralet	chemin de
+1020	Pré-Fleuri	chemin de
+1020	Publiaz	chemin de
+1020	Pépinières	chemin des
+1020	Roche	chemin de la
+1020	Roses	chemin des
+1020	Rueyre	chemin de la
+1020	Saint-Georges	chemin de
+1020	Saugiaz	avenue de
+1020	Savonnerie	rue de la
+1020	Source	rue de la
+1020	Sur la Croix	
+1020	Temple	avenue du
+1020	Terminus	place du
+1020	Terminus	rue du
+1020	Verdeaux	rue de
+1020	Vignes	chemin des
+1020	Village	rue du
+1020	Vorsiaz	allée de la
+1024	Alouettes	chemin des
+1024	Bassenges	rue de
+1024	Bois	route du
+1024	Bosquets	chemin des
+1024	Brûlée	route de la
+1024	Bugnon	chemin du
+1024	Bussigny	route de
+1024	Cantonale	route
+1024	Champs-Courbes	chemin des
+1024	Chantemerle	chemin de
+1024	Chiésaz	chemin de la
+1024	Clos	chemin des
+1024	Cocarde	chemin de la
+1024	Colline	chemin de la
+1024	Coteau	chemin du
+1024	Crausaz	chemin de la
+1024	Crochy	route de
+1024	Croset	chemin du
+1024	Crêts	chemin des
+1024	Danube	chemin du
+1024	Danube	sentier du
+1024	Denges	sentier de
+1024	Dent d'Oche	chemin de la
+1024	Dévent	chemin du
+1024	Dôle	chemin de la
+1024	Esserts	chemin des
+1024	Floréal	chemin de
+1024	Grives	chemin des
+1024	Jura	chemin du
+1024	Larges-Pièces	chemin des
+1024	Levant	chemin du
+1024	Louis-Favre 	route
+1024	Molard	route du
+1024	Montaney	chemin de
+1024	Motte	chemin de la
+1024	Motty	place du
+1024	Mémises	chemin des
+1024	Neuve	route
+1024	Ormet	chemin de l'
+1024	Parc	chemin du
+1024	Perrettes	chemin des
+1024	Pierre	route de la
+1024	Pinsons	chemin des
+1024	PkP 5àsec	
+1024	Plaisance	chemin de
+1024	Planoz	sentier du
+1024	Plantaz	chemin de la
+1024	Pré-Fleuri	chemin de
+1024	Prévenoge	chemin de
+1024	Raye	chemin de la
+1024	Reculan	route de
+1024	Renges	rue de
+1024	Rosemont	chemin de
+1024	Ruchoz	chemin de
+1024	Saugettes	chemin des
+1024	Stand	chemin du
+1024	Treille	chemin de la
+1024	Triaudes	chemin des
+1024	Trois-Ponts	
+1024	Trois-Ponts	chemin des
+1024	Vallaire	route de
+1024	Veilloud	chemin de
+1024	Venoge	chemin de la
+1024	Verney	chemin de
+1024	Vignes	chemin des
+1024	Villars	rue du
+1372	Stade	Chemin du
+1400	MP Av. de la Gare	
+1485	Aclex	route de l'
+1485	Batailles	chemin des
+1485	Biolex	chemin du
+1485	Bugnon	chemin du
+1485	Champs Corcelles	chemin de
+1485	Clous	chemin des
+1485	Coutset	route du
+1485	Cure	sous la
+1485	Eglise	Place de l'
+1485	Eglise	rue de l'
+1485	Fontanys	route des
+1485	Grand-Route	
+1485	Moulins	chemin des
+1485	Ouches	chemin des
+1485	Palud	route de la
+1485	Riaux	chemin des
+1485	Vernolet	chemin du
+1485	Village	rue du
+1608	Chênes	route des
+1608	Planches	chemin des
+1787	Champ Perbou	chemin de
+1787	Courlis	ruelle du
+1787	Crausa	route de la
+1787	Fischilling	ruelle de
+1787	Guillaume Farel	ruelle
+1787	Paverez	chemin du
+1787	Plage	chemin de la
+1787	Planes	chemin des
+1787	Poste	ruelle de la
+1787	Pêcheurs	ruelle des
+1787	Riveraine	ruelle de la
+1787	Vaudigny	chemin de
+1787	Vieux Moulin	ruelle du
+1787	Vignerons	ruelle des
+1787	Vignes	chemin des
+1787	Village	route du
+1787	Château	rue du
+1787	Erpin	route d'
+1787	Gachettes	Chemin des
+1787	Sous Mur	chemin
+1807	Biolle	batterie de la
+1807	Fayaux	batterie en
+1807	Lally	batterie de
+1807	Mouce	batterie d'en
+1807	Ondallaz	batterie d'
+1807	Pléiades	batterie de les
+1820	Clos-de-Chillon	ch. du
+1832	Adversan	batterie en
+1832	Montagnard	batterie du
+2108	Acacias	rue des
+2108	Auge-Belin	
+2108	Baillods	rue Jules-
+2108	Bas-du-Mont	
+2108	Bellevue	chemin de
+2108	Biolley	rue Henry-
+2108	Bois-de-Croix	le
+2108	Bourgeau	rue du
+2108	Boveresse	chemin de
+2108	Brey	le
+2108	Burcle	rue du
+2108	Champ du Tronc	rue du
+2108	Champ-Petit	
+2108	Champs Girards	
+2108	Châble	le
+2108	Clavins	chemin des
+2108	Clos-Guyenet	rue du
+2108	Clos-Pury	rue du
+2108	Collèges	rue des
+2108	Couchant	impasse du
+2108	Crêt de la Mosse	
+2108	Crêt-de-l'Eau	rue du
+2108	Côte-Bertin	
+2108	Dubied	rue Edouard-
+2108	Dubied	rue Pierre-
+2108	Favre d'en Haut	vers
+2108	Ferdinand-Berthoud	rue
+2108	Flamme	rue de la
+2108	Fontenelle	rue de
+2108	Gare	rue de la
+2108	Grand'Rue	
+2108	Grand-Clos	rue du
+2108	Grand-Pré-Baillod	
+2108	Grands Prés	les
+2108	Grands-Champs	
+2108	Grands-Marais	Les
+2108	Halles	place des
+2108	Haut-de-Riaux	
+2108	Hôpital	rue de l'
+2108	Iles	rue des
+2108	Joconde	la
+2108	Lerch	rue du Dr-
+2108	Malmont-Dessous	
+2108	Malmont-Dessus	
+2108	Meley	impasse du
+2108	Midi	rue du
+2108	Mont-de-Couvet	Le
+2108	Mont-de-Couvet	chemin du
+2108	Moulins	rue des
+2108	Nasieux	rue des
+2108	Nouvelle Cencière	
+2108	Ouest	rue de l'
+2108	Paillons	rue des
+2108	Parc	rue du
+2108	Pernod	rue Louis-
+2108	Petites Fauconnières	
+2108	Petits-Marais	les
+2108	Pins	chemin des
+2108	Plan-du-Pré	
+2108	Plancemont	
+2108	Plancemont	chemin de
+2108	Plânes	les
+2108	Premier-Mars	rue du
+2108	Preyel	le
+2108	Prise Blaise	la
+2108	Prise Gauthier	
+2108	Prise Prévôt	
+2108	Prise-Féquenet	
+2108	Prises Gaille	les
+2108	Prises	chemin des
+2108	Prises	les
+2108	Progrès	rue du
+2108	Pré-Jorat	rue du
+2108	Prés-de-la-Porte	
+2108	Quarre	rue du
+2108	Rhédoz	le
+2108	Roessinger	rue Docteur
+2108	Rougemont	rue Denis-de-
+2108	Rousseau	rue J-J-
+2108	Ruillères	les
+2108	Sagnetta	la
+2108	Saint-Gervais	rue
+2108	Saint-Pierre	rue
+2108	Site-Dubied	
+2108	Soliat	le
+2108	Source	rue de la
+2108	Sur le Crêt	
+2108	Théâtre	ruelle du
+2108	Tilleuls	chemin des
+2108	Tourniron	le
+2108	Tuilerie	chemin de la
+2108	Vattel	rue Emer-de-
+2108	Vuissens	
