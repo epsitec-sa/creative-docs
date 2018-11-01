@@ -62,7 +62,8 @@ namespace Epsitec.Data.Platform
 
 			if (this.StreetName.Contains (',') == false)
 			{
-				var suspect = SwissPostStreet.SuspectRootPrefixes.FirstOrDefault (x => this.StreetNameRoot.StartsWith (x));
+				var suspect = SwissPostStreet.SuspectRootPrefixes
+					.FirstOrDefault (x => this.StreetNameRoot.StartsWith (x));
 
 				if (suspect != null)
 				{
@@ -70,6 +71,19 @@ namespace Epsitec.Data.Platform
 					this.StreetName = this.StreetName.Substring (len) + ", " + this.StreetNameShort.Substring (0, len-1).ToLower ();
 					this.StreetNameRoot = this.StreetNameRoot.Substring (len);
 					System.Diagnostics.Trace.WriteLine (string.Format("Invalid root: {0}", this));
+				}
+				else
+				{ 
+					suspect = SwissPostStreet.SuspectRootPrefixes
+						.FirstOrDefault (x => this.StreetName.ToUpper ().StartsWith (x));
+
+					if (suspect != null)
+					{
+						var len = suspect.Length;
+						this.StreetName = this.StreetName.Substring (len) + ", " + this.StreetName.Substring (0, len - 1).ToLower ();
+//						this.StreetNameRoot = this.StreetNameRoot.Substring (len);
+						System.Diagnostics.Trace.WriteLine (string.Format ("Invalid root: {0}", this));
+					}
 				}
 			}
 
