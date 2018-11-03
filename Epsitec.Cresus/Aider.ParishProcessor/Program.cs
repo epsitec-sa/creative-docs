@@ -29,7 +29,7 @@ namespace AIDER.ParishPreprocessor
 			//-			Program.VerifyPrilly ();
 
 			var input = System.IO.File
-				.ReadAllLines (inputPath, System.Text.Encoding.Default)
+				.ReadAllLines (inputPath, System.Text.Encoding.UTF8)
 				.Where (x => x.Contains ('#') == false)
 				.ToArray ();
 
@@ -48,13 +48,13 @@ namespace AIDER.ParishPreprocessor
 
 			Program.AvoidDuplicates (parishAddresses);
 
-			System.IO.File.WriteAllLines (outputPath, parishAddresses.Select (x => x.ToString ()), System.Text.Encoding.Default);
+			System.IO.File.WriteAllLines (outputPath, parishAddresses.Select (x => x.ToString ()), System.Text.Encoding.UTF8);
 
 			var streetsWithMissingParishAddresses = Program.VerifyStreets (streets, parishAddresses).ToList ();
 
 			System.IO.File.WriteAllLines (missingPath, streetsWithMissingParishAddresses.Select (
 				x => $"{x.Zip.ZipCode}\t{x.StreetName.Split (',')[0]}\t{x.StreetName.Split (',').Skip (1).FirstOrDefault ()?.Trim () ?? ""}"),
-				System.Text.Encoding.Default);
+				System.Text.Encoding.UTF8);
 
 
 			/*
@@ -174,7 +174,7 @@ namespace AIDER.ParishPreprocessor
 
 		private static void ReadParishNames(string input2Path)
 		{
-			foreach (var line in System.IO.File.ReadAllLines (input2Path, System.Text.Encoding.Default).Where (x => x.Contains ("\t")))
+			foreach (var line in System.IO.File.ReadAllLines (input2Path, System.Text.Encoding.UTF8).Where (x => x.Contains ("\t")))
 			{
 				string[] items = line.Split ('\t');
 
@@ -207,7 +207,7 @@ namespace AIDER.ParishPreprocessor
 			var streets = SwissPostStreetRepository.Current;
 
 			var prillyPath = @"C:\Users\Arnaud\Documents\Epsitec\Projets\Software\EERV - Projet AIDER\prilly.txt";
-			var input = System.IO.File.ReadAllLines (prillyPath, System.Text.Encoding.Default);
+			var input = System.IO.File.ReadAllLines (prillyPath, System.Text.Encoding.UTF8);
 			var hash = new HashSet<string> ();
 
 			foreach (var streetWithNum in input.Select (x => x.Substring (0, x.Length-4)))
@@ -469,10 +469,10 @@ namespace AIDER.ParishPreprocessor
 			string inputPath = @"C:\Users\Arnaud\Documents\Epsitec\Projets\EERV - Projet AIDER\2012-02-xx Clean wp npa.txt";
 			string outputPath = @"C:\Users\Arnaud\Documents\Epsitec\Projets\EERV - Projet AIDER\2012-02-xx Parish Info.txt";
 
-			string[] input = System.IO.File.ReadAllLines (inputPath, System.Text.Encoding.Default);
+			string[] input = System.IO.File.ReadAllLines (inputPath, System.Text.Encoding.UTF8);
 			string[] output = input.Select (x => Program.Transform1CleanLine (x)).Where (x => x != null).ToArray ();
 
-			System.IO.File.WriteAllLines (outputPath, output, System.Text.Encoding.Default);
+			System.IO.File.WriteAllLines (outputPath, output, System.Text.Encoding.UTF8);
 		}
 
 		private static string Transform1CleanLine(string line)

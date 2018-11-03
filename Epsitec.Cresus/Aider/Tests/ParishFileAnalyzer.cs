@@ -32,7 +32,7 @@ namespace Epsitec.Aider.Tests
 
 		private static ParishAddressRepository GetRepository(FileInfo input)
 		{
-			var lines = File.ReadAllLines (input.FullName, System.Text.Encoding.Default);
+			var lines = File.ReadAllLines (input.FullName, System.Text.Encoding.UTF8);
 
 			return new ParishAddressRepository (lines);
 		}

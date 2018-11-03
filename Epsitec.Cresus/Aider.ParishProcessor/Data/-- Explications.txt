@@ -1,26 +1,26 @@
-Fichiers prÈsents dans ce dossier, utiles pour le projet :
+Fichiers pr√©sents dans ce dossier, utiles pour le projet :
 
 - 2012-02-xx Clean Parish Info.txt
 
-  Fichier de rÈfÈrence contenant les NPA/rues/numÈros associÈs aux paroisses. Ce
-  fichier est consommÈ par l'utilitaire de conversion. Ce fichier est extrait par
+  Fichier de r√©f√©rence contenant les NPA/rues/num√©ros associ√©s aux paroisses. Ce
+  fichier est consomm√© par l'utilitaire de conversion. Ce fichier est extrait par
   copier/coller des colonnes A-F du fichier EXCEL correspondant (en sautant la
-  1Ëre ligne).
+  1√®re ligne).
 
 
 - 2012-02-xx parish names.txt
 
-  Fichier de rÈfÈrence avec les noms de paroisses, par rÈgions.
+  Fichier de r√©f√©rence avec les noms de paroisses, par r√©gions.
 
 
 
 - 2012-02-xx parishes.txt
 
-  Fichier produit par l'utilitaire de conversion: mapping NPA/rue/numÈro -> paroisse
-  UtilisÈ pour assigner les adresses aux paroisses.
-  UtilisÈ pour initialiser les groupes "paroisses".
+  Fichier produit par l'utilitaire de conversion: mapping NPA/rue/num√©ro -> paroisse
+  Utilis√© pour assigner les adresses aux paroisses.
+  Utilis√© pour initialiser les groupes "paroisses".
 
-  ¿ copier vers S:\git\core\cresus\Epsitec.Cresus\Aider\DataFiles\ParishAddresses.zip
+  √Ä copier vers S:\git\core\cresus\Epsitec.Cresus\Aider\DataFiles\ParishAddresses.zip
 
 
 
