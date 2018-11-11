@@ -258,7 +258,12 @@ namespace Epsitec.Aider.Data.Common
 		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
 			var resource = "Epsitec.Aider.DataFiles.ParishAddresses.zip";
-			var source   = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
+			var source   = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource, System.Text.Encoding.UTF8);
+
+			if (source[0] == 0xfeff)
+			{
+				source = source.Substring (1);
+			}
 
 			return Epsitec.Common.IO.StringLineExtractor.GetLines (source);
 		}

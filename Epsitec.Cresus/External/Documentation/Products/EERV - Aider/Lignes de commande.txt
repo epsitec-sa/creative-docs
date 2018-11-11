@@ -1441,6 +1441,85 @@ Lancé le 01.07.2018
 -echupdate -newechfile:S:\eerv\eerv-2018-06-30.xml -oldechfile:S:\eerv\eerv-2018-06-23.xml -output:s:\eerv\ech-diff-2018-06-30.md
 -clearwarnings -beforedate:2018-04-01 -killpersons:true -createsubscriptions:true
 
+Lancé le 08.07.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-07-07.xml -oldechfile:S:\eerv\eerv-2018-06-30.xml -output:s:\eerv\ech-diff-2018-07-07.md
+
+Lancé le 19.08.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-08-18.xml -oldechfile:S:\eerv\eerv-2018-07-07.xml -output:s:\eerv\ech-diff-2018-08-18.md
+-clearwarnings -beforedate:2018-05-01 -killpersons:true -createsubscriptions:true
+-exportsubscriptions -output:export-2018-08-xx.txt -error:error-2018-08-xx.txt -exclude-district-error:false
+
+Lancé le 02.09.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-08-25.xml -oldechfile:S:\eerv\eerv-2018-08-18.xml -output:s:\eerv\ech-diff-2018-08-25.md
+-echupdate -newechfile:S:\eerv\eerv-2018-09-01.xml -oldechfile:S:\eerv\eerv-2018-08-25.xml -output:s:\eerv\ech-diff-2018-09-01.md
+
+
+Lancé le 09.09.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-09-08.xml -oldechfile:S:\eerv\eerv-2018-09-01.xml -output:s:\eerv\ech-diff-2018-09-08.md
+-clearwarnings -beforedate:2018-06-01 -killpersons:true -createsubscriptions:true
+
+
+Lancé le 16.09.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-09-15.xml -oldechfile:S:\eerv\eerv-2018-09-08.xml -output:s:\eerv\ech-diff-2018-09-15.md
+-calculateage
+
+-exportsubscriptions -output:export-2018-09-xx.txt -error:error-2018-09-xx.txt -exclude-district-error:false
+
+
+Lancé le 23.09.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-09-22.xml -oldechfile:S:\eerv\eerv-2018-09-15.xml -output:s:\eerv\ech-diff-2018-09-22.md
+
+
+Lancé le 30.09.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-09-29.xml -oldechfile:S:\eerv\eerv-2018-09-22.xml -output:s:\eerv\ech-diff-2018-09-29.md
+
+
+Lancé le 07.10.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-10-06.xml -oldechfile:S:\eerv\eerv-2018-09-29.xml -output:s:\eerv\ech-diff-2018-10-06.md
+
+
+Lancé le 14.10.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-10-13.xml -oldechfile:S:\eerv\eerv-2018-10-06.xml -output:s:\eerv\ech-diff-2018-10-13.md
+-exportsubscriptions -output:export-2018-10-xx.txt -error:error-2018-10-xx.txt -exclude-district-error:false
+
+
+Lancé le 21.10.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-10-20.xml -oldechfile:S:\eerv\eerv-2018-10-13.xml -output:s:\eerv\ech-diff-2018-10-20.md
+
+
+Lancé le 04.11.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-10-27.xml -oldechfile:S:\eerv\eerv-2018-10-20.xml -output:s:\eerv\ech-diff-2018-10-27.md
+-echupdate -newechfile:S:\eerv\eerv-2018-11-03.xml -oldechfile:S:\eerv\eerv-2018-10-27.xml -output:s:\eerv\ech-diff-2018-11-03.md
+-clearwarnings -beforedate:2018-08-01 -killpersons:true -createsubscriptions:true
+
+
+Lancé le 11.11.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-11-10.xml -oldechfile:S:\eerv\eerv-2018-11-03.xml -output:s:\eerv\ech-diff-2018-11-10.md
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
@@ -1451,3 +1530,11 @@ Supprimer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.meta
 ___________________________________________________________________________________________________________________________________
 
 
+
+
+Opérations de mainteance
+========================
+
+.\gfix.exe -shut -tran 60 aider -user sysdba -password masterkey
+.\gbak.exe -backup aider S:\aider.fbk -user sysdba -password masterkey
+.\gbak.exe -replace S:\aider.fbk aider -user sysdba -password masterkey
