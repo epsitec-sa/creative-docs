@@ -1,7 +1,9 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
-using System;
 
 using System.Linq;
 
