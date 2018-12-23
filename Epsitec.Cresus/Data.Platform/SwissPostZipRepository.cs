@@ -16,7 +16,7 @@ namespace Epsitec.Data.Platform
 	/// </summary>
 	public sealed class SwissPostZipRepository
 	{
-		private SwissPostZipRepository()
+		internal SwissPostZipRepository()
 		{
 			using (var stream = System.IO.File.OpenText (SwissPostZip.GetSwissPostZipCsv ()))
 			{
@@ -49,9 +49,6 @@ namespace Epsitec.Data.Platform
 		}
 
 
-		public static readonly SwissPostZipRepository Current = new SwissPostZipRepository ();
-
-		
 		public IEnumerable<SwissPostZipInformation> FindAll()
 		{
 			return this.nameByZip.SelectMany (x => x.Value);

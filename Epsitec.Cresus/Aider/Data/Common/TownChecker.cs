@@ -41,8 +41,8 @@ namespace Epsitec.Aider.Data.Common
 
 		private static IEnumerable<SwissPostZipInformation> GetTowns()
 		{
-			return SwissPostZipRepository
-				.Current
+			return SwissPost
+				.Zips
 				.FindAll ()
 				.Where (t => t.ZipType != SwissPostZipType.Internal);
 		}

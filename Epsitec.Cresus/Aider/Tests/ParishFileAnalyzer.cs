@@ -275,16 +275,16 @@ namespace Epsitec.Aider.Tests
 
 		private static IEnumerable<SwissPostZipInformation> FindTowns(Town town)
 		{
-			return SwissPostZipRepository
-				.Current
+			return SwissPost
+				.Zips
 				.FindZips (town.Zip, town.Name);
 		}
 
 
 		private static IEnumerable<SwissPostStreetInformation> FindStreets(SwissPostZipInformation town)
 		{
-			return SwissPostStreetRepository
-				.Current
+			return SwissPost
+				.Streets
 				.FindStreets (town.ZipCode, town.ZipCodeAddOn)
 				.Where (s => s.Zip.ZipCodeAddOn == town.ZipCodeAddOn);
 		}
@@ -294,8 +294,8 @@ namespace Epsitec.Aider.Tests
 		{
 			var okTowns = assignedTowns.ToSet ();
 
-			var unassignedTowns = SwissPostZipRepository
-				.Current
+			var unassignedTowns = SwissPost
+				.Zips
 				.FindAll ()
 				.Where (t => t.ZipType != SwissPostZipType.Internal)
 				.Where (t => t.Canton == "VD")

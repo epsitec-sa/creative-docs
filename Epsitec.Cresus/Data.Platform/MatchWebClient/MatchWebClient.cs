@@ -58,7 +58,7 @@ namespace Epsitec.Data.Platform
 				(System.IO.File.GetLastWriteTime (filename).Date.Date != System.DateTime.Now.Date))
 			{
 				this.ProductUri = this.ServiceUri ();
-				this.DownloadFile (this.ProductUri, filename);
+				this.DownloadMatchFile (this.ProductUri, filename);
 				this.IsANewRelease = this.VerifyNewRelease (filename);
 			}
 			this.aValidFileIsAvailable = true;
@@ -91,7 +91,7 @@ namespace Epsitec.Data.Platform
 			return "https://webservices.post.ch:17017/IN_ZOPAxFILES/v1/groups/1062/versions/latest/file/gateway";
 		}
 
-		private void DownloadFile(string uri, string filename)
+		private void DownloadMatchFile(string uri, string filename)
 		{
 			System.Diagnostics.Trace.WriteLine (string.Format ("Downloading MAT[CH]sort file from {0}", uri));
 			

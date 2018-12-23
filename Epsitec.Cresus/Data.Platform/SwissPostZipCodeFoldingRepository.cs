@@ -13,7 +13,7 @@ namespace Epsitec.Data.Platform
 		static SwissPostZipCodeFoldingRepository()
 		{
 			SwissPostZipCodeFoldingRepository.foldings = new Dictionary<SwissPostFullZip, SwissPostZipCodeFolding> ();
-			foreach(var item in SwissPostZipRepository.Current.FindAll ().Select (z => new SwissPostZipCodeFolding (z.ZipCode, z.ZipCodeAddOn, z.RootZipCode, z.ZipType)))
+			foreach(var item in SwissPost.Zips.FindAll ().Select (z => new SwissPostZipCodeFolding (z.ZipCode, z.ZipCodeAddOn, z.RootZipCode, z.ZipType)))
 			{
 				SwissPostZipCodeFolding folding;
 

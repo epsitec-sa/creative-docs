@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Data.Common
 		{
 			this.FillCache ();
 
-			foreach (var zip in SwissPostZipRepository.Current.FindAll ())
+			foreach (var zip in SwissPost.Zips.FindAll ())
 			{
 				this.GetTown (zip.OnrpCode, z => z.ZipType != SwissPostZipType.Internal);
 			}
@@ -71,7 +71,7 @@ namespace Epsitec.Aider.Data.Common
 
 		public AiderTownEntity GetTown(int zipOnrp, System.Predicate<SwissPostZipInformation> filter = null)
 		{
-			var zip = SwissPostZipRepository.Current.FindByOnrpCode (zipOnrp);
+			var zip = SwissPost.Zips.FindByOnrpCode (zipOnrp);
 
 			if (zip == null)
 			{

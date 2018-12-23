@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			int count = 0;
 
-			foreach (var zipInfo in SwissPostZipRepository.Current.FindAll ())
+			foreach (var zipInfo in SwissPost.Zips.FindAll ())
 			{
 				ItemCode onrpCode = ItemCode.Create ("ONRP:" + zipInfo.OnrpCode);
 				var location = this.GetLocation (onrpCode);

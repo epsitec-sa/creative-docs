@@ -791,7 +791,7 @@ namespace Epsitec.Aider
 
 		private static void FixAmbiguousAddresses(string[] args)
 		{
-			var streetRepository = SwissPostStreetRepository.Current;
+			var streetRepository = SwissPost.Streets;
 
 			var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
 			var echReportedPersons = EChDataLoader.Load (eChDataFile);

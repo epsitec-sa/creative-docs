@@ -18,7 +18,7 @@ namespace Epsitec.Aider.Data.ECh
 			this.Town              = town ?? "";
 			this.SwissZipCode      = swissZipCode;
 			this.SwissZipCodeAddOn = swissZipCodeAddOn;
-			this.SwissZipCodeId    = SwissPostZipRepository.Current.FindOnrp (swissZipCodeId, swissZipCode, town);
+			this.SwissZipCodeId    = SwissPost.Zips.FindOnrp (swissZipCodeId, swissZipCode, town);
 			this.CountryCode       = countryCode;
 		}
 

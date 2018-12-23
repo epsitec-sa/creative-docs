@@ -39,7 +39,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				var streetCopy = street;
 
-				var hits = SwissPostStreetRepository.Current
+				var hits = SwissPost.Streets
 					.FindStreets (zipCode, zipCodeAddOn)
 					.Where (x => x.MatchName (streetCopy));
 
