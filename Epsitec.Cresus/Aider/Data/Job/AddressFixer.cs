@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
 
@@ -14,6 +17,14 @@ namespace Epsitec.Aider.Data.Job
     {
         public static void FixForZip(CoreData coreData, int swissZip)
         {
+            AddressFixer.FixContactsBasedOnZip (coreData, swissZip);
+            AddressFixer.FixHouseholdsBasedOnZip (coreData, swissZip);
+            AddressFixer.FixLegalPersonBasedOnZip (coreData, swissZip);
+            AddressFixer.FixSubscriptionsBasedOnZip (coreData, swissZip);
+        }
+
+        private static void FixContactsBasedOnZip(CoreData coreData, int swissZip)
+        {
             using (var businessContext = new BusinessContext (coreData, false))
             {
                 var townExample = new AiderTownEntity ()
@@ -23,7 +34,7 @@ namespace Epsitec.Aider.Data.Job
 
                 var town = businessContext.DataContext.GetByExample (townExample).Single ();
 
-                var contactExample = new AiderContactEntity ()
+                var example = new AiderContactEntity ()
                 {
                     Address = new AiderAddressEntity ()
                     {
@@ -31,22 +42,83 @@ namespace Epsitec.Aider.Data.Job
                     }
                 };
 
-                var contacts = businessContext.DataContext.GetByExample (contactExample);
+                businessContext.DataContext
+                    .GetByExample (example)
+                    .ForEach (x => x.RefreshCache ());
 
-                int count = 0;
-
-                foreach (var contact in contacts)
-                {
-                    contact.RefreshCache ();
-                    count++;
-                }
-
-                businessContext.SaveChanges
-                (
-                    LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors
-                );
+                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
             }
+        }
 
+        private static void FixHouseholdsBasedOnZip(CoreData coreData, int swissZip)
+        {
+            using (var businessContext = new BusinessContext (coreData, false))
+            {
+                var townExample = new AiderTownEntity ()
+                {
+                    SwissZipCode = swissZip
+                };
+
+                var town = businessContext.DataContext.GetByExample (townExample).Single ();
+
+                var example = new AiderHouseholdEntity ()
+                {
+                    Address = new AiderAddressEntity ()
+                    {
+                        Town = town
+                    }
+                };
+
+                businessContext.DataContext
+                    .GetByExample (example)
+                    .ForEach (x => x.RefreshCache ());
+
+                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+            }
+        }
+
+        private static void FixLegalPersonBasedOnZip(CoreData coreData, int swissZip)
+        {
+            using (var businessContext = new BusinessContext (coreData, false))
+            {
+                var townExample = new AiderTownEntity ()
+                {
+                    SwissZipCode = swissZip
+                };
+
+                var town = businessContext.DataContext.GetByExample (townExample).Single ();
+
+                var example = new AiderLegalPersonEntity ()
+                {
+                    Address = new AiderAddressEntity ()
+                    {
+                        Town = town
+                    }
+                };
+
+                businessContext.DataContext
+                    .GetByExample (example)
+                    .ForEach (x => x.RefreshCache ());
+
+                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+            }
+        }
+
+        private static void FixSubscriptionsBasedOnZip(CoreData coreData, int swissZip)
+        {
+            using (var businessContext = new BusinessContext (coreData, false))
+            {
+                var example = new AiderSubscriptionEntity ()
+                {
+                    DisplayZipCode = swissZip.ToString ()
+                };
+
+                businessContext.DataContext
+                    .GetByExample (example)
+                    .ForEach (x => x.RefreshCache ());
+
+                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+            }
         }
     }
 }
