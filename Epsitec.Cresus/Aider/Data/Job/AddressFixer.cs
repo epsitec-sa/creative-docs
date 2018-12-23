@@ -35,6 +35,7 @@ namespace Epsitec.Aider.Data.Job
 
                 foreach (var contact in contacts)
                 {
+                    contact.RefreshCache ();
                     count++;
                 }
 
