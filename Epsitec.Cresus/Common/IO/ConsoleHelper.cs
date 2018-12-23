@@ -41,8 +41,11 @@ namespace Epsitec.Common.IO
 
 				if (windowWidth > 0)
 				{
-					System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
-					System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
+                    if (ConsoleCreator.IsOutputRedirected == false)
+                    {
+                        System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                        System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
+                    }
 				}
 
 				action ();
@@ -55,6 +58,8 @@ namespace Epsitec.Common.IO
 				}
 			}
 		}
+
+
 
 
 		/// <summary>
@@ -85,9 +90,21 @@ namespace Epsitec.Common.IO
 		[DllImport ("kernel32.dll", SetLastError=true)]
 		[return: MarshalAs (UnmanagedType.Bool)]
 		private static extern bool FreeConsole();
+        
+        public static bool IsOutputRedirected => FileType.Char != GetFileType (GetStdHandle (StdHandle.Stdout));
 
+        public static bool IsInputRedirected => FileType.Char != GetFileType (GetStdHandle (StdHandle.Stdin));
 
-	}
+        public static bool IsErrorRedirected => FileType.Char != GetFileType (GetStdHandle (StdHandle.Stderr));
 
+        // P/Invoke:
+        private enum FileType { Unknown, Disk, Char, Pipe };
+        private enum StdHandle { Stdin = -10, Stdout = -11, Stderr = -12 };
 
+        [DllImport ("kernel32.dll")]
+        private static extern FileType GetFileType(IntPtr hdl);
+
+        [DllImport ("kernel32.dll")]
+        private static extern IntPtr GetStdHandle(StdHandle std);
+    }
 }
