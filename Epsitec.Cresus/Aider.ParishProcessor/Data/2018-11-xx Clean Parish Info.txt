@@ -1,4 +1,4 @@
-1	1815	#Baugy			Montreux - Veytaux
+﻿1	1815	#Baugy			Montreux - Veytaux
 2	1832	#Chaulin			Montreux - Veytaux
 3	1820	#Chêne			Montreux - Veytaux
 4	1820	#Collonge			Montreux - Veytaux
@@ -568,7 +568,7 @@
 568	1306	Daillens			Penthalaz
 569	1066	Dailles	ch. des		La Sallaz - Les Croisettes
 570	1066	Daillettes	ch. des		La Sallaz - Les Croisettes
-571	1006	Dapples	av.		Saint-Jean
+571	1006	Dapples	av. Edouard-		Saint-Jean
 572	1004	Davel	av.	1-9/2-8	Saint-Laurent - Les Bergières
 573	1004	Davel	av.	10-/11-	Bellevaux - Saint-Luc
 574	1005	Decker	avenue Pierre-		Chailly - La Cathédrale

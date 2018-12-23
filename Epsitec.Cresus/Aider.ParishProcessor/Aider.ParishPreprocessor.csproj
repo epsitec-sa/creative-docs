@@ -56,6 +56,14 @@
     <Content Include="Data\2015-01-xx parishes.txt" />
     <Content Include="Data\2017-03-xx Clean Parish Info.txt" />
     <Content Include="Data\2017-03-xx parish names.txt" />
+    <Content Include="Data\2018-01-xx Clean Parish Info.txt" />
+    <Content Include="Data\2018-01-xx missing.txt" />
+    <Content Include="Data\2018-01-xx parish names.txt" />
+    <Content Include="Data\2018-01-xx parishes.txt" />
+    <Content Include="Data\2018-11-xx Clean Parish Info.txt" />
+    <Content Include="Data\2018-11-xx missing.txt" />
+    <Content Include="Data\2018-11-xx parish names.txt" />
+    <Content Include="Data\2018-11-xx parishes.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\-- Explications.txt" />
@@ -65,6 +73,8 @@
     <None Include="Data\2014-05-xx Clean Parish Info.xlsx" />
     <None Include="Data\2015-01-xx Clean Parish Info.xlsx" />
     <Content Include="Data\2017-03-xx Clean Parish Info.xlsx" />
+    <None Include="Data\2018-01-xx Clean Parish Info.xlsx" />
+    <None Include="Data\2018-11-xx Clean Parish Info.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\2014-02-xx Correspondances adresses et paroisses.xlsx" />

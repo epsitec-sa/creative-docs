@@ -551,7 +551,7 @@
 0551	1306	Daillens	Daillens				Penthalaz	R5	de	Penthalaz
 0552	1066	Epalinges	Epalinges	Dailles	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
 0553	1066	Epalinges	Epalinges	Daillettes	chemin des		La Sallaz – Les Croisettes	R4	de	La Sallaz – Les Croisettes
-0554	1006	Lausanne	Lausanne	Dapples	avenue		Saint-Jean	R4	de	Saint-Jean
+0554	1006	Lausanne	Lausanne	Dapples	avenue Edouard-		Saint-Jean	R4	de	Saint-Jean
 0555	1004	Lausanne	Lausanne	Davel	avenue	1-9/2-8	Saint-Laurent – Les Bergières	R4	de	Saint-Laurent – Les Bergières
 0556	1004	Lausanne	Lausanne	Davel	avenue	10-/11-	Bellevaux – Saint-Luc	R4	de	Bellevaux – Saint-Luc
 0557	1005	Lausanne	Lausanne	Decker	avenue Pierre-		Chailly – La Cathédrale	R4	de	Chailly – La Cathédrale
