@@ -16,7 +16,7 @@ namespace Epsitec.Data.Platform
 	{
 		public static string GetSwissPostZipCsv()
 		{
-			var matchClient     = SwissPost.MatchWebClient;
+			var matchClient     = SwissPost.WebClient;
 			var swissPostZipCsv = SwissPostZip.GetMatchZipCsvPath ();
 			var file            = matchClient.GetMatchSortFile ();
 

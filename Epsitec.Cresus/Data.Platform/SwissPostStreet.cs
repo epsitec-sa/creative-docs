@@ -21,7 +21,7 @@ namespace Epsitec.Data.Platform
 
 		public static string GetSwissPostStreetCsv()
 		{
-			var matchClient        = SwissPost.MatchWebClient;
+			var matchClient        = SwissPost.WebClient;
 			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
 			try
 			{

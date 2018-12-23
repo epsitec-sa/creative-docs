@@ -13,8 +13,9 @@ namespace Epsitec.Data.Platform
 	{
         static SwissPost()
         {
-            SwissPost.Streets   = new SwissPostStreetRepository ();
+            SwissPost.WebClient = new MatchWebClient ();
             SwissPost.Zips      = new SwissPostZipRepository ();
+            SwissPost.Streets   = new SwissPostStreetRepository ();
             SwissPost.Countries = Iso3166.GetCountries ("FR").ToArray ();
         }
 
@@ -26,6 +27,7 @@ namespace Epsitec.Data.Platform
         public static SwissPostStreetRepository Streets { get; }
         public static SwissPostZipRepository Zips { get; }
         public static IList<GeoNamesCountryInformation> Countries { get; }
+        public static MatchWebClient WebClient { get; }
 
 
         /// <summary>
@@ -59,7 +61,5 @@ namespace Epsitec.Data.Platform
 				}
 			}
 		}
-
-		public static MatchWebClient MatchWebClient = new MatchWebClient ();
 	}
 }

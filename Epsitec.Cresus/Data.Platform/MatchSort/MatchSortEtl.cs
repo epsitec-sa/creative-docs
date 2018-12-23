@@ -19,7 +19,7 @@ namespace Epsitec.Data.Platform.MatchSort
 		{
 			if (System.IO.File.Exists (csvFilePath) == false)
 			{
-				csvFilePath = SwissPost.MatchWebClient.GetMatchSortFile ();
+				csvFilePath = SwissPost.WebClient.GetMatchSortFile ();
 			}
 
 			try
