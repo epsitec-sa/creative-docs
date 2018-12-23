@@ -12,7 +12,7 @@ namespace Epsitec.Data.Platform
 	{
 		public static string GetSwissPostHouseCsv()
 		{
-			var matchClient       = SwissPost.MatchWebClient;
+			var matchClient       = SwissPost.WebClient;
 			var swissPostHouseCsv = SwissPostHouse.GetMatchHouseCsvPath ();
 			var file              = matchClient.GetMatchSortFile ();
 

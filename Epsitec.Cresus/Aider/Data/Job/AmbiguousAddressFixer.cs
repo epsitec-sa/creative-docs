@@ -25,8 +25,6 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.Job
 {
-
-
 	/// <summary>
 	/// This fixer is used to fix a problem with some addresses in the database. Because of a bug
 	/// in the algorithm that finds the street data in the MAT[CH] street light file, some

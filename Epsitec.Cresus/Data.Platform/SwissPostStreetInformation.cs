@@ -17,7 +17,7 @@ namespace Epsitec.Data.Platform
 	{
 		public void SetSwissPostZipInformations()
 		{
-			this.Zip = SwissPostZipRepository.Current.FindByOnrpCode (this.OnrpCode);
+			this.Zip = SwissPost.Zips.FindByOnrpCode (this.OnrpCode);
 		}
 
 		public void SetSwissPostHouseInformations()
@@ -442,8 +442,8 @@ namespace Epsitec.Data.Platform
 			}
 
 			throw new System.ArgumentException ("Invalid Heuristics mode provided");
-
-			int len = rootName.Length;
+#if false
+            int len = rootName.Length;
 			int pos = 0;
 
 			if (rootName.Length > 10)
@@ -484,6 +484,7 @@ namespace Epsitec.Data.Platform
 					}
 				}
 			}
+#endif
 		}
 
 

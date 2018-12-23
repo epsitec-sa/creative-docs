@@ -173,7 +173,7 @@ namespace Epsitec.Aider.Rules
 					return;
 				}
 
-				var repo = SwissPostStreetRepository.Current;
+				var repo = SwissPost.Streets;
 
 				if (repo.IsStreetKnown (zipCode, zipAddOn, street) == false)
 				{

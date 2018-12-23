@@ -48,7 +48,7 @@ namespace Epsitec.Aider.Tools
 				return FixStatus.Invalid;
 			}
 
-			var streetRepository = SwissPostStreetRepository.Current;
+			var streetRepository = SwissPost.Streets;
 
 			var streets = streetRepository.FindStreets (zipCode, zipCodeAddOn);
 			var tokens  = SwissPostStreet.TokenizeStreetName (street).ToArray ();
@@ -162,7 +162,7 @@ namespace Epsitec.Aider.Tools
 				return;
 			}
 
-			var zip = SwissPostZipRepository.Current.FindZips (info.Zip.ZipCode, info.Zip.ZipCodeAddOn).FirstOrDefault ();
+			var zip = SwissPost.Zips.FindZips (info.Zip.ZipCode, info.Zip.ZipCodeAddOn).FirstOrDefault ();
 
 			if (zip == null)
 			{

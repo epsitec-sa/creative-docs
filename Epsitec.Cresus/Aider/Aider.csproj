@@ -342,6 +342,7 @@
     <Compile Include="Data\Job\AmbiguousAddressFixer.cs" />
     <Compile Include="Data\Job\ChardonneSubscriptionFixer.cs" />
     <Compile Include="Data\Job\AgeCalculator.cs" />
+    <Compile Include="Data\Job\AddressFixer.cs" />
     <Compile Include="Data\QualityJob\DataQualityFlagsFixer.cs" />
     <Compile Include="Data\QualityJob\ClearDataQualityFlags.cs" />
     <Compile Include="Data\Job\PersonMrMrsSetter.cs" />

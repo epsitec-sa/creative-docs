@@ -11,18 +11,30 @@ namespace Epsitec.Data.Platform
 {
 	public static class SwissPost
 	{
-		public static void Initialize()
+        static SwissPost()
+        {
+            SwissPost.WebClient = new MatchWebClient ();
+            SwissPost.Zips      = new SwissPostZipRepository ();
+            SwissPost.Streets   = new SwissPostStreetRepository ();
+            SwissPost.Countries = Iso3166.GetCountries ("FR").ToArray ();
+        }
+
+        public static void Initialize()
 		{
-			var streetRepo = SwissPostStreetRepository.Current;
-			var zipRepo    = SwissPostZipRepository.Current;
-			var countries  = Iso3166.GetCountries ("FR").ToArray ();
 		}
 
-		/// <summary>
-		/// Generate a Cresus nupost.txt retro-comaptible format
-		/// </summary>
-		/// <param name="outputFile">full path with file name and ext.</param>
-		public static void GenerateCresusNupoFile(string outputFile)
+
+        public static SwissPostStreetRepository Streets { get; }
+        public static SwissPostZipRepository Zips { get; }
+        public static IList<GeoNamesCountryInformation> Countries { get; }
+        public static MatchWebClient WebClient { get; }
+
+
+        /// <summary>
+        /// Generate a Cresus nupost.txt retro-comaptible format
+        /// </summary>
+        /// <param name="outputFile">full path with file name and ext.</param>
+        public static void GenerateCresusNupoFile(string outputFile)
 		{
 			var encoding     = System.Text.Encoding.GetEncoding ("Windows-1252");
 			var cresusConfig = new CsvConfiguration ();
@@ -49,7 +61,5 @@ namespace Epsitec.Data.Platform
 				}
 			}
 		}
-
-		public static MatchWebClient MatchWebClient = new MatchWebClient ();
 	}
 }

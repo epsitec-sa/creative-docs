@@ -12,8 +12,8 @@ namespace AIDER.ParishPreprocessor
 	{
 		static void Main(string[] args)
 		{
-			var zips = SwissPostZipRepository.Current;
-			var streets = SwissPostStreetRepository.Current;
+			var zips = SwissPost.Zips;
+			var streets = SwissPost.Streets;
 
 			var exePath = System.Reflection.Assembly.GetExecutingAssembly ().GetFiles ()[0].Name;
 			var exeDir = System.IO.Path.GetDirectoryName (exePath);
@@ -204,7 +204,7 @@ namespace AIDER.ParishPreprocessor
 
 		private static void VerifyPrilly()
 		{
-			var streets = SwissPostStreetRepository.Current;
+			var streets = SwissPost.Streets;
 
 			var prillyPath = @"C:\Users\Arnaud\Documents\Epsitec\Projets\Software\EERV - Projet AIDER\prilly.txt";
 			var input = System.IO.File.ReadAllLines (prillyPath, System.Text.Encoding.UTF8);

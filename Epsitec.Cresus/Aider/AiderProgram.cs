@@ -211,6 +211,12 @@ namespace Epsitec.Aider
 					return;
 				}
 
+                if (args.Contains ("-fixbussigny"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.FixBussignyName (args));
+                    return;
+                }
+
 				if (args.Contains ("-fixparishassignations"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixParishAssignation (args));
@@ -791,7 +797,7 @@ namespace Epsitec.Aider
 
 		private static void FixAmbiguousAddresses(string[] args)
 		{
-			var streetRepository = SwissPostStreetRepository.Current;
+			var streetRepository = SwissPost.Streets;
 
 			var eChDataFile = AiderProgram.GetFile (args, "-echfile:", true);
 			var echReportedPersons = EChDataLoader.Load (eChDataFile);
@@ -806,7 +812,13 @@ namespace Epsitec.Aider
 			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixParishAssignations (parishRepository, coreData));
 		}
 
-		private static void FixNoParish(string[] args)
+        private static void FixBussignyName(string[] args)
+        {
+            AiderProgram.RunWithCoreData (coreData => AddressFixer.FixForZip (coreData, 1030));
+        }
+
+
+        private static void FixNoParish(string[] args)
 		{
 			AiderProgram.RunWithCoreData (coreData => ParishAssignationFixer.FixNoParish (coreData));
 		}

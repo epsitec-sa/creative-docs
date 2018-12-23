@@ -81,13 +81,13 @@ namespace Epsitec.Aider.Entities
 		{
 			var swissZipCode = InvariantConverter.ParseInt (zipCode);
 
-			var zipMatch = SwissPostZipRepository.Current
+			var zipMatch = SwissPost.Zips
 				.FindZips (swissZipCode, name)
 				.FirstOrDefault ();
 
 			if (zipMatch == null)
 			{
-				zipMatch = SwissPostZipRepository.Current.FindZips (swissZipCode, null).FirstOrDefault ();
+				zipMatch = SwissPost.Zips.FindZips (swissZipCode, null).FirstOrDefault ();
 				
 				if (zipMatch == null)
 				{
@@ -147,7 +147,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetSwissZipCodeAddOn(ref int? value)
 		{
 			var onrp = this.SwissZipCodeId.GetValueOrDefault ();
-			var info = SwissPostZipRepository.Current.FindByOnrpCode (onrp);
+			var info = SwissPost.Zips.FindByOnrpCode (onrp);
 
 			if (info == null)
 			{

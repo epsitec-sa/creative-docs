@@ -21,7 +21,7 @@ namespace Epsitec.Data.Platform
 
 		public static string GetSwissPostStreetCsv()
 		{
-			var matchClient        = SwissPost.MatchWebClient;
+			var matchClient        = SwissPost.WebClient;
 			var swissPostStreetCsv = SwissPostStreet.GetMatchStreetCsvPath ();
 			try
 			{
@@ -102,7 +102,7 @@ namespace Epsitec.Data.Platform
 				return street;
 			}
 
-			var repository = SwissPostStreetRepository.Current;
+			var repository = SwissPost.Streets;
 			var matchStreet = repository.FindStreetFromUserFriendlyStreetNameDictionary (zipCode, zipComplement, street)
 				/**/       ?? repository.FindStreetFromStreetName (zipCode, zipComplement, street);
 

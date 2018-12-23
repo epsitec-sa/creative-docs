@@ -15,8 +15,8 @@ namespace Epsitec.Aider.Tests
 	{
 		public static void TestMatchStreet()
 		{
-			var streets = SwissPostStreetRepository.Current;
-			var zips    = SwissPostZipRepository.Current;
+			var streets = SwissPost.Streets;
+			var zips    = SwissPost.Zips;
 
 			var repo = ParishAddressRepository.Current;
 			var name = repo.FindParishName (1400, "Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Tests
 				personCount++;
 
 				var zip = person.Address.SwissZipCode;
-				var all = SwissPostZipRepository.Current.FindZips (zip, person.Address.Town);
+				var all = SwissPost.Zips.FindZips (zip, person.Address.Town);
 				var odd = all.Where (x => x.Canton != "VD").ToArray ();
 				var streetName  = person.Address.Street;
 				int houseNumber = SwissPostStreet.NormalizeHouseNumber (person.Address.HouseNumber);

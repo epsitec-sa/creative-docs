@@ -54,7 +54,7 @@ namespace Epsitec.Aider.Data.Common
 			}
 
 			var zipCodeInt = int.Parse (zipCode);
-			var zipCodeAddOn = SwissPostZipRepository.Current.FindZips (zipCodeInt, town).First ().ZipCodeAddOn;
+			var zipCodeAddOn = SwissPost.Zips.FindZips (zipCodeInt, town).First ().ZipCodeAddOn;
 			var zipCodeId = 0;
 
 			var saveFirstAddressLine = firstAddressLine;

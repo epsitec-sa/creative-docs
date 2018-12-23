@@ -1520,6 +1520,44 @@ Lancé le 11.11.2018
 
 -echupdate -newechfile:S:\eerv\eerv-2018-11-10.xml -oldechfile:S:\eerv\eerv-2018-11-03.xml -output:s:\eerv\ech-diff-2018-11-10.md
 
+
+Lancé le 17.11.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-11-17.xml -oldechfile:S:\eerv\eerv-2018-11-10.xml -output:s:\eerv\ech-diff-2018-11-17.md
+-exportsubscriptions -output:export-2018-11-xx.txt -error:error-2018-11-xx.txt -exclude-district-error:false
+
+
+Lancé le 25.11.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-11-24.xml -oldechfile:S:\eerv\eerv-2018-11-17.xml -output:s:\eerv\ech-diff-2018-11-24.md
+
+
+Lancé le 09.12.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-12-01.xml -oldechfile:S:\eerv\eerv-2018-11-24.xml -output:s:\eerv\ech-diff-2018-12-01.md
+-echupdate -newechfile:S:\eerv\eerv-2018-12-08.xml -oldechfile:S:\eerv\eerv-2018-12-01.xml -output:s:\eerv\ech-diff-2018-12-08.md
+
+
+Lancé le 16.12.2018
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2018-12-15.xml -oldechfile:S:\eerv\eerv-2018-12-08.xml -output:s:\eerv\ech-diff-2018-12-15.md
+-clearwarnings -beforedate:2018-10-01 -killpersons:true -createsubscriptions:true
+
+Lancé le 23.12.2018
+-------------------
+
+Edité l'entité AiderTown avec IBExpert pour renommer Bussigny-près-Lausanne en Bussigny.
+
+-fixbussigny
+-echupdate -newechfile:S:\eerv\eerv-2018-12-22.xml -oldechfile:S:\eerv\eerv-2018-12-15.xml -output:s:\eerv\ech-diff-2018-12-22.md
+
+
+
+
 ___________________________________________________________________________________________________________________________________
 
 Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée

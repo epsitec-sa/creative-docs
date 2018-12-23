@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Rules
 			if (town.Country.IsoCode == "CH")
 			{
 				var zipCode  = Epsitec.Common.Types.InvariantConverter.ParseInt (town.ZipCode);
-				var zipMatch = SwissPostZipRepository.Current.FindZips (zipCode, town.Name).FirstOrDefault ();
+				var zipMatch = SwissPost.Zips.FindZips (zipCode, town.Name).FirstOrDefault ();
 
 				if (zipMatch != null)
 				{
