@@ -3,12 +3,12 @@
 cd %~d0%~p0%
 
 pushd
-call "%VS100COMNTOOLS%\..\..\VC\bin\vcvars32.bat"
+call "%VS150COMNTOOLS%\vsdevcmd\ext\vcvars.bat"
 popd
 
 if exist "%~n1.res" del /Q "%~n1.res"
 
-rc.exe /nologo /r "%~n1.rc"
+"%VS150COMNTOOLS%..\..\SDK\ScopeCppSDK\SDK\bin\rc.exe" /nologo /r "%~n1.rc"
 
 del /Q "%~n1.aps" 2>NUL
 

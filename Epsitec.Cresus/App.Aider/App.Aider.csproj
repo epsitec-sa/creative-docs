@@ -132,10 +132,6 @@
       <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
       <Name>Aider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
-      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
-      <Name>App.DebugService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
@@ -147,10 +143,6 @@
     <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
       <Name>Cresus.Core.Library.Business</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
-      <Name>Cresus.Core.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj">
       <Project>{917EB960-42F9-48DF-A649-69A0065AA07C}</Project>

@@ -255,13 +255,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
+    <ProjectReference Include="..\..\Epsitec.ShellPE\Epsitec.Batch\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
       <Project>{b4d96bd8-5b65-486d-99b1-16d7948fed61}</Project>
       <Name>Epsitec.TwixClip</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
-      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
-      <Name>App.DebugService</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
@@ -272,7 +268,7 @@
       <Name>Cresus.Bricks</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">

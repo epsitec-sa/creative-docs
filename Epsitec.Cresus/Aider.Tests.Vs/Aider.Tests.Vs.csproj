@@ -81,10 +81,6 @@
       <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
       <Name>Aider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
-      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
-      <Name>App.DebugService</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>

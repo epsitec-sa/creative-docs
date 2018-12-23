@@ -84,7 +84,7 @@
       <Name>Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
-      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Project>{91da0241-f084-40c5-b76e-0240884d1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
