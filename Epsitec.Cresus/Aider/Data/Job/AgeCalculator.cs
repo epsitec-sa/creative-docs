@@ -52,7 +52,6 @@ namespace Epsitec.Aider.Data.Job
 
             System.Console.WriteLine ("Global update took {0}ms", this.watch.ElapsedMilliseconds);
             System.Console.WriteLine ("Updated {0} ages, {1} Mademoiselle => Madame, {2} Madame => Mademoiselle", this.countAgeChange, this.countMademoiselle, this.countMadame);
-            System.Console.ReadLine ();
         }
 
 
