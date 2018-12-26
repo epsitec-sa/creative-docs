@@ -26,11 +26,7 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void FixHouseholds(CoreData coreData)
 		{
-			Logger.LogToConsole ("START ALL BATCHES");
-			
 			AiderEnumerator.Execute (coreData, HouseholdCleaner.FixHouseholds);
-
-			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
 
@@ -39,8 +35,6 @@ namespace Epsitec.Aider.Data.Job
             BusinessContext businessContext,
             IEnumerable<AiderHouseholdEntity> households)
         {
-            Logger.LogToConsole("START BATCH");
-
             foreach (var household in households)
             {
                 household.RefreshMembers ();
@@ -97,8 +91,8 @@ namespace Epsitec.Aider.Data.Job
 
 
             }
+
             businessContext.SaveChanges(LockingPolicy.ReleaseLock, EntitySaveMode.None);
-			Logger.LogToConsole ("DONE BATCH");
 		}
 
 	}

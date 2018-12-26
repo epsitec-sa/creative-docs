@@ -27,11 +27,7 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void FixContactNames(CoreData coreData)
 		{
-			Logger.LogToConsole ("START ALL BATCHES");
-
 			AiderEnumerator.Execute (coreData, ContactNameFixer.FixContactNames);
-
-			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
 
@@ -40,8 +36,6 @@ namespace Epsitec.Aider.Data.Job
 			BusinessContext businessContext,
 			IEnumerable<AiderContactEntity> contacts)
 		{
-			Logger.LogToConsole ("START BATCH");
-
 			foreach (var contact in contacts)
 			{
 				ContactNameFixer.FixContactName (businessContext, contact);
@@ -50,8 +44,6 @@ namespace Epsitec.Aider.Data.Job
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
-
-			Logger.LogToConsole ("DONE BATCH");
 		}
 
 

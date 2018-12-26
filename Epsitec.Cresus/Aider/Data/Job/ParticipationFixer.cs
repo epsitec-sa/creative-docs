@@ -29,11 +29,7 @@ namespace Epsitec.Aider.Data.Job
 
 		public static void FixParticipations(CoreData coreData)
 		{
-			Logger.LogToConsole ("START ALL BATCHES");
-			
 			AiderEnumerator.Execute (coreData, ParticipationFixer.FixParticipations);
-
-			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
 
@@ -42,8 +38,6 @@ namespace Epsitec.Aider.Data.Job
 			BusinessContext businessContext,
 			IEnumerable<AiderGroupParticipantEntity> particpations)
 		{
-			Logger.LogToConsole ("START BATCH");
-
 			foreach (var participation in particpations)
 			{
 				if (participation.Contact.IsNull ())
@@ -53,8 +47,6 @@ namespace Epsitec.Aider.Data.Job
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
-
-			Logger.LogToConsole ("DONE BATCH");
 		}
 
 

@@ -20,11 +20,7 @@ namespace Epsitec.Aider.Data.Job
 	{
 		public static void FlagContacts(CoreData coreData)
 		{
-			Logger.LogToConsole ("START ALL BATCHES");
-
 			AiderEnumerator.Execute (coreData, MXFlagger.FlagContacts);
-
-			Logger.LogToConsole ("DONE ALL BATCHES");
 		}
 
 		public static string GetCode(AiderPersonEntity person)
@@ -71,7 +67,6 @@ namespace Epsitec.Aider.Data.Job
 			BusinessContext businessContext,
 			IEnumerable<AiderPersonEntity> batch)
 		{
-			Logger.LogToConsole ("START BATCH");
 			var persons = batch
 			.Where (
 				p =>
@@ -88,8 +83,6 @@ namespace Epsitec.Aider.Data.Job
 			}
 
 			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
-
-			Logger.LogToConsole ("DONE BATCH");
 		}
 
 
