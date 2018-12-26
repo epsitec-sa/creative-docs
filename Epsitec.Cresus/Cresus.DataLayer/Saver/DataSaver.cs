@@ -125,9 +125,11 @@ namespace Epsitec.Cresus.DataLayer.Saver
 			var entitiesToDelete = this.DataContext.GetEntitiesToDelete ().ToList ();
 			var entitiesToSave = this.DataContext.GetEntitiesModified ().ToList ();
 
-			// Here we don't remove the deleted entities from the entities to save, because they will
-			// be removed afterwards in the GetPersistenceJobs(...) method.
-			// Marc
+            // Here we don't remove the deleted entities from the entities to save, because they will
+            // be removed afterwards in the GetPersistenceJobs(...) method.
+            // Marc
+
+            System.Diagnostics.Trace.WriteLine ($"Save: {entitiesToDelete.Count} deletes, {entitiesToSave.Count} saves");
 
 			var persistenceJobs = this.GetPersistenceJobs (entitiesToDelete, entitiesToSave).ToList ();
 			var affectedTables = this.GetAffectedTables (persistenceJobs).ToList ();
