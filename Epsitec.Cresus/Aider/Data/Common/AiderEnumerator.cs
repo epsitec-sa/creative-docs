@@ -14,7 +14,7 @@ using Epsitec.Cresus.DataLayer.Loader;
 using System;
 
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 
@@ -81,11 +81,14 @@ namespace Epsitec.Aider.Data.Common
 
 		private static void Execute<T>(CoreData coreData, Func<DataContext, int, int, IEnumerable<T>> batchGetter, Action<BusinessContext, IEnumerable<T>> action)
 		{
-			const int size = 10000;
+            const int size = 200;
 
 			for (int i = 0; ; i += size)
 			{
-				int skip = i;
+                var watch = new Stopwatch ();
+                watch.Start ();
+
+                int skip = i;
 
 				bool done = false;
 
@@ -95,7 +98,9 @@ namespace Epsitec.Aider.Data.Common
 
 					var batch = batchGetter (businessContext.DataContext, skip, size);
 
-					if (batch.Any ())
+                    System.Console.WriteLine ("- Fetch {0}ms", watch.ElapsedMilliseconds);
+
+                    if (batch.Any ())
 					{
 						action (businessContext, batch);
 					}
@@ -109,11 +114,15 @@ namespace Epsitec.Aider.Data.Common
 				{
 					break;
 				}
-			}
-		}
+
+                watch.Stop ();
+
+                System.Console.WriteLine ("- Done at {0}ms", watch.ElapsedMilliseconds);
+            }
+        }
 
 
-		private static IList<AiderContactEntity> GetContactBatch(DataContext dataContext, int skip, int take)
+        private static IList<AiderContactEntity> GetContactBatch(DataContext dataContext, int skip, int take)
 		{
 			var request = AiderEnumerator.CreateBatchRequest<AiderContactEntity> (skip, take);
 			var aiderContacts = dataContext.GetByRequest<AiderContactEntity> (request);
