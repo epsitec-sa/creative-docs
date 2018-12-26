@@ -241,13 +241,19 @@ namespace Epsitec.Aider
 					return;
 				}
 
-				if (args.Contains ("-calculateage")) // must be run 1 times/year
-				{
-					ConsoleCreator.RunWithConsole (() => AiderProgram.CalculateAge (args));
-					return;
-				}
+                if (args.Contains ("-calculateage")) // must be run 1 times/year
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.CalculateAge (args));
+                    return;
+                }
 
-				if (args.Contains ("-fixpersonswithoutcontact"))
+                if (args.Contains ("-updatebirthday")) // must be run every day
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.UpdateBirthdayOfToday ());
+                    return;
+                }
+
+                if (args.Contains ("-fixpersonswithoutcontact"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPersonsWithoutContact (args));
 					return;
@@ -845,7 +851,15 @@ namespace Epsitec.Aider
 			);
 		}
 
-		private static void FixChardonneSubscriptions(string[] args)
+        private static void UpdateBirthdayOfToday()
+        {
+            AiderProgram.RunWithCoreData
+            (
+                coreData => AgeCalculator.UpdateBirthdayOfToday (coreData)
+            );
+        }
+
+        private static void FixChardonneSubscriptions(string[] args)
 		{
 			AiderProgram.RunWithCoreData
 			(

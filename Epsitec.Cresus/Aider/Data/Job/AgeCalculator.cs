@@ -17,15 +17,25 @@ namespace Epsitec.Aider.Data.Job
     /// <summary>
     /// Update CalculatedAge on persons
     /// </summary>
-    internal class AgeCalculator
+    internal sealed class AgeCalculator : System.IDisposable
     {
         public static void Start(CoreData coreData)
         {
-            var calculator = new AgeCalculator (coreData);
-            calculator.Process ();
+            using (var calculator = new AgeCalculator (coreData))
+            {
+                AiderEnumerator.Execute (coreData, calculator.UpdateCalculatedAge);
+            }
         }
 
-        public AgeCalculator(CoreData coreData)
+        public static void UpdateBirthdayOfToday(CoreData coreData)
+        {
+            using (var calculator = new AgeCalculator (coreData))
+            {
+                calculator.UpdateCalculatedAge (System.DateTime.Now);
+            }
+        }
+
+        private AgeCalculator(CoreData coreData)
         {
             this.coreData = coreData;
             this.watch = new Stopwatch ();
@@ -33,12 +43,11 @@ namespace Epsitec.Aider.Data.Job
             this.countMademoiselle = 0;
             this.countMadame = 0;
 
+            this.watch.Start ();
         }
 
-        private void Process()
+        void System.IDisposable.Dispose()
         {
-            this.watch.Start ();
-            AiderEnumerator.Execute (this.coreData, this.CalculateAge);
             this.watch.Stop ();
 
             System.Console.WriteLine ("Global update took {0}ms", this.watch.ElapsedMilliseconds);
@@ -47,7 +56,7 @@ namespace Epsitec.Aider.Data.Job
         }
 
 
-        private void CalculateAge(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
+        private void UpdateCalculatedAge(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
         {
             foreach (var person in persons)
             {
@@ -77,26 +86,28 @@ namespace Epsitec.Aider.Data.Job
             businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
         }
 
-        private static void UpdateCalculatedAge(CoreData coreData)
+        private void UpdateCalculatedAge(System.DateTime today)
         {
-            using (var businessContext = new BusinessContext (coreData, false))
+            using (var businessContext = new BusinessContext (this.coreData, false))
             {
                 var example = new AiderPersonEntity ()
                 {
-                    BirthdayDay = 1,
-                    BirthdayMonth = 1,
-                };
+                    BirthdayDay = today.Day,
+                    BirthdayMonth = today.Month,
+               };
 
-                businessContext.DataContext
-                    .GetByExample (example)
-                    .ForEach (x => x.CalculatedAge = x.Age);
+                var persons = businessContext.DataContext
+                    .GetByExample (example);
 
-                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+                System.Console.WriteLine ("{0} persons found", persons.Count);
+
+                this.UpdateCalculatedAge (businessContext, persons);
             }
         }
 
         private readonly CoreData coreData;
         private readonly Stopwatch watch;
+
         private int countAgeChange;
         private int countMademoiselle;
         private int countMadame;
