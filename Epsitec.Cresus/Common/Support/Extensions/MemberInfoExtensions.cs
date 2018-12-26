@@ -6,7 +6,8 @@ using System.Linq;
 
 namespace Epsitec.Common.Support.Extensions
 {
-	public static class MemberInfoExtensions
+#if false
+    public static class MemberInfoExtensions
 	{
 		public static IEnumerable<T> GetCustomAttributes<T>(this System.Reflection.MemberInfo memberInfo, bool inherit = false)
 			where T : System.Attribute
@@ -14,4 +15,5 @@ namespace Epsitec.Common.Support.Extensions
 			return memberInfo.GetCustomAttributes (typeof (T), inherit).Cast<T> ();
 		}
 	}
+#endif
 }

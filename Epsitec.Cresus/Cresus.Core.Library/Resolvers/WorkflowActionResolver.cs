@@ -8,6 +8,7 @@ using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Workflows;
+using System.Reflection;
 
 namespace Epsitec.Cresus.Core.Resolvers
 {

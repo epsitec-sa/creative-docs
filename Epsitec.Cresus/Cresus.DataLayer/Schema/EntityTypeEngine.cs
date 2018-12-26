@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, StructuredType> ComputeEntityTypeCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, StructuredType> ComputeEntityTypeCache()
 		{
 			return this.entityTypesCache
 				.ToDictionary (t => t.CaptionId)
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredType>> ComputeBaseTypesCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredType>> ComputeBaseTypesCache()
 		{
 			return this.entityTypesCache
 				.ToDictionary
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, StructuredType> ComputeRootTypeCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, StructuredType> ComputeRootTypeCache()
 		{
 			return this.entityTypesCache
 				.ToDictionary
@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeFieldsCache()
 		{
 			return this.entityTypesCache
 				.ToDictionary
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredTypeField> ComputeFieldCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredTypeField> ComputeFieldCache()
 		{
 			return this.fieldsCache
 				.SelectMany (item => item.Value.Select (f => new { TypeId = item.Key, Field = f }))
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredType> ComputeLocalTypeCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredType> ComputeLocalTypeCache()
 		{
 			return this.fieldCache
 				.ToDictionary
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeValueFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeValueFieldsCache()
 		{
 			return this.fieldsCache
 				.ToDictionary
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeReferenceFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeReferenceFieldsCache()
 		{
 			return this.fieldsCache
 				.ToDictionary
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeCollectionFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeCollectionFieldsCache()
 		{
 			return this.fieldsCache
 				.ToDictionary
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalFieldsCache()
 		{
 			return this.fieldsCache
 				   .ToDictionary
@@ -306,7 +306,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalValueFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalValueFieldsCache()
 		{
 			return this.localFieldsCache
 				.ToDictionary
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalReferenceFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalReferenceFieldsCache()
 		{
 			return this.localFieldsCache
 				.ToDictionary
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalCollectionFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> ComputeLocalCollectionFieldsCache()
 		{
 			return this.localFieldsCache
 				.ToDictionary
@@ -354,13 +354,13 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		public ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>> GetReferencingFields(Druid entityTypeId)
+		public Common.Types.Collections.ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>> GetReferencingFields(Druid entityTypeId)
 		{
 			return EntityTypeEngine.GetFromCache (this.referencingFieldsCache, entityTypeId);
 		}
 
 
-		private ReadOnlyDictionary<Druid, ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>>> ComputeReferencingFieldsCache()
+		private Common.Types.Collections.ReadOnlyDictionary<Druid, Common.Types.Collections.ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>>> ComputeReferencingFieldsCache()
 		{
 			return this.entityTypesCache
 				.ToDictionary
@@ -372,7 +372,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		}
 
 
-		private ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>> ComputeReferencingFields(StructuredType type)
+		private Common.Types.Collections.ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>> ComputeReferencingFields(StructuredType type)
 		{
 			var baseTypeIds = this.baseTypesCache[type.CaptionId]
 				.Select (t => t.CaptionId)
@@ -490,46 +490,46 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private readonly ReadOnlyCollection<StructuredType> entityTypesCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, StructuredType> entityTypeCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, StructuredType> entityTypeCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredType>> baseTypesCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredType>> baseTypesCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, StructuredType> rootTypeCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, StructuredType> rootTypeCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> fieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> fieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredTypeField> fieldCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredTypeField> fieldCache;
 
 
-		private readonly ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredType> localTypeCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Tuple<Druid, Druid>, StructuredType> localTypeCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> valueFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> valueFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> referenceFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> referenceFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> collectionFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> collectionFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localValueFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localValueFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localReferenceFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localReferenceFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localCollectionFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, ReadOnlyCollection<StructuredTypeField>> localCollectionFieldsCache;
 
 
-		private readonly ReadOnlyDictionary<Druid, ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>>> referencingFieldsCache;
+		private readonly Common.Types.Collections.ReadOnlyDictionary<Druid, Common.Types.Collections.ReadOnlyDictionary<StructuredType, ReadOnlyCollection<StructuredTypeField>>> referencingFieldsCache;
 
 
 	}

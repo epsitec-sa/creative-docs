@@ -1,0 +1,9 @@
+<Project>
+  <Import Project="zou\Directory.Build.Default.props" />
+  <PropertyGroup>
+    <!-- Default target framework for core bundle (net452 | net472) -->
+    <TargetFramework>net472</TargetFramework>
+    <PackageTags>core</PackageTags>
+    <PackageProjectUrl>https://git.epsitec.ch/core/cresus</PackageProjectUrl>
+  </PropertyGroup>
+</Project>

@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Epsitec.Common.Support.EntityEngine
 {

@@ -14,11 +14,12 @@ namespace Epsitec.Common.Types
 	using FieldInfo    = System.Reflection.FieldInfo;
 	using BindingFlags = System.Reflection.BindingFlags;
 	using Epsitec.Common.Support;
-	
-	/// <summary>
-	/// La classe EnumType décrit des valeurs de type System.Enum.
-	/// </summary>
-	public class EnumType : AbstractType, IEnumType
+    using System.Reflection;
+
+    /// <summary>
+    /// La classe EnumType décrit des valeurs de type System.Enum.
+    /// </summary>
+    public class EnumType : AbstractType, IEnumType
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EnumType"/> class.
