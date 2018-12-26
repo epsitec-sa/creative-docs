@@ -1,54 +1,104 @@
-﻿using Epsitec.Aider.Data.Common;
+﻿//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Samuel LOUP, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data.Common;
 using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
-using Epsitec.Common.IO;
+
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Entities;
-using System;
+
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-
 
 namespace Epsitec.Aider.Data.Job
 {
+    /// <summary>
+    /// Update CalculatedAge on persons
+    /// </summary>
+    internal class AgeCalculator
+    {
+        public static void Start(CoreData coreData)
+        {
+            var calculator = new AgeCalculator (coreData);
+            calculator.Process ();
+        }
+
+        public AgeCalculator(CoreData coreData)
+        {
+            this.coreData = coreData;
+            this.watch = new Stopwatch ();
+            this.countAgeChange = 0;
+            this.countMademoiselle = 0;
+            this.countMadame = 0;
+
+        }
+
+        private void Process()
+        {
+            this.watch.Start ();
+            AiderEnumerator.Execute (this.coreData, this.CalculateAge);
+            this.watch.Stop ();
+
+            System.Console.WriteLine ("Global update took {0}ms", this.watch.ElapsedMilliseconds);
+            System.Console.WriteLine ("Updated {0} ages, {1} Mademoiselle => Madame, {2} Madame => Mademoiselle", this.countAgeChange, this.countMademoiselle, this.countMadame);
+            System.Console.ReadLine ();
+        }
 
 
-	/// <summary>
-	/// Update CalculatedAge on persons
-	/// </summary>
-	internal static class AgeCalculator
-	{
-		public static void Start (CoreData coreData)
-		{
-			Logger.LogToConsole ("START ALL BATCHES");
+        private void CalculateAge(BusinessContext businessContext, IEnumerable<AiderPersonEntity> persons)
+        {
+            foreach (var person in persons)
+            {
+                var age = person.Age;
 
-			AiderEnumerator.Execute (coreData, AgeCalculator.CalculateAge);
+                if (person.CalculatedAge != age)
+                {
+                    person.CalculatedAge = age;
+                    this.countAgeChange++;
+                }
 
-			Logger.LogToConsole ("DONE ALL BATCHES");
-		}
+                if (age.HasValue)
+                {
+                    if ((age.Value >= 18) && (person.MrMrs == Enumerations.PersonMrMrs.Mademoiselle))
+                    {
+                        person.MrMrs = Enumerations.PersonMrMrs.Madame;
+                        this.countMademoiselle++;
+                    }
+                    else if ((age.Value < 18) && (person.MrMrs == Enumerations.PersonMrMrs.Madame))
+                    {
+                        person.MrMrs = Enumerations.PersonMrMrs.Mademoiselle;
+                        this.countMadame++;
+                    }
+                }
+            }
 
+            businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+        }
 
-		private static void CalculateAge
-		(
-			BusinessContext businessContext,
-			IEnumerable<AiderPersonEntity> persons)
-		{
-			Logger.LogToConsole ("START BATCH");
+        private static void UpdateCalculatedAge(CoreData coreData)
+        {
+            using (var businessContext = new BusinessContext (coreData, false))
+            {
+                var example = new AiderPersonEntity ()
+                {
+                    BirthdayDay = 1,
+                    BirthdayMonth = 1,
+                };
 
-			foreach (var person in persons)
-			{
-				person.CalculatedAge = person.Age;
-			}
+                businessContext.DataContext
+                    .GetByExample (example)
+                    .ForEach (x => x.CalculatedAge = x.Age);
 
-			businessContext.SaveChanges (LockingPolicy.KeepLock, EntitySaveMode.IgnoreValidationErrors);
+                businessContext.SaveChanges (LockingPolicy.ReleaseLock, EntitySaveMode.IgnoreValidationErrors);
+            }
+        }
 
-			Logger.LogToConsole ("DONE BATCH");
-		}
-
-
-	}
-
-
+        private readonly CoreData coreData;
+        private readonly Stopwatch watch;
+        private int countAgeChange;
+        private int countMademoiselle;
+        private int countMadame;
+    }
 }
