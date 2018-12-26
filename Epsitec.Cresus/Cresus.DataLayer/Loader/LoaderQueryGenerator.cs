@@ -745,7 +745,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var list = keys.ToList ();
 
-			if (list.Count < 200)
+			if (list.Count <= 200)
 			{
 				request.CacheSourceSet (list);
 			}
