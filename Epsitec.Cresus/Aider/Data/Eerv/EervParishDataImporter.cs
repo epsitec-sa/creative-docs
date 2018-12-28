@@ -17,8 +17,6 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.TwixClip;
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -377,9 +375,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static bool HasPhone(AiderPersonEntity person, string phone)
 		{
-			var parsedPhone = TwixTel.ParsePhoneNumber (phone);
+			var parsedPhone = TwixClip.TwixTel.ParsePhoneNumber (phone);
 
-			if (!TwixTel.IsValidPhoneNumber (parsedPhone, false))
+			if (!TwixClip.TwixTel.IsValidPhoneNumber (parsedPhone, false))
 			{
 				return false;
 			}
@@ -441,7 +439,7 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var number = buffer.ToString ();
 
-					if (TwixTel.IsValidPhoneNumber (number, acceptEmptyNumbers: false))
+					if (TwixClip.TwixTel.IsValidPhoneNumber (number, acceptEmptyNumbers: false))
 					{
 						yield return number;
 
@@ -465,9 +463,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			if (!string.IsNullOrEmpty (phoneNumber))
 			{
-				var parsedNumber = TwixTel.ParsePhoneNumber (phoneNumber);
+				var parsedNumber = TwixClip.TwixTel.ParsePhoneNumber (phoneNumber);
 
-				if (TwixTel.IsValidPhoneNumber (parsedNumber, false))
+				if (TwixClip.TwixTel.IsValidPhoneNumber (parsedNumber, false))
 				{
 					setter (address, parsedNumber);
 				}
