@@ -299,7 +299,7 @@ namespace Epsitec.Aider.Entities
 			this.SetPassword (password);
 		}
 
-		public void SetAdmininistrator(BusinessContext businessContext, bool admin)
+		public void SetAdministrator(BusinessContext businessContext, bool admin)
 		{
 			var powerLevel = UserPowerLevel.Administrator;
 

@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 
 			var user = AiderUserEntity.Create (this.BusinessContext, contact, role);
 
-            user.SetAdmininistrator (this.BusinessContext, admin);
+            user.SetAdministrator (this.BusinessContext, admin);
 			user.SetPassword (password, confirmation);
 			user.Email = contact.Person.MainEmail;
 

@@ -31,7 +31,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(bool shouldBeAdmin)
 		{
-			this.Entity.SetAdmininistrator (this.BusinessContext, shouldBeAdmin);
+			this.Entity.SetAdministrator (this.BusinessContext, shouldBeAdmin);
 		}
 
 		protected override void GetForm(ActionBrick<AiderUserEntity, SimpleBrick<AiderUserEntity>> form)
