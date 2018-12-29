@@ -62,24 +62,31 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				throw new BusinessRuleException (this.Entity, "Le rôle est obligatoire");
 			}
 
-			if (contact.IsNull ())
+			if ((contact.IsNull ()) ||
+                (contact.Person.IsNull ()))
 			{
-				throw new BusinessRuleException (this.Entity, "Un contact est obligatoire");
+				throw new BusinessRuleException (this.Entity, "Un contact avec une personne physique est obligatoire");
 			}
-			var user        = AiderUserEntity.Create (this.BusinessContext, contact, role);
-			user.SetAdmininistrator (this.BusinessContext, admin);
+
+            if (string.IsNullOrEmpty (contact.Person.MainEmail))
+            {
+                throw new BusinessRuleException (this.Entity, "Le contact sélectionné n'a pas d'adresse e-mail");
+            }
+
+			var user = AiderUserEntity.Create (this.BusinessContext, contact, role);
+
+            user.SetAdmininistrator (this.BusinessContext, admin);
 			user.SetPassword (password, confirmation);
 			user.Email = contact.Person.MainEmail;
 
 			if (contact.Person.Employee.IsNull ())
 			{
-				var employee = AiderEmployeeEntity.Create (this.BusinessContext, 
-											contact.Person,
-											user,
-											Enumerations.EmployeeType.BenevoleAIDER,
-											"",
-											Enumerations.EmployeeActivity.None,
-											"");
+				var employee = AiderEmployeeEntity
+                    .Create (this.BusinessContext, 
+                        contact.Person, user, Enumerations.EmployeeType.BenevoleAIDER,
+                        function: "",
+                        Enumerations.EmployeeActivity.None,
+                        navs13: "");
 
 				if (user.Parish.IsNotNull ())
 				{
@@ -88,17 +95,14 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 						ParishGroup = user.Parish
 					};
 
-					var offices = this.BusinessContext.GetByExample<AiderOfficeManagementEntity> (officeExemple);
-					if (offices.Any ())
+                    var office = this.BusinessContext
+                        .GetByExample<AiderOfficeManagementEntity> (officeExemple)
+                        .FirstOrDefault ();
+
+                    if ((office != null) &&
+                        (office.UserJobExistFor (user)))
 					{
-						if (!offices.First ().UserJobExistFor (user))
-						{
-							AiderEmployeeJobEntity.CreateOfficeUser (
-							this.BusinessContext,
-							employee,
-							offices.First (),
-							"");
-						}
+						AiderEmployeeJobEntity.CreateOfficeUser (this.BusinessContext, employee, office, detail: "");
 					}
 				}
 			}
