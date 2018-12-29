@@ -61,61 +61,29 @@ namespace Epsitec.Cresus.WebCore.Server
 			Logger.LogToConsole ("Nginx path: " + CoreServerProgram.nGinxPath.FullName);
 			Logger.LogToConsole ("Nginx autorun: " + CoreServerProgram.nGinxAutorun);
 
-			this.clientDirectory = this.SetupParameter
-			(
-				"clientDirectory",
-				s => new DirectoryInfo (s),
-				CoreServerProgram.defaultClientDirectory
-			);
+			this.clientDirectory = this.SetupParameter ("clientDirectory", s => new DirectoryInfo (s), CoreServerProgram.defaultClientDirectory);
 			Logger.LogToConsole ("Client directory: " + this.clientDirectory.FullName);
 
-			this.nancyUri = this.SetupParameter
-			(
-				"nancyUri",
-				s => new Uri (s),
-				CoreServerProgram.defaultNancyUri
-			);
+			this.nancyUri = this.SetupParameter ("nancyUri", s => new Uri (s), CoreServerProgram.defaultNancyUri);
 			Logger.LogToConsole ("Nancy uri: " + this.nancyUri);
 
-			this.owinUri = this.SetupParameter
-			(
-				"owinUri",
-				s => new Uri (s),
-				CoreServerProgram.defaultOwinUri
-			);
+			this.owinUri = this.SetupParameter ("owinUri", s => new Uri (s), CoreServerProgram.defaultOwinUri);
 			Logger.LogToConsole ("Owin uri: " + this.owinUri);
 
-			this.nbCoreWorkers = this.SetupParameter
-			(
-				"nbCoreWorkers",
-				s => int.Parse (s),
-				CoreServerProgram.defaultNbCoreWorkers
-			);
+			this.nbCoreWorkers = this.SetupParameter ("nbCoreWorkers", s => int.Parse (s), CoreServerProgram.defaultNbCoreWorkers);
 			Logger.LogToConsole ("Number of CoreWorkers: " + this.nbCoreWorkers);
 
-			this.backupDirectory = this.SetupParameter
-			(
-				"backupDirectory",
-				s => new DirectoryInfo (s),
-				CoreServerProgram.defaultBackupDirectory
-			);
+			this.backupDirectory = this.SetupParameter ("backupDirectory", s => new DirectoryInfo (s), CoreServerProgram.defaultBackupDirectory);
 			Logger.LogToConsole ("Backup directory: " + this.backupDirectory);
 
-			this.backupStart = this.SetupParameter
-			(
-				"backupStart",
-				s => new Time (DateTime.Parse (s)),
-				CoreServerProgram.defaultBackupStart
-			);
+			this.backupStart = this.SetupParameter ("backupStart", s => new Time (DateTime.Parse (s)), CoreServerProgram.defaultBackupStart);
 			Logger.LogToConsole ("Backup start: " + this.backupStart);
 
-			this.backupInterval = this.SetupParameter
-			(
-				"backupInterval",
-				s => TimeSpan.Parse (s),
-				CoreServerProgram.defaultBackupInterval
-			);
+			this.backupInterval = this.SetupParameter ("backupInterval", s => TimeSpan.Parse (s), CoreServerProgram.defaultBackupInterval);
 			Logger.LogToConsole ("Backup interval: " + this.backupInterval);
+
+            this.firebird = this.SetupParameter ("firebird", s => s, null);
+            Logger.LogToConsole ("Firebird: " + (this.firebird ?? "<null>"));
 
 			Logger.LogToConsole ("Configuration read");
 		}
@@ -175,7 +143,19 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private void SetupDatabaseClient()
 		{
-			CoreContext.EnableEmbeddedDatabaseClient (true);
+            switch (this.firebird)
+            {
+                case "server":
+                    CoreContext.EnableEmbeddedDatabaseClient (false);
+                    break;
+
+                case "embedded":
+                    CoreContext.EnableEmbeddedDatabaseClient (true);
+                    break;
+
+                default:
+                    throw new System.ArgumentException ($"Invalid firebird configuration: {this.firebird ?? "<null>"}");
+            }
 		}
 
 		private void Initialize(CultureInfo uiCulture, DirectoryInfo clientDirectory)
@@ -246,5 +226,6 @@ namespace Epsitec.Cresus.WebCore.Server
 		private DirectoryInfo					backupDirectory;
 		private TimeSpan						backupInterval;
 		private Time?							backupStart;
-	}
+        private string                          firebird;
+    }
 }

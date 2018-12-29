@@ -820,7 +820,6 @@ namespace Epsitec.Aider
 
         private static void FixBussignyName(string[] args)
         {
-            CoreContext.EnableEmbeddedDatabaseClient (true);
             AiderProgram.RunWithCoreData (coreData => AddressFixer.FixForZip (coreData, 1030));
         }
 
