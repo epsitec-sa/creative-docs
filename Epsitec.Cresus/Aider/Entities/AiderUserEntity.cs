@@ -1,6 +1,7 @@
-﻿//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -38,7 +39,20 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.DisplayName);
 		}
 
-		public FormattedText GetSenderAddressLabelText ()
+        public override EntityStatus GetEntityStatus()
+        {
+            using (var a = new EntityStatusAccumulator ())
+            {
+                a.Accumulate (this.Contact.GetEntityStatus ());
+                a.Accumulate (this.Role.GetEntityStatus ());
+                a.Accumulate (this.Email.GetEntityStatus ());
+
+                return a.EntityStatus;
+            }
+        }
+
+
+        public FormattedText GetSenderAddressLabelText ()
 		{
 			var sender = this.OfficeSender;
 			if (sender.IsNull ())
