@@ -1,4 +1,4 @@
-//	Copyright © 2013-2015, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2013-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Aider.Helpers;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Aider.Entities
 {
@@ -33,9 +34,20 @@ namespace Epsitec.Aider.Entities
 			return address.Town.IsNotNull ()
 				&& ((string.IsNullOrEmpty (address.Street) == false) || (string.IsNullOrEmpty (address.PostBox) == false));
 		}
-		
-		
-		public override FormattedText GetSummary()
+
+        public override EntityStatus GetEntityStatus()
+        {
+            using (var a = new EntityStatusAccumulator ())
+            {
+                a.Accumulate (this.DisplayName.GetEntityStatus ());
+                a.Accumulate (this.DisplayZipCode.GetEntityStatus ());
+                a.Accumulate (this.DisplayAddress.GetEntityStatus ());
+
+                return a.EntityStatus;
+            }
+        }
+
+        public override FormattedText GetSummary()
 		{
 			switch (this.ContactType)
 			{
