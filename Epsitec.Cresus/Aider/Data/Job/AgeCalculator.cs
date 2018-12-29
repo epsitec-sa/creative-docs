@@ -42,6 +42,7 @@ namespace Epsitec.Aider.Data.Job
             this.countAgeChange = 0;
             this.countMademoiselle = 0;
             this.countMadame = 0;
+            this.countMonsieur = 0;
 
             this.watch.Start ();
         }
@@ -51,7 +52,12 @@ namespace Epsitec.Aider.Data.Job
             this.watch.Stop ();
 
             System.Console.WriteLine ("Global update took {0}ms", this.watch.ElapsedMilliseconds);
-            System.Console.WriteLine ("Updated {0} ages, {1} Mademoiselle => Madame, {2} Madame => Mademoiselle", this.countAgeChange, this.countMademoiselle, this.countMadame);
+            var message = string.Format (
+                "Updated {0} ages, {1} => Madame, {2} => Mademoiselle, {3} => Monsieur",
+                this.countAgeChange, this.countMademoiselle, this.countMadame, this.countMonsieur);
+
+            System.Console.Write (message);
+            System.Diagnostics.Trace.WriteLine (message);
         }
 
 
@@ -69,15 +75,26 @@ namespace Epsitec.Aider.Data.Job
 
                 if (age.HasValue)
                 {
-                    if ((age.Value >= 18) && (person.MrMrs == Enumerations.PersonMrMrs.Mademoiselle))
+                    if ((age.Value >= 18) &&
+                        (person.MrMrs != Enumerations.PersonMrMrs.Madame) &&
+                        (person.eCH_Person.PersonSex == Enumerations.PersonSex.Female))
                     {
                         person.MrMrs = Enumerations.PersonMrMrs.Madame;
                         this.countMademoiselle++;
                     }
-                    else if ((age.Value < 18) && (person.MrMrs == Enumerations.PersonMrMrs.Madame))
+                    else if ((age.Value < 18) &&
+                        (person.MrMrs != Enumerations.PersonMrMrs.Mademoiselle) &&
+                        (person.eCH_Person.PersonSex == Enumerations.PersonSex.Female))
                     {
                         person.MrMrs = Enumerations.PersonMrMrs.Mademoiselle;
                         this.countMadame++;
+                    }
+                    else if ((age.Value >= 18) &&
+                        (person.MrMrs != Enumerations.PersonMrMrs.Monsieur) &&
+                        (person.eCH_Person.PersonSex == Enumerations.PersonSex.Male))
+                    {
+                        person.MrMrs = Enumerations.PersonMrMrs.Monsieur;
+                        this.countMonsieur++;
                     }
                 }
             }
@@ -110,5 +127,6 @@ namespace Epsitec.Aider.Data.Job
         private int countAgeChange;
         private int countMademoiselle;
         private int countMadame;
+        private int countMonsieur;
     }
 }
