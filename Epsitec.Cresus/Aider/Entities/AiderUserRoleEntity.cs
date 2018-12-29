@@ -1,17 +1,28 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
-
+using Epsitec.Cresus.Core.Entities;
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
 	public partial class AiderUserRoleEntity
 	{
-		public override FormattedText GetSummary()
+        public override EntityStatus GetEntityStatus()
+        {
+            using (var a = new EntityStatusAccumulator ())
+            {
+                a.Accumulate (this.Name.GetEntityStatus ());
+
+                return a.EntityStatus;
+            }
+        }
+
+        public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (this.Name, "\n", this.DefaultScopes);
 		}
