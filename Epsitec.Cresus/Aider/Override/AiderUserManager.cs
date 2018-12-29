@@ -51,7 +51,12 @@ namespace Epsitec.Aider.Override
 
 		public override void NotifySusccessfulLogin(SoftwareUserEntity user)
 		{
-			this.UpdateUser (user.Code, u => u.LastLoginDate = System.DateTime.UtcNow);
+            this.UpdateUser (user.Code,
+                u =>
+                {
+                    u.LastLoginDate = u.LastActivityDate = System.DateTime.UtcNow;
+                    u.LastSoftwareReleaseDate = CoreContext.SoftwareReleaseDate;
+                });
 
 			var notif = NotificationManager.GetCurrentNotificationManager ();
 
@@ -83,18 +88,11 @@ namespace Epsitec.Aider.Override
 
 				var now  = System.DateTime.UtcNow;
 				var last = aiderUser.LastActivityDate;
-				var date = aiderUser.LastSoftwareReleaseDate;
 
 				if ((last == null) ||
-					(date == null) ||
-					((now-last.Value).Seconds > 10))
+					((now-last.Value).TotalMinutes > 10))
 				{
-					this.UpdateUser (user.Code,
-						u =>
-						{
-							u.LastActivityDate = now;
-							u.LastSoftwareReleaseDate = CoreContext.SoftwareReleaseDate;
-						});
+					this.UpdateUser (user.Code, u => u.LastActivityDate = now);
 				}
 			}
 
