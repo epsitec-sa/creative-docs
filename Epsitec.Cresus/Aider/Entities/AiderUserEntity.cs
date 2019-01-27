@@ -341,6 +341,7 @@ namespace Epsitec.Aider.Entities
 			this.Parish = group;
 		}
 
+
 		public void Delete(BusinessContext businessContext)
 		{
 			this.CustomUISettings.Delete (businessContext);
@@ -348,46 +349,86 @@ namespace Epsitec.Aider.Entities
 			businessContext.DeleteEntity (this);
 		}
 
-		public static AiderUserEntity Create(
-			BusinessContext businessContext, 
-			AiderContactEntity contact, 
-			AiderUserRoleEntity role)
+		public static AiderUserEntity Create(BusinessContext businessContext, AiderContactEntity contact, AiderUserRoleEntity role)
 		{
-			var login = AiderUserEntity.BuildLoginName (businessContext, contact.Person);
-			var user = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
+            var person = contact.Person;
+            var login  = AiderUserEntity.BuildLoginName (businessContext, person);
+			var user   = businessContext.CreateAndRegisterEntity<AiderUserEntity> ();
 
-			user.LoginName = login;
-			user.DisplayName = AiderUserEntity.BuildDisplayName (contact.Person);
-			user.Role = role;
-			user.Parish = contact.Person.ParishGroup;
-			user.Contact = contact;
+            user.LoginName   = login;
+			user.DisplayName = AiderUserEntity.BuildDisplayName (person);
+			user.Role        = role;
+			user.Parish      = person.ParishGroup;
+			user.Contact     = contact;
+            user.Email       = person.MainEmail;
+
+            AiderUserEntity.CreateEmployee (businessContext, user);
 
 			return user;
 		}
+        
+        private static void CreateEmployee(BusinessContext businessContext, AiderUserEntity user)
+        {
+            var contact = user.Contact;
+            var person  = contact.Person;
 
-		public static string BuildLoginName (BusinessContext businessContext, AiderPersonEntity person)
+            if (person.Employee.IsNotNull ())
+            {
+                return;
+            }
+
+            var employee = AiderEmployeeEntity
+                .Create (businessContext,
+                    person, user, Enumerations.EmployeeType.BenevoleAIDER,
+                    function: "", Enumerations.EmployeeActivity.None, navs13: "");
+
+            if (user.Parish.IsNotNull ())
+            {
+                var officeExemple = new AiderOfficeManagementEntity
+                {
+                    ParishGroup = user.Parish
+                };
+
+                var office = businessContext
+                    .GetByExample<AiderOfficeManagementEntity> (officeExemple)
+                    .FirstOrDefault ();
+
+                if ((office.IsNotNull ()) &&
+                    (office.UserJobExistFor (user)))
+                {
+                    AiderEmployeeJobEntity.CreateOfficeUser (businessContext, employee, office, detail: "");
+                }
+            }
+        }
+        
+        private static string BuildLoginName (BusinessContext businessContext, AiderPersonEntity person)
 		{
 			var initial = person.eCH_Person.PersonFirstNames.Substring (0, 1).ToLower ();
 			var name    = person.eCH_Person.PersonOfficialName.ToLower ();
-			var desiredUsername = initial + "." + name;
+            var index   = 0;
 
-			var checkExample = new AiderUserEntity ()
-			{
-				LoginName = desiredUsername
-			};
-			var count = businessContext.GetByExample<AiderUserEntity> (checkExample).Count;
-			if(count == 0)
-			{
-				return desiredUsername;
-			}
-			else
-			{
-				var next = count + 1;
-				return desiredUsername = initial + "." + name + next.ToString ();
+            while (true)
+            {
+                var loginName = index == 0 ? $"{initial}.{name}" : $"{initial}.{name}{index}";
+
+                var checkExample = new AiderUserEntity ()
+                {
+                    LoginName = loginName
+                };
+
+                if (businessContext.GetByExample<AiderUserEntity> (checkExample).Any ())
+                {
+                    index++;
+                    continue;
+                }
+                else
+                {
+                    return loginName;
+                }
 			}
 		}
 
-		public static string BuildDisplayName(AiderPersonEntity person)
+		private static string BuildDisplayName(AiderPersonEntity person)
 		{
 			return person.eCH_Person.PersonFirstNames + " " + person.eCH_Person.PersonOfficialName;
 		}
@@ -432,20 +473,25 @@ namespace Epsitec.Aider.Entities
 
 		partial void SetPowerLevel(UserPowerLevel value)
 		{
-			this.UserGroups.Clear ();
+            this.UserGroups.Clear ();
 
 			if (value == UserPowerLevel.None)
 			{
 				return;
 			}
-			
-			var dataContext = this.GetDataContext ();
-			
-			//	Setting the power level picks the proper user group and associates it with
-			//	the user; unless the level is more restricted than "standard", we should
-			//	always include the standard user level too.
-			
-			if (value < UserPowerLevel.Restricted)
+
+            var dataContext = this.GetDataContext ();
+
+            if (dataContext == null)
+            {
+                throw new System.Exception ("Don't set power level of user for example queries; it won't work as this is a synthetic property");
+            }
+
+            //	Setting the power level picks the proper user group and associates it with
+            //	the user; unless the level is more restricted than "standard", we should
+            //	always include the standard user level too.
+
+            if (value < UserPowerLevel.Restricted)
 			{
 				var example = new SoftwareUserGroupEntity
 				{
