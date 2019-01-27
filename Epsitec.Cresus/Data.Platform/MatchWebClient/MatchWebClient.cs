@@ -58,10 +58,14 @@ namespace Epsitec.Data.Platform
 				(System.IO.File.GetLastWriteTime (filename).Date.Date != System.DateTime.Now.Date))
 			{
 				this.ProductUri = this.ServiceUri ();
-				this.DownloadMatchFile (this.ProductUri, filename);
-				this.IsANewRelease = this.VerifyNewRelease (filename);
+
+                if (this.DownloadMatchFile (this.ProductUri, filename))
+                {
+                    this.IsANewRelease = this.VerifyNewRelease (filename);
+                }
 			}
-			this.aValidFileIsAvailable = true;
+
+            this.aValidFileIsAvailable = System.IO.File.Exists (filename);
 			
 			return filename;
 		}
@@ -91,29 +95,32 @@ namespace Epsitec.Data.Platform
 			return "https://webservices.post.ch:17017/IN_ZOPAxFILES/v1/groups/1062/versions/latest/file/gateway";
 		}
 
-		private void DownloadMatchFile(string uri, string filename)
+		private bool DownloadMatchFile(string uri, string filename)
 		{
 			System.Diagnostics.Trace.WriteLine (string.Format ("Downloading MAT[CH]sort file from {0}", uri));
-			
-			using (var stream = this.OpenRead (uri))
-			{
-				try
-				{
-					var zipFile = new Epsitec.Common.IO.ZipFile ();
-					zipFile.LoadFile (stream);
-					var zipEntry = zipFile.Entries.First ();
-					System.Diagnostics.Trace.WriteLine (string.Format ("Writing file {0}", filename));
-					using (var sw = new StreamWriter (filename)) // output as UTF-8
-					{
-						sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
-					}
-					System.Diagnostics.Trace.WriteLine ("Done");
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Trace.WriteLine (ex.Message);
-				}
-			}
+
+            try
+            {
+                using (var stream = this.OpenRead (uri))
+                {
+                    var zipFile = new Epsitec.Common.IO.ZipFile ();
+                    zipFile.LoadFile (stream);
+                    var zipEntry = zipFile.Entries.First ();
+                    System.Diagnostics.Trace.WriteLine (string.Format ("Writing file {0}", filename));
+                    using (var sw = new StreamWriter (filename)) // output as UTF-8
+                    {
+                        sw.Write (System.Text.Encoding.Default.GetString (zipEntry.Data));
+                    }
+                    System.Diagnostics.Trace.WriteLine ("Done");
+                    return true;
+                }
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine (ex.Message);
+            }
+
+            return false;
 		}
 
 		private static string GetLocalMetaDataPath()
