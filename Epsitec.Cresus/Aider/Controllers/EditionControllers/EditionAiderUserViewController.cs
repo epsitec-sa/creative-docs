@@ -1,4 +1,4 @@
-//	Copyright © 2012-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableActionMenu<ActionAiderUserViewController5UnsetOffice> ().IfTrue (senderDefined)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Contact)
+					.Field (x => x.Contact).ReadOnly ()
 					.Field (x => x.Parish).ReadOnly ()
 					.Field (x => x.Office).ReadOnly ()
 					.Field (x => x.OfficeSender).IfTrue (senderDefined)
@@ -66,8 +66,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableActionMenu<ActionAiderUserViewController0SetPassword> ()
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Contact)
-					.Field (x => x.Parish).ReadOnly ()
+					.Field (x => x.Contact).ReadOnly ()
+                    .Field (x => x.Parish).ReadOnly ()
 					.Field (x => x.Office).ReadOnly ()
 					.Field (x => x.OfficeSender).IfTrue (senderDefined)
 					.Field (x => x.LoginName).ReadOnly ()
