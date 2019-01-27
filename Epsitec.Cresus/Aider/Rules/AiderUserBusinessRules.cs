@@ -138,7 +138,10 @@ namespace Epsitec.Aider.Rules
 
 			if (string.IsNullOrEmpty (email))
 			{
-				return;
+                var message = Resources.Text ("L'adresse e-mail ne peut pas rester vide.");
+
+                Logic.BusinessRuleException (user, message);
+                return;
 			}
 
 			var fixedEmail = Epsitec.Common.IO.UriBuilder.FixScheme (email);
