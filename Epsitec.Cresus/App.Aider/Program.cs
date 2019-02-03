@@ -11,7 +11,8 @@ namespace Epsitec.Aider
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			Epsitec.Aider.Processors.Processor.Setup ();
+            Common.IO.ConsoleCreator.Initialize ();
+            Epsitec.Aider.Processors.Processor.Setup ();
 
 			AiderProgram.Main (args);
 		}
