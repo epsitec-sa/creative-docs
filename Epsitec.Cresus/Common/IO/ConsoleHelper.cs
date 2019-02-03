@@ -17,7 +17,10 @@ namespace Epsitec.Common.IO
 	/// </remarks>
 	public static class ConsoleCreator
 	{
-
+        public static void Initialize()
+        {
+            ConsoleCreator.CreateConsole ();
+        }
 
 		/// <summary>
 		/// Creates a console, executes the given action and deletes the console afterwards. If the
@@ -68,26 +71,72 @@ namespace Epsitec.Common.IO
 		/// <returns>return true for success and false for failure.</returns>
 		private static bool CreateConsole()
 		{
-			return ConsoleCreator.AllocConsole ();
-		}
+            if (System.Threading.Interlocked.Increment (ref ConsoleCreator.counter) == 1)
+            {
+                ConsoleCreator.consoleAllocResult = ConsoleCreator.AllocConsole ();
+
+                var defaultHandle = new IntPtr (7);
+                var currentHandle = ConsoleCreator.GetStdHandle (ConsoleCreator.StdOutputHandle);
+
+                if (currentHandle != defaultHandle)
+                {
+                    //  Visual Studio has redirected our output, apparently, so we
+                    //  need to restore a valid handle here in order to be able to
+                    //  use SetCursorPosition, etc.
+
+                    ConsoleCreator.SetStdHandle (StdOutputHandle, defaultHandle);
+
+                    System.Diagnostics.Trace.WriteLine ("AllocConsole: restored output to console");
+                }
+
+                var writer = new System.IO.StreamWriter (Console.OpenStandardOutput ())
+                {
+                    AutoFlush = true
+                };
+
+                Console.SetOut (writer);
+
+                System.Console.WriteLine ($"{System.DateTime.Now.ToShortDateString ()} {System.DateTime.Now.ToLongTimeString ()}");
+                System.Console.SetCursorPosition (0, 0);
+                System.Console.WriteLine ("                   ");
+                System.Console.SetCursorPosition (0, 0);
+            }
+
+            return ConsoleCreator.consoleAllocResult;
+        }
 
 
-		/// <summary>
-		/// Deletes a console.
-		/// </summary>
-		/// <returns>return true for success and false for failure.</returns>
-		private static bool DeleteConsole()
+        /// <summary>
+        /// Deletes a console.
+        /// </summary>
+        /// <returns>return true for success and false for failure.</returns>
+        private static bool DeleteConsole()
 		{
-			return ConsoleCreator.FreeConsole ();
+            if (System.Threading.Interlocked.Decrement (ref ConsoleCreator.counter) == 0)
+            {
+                return ConsoleCreator.FreeConsole ();
+            }
+
+            return true;
 		}
 
 
-		[DllImport ("kernel32.dll", SetLastError=true)]
+        private static int counter;
+        private static bool consoleAllocResult;
+
+
+
+        private const uint StdOutputHandle = 0xFFFFFFF5;
+        [DllImport ("kernel32.dll")]
+        private static extern IntPtr GetStdHandle(uint nStdHandle);
+        [DllImport ("kernel32.dll")]
+        private static extern void SetStdHandle(uint nStdHandle, IntPtr handle);
+
+        [DllImport ("kernel32.dll", SetLastError=true)]
 		[return: MarshalAs (UnmanagedType.Bool)]
 		private static extern bool AllocConsole();
 
-
-		[DllImport ("kernel32.dll", SetLastError=true)]
+        [DllImport ("kernel32.dll", SetLastError=true)]
 		[return: MarshalAs (UnmanagedType.Bool)]
 		private static extern bool FreeConsole();
         
