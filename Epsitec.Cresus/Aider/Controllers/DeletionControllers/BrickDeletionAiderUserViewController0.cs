@@ -43,70 +43,44 @@ namespace Epsitec.Aider.Controllers.DeletionControllers
 			return ActionExecutor.Create<string, string> (this.Execute);
 		}
 
-		private void Execute(string _1, string _2)
-		{
-			if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
-			{
-				var message = "Seul un administrateur a le droit de détruire des utilisateurs.";
+        private void Execute(string _1, string _2)
+        {
+            var user = this.Entity;
 
-				throw new BusinessRuleException (this.Entity, message);
-			}
+            if (this.HasUserPowerLevel (UserPowerLevel.Administrator) == false)
+            {
+                var message = "Seul un administrateur a le droit de détruire des utilisateurs.";
 
-			var user = UserManager.Current.AuthenticatedUser;
-			var key1 = UserManager.Current.BusinessContext.DataContext.GetNormalizedEntityKey (user);
-			var key2 = this.BusinessContext.DataContext.GetNormalizedEntityKey (this.Entity);
-			
-			// We check the value of the keys, because the two entities belong to two diffent
-			// DataContext and checking them directly for equality would always return false.
-			
-			if (key1 == key2)
-			{
-				var message = "Vous ne pouvez pas vous détruire vous-même.";
+                throw new BusinessRuleException (user, message);
+            }
 
-				throw new BusinessRuleException (this.Entity, message);
-			}
+            if (this.MatchesUser (user))
+            {
+                var message = "Vous ne pouvez pas vous détruire vous-même.";
 
-			if (this.Entity.Mutability != Mutability.Customizable)
-			{
-				var message = "Vous ne pouvez pas détruire un utilisateur système.";
+                throw new BusinessRuleException (user, message);
+            }
 
-				throw new BusinessRuleException (this.Entity, message);
-			}
+            if (user.Mutability != Mutability.Customizable)
+            {
+                var message = "Vous ne pouvez pas détruire un utilisateur système.";
 
-			if (this.Entity.Contact.IsNotNull ())
-			{
-				var employee = this.Entity.Contact.Person.Employee;
-				if (employee.IsNotNull ())
-				{
-					var userJobsToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
-					foreach (var userJob in userJobsToRemove)
-					{
-						AiderOfficeManagementEntity.LeaveOfficeUsers (this.BusinessContext, userJob.Office, this.Entity);
-					}
+                throw new BusinessRuleException (user, message);
+            }
 
-					var suppleantJobsToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER);
-					foreach (var suppleantJob in suppleantJobsToRemove)
-					{
-						AiderOfficeManagementEntity.LeaveOfficeSuppleants (this.BusinessContext, suppleantJob.Office, this.Entity);
-					}
+            user.Delete (this.BusinessContext);
+        }
 
-					var officeManagerJobToRemove = employee.EmployeeJobs.Where (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER);
-					foreach (var managerJob in officeManagerJobToRemove)
-					{
-						AiderOfficeManagementEntity.LeaveOfficeManagement (this.BusinessContext, managerJob.Office, this.Entity, true);
-					}
+        private bool MatchesUser(AiderUserEntity user)
+        {
+            // We check the value of the keys, because the two entities belong to two diffent
+            // DataContext and checking them directly for equality would always return false.
 
-					foreach (var jobs in employee.EmployeeJobs)
-					{
-						jobs.Delete (this.BusinessContext);
-					}
+            var manager = UserManager.Current;
+            var key1 = manager.BusinessContext.DataContext.GetNormalizedEntityKey (manager.AuthenticatedUser);
+            var key2 = this.BusinessContext.DataContext.GetNormalizedEntityKey (user);
 
-					this.BusinessContext.DeleteEntity (employee);
-				}
-			}
-		
-
-			this.Entity.Delete (this.BusinessContext);
-		}
+            return key1 == key2;
+        }
 	}
 }

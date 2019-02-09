@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2012-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -344,7 +345,60 @@ namespace Epsitec.Aider.Entities
 
 		public void Delete(BusinessContext businessContext)
 		{
-			this.CustomUISettings.Delete (businessContext);
+            var contact = this.Contact;
+
+            if (contact.IsNotNull ())
+            {
+                var employee = contact.Person.Employee;
+
+                if (employee.IsNotNull ())
+                {
+                    var userJobsToRemove = employee
+                        .EmployeeJobs
+                        .Where (j => j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER)
+                        .ToList ();
+
+                    var suppleantJobsToRemove = employee
+                        .EmployeeJobs
+                        .Where (j => j.EmployeeJobFunction == EmployeeJobFunction.SuppléantAIDER)
+                        .ToList ();
+
+                    var officeManagerJobsToRemove = employee
+                        .EmployeeJobs
+                        .Where (j => j.EmployeeJobFunction == EmployeeJobFunction.GestionnaireAIDER)
+                        .ToList ();
+
+                    var jobsToRemove = userJobsToRemove
+                        .Concat (suppleantJobsToRemove)
+                        .Concat (officeManagerJobsToRemove)
+                        .ToList ();
+                    
+                    foreach (var userJob in userJobsToRemove)
+                    {
+                        AiderOfficeManagementEntity.LeaveOfficeUsers (businessContext, userJob.Office, this);
+                    }
+
+                    foreach (var suppleantJob in suppleantJobsToRemove)
+                    {
+                        AiderOfficeManagementEntity.LeaveOfficeSuppleants (businessContext, suppleantJob.Office, this);
+                    }
+
+                    foreach (var managerJob in officeManagerJobsToRemove)
+                    {
+                        AiderOfficeManagementEntity.LeaveOfficeManagement (businessContext, managerJob.Office, this, true);
+                    }
+
+                    foreach (var job in employee.EmployeeJobs)
+                    {
+                        job.Delete (businessContext);
+                    }
+
+                    businessContext.DeleteEntity (employee);
+                }
+            }
+
+
+            this.CustomUISettings.Delete (businessContext);
 
 			businessContext.DeleteEntity (this);
 		}

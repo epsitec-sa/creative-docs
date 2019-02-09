@@ -253,6 +253,11 @@ namespace Epsitec.Aider
                     return;
                 }
 
+                if (args.Contains ("-cleanupusers"))
+                {
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.CleanupUsers ());
+                }
+
                 if (args.Contains ("-fixpersonswithoutcontact"))
 				{
 					ConsoleCreator.RunWithConsole (() => AiderProgram.FixPersonsWithoutContact (args));
@@ -856,6 +861,11 @@ namespace Epsitec.Aider
             (
                 coreData => AgeCalculator.UpdateBirthdayOfToday (coreData)
             );
+        }
+
+        private static void CleanupUsers()
+        {
+            AiderProgram.RunWithCoreData (UserFixer.RemoveEmptyUsers);
         }
 
         private static void FixChardonneSubscriptions(string[] args)

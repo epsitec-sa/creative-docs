@@ -92,6 +92,8 @@ namespace Epsitec.Cresus.Core
 
 		private static void ExecuteJsServer()
 		{
+            System.Diagnostics.Trace.WriteLine ("Starting as server");
+            
 			Library.CoreContext.StartAsServer ();
 
 			WinFormsUtils.ExecuteWithoutForm (() =>

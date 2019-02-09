@@ -1,7 +1,9 @@
-﻿using System;
+﻿//	Copyright © 2008-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System;
 
 using System.Runtime.InteropServices;
-
 
 namespace Epsitec.Common.IO
 {
@@ -46,7 +48,31 @@ namespace Epsitec.Common.IO
 				{
                     if (ConsoleCreator.IsOutputRedirected == false)
                     {
-                        System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                        try
+                        {
+                            System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                        }
+                        catch (System.ArgumentOutOfRangeException ex)
+                        {
+                            var find = "maximum window size of ";
+                            var message = ex.Message;
+                            var pos = message.IndexOf (find);
+
+                            System.Diagnostics.Trace.WriteLine ($"RunWithConsole: {message}");
+
+                            if (pos > 0)
+                            {
+                                message = message.Substring (pos + find.Length);
+                                pos = message.IndexOf (' ');
+                                if (pos > 0)
+                                {
+                                    var value = int.Parse (message.Substring (0, pos), System.Globalization.CultureInfo.InvariantCulture);
+                                    windowWidth = value;
+                                    System.Diagnostics.Trace.WriteLine ($"Adjust to {windowWidth}");
+                                    System.Console.SetWindowSize (windowWidth, System.Console.WindowHeight);
+                                }
+                            }
+                        }
                         System.Console.SetBufferSize (windowWidth, System.Console.BufferHeight);
                     }
 				}
@@ -93,6 +119,8 @@ namespace Epsitec.Common.IO
                 {
                     AutoFlush = true
                 };
+
+                System.Diagnostics.Trace.WriteLine ("Console created");
 
                 Console.SetOut (writer);
 

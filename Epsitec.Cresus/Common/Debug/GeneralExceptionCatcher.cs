@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Debug
 				exception = exception.InnerException;
 			}
 
-			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+			System.Diagnostics.Trace.WriteLine (buffer.ToString ());
 
 			if (GeneralExceptionCatcher.abortOnException)
 			{

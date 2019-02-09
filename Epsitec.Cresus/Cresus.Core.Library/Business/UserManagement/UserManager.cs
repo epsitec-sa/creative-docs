@@ -453,10 +453,9 @@ namespace Epsitec.Cresus.Core.Business.UserManagement
 		}
 
 
+        #region NotificationMode Enumeration
 
-		#region NotificationMode Enumeration
-
-		private enum NotificationMode
+        private enum NotificationMode
 		{
 			OnChange,
 			Always,
