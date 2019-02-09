@@ -115,7 +115,7 @@ namespace Epsitec.Common.IO
                     System.Diagnostics.Trace.WriteLine ("AllocConsole: restored output to console");
                 }
 
-                var writer = new System.IO.StreamWriter (Console.OpenStandardOutput ())
+                var writer = new System.IO.StreamWriter (Console.OpenStandardOutput (), System.Text.Encoding.GetEncoding (850))
                 {
                     AutoFlush = true
                 };
