@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.EnableActionMenu<ActionAiderUserViewController5UnsetOffice> ().IfTrue (senderDefined)
 				.Title (Res.Strings.AiderUserDataTitle)
 				.Input ()
-					.Field (x => x.Contact).ReadOnly ()
+					.Field (x => x.Contact).ReadOnly (contactDefined)
 					.Field (x => x.Parish).ReadOnly ()
 					.Field (x => x.Office).ReadOnly ()
 					.Field (x => x.OfficeSender).IfTrue (senderDefined)
