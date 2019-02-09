@@ -1,4 +1,4 @@
-﻿//	Copyright © 2012-2018, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Enumerations;
@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.FormatText ("E-mail: ").ApplyBold (), this.Email, "\n",
 				TextFormatter.FormatText ("Groupe: ").ApplyBold (), this.Parish.Name, "\n",
 				TextFormatter.FormatText ("Rôle: ").ApplyBold (), this.Role.Name, "\n",
-				TextFormatter.FormatText ("Administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
+				TextFormatter.FormatText ("administrateur: ").ApplyBold (), this.HasPowerLevel (UserPowerLevel.Administrator).ToYesOrNo (), "\n",
 				TextFormatter.FormatText ("Actif: ").ApplyBold (), this.IsActive.ToYesOrNo (), "\n",
 				TextFormatter.FormatText ("Dernier login: ").ApplyBold (), this.LastLoginDate.ToLocalTime (), "\n",
 				TextFormatter.FormatText ("Dernier accès: ").ApplyBold (), this.LastActivityDate.ToLocalTime (), "\n"
