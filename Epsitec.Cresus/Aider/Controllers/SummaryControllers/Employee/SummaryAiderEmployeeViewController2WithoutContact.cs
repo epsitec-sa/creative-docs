@@ -1,4 +1,4 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Controllers.ActionControllers;
@@ -32,7 +32,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.EnableActionMenu<ActionAiderEmployeeViewController03RemoveJob> ().IfTrue (user.CanEditEmployee ())
 				.Template ()
 				.End ();
-			
+
+            //  TODO: add user entries
+            var users = this.Entity.GetUsers ();
+            System.Diagnostics.Trace.WriteLine ($"{this.Entity.Person.DisplayName} => {users.Count} users");
+
 			wall.AddBrick (x => x.RefereeEntries)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)

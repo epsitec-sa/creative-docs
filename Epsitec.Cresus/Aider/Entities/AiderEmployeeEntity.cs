@@ -45,6 +45,23 @@ namespace Epsitec.Aider.Entities
 			value = this.GetVirtualCollection (ref this.refereeEntries, x => x.Employee = this).AsReadOnlyCollection ();
 		}
 
+        void GetUsers(ref IList<AiderUserEntity> value)
+        {
+            //  TODO: make this a real virtual property
+            value = this.GetVirtualCollection (ref this.users, x => x.Contact = this.PersonContact).AsReadOnlyCollection ();
+        }
+
+        public IList<AiderUserEntity> GetUsers()
+        {
+            //  TODO: make this a real virtual property
+            if (this.users == null)
+            {
+                this.GetUsers (ref this.users);
+            }
+
+            return this.users;
+        }
+
 		public static AiderEmployeeEntity Create(BusinessContext businessContext, AiderPersonEntity person, AiderUserEntity user, EmployeeType employeeType, string function, EmployeeActivity employeeActivity, string navs13)
 		{
 			var employee    = businessContext.CreateAndRegisterEntity<AiderEmployeeEntity> ();
@@ -115,7 +132,8 @@ namespace Epsitec.Aider.Entities
                                     || j.EmployeeJobFunction == EmployeeJobFunction.UtilisateurAIDER);
         }
 
-        private IList<AiderEmployeeJobEntity>		jobs;
-		private IList<AiderRefereeEntity>			refereeEntries;
+        private IList<AiderEmployeeJobEntity>	jobs;
+		private IList<AiderRefereeEntity>		refereeEntries;
+        private IList<AiderUserEntity>          users;
 	}
 }

@@ -255,7 +255,11 @@ namespace Epsitec.Aider
 
                 if (args.Contains ("-cleanupusers"))
                 {
-                    ConsoleCreator.RunWithConsole (() => AiderProgram.CleanupUsers ());
+                    var pos = args.ToList ().IndexOf ("-cleanupusers");
+                    var arg = args.Skip (pos + 1).FirstOrDefault () ?? "";
+                    var keys = arg.Split (':', ',', '|', ';');
+                    ConsoleCreator.RunWithConsole (() => AiderProgram.CleanupUsers (keys));
+                    return;
                 }
 
                 if (args.Contains ("-fixpersonswithoutcontact"))
@@ -863,9 +867,32 @@ namespace Epsitec.Aider
             );
         }
 
-        private static void CleanupUsers()
+        private static void CleanupUsers(string[] keys)
         {
-            AiderProgram.RunWithCoreData (UserFixer.RemoveEmptyUsers);
+            var flags = UserRemovalMode.None;
+
+            if (keys.Contains ("empty"))
+            {
+                flags |= UserRemovalMode.Empty;
+            }
+            if (keys.Contains ("nocontact"))
+            {
+                flags |= UserRemovalMode.NoContact;
+            }
+            if (keys.Contains ("noemail"))
+            {
+                flags |= UserRemovalMode.NoEmail;
+            }
+            if (keys.Contains ("notanemployee"))
+            {
+                flags |= UserRemovalMode.NotAnEmployee;
+            }
+            if (keys.Contains ("brokenemployee"))
+            {
+                flags |= UserRemovalMode.BrokenEmployee;
+            }
+
+            AiderProgram.RunWithCoreData (data => UserFixer.RemoveEmptyUsers (data, flags));
         }
 
         private static void FixChardonneSubscriptions(string[] args)
