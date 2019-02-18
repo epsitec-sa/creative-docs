@@ -74,7 +74,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultInteger("Settings", "ConstrainAngle");
             this.CreateDefaultDouble("Settings", "ToLinePrecision");
             this.CreateDefaultBool("Settings", "ImageAlphaCorrect");
-			this.CreateDefaultInteger("Settings", "DefaultUnit");
+            this.CreateDefaultBool("Settings", "ImageAlphaPremultiplied");
+            this.CreateDefaultInteger("Settings", "DefaultUnit");
 			this.CreateDefaultDouble("Settings", "DimensionScale");
 			this.CreateDefaultDouble("Settings", "DimensionDecimal");
 
