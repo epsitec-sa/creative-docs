@@ -123,9 +123,9 @@ namespace Epsitec.Aider.Entities
 						case Enumerations.EmployeeType.Diacre:
 						case Enumerations.EmployeeType.Pasteur:
                         case Enumerations.EmployeeType.AnimateurEglise:
-                        case Enumerations.EmployeeType.AnimateurParoisse:
+//                      case Enumerations.EmployeeType.AnimateurParoisse:
                             ministerBypass = true;
-						break;
+		    				break;
 					}
 				}
 			}

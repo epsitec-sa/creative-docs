@@ -1,4 +1,4 @@
-//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2012-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -21,11 +21,18 @@ namespace Epsitec.Cresus.Core.Metadata
 				return;
 			}
 
-			var name = "x";
-			var @param = Expression.Parameter (entity.GetType (), name);
-			var body   = filter.GetExpression (entity, @param);
+            try
+            {
+                var name = "x";
+                var @param = Expression.Parameter (entity.GetType (), name);
+                var body = filter.GetExpression (entity, @param);
 
-			request.AddCondition (dataContext, name, entity, body);
+                request.AddCondition (dataContext, name, entity, body);
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine ("Request.AddCondition: " + ex.Message);
+            }
 		}
 
 		public static void AddCondition(this Epsitec.Cresus.DataLayer.Loader.Request request, DataContext dataContext, string entityName, AbstractEntity entity, Expression expression)
@@ -35,7 +42,14 @@ namespace Epsitec.Cresus.Core.Metadata
 				return;
 			}
 
-			request.Conditions.Add (LambdaConverter.Convert (dataContext, entityName, entity, expression));
-		}
-	}
+            try
+            {
+                request.Conditions.Add (LambdaConverter.Convert (dataContext, entityName, entity, expression));
+            }
+            catch (System.Exception ex)
+            {
+                System.Diagnostics.Trace.WriteLine ("Request.AddCondition: " + ex.Message);
+            }
+        }
+    }
 }

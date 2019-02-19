@@ -1,15 +1,12 @@
-//	Copyright © 2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2014-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Samuel LOUP, Maintainer: Samuel LOUP,
 
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
-using System.Linq;
-using System.Collections.Generic;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Common.Support;
 
 namespace Epsitec.Aider.Entities
 {
@@ -85,7 +82,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.LastName;
+				return this.LastName?.Trim ();
 			}
 			else
 			{
@@ -95,7 +92,7 @@ namespace Epsitec.Aider.Entities
                 }
                 else
                 {
-                    return this.LastName;
+                    return this.LastName?.Trim ();
                 }
 			}
 		}
@@ -104,7 +101,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.FirstName;
+				return this.FirstName?.Trim ();
 			}
 			else
 			{
@@ -114,7 +111,7 @@ namespace Epsitec.Aider.Entities
                 }
                 else
                 {
-                    return this.FirstName;
+                    return this.FirstName?.Trim ();
                 }
 			}
 		}
@@ -123,7 +120,9 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return StringUtils.Join (" ", this.FirstName, this.LastName);
+                return StringUtils
+                    .Join (" ", this.FirstName, this.LastName)
+                    .Trim ();
 			}
 			else
 			{
@@ -133,7 +132,9 @@ namespace Epsitec.Aider.Entities
                 }
                 else
                 {
-                    return StringUtils.Join (" ", this.FirstName, this.LastName);
+                    return StringUtils
+                        .Join (" ", this.FirstName, this.LastName)
+                        .Trim ();
                 }
 				
 			}
@@ -219,7 +220,7 @@ namespace Epsitec.Aider.Entities
 		{
 			if (this.IsExternal || (this.Event.State == Enumerations.EventState.Validated && fromModel == false))
 			{
-				return this.ParishName;
+				return this.ParishName?.Trim ();
 			}
 			else
 			{
@@ -229,7 +230,7 @@ namespace Epsitec.Aider.Entities
                 }
                 else
                 {
-                    return this.ParishName;
+                    return this.ParishName?.Trim ();
                 }
 			}
 		}

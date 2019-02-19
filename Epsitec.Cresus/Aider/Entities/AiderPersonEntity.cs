@@ -245,7 +245,9 @@ namespace Epsitec.Aider.Entities
 
 		public string GetFullName(string firstname)
 		{
-			return StringUtils.Join (" ", firstname, this.eCH_Person.PersonOfficialName);
+			return StringUtils
+                .Join (" ", firstname, this.eCH_Person.PersonOfficialName)
+                .Trim ();
 		}
 
 		public string GetDisplayName()
