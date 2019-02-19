@@ -170,6 +170,7 @@ namespace Epsitec.Common.Document
 
                 DocumentDialogs.CreateTitle(container, Res.Strings.Dialog.Settings.BitmapExport);
                 this.CreateBool(container, "ImageAlphaCorrect");
+                this.CreateBool(container, "ImageAlphaPremultiplied");
                 DocumentDialogs.CreateSeparator(container);
 
                 //	Onglet Fonts:
@@ -418,11 +419,12 @@ namespace Epsitec.Common.Document
 			this.UpdateCombo("ImageFilterA");
 			this.UpdateCombo("ImageFilterB");
             this.UpdateBool("ImageAlphaCorrect");
-		}
-		#endregion
+            this.UpdateBool("ImageAlphaPremultiplied");
+        }
+        #endregion
 
-		#region ExportPDF
-		public void BuildExportPDF(Window window)
+        #region ExportPDF
+        public void BuildExportPDF(Window window)
 		{
 			//	Peuple le dialogue des exportations en PDF.
 			if ( this.windowExportPDF == null )

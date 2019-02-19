@@ -177,7 +177,7 @@ namespace Epsitec.Common.Drawing
 		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> lockedBitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
 
 
-        public static void Merge(Bitmap bitmapBlack, Bitmap bitmapWhite)
+        public static void Merge(Bitmap bitmapBlack, Bitmap bitmapWhite, bool alphaCorrect, bool alphaPremultiplied)
         {
             //	A partir de la même image, une fois sur fond noir et une fois sur
             //	fond blanc, on calcule les composantes rgb ainsi que la transparence,
@@ -208,7 +208,15 @@ namespace Epsitec.Common.Drawing
                     int rw = (iWhite[i] >> 16) & 0xff;
                     int aw = (iWhite[i] >> 24) & 0xff;
 
-                    Bitmap.MergePixel(rb, gb, bb, ref rw, ref gw, ref bw, ref aw);
+                    if (alphaCorrect)
+                    {
+                        Bitmap.MergePixel(rb, gb, bb, ref rw, ref gw, ref bw, ref aw);
+                    }
+
+                    if (alphaPremultiplied)
+                    {
+                        Bitmap.MultiplyAlpha(ref rw, ref gw, ref bw, ref aw);
+                    }
 
                     iWhite[i] = bw | (gw << 8) | (rw << 16) | (aw << 24);
                 }
@@ -265,8 +273,15 @@ namespace Epsitec.Common.Drawing
 
             aw = (ar + ag + ab) / 3;
         }
-        
-        
+
+        private static void MultiplyAlpha(ref int r, ref int g, ref int b, ref int a)
+        {
+            r = (r * a) / 256;
+            g = (g * a) / 256;
+            b = (b * a) / 256;
+        }
+
+
         public bool LockBits()
 		{
 			lock (this)

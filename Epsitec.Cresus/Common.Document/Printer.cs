@@ -34,8 +34,9 @@ namespace Epsitec.Common.Document
 			this.imageQuality = 0.85;
 			this.imageAA = 1.0;
             this.imageAlphaCorrect = true;
+            this.imageAlphaPremultiplied = true;
 
-			this.imageNameFilters = new string[2];
+            this.imageNameFilters = new string[2];
 			this.imageNameFilters[0] = "Blackman";
 			this.imageNameFilters[1] = "Bicubic";
 		}
@@ -109,7 +110,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 			
-			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, true, false, false, ExportImageCrop.Page, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 24, 85, 1, true, true, false, false, ExportImageCrop.Page, out data);
 			if (err == "")
 			{
 				filename = "preview.png";
@@ -139,7 +140,7 @@ namespace Epsitec.Common.Document
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap(drawingContext, page, layer, dpi, 24, 1, true, false, false, ExportImageCrop.Page);
+			return this.ExportBitmap(drawingContext, page, layer, dpi, 24, 1, true, true, false, false, ExportImageCrop.Page);
 		}
 
 
@@ -229,6 +230,12 @@ namespace Epsitec.Common.Document
         {
             get { return this.imageAlphaCorrect; }
             set { this.imageAlphaCorrect = value; }
+        }
+
+        public bool ImageAlphaPremultiplied
+        {
+            get { return this.imageAlphaPremultiplied; }
+            set { this.imageAlphaPremultiplied = value; }
         }
 
         public string GetImageNameFilter(int rank)
@@ -1253,7 +1260,7 @@ namespace Epsitec.Common.Document
 			//	Exporte la géométrie complexe de tous les objets, en utilisant
 			//	un bitmap intermédiaire.
 			byte[] data;
-			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, this.imageAlphaCorrect, true, this.ImageOnlySelected, this.ImageCrop, out data);
+			string err = this.ExportGeometry(drawingContext, pageNumber, this.imageFormat, this.imageDpi, this.imageCompression, this.imageDepth, this.imageQuality, this.imageAA, this.imageAlphaCorrect, this.imageAlphaPremultiplied, true, this.ImageOnlySelected, this.ImageCrop, out data);
 			if (err != "")
 			{
 				return err;
@@ -1292,7 +1299,7 @@ namespace Epsitec.Common.Document
             }
 
             byte[] data;
-            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, true, this.ImageOnlySelected, this.ImageCrop, out data);
+            string err = this.ExportGeometry(drawingContext, pageNumber, format, dpi, ImageCompression.None, 32, 1.0, 1.0, true, true, true, this.ImageOnlySelected, this.ImageCrop, out data);
             if (err != "")
             {
                 return err;
@@ -1344,7 +1351,7 @@ namespace Epsitec.Common.Document
 			var pageNumbers = this.GetPageNumbers (drawingContext);
 
 			byte[] data;
-			string err = this.ExportGeometry (drawingContext, pageNumbers, 254.0, 32, 1.0, this.ImageAlphaCorrect, true, this.ImageOnlySelected, this.ImageCrop, out data);
+			string err = this.ExportGeometry (drawingContext, pageNumbers, 254.0, 32, 1.0, this.ImageAlphaCorrect, this.ImageAlphaPremultiplied, true, this.ImageOnlySelected, this.ImageCrop, out data);
 			if (err != "")
 			{
 				return err;
@@ -1383,7 +1390,7 @@ namespace Epsitec.Common.Document
 				int dpi = 254 * hopeSize / pageSize;
 
 				byte[] data;
-				string err = this.ExportGeometry (drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 32, 85, 1, true, false, false, ExportImageCrop.Page, out data);
+				string err = this.ExportGeometry (drawingContext, pageNumber, ImageFormat.Png, dpi, ImageCompression.None, 32, 85, 1, true, true, false, false, ExportImageCrop.Page, out data);
 
 				if (err != "")
 				{
@@ -1425,7 +1432,7 @@ namespace Epsitec.Common.Document
 			return System.IO.Path.Combine (path, n);
 		}
 
-		private string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool alphaCorrect, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
+		private string ExportGeometry(DrawingContext drawingContext, int pageNumber, ImageFormat format, double dpi, ImageCompression compression, int depth, double quality, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets d'une page donnée, en
 			//	utilisant un bitmap intermédiaire. Retourne un éventuel message d'erreur
@@ -1437,7 +1444,7 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-            Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, -1, dpi, depth, AA, alphaCorrect, paintMark, onlySelected, crop);
+            Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, -1, dpi, depth, AA, alphaCorrect, alphaPremultiplied, paintMark, onlySelected, crop);
 			
 			if (bitmap == null)
 			{
@@ -1457,7 +1464,7 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected string ExportGeometry(DrawingContext drawingContext, IEnumerable<int> pageNumbers, double dpi, int depth, double AA, bool alphaCorrect, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
+		protected string ExportGeometry(DrawingContext drawingContext, IEnumerable<int> pageNumbers, double dpi, int depth, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop, out byte[] data)
 		{
 			//	Exporte la géométrie complexe de tous les objets de plusieurs pages, en utilisant
 			//	un bitmap intermédiaire pour chaque page. Retourne un éventuel message d'erreur
@@ -1467,7 +1474,7 @@ namespace Epsitec.Common.Document
 
 			foreach (var pageNumber in pageNumbers)
 			{
-                var nb = this.GetNativeBitmap(drawingContext, pageNumber, dpi, depth, AA, alphaCorrect, paintMark, onlySelected, crop);
+                var nb = this.GetNativeBitmap(drawingContext, pageNumber, dpi, depth, AA, alphaCorrect, alphaPremultiplied, paintMark, onlySelected, crop);
 
 				if (nb != null)
 				{
@@ -1493,7 +1500,7 @@ namespace Epsitec.Common.Document
 					if (pageNumber != -1)
 					{
 						double zdpi = dpi * supplement / pageSize;
-                        var nb = this.GetNativeBitmap(drawingContext, pageNumber, zdpi, depth, AA, alphaCorrect, paintMark, onlySelected, crop);
+                        var nb = this.GetNativeBitmap(drawingContext, pageNumber, zdpi, depth, AA, alphaCorrect, alphaPremultiplied, paintMark, onlySelected, crop);
 
 						if (nb != null)
 						{
@@ -1518,9 +1525,9 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		private NativeBitmap GetNativeBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool alphaCorrect, bool paintMark, bool onlySelected, ExportImageCrop crop)
+		private NativeBitmap GetNativeBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
-            var bitmap = this.ExportBitmap(drawingContext, pageNumber, -1, dpi, depth, AA, alphaCorrect, paintMark, onlySelected, crop);
+            var bitmap = this.ExportBitmap(drawingContext, pageNumber, -1, dpi, depth, AA, alphaCorrect, alphaPremultiplied, paintMark, onlySelected, crop);
 
 			if (bitmap == null)
 			{
@@ -1617,15 +1624,15 @@ namespace Epsitec.Common.Document
 			return greatestPage;
 		}
 
-		private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool alphaCorrect, bool paintMark, bool onlySelected, ExportImageCrop crop)
+		private Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool alphaCorrect, bool alphaPremultiplied, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
             //	Retourne le bitmap contenant le dessin des objets à exporter.
-            if (depth == 32 && alphaCorrect)
+            if (depth == 32 && (alphaCorrect || alphaPremultiplied))
             {
                 var bBlack = this.ExportBitmap(drawingContext, pageNumber, layerNumber, dpi, 24, AA, paintMark, onlySelected, crop, 0.0);
                 var bWhite = this.ExportBitmap(drawingContext, pageNumber, layerNumber, dpi, 24, AA, paintMark, onlySelected, crop, 1.0);
 
-                Bitmap.Merge(bBlack, bWhite);
+                Bitmap.Merge(bBlack, bWhite, alphaCorrect, alphaPremultiplied);
 
                 return bWhite;
             }
@@ -1769,6 +1776,7 @@ namespace Epsitec.Common.Document
 		protected double					imageQuality;
 		protected double					imageAA;
         protected bool                      imageAlphaCorrect;
+        protected bool                      imageAlphaPremultiplied;
 		protected string[]					imageNameFilters;
 	}
 }

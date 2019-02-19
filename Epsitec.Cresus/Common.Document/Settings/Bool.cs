@@ -145,8 +145,12 @@ namespace Epsitec.Common.Document.Settings
                 case "ImageAlphaCorrect":
                     this.text = Res.Strings.Dialog.Bool.AlphaCorrect;
                     break;
+
+                case "ImageAlphaPremultiplied":
+                    this.text = "Canal alpha pré-multiplié";
+                    break;
             }
-		}
+        }
 
 		public bool Value
 		{
@@ -241,9 +245,12 @@ namespace Epsitec.Common.Document.Settings
 
                     case "ImageAlphaCorrect":
                         return this.document.Printer.ImageAlphaCorrect;
+
+                    case "ImageAlphaPremultiplied":
+                        return this.document.Printer.ImageAlphaPremultiplied;
                 }
 
-				return false;
+                return false;
 			}
 
 			set
@@ -366,8 +373,12 @@ namespace Epsitec.Common.Document.Settings
                     case "ImageAlphaCorrect":
                         this.document.Printer.ImageAlphaCorrect = value;
                         break;
+
+                    case "ImageAlphaPremultiplied":
+                        this.document.Printer.ImageAlphaPremultiplied = value;
+                        break;
                 }
-			}
+            }
 		}
 
 
