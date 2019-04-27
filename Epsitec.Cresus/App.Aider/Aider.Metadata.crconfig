@@ -2469,6 +2469,14 @@ AiderOfficeTask = [LVOD83]
       <R><r>@user</r></R>
     </d>
 
+    <d cid="[LVAUM]" teid="@AiderEmployeeJob" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
+      <R><r>@user</r></R>
+      <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEmployeeJob:[LVA9J].[LVALK]" /></M>
+      <L>
+        <l t="Adresse normale" f="0"/>
+      </L>
+    </d>
+
     <d cid="[LVOJ33]" teid="@AiderEmployeeJob" tn="default" df="true" d="true" ec="false" ed="false" dg="@submenuMisc">
       <R><r>@user</r></R>
       <M><m t="Voir le contact" d="[LVAFE]" p="@AiderEmployeeJob:[LVA9J].[LVALK]" /></M>

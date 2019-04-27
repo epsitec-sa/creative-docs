@@ -382,7 +382,7 @@ namespace Epsitec.Aider.Entities
 				return request;
 			}
 
-			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJob.CommandId)
+			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJobOnlyJobs.CommandId)
 			{
 				var contact             = new AiderContactEntity ();
 
@@ -406,7 +406,7 @@ namespace Epsitec.Aider.Entities
 				return request;
 			}
 
-			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJobAIDERUsersOnly.CommandId)
+			if (query.CommandId == Res.Commands.Base.ShowAiderEmployeeJobOnlyUsers.CommandId)
 			{
 				var contact             = new AiderContactEntity ();
 

@@ -44,7 +44,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		protected override void GetForm(ActionBrick<AiderMailingEntity, SimpleBrick<AiderMailingEntity>> form)
 		{
-			var contactDataset      = Res.Commands.Base.ShowAiderEmployeeJob.CommandId;
+			var contactDataset      = Res.Commands.Base.ShowAiderEmployeeJobOnlyJobs.CommandId;
 
 			var settings  = AiderUserManager.GetCurrentDataSetUISettings (contactDataset);
 			
@@ -65,7 +65,7 @@ namespace Epsitec.Aider.Controllers.ActionControllers
 
 		private void Execute(string queryName)
 		{
-			var dataset   = Res.Commands.Base.ShowAiderEmployeeJob.CommandId;
+			var dataset   = Res.Commands.Base.ShowAiderEmployeeJobOnlyJobs.CommandId;
 			var query     = AiderMailingQueryEntity.Create (this.BusinessContext, queryName, dataset);
 			this.Entity.AddQuery (this.BusinessContext, query);
 		}

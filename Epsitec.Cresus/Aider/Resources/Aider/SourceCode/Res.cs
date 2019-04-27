@@ -29,10 +29,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
 				//	designer:cap/LVOL33
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployee = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 117));
+				//	designer:cap/LVAUM
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobAny = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 734));
 				//	designer:cap/LVOJ33
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJob = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 115));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobOnlyJobs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 115));
 				//	designer:cap/LVOF63
-				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobAIDERUsersOnly = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 207));
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEmployeeJobOnlyUsers = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 207));
 				//	designer:cap/LVOR53
 				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderEventBaptims = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 120, 187));
 				//	designer:cap/LVOA73
@@ -126,10 +128,12 @@ namespace Epsitec.Aider
 				public const long ShowAiderCountry = 0x3F500050000004L;
 				//	designer:cap/LVOL33
 				public const long ShowAiderEmployee = 0x3F500078000075L;
+				//	designer:cap/LVAUM
+				public const long ShowAiderEmployeeJobAny = 0x3F50000A0002DEL;
 				//	designer:cap/LVOJ33
-				public const long ShowAiderEmployeeJob = 0x3F500078000073L;
+				public const long ShowAiderEmployeeJobOnlyJobs = 0x3F500078000073L;
 				//	designer:cap/LVOF63
-				public const long ShowAiderEmployeeJobAIDERUsersOnly = 0x3F5000780000CFL;
+				public const long ShowAiderEmployeeJobOnlyUsers = 0x3F5000780000CFL;
 				//	designer:cap/LVOR53
 				public const long ShowAiderEventBaptims = 0x3F5000780000BBL;
 				//	designer:cap/LVOA73
