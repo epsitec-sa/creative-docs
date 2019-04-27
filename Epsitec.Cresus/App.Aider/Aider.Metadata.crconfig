@@ -2477,10 +2477,11 @@ AiderOfficeTask = [LVOD83]
       </L>
       <f id="@AiderEmployeeJob">
         <C>
-	    <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/20" /></v></c>
-	    <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/21" /></v></c>
-	    <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/22" /></v></c>
-	</C>
+		  <!-- Column id=EmployeeJobFunction (Valeur) (Comparaison) c=NotEquals(2) v="(e)num EmployeeJobFunction/n°20 (UtilisateurAIDER)" -->
+		  <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/20" /></v></c>
+		  <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/21" /></v></c>
+		  <c id="[LVABJ]"><v><comp c="2" v="e[LVATJ]/22" /></v></c>
+		</C>
       </f>
     </d>
 
@@ -2490,13 +2491,14 @@ AiderOfficeTask = [LVOD83]
       <L>
         <l t="Adresse normale" f="0"/>
       </L>
-	<f id="@AiderEmployeeJob" cm="Or">
+	  <f id="@AiderEmployeeJob" cm="Or">
 	    <C>
-		 <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/20" /></v></c>
-		 <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/21" /></v></c>
-		 <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/22" /></v></c>
+		  <!-- Column id=EmployeeJobFunction (Valeur) (Comparaison) c=Equals(1) v="(e)num EmployeeJobFunction/n°20 (UtilisateurAIDER)" -->
+		  <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/20" /></v></c>
+		  <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/21" /></v></c>
+		  <c id="[LVABJ]"><v><comp c="1" v="e[LVATJ]/22" /></v></c>
 	    </C>
-	</f>
+	  </f>
     </d>
 
 
