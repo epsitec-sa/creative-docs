@@ -14,33 +14,33 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-  [ControllerSubType(3)]
-  public sealed class ActionAiderEmployeeViewController03RemoveJob : TemplateActionViewController<AiderEmployeeEntity, AiderEmployeeJobEntity>
-  {
-    public override FormattedText GetTitle()
+    [ControllerSubType (3)]
+    public sealed class ActionAiderEmployeeViewController03RemoveJob : TemplateActionViewController<AiderEmployeeEntity, AiderEmployeeJobEntity>
     {
-      return Resources.Text("Supprimer un poste...");
-    }
+        public override FormattedText GetTitle()
+        {
+            return Resources.Text ("Supprimer un poste...");
+        }
 
-    public override ActionExecutor GetExecutor()
-    {
-      return ActionExecutor.Create(this.Execute);
-    }
+        public override ActionExecutor GetExecutor()
+        {
+            return ActionExecutor.Create (this.Execute);
+        }
 
-    protected override void GetForm(ActionBrick<AiderEmployeeEntity, SimpleBrick<AiderEmployeeEntity>> form)
-    {
-      form
-          .Title("Supprimer un poste")
-          .Text("Faut-il vraiment supprimer ce poste ?")
-          .End();
-    }
+        protected override void GetForm(ActionBrick<AiderEmployeeEntity, SimpleBrick<AiderEmployeeEntity>> form)
+        {
+            form
+                .Title ("Supprimer un poste")
+                .Text ("Faut-il vraiment supprimer ce poste ?")
+                .End ();
+        }
 
-    private void Execute()
-    {
-      var context = this.BusinessContext;
-      var job = this.AdditionalEntity;
+        private void Execute()
+        {
+            var context = this.BusinessContext;
+            var job = this.AdditionalEntity;
 
-      job.Delete(context);
+            job.Delete (context);
+        }
     }
-  }
 }

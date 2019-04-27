@@ -17,41 +17,43 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.ActionControllers
 {
-  [ControllerSubType(16)]
-  public sealed class ActionAiderPersonViewController16RemoveJob : ActionViewController<AiderPersonEntity>
-  {
-    public override FormattedText GetTitle()
+    [ControllerSubType (16)]
+    public sealed class ActionAiderPersonViewController16RemoveJob : ActionViewController<AiderPersonEntity>
     {
-      return Resources.Text("Supprimer un poste...");
+        public override FormattedText GetTitle()
+        {
+            return Resources.Text ("Supprimer un poste...");
+        }
+
+        public override ActionExecutor GetExecutor()
+        {
+            return ActionExecutor.Create<AiderEmployeeJobEntity> (this.Execute);
+        }
+
+        protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
+        {
+            var jobs = this.Entity.Employee.EmployeeJobs;
+
+            //  TODO: restrict jobs to *real job* entities (exluding AIDER users)
+
+            form
+                .Title ("Supprimer un poste")
+                .Text ("La suppression d'un poste est une opération irréversible.")
+                .Field<AiderEmployeeJobEntity> ()
+                    .Title ("Poste à supprimer")
+                    .WithFavorites (jobs, true)
+                .End ()
+            .End ();
+        }
+
+        private void Execute(AiderEmployeeJobEntity job)
+        {
+            if (job.IsNull ())
+            {
+                throw new BusinessRuleException ("Veuillez sélectionner un poste dans la liste");
+            }
+
+            job.Delete (this.BusinessContext);
+        }
     }
-
-    public override ActionExecutor GetExecutor()
-    {
-      return ActionExecutor.Create<AiderEmployeeJobEntity>(this.Execute);
-    }
-
-    protected override void GetForm(ActionBrick<AiderPersonEntity, SimpleBrick<AiderPersonEntity>> form)
-    {
-      var jobs = this.Entity.Employee.EmployeeJobs;
-
-      form
-          .Title("Supprimer un poste")
-          .Text("La suppression d'un poste est une opération irréversible.")
-          .Field<AiderEmployeeJobEntity>()
-              .Title("Poste à supprimer")
-              .WithFavorites(jobs, true)
-          .End()
-      .End();
-    }
-
-    private void Execute(AiderEmployeeJobEntity job)
-    {
-      if (job.IsNull())
-      {
-        throw new BusinessRuleException("Veuillez séléctionner un poste dans la liste");
-      }
-
-      job.Delete(this.BusinessContext);
-    }
-  }
 }
