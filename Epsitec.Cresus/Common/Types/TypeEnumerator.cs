@@ -1,4 +1,4 @@
-//	Copyright © 2011-2014, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2019, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -340,8 +340,8 @@ namespace Epsitec.Common.Types
 				return;
 			}
 
+            //  ===>
 			this.exclusion.EnterWriteLock ();
-
             try
             {
                 if (this.assemblyNames.Add (assembly.FullName))
@@ -359,11 +359,19 @@ namespace Epsitec.Common.Types
             {
                 this.exclusion.ExitWriteLock ();
             }
+            //  <===
+
+            
+            //  Execute this method outside of the exclusion, because it can trigger
+            //  new assembly loads which might execute on other treads and which are
+            //  not reentrant -- causing to dead-locks on statup...
 
             var types = assembly.GetTypes ();
 
-            this.exclusion.EnterWriteLock ();
 
+
+            //  ===>
+            this.exclusion.EnterWriteLock ();
             try
             {
 				foreach (var type in types)
@@ -442,6 +450,7 @@ namespace Epsitec.Common.Types
 			{
 				this.exclusion.ExitWriteLock ();
 			}
+            //  <===
 		}
 
 		private static bool IsForeignAssembly(Assembly assembly)
