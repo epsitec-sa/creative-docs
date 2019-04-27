@@ -1,4 +1,4 @@
-Importation d'abonnements
+ï»¿Importation d'abonnements
 -------------------------
 
   -importsubscriptions "-generic:S:\Epsitec.Cresus\App.Aider\Samples\EERV Bonne nouvelle\2013-08-21.xlsx"
@@ -19,7 +19,7 @@ Exportation Bonne Nouvelle
 eCHReportedPerson: 169772
 
 
-Aline Berthe André
+Aline Berthe AndrÃ©
 1921-08-28
 819119280
 
@@ -38,10 +38,10 @@ Aline Berthe André
 -fixechpersons
 
 
-Lancé le 31.10.2013
+LancÃ© le 31.10.2013
 -------------------
 
-Upgrade de la base de données
+Upgrade de la base de donnÃ©es
 
 -fixsubscriptionsparishgroup
 -fixzombiesechstatus
@@ -52,24 +52,24 @@ Upgrade de la base de données
 -echupdate -newechfile:S:\eerv\eerv-2013-10-31.xml -oldechfile:S:\eerv\eerv-2013-10-24.xml -output:S:\eerv\ech-diff.md
 
 
-Lancé le 18.11.2013
+LancÃ© le 18.11.2013
 -------------------
 
 SVN Update > r22264
 
-Fichiers utilisés:
+Fichiers utilisÃ©s:
 
 - http://www.opac.ch/files/aider/2013-11-16-prod.zip
 - http://www.opac.ch/files/aider/eerv-2013-11-07.zip
 - http://www.opac.ch/files/aider/eerv-2013-11-14.zip
 
-Upgrade de la base de données
+Upgrade de la base de donnÃ©es
 
 -fixoldechwarnings
 -fixmissingsubscriptions
 
-Ensuite, exécution avec "-testfullimport" sur les paroisses 8040 et 5070 uniquement.
-Cf. fichier AiderProgram.Test.cs, lignes 80 à 113.
+Ensuite, exÃ©cution avec "-testfullimport" sur les paroisses 8040 et 5070 uniquement.
+Cf. fichier AiderProgram.Test.cs, lignes 80 Ã  113.
 
 -echupdate -newechfile:S:\eerv\eerv-2013-11-07.xml -oldechfile:S:\eerv\eerv-2013-10-31.xml -output:S:\eerv\ech-diff-2013-11-07.md
 -echupdate -newechfile:S:\eerv\eerv-2013-11-14.xml -oldechfile:S:\eerv\eerv-2013-11-07.xml -output:S:\eerv\ech-diff-2013-11-14.md
@@ -79,16 +79,16 @@ Fichier produit:
 - http://www.opac.ch/files/aider/2013-11-18-aider.zip
 
 
-Lancé le 19.11.2013
+LancÃ© le 19.11.2013
 -------------------
 
-Mise à jour des fichiers MAT[CH]sort et MAT[CH]street Schweiz Light
+Mise Ã  jour des fichiers MAT[CH]sort et MAT[CH]street Schweiz Light
 
 -exportsubscriptions -output:export-2013-11-28.txt -error:error-2013-11-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2013-11-28.txt -publicationdate:2013-11-28 -response:tamedia-2013-11-28.log
 
 
-Lancé le 27.11.2013
+LancÃ© le 27.11.2013
 -------------------
 
 SVN Update > r22401
@@ -102,7 +102,7 @@ Fichiers mis en production:
 
 
 
-Lancé le 30.11.2013
+LancÃ© le 30.11.2013
 -------------------
 
 SVN Update > r22418
@@ -116,7 +116,7 @@ Fichiers mis en production:
 - http://www.opac.ch/files/aider/eerv-2013-11-28.zip
 
 
-Lancé le 08.12.2013
+LancÃ© le 08.12.2013
 -------------------
 
 SVN Update > r22469
@@ -124,7 +124,7 @@ SVN Update > r22469
 -echupdate -newechfile:S:\eerv\eerv-2013-12-05.xml -oldechfile:S:\eerv\eerv-2013-11-28.xml -output:S:\eerv\ech-diff-2013-12-05.md
 
 
-Lancé le 16.12.2013
+LancÃ© le 16.12.2013
 -------------------
 
 SVN Update > r22485
@@ -132,7 +132,7 @@ SVN Update > r22485
 -echupdate -newechfile:S:\eerv\eerv-2013-12-13.xml -oldechfile:S:\eerv\eerv-2013-12-05.xml -output:S:\eerv\ech-diff-2013-12-13.md
 
 
-Lancé le 23.12.2013
+LancÃ© le 23.12.2013
 -------------------
 
 SVN update > r22490
@@ -140,7 +140,7 @@ SVN update > r22490
 -echupdate -newechfile:S:\eerv\eerv-2013-12-19.xml -oldechfile:S:\eerv\eerv-2013-12-13.xml -output:S:\eerv\ech-diff-2013-12-20.md
 
 
-Lancé le 07.01.2014
+LancÃ© le 07.01.2014
 -------------------
 
 SVN update > r22494
@@ -152,7 +152,7 @@ SVN update > r22494
 -echupdate -newechfile:S:\eerv\eerv-2014-01-06.xml -oldechfile:S:\eerv\eerv-2013-12-26.xml -output:S:\eerv\ech-diff-2014-01-06.md
 
 
-Lancé le 09.01.2014
+LancÃ© le 09.01.2014
 -------------------
 
 SVN update > r22515
@@ -165,14 +165,14 @@ SVN update > r22515
 -exportsubscriptions -output:export-2014-01-16.txt -error:error-2014-01-16.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-01-16.txt -publicationdate:2014-01-16 -response:tamedia-2014-01-16.log
 
-Lancé le 30.01.2014
+LancÃ© le 30.01.2014
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2014-01-16.xml -oldechfile:S:\eerv\eerv-2014-01-09.xml -output:S:\eerv\ech-diff-2014-01-16.md
 -echupdate -newechfile:S:\eerv\eerv-2014-01-23.xml -oldechfile:S:\eerv\eerv-2014-01-16.xml -output:S:\eerv\ech-diff-2014-01-23.md
 -echupdate -newechfile:S:\eerv\eerv-2014-01-30.xml -oldechfile:S:\eerv\eerv-2014-01-23.xml -output:S:\eerv\ech-diff-2014-01-30.md
 
-Lancé le 06.02.2014
+LancÃ© le 06.02.2014
 -------------------
 
 SVN update > r22532
@@ -180,7 +180,7 @@ SVN update > r22532
 -echupdate -newechfile:S:\eerv\eerv-2014-02-06.xml -oldechfile:S:\eerv\eerv-2014-01-30.xml -output:S:\eerv\ech-diff-2014-02-06.md
 
 
-Lancé le 16.02.2014
+LancÃ© le 16.02.2014
 -------------------
 
 SVN update > r22564
@@ -197,7 +197,7 @@ SVN update > r22564
 -uploadsubscriptions -input:export-2014-02-27.txt -publicationdate:2014-02-27 -response:tamedia-2014-02-27.log
 
 
-Lancé le 28.02.2014
+LancÃ© le 28.02.2014
 -------------------
 
 SVN update > r22601
@@ -205,7 +205,7 @@ SVN update > r22601
 -echupdate -newechfile:S:\eerv\eerv-2014-02-27.xml -oldechfile:S:\eerv\eerv-2014-02-13.xml -output:S:\eerv\ech-diff-2014-02-27.md
 
 
-Lancé le 17.03.2014
+LancÃ© le 17.03.2014
 -------------------
 
 SVN update > r22822
@@ -222,7 +222,7 @@ SVN update > r22861
 -initofficemanagement
 -echupdate -newechfile:S:\eerv\eerv-2014-03-20.xml -oldechfile:S:\eerv\eerv-2014-03-13.xml -output:s:\eerv\ech-diff-2014-03-20.md
 
-Lancé le 27.03.2014
+LancÃ© le 27.03.2014
 -------------------
 
 SVN update > r22877
@@ -230,7 +230,7 @@ SVN update > r22877
 -echupdate -newechfile:S:\eerv\eerv-2014-03-27.xml -oldechfile:S:\eerv\eerv-2014-03-20.xml -output:s:\eerv\ech-diff-2014-03-27.md
 
 
-Lancé le 02.04.2014
+LancÃ© le 02.04.2014
 -------------------
 
 SVN Update > r22893
@@ -240,7 +240,7 @@ SVN Update > r22893
 -fixparticipations
 
 
-Lancé le 11.04.2014
+LancÃ© le 11.04.2014
 -------------------
 
 SVN Update > r22932
@@ -249,7 +249,7 @@ SVN Update > r22932
 -echupdate -newechfile:S:\eerv\eerv-2014-04-10.xml -oldechfile:S:\eerv\eerv-2014-04-03.xml -output:s:\eerv\ech-diff-2014-04-10.md
 
 
-Lancé le 21.04.2014
+LancÃ© le 21.04.2014
 -------------------
 
 SVN Update > r22975
@@ -261,7 +261,7 @@ SVN Update > r22975
 
 
 
-Lancé le 28.04.2014
+LancÃ© le 28.04.2014
 -------------------
 
 SVN Update > r23031
@@ -269,13 +269,13 @@ SVN Update > r23031
 -echupdate -newechfile:S:\eerv\eerv-2014-04-24.xml -oldechfile:S:\eerv\eerv-2014-04-17.xml -output:s:\eerv\ech-diff-2014-04-24.md
 
 
-Lancé le 05.05.2014
+LancÃ© le 05.05.2014
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2014-05-01.xml -oldechfile:S:\eerv\eerv-2014-04-24.xml -output:s:\eerv\ech-diff-2014-05-01.md
 
 
-Lancé le 08.05.2014
+LancÃ© le 08.05.2014
 -------------------
 
 SVN Update > r23077
@@ -289,7 +289,7 @@ SVN Update > r23077
 (-exportsubscriptions -output:export-2014-05-xx.txt -error:error-2014-05-xx.txt -exclude-district-error:false)
 
 
-Lancé le 15.05.2014
+LancÃ© le 15.05.2014
 -------------------
 
 SVN Update > r23152
@@ -304,7 +304,7 @@ SVN Update > r23191
 -automergeduplicatedpersons
 
 
-Lancé le 23.05.2014
+LancÃ© le 23.05.2014
 -------------------
 
 SVN Update > r23204
@@ -315,14 +315,14 @@ SVN Update > r23204
 -uploadsubscriptions -input:export-2014-06-05.txt -publicationdate:2014-06-05 -response:tamedia-2014-06-05.log
 
 
-Lancé le 02.06.2014
+LancÃ© le 02.06.2014
 -------------------
 
 SVN Update > r23242
 
 -echupdate -newechfile:S:\eerv\eerv-2014-05-29.xml -oldechfile:S:\eerv\eerv-2014-05-22.xml -output:s:\eerv\ech-diff-2014-05-29.md
 
-Lancé le 06.06.2014
+LancÃ© le 06.06.2014
 -------------------
 
 SVN Update > r23261
@@ -330,21 +330,21 @@ SVN Update > r23261
 -echupdate -newechfile:S:\eerv\eerv-2014-06-05.xml -oldechfile:S:\eerv\eerv-2014-05-29.xml -output:s:\eerv\ech-diff-2014-06-05.md
 
 
-Lancé le 13.06.2014
+LancÃ© le 13.06.2014
 -------------------
 
 SVN Update > r23285
 
 -echupdate -newechfile:S:\eerv\eerv-2014-06-12.xml -oldechfile:S:\eerv\eerv-2014-06-05.xml -output:s:\eerv\ech-diff-2014-06-12.md
 
-Lancé le 19.06.2014
+LancÃ© le 19.06.2014
 -------------------
 
 SVN Update > r23292
 
 -echupdate -newechfile:S:\eerv\eerv-2014-06-19.xml -oldechfile:S:\eerv\eerv-2014-06-12.xml -output:s:\eerv\ech-diff-2014-06-19.md
 
-Lancé le 25.06.2014
+LancÃ© le 25.06.2014
 -------------------
 
 SVN Update > r23323
@@ -354,21 +354,21 @@ SVN Update > r23323
 -exportsubscriptions -output:export-2014-07-03.txt -error:error-2014-07-03.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-07-03.txt -publicationdate:2014-07-03 -response:tamedia-2014-07-03.log
 
-Lancé le 26.06.2014
+LancÃ© le 26.06.2014
 -------------------
 
 SVN Update > r23339
 
 -echupdate -newechfile:S:\eerv\eerv-2014-06-26.xml -oldechfile:S:\eerv\eerv-2014-06-19.xml -output:s:\eerv\ech-diff-2014-06-26.md
 
-Lancé le 05.07.2014
+LancÃ© le 05.07.2014
 -------------------
 
 SVN Update > r23389
 
 -echupdate -newechfile:S:\eerv\eerv-2014-07-03.xml -oldechfile:S:\eerv\eerv-2014-06-26.xml -output:s:\eerv\ech-diff-2014-07-03.md
 
-Lancé le 20.07.2014
+LancÃ© le 20.07.2014
 -------------------
 
 SVN Update > r23469
@@ -377,20 +377,20 @@ SVN Update > r23469
 -echupdate -newechfile:S:\eerv\eerv-2014-07-17.xml -oldechfile:S:\eerv\eerv-2014-07-10.xml -output:s:\eerv\ech-diff-2014-07-17.md
 
 
-Lancé le 26.07.2014
+LancÃ© le 26.07.2014
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2014-07-24.xml -oldechfile:S:\eerv\eerv-2014-07-17.xml -output:s:\eerv\ech-diff-2014-07-24.md
 
 
-Lancé le 02.08.2014
+LancÃ© le 02.08.2014
 -------------------
 
 SVN Update > r23525
 
 -echupdate -newechfile:S:\eerv\eerv-2014-07-31.xml -oldechfile:S:\eerv\eerv-2014-07-24.xml -output:s:\eerv\ech-diff-2014-07-31.md
 
-Lancé le 15.08.2014
+LancÃ© le 15.08.2014
 -------------------
 
 SVN Update > r23xxx
@@ -402,21 +402,21 @@ SVN Update > r23xxx
 -exportsubscriptions -output:export-2014-08-28.txt -error:error-2014-08-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-08-28.txt -publicationdate:2014-08-28 -response:tamedia-2014-08-28.log
 
-Lancé le 25.08.2014
+LancÃ© le 25.08.2014
 -------------------
 
 SVN Update > r23545
 
 -echupdate -newechfile:S:\eerv\eerv-2014-08-21.xml -oldechfile:S:\eerv\eerv-2014-08-14.xml -output:s:\eerv\ech-diff-2014-08-21.md
 
-Lancé le 29.08.2014
+LancÃ© le 29.08.2014
 -------------------
 
 SVN Update > r23552
 
 -echupdate -newechfile:S:\eerv\eerv-2014-08-28.xml -oldechfile:S:\eerv\eerv-2014-08-21.xml -output:s:\eerv\ech-diff-2014-08-28.md
 
-Lancé le 05.09.2014
+LancÃ© le 05.09.2014
 -------------------
 
 SVN Update > r23601
@@ -424,7 +424,7 @@ SVN Update > r23601
 -echupdate -newechfile:S:\eerv\eerv-2014-09-04.xml -oldechfile:S:\eerv\eerv-2014-08-28.xml -output:s:\eerv\ech-diff-2014-09-04.md
 
 
-Lancé le 15.09.2014
+LancÃ© le 15.09.2014
 -------------------
 
 SVN Update > r23653
@@ -432,7 +432,7 @@ SVN Update > r23653
 -echupdate -newechfile:S:\eerv\eerv-2014-09-11.xml -oldechfile:S:\eerv\eerv-2014-09-04.xml -output:s:\eerv\ech-diff-2014-09-11.md
 
 
-Lancé le 22.09.2014
+LancÃ© le 22.09.2014
 -------------------
 
 SVN Update > r23714
@@ -440,14 +440,14 @@ SVN Update > r23714
 -echupdate -newechfile:S:\eerv\eerv-2014-09-18.xml -oldechfile:S:\eerv\eerv-2014-09-11.xml -output:s:\eerv\ech-diff-2014-09-18.md
 
 
-Lancé le 28.09.2014
+LancÃ© le 28.09.2014
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2014-09-25.xml -oldechfile:S:\eerv\eerv-2014-09-18.xml -output:s:\eerv\ech-diff-2014-09-25.md
 -clearwarnings -beforedate:2014-05-15 -killpersons:true -createsubscriptions:true
 
 
-Lancé le 03.10.2014
+LancÃ© le 03.10.2014
 -------------------
 
 SVN update > r23775
@@ -455,7 +455,7 @@ SVN update > r23775
 -echupdate -newechfile:S:\eerv\eerv-2014-10-02.xml -oldechfile:S:\eerv\eerv-2014-09-25.xml -output:s:\eerv\ech-diff-2014-10-02.md
 
 
-Lancé le 10.10.2014
+LancÃ© le 10.10.2014
 -------------------
 
 SVN update > r23822
@@ -464,20 +464,20 @@ SVN update > r23822
 -echupdate -newechfile:S:\eerv\eerv-2014-10-09.xml -oldechfile:S:\eerv\eerv-2014-10-02.xml -output:s:\eerv\ech-diff-2014-10-09.md
 
 
-Lancé le 17.10.2014
+LancÃ© le 17.10.2014
 -------------------
 
 SVN update > r23845
 
 -echupdate -newechfile:S:\eerv\eerv-2014-10-16.xml -oldechfile:S:\eerv\eerv-2014-10-09.xml -output:s:\eerv\ech-diff-2014-10-16.md
 
-Mise à jour MAT[CH]sort et MAT[CH]street
+Mise Ã  jour MAT[CH]sort et MAT[CH]street
 
 -exportsubscriptions -output:export-2014-10-30.txt -error:error-2014-10-30.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-10-30.txt -publicationdate:2014-10-30 -response:tamedia-2014-10-30.log
 
 
-Lancé le 26.10.2014
+LancÃ© le 26.10.2014
 -------------------
 
 SVN update > r23886
@@ -485,14 +485,14 @@ SVN update > r23886
 -echupdate -newechfile:S:\eerv\eerv-2014-10-23.xml -oldechfile:S:\eerv\eerv-2014-10-16.xml -output:s:\eerv\ech-diff-2014-10-23.md
 
 
-Lancé le 31.10.2014
+LancÃ© le 31.10.2014
 -------------------
 
 SVN update > r23910
 
 -echupdate -newechfile:S:\eerv\eerv-2014-10-30.xml -oldechfile:S:\eerv\eerv-2014-10-23.xml -output:s:\eerv\ech-diff-2014-10-30.md
 
-Lancé le 08.11.2014
+LancÃ© le 08.11.2014
 -------------------
 
 SVN update > r23958
@@ -500,7 +500,7 @@ SVN update > r23958
 -echupdate -newechfile:S:\eerv\eerv-2014-11-06.xml -oldechfile:S:\eerv\eerv-2014-10-30.xml -output:s:\eerv\ech-diff-2014-11-06.md
 
 
-Lancé le 14.11.2014
+LancÃ© le 14.11.2014
 -------------------
 
 SVN update > r23974
@@ -508,14 +508,14 @@ SVN update > r23974
 -echupdate -newechfile:S:\eerv\eerv-2014-11-13.xml -oldechfile:S:\eerv\eerv-2014-11-06.xml -output:s:\eerv\ech-diff-2014-11-13.md
 
 
-Lancé le 20.11.2014
+LancÃ© le 20.11.2014
 -------------------
 
 -exportsubscriptions -output:export-2014-11-27.txt -error:error-2014-11-27.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2014-11-27.txt -publicationdate:2014-11-27 -response:tamedia-2014-11-27.log
 
 
-Lancé le 21.11.2014
+LancÃ© le 21.11.2014
 -------------------
 
 SVN update > 23998
@@ -524,12 +524,12 @@ SVN update > 23998
 -clearwarnings -beforedate:2014-07-15 -killpersons:true -createsubscriptions:true
 
 
-Lancé le 28.11.2014
+LancÃ© le 28.11.2014
 -------------------
 
 SVN update > 24031
 
-Lancé le 04.12.2014
+LancÃ© le 04.12.2014
 -------------------
 
 SVN update > 24058
@@ -540,13 +540,13 @@ SVN update > 24058
 -echupdate -newechfile:S:\eerv\eerv-2014-12-04.xml -oldechfile:S:\eerv\eerv-2014-11-27.xml -output:s:\eerv\ech-diff-2014-12-04.md
 
 
-Lancé le 12.12.2014
+LancÃ© le 12.12.2014
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2014-12-11.xml -oldechfile:S:\eerv\eerv-2014-12-04.xml -output:s:\eerv\ech-diff-2014-12-11.md
 
 
-Lancé le 04.01.2015
+LancÃ© le 04.01.2015
 -------------------
 
 SVN update > 24146
@@ -554,14 +554,14 @@ SVN update > 24146
 -echupdate -newechfile:S:\eerv\eerv-2015-01-01.xml -oldechfile:S:\eerv\eerv-2014-12-11.xml -output:s:\eerv\ech-diff-2015-01-01.md
 
 
-Lancé le 08.01.2015
+LancÃ© le 08.01.2015
 -------------------
 
 -exportsubscriptions -output:export-2015-01-15.txt -error:error-2015-01-15.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-01-15.txt -publicationdate:2015-01-15 -response:tamedia-2015-01-15.log
 
 
-Lancé le 08.01.2015
+LancÃ© le 08.01.2015
 -------------------
 
 SVN update > 24173
@@ -570,92 +570,92 @@ SVN update > 24173
 -echupdate -newechfile:S:\eerv\eerv-2015-01-08.xml -oldechfile:S:\eerv\eerv-2015-01-01.xml -output:s:\eerv\ech-diff-2015-01-08.md
 
 
-Lancé le 24.01.2015
+LancÃ© le 24.01.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-01-22.xml -oldechfile:S:\eerv\eerv-2015-01-08.xml -output:s:\eerv\ech-diff-2015-01-22.md
 
-Lancé le 01.02.2015
+LancÃ© le 01.02.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-01-29.xml -oldechfile:S:\eerv\eerv-2015-01-22.xml -output:s:\eerv\ech-diff-2015-01-29.md
 
-Lancé le 15.02.2015
+LancÃ© le 15.02.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-02-12.xml -oldechfile:S:\eerv\eerv-2015-01-29.xml -output:s:\eerv\ech-diff-2015-02-12.md
 
 
-Lancé le 17.02.2015
+LancÃ© le 17.02.2015
 -------------------
 
 -exportsubscriptions -output:export-2015-02-26.txt -error:error-2015-02-26.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-02-26.txt -publicationdate:2015-02-26 -response:tamedia-2015-02-26.log
 
 
-Lancé le 02.03.2015
+LancÃ© le 02.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-02-19.xml -oldechfile:S:\eerv\eerv-2015-02-12.xml -output:s:\eerv\ech-diff-2015-02-19.md
 -echupdate -newechfile:S:\eerv\eerv-2015-02-26.xml -oldechfile:S:\eerv\eerv-2015-02-19.xml -output:s:\eerv\ech-diff-2015-02-26.md
 
 
-Lancé le 06.03.2015
+LancÃ© le 06.03.2015
 -------------------
 
 -initdefaultemployee
 -echupdate -newechfile:S:\eerv\eerv-2015-03-05.xml -oldechfile:S:\eerv\eerv-2015-02-26.xml -output:s:\eerv\ech-diff-2015-03-05.md
 
 
-Lancé le 14.03.2015
+LancÃ© le 14.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-03-12.xml -oldechfile:S:\eerv\eerv-2015-03-05.xml -output:s:\eerv\ech-diff-2015-03-12.md
 
-Lancé le 18.03.2015
+LancÃ© le 18.03.2015
 -------------------
 
 -exportsubscriptions -output:export-2015-03-26.txt -error:error-2015-03-26.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-03-26.txt -publicationdate:2015-03-26 -response:tamedia-2015-03-26.log
 
-Lancé le 19.03.2015
+LancÃ© le 19.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-03-19.xml -oldechfile:S:\eerv\eerv-2015-03-12.xml -output:s:\eerv\ech-diff-2015-03-19.md
 
-Lancé le 29.03.2015
+LancÃ© le 29.03.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-03-26.xml -oldechfile:S:\eerv\eerv-2015-03-19.xml -output:s:\eerv\ech-diff-2015-03-26.md
 
-Lancé le 19.04.2015
+LancÃ© le 19.04.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-04-09.xml -oldechfile:S:\eerv\eerv-2015-04-02.xml -output:s:\eerv\ech-diff-2015-04-09.md
 -echupdate -newechfile:S:\eerv\eerv-2015-04-16.xml -oldechfile:S:\eerv\eerv-2015-04-09.xml -output:s:\eerv\ech-diff-2015-04-16.md
 
-Lancé le 23.04.2015
+LancÃ© le 23.04.2015
 -------------------
 
 -exportsubscriptions -output:export-2015-04-30.txt -error:error-2015-04-30.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-04-30.txt -publicationdate:2015-04-30 -response:tamedia-2015-04-30.log
 
-Lancé le 25.04.2015
+LancÃ© le 25.04.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-04-23.xml -oldechfile:S:\eerv\eerv-2015-04-16.xml -output:s:\eerv\ech-diff-2015-04-23.md
 
-Lancé le 02.05.2015
+LancÃ© le 02.05.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-04-30.xml -oldechfile:S:\eerv\eerv-2015-04-23.xml -output:s:\eerv\ech-diff-2015-04-30.md
 
-Lancé le 10.05.2015
+LancÃ© le 10.05.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-05-07.xml -oldechfile:S:\eerv\eerv-2015-04-30.xml -output:s:\eerv\ech-diff-2015-05-07.md
 
-Lancé le 15.05.2015
+LancÃ© le 15.05.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-05-14.xml -oldechfile:S:\eerv\eerv-2015-05-07.xml -output:s:\eerv\ech-diff-2015-05-14.md
@@ -663,49 +663,49 @@ Lancé le 15.05.2015
 -exportsubscriptions -output:export-2015-05-28.txt -error:error-2015-05-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-05-28.txt -publicationdate:2015-05-28 -response:tamedia-2015-05-28.log
 
-Lancé le 29.05.2015
+LancÃ© le 29.05.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-05-21.xml -oldechfile:S:\eerv\eerv-2015-05-14.xml -output:s:\eerv\ech-diff-2015-05-21.md
 -echupdate -newechfile:S:\eerv\eerv-2015-05-28.xml -oldechfile:S:\eerv\eerv-2015-05-21.xml -output:s:\eerv\ech-diff-2015-05-28.md
 
-Lancé le 06.06.2015
+LancÃ© le 06.06.2015
 -------------------
 
 -initrolecache
 -buildrolecache
 -echupdate -newechfile:S:\eerv\eerv-2015-06-04.xml -oldechfile:S:\eerv\eerv-2015-05-28.xml -output:s:\eerv\ech-diff-2015-06-04.md
 
-Lancé le 12.06.2015
+LancÃ© le 12.06.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-06-12.xml -oldechfile:S:\eerv\eerv-2015-06-04.xml -output:s:\eerv\ech-diff-2015-06-12.md
 -buildrolecache
 
-Lancé le 21.06.2015
+LancÃ© le 21.06.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-06-20.xml -oldechfile:S:\eerv\eerv-2015-06-12.xml -output:s:\eerv\ech-diff-2015-06-20.md
 -buildrolecache
 
-Lancé le 25.06.2015
+LancÃ© le 25.06.2015
 -------------------
 
 -exportsubscriptions -output:export-2015-07-02.txt -error:error-2015-07-02.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-07-02.txt -publicationdate:2015-07-02 -response:tamedia-2015-07-02.log
 
 
-Lancé le 28.06.2015
+LancÃ© le 28.06.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-06-26.xml -oldechfile:S:\eerv\eerv-2015-06-20.xml -output:s:\eerv\ech-diff-2015-06-26.md
 -buildrolecache
 
 
-Lancé le 23.07.2015
+LancÃ© le 23.07.2015
 -------------------
 
-Création des vues nécessaires à la main dans IBExpert.
+CrÃ©ation des vues nÃ©cessaires Ã  la main dans IBExpert.
 
 
 -echupdate -newechfile:S:\eerv\eerv-2015-07-06.xml -oldechfile:S:\eerv\eerv-2015-06-26.xml -output:s:\eerv\ech-diff-2015-07-06.md
@@ -713,10 +713,10 @@ Création des vues nécessaires à la main dans IBExpert.
 -echupdate -newechfile:S:\eerv\eerv-2015-07-20.xml -oldechfile:S:\eerv\eerv-2015-07-13.xml -output:s:\eerv\ech-diff-2015-07-20.md
 -admin2muni
 
-Lancé le 18.08.2015
+LancÃ© le 18.08.2015
 -------------------
 
-Mise à jour de la vue ECH_PERSON_WITH_HOUSEHOLDS
+Mise Ã  jour de la vue ECH_PERSON_WITH_HOUSEHOLDS
 
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-07-20.xml
 -echupdate -newechfile:S:\eerv\eerv-2015-07-27.xml -oldechfile:S:\eerv\eerv-2015-07-20.xml -output:s:\eerv\ech-diff-2015-07-27.md
@@ -726,7 +726,7 @@ Mise à jour de la vue ECH_PERSON_WITH_HOUSEHOLDS
 -echupdate -newechfile:S:\eerv\eerv-2015-08-10.xml -oldechfile:S:\eerv\eerv-2015-08-03.xml -output:s:\eerv\ech-diff-2015-08-10.md
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-08-10.xml
 
-Lancé le 20.08.2015
+LancÃ© le 20.08.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-08-17.xml -oldechfile:S:\eerv\eerv-2015-08-10.xml -output:s:\eerv\ech-diff-2015-08-17.md
@@ -735,30 +735,30 @@ Lancé le 20.08.2015
 -exportsubscriptions -output:export-2015-08-27.txt -error:error-2015-08-27.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2015-08-27.txt -publicationdate:2015-08-27 -response:tamedia-2015-08-27.log
 
-Lancé le 27.08.2015
+LancÃ© le 27.08.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-08-24.xml -oldechfile:S:\eerv\eerv-2015-08-17.xml -output:s:\eerv\ech-diff-2015-08-24.md
 -cleanhouseholds -echfile:S:\eerv\eerv-2015-08-24.xml
 
-Lancé le 06.09.2015
+LancÃ© le 06.09.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-08-31.xml -oldechfile:S:\eerv\eerv-2015-08-24.xml -output:s:\eerv\ech-diff-2015-08-31.md
 
-Lancé le 16.09.2015
+LancÃ© le 16.09.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-09-07.xml -oldechfile:S:\eerv\eerv-2015-08-31.xml -output:s:\eerv\ech-diff-2015-09-07.md
 -echupdate -newechfile:S:\eerv\eerv-2015-09-14.xml -oldechfile:S:\eerv\eerv-2015-09-07.xml -output:s:\eerv\ech-diff-2015-09-14.md
 
-Lancé le 22.09.2015
+LancÃ© le 22.09.2015
 -------------------
 
 -initevents
 -echupdate -newechfile:S:\eerv\eerv-2015-09-21.xml -oldechfile:S:\eerv\eerv-2015-09-14.xml -output:s:\eerv\ech-diff-2015-09-21.md
 
-Lancé le 23.09.2015
+LancÃ© le 23.09.2015
 -------------------
 
 -fixechpersons -echfile:s:\eerv\eerv-2015-09-21.xml
@@ -768,7 +768,7 @@ Lancé le 23.09.2015
 -uploadsubscriptions -input:export-2015-10-01.txt -publicationdate:2015-10-01 -response:tamedia-2015-10-01.log
 
 
-Lancé le 29.09.2015
+LancÃ© le 29.09.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-09-28.xml -oldechfile:S:\eerv\eerv-2015-09-21.xml -output:s:\eerv\ech-diff-2015-09-28.md
@@ -779,13 +779,13 @@ Lancé le 29.09.2015
 // -cleanhouseholds -echfile:S:\eerv\eerv-2015-09-28.xml
 
 
-Lancé le 06.10.2015
+LancÃ© le 06.10.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-10-05.xml -oldechfile:S:\eerv\eerv-2015-09-28.xml -output:s:\eerv\ech-diff-2015-10-05.md
 
 
-Lancé le 21.10.2015
+LancÃ© le 21.10.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-10-12.xml -oldechfile:S:\eerv\eerv-2015-10-05.xml -output:s:\eerv\ech-diff-2015-10-12.md
@@ -797,7 +797,7 @@ Lancé le 21.10.2015
 
 
 
-Lancé le 17.11.2015
+LancÃ© le 17.11.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-10-26.xml -oldechfile:S:\eerv\eerv-2015-10-19.xml -output:s:\eerv\ech-diff-2015-10-26.md
@@ -809,33 +809,33 @@ Lancé le 17.11.2015
 -uploadsubscriptions -input:export-2015-11-26.txt -publicationdate:2015-11-26 -response:tamedia-2015-11-26.log
 
 
-Lancé le 24.11.2015
+LancÃ© le 24.11.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-11-23.xml -oldechfile:S:\eerv\eerv-2015-11-16.xml -output:s:\eerv\ech-diff-2015-11-23.md
 
-Lancé le 01.12.2015
+LancÃ© le 01.12.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-11-30.xml -oldechfile:S:\eerv\eerv-2015-11-23.xml -output:s:\eerv\ech-diff-2015-11-30.md
 
-Lancé le 08.12.2015
+LancÃ© le 08.12.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-12-07.xml -oldechfile:S:\eerv\eerv-2015-11-30.xml -output:s:\eerv\ech-diff-2015-12-07.md
 
-Lancé le 22.12.2015
+LancÃ© le 22.12.2015
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-12-14.xml -oldechfile:S:\eerv\eerv-2015-12-07.xml -output:s:\eerv\ech-diff-2015-12-14.md
 -echupdate -newechfile:S:\eerv\eerv-2015-12-21.xml -oldechfile:S:\eerv\eerv-2015-12-14.xml -output:s:\eerv\ech-diff-2015-12-21.md
 
-Lancé le 03.01.2016
+LancÃ© le 03.01.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2015-12-28.xml -oldechfile:S:\eerv\eerv-2015-12-21.xml -output:s:\eerv\ech-diff-2015-12-21.md
 
-Lancé le 06.01.2016
+LancÃ© le 06.01.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-01-04.xml -oldechfile:S:\eerv\eerv-2015-12-28.xml -output:s:\eerv\ech-diff-2016-01-04.md
@@ -843,25 +843,25 @@ Lancé le 06.01.2016
 -exportsubscriptions -output:export-2016-01-14.txt -error:error-2016-01-14.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2016-01-14.txt -publicationdate:2016-01-14 -response:tamedia-2016-01-14.log
 
-Lancé le 18.01.2016
+LancÃ© le 18.01.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-01-18.xml -oldechfile:S:\eerv\eerv-2016-01-04.xml -output:s:\eerv\ech-diff-2016-01-18.md
 
-Lancé le 02.02.2016
+LancÃ© le 02.02.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-01-25.xml -oldechfile:S:\eerv\eerv-2016-01-18.xml -output:s:\eerv\ech-diff-2016-01-25.md
 -echupdate -newechfile:S:\eerv\eerv-2016-02-01.xml -oldechfile:S:\eerv\eerv-2016-01-25.xml -output:s:\eerv\ech-diff-2016-02-01.md
 -cleanhouseholds 
 
-Lancé le 09.02.2016
+LancÃ© le 09.02.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-02-08.xml -oldechfile:S:\eerv\eerv-2016-02-01.xml -output:s:\eerv\ech-diff-2016-02-08.md
 
 
-Lancé le 17.02.2016
+LancÃ© le 17.02.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-02-15.xml -oldechfile:S:\eerv\eerv-2016-02-08.xml -output:s:\eerv\ech-diff-2016-02-15.md
@@ -870,39 +870,39 @@ Lancé le 17.02.2016
 -uploadsubscriptions -input:export-2016-02-25.txt -publicationdate:2016-02-25 -response:tamedia-2016-02-25.log
 
 
-Lancé le 24.02.2016
+LancÃ© le 24.02.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-02-22.xml -oldechfile:S:\eerv\eerv-2016-02-15.xml -output:s:\eerv\ech-diff-2016-02-22.md
 
 
-Lancé le 01.03.2016
+LancÃ© le 01.03.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-02-29.xml -oldechfile:S:\eerv\eerv-2016-02-22.xml -output:s:\eerv\ech-diff-2016-02-29.md
 
 
-Lancé le 15.03.2016
+LancÃ© le 15.03.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-03-08.xml -oldechfile:S:\eerv\eerv-2016-02-29.xml -output:s:\eerv\ech-diff-2016-03-08.md
 -echupdate -newechfile:S:\eerv\eerv-2016-03-14.xml -oldechfile:S:\eerv\eerv-2016-03-08.xml -output:s:\eerv\ech-diff-2016-03-14.md
 
 
-Lancé le 17.03.2016
+LancÃ© le 17.03.2016
 -------------------
 
 -exportsubscriptions -output:export-2016-03-31.txt -error:error-2016-03-31.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2016-03-31.txt -publicationdate:2016-03-31 -response:tamedia-2016-03-31.log
 
 
-Lancé le 25.03.2016
+LancÃ© le 25.03.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-03-21.xml -oldechfile:S:\eerv\eerv-2016-03-14.xml -output:s:\eerv\ech-diff-2016-03-21.md
 
 
-Lancé le 18.04.2016
+LancÃ© le 18.04.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-04-11.xml -oldechfile:S:\eerv\eerv-2016-03-21.xml -output:s:\eerv\ech-diff-2016-04-11.md
@@ -911,13 +911,13 @@ Lancé le 18.04.2016
 -exportsubscriptions -output:export-2016-04-28.txt -error:error-2016-04-28.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2016-04-28.txt -publicationdate:2016-04-28 -response:tamedia-2016-04-28.log
 
-Lancé le 09.05.2016
+LancÃ© le 09.05.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-05-02.xml -oldechfile:S:\eerv\eerv-2016-04-20.xml -output:s:\eerv\ech-diff-2016-05-02.md
 -echupdate -newechfile:S:\eerv\eerv-2016-05-09.xml -oldechfile:S:\eerv\eerv-2016-05-02.xml -output:s:\eerv\ech-diff-2016-05-09.md
 
-Lancé le 18.05.2016
+LancÃ© le 18.05.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-05-16.xml -oldechfile:S:\eerv\eerv-2016-05-09.xml -output:s:\eerv\ech-diff-2016-05-16.md
@@ -925,12 +925,12 @@ Lancé le 18.05.2016
 -exportsubscriptions -output:export-2016-05-26.txt -error:error-2016-05-26.txt -exclude-district-error:false
 -uploadsubscriptions -input:export-2016-05-26.txt -publicationdate:2016-05-26 -response:tamedia-2016-05-26.log
 
-Lancé le 24.05.2016
+LancÃ© le 24.05.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-05-23.xml -oldechfile:S:\eerv\eerv-2016-05-16.xml -output:s:\eerv\ech-diff-2016-05-23.md
 
-Lancé le 29.05.2016
+LancÃ© le 29.05.2016
 -------------------
 
 -flagmissinghousehold
@@ -943,13 +943,13 @@ Lancé le 29.05.2016
 
 -fixdqflags
 
-Lancé le 14.06.2016
+LancÃ© le 14.06.2016
 -------------------
 
--updateparishname -current:"Villeneuve – Noville" -new:"Villeneuve – Haut-Lac" -pla:false
+-updateparishname -current:"Villeneuve â€“ Noville" -new:"Villeneuve â€“ Haut-Lac" -pla:false
 -echupdate -newechfile:S:\eerv\eerv-2016-06-13.xml -oldechfile:S:\eerv\eerv-2016-06-06.xml -output:s:\eerv\ech-diff-2016-06-13.md
 
-Lancé le 21.06.2016
+LancÃ© le 21.06.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-06-20.xml -oldechfile:S:\eerv\eerv-2016-06-13.xml -output:s:\eerv\ech-diff-2016-06-20.md
@@ -958,18 +958,18 @@ Lancé le 21.06.2016
 -uploadsubscriptions -input:export-2016-06-30.txt -publicationdate:2016-06-30 -response:tamedia-2016-06-30.log
 
 
-Lancé le 28.06.2016
+LancÃ© le 28.06.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-06-27.xml -oldechfile:S:\eerv\eerv-2016-06-20.xml -output:s:\eerv\ech-diff-2016-06-27.md
 
 
-Lancé le 04.07.2016
+LancÃ© le 04.07.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-07-04.xml -oldechfile:S:\eerv\eerv-2016-06-27.xml -output:s:\eerv\ech-diff-2016-07-04.md
 
-Lancé le 14.08.2016
+LancÃ© le 14.08.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-08-08.xml -oldechfile:S:\eerv\eerv-2016-07-04.xml -output:s:\eerv\ech-diff-2016-08-08.md
@@ -978,24 +978,24 @@ Lancé le 14.08.2016
 -uploadsubscriptions -input:export-2016-08-25.txt -publicationdate:2016-08-25 -response:tamedia-2016-08-25.log
 
 
-Lancé le 24.08.2016
+LancÃ© le 24.08.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-08-22.xml -oldechfile:S:\eerv\eerv-2016-08-08.xml -output:s:\eerv\ech-diff-2016-08-22.md
 
-Lancé le 05.09.2016
+LancÃ© le 05.09.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-08-29.xml -oldechfile:S:\eerv\eerv-2016-08-22.xml -output:s:\eerv\ech-diff-2016-08-29.md
 -echupdate -newechfile:S:\eerv\eerv-2016-09-05.xml -oldechfile:S:\eerv\eerv-2016-08-29.xml -output:s:\eerv\ech-diff-2016-09-05.md
 
-Lancé le 14.09.2016
+LancÃ© le 14.09.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-09-12.xml -oldechfile:S:\eerv\eerv-2016-09-05.xml -output:s:\eerv\ech-diff-2016-09-12.md
 
 
-Lancé le 20.09.2016
+LancÃ© le 20.09.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-09-19.xml -oldechfile:S:\eerv\eerv-2016-09-12.xml -output:s:\eerv\ech-diff-2016-09-19.md
@@ -1003,14 +1003,14 @@ Lancé le 20.09.2016
 -uploadsubscriptions -input:export-2016-09-29.txt -publicationdate:2016-09-29 -response:tamedia-2016-09-29.log
 
 
-Lancé le 03.10.2016
+LancÃ© le 03.10.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-09-26.xml -oldechfile:S:\eerv\eerv-2016-09-19.xml -output:s:\eerv\ech-diff-2016-09-26.md
 -echupdate -newechfile:S:\eerv\eerv-2016-10-03.xml -oldechfile:S:\eerv\eerv-2016-09-26.xml -output:s:\eerv\ech-diff-2016-10-03.md
 
 
-Lancé le 13.10.2016
+LancÃ© le 13.10.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-10-10.xml -oldechfile:S:\eerv\eerv-2016-10-03.xml -output:s:\eerv\ech-diff-2016-10-10.md
@@ -1018,7 +1018,7 @@ Lancé le 13.10.2016
 
 -exportsubscriptions -output:export-2016-10-14.txt -error:error-2016-10-14.txt -exclude-district-error:false
 
-Lancé le 01.11.2016
+LancÃ© le 01.11.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-10-24.xml -oldechfile:S:\eerv\eerv-2016-10-10.xml -output:s:\eerv\ech-diff-2016-10-24.md
@@ -1026,35 +1026,35 @@ Lancé le 01.11.2016
 -buildrolecache
 -clearwarnings -beforedate:2015-01-01 -killpersons:true -createsubscriptions:true
 
-Lancé le 09.11.2016
+LancÃ© le 09.11.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-11-07.xml -oldechfile:S:\eerv\eerv-2016-11-01.xml -output:s:\eerv\ech-diff-2016-11-07.md
 -clearwarnings -beforedate:2016-01-01 -killpersons:true -createsubscriptions:true
 
-Lancé le 15.11.2016
+LancÃ© le 15.11.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-11-14.xml -oldechfile:S:\eerv\eerv-2016-11-07.xml -output:s:\eerv\ech-diff-2016-11-14.md
 -exportsubscriptions -output:export-2016-11-15.txt -error:error-2016-11-15.txt -exclude-district-error:false
 
 
-Lancé le 24.11.2016
+LancÃ© le 24.11.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-11-22.xml -oldechfile:S:\eerv\eerv-2016-11-14.xml -output:s:\eerv\ech-diff-2016-11-22.md
 
-Testé -fixduplicatesubscriptions (mais pas produit de version modifiée de la base)
+TestÃ© -fixduplicatesubscriptions (mais pas produit de version modifiÃ©e de la base)
 
 
-Lancé le 30.11.2016
+LancÃ© le 30.11.2016
 -------------------
 
 -buildrolecache
 -echupdate -newechfile:S:\eerv\eerv-2016-11-29.xml -oldechfile:S:\eerv\eerv-2016-11-22.xml -output:s:\eerv\ech-diff-2016-11-29.md
 -fixduplicatesubscriptions
 
-Lancé le 27.12.2016
+LancÃ© le 27.12.2016
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2016-12-05.xml -oldechfile:S:\eerv\eerv-2016-11-29.xml -output:s:\eerv\ech-diff-2016-12-05.md
@@ -1067,26 +1067,26 @@ Lancé le 27.12.2016
 -cleanmailingcategories
 -setpersonmrmrs
 
-Lancé le 03.01.2017
+LancÃ© le 03.01.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-01-02.xml -oldechfile:S:\eerv\eerv-2016-12-26.xml -output:s:\eerv\ech-diff-2017-01-02.md
 -exportsubscriptions -output:export-2017-01-12.txt -error:error-2017-01-12.txt -exclude-district-error:false
 
-Lancé le 15.01.2017
+LancÃ© le 15.01.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-01-10.xml -oldechfile:S:\eerv\eerv-2017-01-02.xml -output:s:\eerv\ech-diff-2017-01-10.md
 -exportsubscriptions -output:export-2017-01.txt -error:error-2017-01.txt -exclude-district-error:false
 
-Lancé le 29.01.2017
+LancÃ© le 29.01.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-01-17.xml -oldechfile:S:\eerv\eerv-2017-01-10.xml -output:s:\eerv\ech-diff-2017-01-17.md
 -echupdate -newechfile:S:\eerv\eerv-2017-01-24.xml -oldechfile:S:\eerv\eerv-2017-01-17.xml -output:s:\eerv\ech-diff-2017-01-24.md
 
 
-Lancé le 13.02.2017
+LancÃ© le 13.02.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-01-30.xml -oldechfile:S:\eerv\eerv-2017-01-24.xml -output:s:\eerv\ech-diff-2017-01-31.md
@@ -1095,19 +1095,19 @@ Lancé le 13.02.2017
 -exportsubscriptions -output:export-2017-02-xx.txt -error:error-2017-02-xx.txt -exclude-district-error:false
 
 
-Lancé le 07.03.2017
+LancÃ© le 07.03.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-03-06.xml -oldechfile:S:\eerv\eerv-2017-02-06.xml -output:s:\eerv\ech-diff-2017-03-06.md
 
 
-Lancé le 13.03.2017
+LancÃ© le 13.03.2017
 -------------------
 
 -exportsubscriptions -output:export-2017-03-xx.txt -error:error-2017-03-xx.txt -exclude-district-error:false
 
 
-Lancé le 19.03.2017
+LancÃ© le 19.03.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-03-13.xml -oldechfile:S:\eerv\eerv-2017-03-06.xml -output:s:\eerv\ech-diff-2017-03-13.md
@@ -1130,23 +1130,23 @@ gbak.exe -REP S:\aider.fbk "C:\ProgramData\Epsitec\Firebird Databases\AIDER.FIRE
 
 
 
-Lancé le 21.03.2017
+LancÃ© le 21.03.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-03-20.xml -oldechfile:S:\eerv\eerv-2017-03-13.xml -output:s:\eerv\ech-diff-2017-03-20.md
 
 
-Lancé le 28.03.2017
+LancÃ© le 28.03.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-03-28.xml -oldechfile:S:\eerv\eerv-2017-03-20.xml -output:s:\eerv\ech-diff-2017-03-28.md
 
-Lancé le 06.04.2017
+LancÃ© le 06.04.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-04-04.xml -oldechfile:S:\eerv\eerv-2017-03-28.xml -output:s:\eerv\ech-diff-2017-04-04.md
 
-Lancé le 16.04.2017
+LancÃ© le 16.04.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-04-15.xml -oldechfile:S:\eerv\eerv-2017-04-04.xml -output:s:\eerv\ech-diff-2017-04-15.md
@@ -1154,28 +1154,28 @@ Lancé le 16.04.2017
 -exportsubscriptions -output:export-2017-04-xx.txt -error:error-2017-04-xx.txt -exclude-district-error:false
 
 
-Lancé le 25.04.2017
+LancÃ© le 25.04.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-04-22.xml -oldechfile:S:\eerv\eerv-2017-04-15.xml -output:s:\eerv\ech-diff-2017-04-22.md
 
-Lancé le 07.05.2017
+LancÃ© le 07.05.2017
 -------------------
 
-Mise à jour du code selon issue dataquality/23 (erreurs de noms de rues à la suite
-de la mise à jour de MAT[CH]).
+Mise Ã  jour du code selon issue dataquality/23 (erreurs de noms de rues Ã  la suite
+de la mise Ã  jour de MAT[CH]).
 
 -echupdate -newechfile:S:\eerv\eerv-2017-05-06.xml -oldechfile:S:\eerv\eerv-2017-04-22.xml -output:s:\eerv\ech-diff-2017-05-07.md
 
 
-Lancé le 14.05.2017
+LancÃ© le 14.05.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-05-13.xml -oldechfile:S:\eerv\eerv-2017-05-06.xml -output:s:\eerv\ech-diff-2017-05-13.md
 -exportsubscriptions -output:export-2017-05-xx.txt -error:error-2017-05-xx.txt -exclude-district-error:false
 
 
-Lancé le 04.06.2017
+LancÃ© le 04.06.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-06-03.xml -oldechfile:S:\eerv\eerv-2017-05-13.xml -output:s:\eerv\ech-diff-2017-06-03.md
@@ -1198,38 +1198,38 @@ NOT RUN:
 -buildrolecache
 -cleanmailingcategories
 
-Lancé le 11.06.2017
+LancÃ© le 11.06.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-06-10.xml -oldechfile:S:\eerv\eerv-2017-06-03.xml -output:s:\eerv\ech-diff-2017-06-10.md
 
 
-Lancé le 18.06.2017
+LancÃ© le 18.06.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-06-17.xml -oldechfile:S:\eerv\eerv-2017-06-10.xml -output:s:\eerv\ech-diff-2017-06-17.md
 -exportsubscriptions -output:export-2017-06-xx.txt -error:error-2017-06-xx.txt -exclude-district-error:false
 
 
-Lancé le 25.06.2017
+LancÃ© le 25.06.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-06-24.xml -oldechfile:S:\eerv\eerv-2017-06-17.xml -output:s:\eerv\ech-diff-2017-06-24.md
 
 
-Lancé le 02.07.2017
+LancÃ© le 02.07.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-07-01.xml -oldechfile:S:\eerv\eerv-2017-06-24.xml -output:s:\eerv\ech-diff-2017-07-01.md
 
 
-Lancé le 11.07.2017
+LancÃ© le 11.07.2017
 -------------------
 
 -clearwarnings -beforedate:2017-01-01 -killpersons:true -createsubscriptions:true
 -echupdate -newechfile:S:\eerv\eerv-2017-07-08.xml -oldechfile:S:\eerv\eerv-2017-07-01.xml -output:s:\eerv\ech-diff-2017-07-08.md
 
-Lancé le 11.08.2017
+LancÃ© le 11.08.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-07-15.xml -oldechfile:S:\eerv\eerv-2017-07-08.xml -output:s:\eerv\ech-diff-2017-07-15.md
@@ -1240,29 +1240,29 @@ Lancé le 11.08.2017
 -exportsubscriptions -output:export-2017-08-xx.txt -error:error-2017-08-xx.txt -exclude-district-error:false
 
 
-Lancé le 29.08.2017
+LancÃ© le 29.08.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-08-26.xml -oldechfile:S:\eerv\eerv-2017-08-05.xml -output:s:\eerv\ech-diff-2017-08-26.md
 
-Lancé le 03.09.2017
+LancÃ© le 03.09.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-09-02.xml -oldechfile:S:\eerv\eerv-2017-08-26.xml -output:s:\eerv\ech-diff-2017-09-02.md
 
 
-Lancé le 19.09.2017
+LancÃ© le 19.09.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-09-16.xml -oldechfile:S:\eerv\eerv-2017-09-02.xml -output:s:\eerv\ech-diff-2017-09-16.md
 -exportsubscriptions -output:export-2017-10-xx.txt -error:error-2017-10-xx.txt -exclude-district-error:false
 
-Lancé le 24.09.2017
+LancÃ© le 24.09.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-09-23.xml -oldechfile:S:\eerv\eerv-2017-09-16.xml -output:s:\eerv\ech-diff-2017-09-23.md
 
-Lancé le 15.10.2017
+LancÃ© le 15.10.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-09-30.xml -oldechfile:S:\eerv\eerv-2017-09-23.xml -output:s:\eerv\ech-diff-2017-09-30.md
@@ -1271,7 +1271,7 @@ Lancé le 15.10.2017
 
 -exportsubscriptions -output:export-2017-11-xx.txt -error:error-2017-11-xx.txt -exclude-district-error:false
 
-Lancé le 05.11.2017
+LancÃ© le 05.11.2017
 -------------------
 
 -clearwarnings -beforedate:2017-08-01 -killpersons:true -createsubscriptions:true
@@ -1279,43 +1279,43 @@ Lancé le 05.11.2017
 -echupdate -newechfile:S:\eerv\eerv-2017-10-28.xml -oldechfile:S:\eerv\eerv-2017-10-21.xml -output:s:\eerv\ech-diff-2017-10-28.md
 -echupdate -newechfile:S:\eerv\eerv-2017-11-04.xml -oldechfile:S:\eerv\eerv-2017-10-28.xml -output:s:\eerv\ech-diff-2017-11-04.md
 
-Lancé le 12.11.2017
+LancÃ© le 12.11.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-11-11.xml -oldechfile:S:\eerv\eerv-2017-11-04.xml -output:s:\eerv\ech-diff-2017-11-11.md
 -exportsubscriptions -output:export-2017-12-xx.txt -error:error-2017-12-xx.txt -exclude-district-error:false
 
-Lancé le 21.11.2017
+LancÃ© le 21.11.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-11-18.xml -oldechfile:S:\eerv\eerv-2017-11-11.xml -output:s:\eerv\ech-diff-2017-11-18.md
 
 
-Lancé le 03.12.2017
+LancÃ© le 03.12.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-11-25.xml -oldechfile:S:\eerv\eerv-2017-11-18.xml -output:s:\eerv\ech-diff-2017-11-25.md
 -echupdate -newechfile:S:\eerv\eerv-2017-12-02.xml -oldechfile:S:\eerv\eerv-2017-11-25.xml -output:s:\eerv\ech-diff-2017-12-02.md
 
-Lancé le 10.12.2017
+LancÃ© le 10.12.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-12-09.xml -oldechfile:S:\eerv\eerv-2017-12-02.xml -output:s:\eerv\ech-diff-2017-12-09.md
 
-Lancé le 16.12.2017
+LancÃ© le 16.12.2017
 -------------------
 
 -clearwarnings -beforedate:2017-09-16 -killpersons:true -createsubscriptions:true
 -echupdate -newechfile:S:\eerv\eerv-2017-12-16.xml -oldechfile:S:\eerv\eerv-2017-12-09.xml -output:s:\eerv\ech-diff-2017-12-16.md
 
 
-Lancé le 28.12.2017
+LancÃ© le 28.12.2017
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-12-23.xml -oldechfile:S:\eerv\eerv-2017-12-16.xml -output:s:\eerv\ech-diff-2017-12-23.md
 
 
-Lancé le 07.01.2018
+LancÃ© le 07.01.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2017-12-30.xml -oldechfile:S:\eerv\eerv-2017-12-23.xml -output:s:\eerv\ech-diff-2017-12-30.md
@@ -1323,7 +1323,7 @@ Lancé le 07.01.2018
 -clearwarnings -beforedate:2017-10-01 -killpersons:true -createsubscriptions:true
 
 
-Lancé le 13.01.2018
+LancÃ© le 13.01.2018
 -------------------
 
 -calculateage
@@ -1331,102 +1331,102 @@ Lancé le 13.01.2018
 -exportsubscriptions -output:export-2018-01-xx.txt -error:error-2018-01-xx.txt -exclude-district-error:false
 
 
-Lancé le 21.01.2018
+LancÃ© le 21.01.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-01-20.xml -oldechfile:S:\eerv\eerv-2018-01-13.xml -output:s:\eerv\ech-diff-2018-01-20.md
 
 
-Lancé le 11.02.2018
+LancÃ© le 11.02.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-02-10.xml -oldechfile:S:\eerv\eerv-2018-02-03.xml -output:s:\eerv\ech-diff-2018-02-10.md
 -exportsubscriptions -output:export-2018-02-xx.txt -error:error-2018-02-xx.txt -exclude-district-error:false
 
 
-Lancé le 11.03.2018
+LancÃ© le 11.03.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-03-10.xml -oldechfile:S:\eerv\eerv-2018-02-10.xml -output:s:\eerv\ech-diff-2018-03-10.md
 
 
-Lancé le 18.03.2018
+LancÃ© le 18.03.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-03-17.xml -oldechfile:S:\eerv\eerv-2018-03-10.xml -output:s:\eerv\ech-diff-2018-03-17.md
 -exportsubscriptions -output:export-2018-03-xx.txt -error:error-2018-03-xx.txt -exclude-district-error:false
 
 
-Lancé le 25.03.2018
+LancÃ© le 25.03.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-03-24.xml -oldechfile:S:\eerv\eerv-2018-03-17.xml -output:s:\eerv\ech-diff-2018-03-24.md
 
 
-Lancé le 01.04.2018
+LancÃ© le 01.04.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-03-31.xml -oldechfile:S:\eerv\eerv-2018-03-24.xml -output:s:\eerv\ech-diff-2018-03-31.md
 
 
-Lancé le 15.04.2018
+LancÃ© le 15.04.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-04-07.xml -oldechfile:S:\eerv\eerv-2018-03-31.xml -output:s:\eerv\ech-diff-2018-04-07.md
 -echupdate -newechfile:S:\eerv\eerv-2018-04-14.xml -oldechfile:S:\eerv\eerv-2018-04-07.xml -output:s:\eerv\ech-diff-2018-04-14.md
 -exportsubscriptions -output:export-2018-04-xx.txt -error:error-2018-04-xx.txt -exclude-district-error:false
 
-Lancé le 21.04.2018
+LancÃ© le 21.04.2018
 -------------------
 
 -clearwarnings -beforedate:2018-01-01 -killpersons:true -createsubscriptions:true
 -echupdate -newechfile:S:\eerv\eerv-2018-04-21.xml -oldechfile:S:\eerv\eerv-2018-04-14.xml -output:s:\eerv\ech-diff-2018-04-21.md
 
 
-Lancé le 29.04.2018
+LancÃ© le 29.04.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-04-28.xml -oldechfile:S:\eerv\eerv-2018-04-21.xml -output:s:\eerv\ech-diff-2018-04-28.md
 
 
-Lancé le 06.05.2018
+LancÃ© le 06.05.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-05-05.xml -oldechfile:S:\eerv\eerv-2018-04-28.xml -output:s:\eerv\ech-diff-2018-05-05.md
 
 
-Lancé le 13.05.2018
+LancÃ© le 13.05.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-05-12.xml -oldechfile:S:\eerv\eerv-2018-05-05.xml -output:s:\eerv\ech-diff-2018-05-12.md
 
 
-Lancé le 20.05.2018
+LancÃ© le 20.05.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-05-19.xml -oldechfile:S:\eerv\eerv-2018-05-12.xml -output:s:\eerv\ech-diff-2018-05-19.md
 -exportsubscriptions -output:export-2018-05-xx.txt -error:error-2018-05-xx.txt -exclude-district-error:false
 
 
-Lancé le 27.05.2018
+LancÃ© le 27.05.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-05-26.xml -oldechfile:S:\eerv\eerv-2018-05-19.xml -output:s:\eerv\ech-diff-2018-05-26.md
 
 
-Lancé le 03.06.2018
+LancÃ© le 03.06.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-06-02.xml -oldechfile:S:\eerv\eerv-2018-05-26.xml -output:s:\eerv\ech-diff-2018-06-02.md
 
 
-Lancé le 09.06.2018
+LancÃ© le 09.06.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-06-09.xml -oldechfile:S:\eerv\eerv-2018-06-02.xml -output:s:\eerv\ech-diff-2018-06-09.md
 
 
-Lancé le 16.06.2018
+LancÃ© le 16.06.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-06-17.xml -oldechfile:S:\eerv\eerv-2018-06-09.xml -output:s:\eerv\ech-diff-2018-06-17.md
@@ -1434,40 +1434,40 @@ Lancé le 16.06.2018
 -exportsubscriptions -output:export-2018-06-xx.txt -error:error-2018-06-xx.txt -exclude-district-error:false
 
 
-Lancé le 01.07.2018
+LancÃ© le 01.07.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-06-23.xml -oldechfile:S:\eerv\eerv-2018-06-17.xml -output:s:\eerv\ech-diff-2018-06-23.md
 -echupdate -newechfile:S:\eerv\eerv-2018-06-30.xml -oldechfile:S:\eerv\eerv-2018-06-23.xml -output:s:\eerv\ech-diff-2018-06-30.md
 -clearwarnings -beforedate:2018-04-01 -killpersons:true -createsubscriptions:true
 
-Lancé le 08.07.2018
+LancÃ© le 08.07.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-07-07.xml -oldechfile:S:\eerv\eerv-2018-06-30.xml -output:s:\eerv\ech-diff-2018-07-07.md
 
-Lancé le 19.08.2018
+LancÃ© le 19.08.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-08-18.xml -oldechfile:S:\eerv\eerv-2018-07-07.xml -output:s:\eerv\ech-diff-2018-08-18.md
 -clearwarnings -beforedate:2018-05-01 -killpersons:true -createsubscriptions:true
 -exportsubscriptions -output:export-2018-08-xx.txt -error:error-2018-08-xx.txt -exclude-district-error:false
 
-Lancé le 02.09.2018
+LancÃ© le 02.09.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-08-25.xml -oldechfile:S:\eerv\eerv-2018-08-18.xml -output:s:\eerv\ech-diff-2018-08-25.md
 -echupdate -newechfile:S:\eerv\eerv-2018-09-01.xml -oldechfile:S:\eerv\eerv-2018-08-25.xml -output:s:\eerv\ech-diff-2018-09-01.md
 
 
-Lancé le 09.09.2018
+LancÃ© le 09.09.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-09-08.xml -oldechfile:S:\eerv\eerv-2018-09-01.xml -output:s:\eerv\ech-diff-2018-09-08.md
 -clearwarnings -beforedate:2018-06-01 -killpersons:true -createsubscriptions:true
 
 
-Lancé le 16.09.2018
+LancÃ© le 16.09.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-09-15.xml -oldechfile:S:\eerv\eerv-2018-09-08.xml -output:s:\eerv\ech-diff-2018-09-15.md
@@ -1476,38 +1476,38 @@ Lancé le 16.09.2018
 -exportsubscriptions -output:export-2018-09-xx.txt -error:error-2018-09-xx.txt -exclude-district-error:false
 
 
-Lancé le 23.09.2018
+LancÃ© le 23.09.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-09-22.xml -oldechfile:S:\eerv\eerv-2018-09-15.xml -output:s:\eerv\ech-diff-2018-09-22.md
 
 
-Lancé le 30.09.2018
+LancÃ© le 30.09.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-09-29.xml -oldechfile:S:\eerv\eerv-2018-09-22.xml -output:s:\eerv\ech-diff-2018-09-29.md
 
 
-Lancé le 07.10.2018
+LancÃ© le 07.10.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-10-06.xml -oldechfile:S:\eerv\eerv-2018-09-29.xml -output:s:\eerv\ech-diff-2018-10-06.md
 
 
-Lancé le 14.10.2018
+LancÃ© le 14.10.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-10-13.xml -oldechfile:S:\eerv\eerv-2018-10-06.xml -output:s:\eerv\ech-diff-2018-10-13.md
 -exportsubscriptions -output:export-2018-10-xx.txt -error:error-2018-10-xx.txt -exclude-district-error:false
 
 
-Lancé le 21.10.2018
+LancÃ© le 21.10.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-10-20.xml -oldechfile:S:\eerv\eerv-2018-10-13.xml -output:s:\eerv\ech-diff-2018-10-20.md
 
 
-Lancé le 04.11.2018
+LancÃ© le 04.11.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-10-27.xml -oldechfile:S:\eerv\eerv-2018-10-20.xml -output:s:\eerv\ech-diff-2018-10-27.md
@@ -1515,91 +1515,132 @@ Lancé le 04.11.2018
 -clearwarnings -beforedate:2018-08-01 -killpersons:true -createsubscriptions:true
 
 
-Lancé le 11.11.2018
+LancÃ© le 11.11.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-11-10.xml -oldechfile:S:\eerv\eerv-2018-11-03.xml -output:s:\eerv\ech-diff-2018-11-10.md
 
 
-Lancé le 17.11.2018
+LancÃ© le 17.11.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-11-17.xml -oldechfile:S:\eerv\eerv-2018-11-10.xml -output:s:\eerv\ech-diff-2018-11-17.md
 -exportsubscriptions -output:export-2018-11-xx.txt -error:error-2018-11-xx.txt -exclude-district-error:false
 
 
-Lancé le 25.11.2018
+LancÃ© le 25.11.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-11-24.xml -oldechfile:S:\eerv\eerv-2018-11-17.xml -output:s:\eerv\ech-diff-2018-11-24.md
 
 
-Lancé le 09.12.2018
+LancÃ© le 09.12.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-12-01.xml -oldechfile:S:\eerv\eerv-2018-11-24.xml -output:s:\eerv\ech-diff-2018-12-01.md
 -echupdate -newechfile:S:\eerv\eerv-2018-12-08.xml -oldechfile:S:\eerv\eerv-2018-12-01.xml -output:s:\eerv\ech-diff-2018-12-08.md
 
 
-Lancé le 16.12.2018
+LancÃ© le 16.12.2018
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2018-12-15.xml -oldechfile:S:\eerv\eerv-2018-12-08.xml -output:s:\eerv\ech-diff-2018-12-15.md
 -clearwarnings -beforedate:2018-10-01 -killpersons:true -createsubscriptions:true
 
-Lancé le 23.12.2018
+LancÃ© le 23.12.2018
 -------------------
 
-Edité l'entité AiderTown avec IBExpert pour renommer Bussigny-près-Lausanne en Bussigny.
+EditÃ© l'entitÃ© AiderTown avec IBExpert pour renommer Bussigny-prÃ¨s-Lausanne en Bussigny.
 
 -fixbussigny
 -echupdate -newechfile:S:\eerv\eerv-2018-12-22.xml -oldechfile:S:\eerv\eerv-2018-12-15.xml -output:s:\eerv\ech-diff-2018-12-22.md
 
 
-Lancé le 29.12.2018
+LancÃ© le 29.12.2018
 -------------------
 
 -calculateage
 -echupdate -newechfile:S:\eerv\eerv-2018-12-29.xml -oldechfile:S:\eerv\eerv-2018-12-22.xml -output:s:\eerv\ech-diff-2018-12-29.md
 
 
-Lancé le 06.01.2019
+LancÃ© le 06.01.2019
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2019-01-05.xml -oldechfile:S:\eerv\eerv-2018-12-29.xml -output:s:\eerv\ech-diff-2019-01-05.md
 -exportsubscriptions -output:export-2019-01-xx.txt -error:error-2019-01-xx.txt -exclude-district-error:false
 
 
-Lancé le 21.01.2019
+LancÃ© le 21.01.2019
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2019-01-12.xml -oldechfile:S:\eerv\eerv-2019-01-05.xml -output:s:\eerv\ech-diff-2019-01-12.md
 -echupdate -newechfile:S:\eerv\eerv-2019-01-19.xml -oldechfile:S:\eerv\eerv-2019-01-12.xml -output:s:\eerv\ech-diff-2019-01-19.md
 
 
-Lancé le 27.01.2019
+LancÃ© le 27.01.2019
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2019-01-26.xml -oldechfile:S:\eerv\eerv-2019-01-19.xml -output:s:\eerv\ech-diff-2019-01-26.md
 
-Lancé le 03.02.2019
+LancÃ© le 03.02.2019
 -------------------
 
 -echupdate -newechfile:S:\eerv\eerv-2019-02-02.xml -oldechfile:S:\eerv\eerv-2019-01-26.xml -output:s:\eerv\ech-diff-2019-02-02.md
 
 
-Lancé le 09.02.2019
+LancÃ© le 09.02.2019
 -------------------
 
 -cleanupusers empty:nocontact:noemail
 -echupdate -newechfile:S:\eerv\eerv-2019-02-09.xml -oldechfile:S:\eerv\eerv-2019-02-02.xml -output:s:\eerv\ech-diff-2019-02-09.md
 -exportsubscriptions -output:export-2019-02-xx.txt -error:error-2019-02-xx.txt -exclude-district-error:false
 
+LancÃ© le 03.03.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-02-16.xml -oldechfile:S:\eerv\eerv-2019-02-09.xml -output:s:\eerv\ech-diff-2019-02-16.md
+-echupdate -newechfile:S:\eerv\eerv-2019-02-23.xml -oldechfile:S:\eerv\eerv-2019-02-16.xml -output:s:\eerv\ech-diff-2019-02-23.md
+-echupdate -newechfile:S:\eerv\eerv-2019-03-02.xml -oldechfile:S:\eerv\eerv-2019-02-23.xml -output:s:\eerv\ech-diff-2019-03-02.md
+
+LancÃ© le 11.03.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-03-09.xml -oldechfile:S:\eerv\eerv-2019-03-02.xml -output:s:\eerv\ech-diff-2019-03-09.md
+
+LancÃ© le 17.03.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-03-16.xml -oldechfile:S:\eerv\eerv-2019-03-09.xml -output:s:\eerv\ech-diff-2019-03-16.md
+-exportsubscriptions -output:export-2019-03-xx.txt -error:error-2019-03-xx.txt -exclude-district-error:false
+-clearwarnings -beforedate:2018-12-01 -killpersons:true -createsubscriptions:true
+
+LancÃ© le 31.03.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-03-23.xml -oldechfile:S:\eerv\eerv-2019-03-16.xml -output:s:\eerv\ech-diff-2019-03-23.md
+-echupdate -newechfile:S:\eerv\eerv-2019-03-30.xml -oldechfile:S:\eerv\eerv-2019-03-23.xml -output:s:\eerv\ech-diff-2019-03-30.md
+-clearwarnings -beforedate:2018-01-01 -killpersons:true -createsubscriptions:true
+
+LancÃ© le 09.04.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-04-06.xml -oldechfile:S:\eerv\eerv-2019-03-30.xml -output:s:\eerv\ech-diff-2019-04-06.md
+
+LancÃ© le 13.04.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-04-13.xml -oldechfile:S:\eerv\eerv-2019-04-06.xml -output:s:\eerv\ech-diff-2019-04-13.md
+-exportsubscriptions -output:export-2019-04-xx.txt -error:error-2019-04-xx.txt -exclude-district-error:false
+
+LancÃ© le 21.04.2019
+-------------------
+
+-echupdate -newechfile:S:\eerv\eerv-2019-04-20.xml -oldechfile:S:\eerv\eerv-2019-04-13.xml -output:s:\eerv\ech-diff-2019-04-20.md
 
 ___________________________________________________________________________________________________________________________________
 
-Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus récente téléchargée
-depuis le site de La Poste (https://www.post.ch/de/?inIframe=false&inMobileApp=false&lang=de) après avoir
+Remplacer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.csv par la version la plus rÃ©cente tÃ©lÃ©chargÃ©e
+depuis le site de La Poste (https://www.post.ch/de/?inIframe=false&inMobileApp=false&lang=de) aprÃ¨s avoir
 converti avec EditPad Pro le CSV en UTF-8.
 
 Supprimer C:\Users\Arnaud\AppData\Roaming\Epsitec\swisspost.meta
@@ -1608,7 +1649,7 @@ ________________________________________________________________________________
 
 
 
-Opérations de mainteance
+OpÃ©rations de mainteance
 ========================
 
 .\gfix.exe -shut -tran 60 aider -user sysdba -password masterkey
