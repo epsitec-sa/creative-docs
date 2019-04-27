@@ -19,10 +19,10 @@ namespace AIDER.ParishPreprocessor
 			var exeDir = System.IO.Path.GetDirectoryName (exePath);
 			var dataDir = System.IO.Path.GetFullPath (System.IO.Path.Combine (exeDir, "..", "..", "Data"));
 
-			string inputPath = System.IO.Path.Combine (dataDir, "2018-11-xx Clean Parish Info.txt");
-			string input2Path = System.IO.Path.Combine (dataDir, "2018-11-xx parish names.txt");
-			string outputPath = System.IO.Path.Combine (dataDir, "2018-11-xx parishes.txt");
-			string missingPath = System.IO.Path.Combine (dataDir, "2018-11-xx missing.txt");
+			string inputPath = System.IO.Path.Combine (dataDir, "2019-03-xx Clean Parish Info.txt");
+			string input2Path = System.IO.Path.Combine (dataDir, "2019-03-xx parish names.txt");
+			string outputPath = System.IO.Path.Combine (dataDir, "2019-03-xx parishes.txt");
+			string missingPath = System.IO.Path.Combine (dataDir, "2019-03-xx missing.txt");
 
 			Program.ReadParishNames (input2Path);
 
