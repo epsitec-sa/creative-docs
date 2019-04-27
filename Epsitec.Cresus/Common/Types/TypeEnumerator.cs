@@ -34,7 +34,9 @@ namespace Epsitec.Common.Types
 
 			Epsitec.Common.Support.AssemblyLoader.AssemblyLoaded += this.HandleCurrentDomainAssemblyLoaded;
 
-			foreach (var assembly in System.AppDomain.CurrentDomain.GetAssemblies ())
+            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies ();
+
+            foreach (var assembly in assemblies)
 			{
 				this.AnalyzeAssembly (assembly);
 			}
