@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.AutoGroup)
 				.Attribute (BrickMode.HideAddButton)
 				.Attribute (BrickMode.HideRemoveButton)
-				.EnableActionButton<ActionAiderOfficeManagementViewController0CreateSettings> ()
+				.EnableActionMenu<ActionAiderOfficeManagementViewController0CreateSettings> ()
 				.EnableActionMenu<ActionAiderOfficeManagementViewController2RemoveSettings> ()
 				.Template ()
 					.Title ("Liste des expéditeurs")

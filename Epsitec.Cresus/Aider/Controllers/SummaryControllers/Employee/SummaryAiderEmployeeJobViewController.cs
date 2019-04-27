@@ -25,7 +25,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
             wall.AddBrick ()
                 .Attribute (BrickMode.DefaultToNoSubView).IfFalse (canEditEmployee)
-                .EnableActionButton<ActionAiderEmployeeJobViewController01RemoveJob> ().IfTrue (canEditEmployee);
+                .EnableActionMenu<ActionAiderEmployeeJobViewController01RemoveJob> ().IfTrue (canEditEmployee);
 
             wall.AddBrick (x => x.Office)
                 .Icon ("Base.AiderGoup.Parish")
