@@ -342,21 +342,30 @@ namespace Epsitec.Common.Types
 
 			this.exclusion.EnterWriteLock ();
 
-			try
-			{
-				if (this.assemblyNames.Add (assembly.FullName))
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: analyzing assembly {0}", assembly.FullName));
-					this.assemblies.Add (assembly);
-				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: skipping assembly {0}", assembly.FullName));
-					return;
-				}
+            try
+            {
+                if (this.assemblyNames.Add (assembly.FullName))
+                {
+                    System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: analyzing assembly {0}", assembly.FullName));
+                    this.assemblies.Add (assembly);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine (string.Format ("TypeEnumerator: skipping assembly {0}", assembly.FullName));
+                    return;
+                }
+            }
+            finally
+            {
+                this.exclusion.ExitWriteLock ();
+            }
 
-				var types = assembly.GetTypes ();
+            var types = assembly.GetTypes ();
 
+            this.exclusion.EnterWriteLock ();
+
+            try
+            {
 				foreach (var type in types)
 				{
 					var name = type.FullName;
